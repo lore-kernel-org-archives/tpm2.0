@@ -1,46 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============7340844321778310997=="
+Content-Type: multipart/mixed; boundary="===============4887604233859264284=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2.0-tools] 1ae94f: tpm2_create: check if keyed-hash
- algorithm was use...
-Date: Tue, 25 Jul 2017 16:48:24 -0700
-Message-ID: <5977d8c859d83_2055a3fd400983c303581b@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2.0-tools] c2cc8a: Use maximum supported size for
+ large file size tes...
+Date: Wed, 26 Jul 2017 09:19:04 -0700
+Message-ID: <5978c0f89b3e6_15c93f837475bc3c135986@hookshot-fe6-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7340844321778310997==
+--===============4887604233859264284==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2.0-tools
-  Commit: 1ae94ffaaccf28ec4622eeaa2da64ba538e35a4a
-      https://github.com/01org/tpm2.0-tools/commit/1ae94ffaaccf28ec4622eeaa=
-2da64ba538e35a4a
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
-  Date:   2017-07-25 (Tue, 25 Jul 2017)
+  Commit: c2cc8a799a2fba6ef561269e51f877a7dfdfe617
+      https://github.com/01org/tpm2.0-tools/commit/c2cc8a799a2fba6ef561269e=
+51f877a7dfdfe617
+  Author: Alexander Steffen <webmeister(a)users.noreply.github.com>
+  Date:   2017-07-26 (Wed, 26 Jul 2017)
 
   Changed paths:
-    M man/tpm2_create.8.in
-    M tools/tpm2_create.c
+    M test/system/test_tpm2_nv.sh
 
   Log Message:
   -----------
-  tpm2_create: check if keyed-hash algorithm was used when sealing data
+  Use maximum supported size for large file size test
 
-The TCG specification is clear that only the TPM_ALG_KEYEDHASH algorithm
-can be used when the user provides part of the the sensitive data.
-
-The tpm2_create tool behaves according to the specification, but it may
-not be clear to the users why it fails, unless are already familiar with
-the specs. Make the tool gracefully fail and also add a note to man page.
-
-Fixes: #369
-
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+TPM_PT_NV_INDEX_MAX contains the maximum NV index size that is supported by=
+ a TPM. Larger values will always be rejected.
 
 
 
---===============7340844321778310997==--
+--===============4887604233859264284==--
 
