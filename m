@@ -1,37 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============1919356644232229992=="
+Content-Type: multipart/mixed; boundary="===============5674408531703022040=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2.0-tools] 5ac845: Restrict nonce length to
- TPM_PT_MAX_DIGEST
-Date: Thu, 27 Jul 2017 09:46:52 -0700
-Message-ID: <597a18fc20a32_24223f839df39c3c13061d@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2.0-tools] bb3aba: Update CHANGELOG
+Date: Thu, 27 Jul 2017 09:50:27 -0700
+Message-ID: <597a19d37c663_15b93f97f3d3bc2c172493@hookshot-fe3-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1919356644232229992==
+--===============5674408531703022040==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2.0-tools
-  Commit: 5ac845f18d3f04fe9a0c07f6cb7d24e5bad3759a
-      https://github.com/01org/tpm2.0-tools/commit/5ac845f18d3f04fe9a0c07f6=
-cb7d24e5bad3759a
-  Author: Alexander Steffen <webmeister(a)users.noreply.github.com>
+  Commit: bb3aba0a6ff6ea83fc802ca861aa0147c430a650
+      https://github.com/01org/tpm2.0-tools/commit/bb3aba0a6ff6ea83fc802ca8=
+61aa0147c430a650
+  Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-07-27 (Thu, 27 Jul 2017)
 
   Changed paths:
-    M test/system/test_tpm2_quote.sh
+    M CHANGELOG
 
   Log Message:
   -----------
-  Restrict nonce length to TPM_PT_MAX_DIGEST
-
-The qualifying data in a TPM2_Quote call may not be larger than the maximum=
- size of a digest.
+  Update CHANGELOG
 
 
 
---===============1919356644232229992==--
+--===============5674408531703022040==--
 
