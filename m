@@ -1,37 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============3757641125929423199=="
+Content-Type: multipart/mixed; boundary="===============4580889489406157092=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2.0-tools] 1321ae: gcc7: Change two case fallthrough
- conditions that ...
-Date: Sat, 29 Jul 2017 16:51:25 -0700
-Message-ID: <597d1f7d9f31_e6f3fcbec9d7c34389e7@hookshot-fe3-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2.0-tools] bb856d: tpm2_getmanufec: handle output
+ more gracefully
+Date: Sat, 29 Jul 2017 16:51:54 -0700
+Message-ID: <597d1f9aa3368_4c7f3fe13265dc241086c7@hookshot-fe5-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3757641125929423199==
+--===============4580889489406157092==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2.0-tools
-  Commit: 1321aee7d2a3be248d32b012ee6d2a4452435690
-      https://github.com/01org/tpm2.0-tools/commit/1321aee7d2a3be248d32b012=
-ee6d2a4452435690
-  Author: Philip Tricca <flihp(a)twobit.us>
+  Commit: bb856ded2c85093891c7f1f4608cd5f448f0b3d9
+      https://github.com/01org/tpm2.0-tools/commit/bb856ded2c85093891c7f1f4=
+608cd5f448f0b3d9
+  Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-07-29 (Sat, 29 Jul 2017)
 
   Changed paths:
-    M tools/main.c
-    M tools/tpm2_dump_capability.c
+    M man/tpm2_getmanufec.8.in
+    M test/system/test_tpm2_getmanufec.sh
+    M tools/tpm2_getmanufec.c
 
   Log Message:
   -----------
-  gcc7: Change two case fallthrough conditions that upset gcc7.
+  tpm2_getmanufec: handle output more gracefully
 
-Signed-off-by: Philip Tricca <flihp(a)twobit.us>
+Currently, the -E option will fail when -E is not specified:
+$ tpm2_getmanufec -g 0x01 -O -N -U -f test_ek.pub -S https://ekop.intel.com=
+/ekcertservice/
+...
+ERROR: Could not open file for writing: "(null)"
+
+Make -E option, optional by making the default stdout. This requires
+modifying the tool to stop outputing other information to sdout,
+which is currently unused output in the test suite.
+
+Make the information only output when verbose is enabled, this
+includes curl verbose information.
+
+Update errors and warnings to go to stderr.
+
+Fixes: 361
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============3757641125929423199==--
+--===============4580889489406157092==--
 
