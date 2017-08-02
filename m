@@ -1,181 +1,143 @@
-Content-Type: multipart/mixed; boundary="===============4252710946536987599=="
+Content-Type: multipart/mixed; boundary="===============0933517752108226537=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] feedback on unlocking LUKS volumes using a TPM2
-Date: Wed, 02 Aug 2017 18:00:50 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563EAA945D@ORSMSX103.amr.corp.intel.com>
-In-Reply-To: 41bfe388-ea85-5880-a78c-8f888ffe328d@redhat.com
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] ed68e7: .travis.yml: cat cmocka results to
+ stdout
+Date: Wed, 02 Aug 2017 14:02:42 -0700
+Message-ID: <59823df24ee4b_2fbf3f82cd0f1c2c275b0@hookshot-fe1-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4252710946536987599==
+--===============0933517752108226537==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+  Branch: refs/heads/master
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: ed68e71074ff4d7d09b79b727c846ea0245f3046
+      https://github.com/01org/tpm2-tools/commit/ed68e71074ff4d7d09b79b727c=
+846ea0245f3046
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-02 (Wed, 02 Aug 2017)
+
+  Changed paths:
+    M .travis.yml
+
+  Log Message:
+  -----------
+  .travis.yml: cat cmocka results to stdout
+
+When the unit tests fail, its a black hole becuase all of the
+data goes to a file called test-suite.log. Cat that file
+to stdout so the failure details end up on the server output.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-> -----Original Message-----
-> From: Javier Martinez Canillas [mailto:javierm(a)redhat.com]
-> Sent: Monday, July 31, 2017 5:29 PM
-> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.o=
-rg
-> Subject: Re: [tpm2] feedback on unlocking LUKS volumes using a TPM2
-> =
+  Commit: f5a3566fd8161e9529681a2dce2bfe5d8c9c2fa6
+      https://github.com/01org/tpm2-tools/commit/f5a3566fd8161e9529681a2dce=
+2bfe5d8c9c2fa6
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-02 (Wed, 02 Aug 2017)
 
-> Hello Bill,
-> =
+  Changed paths:
+    M lib/tpm2_alg_util.c
+    M lib/tpm2_alg_util.h
+    M test/unit/test_tpm2_alg_util.c
 
-> Thanks a lot for your feedback.
-> =
+  Log Message:
+  -----------
+  tpm2_alg_util: add routines and tests for parsing digest spec
 
-> On 07/31/2017 10:27 PM, Roberts, William C wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Javier
-> >> Martinez Canillas
-> >> Sent: Wednesday, July 26, 2017 12:25 PM
-> >> To: tpm2(a)lists.01.org
-> >> Subject: [tpm2] feedback on unlocking LUKS volumes using a TPM2
-> >>
-> >> Hello folks,
-> >>
-> >> As mentioned before, I'm exploring on using a TPM2 chip to unlock a
-> >> root LUKS volume so users don't need to type a passphrase as long as
-> >> their systems have not been tampered with.
-> >>
-> >> Since I'm still new to TPM2, I wanted to share what I did in case
-> >> people more familiar with the TCG specification could provide their fe=
-edback.
-> >>
-> >> First some context:
-> >>
-> >> We have a plugable framework for automated decryption that's called Cl=
-evis
-> [0].
-> >>
-> >> Clevis has a number of "pins", where each pin implements an automated
-> >> decryption support using a different {en,de}cryption backend. It also
-> >> has infrastructure to {en,de}crypt data, unlock LUKS volumes and
-> >> create complex security policies.
-> >>
-> >> Clevis relies on the Jos=C3=A9 project [1], which is an C implementati=
-on
-> >> of the JOSE (Javascript Object Signing and Encryption) standard [2].
-> >> It also uses the LUKSMeta project [3] to bind a pin to a LUKS volume,
-> >> by storing the JWE (JSON Web
-> >> Encryption) [4] in the LUKS header so the data can later be decrypted
-> >> and the volume unlocked.
-> >>
-> >> So I created a TPM2 pin [5] for clevis to reuse all this existing infr=
-astructure.
-> >>
-> >> But I'm mostly interested for your feedback on the TPM2 bits, what I
-> >> basically do is something like this:
-> >>
-> >> - Create an authorization policy based on a set of PCR ids
-> >> - Create a primary key
-> >> - Create an object and pass as data to be sealed a JWK (JSON Web Key) =
-[6]
-> that is
-> >>   used to encrypt the LUKS volume master key.
-> >> - Create a JWE that contains the encrypted LUKS key and also informati=
-on on
-> how
-> >>   to decrypt it. The information that's needed to unseal the JWK from =
-the
-> TPM2 is:
-> >>
-> >>     - hierarchy used for the primary key and object
-> >>     - the hash and key algorithms used
-> >>     - PCR bank and ids for policy session
-> >>     - the public and private key pair for the sealed object
-> >>
-> >> The user can choose most of the parameters when using the clevis tpm2
-> >> pin, but these are the default used:
-> >>
-> >> - Endorsement hierarchy seed for the primary key and sealed object
-> >> - SHA-256 for primary and object name computation
-> >> - ECC as algorithm type for generated key
-> >> - SHA-1 PCR bank for PCR policy
-> >>
-> >> Do you think what I described is the correct approach? Specially I
-> >> would like to know your opinion about storing not only the pub but
-> >> also the priv key in the LUKS volume header (since both are needed
-> >> for unsealing)
-> >
-> > I'm not following what you're saying about storing the keypair here
-> > for unsealing, shouldn't those keys be generated in the tpm and bound t=
-o a pcr
-> policy?
-> >
-> =
+Introduce a digest specification language that can be used
+by forthcoming tools like tpm2_pcr_extend.
 
-> Yes, maybe I'm failing in the terminology. My understanding is that the T=
-PM2 on
-> TPM2_Create() creates a key pair, seals the passed data using this key, w=
-raps the
-> key using the parent key and finally returns that wrapped key pair to cal=
-ler.
-> =
+The digest specification is as follows:
+  - A pcr identifier as understood by strtoul with 0 as the base.
+  - A colon followed by the algorithm hash specification.
+  - The algorithm hash specification is as follows:
+      - The algorithm friendly name or raw numerical as understood by
+  strtoul with a base of 0.
+      - An equals sign
+      - The hex hash value.
 
-> Since the key pair is needed to be loaded for unsealing, I need to store =
-it in a
-> place so they can latter be used for unsealing.
+  This all distills to a string that looks like this:
+  <pcr index>:<hash alg id>=3D<hash value>
 
-In theory you can store that anywhere, the easier it is to get to the more =
-prevalent someone
-can hose all of your data. The LUKS partition metadata seems reasonable, if=
- they can delete
-that, they could hose your hard drive data anyways. A permeant entity in th=
-e TPM is also
-an option.
+  Example:
+    "4:sha=3Df1d2d2f924e986ac86fdf7b36c94bcdf32beec15"
 
-> =
+  Note:
+    Multiple specifications of PCR and hash are OK. Multiple hashes
+    cause the pcr to be extended with both hashes. Multiple same PCR
+    values cause the PCR to be extended multiple times. Extension
+    is done in order from left to right as specified.
 
-> >  and using the
-> >> endorsement hierarchy by default.
-> >
-> > I don't see the privacy concerns offhand, as no one is receiving a digi=
-tal
-> signature from the private key generated?
-> =
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
-> That's why I'm storing it in an accessible place, since it can't be used =
-without the
-> TPM2. I just wanted to confirm if my understanding of the specs were corr=
-ect.
-> =
 
-> > I think the storage hierarchy is more appropriate, but again I may be m=
-issing
-> something.
-> >
-> =
+  Commit: 0b1215d3c3a4badb9ea802135de40307e61fdfa1
+      https://github.com/01org/tpm2-tools/commit/0b1215d3c3a4badb9ea802135d=
+e40307e61fdfa1
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-02 (Wed, 02 Aug 2017)
 
-> Can you please elaborate on why do you think the storage hierarchy
-> (TPM_RH_OWNER) is more appropriate? That's why I asked the question,
-> because reading the specs were not clear to me which one is meant to be u=
-sed
-> for this use case.
+  Changed paths:
+    M Makefile.am
+    M lib/tpm2_alg_util.c
+    M lib/tpm2_alg_util.h
+    A man/tpm2_pcrextend.8.in
+    M test/system/test_all.sh
+    A test/system/test_tpm2_pcrextend.sh
+    A tools/tpm2_pcrextend.c
 
-I'm basing that on page 107 of, "A Practical guide to TPM 2.0". This seems =
-to be non-sensitive
-with respect to how they define privacy, so using the storage hierarchy see=
-ms reasonable to
-me.
+  Log Message:
+  -----------
+  tpm2_pcrextend: initial commit
 
-This is all caveated with I am pretty new to TPM as well, so someone more k=
-nowledgeable may see
-things differently.
+Add a tool that extends the PCR values.
 
-> =
+Example:
+$ tpm2_pcr_extend 9:sha256=3Dc324d5e9514f00b1a42052666721fb0911090ca197bf83=
+1f6568e735bc8522c3
 
-> Best regards,
-> --
-> Javier Martinez Canillas
-> Software Engineer - Desktop Hardware Enablement Red Hat
+Add system tests as well.
 
---===============4252710946536987599==--
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: e8c49105e244f3bb6d731ce646ed5688fa3b1774
+      https://github.com/01org/tpm2-tools/commit/e8c49105e244f3bb6d731ce646=
+ed5688fa3b1774
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-02 (Wed, 02 Aug 2017)
+
+  Changed paths:
+    M Makefile.am
+    R man/tpm2_listpcrs.8.in
+    A man/tpm2_pcrlist.8.in
+    M test/system/test_all.sh
+    M test/system/test_smoking.sh
+    R test/system/test_tpm2_listpcrs.sh
+    M test/system/test_tpm2_pcrextend.sh
+    A test/system/test_tpm2_pcrlist.sh
+    M test/system/test_tpm2_unseal.sh
+    R tools/tpm2_listpcrs.c
+    A tools/tpm2_pcrlist.c
+
+  Log Message:
+  -----------
+  tpm2_pcrlist: rename from tpm2_listpcrs
+
+Rename tpm2_listpcrs to tpm2_pcrlist to be compliant with the
+rest of the naming convention set by the nv family of tools.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/a16446d7ee58...e8c4910=
+5e244
+
+--===============0933517752108226537==--
 
