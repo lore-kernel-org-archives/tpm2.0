@@ -1,39 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============1823455805516339572=="
+Content-Type: multipart/mixed; boundary="===============2201517142354560237=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] a16446: RELEASE: Fix a typo and reword
- release process fir...
-Date: Tue, 01 Aug 2017 10:10:21 -0700
-Message-ID: <5980b5fdc9d7b_45ec3fdb761efc3047922@hookshot-fe5-cp1-prd.iad.github.net.mail>
+From: Javier Martinez Canillas <javierm at redhat.com>
+Subject: Re: [tpm2] tpm2.0-tools: Release 2.1.0 is available
+Date: Wed, 02 Aug 2017 12:04:52 +0200
+Message-ID: <d5cb2bea-e9a2-6c20-407a-01418b968f7f@redhat.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563EAA7739@ORSMSX103.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1823455805516339572==
+--===============2201517142354560237==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
-  Home:   https://github.com/01org/tpm2-tools
-  Commit: a16446d7ee585263f894edfd0d18db9eae4e9774
-      https://github.com/01org/tpm2-tools/commit/a16446d7ee585263f894edfd0d=
-18db9eae4e9774
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
-  Date:   2017-08-01 (Tue, 01 Aug 2017)
+Hello folks,
 
-  Changed paths:
-    M RELEASE
+On 07/24/2017 07:54 PM, Roberts, William C wrote:
+> Release 2.1.0 is available at: https://github.com/01org/tpm2.0-tools/rele=
+ases/tag/2.1.0
+> =
 
-  Log Message:
-  -----------
-  RELEASE: Fix a typo and reword release process first paragraph
+> v2.1.0 - 2017-7-24
 
-I've changed the release process first paragraph a little bit, to make it
-easier to understand.
+I've some questions about the release process that were not answered by rea=
+ding
+the RELEASE document in the repository (it would be nice to add the answers=
+ for
+these in the doc as well).
 
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+1- What's the expected time after a release for the next branch to be creat=
+ed?
+2- What's the expected time after a branch is created for a -rc to be relea=
+sed?
 
+I'm asking because there is a bunch of new stuff and fixes currently in mas=
+ter,
+so it would be nice to start thinking on the next release:
 
+$ git lg 2.1.0..master | wc -l
+221
 
---===============1823455805516339572==--
+Best regards,
+-- =
+
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
+
+--===============2201517142354560237==--
 
