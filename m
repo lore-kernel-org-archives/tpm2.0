@@ -1,143 +1,247 @@
-Content-Type: multipart/mixed; boundary="===============0933517752108226537=="
+Content-Type: multipart/mixed; boundary="===============0290239497011243627=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] ed68e7: .travis.yml: cat cmocka results to
- stdout
-Date: Wed, 02 Aug 2017 14:02:42 -0700
-Message-ID: <59823df24ee4b_2fbf3f82cd0f1c2c275b0@hookshot-fe1-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] c24e90: tpm2_certify: fix tool exit code
+Date: Wed, 02 Aug 2017 14:19:38 -0700
+Message-ID: <598241ea7daab_d713feda0d23c3c254b5@hookshot-fe6-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0933517752108226537==
+--===============0290239497011243627==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: ed68e71074ff4d7d09b79b727c846ea0245f3046
-      https://github.com/01org/tpm2-tools/commit/ed68e71074ff4d7d09b79b727c=
-846ea0245f3046
-  Author: William Roberts <william.c.roberts(a)intel.com>
+  Commit: c24e901bbbcb8cead6c50d82ed3d8f155bbb5671
+      https://github.com/01org/tpm2-tools/commit/c24e901bbbcb8cead6c50d82ed=
+3d8f155bbb5671
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-08-02 (Wed, 02 Aug 2017)
 
   Changed paths:
-    M .travis.yml
+    M tools/tpm2_certify.c
 
   Log Message:
   -----------
-  .travis.yml: cat cmocka results to stdout
+  tpm2_certify: fix tool exit code
 
-When the unit tests fail, its a black hole becuase all of the
-data goes to a file called test-suite.log. Cat that file
-to stdout so the failure details end up on the server output.
+The tpm2_certify execute_tool() is wrongly returning a false value on
+error, while the main program takes 0 to be a success value. But also
+the function is expected to return an int a not a bool value, so fix
+both issues.
 
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-  Commit: f5a3566fd8161e9529681a2dce2bfe5d8c9c2fa6
-      https://github.com/01org/tpm2-tools/commit/f5a3566fd8161e9529681a2dce=
-2bfe5d8c9c2fa6
-  Author: William Roberts <william.c.roberts(a)intel.com>
+  Commit: 2093a168b7a99884eea0d0a9e749df5c75a16f1b
+      https://github.com/01org/tpm2-tools/commit/2093a168b7a99884eea0d0a9e7=
+49df5c75a16f1b
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-08-02 (Wed, 02 Aug 2017)
 
   Changed paths:
-    M lib/tpm2_alg_util.c
-    M lib/tpm2_alg_util.h
-    M test/unit/test_tpm2_alg_util.c
+    M tools/tpm2_encryptdecrypt.c
 
   Log Message:
   -----------
-  tpm2_alg_util: add routines and tests for parsing digest spec
+  tpm2_encryptdecrypt: fix tool exit code
 
-Introduce a digest specification language that can be used
-by forthcoming tools like tpm2_pcr_extend.
+The tpm2_encryptdecrypt execute_tool() is wrongly returning a false value
+on error, while the main program takes 0 to be a success value. But also
+the function is expected to return an int a not a bool value, so fix both
+issues.
 
-The digest specification is as follows:
-  - A pcr identifier as understood by strtoul with 0 as the base.
-  - A colon followed by the algorithm hash specification.
-  - The algorithm hash specification is as follows:
-      - The algorithm friendly name or raw numerical as understood by
-  strtoul with a base of 0.
-      - An equals sign
-      - The hex hash value.
-
-  This all distills to a string that looks like this:
-  <pcr index>:<hash alg id>=3D<hash value>
-
-  Example:
-    "4:sha=3Df1d2d2f924e986ac86fdf7b36c94bcdf32beec15"
-
-  Note:
-    Multiple specifications of PCR and hash are OK. Multiple hashes
-    cause the pcr to be extended with both hashes. Multiple same PCR
-    values cause the PCR to be extended multiple times. Extension
-    is done in order from left to right as specified.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-  Commit: 0b1215d3c3a4badb9ea802135de40307e61fdfa1
-      https://github.com/01org/tpm2-tools/commit/0b1215d3c3a4badb9ea802135d=
-e40307e61fdfa1
-  Author: William Roberts <william.c.roberts(a)intel.com>
+  Commit: 1e402379e43a38bd2a8744a8eb1cedd8dc834d33
+      https://github.com/01org/tpm2-tools/commit/1e402379e43a38bd2a8744a8eb=
+1cedd8dc834d33
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-08-02 (Wed, 02 Aug 2017)
 
   Changed paths:
-    M Makefile.am
-    M lib/tpm2_alg_util.c
-    M lib/tpm2_alg_util.h
-    A man/tpm2_pcrextend.8.in
-    M test/system/test_all.sh
-    A test/system/test_tpm2_pcrextend.sh
-    A tools/tpm2_pcrextend.c
+    M tools/tpm2_getpubek.c
 
   Log Message:
   -----------
-  tpm2_pcrextend: initial commit
+  tpm2_getpubek: fix tool exit code
 
-Add a tool that extends the PCR values.
+The tpm2_getpubek execute_tool() is wrongly returning a false value on
+error, while the main program takes 0 to be a success value. But also
+the function is expected to return an int a not a bool value, so fix
+both issues.
 
-Example:
-$ tpm2_pcr_extend 9:sha256=3Dc324d5e9514f00b1a42052666721fb0911090ca197bf83=
-1f6568e735bc8522c3
-
-Add system tests as well.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-  Commit: e8c49105e244f3bb6d731ce646ed5688fa3b1774
-      https://github.com/01org/tpm2-tools/commit/e8c49105e244f3bb6d731ce646=
-ed5688fa3b1774
-  Author: William Roberts <william.c.roberts(a)intel.com>
+  Commit: 4d3659996a5412fa4e10ead386e2b1be780ace2a
+      https://github.com/01org/tpm2-tools/commit/4d3659996a5412fa4e10ead386=
+e2b1be780ace2a
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-08-02 (Wed, 02 Aug 2017)
 
   Changed paths:
-    M Makefile.am
-    R man/tpm2_listpcrs.8.in
-    A man/tpm2_pcrlist.8.in
-    M test/system/test_all.sh
-    M test/system/test_smoking.sh
-    R test/system/test_tpm2_listpcrs.sh
-    M test/system/test_tpm2_pcrextend.sh
-    A test/system/test_tpm2_pcrlist.sh
-    M test/system/test_tpm2_unseal.sh
-    R tools/tpm2_listpcrs.c
-    A tools/tpm2_pcrlist.c
+    M tools/tpm2_loadexternal.c
 
   Log Message:
   -----------
-  tpm2_pcrlist: rename from tpm2_listpcrs
+  tpm2_loadexternal: fix tool exit code
 
-Rename tpm2_listpcrs to tpm2_pcrlist to be compliant with the
-rest of the naming convention set by the nv family of tools.
+The tpm2_loadexternal execute_tool() is wrongly returning a false value on
+error, while the main program takes 0 to be a success value. But also the
+function is expected to return an int a not a bool, so fix both issues.
 
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-Compare: https://github.com/01org/tpm2-tools/compare/a16446d7ee58...e8c4910=
-5e244
+  Commit: 52635941501fe3f5063329073529f3675c15b334
+      https://github.com/01org/tpm2-tools/commit/52635941501fe3f50633290735=
+29f3675c15b334
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-08-02 (Wed, 02 Aug 2017)
 
---===============0933517752108226537==--
+  Changed paths:
+    M tools/tpm2_nvlist.c
+
+  Log Message:
+  -----------
+  tpm2_nvlist: fix tool exit code
+
+The tpm2_nvlist execute_tool() is wrongly return nv_list() !=3D 0. This is
+wrong not only because that function returns a bool and not an int, but
+also because the nv_list() returns true (!=3D 0) on success and the main
+the main program takes 1 to be an error. So fix both issues.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+  Commit: 2b66941d03050a48acf646282d1f832a44086de5
+      https://github.com/01org/tpm2-tools/commit/2b66941d03050a48acf646282d=
+1f832a44086de5
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-08-02 (Wed, 02 Aug 2017)
+
+  Changed paths:
+    M tools/tpm2_create.c
+
+  Log Message:
+  -----------
+  tpm2_create: simplify execute_tool() error codes propagation
+
+The tool main function that calls execute_tool() doesn't use the returned
+value, it only takes 0 as a succeeds value an everything else as an error.
+
+So it makes no sense to have a gazillion different error codes for each
+situation, this just makes the code difficult to read for no gain.
+
+While being there, handle the cases for when getopt_long() finds that the
+option or arguments are not correct.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+  Commit: 6758d1469090dacb8c9b0718b5862a29d2e6d9b2
+      https://github.com/01org/tpm2-tools/commit/6758d1469090dacb8c9b0718b5=
+862a29d2e6d9b2
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-08-02 (Wed, 02 Aug 2017)
+
+  Changed paths:
+    M tools/tpm2_createprimary.c
+
+  Log Message:
+  -----------
+  tpm2_createprimary: simplify execute_tool() error codes propagation
+
+The tool main function that calls execute_tool() doesn't use the returned
+value, it only takes 0 as a succeeds value an everything else as an error.
+
+So it makes no sense to have a gazillion different error codes for each
+situation, this just makes the code difficult to read for no gain.
+
+While being there, handle the cases for when getopt_long() finds that the
+option or arguments are not correct.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+  Commit: cbb78fb24a084d2953c519b9d476cf037d47d396
+      https://github.com/01org/tpm2-tools/commit/cbb78fb24a084d2953c519b9d4=
+76cf037d47d396
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-08-02 (Wed, 02 Aug 2017)
+
+  Changed paths:
+    M tools/tpm2_getmanufec.c
+
+  Log Message:
+  -----------
+  tpm2_getmanufec: simplify execute_tool() error codes propagation
+
+The tool main function that calls execute_tool() doesn't use the returned
+value, it only takes 0 as a succeeds value an everything else as an error.
+
+So lets just return consistently 1 as an error an 0 as a success, instead
+of returning a combination of -1 and value set in the return_val variable.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+  Commit: cd4191fc01fc894b0a919f04fc0b7f9177e63b94
+      https://github.com/01org/tpm2-tools/commit/cd4191fc01fc894b0a919f04fc=
+0b7f9177e63b94
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-08-02 (Wed, 02 Aug 2017)
+
+  Changed paths:
+    M tools/tpm2_load.c
+
+  Log Message:
+  -----------
+  tpm2_load: simplify execute_tool() error codes propagation
+
+The tool main function that calls execute_tool() doesn't use the returned
+value, it only takes 0 as a succeeds value an everything else as an error.
+
+So it makes no sense to have a gazillion different error codes for each
+situation, this just makes the code difficult to read for no gain.
+
+While being there, handle the cases for when getopt_long() finds that the
+option or arguments are not correct.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+  Commit: 314c4806288b2e3d47c9b6d7491661d59b5eba61
+      https://github.com/01org/tpm2-tools/commit/314c4806288b2e3d47c9b6d749=
+1661d59b5eba61
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-08-02 (Wed, 02 Aug 2017)
+
+  Changed paths:
+    M tools/tpm2_quote.c
+
+  Log Message:
+  -----------
+  tpm2_quote: simplify execute_tool() error codes propagation
+
+The tool main function that calls execute_tool() doesn't use the returned
+value, it only takes 0 as a succeeds value an everything else as an error.
+
+So it makes no sense to have a gazillion different error codes for each
+situation, this just makes the code difficult to read for no gain.
+
+While being there, handle the cases for when getopt_long() finds that the
+option or arguments are not correct.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/e8c49105e244...314c480=
+6288b
+
+--===============0290239497011243627==--
 
