@@ -1,82 +1,107 @@
-Content-Type: multipart/mixed; boundary="===============9180768399793076885=="
+Content-Type: multipart/mixed; boundary="===============1486711356126503931=="
 MIME-Version: 1.0
-From: Raveau, Sebastien <sebastien.raveau at baesystems.com>
+From: Javier Martinez Canillas <javierm at redhat.com>
 Subject: Re: [tpm2] feedback on unlocking LUKS volumes using a TPM2
-Date: Thu, 03 Aug 2017 10:33:54 +0000
-Message-ID: <1FEB6BE5D027454BAEDB8EA7F2D809DED80C27E6@UKDC1CSUEXMV01.CSU.LOCAL>
+Date: Thu, 03 Aug 2017 14:25:06 +0200
+Message-ID: <7c5a9e12-2d69-ee6a-b142-74b58dd8ede8@redhat.com>
 In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563EAA945D@ORSMSX103.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9180768399793076885==
+--===============1486711356126503931==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Javier, Robert, everyone,
+Hello Bill,
 
-I very much appreciate the effort but I believe there are problems with thi=
-s particular approach:
+On 08/02/2017 08:00 PM, Roberts, William C wrote:
 
-> >> Do you think what I described is the correct approach? Specially I
-> >> would like to know your opinion about storing not only the pub but
-> >> also the priv key in the LUKS volume header (since both are needed
-> >> for unsealing)
+[snip]
 
-I would not store anything in the LUKS header because it needs to be measur=
-ed and tightly coupled with the mounting process to ensure that you are not=
- being tricked. For example if I copy your exact /boot onto another disk, c=
-opy your LUKS header into a tiny partition just for your initrd to retrieve=
- the sealed keys, and add my own root partition unencrypted but with the sa=
-me UUID as that of your crypt_root then I am likely to end up with a fully =
-functional system of my own where your keys are unsealed.
+>>>
+>>
+>> Yes, maybe I'm failing in the terminology. My understanding is that the =
+TPM2 on
+>> TPM2_Create() creates a key pair, seals the passed data using this key, =
+wraps the
+>> key using the parent key and finally returns that wrapped key pair to ca=
+ller.
+>>
+>> Since the key pair is needed to be loaded for unsealing, I need to store=
+ it in a
+>> place so they can latter be used for unsealing.
+> =
 
-It is also crucial to remove access to unsealed data or unlocked NVRAM indi=
-ces as soon as they are not needed anymore. For example if your initrd take=
-s issue with my trick above, I imagine it would drop to a root shell which =
-would still give me access to your unsealed keys unless you remove access a=
-sap. This is very easily achieved with a NVRAM index by defining it with th=
-e READ_STCLEAR flag and a size 0 read right after the normal read, but you =
-could achieve the same result by further extending (with whatever measureme=
-nt just to invalidate it) one of the PCRs the data is sealed/locked with; o=
-f course in both cases you also have to make sure to wipe asap all copies o=
-f unlocked/unsealed data that you might have made.
+> In theory you can store that anywhere, the easier it is to get to the mor=
+e prevalent someone
+> can hose all of your data. The LUKS partition metadata seems reasonable, =
+if they can delete
+> that, they could hose your hard drive data anyways. A permeant entity in =
+the TPM is also
+> an option.
+>
 
-Personally I would recommend using NVRAM indices as opposed to sealed data,=
- for three reasons:
-1/ No need to write to the encrypted storage medium, so that for example yo=
-u can have TPM(s) unlock a live CD like https://lists.debian.org/debian-liv=
-e/2007/02/msg00090.html
-2/ Chicken & egg problem if you store sealed data files into the places tha=
-t need to be measured, e.g. my own original approach was to store inside th=
-e initrd but I needed to measure that. Granted, nowadays I could add the se=
-aled data as an initrd overlay and you could measure only chosen parts of t=
-he LUKS header but meh, it feels like leaving the door ajar for vulnerabili=
-ties.
-3/ I can't seem to find a reason justifying the unnecessary risk added by i=
-ntroducing a key pair between the TPM's Hardware Security Module function a=
-nd LUKS's key derivation function; why not have the TPM decrypt the LUKS ma=
-ster key for you, or simply hold in NVRAM a (fully random) passphrase for o=
-ne of the LUKS key slots? Both usable only when the right conditions are me=
-t of course.
+Exactly, that's what my reasoning as well. Good that you confirm my underst=
+anding
+and we are in the same page then.
+ =
 
-To be completely honest I have to warn that NVRAM size is not infinite; per=
-sonally I have always found there to be plenty of space (kilobytes vs 32 by=
-tes per fully-random "passphrase" to match the entropy of AES-256 keys) lef=
-t but I don't know if there are TPMs out there with too little NVRAM (depen=
-ding on how many combinations of bootstraps and LUKS root partitions your u=
-sers might want to support) or none at all.
+>>
+>>>  and using the
+>>>> endorsement hierarchy by default.
+>>>
+>>> I don't see the privacy concerns offhand, as no one is receiving a digi=
+tal
+>> signature from the private key generated?
+>>
+>> That's why I'm storing it in an accessible place, since it can't be used=
+ without the
+>> TPM2. I just wanted to confirm if my understanding of the specs were cor=
+rect.
+>>
+>>> I think the storage hierarchy is more appropriate, but again I may be m=
+issing
+>> something.
+>>>
+>>
+>> Can you please elaborate on why do you think the storage hierarchy
+>> (TPM_RH_OWNER) is more appropriate? That's why I asked the question,
+>> because reading the specs were not clear to me which one is meant to be =
+used
+>> for this use case.
+> =
+
+> I'm basing that on page 107 of, "A Practical guide to TPM 2.0". This seem=
+s to be non-sensitive
+> with respect to how they define privacy, so using the storage hierarchy s=
+eems reasonable to
+> me.
+>
+
+I see. I also read that chapter and thought the opposite, that it's more be=
+tter to use
+the endorsement hierarchy, because it addresses privacy (and so if the disk=
+ is stolen,
+it can't be tracked to a specific TPM). But maybe I'll misunderstood the in=
+formation in
+that chapter so I'll read it again.
+
+> This is all caveated with I am pretty new to TPM as well, so someone more=
+ knowledgeable may see
+> things differently.
+> =
+
+
+No worries, certainly have more experience than me so I really appreciate y=
+our feedback!
 
 Best regards,
+-- =
 
-Sebastien
-Please consider the environment before printing this email. This message sh=
-ould be regarded as confidential. If you have received this email in error =
-please notify the sender and destroy it immediately. Statements of intent s=
-hall only become binding when confirmed in hard copy by an authorised signa=
-tory. The contents of this email may relate to dealings with other companie=
-s under the control of BAE Systems Applied Intelligence Limited, details of=
- which can be found at http://www.baesystems.com/Businesses/index.htm.
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
 
---===============9180768399793076885==--
+--===============1486711356126503931==--
 
