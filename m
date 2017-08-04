@@ -1,71 +1,209 @@
-Content-Type: multipart/mixed; boundary="===============5014395031183929918=="
+Content-Type: multipart/mixed; boundary="===============3612567796302821855=="
 MIME-Version: 1.0
-From: =?utf-8?q?Kh=C3=A1nh_Nguy=E1=BB=85n_=3Ckhanhnt=2E56_at_gmail=2Ecom=3E?=
-Subject: [tpm2] How to use PolicyAuthorize for flexiable PCR policy?
-Date: Sat, 05 Aug 2017 01:31:53 +0700
-Message-ID: <CAMGQdGLUHXGwm406npDH9qNqPZHWGSuDoD-jS9=inHh2Tu0okA@mail.gmail.com>
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] 8bb6ae: Update Algorithm Defines
+Date: Fri, 04 Aug 2017 15:18:06 -0700
+Message-ID: <5984f29e288de_73473f9bff799c3c382c5@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5014395031183929918==
+--===============3612567796302821855==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
-I have read in A Practical Guide to TPM 2.0 book, there is a example about
-policy for flexible PCRs. Thay said use PolicyAuthorize in case use NVIndex
-hold full disk encryption key. I confused about how to use PolicyAuthorize,
-so I ask a man in github, he answer but I still not total clear.
-Can you list all step use of PolicyAuthorize or give me a example code?
-This is that I understand about use of PolicyAuthorize, can you correct me?
-- When define new NVIndex:
-    + Use TPM create sign key
-    + Create a trail session
-    + Call PolicyAuthorize with input is sign key
-    + Get policydigest and call NVDefineIndex with policydigest.
-- When use NVIndex (read or write):
-    + Create trail session, call PolicyPCR, call GetDigest to get a
-policydigest1
-    + Sign policydigest1 with sign key
-    + VerifySignature with input is sign key, signature, sign key and get a
-ticket
-    + Pass ticket, sign key name, policydigest1 to PolicyAuthorize, if all
-thing right, policy session->policydigest will change to policydigest
-    + Use that policydigest to use with NVIndex.
+  Branch: refs/heads/master
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: 8bb6ae16453e3a6fe2a96ef08fcb3242c76a4db2
+      https://github.com/01org/tpm2-tools/commit/8bb6ae16453e3a6fe2a96ef08f=
+cb3242c76a4db2
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-04 (Fri, 04 Aug 2017)
 
-Thank you!
+  Changed paths:
+    M lib/tpm2_alg_util.c
+    M lib/tpm2_alg_util.h
+    M lib/tpm_kdfa.c
+    M test/unit/test_tpm2_alg_util.c
 
---===============5014395031183929918==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+  Log Message:
+  -----------
+  Update Algorithm Defines
 
-PGRpdiBkaXI9Imx0ciI+SGkgYWxsLDxkaXY+SSBoYXZlIHJlYWQgaW4gQSBQcmFjdGljYWwgR3Vp
-ZGUgdG8gVFBNIDIuMCBib29rLCB0aGVyZSBpcyBhIGV4YW1wbGUgYWJvdXQgcG9saWN5IGZvciBm
-bGV4aWJsZSBQQ1JzLiBUaGF5IHNhaWQgdXNlIFBvbGljeUF1dGhvcml6ZSBpbiBjYXNlIHVzZSBO
-VkluZGV4IGhvbGQgZnVsbCBkaXNrIGVuY3J5cHRpb24ga2V5LiBJIGNvbmZ1c2VkIGFib3V0IGhv
-dyB0byB1c2UgUG9saWN5QXV0aG9yaXplLCBzbyBJIGFzayBhIG1hbiBpbiBnaXRodWIsIGhlIGFu
-c3dlciBidXQgSSBzdGlsbCBub3QgdG90YWwgY2xlYXIuPC9kaXY+PGRpdj5DYW4geW91IGxpc3Qg
-YWxsIHN0ZXAgdXNlIG9mIFBvbGljeUF1dGhvcml6ZSBvciBnaXZlIG1lIGEgZXhhbXBsZSBjb2Rl
-PzwvZGl2PjxkaXY+VGhpcyBpcyB0aGF0IEkgdW5kZXJzdGFuZCBhYm91dCB1c2Ugb2YgUG9saWN5
-QXV0aG9yaXplLCBjYW4geW91IGNvcnJlY3QgbWU/PC9kaXY+PGRpdj4tIFdoZW4gZGVmaW5lIG5l
-dyBOVkluZGV4OjwvZGl2PjxkaXY+wqAgwqAgKyBVc2UgVFBNIGNyZWF0ZSBzaWduIGtleTwvZGl2
-PjxkaXY+wqAgwqAgKyBDcmVhdGUgYSB0cmFpbCBzZXNzaW9uPC9kaXY+PGRpdj7CoCDCoCArIENh
-bGwgUG9saWN5QXV0aG9yaXplIHdpdGggaW5wdXQgaXMgc2lnbiBrZXk8L2Rpdj48ZGl2PsKgIMKg
-ICsgR2V0IHBvbGljeWRpZ2VzdCBhbmQgY2FsbCBOVkRlZmluZUluZGV4IHdpdGggcG9saWN5ZGln
-ZXN0LjwvZGl2PjxkaXY+LSBXaGVuIHVzZSBOVkluZGV4IChyZWFkIG9yIHdyaXRlKTo8L2Rpdj48
-ZGl2PsKgIMKgICsgQ3JlYXRlIHRyYWlsIHNlc3Npb24sIGNhbGwgUG9saWN5UENSLCBjYWxsIEdl
-dERpZ2VzdCB0byBnZXQgYSBwb2xpY3lkaWdlc3QxPC9kaXY+PGRpdj7CoCDCoCArIFNpZ24gcG9s
-aWN5ZGlnZXN0MSB3aXRoIHNpZ24ga2V5PC9kaXY+PGRpdj7CoCDCoCArIFZlcmlmeVNpZ25hdHVy
-ZSB3aXRoIGlucHV0IGlzIHNpZ24ga2V5LCBzaWduYXR1cmUsIHNpZ24ga2V5IGFuZCBnZXQgYSB0
-aWNrZXQ8L2Rpdj48ZGl2PsKgIMKgICsgUGFzcyB0aWNrZXQsIHNpZ24ga2V5IG5hbWUsIHBvbGlj
-eWRpZ2VzdDEgdG8gUG9saWN5QXV0aG9yaXplLCBpZiBhbGwgdGhpbmcgcmlnaHQsIHBvbGljeSBz
-ZXNzaW9uLSZndDtwb2xpY3lkaWdlc3Qgd2lsbCBjaGFuZ2UgdG8gcG9saWN5ZGlnZXN0PC9kaXY+
-PGRpdj7CoCDCoCArIFVzZSB0aGF0IHBvbGljeWRpZ2VzdCB0byB1c2Ugd2l0aCBOVkluZGV4Ljwv
-ZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhhbmsgeW91ITwvZGl2PjxkaXY+PGJyPjwvZGl2Pjwv
-ZGl2Pgo=
+Commit https://github.com/01org/tpm2-tss/commit/87feb17d81b8f3de31578347ec7=
+af7fc3a3d350f
+removes the macro magic between ALG and VALUE defines, so switch over to AL=
+G defines.
 
---===============5014395031183929918==--
+Update the tests to use the new defines.
+
+Drop duplicate defines on ALG_SHA3_256|512_VALUE (Bug #375)
+
+Fixes: #375
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: a7eb5b85ccb27d51a14eaf641548e20a40dbf020
+      https://github.com/01org/tpm2-tools/commit/a7eb5b85ccb27d51a14eaf6415=
+48e20a40dbf020
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-04 (Fri, 04 Aug 2017)
+
+  Changed paths:
+    M lib/tpm2_alg_util.c
+    M lib/tpm2_alg_util.h
+    M test/unit/test_tpm2_alg_util.c
+
+  Log Message:
+  -----------
+  tpm2_alg_util: add tpm2_alg_util_get_hash_size
+
+Add a routine for getting the hash size and add a test
+for it.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 2f932da6e46eabee89261cca5deecd37212415e4
+      https://github.com/01org/tpm2-tools/commit/2f932da6e46eabee89261cca5d=
+eecd37212415e4
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-04 (Fri, 04 Aug 2017)
+
+  Changed paths:
+    M lib/tpm2_policy.c
+    M lib/tpm_session.c
+    M lib/tpm_session.h
+    M tools/tpm2_activatecredential.c
+    M tools/tpm2_getpubak.c
+    M tools/tpm2_unseal.c
+
+  Log Message:
+  -----------
+  sessions: get rid of funky session handling code
+
+Session code was memory leaking, and the session list code
+was non-functioning. Remove the list code, and simplify.
+
+Update the tools that use these routines.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 03f5a85d10e5c3e1ac4f6874f4abcffa53efcb8d
+      https://github.com/01org/tpm2-tools/commit/03f5a85d10e5c3e1ac4f6874f4=
+abcffa53efcb8d
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-04 (Fri, 04 Aug 2017)
+
+  Changed paths:
+    M tools/tpm2_createpolicy.c
+
+  Log Message:
+  -----------
+  tpm2_createpolicy: simplify error logic
+
+No need for the goto, just bail on a failure.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 2b8bfc12d8dcff327ab87abad6f28f7d2a4f4bcd
+      https://github.com/01org/tpm2-tools/commit/2b8bfc12d8dcff327ab87abad6=
+f28f7d2a4f4bcd
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-04 (Fri, 04 Aug 2017)
+
+  Changed paths:
+    M test/system/test_tpm2_createpolicy.sh
+
+  Log Message:
+  -----------
+  test_tpm2_createpolicy.sh: make failures verbose
+
+Add the failed command and rc to the failure message.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 802052c032bc6ea3e11a51f556182388faaffd9a
+      https://github.com/01org/tpm2-tools/commit/802052c032bc6ea3e11a51f556=
+182388faaffd9a
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-04 (Fri, 04 Aug 2017)
+
+  Changed paths:
+    M .ci/travis-build-and-run-tests.sh
+    M test/system/test_all.sh
+
+  Log Message:
+  -----------
+  ci: Enable ASAN when building with clang
+
+Use CLANGs asan feature to find memory issues during the CI
+process.
+
+Clang ASAN info can be found at:
+https://clang.llvm.org/docs/AddressSanitizer.html
+
+Also, disable test:
+test_tpm2_getmanufec:
+
+When using ASAN. ASAN is reporting a leak in tpm2_getmanufec
+that cannot be suppressed with version 3.6 of clang. It is
+undiagnosed if it is a bug in tpm2_getmanufec, OpenSSL or
+a false positive.
+
+For now, skip the test, as checking everything else is more
+prident, and it gets functional tested under GCC builds.
+
+File a bug to come back and try to fix it better:
+https://github.com/01org/tpm2-tools/issues/390
+
+Fixes: #387
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 7d69113640401196b4e5c29168783fc1514b168b
+      https://github.com/01org/tpm2-tools/commit/7d69113640401196b4e5c29168=
+783fc1514b168b
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-04 (Fri, 04 Aug 2017)
+
+  Changed paths:
+    M lib/tpm2_nv_util.h
+
+  Log Message:
+  -----------
+  tpm2_nv_util: add space between preceeding function
+
+Add a space between the preceeding routine and the start
+of the doxygen comment block.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: b32a4bdd7f4461503eaf7f0076e573fefc779476
+      https://github.com/01org/tpm2-tools/commit/b32a4bdd7f4461503eaf7f0076=
+e573fefc779476
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-04 (Fri, 04 Aug 2017)
+
+  Changed paths:
+    M .ci/travis-build-and-run-tests.sh
+    M .travis.yml
+
+  Log Message:
+  -----------
+  travis: enable clang-3.8
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/1e013129cd88...b32a4bd=
+d7f44
+
+--===============3612567796302821855==--
 
