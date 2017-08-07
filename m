@@ -1,74 +1,121 @@
-Content-Type: multipart/mixed; boundary="===============8279512934997655153=="
+Content-Type: multipart/mixed; boundary="===============6669294378619056971=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] How to use PolicyAuthorize for flexiable PCR policy?
-Date: Mon, 07 Aug 2017 17:16:36 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563EAABF28@ORSMSX103.amr.corp.intel.com>
-In-Reply-To: CAMGQdGLUHXGwm406npDH9qNqPZHWGSuDoD-jS9=inHh2Tu0okA@mail.gmail.com
+Subject: Re: [tpm2] Question about eviction
+Date: Mon, 07 Aug 2017 17:42:45 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563EAABF6E@ORSMSX103.amr.corp.intel.com>
+In-Reply-To: CAJ-RDKd_PbzRez5DVk2QCiPqBKRi=Ek3zqffyDejVPmxipii8w@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8279512934997655153==
+--===============6669294378619056971==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Sorry for top posting, I need to configure my email client still.
+For the generation of unique, section 27.5.3.1 describes how it is done in =
+detail:
+https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-1-Arc=
+hitecture-01.38.pdf
+Since your key was RSA, unique is the public modules of the key.
 
-The problem with the tools right now, is that the policy sessions are getti=
-ng destroyed when the command exits
-when you use the resource manager. The resource manager always flushes the =
-TPM when a client exists.
+Decoding your error code:
+$ ./tools/tpm2_rc_decode 0x284
+error layer
+  hex: 0x0
+  identifier: TSS2_TPM_ERROR_LEVEL
+  description: Error produced by the TPM
+format 1 error code
+  hex: 0x04
+  identifier: TPM_RC_VALUE
+  description: value is out of range or is not correct for the context
+handle
+  hex:0x200
+  identifier:  TPM_RC_2
+  description:  (null)
 
-You have three choices at the moment:
-1. use /dev/tpm0 directly, which means no other clients can be using the TP=
-M at that time.
-2. Patch the tools to be able to set up simple pcr policy sessions, like tp=
-m2_unseal. This is currently issue https://github.com/01org/tpm2-tools/issu=
-es/348
-3. Use the experimental tpm_shell from my github repo: https://github.com/w=
-illiamcroberts/tpm2.0-tools/tree/tpm-shell
+I think points us to the problem. Based on page 118 of "A Practical Guide t=
+o TPM2.0",
+It states, "TPM2_FlushContext removes a key from the TPM.". The Resource Ma=
+nager (RM)
+is calling FLushContext and thus your just creating primary keys that are g=
+etting removed
+when the command exits.
 
-As far as your steps below:
-1. I don't see PolicyAuthorize on master branch, so I am not 100% sure what=
- tool your calling.
-2. I am assuming by call NVDefineIndex you mean tpm2_nvdefine?
-3. When use NVIndex (read or write)... Doesn't support PCR based policies a=
-s discussed above.
+You're options are 3 fold:
+1. use the -c option for saving the key that can be re-loaded from LoadCont=
+ext.
+    See test/system/test_tpm2_createprimary_all.sh
+2. Don't use an RM and use the --tcti=3Ddevice option. Note that no other c=
+lients can
+    Be using the TPM if you do this.
+3. Use the experimental tpm-shell branch: =
 
-Bill
+    https://github.com/williamcroberts/tpm2.0-tools/tree/tpm-shell
 
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Kh=C3=A1nh Ngu=
-y?n
-Sent: Friday, August 4, 2017 11:32 AM
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of yongkwan park
+Sent: Monday, August 7, 2017 12:23 AM
 To: tpm2(a)lists.01.org
-Subject: [tpm2] How to use PolicyAuthorize for flexiable PCR policy?
+Subject: [tpm2] Question about eviction
 
-Hi all,
-I have read in A Practical Guide to TPM 2.0 book, there is a example about =
-policy for flexible PCRs. Thay said use PolicyAuthorize in case use NVIndex=
- hold full disk encryption key. I confused about how to use PolicyAuthorize=
-, so I ask a man in github, he answer but I still not total clear.
-Can you list all step use of PolicyAuthorize or give me a example code?
-This is that I understand about use of PolicyAuthorize, can you correct me?
-- When define new NVIndex:
-=C2=A0 =C2=A0 + Use TPM create sign key
-=C2=A0 =C2=A0 + Create a trail session
-=C2=A0 =C2=A0 + Call PolicyAuthorize with input is sign key
-=C2=A0 =C2=A0 + Get policydigest and call NVDefineIndex with policydigest.
-- When use NVIndex (read or write):
-=C2=A0 =C2=A0 + Create trail session, call PolicyPCR, call GetDigest to get=
- a policydigest1
-=C2=A0 =C2=A0 + Sign policydigest1 with sign key
-=C2=A0 =C2=A0 + VerifySignature with input is sign key, signature, sign key=
- and get a ticket
-=C2=A0 =C2=A0 + Pass ticket, sign key name, policydigest1 to PolicyAuthoriz=
-e, if all thing right, policy session->policydigest will change to policydi=
-gest
-=C2=A0 =C2=A0 + Use that policydigest to use with NVIndex.
+Hi folks,
 
-Thank you!
+I want to make a primary key and evict it to make it persistent.
+But, failed.
+
+Here is what I did accroding to "How to use tpm2 tools",
+
+pi(a)raspberrypi:~/work/TPM2.0-TSS-1.1.0$ tpm2_createprimary -A o -K object=
+pass -g 0x000b -G 0x0001
+nameAlg =3D 0x000b
+type =3D 0x0001
+
+CreatePrimary Succeed ! Handle: 0x800000ff
+
+pi(a)raspberrypi:~/work/TPM2.0-TSS-1.1.0$ tpm2_createprimary -A o -K object=
+pass -g 0x000b -G 0x0001
+nameAlg =3D 0x000b
+type =3D 0x0001
+
+CreatePrimary Succeed ! Handle: 0x800000ff
+
+pi(a)raspberrypi:~/work/TPM2.0-TSS-1.1.0$ tpm2_evictcontrol -A o -H 0x80000=
+0ff -S 0x81000100 -P objectpass
+persistentHandle: 0x81000100
+ERROR: EvictControl failed, error code: 0x284
 
 
---===============8279512934997655153==--
+The following are questions.
+
+Q1. In tools/tpm2_createprimary.c,=C2=A0inPublic->t.publicArea.unique.rsa.t=
+.size is set to zero. It is written in the TPM2 spec part1, "The caller may=
+ also set the size of this field to zero and the TPM will replace it with a=
+ correctly sized structure." I think this means that unique field will be s=
+et with random values by TPM. Is it correct?=C2=A0
+
+tpm2_createprimary was executed twice in a row at the previous test. Those =
+two tests were successful seeing the messages. If those primary keys were g=
+enerated by random values (unique field is zero), result keys would be diff=
+erent. But, the handles of two keys(0x800000ff) are the same at the message=
+s. Can anyone explain the meaning?
+
+Q2. I tried to evict the primary key with tpm2_evictcontrol, but failed. Ca=
+n anyone tell what's wrong at the command?=C2=A0
+
+Thank you.
+
+
+-- =
+
+Yongkwan "Ethan" Park=C2=A0/ Principle Engineer
+------------------------------------------------------------------
+Security Platform,Inc.=C2=A0(http://www.securityplatform.co.kr=C2=A0)
+CONSEC #C-7, GCCEI Bldg.
+12 Daewangpangyo-ro 645beon-gil
+Bundang-gu, Seongnam-si, Gyeonggi-do,Korea=C2=A0
+T. 82-70-7613-0094
+M.=C2=A082-10-5156-8532=C2=A0 =C2=A0 E.=C2=A0yongkwan.park(a)securityplatfo=
+rm.co.kr
+
+--===============6669294378619056971==--
 
