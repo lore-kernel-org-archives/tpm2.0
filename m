@@ -1,120 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============5924518844965602857=="
+Content-Type: multipart/mixed; boundary="===============8279512934997655153=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] feedback on unlocking LUKS volumes using a TPM2
-Date: Mon, 07 Aug 2017 16:56:45 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563EAABF06@ORSMSX103.amr.corp.intel.com>
-In-Reply-To: 7c5a9e12-2d69-ee6a-b142-74b58dd8ede8@redhat.com
+Subject: Re: [tpm2] How to use PolicyAuthorize for flexiable PCR policy?
+Date: Mon, 07 Aug 2017 17:16:36 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563EAABF28@ORSMSX103.amr.corp.intel.com>
+In-Reply-To: CAMGQdGLUHXGwm406npDH9qNqPZHWGSuDoD-jS9=inHh2Tu0okA@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5924518844965602857==
+--===============8279512934997655153==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Sorry for top posting, I need to configure my email client still.
+
+The problem with the tools right now, is that the policy sessions are getti=
+ng destroyed when the command exits
+when you use the resource manager. The resource manager always flushes the =
+TPM when a client exists.
+
+You have three choices at the moment:
+1. use /dev/tpm0 directly, which means no other clients can be using the TP=
+M at that time.
+2. Patch the tools to be able to set up simple pcr policy sessions, like tp=
+m2_unseal. This is currently issue https://github.com/01org/tpm2-tools/issu=
+es/348
+3. Use the experimental tpm_shell from my github repo: https://github.com/w=
+illiamcroberts/tpm2.0-tools/tree/tpm-shell
+
+As far as your steps below:
+1. I don't see PolicyAuthorize on master branch, so I am not 100% sure what=
+ tool your calling.
+2. I am assuming by call NVDefineIndex you mean tpm2_nvdefine?
+3. When use NVIndex (read or write)... Doesn't support PCR based policies a=
+s discussed above.
+
+Bill
+
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Kh=C3=A1nh Ngu=
+y?n
+Sent: Friday, August 4, 2017 11:32 AM
+To: tpm2(a)lists.01.org
+Subject: [tpm2] How to use PolicyAuthorize for flexiable PCR policy?
+
+Hi all,
+I have read in A Practical Guide to TPM 2.0 book, there is a example about =
+policy for flexible PCRs. Thay said use PolicyAuthorize in case use NVIndex=
+ hold full disk encryption key. I confused about how to use PolicyAuthorize=
+, so I ask a man in github, he answer but I still not total clear.
+Can you list all step use of PolicyAuthorize or give me a example code?
+This is that I understand about use of PolicyAuthorize, can you correct me?
+- When define new NVIndex:
+=C2=A0 =C2=A0 + Use TPM create sign key
+=C2=A0 =C2=A0 + Create a trail session
+=C2=A0 =C2=A0 + Call PolicyAuthorize with input is sign key
+=C2=A0 =C2=A0 + Get policydigest and call NVDefineIndex with policydigest.
+- When use NVIndex (read or write):
+=C2=A0 =C2=A0 + Create trail session, call PolicyPCR, call GetDigest to get=
+ a policydigest1
+=C2=A0 =C2=A0 + Sign policydigest1 with sign key
+=C2=A0 =C2=A0 + VerifySignature with input is sign key, signature, sign key=
+ and get a ticket
+=C2=A0 =C2=A0 + Pass ticket, sign key name, policydigest1 to PolicyAuthoriz=
+e, if all thing right, policy session->policydigest will change to policydi=
+gest
+=C2=A0 =C2=A0 + Use that policydigest to use with NVIndex.
+
+Thank you!
 
 
-> -----Original Message-----
-> From: Javier Martinez Canillas [mailto:javierm(a)redhat.com]
-> Sent: Thursday, August 3, 2017 5:25 AM
-> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.o=
-rg
-> Subject: Re: [tpm2] feedback on unlocking LUKS volumes using a TPM2
-> =
-
-> Hello Bill,
-> =
-
-> On 08/02/2017 08:00 PM, Roberts, William C wrote:
-> =
-
-> [snip]
-> =
-
-> >>>
-> >>
-> >> Yes, maybe I'm failing in the terminology. My understanding is that
-> >> the TPM2 on
-> >> TPM2_Create() creates a key pair, seals the passed data using this
-> >> key, wraps the key using the parent key and finally returns that wrapp=
-ed key
-> pair to caller.
-> >>
-> >> Since the key pair is needed to be loaded for unsealing, I need to
-> >> store it in a place so they can latter be used for unsealing.
-> >
-> > In theory you can store that anywhere, the easier it is to get to the
-> > more prevalent someone can hose all of your data. The LUKS partition
-> > metadata seems reasonable, if they can delete that, they could hose
-> > your hard drive data anyways. A permeant entity in the TPM is also an o=
-ption.
-> >
-> =
-
-> Exactly, that's what my reasoning as well. Good that you confirm my
-> understanding and we are in the same page then.
-> =
-
-> >>
-> >>>  and using the
-> >>>> endorsement hierarchy by default.
-> >>>
-> >>> I don't see the privacy concerns offhand, as no one is receiving a
-> >>> digital
-> >> signature from the private key generated?
-> >>
-> >> That's why I'm storing it in an accessible place, since it can't be
-> >> used without the TPM2. I just wanted to confirm if my understanding of=
- the
-> specs were correct.
-> >>
-> >>> I think the storage hierarchy is more appropriate, but again I may
-> >>> be missing
-> >> something.
-> >>>
-> >>
-> >> Can you please elaborate on why do you think the storage hierarchy
-> >> (TPM_RH_OWNER) is more appropriate? That's why I asked the question,
-> >> because reading the specs were not clear to me which one is meant to
-> >> be used for this use case.
-> >
-> > I'm basing that on page 107 of, "A Practical guide to TPM 2.0". This
-> > seems to be non-sensitive with respect to how they define privacy, so
-> > using the storage hierarchy seems reasonable to me.
-> >
-> =
-
-> I see. I also read that chapter and thought the opposite, that it's more =
-better to
-> use the endorsement hierarchy, because it addresses privacy (and so if th=
-e disk is
-> stolen, it can't be tracked to a specific TPM). But maybe I'll misunderst=
-ood the
-> information in that chapter so I'll read it again.
-
-That scenario never really crossed my mind. I guess in theory it would be p=
-ossible to trace it,
-But if you stole the hard-drive, you likely already know what machine it ca=
-me out of. Unless
-It was just some random out of the machine already.
-
-> =
-
-> > This is all caveated with I am pretty new to TPM as well, so someone
-> > more knowledgeable may see things differently.
-> >
-> =
-
-> No worries, certainly have more experience than me so I really appreciate=
- your
-> feedback!
-> =
-
-> Best regards,
-> --
-> Javier Martinez Canillas
-> Software Engineer - Desktop Hardware Enablement Red Hat
-
---===============5924518844965602857==--
+--===============8279512934997655153==--
 
