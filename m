@@ -1,96 +1,312 @@
-Content-Type: multipart/mixed; boundary="===============6622931479842897479=="
+Content-Type: multipart/mixed; boundary="===============7496184181975048316=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] How to use PolicyAuthorize for flexiable PCR policy?
-Date: Tue, 08 Aug 2017 01:34:55 +0200
-Message-ID: <240151b1-8a09-7b97-a296-6874ba9decae@redhat.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563EAABF28@ORSMSX103.amr.corp.intel.com
+From: yongkwan park <yongkwan.park at securityplatform.co.kr>
+Subject: Re: [tpm2] Question about eviction
+Date: Tue, 08 Aug 2017 16:10:35 +0900
+Message-ID: <CAJ-RDKe6=LqjGmGGNYqH-KhL6H-cBinGpo__Nc8auHWd_pATpg@mail.gmail.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563EAABF6E@ORSMSX103.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6622931479842897479==
+--===============7496184181975048316==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Kh=C3=A1nh,
+Hi William,
 
-On 08/07/2017 07:16 PM, Roberts, William C wrote:> Sorry for top posting, I=
- need to configure my email client still.
-> =
+I tested based on your instruction and got the following result.
 
-> The problem with the tools right now, is that the policy sessions are get=
-ting destroyed when the command exits
-> when you use the resource manager. The resource manager always flushes th=
-e TPM when a client exists.
-> =
+pi(a)raspberrypi:~/tmp$ tpm2_createprimary -A o -K objectpass -g 0x000b -G
+0x0001 -C po.ctx
+nameAlg =3D 0x000b
+type =3D 0x0001
+contextFile =3D po.ctx
 
-> You have three choices at the moment:
-> 1. use /dev/tpm0 directly, which means no other clients can be using the =
-TPM at that time.
-> 2. Patch the tools to be able to set up simple pcr policy sessions, like =
-tpm2_unseal. This is currently issue https://github.com/01org/tpm2-tools/is=
-sues/348
+CreatePrimary Succeed ! Handle: 0x800000ff
 
-To elaborate on Bill's comment, you can take a look to the following issue =
-that
-mentioned the same problem on the tpm2_unseal tool and has references to the
-commits used to add support for authentication using a PCR policy session:
+pi(a)raspberrypi:~/tmp$ tpm2_evictcontrol -c po.ctx -A o -H 0x800000ff -S
+0x81000100 -P objectpass
+persistentHandle: 0x81000100
+ERROR: EvictControl failed, error code: 0x9a2
 
-https://github.com/01org/tpm2-tools/issues/313
-https://github.com/01org/tpm2-tools/pull/354
-https://github.com/01org/tpm2-tools/pull/365
+pi(a)raspberrypi:~/tmp$ tpm2_rc_decode 0x9a2
+error layer
+  hex: 0x0
+  identifier: TSS2_TPM_ERROR_LEVEL
+  description: Error produced by the TPM
+format 1 error code
+  hex: 0x22
+  identifier: TPM_RC_BAD_AUTH
+  description: authorization failure without DA implications
+session
+  hex: 0x100
+  identifier: TPM_RC_1
+  description:  (null)
 
-If you decide to go (2), then you need to implement something similar to th=
-ese
-patches for the tpm2_nv* tools. I have on my TODO list to implement this bu=
-t I
-have been busy with other stuff.
+The result is the same even if --tcti=3Ddevice is used.
+It seems that the output messages says the password is wrong.
+But, I see that the used passwords at tpm2_createprimary and
+tpm2_evictcontrol are same.
+Could you tell what's wrong?
 
-> 3. Use the experimental tpm_shell from my github repo: https://github.com=
-/williamcroberts/tpm2.0-tools/tree/tpm-shell
-> =
+Thank you,
 
-> As far as your steps below:
-> 1. I don't see PolicyAuthorize on master branch, so I am not 100% sure wh=
-at tool your calling.
-> 2. I am assuming by call NVDefineIndex you mean tpm2_nvdefine?
-> 3. When use NVIndex (read or write)... Doesn't support PCR based policies=
- as discussed above.
-> =
 
-> Bill
-> =
+2017-08-08 2:42 GMT+09:00 Roberts, William C <william.c.roberts(a)intel.com=
+>:
 
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Kh=C3=A1nh N=
-guy?n
-> Sent: Friday, August 4, 2017 11:32 AM
+> For the generation of unique, section 27.5.3.1 describes how it is done in
+> detail:
+> https://trustedcomputinggroup.org/wp-content/uploads/TPM-
+> Rev-2.0-Part-1-Architecture-01.38.pdf
+> Since your key was RSA, unique is the public modules of the key.
+>
+> Decoding your error code:
+> $ ./tools/tpm2_rc_decode 0x284
+> error layer
+>   hex: 0x0
+>   identifier: TSS2_TPM_ERROR_LEVEL
+>   description: Error produced by the TPM
+> format 1 error code
+>   hex: 0x04
+>   identifier: TPM_RC_VALUE
+>   description: value is out of range or is not correct for the context
+> handle
+>   hex:0x200
+>   identifier:  TPM_RC_2
+>   description:  (null)
+>
+> I think points us to the problem. Based on page 118 of "A Practical Guide
+> to TPM2.0",
+> It states, "TPM2_FlushContext removes a key from the TPM.". The Resource
+> Manager (RM)
+> is calling FLushContext and thus your just creating primary keys that are
+> getting removed
+> when the command exits.
+>
+> You're options are 3 fold:
+> 1. use the -c option for saving the key that can be re-loaded from
+> LoadContext.
+>     See test/system/test_tpm2_createprimary_all.sh
+> 2. Don't use an RM and use the --tcti=3Ddevice option. Note that no other
+> clients can
+>     Be using the TPM if you do this.
+> 3. Use the experimental tpm-shell branch:
+>     https://github.com/williamcroberts/tpm2.0-tools/tree/tpm-shell
+>
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of yongkwan park
+> Sent: Monday, August 7, 2017 12:23 AM
 > To: tpm2(a)lists.01.org
-> Subject: [tpm2] How to use PolicyAuthorize for flexiable PCR policy?
-> =
+> Subject: [tpm2] Question about eviction
+>
+> Hi folks,
+>
+> I want to make a primary key and evict it to make it persistent.
+> But, failed.
+>
+> Here is what I did accroding to "How to use tpm2 tools",
+>
+> pi(a)raspberrypi:~/work/TPM2.0-TSS-1.1.0$ tpm2_createprimary -A o -K
+> objectpass -g 0x000b -G 0x0001
+> nameAlg =3D 0x000b
+> type =3D 0x0001
+>
+> CreatePrimary Succeed ! Handle: 0x800000ff
+>
+> pi(a)raspberrypi:~/work/TPM2.0-TSS-1.1.0$ tpm2_createprimary -A o -K
+> objectpass -g 0x000b -G 0x0001
+> nameAlg =3D 0x000b
+> type =3D 0x0001
+>
+> CreatePrimary Succeed ! Handle: 0x800000ff
+>
+> pi(a)raspberrypi:~/work/TPM2.0-TSS-1.1.0$ tpm2_evictcontrol -A o -H
+> 0x800000ff -S 0x81000100 -P objectpass
+> persistentHandle: 0x81000100
+> ERROR: EvictControl failed, error code: 0x284
+>
+>
+> The following are questions.
+>
+> Q1. In tools/tpm2_createprimary.c, inPublic->t.publicArea.unique.rsa.t.si=
+ze
+> is set to zero. It is written in the TPM2 spec part1, "The caller may also
+> set the size of this field to zero and the TPM will replace it with a
+> correctly sized structure." I think this means that unique field will be
+> set with random values by TPM. Is it correct?
+>
+> tpm2_createprimary was executed twice in a row at the previous test. Those
+> two tests were successful seeing the messages. If those primary keys were
+> generated by random values (unique field is zero), result keys would be
+> different. But, the handles of two keys(0x800000ff) are the same at the
+> messages. Can anyone explain the meaning?
+>
+> Q2. I tried to evict the primary key with tpm2_evictcontrol, but failed.
+> Can anyone tell what's wrong at the command?
+>
+> Thank you.
+>
+>
+> --
+> Yongkwan "Ethan" Park / Principle Engineer
+> ------------------------------------------------------------------
+> Security Platform,Inc. (http://www.securityplatform.co.kr )
+> CONSEC #C-7, GCCEI Bldg.
+> 12 Daewangpangyo-ro 645beon-gil
+> Bundang-gu, Seongnam-si, Gyeonggi-do,Korea
+> T. 82-70-7613-0094
+> M. 82-10-5156-8532    E. yongkwan.park(a)securityplatform.co.kr
+>
 
-> Hi all,
-> I have read in A Practical Guide to TPM 2.0 book, there is a example abou=
-t policy for flexible PCRs. Thay said use PolicyAuthorize in case use NVInd=
-ex hold full disk encryption key. I confused about how to use PolicyAuthori=
-ze, so I ask a man in github, he answer but I still not total clear.
 
-Can you link to the discussion that happened on Github to have more context?
 
-Also, what's your use case? IIUC you want to store a full disk encryption k=
-ey
-in a NV area, is that correct? If that's the case, then can you see if what=
-'s
-described in this thread is something that can work for you:
-
-https://lists.01.org/pipermail/tpm2/2017-July/000015.html
-
-Best regards,
 -- =
 
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
+Yongkwan "Ethan" Park / Principle Engineer
+------------------------------------------------------------------
+*Security Platform,Inc.* (http://www.securityplatform.co.kr )
+CONSEC #C-7, GCCEI Bldg.
+12 Daewangpangyo-ro 645beon-gil
+Bundang-gu, Seongnam-si, Gyeonggi-do,Korea
+T. 82-70-7613-0094
+M. 82-10-5156-8532    E. yongkwan.park(a)securityplatform.co.kr
 
---===============6622931479842897479==--
+--===============7496184181975048316==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+SGkgV2lsbGlhbSw8ZGl2Pjxicj48L2Rpdj48ZGl2PkkgdGVzdGVkIGJh
+c2VkIG9uIHlvdXIgaW5zdHJ1Y3Rpb24gYW5kIGdvdCB0aGUgZm9sbG93aW5nIHJlc3VsdC48L2Rp
+dj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxkaXY+cGlAcmFzcGJlcnJ5cGk6fi90bXAkIHRwbTJfY3Jl
+YXRlcHJpbWFyeSAtQSBvIC1LIG9iamVjdHBhc3MgLWcgMHgwMDBiIC1HIDB4MDAwMSAtQyBwby5j
+dHjCoDwvZGl2PjxkaXY+bmFtZUFsZyA9IDB4MDAwYjwvZGl2PjxkaXY+dHlwZSA9IDB4MDAwMTwv
+ZGl2PjxkaXY+Y29udGV4dEZpbGUgPSBwby5jdHg8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkNy
+ZWF0ZVByaW1hcnkgU3VjY2VlZCAhIEhhbmRsZTogMHg4MDAwMDBmZjwvZGl2PjxkaXY+PGJyPjwv
+ZGl2PjxkaXY+cGlAcmFzcGJlcnJ5cGk6fi90bXAkIHRwbTJfZXZpY3Rjb250cm9sIC1jIHBvLmN0
+eCAtQSBvIC1IIDB4ODAwMDAwZmYgLVMgMHg4MTAwMDEwMCAtUCBvYmplY3RwYXNzPC9kaXY+PGRp
+dj5wZXJzaXN0ZW50SGFuZGxlOiAweDgxMDAwMTAwPC9kaXY+PGRpdj5FUlJPUjogRXZpY3RDb250
+cm9sIGZhaWxlZCwgZXJyb3IgY29kZTogMHg5YTI8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PnBp
+QHJhc3BiZXJyeXBpOn4vdG1wJCB0cG0yX3JjX2RlY29kZSAweDlhMjwvZGl2PjxkaXY+ZXJyb3Ig
+bGF5ZXI8L2Rpdj48ZGl2PsKgIGhleDogMHgwPC9kaXY+PGRpdj7CoCBpZGVudGlmaWVyOiBUU1My
+X1RQTV9FUlJPUl9MRVZFTDwvZGl2PjxkaXY+wqAgZGVzY3JpcHRpb246IEVycm9yIHByb2R1Y2Vk
+IGJ5IHRoZSBUUE08L2Rpdj48ZGl2PmZvcm1hdCAxIGVycm9yIGNvZGU8L2Rpdj48ZGl2PsKgIGhl
+eDogMHgyMjwvZGl2PjxkaXY+wqAgaWRlbnRpZmllcjogVFBNX1JDX0JBRF9BVVRIPC9kaXY+PGRp
+dj7CoCBkZXNjcmlwdGlvbjogYXV0aG9yaXphdGlvbiBmYWlsdXJlIHdpdGhvdXQgREEgaW1wbGlj
+YXRpb25zPC9kaXY+PGRpdj5zZXNzaW9uPC9kaXY+PGRpdj7CoCBoZXg6IDB4MTAwPC9kaXY+PGRp
+dj7CoCBpZGVudGlmaWVyOiBUUE1fUkNfMTwvZGl2PjxkaXY+wqAgZGVzY3JpcHRpb246IMKgKG51
+bGwpPC9kaXY+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGUgcmVzdWx0IGlzIHRoZSBzYW1l
+IGV2ZW4gaWYgLS10Y3RpPWRldmljZSBpcyB1c2VkLjwvZGl2PjxkaXY+SXQgc2VlbXMgdGhhdCB0
+aGUgb3V0cHV0IG1lc3NhZ2VzIHNheXMgdGhlIHBhc3N3b3JkIGlzIHdyb25nLjwvZGl2PjxkaXY+
+QnV0LCBJIHNlZSB0aGF0IHRoZSB1c2VkIHBhc3N3b3JkcyBhdCB0cG0yX2NyZWF0ZXByaW1hcnkg
+YW5kIHRwbTJfZXZpY3Rjb250cm9sIGFyZSBzYW1lLjwvZGl2PjxkaXY+Q291bGQgeW91IHRlbGwg
+d2hhdCYjMzk7cyB3cm9uZz88L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRoYW5rIHlvdSw8L2Rp
+dj48ZGl2Pjxicj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9leHRyYSI+PGJyPjxkaXYg
+Y2xhc3M9ImdtYWlsX3F1b3RlIj4yMDE3LTA4LTA4IDI6NDIgR01UKzA5OjAwIFJvYmVydHMsIFdp
+bGxpYW0gQyA8c3BhbiBkaXI9Imx0ciI+Jmx0OzxhIGhyZWY9Im1haWx0bzp3aWxsaWFtLmMucm9i
+ZXJ0c0BpbnRlbC5jb20iIHRhcmdldD0iX2JsYW5rIj53aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5j
+b208L2E+Jmd0Ozwvc3Bhbj46PGJyPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5
+bGU9Im1hcmdpbjowIDAgMCAuOGV4O2JvcmRlci1sZWZ0OjFweCAjY2NjIHNvbGlkO3BhZGRpbmct
+bGVmdDoxZXgiPkZvciB0aGUgZ2VuZXJhdGlvbiBvZiB1bmlxdWUsIHNlY3Rpb24gMjcuNS4zLjEg
+ZGVzY3JpYmVzIGhvdyBpdCBpcyBkb25lIGluIGRldGFpbDo8YnI+CjxhIGhyZWY9Imh0dHBzOi8v
+dHJ1c3RlZGNvbXB1dGluZ2dyb3VwLm9yZy93cC1jb250ZW50L3VwbG9hZHMvVFBNLVJldi0yLjAt
+UGFydC0xLUFyY2hpdGVjdHVyZS0wMS4zOC5wZGYiIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJf
+YmxhbmsiPmh0dHBzOi8vdHJ1c3RlZGNvbXB1dGluZ2dyb3VwLjx3YnI+b3JnL3dwLWNvbnRlbnQv
+dXBsb2Fkcy9UUE0tPHdicj5SZXYtMi4wLVBhcnQtMS1BcmNoaXRlY3R1cmUtPHdicj4wMS4zOC5w
+ZGY8L2E+PGJyPgpTaW5jZSB5b3VyIGtleSB3YXMgUlNBLCB1bmlxdWUgaXMgdGhlIHB1YmxpYyBt
+b2R1bGVzIG9mIHRoZSBrZXkuPGJyPgo8YnI+CkRlY29kaW5nIHlvdXIgZXJyb3IgY29kZTo8YnI+
+CiQgLi90b29scy90cG0yX3JjX2RlY29kZSAweDI4NDxicj4KZXJyb3IgbGF5ZXI8YnI+CsKgIGhl
+eDogMHgwPGJyPgrCoCBpZGVudGlmaWVyOiBUU1MyX1RQTV9FUlJPUl9MRVZFTDxicj4KwqAgZGVz
+Y3JpcHRpb246IEVycm9yIHByb2R1Y2VkIGJ5IHRoZSBUUE08YnI+CmZvcm1hdCAxIGVycm9yIGNv
+ZGU8YnI+CsKgIGhleDogMHgwNDxicj4KwqAgaWRlbnRpZmllcjogVFBNX1JDX1ZBTFVFPGJyPgrC
+oCBkZXNjcmlwdGlvbjogdmFsdWUgaXMgb3V0IG9mIHJhbmdlIG9yIGlzIG5vdCBjb3JyZWN0IGZv
+ciB0aGUgY29udGV4dDxicj4KaGFuZGxlPGJyPgrCoCBoZXg6MHgyMDA8YnI+CsKgIGlkZW50aWZp
+ZXI6wqAgVFBNX1JDXzI8YnI+CsKgIGRlc2NyaXB0aW9uOsKgIChudWxsKTxicj4KPGJyPgpJIHRo
+aW5rIHBvaW50cyB1cyB0byB0aGUgcHJvYmxlbS4gQmFzZWQgb24gcGFnZSAxMTggb2YgJnF1b3Q7
+QSBQcmFjdGljYWwgR3VpZGUgdG8gVFBNMi4wJnF1b3Q7LDxicj4KSXQgc3RhdGVzLCAmcXVvdDtU
+UE0yX0ZsdXNoQ29udGV4dCByZW1vdmVzIGEga2V5IGZyb20gdGhlIFRQTS4mcXVvdDsuIFRoZSBS
+ZXNvdXJjZSBNYW5hZ2VyIChSTSk8YnI+CmlzIGNhbGxpbmcgRkx1c2hDb250ZXh0IGFuZCB0aHVz
+IHlvdXIganVzdCBjcmVhdGluZyBwcmltYXJ5IGtleXMgdGhhdCBhcmUgZ2V0dGluZyByZW1vdmVk
+PGJyPgp3aGVuIHRoZSBjb21tYW5kIGV4aXRzLjxicj4KPGJyPgpZb3UmIzM5O3JlIG9wdGlvbnMg
+YXJlIDMgZm9sZDo8YnI+CjEuIHVzZSB0aGUgLWMgb3B0aW9uIGZvciBzYXZpbmcgdGhlIGtleSB0
+aGF0IGNhbiBiZSByZS1sb2FkZWQgZnJvbSBMb2FkQ29udGV4dC48YnI+CsKgIMKgIFNlZSB0ZXN0
+L3N5c3RlbS90ZXN0X3RwbTJfPHdicj5jcmVhdGVwcmltYXJ5X2FsbC5zaDxicj4KMi4gRG9uJiMz
+OTt0IHVzZSBhbiBSTSBhbmQgdXNlIHRoZSAtLXRjdGk9ZGV2aWNlIG9wdGlvbi4gTm90ZSB0aGF0
+IG5vIG90aGVyIGNsaWVudHMgY2FuPGJyPgrCoCDCoCBCZSB1c2luZyB0aGUgVFBNIGlmIHlvdSBk
+byB0aGlzLjxicj4KMy4gVXNlIHRoZSBleHBlcmltZW50YWwgdHBtLXNoZWxsIGJyYW5jaDo8YnI+
+CsKgIMKgIDxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS93aWxsaWFtY3JvYmVydHMvdHBtMi4w
+LXRvb2xzL3RyZWUvdHBtLXNoZWxsIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5o
+dHRwczovL2dpdGh1Yi5jb20vPHdicj53aWxsaWFtY3JvYmVydHMvdHBtMi4wLXRvb2xzLzx3YnI+
+dHJlZS90cG0tc2hlbGw8L2E+PGJyPgo8YnI+CkZyb206IHRwbTIgW21haWx0bzo8YSBocmVmPSJt
+YWlsdG86dHBtMi1ib3VuY2VzQGxpc3RzLjAxLm9yZyI+dHBtMi1ib3VuY2VzQGxpc3RzLjAxLjx3
+YnI+b3JnPC9hPl0gT24gQmVoYWxmIE9mIHlvbmdrd2FuIHBhcms8YnI+ClNlbnQ6IE1vbmRheSwg
+QXVndXN0IDcsIDIwMTcgMTI6MjMgQU08YnI+ClRvOiA8YSBocmVmPSJtYWlsdG86dHBtMkBsaXN0
+cy4wMS5vcmciPnRwbTJAbGlzdHMuMDEub3JnPC9hPjxicj4KU3ViamVjdDogW3RwbTJdIFF1ZXN0
+aW9uIGFib3V0IGV2aWN0aW9uPGJyPgo8ZGl2IGNsYXNzPSJIT0VuWmIiPjxkaXYgY2xhc3M9Img1
+Ij48YnI+CkhpIGZvbGtzLDxicj4KPGJyPgpJIHdhbnQgdG8gbWFrZSBhIHByaW1hcnkga2V5IGFu
+ZCBldmljdCBpdCB0byBtYWtlIGl0IHBlcnNpc3RlbnQuPGJyPgpCdXQsIGZhaWxlZC48YnI+Cjxi
+cj4KSGVyZSBpcyB3aGF0IEkgZGlkIGFjY3JvZGluZyB0byAmcXVvdDtIb3cgdG8gdXNlIHRwbTIg
+dG9vbHMmcXVvdDssPGJyPgo8YnI+CnBpQHJhc3BiZXJyeXBpOn4vd29yay9UUE0yLjAtPHdicj5U
+U1MtMS4xLjAkIHRwbTJfY3JlYXRlcHJpbWFyeSAtQSBvIC1LIG9iamVjdHBhc3MgLWcgMHgwMDBi
+IC1HIDB4MDAwMTxicj4KbmFtZUFsZyA9IDB4MDAwYjxicj4KdHlwZSA9IDB4MDAwMTxicj4KPGJy
+PgpDcmVhdGVQcmltYXJ5IFN1Y2NlZWQgISBIYW5kbGU6IDB4ODAwMDAwZmY8YnI+Cjxicj4KcGlA
+cmFzcGJlcnJ5cGk6fi93b3JrL1RQTTIuMC08d2JyPlRTUy0xLjEuMCQgdHBtMl9jcmVhdGVwcmlt
+YXJ5IC1BIG8gLUsgb2JqZWN0cGFzcyAtZyAweDAwMGIgLUcgMHgwMDAxPGJyPgpuYW1lQWxnID0g
+MHgwMDBiPGJyPgp0eXBlID0gMHgwMDAxPGJyPgo8YnI+CkNyZWF0ZVByaW1hcnkgU3VjY2VlZCAh
+IEhhbmRsZTogMHg4MDAwMDBmZjxicj4KPGJyPgpwaUByYXNwYmVycnlwaTp+L3dvcmsvVFBNMi4w
+LTx3YnI+VFNTLTEuMS4wJCB0cG0yX2V2aWN0Y29udHJvbCAtQSBvIC1IIDB4ODAwMDAwZmYgLVMg
+MHg4MTAwMDEwMCAtUCBvYmplY3RwYXNzPGJyPgpwZXJzaXN0ZW50SGFuZGxlOiAweDgxMDAwMTAw
+PGJyPgpFUlJPUjogRXZpY3RDb250cm9sIGZhaWxlZCwgZXJyb3IgY29kZTogMHgyODQ8YnI+Cjxi
+cj4KPGJyPgpUaGUgZm9sbG93aW5nIGFyZSBxdWVzdGlvbnMuPGJyPgo8YnI+ClExLiBJbiB0b29s
+cy90cG0yX2NyZWF0ZXByaW1hcnkuYyzCoDx3YnI+aW5QdWJsaWMtJmd0O3QucHVibGljQXJlYS51
+bmlxdWUuPHdicj5yc2EudC5zaXplIGlzIHNldCB0byB6ZXJvLiBJdCBpcyB3cml0dGVuIGluIHRo
+ZSBUUE0yIHNwZWMgcGFydDEsICZxdW90O1RoZSBjYWxsZXIgbWF5IGFsc28gc2V0IHRoZSBzaXpl
+IG9mIHRoaXMgZmllbGQgdG8gemVybyBhbmQgdGhlIFRQTSB3aWxsIHJlcGxhY2UgaXQgd2l0aCBh
+IGNvcnJlY3RseSBzaXplZCBzdHJ1Y3R1cmUuJnF1b3Q7IEkgdGhpbmsgdGhpcyBtZWFucyB0aGF0
+IHVuaXF1ZSBmaWVsZCB3aWxsIGJlIHNldCB3aXRoIHJhbmRvbSB2YWx1ZXMgYnkgVFBNLiBJcyBp
+dCBjb3JyZWN0P8KgPGJyPgo8YnI+CnRwbTJfY3JlYXRlcHJpbWFyeSB3YXMgZXhlY3V0ZWQgdHdp
+Y2UgaW4gYSByb3cgYXQgdGhlIHByZXZpb3VzIHRlc3QuIFRob3NlIHR3byB0ZXN0cyB3ZXJlIHN1
+Y2Nlc3NmdWwgc2VlaW5nIHRoZSBtZXNzYWdlcy4gSWYgdGhvc2UgcHJpbWFyeSBrZXlzIHdlcmUg
+Z2VuZXJhdGVkIGJ5IHJhbmRvbSB2YWx1ZXMgKHVuaXF1ZSBmaWVsZCBpcyB6ZXJvKSwgcmVzdWx0
+IGtleXMgd291bGQgYmUgZGlmZmVyZW50LiBCdXQsIHRoZSBoYW5kbGVzIG9mIHR3byBrZXlzKDB4
+ODAwMDAwZmYpIGFyZSB0aGUgc2FtZSBhdCB0aGUgbWVzc2FnZXMuIENhbiBhbnlvbmUgZXhwbGFp
+biB0aGUgbWVhbmluZz88YnI+Cjxicj4KUTIuIEkgdHJpZWQgdG8gZXZpY3QgdGhlIHByaW1hcnkg
+a2V5IHdpdGggdHBtMl9ldmljdGNvbnRyb2wsIGJ1dCBmYWlsZWQuIENhbiBhbnlvbmUgdGVsbCB3
+aGF0JiMzOTtzIHdyb25nIGF0IHRoZSBjb21tYW5kP8KgPGJyPgo8YnI+ClRoYW5rIHlvdS48YnI+
+Cjxicj4KPGJyPgotLTxicj4KWW9uZ2t3YW4gJnF1b3Q7RXRoYW4mcXVvdDsgUGFya8KgLyBQcmlu
+Y2lwbGUgRW5naW5lZXI8YnI+Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLTx3YnI+LS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPHdicj4tLS0tLS08YnI+ClNlY3VyaXR5IFBsYXRm
+b3JtLEluYy7CoCg8YSBocmVmPSJodHRwOi8vd3d3LnNlY3VyaXR5cGxhdGZvcm0uY28ua3IiIHJl
+bD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPmh0dHA6Ly93d3cuPHdicj5zZWN1cml0eXBs
+YXRmb3JtLmNvLmtyPC9hPsKgKTxicj4KQ09OU0VDICNDLTcsIEdDQ0VJIEJsZGcuPGJyPgoxMiBE
+YWV3YW5ncGFuZ3lvLXJvIDY0NWJlb24tZ2lsPGJyPgpCdW5kYW5nLWd1LCBTZW9uZ25hbS1zaSwg
+R3llb25nZ2ktZG8sS29yZWHCoDxicj4KVC4gODItNzAtNzYxMy0wMDk0PGJyPgpNLsKgODItMTAt
+NTE1Ni04NTMywqAgwqAgRS7CoDxhIGhyZWY9Im1haWx0bzp5b25na3dhbi5wYXJrQHNlY3VyaXR5
+cGxhdGZvcm0uY28ua3IiPnlvbmdrd2FuLnBhcmtAPHdicj5zZWN1cml0eXBsYXRmb3JtLmNvLmty
+PC9hPjxicj4KPC9kaXY+PC9kaXY+PC9ibG9ja3F1b3RlPjwvZGl2Pjxicj48YnIgY2xlYXI9ImFs
+bCI+PGRpdj48YnI+PC9kaXY+LS0gPGJyPjxkaXYgY2xhc3M9ImdtYWlsX3NpZ25hdHVyZSIgZGF0
+YS1zbWFydG1haWw9ImdtYWlsX3NpZ25hdHVyZSI+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGRp
+cj0ibHRyIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtZmFtaWx5OlRhaG9tYSxzYW5z
+LXNlcmlmO2NvbG9yOmdyYXkiPllvbmdrd2FuICZxdW90O0V0aGFuJnF1b3Q7IFBhcmvCoC8gUHJp
+bmNpcGxlIEVuZ2luZWVyPGJyPi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLTxicj48Yj5TZWN1cml0eSBQbGF0Zm9ybSxJbmMu
+PC9iPsKgKDxhIGhyZWY9Imh0dHA6Ly93d3cuc2VjdXJpdHlwbGF0Zm9ybS5jby5rciIgc3R5bGU9
+ImNvbG9yOnJnYigxNyw4NSwyMDQpIiB0YXJnZXQ9Il9ibGFuayI+PHNwYW4gc3R5bGU9ImNvbG9y
+OmJsdWUiPmh0dHA6Ly93d3cuc2VjdXJpdHlwbGF0Zm9ybS5jby5rcjwvc3Bhbj48L2E+wqApPGJy
+Pjwvc3Bhbj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtZmFtaWx5OlRhaG9tYSxzYW5z
+LXNlcmlmO2NvbG9yOmdyYXkiPkNPTlNFQyAjQy03LCBHQ0NFSSBCbGRnLjwvc3Bhbj48ZGl2Pjxz
+cGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1mYW1pbHk6VGFob21hLHNhbnMtc2VyaWY7Y29s
+b3I6Z3JheSI+MTIgRGFld2FuZ3Bhbmd5by1ybyA2NDViZW9uLWdpbDwvc3Bhbj48L2Rpdj48ZGl2
+PjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1mYW1pbHk6VGFob21hLHNhbnMtc2VyaWY7
+Y29sb3I6Z3JheSI+QnVuZGFuZy1ndSwgU2VvbmduYW0tc2ksIEd5ZW9uZ2dpLWRvLEtvcmVhwqA8
+YnI+VC4gODItNzAtNzYxMy0wMDk0PGJyPk0uwqA4Mi0xMC01MTU2LTg1MzLCoCDCoCBFLsKgPGEg
+aHJlZj0ibWFpbHRvOnlvbmdrd2FuLnBhcmtAc2VjdXJpdHlwbGF0Zm9ybS5jby5rciIgdGl0bGU9
+Im1haWx0bzptZ2Nob2lAZ2N0c2VtaS5jb20iIHN0eWxlPSJjb2xvcjpyZ2IoMTcsODUsMjA0KSIg
+dGFyZ2V0PSJfYmxhbmsiPjxzcGFuIHN0eWxlPSJjb2xvcjpibHVlIj55b25na3dhbi5wYXJrQHNl
+Y3VyaXR5cGxhdGZvcm0uY28ua3I8L3NwYW4+PC9hPjwvc3Bhbj48YnI+PC9kaXY+PC9kaXY+PC9k
+aXY+PC9kaXY+PC9kaXY+CjwvZGl2Pgo=
+
+--===============7496184181975048316==--
 
