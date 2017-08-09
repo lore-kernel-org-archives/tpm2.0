@@ -1,41 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============5864013280095668056=="
+Content-Type: multipart/mixed; boundary="===============2522977702355363226=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 989108: test: tpm2_alg_util clean up
-Date: Wed, 09 Aug 2017 08:43:18 -0700
-Message-ID: <598b2d96da144_4a6a3fb47ddc7c30434af@hookshot-fe5-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] fb3cde: REVERTME: workaround patch to fix
+ build
+Date: Wed, 09 Aug 2017 11:30:44 -0700
+Message-ID: <598b54d44205c_111d3fece7a01c342863f@hookshot-fe3-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5864013280095668056==
+--===============2522977702355363226==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 98910869f776bf0b121a26242e02dd1f57bce0d1
-      https://github.com/01org/tpm2-tools/commit/98910869f776bf0b121a26242e=
-02dd1f57bce0d1
+  Commit: fb3cdeb27fee290188b2aa4fa9a5dfae427a820a
+      https://github.com/01org/tpm2-tools/commit/fb3cdeb27fee290188b2aa4fa9=
+a5dfae427a820a
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-09 (Wed, 09 Aug 2017)
 
   Changed paths:
-    M test/unit/test_tpm2_alg_util.c
+    A .ci/0001-TSS2_Sys_LoadExternal-Fix-marshaling-error.patch
+    M .travis.yml
 
   Log Message:
   -----------
-  test: tpm2_alg_util clean up
+  REVERTME: workaround patch to fix build
 
-Now that PR: https://github.com/01org/tpm2-tss/pull/494
-is merged, fix up the tests to stop having to convert
-the expanded macro values to a hex string via snprintf.
-
-Now the macros can be stringified and used directly.
+See TSS Bug: https://github.com/01org/tpm2-tss/issues/496
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============5864013280095668056==--
+--===============2522977702355363226==--
 
