@@ -1,60 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============8551453900347837236=="
+Content-Type: multipart/mixed; boundary="===============5462687453504527781=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] tpm2.0-tools: Release 2.1.0 is available
-Date: Thu, 10 Aug 2017 16:43:23 +0200
-Message-ID: <c5c239ba-13c3-5c24-9d53-6e38efcc61bc@redhat.com>
-In-Reply-To: d5cb2bea-e9a2-6c20-407a-01418b968f7f@redhat.com
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] b19074: Revert "REVERTME: workaround patch
+ to fix build"
+Date: Fri, 11 Aug 2017 08:56:39 -0700
+Message-ID: <598dd3b79c6eb_4cfd3fc2ced77c308601a@hookshot-fe3-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8551453900347837236==
+--===============5462687453504527781==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 08/02/2017 12:04 PM, Javier Martinez Canillas wrote:
-> Hello folks,
-> =
+  Branch: refs/heads/master
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: b1907461e4bcc961885f49f4349112d7f1549126
+      https://github.com/01org/tpm2-tools/commit/b1907461e4bcc961885f49f434=
+9112d7f1549126
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-11 (Fri, 11 Aug 2017)
 
-> On 07/24/2017 07:54 PM, Roberts, William C wrote:
->> Release 2.1.0 is available at: https://github.com/01org/tpm2.0-tools/rel=
-eases/tag/2.1.0
->>
->> v2.1.0 - 2017-7-24
-> =
+  Changed paths:
+    R .ci/0001-TSS2_Sys_LoadExternal-Fix-marshaling-error.patch
+    M .travis.yml
 
-> I've some questions about the release process that were not answered by r=
-eading
-> the RELEASE document in the repository (it would be nice to add the answe=
-rs for
-> these in the doc as well).
-> =
+  Log Message:
+  -----------
+  Revert "REVERTME: workaround patch to fix build"
 
-> 1- What's the expected time after a release for the next branch to be cre=
-ated?
-> 2- What's the expected time after a branch is created for a -rc to be rel=
-eased?
-> =
-
-> I'm asking because there is a bunch of new stuff and fixes currently in m=
-aster,
-> so it would be nice to start thinking on the next release:
-> =
-
-> $ git lg 2.1.0..master | wc -l
-> 221
-> =
+This reverts commit fb3cdeb27fee290188b2aa4fa9a5dfae427a820a.
 
 
-Any comments on this?
 
-Best regards,
--- =
-
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
-
---===============8551453900347837236==--
+--===============5462687453504527781==--
 
