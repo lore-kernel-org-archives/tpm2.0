@@ -1,37 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============5462687453504527781=="
+Content-Type: multipart/mixed; boundary="===============7702013768163681370=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] b19074: Revert "REVERTME: workaround patch
- to fix build"
-Date: Fri, 11 Aug 2017 08:56:39 -0700
-Message-ID: <598dd3b79c6eb_4cfd3fc2ced77c308601a@hookshot-fe3-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] dbb44b: test: tpm2_evictcontrol clean up
+Date: Fri, 11 Aug 2017 08:57:37 -0700
+Message-ID: <598dd3f143b9f_22c53fb9acd4bc3c43071@hookshot-fe6-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5462687453504527781==
+--===============7702013768163681370==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: b1907461e4bcc961885f49f4349112d7f1549126
-      https://github.com/01org/tpm2-tools/commit/b1907461e4bcc961885f49f434=
-9112d7f1549126
+  Commit: dbb44b5325025b657d57a1b29e21b09b9249772c
+      https://github.com/01org/tpm2-tools/commit/dbb44b5325025b657d57a1b29e=
+21b09b9249772c
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-11 (Fri, 11 Aug 2017)
 
   Changed paths:
-    R .ci/0001-TSS2_Sys_LoadExternal-Fix-marshaling-error.patch
-    M .travis.yml
+    M test/system/test_tpm2_evictcontrol.sh
+    M test/system/test_tpm2_loadexternal.sh
 
   Log Message:
   -----------
-  Revert "REVERTME: workaround patch to fix build"
+  test: tpm2_evictcontrol clean up
 
-This reverts commit fb3cdeb27fee290188b2aa4fa9a5dfae427a820a.
+Clean up the tpm2_evictcontrol test so:
+1. Files get cleaned up on exit
+2. The script is easier to read
+3. Clean out whitespace errors
+4. Enhance error reporting
+
+New failures have command executed, line number
+and return code all printed.
+
+Example:
+$ ./test_tpm2_loadexternal.sh
+Argument mismatched!
+Please type "tpm2_takeownership -h" get the usage!
+tpm2_takeownership -x on line 62 failed: 1
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============5462687453504527781==--
+--===============7702013768163681370==--
 
