@@ -1,25 +1,25 @@
-Content-Type: multipart/mixed; boundary="===============1320250239080960573=="
+Content-Type: multipart/mixed; boundary="===============8969947407244394308=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] c15d5f: password_util: rename to
+Subject: [tpm2] [01org/tpm2-tools] 014ea5: password_util: rename to
  tpm2_password_util
-Date: Thu, 17 Aug 2017 09:01:47 -0700
-Message-ID: <5995bdeb54a50_8e23fd89de95c2c1423b0@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Date: Thu, 17 Aug 2017 09:04:08 -0700
+Message-ID: <5995be7875f7b_cc13f86cebf7c341075b@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1320250239080960573==
+--===============8969947407244394308==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/test-password-utils
   Home:   https://github.com/01org/tpm2-tools
-  Commit: c15d5f6a81c5132048bb8a89201dff972c5ec688
-      https://github.com/01org/tpm2-tools/commit/c15d5f6a81c5132048bb8a8920=
-1dff972c5ec688
+  Commit: 014ea5081894af2e5da89e69725cf7bb5e546426
+      https://github.com/01org/tpm2-tools/commit/014ea5081894af2e5da89e6972=
+5cf7bb5e546426
   Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-08-16 (Wed, 16 Aug 2017)
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
 
   Changed paths:
     M Makefile.am
@@ -61,11 +61,11 @@ coding standard.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: a6e3a5e6d1d70a1e1aff19b8a92a2679447a8c41
-      https://github.com/01org/tpm2-tools/commit/a6e3a5e6d1d70a1e1aff19b8a9=
-2a2679447a8c41
+  Commit: 69eef0c5d67eff95a4208b557ebfe77bf126d3cd
+      https://github.com/01org/tpm2-tools/commit/69eef0c5d67eff95a4208b557e=
+bfe77bf126d3cd
   Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-08-16 (Wed, 16 Aug 2017)
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
 
   Changed paths:
     M Makefile.am
@@ -86,9 +86,9 @@ Also add tests.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 8ec1eb8853600e6c4b84e368f2c7069385e44638
-      https://github.com/01org/tpm2-tools/commit/8ec1eb8853600e6c4b84e368f2=
-c7069385e44638
+  Commit: f7eeebc79f2e816a406573ce270c0488225dda65
+      https://github.com/01org/tpm2-tools/commit/f7eeebc79f2e816a406573ce27=
+0c0488225dda65
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -110,9 +110,9 @@ options.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 1fbf8eff548869713a63605c921634ac15ad4079
-      https://github.com/01org/tpm2-tools/commit/1fbf8eff548869713a63605c92=
-1634ac15ad4079
+  Commit: ddc9df9e12e54e0417dd2543c1699d3470d8876b
+      https://github.com/01org/tpm2-tools/commit/ddc9df9e12e54e0417dd2543c1=
+699d3470d8876b
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -129,9 +129,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: a478ca8e4b0f5fa3a8cfd06f23dfbe46b40a52f7
-      https://github.com/01org/tpm2-tools/commit/a478ca8e4b0f5fa3a8cfd06f23=
-dfbe46b40a52f7
+  Commit: 5dce817851f19343af2e053e76e735df43e3eca1
+      https://github.com/01org/tpm2-tools/commit/5dce817851f19343af2e053e76=
+e735df43e3eca1
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -148,9 +148,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 4d9d7bc9471b3c278952755b8ae419287397eadc
-      https://github.com/01org/tpm2-tools/commit/4d9d7bc9471b3c278952755b8a=
-e419287397eadc
+  Commit: 483ad45f427ce2352c264c77a8ccaeb6606e9135
+      https://github.com/01org/tpm2-tools/commit/483ad45f427ce2352c264c77a8=
+ccaeb6606e9135
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -167,9 +167,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: e6c05e41cbd3ffd376ea880601b5e9cd83793e72
-      https://github.com/01org/tpm2-tools/commit/e6c05e41cbd3ffd376ea880601=
-b5e9cd83793e72
+  Commit: 98445681ea6d3360c5dcb27ee823ce271fba50ee
+      https://github.com/01org/tpm2-tools/commit/98445681ea6d3360c5dcb27ee8=
+23ce271fba50ee
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -186,9 +186,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 59ddd0e1e193712bce50942e26e6d838e90435af
-      https://github.com/01org/tpm2-tools/commit/59ddd0e1e193712bce50942e26=
-e6d838e90435af
+  Commit: 9c0671031b3f8fa35e6b1bbf5fddf7425826ad72
+      https://github.com/01org/tpm2-tools/commit/9c0671031b3f8fa35e6b1bbf5f=
+ddf7425826ad72
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -205,9 +205,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 2faea8616294d613e63aa0230cee69ae82702604
-      https://github.com/01org/tpm2-tools/commit/2faea8616294d613e63aa0230c=
-ee69ae82702604
+  Commit: c73ccdacb0fb0598cadca3043644bdba720acd40
+      https://github.com/01org/tpm2-tools/commit/c73ccdacb0fb0598cadca30436=
+44bdba720acd40
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -224,9 +224,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: ab395f13563d76349d25a3acfe99f2b59a31af7f
-      https://github.com/01org/tpm2-tools/commit/ab395f13563d76349d25a3acfe=
-99f2b59a31af7f
+  Commit: 7befa28f73c6e05c4506607e29f8e1932298d7be
+      https://github.com/01org/tpm2-tools/commit/7befa28f73c6e05c4506607e29=
+f8e1932298d7be
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -243,9 +243,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: b2e1d6c3ea48bbe3719fe7fba23d5e438e0568b4
-      https://github.com/01org/tpm2-tools/commit/b2e1d6c3ea48bbe3719fe7fba2=
-3d5e438e0568b4
+  Commit: b0c2d11048b6c804ff79480c4dfc2865c01705f8
+      https://github.com/01org/tpm2-tools/commit/b0c2d11048b6c804ff79480c4d=
+fc2865c01705f8
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -262,9 +262,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 9f487518035a66342ea9eb65030c4ddd5d29c013
-      https://github.com/01org/tpm2-tools/commit/9f487518035a66342ea9eb6503=
-0c4ddd5d29c013
+  Commit: aea6bc5049379f6a5852307abd4b821d71ffc2b5
+      https://github.com/01org/tpm2-tools/commit/aea6bc5049379f6a5852307abd=
+4b821d71ffc2b5
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -281,9 +281,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 4072abec53393cc220ac98f55796c24459064b22
-      https://github.com/01org/tpm2-tools/commit/4072abec53393cc220ac98f557=
-96c24459064b22
+  Commit: 8ddfaf6a2ee0a8e64d77314cf69dddb55ee0f71e
+      https://github.com/01org/tpm2-tools/commit/8ddfaf6a2ee0a8e64d77314cf6=
+9dddb55ee0f71e
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -300,9 +300,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 568677e8e0d8bbc1946e482bb59cfe62f724bdce
-      https://github.com/01org/tpm2-tools/commit/568677e8e0d8bbc1946e482bb5=
-9cfe62f724bdce
+  Commit: acac8c2e110d2ea2821e20ed67559c7089e2a48f
+      https://github.com/01org/tpm2-tools/commit/acac8c2e110d2ea2821e20ed67=
+559c7089e2a48f
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -319,9 +319,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 80617be1488a405e348be02454be911fa717ea2f
-      https://github.com/01org/tpm2-tools/commit/80617be1488a405e348be02454=
-be911fa717ea2f
+  Commit: 07c9c3578e10d0ac83902e895eac8d1fac6d0f9e
+      https://github.com/01org/tpm2-tools/commit/07c9c3578e10d0ac83902e895e=
+ac8d1fac6d0f9e
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -338,9 +338,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 5441af44ec0432b07c69900e4f54ab9b75063889
-      https://github.com/01org/tpm2-tools/commit/5441af44ec0432b07c69900e4f=
-54ab9b75063889
+  Commit: f57f8f052417d6729df6c4ba208d8725a45e8653
+      https://github.com/01org/tpm2-tools/commit/f57f8f052417d6729df6c4ba20=
+8d8725a45e8653
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -357,9 +357,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: df26ab914d4ce21790cf4b11bde4b2dc68274d02
-      https://github.com/01org/tpm2-tools/commit/df26ab914d4ce21790cf4b11bd=
-e4b2dc68274d02
+  Commit: bd76419f0e8d0a3b453083a384c6065e401673ff
+      https://github.com/01org/tpm2-tools/commit/bd76419f0e8d0a3b453083a384=
+c6065e401673ff
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -376,9 +376,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 77aebb863d7441ecdbd449d1483eb5f53dd4c7d6
-      https://github.com/01org/tpm2-tools/commit/77aebb863d7441ecdbd449d148=
-3eb5f53dd4c7d6
+  Commit: 6cbf804e5c7d57ca0b1dacb37c5dfe266cf98f34
+      https://github.com/01org/tpm2-tools/commit/6cbf804e5c7d57ca0b1dacb37c=
+5dfe266cf98f34
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -395,9 +395,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 56b88d3adaa06186878c70a658b2e12b5fd048a4
-      https://github.com/01org/tpm2-tools/commit/56b88d3adaa06186878c70a658=
-b2e12b5fd048a4
+  Commit: 5efb4b584de905cfc878aba9ab72919e4d3fcb22
+      https://github.com/01org/tpm2-tools/commit/5efb4b584de905cfc878aba9ab=
+72919e4d3fcb22
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -414,9 +414,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: d52cf4f95ddb5b150f4a1fa0f5ab9714e9d5616a
-      https://github.com/01org/tpm2-tools/commit/d52cf4f95ddb5b150f4a1fa0f5=
-ab9714e9d5616a
+  Commit: 1a7303d5d2312f7ab7ec92469dd9d7c21bf40f3a
+      https://github.com/01org/tpm2-tools/commit/1a7303d5d2312f7ab7ec92469d=
+d9d7c21bf40f3a
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -433,9 +433,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 4885bb412829485d66d88f3c26a44a9dc69a3411
-      https://github.com/01org/tpm2-tools/commit/4885bb412829485d66d88f3c26=
-a44a9dc69a3411
+  Commit: 72566cf75f0c0529de6906606659f0cbf30523b3
+      https://github.com/01org/tpm2-tools/commit/72566cf75f0c0529de69066066=
+59f0cbf30523b3
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -452,9 +452,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 92adc0a4d80c9c556ad5774e3a87ef47dc09130d
-      https://github.com/01org/tpm2-tools/commit/92adc0a4d80c9c556ad5774e3a=
-87ef47dc09130d
+  Commit: b9f7d3240547a9f944c0324cfbc259335077bf49
+      https://github.com/01org/tpm2-tools/commit/b9f7d3240547a9f944c0324cfb=
+c259335077bf49
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -471,9 +471,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 1cf2ef534978d2c6fc7e046db6e38dda960104af
-      https://github.com/01org/tpm2-tools/commit/1cf2ef534978d2c6fc7e046db6=
-e38dda960104af
+  Commit: c952d7bdf283841cce5eb4a7a9b8e37ce1c563cd
+      https://github.com/01org/tpm2-tools/commit/c952d7bdf283841cce5eb4a7a9=
+b8e37ce1c563cd
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -490,9 +490,9 @@ Drop the -X argument and use tpm2_password_util_from_optarg.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 0cd7043992b91cf5df1fd013b1ac4bbd1194552e
-      https://github.com/01org/tpm2-tools/commit/0cd7043992b91cf5df1fd013b1=
-ac4bbd1194552e
+  Commit: c4e0f359c84b4e13f90b06415eb9e8dddebc6e36
+      https://github.com/01org/tpm2-tools/commit/c4e0f359c84b4e13f90b06415e=
+b9e8dddebc6e36
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -507,9 +507,9 @@ ac4bbd1194552e
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: c927b7dc22e86e751a801da59546b3806911328e
-      https://github.com/01org/tpm2-tools/commit/c927b7dc22e86e751a801da595=
-46b3806911328e
+  Commit: 0f6a6de8c5e71f173d25b46377c9fba1a8eb7233
+      https://github.com/01org/tpm2-tools/commit/0f6a6de8c5e71f173d25b46377=
+c9fba1a8eb7233
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -523,9 +523,9 @@ Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: c70ec342ecbe1507e29a625726bb0393bad00821
-      https://github.com/01org/tpm2-tools/commit/c70ec342ecbe1507e29a625726=
-bb0393bad00821
+  Commit: 818824f602ac0045423954784ea31b131230aea3
+      https://github.com/01org/tpm2-tools/commit/818824f602ac0045423954784e=
+a31b131230aea3
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-17 (Thu, 17 Aug 2017)
 
@@ -537,8 +537,8 @@ bb0393bad00821
   tpm2_getrandom.c: drop unused include
 
 
-Compare: https://github.com/01org/tpm2-tools/compare/c15d5f6a81c5^...c70ec3=
-42ecbe
+Compare: https://github.com/01org/tpm2-tools/compare/c70ec342ecbe...818824f=
+602ac
 
---===============1320250239080960573==--
+--===============8969947407244394308==--
 
