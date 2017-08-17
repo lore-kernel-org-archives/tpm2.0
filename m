@@ -1,312 +1,544 @@
-Content-Type: multipart/mixed; boundary="===============2294329921236890766=="
+Content-Type: multipart/mixed; boundary="===============1320250239080960573=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] feedback on unlocking LUKS volumes using a TPM2
-Date: Thu, 17 Aug 2017 12:24:36 +0200
-Message-ID: <2e77a669-30d3-51bc-8b58-f6b1613a6b5d@redhat.com>
-In-Reply-To: 1FEB6BE5D027454BAEDB8EA7F2D809DED80CFC15@UKDC1CSUEXMV01.CSU.LOCAL
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] c15d5f: password_util: rename to
+ tpm2_password_util
+Date: Thu, 17 Aug 2017 09:01:47 -0700
+Message-ID: <5995bdeb54a50_8e23fd89de95c2c1423b0@hookshot-fe2-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2294329921236890766==
+--===============1320250239080960573==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Sebastien,
-
-On 08/16/2017 07:25 PM, Raveau, Sebastien wrote:
-> Hi Javier,
-> =
-
-> Thanks for your reply and apologies for the delay in mine.
-> =
-
-
-No worries, email is async anyways. I really appreciate your feedback.
-
-> =
-
-> =
-
-> On 2017/08/03 14:21 PM, Javier Martinez Canillas wrote:
->> Yes, approach I mentioned does not attempt to protect from an evil maid
->> attack. Since if someone is able to get physical access to your computer=
-, she
->> can change the initramfs which isn't measured so unlocking the LUKS volu=
-me
->> becomes trivial.
-> =
-
-> Perhaps I am the one missing something, apologies if I am, but isn't prot=
-ecting
-> against evil maid attack the whole point of disk encryption? :-)
-> =
-
-
-I think it really depends on your threat model. A colleague usually says th=
-at
-security is not binary but instead a sliding scale of risk management.
-
-IOW, the fact that only having the /root volume encrypted doesn't defend for
-the evil maid attack doesn't mean that is not useful for other use cases, e=
-.g:
-
-1) A server that can be booted without typing a pass-phrase to unlock a LUKS
-   volume but if the hard disk is stolen, can't be mounted on another machi=
-ne.
-
-2) A Virtual Machine image that if stolen can't be mounted in another machi=
-ne. =
-
-
-> =
-
-> =
-
->> AFAICT this is an issue regardless of how the data is protected by the T=
-PM
->> (e.g: using a sealed data object or storing it in an NV area), at some p=
-oint
->> the key has to be decrypted and stored at least in RAM for unlocking the=
- LUKS
->> volume. So I don't see how storing in an NV area will make a difference =
-for
->> the attack you are mentioning (sorry if I'm missing something).
-> =
-
-> An issue regardless indeed; I was not suggesting that defending against s=
-uch
-> attacks can only be done with NV areas, just that there are more risks in=
- doing
-> so with sealed data; apologies for the confusion.
->
-
-That's where I disagree. I don't see why storing in a NV area will make it =
-more
-secure that sealing the data. If you trick the system to unseal the data, t=
-hen
-you can also trick it to read from the NV area.
- =
-
-> Not recommending you do this but just in case it helps somehow in the fut=
-ure:
-> technically the key does not have to be stored in RAM, you could have disk
-> encryption/decryption done entirely in TPM, just very slowly. There are h=
-igh
-> performance alternatives with the key held in CPU (see "TRESOR Runs Encry=
-ption
-> Securely Outside RAM" [1] for example) or GPU but both of those introduce=
- other
-
-Thanks for the pointer.
-
-> challenges like reliability vs suspend/resume, and can hardly be locked d=
-own as
-> much as a proper Hardware Security Module... Not to mention the (in)secur=
-ity of
-> the transport between TPM and CPU/GPU: the LPC/I2C/PCIe/etc bus to either=
- might
-> be sniffed and the trip to the latter most likely includes a RAM stopover=
-. Not
-> that I would put this kind of attack and other considerations that require
-> decapping, lasers, etc in the same category as the common Insider Threat =
-alone
-> with your machine just for a couple of minutes; just saying that it would=
- be a
-> lot of work for too little gain security-wise (GPU crypto is still intere=
-sting
-> throughput-wise).
-> =
-
-
-Yeah, that's what I meant by a scaling risk management. If someone is the k=
-ind of
-target for this type of attack (or something like differential power analys=
-is to
-extract data from the TPM) then they shouldn't rely only on the TPM, but in=
-stead
-use many factors for authentication.
-
-> =
-
-> =
-
->> The suggestion here [0] is to have a small initramfs whose sole task is =
-to
->> get a secret from the TPM and then store the secret in the Linux kernel,=
- so
->> latter another initramfs is only able to unlock a volume but no to get t=
-he
->> secret.
-> =
-
-> Isn't this moot if an attacker has access to the decrypted files? I mean,=
- if I
-> can modify the initramfs to get local and/or remote shell, I do not care =
-about
-> the LUKS key anymore :-)
-> =
-
-
-Yes, but I think there's a difference between having access to the files of=
- the
-decrypted volume and having access to a boot partition that isn't encrypted=
- in
-the first place. That blog post was talking about the latter.
-
-> =
-
-> =
-
->> Another option is to have an encrypted boot partition, and make the
->> bootloader unlock the boot partition using the TPM. That way an attacker
->> won't be able to tamper with the system since the boot-loader is already
->> measured and the LUKS master key will be sealed to this PCR state.
-> =
-
-> That might work but it is tackling the exact same problem with the exact =
-same
-> solution, just at a different stage of the boot process: not only would it
-
-I think I missed some information in my first email. The idea is to seal th=
-e LUKS
-master key against PCR7 which is used to measure the UEFI Secure Boot polic=
-y and
-keys on shim. That avoid unsealing the LUKS master key if Secure Boot was d=
-isabled
-or the used keys were replaced.
-
-So the difference is that the boot-loader will be signed while the initramf=
-s isn't.
-
-> require duplicating LUKS (or GPG to keep the boot partition unencrypted n=
-otably
-> if it doubles as an EFI partition, but that would then also require modif=
-ying
-> kernel/initramfs upgrade tools as well) into the boot loader, there would=
- be
-> even more mistakes you would have to avoid making; for example you would =
-have
-> to worry not only about the initramfs dropping to a shell (due to adding =
-things
-> like "single" to an unmeasured command line, to errors triggered on purpo=
-se or
-> simply to bugs such as [2] not that long ago), you would also have to wor=
-ry
-> about the freedom your own unmodified boot loader might leave attackers (=
-e.g.
-> you might have forgotten to measure menu.lst/grub.cfg, or you measure it =
-but
-> a time-of-check vs time-of-use race condition allows the attacker to repl=
-ace it
-> as in [3], or attackers can do too much from the boot loader shell, or yo=
-u have
-> disabled that but bugs still lead to a rescue shell as in [4], etc).
-> =
-
-
-Agreed, that's why sealing against PCR7 and using the TPM with Secure Boot =
-is the
-least error prone approach and what we are exploring now.
-
-> =
-
-> =
-
->> I added support for tpm2_create to get the data to be sealed from the
->> standard input and for tpm2_unseal to write the unsealed data to the sta=
-ndard
->> output. That way the secret never is stored in a media
-> =
-
-> Nice, thanks!
-> =
-
-> I would just add "memset(outData.t.buffer, 0, outData.t.size);"... I see
-> cryptsetup calls crypt_safe_free() on passwords and keys to zero out memo=
-ry
-> copies once they are not needed anymore, but then again I am not sure what
-> happens in the pipe. Your secret might end up stored in pipefs "media" ;-D
-> =
-
-> It's probably nothing but I'll investigate, always good to know :-)
-> =
-
-
-Interesting, thanks a lot for bringing this up. I'll take a look to it as w=
-ell.
-
-> =
-
-> =
-
->> That's certainly an advantage, although it's not a use case I'm interest=
-ed in
-> =
-
-> Fair enough :-)
-> =
-
-> =
-
-> =
-
->> I think that measuring the initramfs is tricky since any random package =
-can
->> update the initramfs and so relying on the initramfs being measured coul=
-d be
->> fragile IMHO.
-> =
-
-> I have to admit that I have a /boot and /actualboot just in case I am not
-> familiar enough with all the intrinsics of the various distros I use: the
-> former keeps software upgrades happy but resides in the encrypted / and o=
-nce I
-> have checked that nothing went wrong I apply the changes to the latter...
-> =
-
-> I have yet to find a initramfs-modifying package that did not trigger my
-> initramfs-tools hook though; wouldn't it work just as well on Red Hat?
->
-
-Yes, it would but we decided that it's fragile since you need to re-seal
-everything, and instead will explore to encrypt /boot as mentioned.
- =
-
-> Maybe I am missing something, but it seems to me that not measuring the
-> initramfs defeats the whole purpose of using the TPM: is the threat profi=
-le
-
-Indeed, it's an important attack vector. I hope my explanation about sealing
-against PCR7 and encrypting /boot and only be able to decrypt using a signed
-bootloader better explains why we could protect against this without the ne=
-ed
-to measure the initramfs.
-
-> limited to someone stealing the disks without stealing the computers as w=
-ell,
-> nor ever coming back once they realise the disks are encrypted? :-)
->
-
-We preferred to do it in small steps, so this initial solution as you menti=
-oned
-has limited use cases (although even for those people are interested and it=
- is
-better than nothing). And even for full disk encryption (including /boot), =
-you
-need the ability for user-space to unlock the LUKS volume so this will be p=
-art
-of the final solution.
-
-Again, thanks a lot for your comments and feedback.
-
-Best regards,
--- =
-
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
-
---===============2294329921236890766==--
+  Branch: refs/heads/test-password-utils
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: c15d5f6a81c5132048bb8a89201dff972c5ec688
+      https://github.com/01org/tpm2-tools/commit/c15d5f6a81c5132048bb8a8920=
+1dff972c5ec688
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-16 (Wed, 16 Aug 2017)
+
+  Changed paths:
+    M Makefile.am
+    R lib/password_util.c
+    R lib/password_util.h
+    A lib/tpm2_password_util.c
+    A lib/tpm2_password_util.h
+    M tools/tpm2_activatecredential.c
+    M tools/tpm2_certify.c
+    M tools/tpm2_create.c
+    M tools/tpm2_createprimary.c
+    M tools/tpm2_dictionarylockout.c
+    M tools/tpm2_encryptdecrypt.c
+    M tools/tpm2_evictcontrol.c
+    M tools/tpm2_getpubak.c
+    M tools/tpm2_getpubek.c
+    M tools/tpm2_getrandom.c
+    M tools/tpm2_hmac.c
+    M tools/tpm2_load.c
+    M tools/tpm2_nvdefine.c
+    M tools/tpm2_nvread.c
+    M tools/tpm2_nvreadlock.c
+    M tools/tpm2_nvrelease.c
+    M tools/tpm2_nvwrite.c
+    M tools/tpm2_quote.c
+    M tools/tpm2_readpublic.c
+    M tools/tpm2_rsadecrypt.c
+    M tools/tpm2_sign.c
+    M tools/tpm2_takeownership.c
+    M tools/tpm2_unseal.c
+
+  Log Message:
+  -----------
+  password_util: rename to tpm2_password_util
+
+Rename password_util and routines to be compliant with
+coding standard.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: a6e3a5e6d1d70a1e1aff19b8a92a2679447a8c41
+      https://github.com/01org/tpm2-tools/commit/a6e3a5e6d1d70a1e1aff19b8a9=
+2a2679447a8c41
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-16 (Wed, 16 Aug 2017)
+
+  Changed paths:
+    M Makefile.am
+    M lib/tpm2_password_util.c
+    M lib/tpm2_password_util.h
+    A test/unit/test_tpm2_password_util.c
+
+  Log Message:
+  -----------
+  tpm2_password_util: add from optarg handler
+
+Add a routine for replacing the remaining tpm2_password_util
+routines. The new routine will be used to handle optarg
+directly, and avoid the need of the -X argument.
+
+Also add tests.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 8ec1eb8853600e6c4b84e368f2c7069385e44638
+      https://github.com/01org/tpm2-tools/commit/8ec1eb8853600e6c4b84e368f2=
+c7069385e44638
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M Makefile.am
+    A man/password-fmt-common.troff
+    M man/tpm2_create.8.in
+    M tools/tpm2_create.c
+
+  Log Message:
+  -----------
+  tpm2_create: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Update the manpage to include new string password formating
+options.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 1fbf8eff548869713a63605c921634ac15ad4079
+      https://github.com/01org/tpm2-tools/commit/1fbf8eff548869713a63605c92=
+1634ac15ad4079
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_createprimary.8.in
+    M tools/tpm2_createprimary.c
+
+  Log Message:
+  -----------
+  tpm2_createprimary: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: a478ca8e4b0f5fa3a8cfd06f23dfbe46b40a52f7
+      https://github.com/01org/tpm2-tools/commit/a478ca8e4b0f5fa3a8cfd06f23=
+dfbe46b40a52f7
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_load.8.in
+    M tools/tpm2_load.c
+
+  Log Message:
+  -----------
+  tpm2_load: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 4d9d7bc9471b3c278952755b8ae419287397eadc
+      https://github.com/01org/tpm2-tools/commit/4d9d7bc9471b3c278952755b8a=
+e419287397eadc
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_quote.8.in
+    M tools/tpm2_quote.c
+
+  Log Message:
+  -----------
+  tpm2_quote: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: e6c05e41cbd3ffd376ea880601b5e9cd83793e72
+      https://github.com/01org/tpm2-tools/commit/e6c05e41cbd3ffd376ea880601=
+b5e9cd83793e72
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_takeownership.8.in
+    M tools/tpm2_takeownership.c
+
+  Log Message:
+  -----------
+  tpm2_takeownership: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 59ddd0e1e193712bce50942e26e6d838e90435af
+      https://github.com/01org/tpm2-tools/commit/59ddd0e1e193712bce50942e26=
+e6d838e90435af
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_getpubek.8.in
+    M tools/tpm2_getpubek.c
+
+  Log Message:
+  -----------
+  tpm2_getpubek: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 2faea8616294d613e63aa0230cee69ae82702604
+      https://github.com/01org/tpm2-tools/commit/2faea8616294d613e63aa0230c=
+ee69ae82702604
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_getpubak.8.in
+    M tools/tpm2_getpubak.c
+
+  Log Message:
+  -----------
+  tpm2_getpubak: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: ab395f13563d76349d25a3acfe99f2b59a31af7f
+      https://github.com/01org/tpm2-tools/commit/ab395f13563d76349d25a3acfe=
+99f2b59a31af7f
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_activatecredential.8.in
+    M tools/tpm2_activatecredential.c
+
+  Log Message:
+  -----------
+  tpm2_activatecredential: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: b2e1d6c3ea48bbe3719fe7fba23d5e438e0568b4
+      https://github.com/01org/tpm2-tools/commit/b2e1d6c3ea48bbe3719fe7fba2=
+3d5e438e0568b4
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_nvread.8.in
+    M tools/tpm2_nvread.c
+
+  Log Message:
+  -----------
+  tpm2_nvread: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 9f487518035a66342ea9eb65030c4ddd5d29c013
+      https://github.com/01org/tpm2-tools/commit/9f487518035a66342ea9eb6503=
+0c4ddd5d29c013
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_nvreadlock.8.in
+    M tools/tpm2_nvreadlock.c
+
+  Log Message:
+  -----------
+  tpm2_nvreadlock: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 4072abec53393cc220ac98f55796c24459064b22
+      https://github.com/01org/tpm2-tools/commit/4072abec53393cc220ac98f557=
+96c24459064b22
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_nvwrite.8.in
+    M tools/tpm2_nvwrite.c
+
+  Log Message:
+  -----------
+  tpm2_nvwrite: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 568677e8e0d8bbc1946e482bb59cfe62f724bdce
+      https://github.com/01org/tpm2-tools/commit/568677e8e0d8bbc1946e482bb5=
+9cfe62f724bdce
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_nvdefine.8.in
+    M tools/tpm2_nvdefine.c
+
+  Log Message:
+  -----------
+  tpm2_nvdefine: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 80617be1488a405e348be02454be911fa717ea2f
+      https://github.com/01org/tpm2-tools/commit/80617be1488a405e348be02454=
+be911fa717ea2f
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_nvrelease.8.in
+    M tools/tpm2_nvrelease.c
+
+  Log Message:
+  -----------
+  tpm2_nvrelease: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 5441af44ec0432b07c69900e4f54ab9b75063889
+      https://github.com/01org/tpm2-tools/commit/5441af44ec0432b07c69900e4f=
+54ab9b75063889
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_hmac.8.in
+    M tools/tpm2_hmac.c
+
+  Log Message:
+  -----------
+  tpm2_hmac: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: df26ab914d4ce21790cf4b11bde4b2dc68274d02
+      https://github.com/01org/tpm2-tools/commit/df26ab914d4ce21790cf4b11bd=
+e4b2dc68274d02
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_certify.8.in
+    M tools/tpm2_certify.c
+
+  Log Message:
+  -----------
+  tpm2_certify: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 77aebb863d7441ecdbd449d1483eb5f53dd4c7d6
+      https://github.com/01org/tpm2-tools/commit/77aebb863d7441ecdbd449d148=
+3eb5f53dd4c7d6
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_encryptdecrypt.8.in
+    M tools/tpm2_encryptdecrypt.c
+
+  Log Message:
+  -----------
+  tpm2_encryptdecrypt: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 56b88d3adaa06186878c70a658b2e12b5fd048a4
+      https://github.com/01org/tpm2-tools/commit/56b88d3adaa06186878c70a658=
+b2e12b5fd048a4
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_evictcontrol.8.in
+    M tools/tpm2_evictcontrol.c
+
+  Log Message:
+  -----------
+  tpm2_evictcontrol: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: d52cf4f95ddb5b150f4a1fa0f5ab9714e9d5616a
+      https://github.com/01org/tpm2-tools/commit/d52cf4f95ddb5b150f4a1fa0f5=
+ab9714e9d5616a
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_rsadecrypt.8.in
+    M tools/tpm2_rsadecrypt.c
+
+  Log Message:
+  -----------
+  tpm2_rsadecrypt: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 4885bb412829485d66d88f3c26a44a9dc69a3411
+      https://github.com/01org/tpm2-tools/commit/4885bb412829485d66d88f3c26=
+a44a9dc69a3411
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_sign.8.in
+    M tools/tpm2_sign.c
+
+  Log Message:
+  -----------
+  tpm2_sign: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 92adc0a4d80c9c556ad5774e3a87ef47dc09130d
+      https://github.com/01org/tpm2-tools/commit/92adc0a4d80c9c556ad5774e3a=
+87ef47dc09130d
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_unseal.8.in
+    M tools/tpm2_unseal.c
+
+  Log Message:
+  -----------
+  tpm2_unseal: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 1cf2ef534978d2c6fc7e046db6e38dda960104af
+      https://github.com/01org/tpm2-tools/commit/1cf2ef534978d2c6fc7e046db6=
+e38dda960104af
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M man/tpm2_dictionarylockout.8.in
+    M tools/tpm2_dictionarylockout.c
+
+  Log Message:
+  -----------
+  tpm2_dictionarylockout: switch to use tpm2_password_util_from_optarg
+
+Drop the -X argument and use tpm2_password_util_from_optarg.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 0cd7043992b91cf5df1fd013b1ac4bbd1194552e
+      https://github.com/01org/tpm2-tools/commit/0cd7043992b91cf5df1fd013b1=
+ac4bbd1194552e
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M lib/tpm2_password_util.c
+    M lib/tpm2_password_util.h
+
+  Log Message:
+  -----------
+  tpm2_password_util: drop unused routines
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: c927b7dc22e86e751a801da59546b3806911328e
+      https://github.com/01org/tpm2-tools/commit/c927b7dc22e86e751a801da595=
+46b3806911328e
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M tools/tpm2_readpublic.c
+
+  Log Message:
+  -----------
+  tpm2_readpublic.c: drop unused include
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: c70ec342ecbe1507e29a625726bb0393bad00821
+      https://github.com/01org/tpm2-tools/commit/c70ec342ecbe1507e29a625726=
+bb0393bad00821
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-17 (Thu, 17 Aug 2017)
+
+  Changed paths:
+    M tools/tpm2_getrandom.c
+
+  Log Message:
+  -----------
+  tpm2_getrandom.c: drop unused include
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/c15d5f6a81c5^...c70ec3=
+42ecbe
+
+--===============1320250239080960573==--
 
