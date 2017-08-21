@@ -1,48 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============7663014763241228261=="
+Content-Type: multipart/mixed; boundary="===============1653772047720349379=="
 MIME-Version: 1.0
-From: philip.b.tricca at intel.com
-Subject: [tpm2] [tpm2-abrmd] First release candidate (RC0) for version 1.1.1
-Date: Sat, 19 Aug 2017 10:15:56 -0700
-Message-ID: <fbd89e00-10da-5df3-4efb-16716f439023@twobit.us>
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] f54bc7: travis: patch abrmd builds against
+ master
+Date: Mon, 21 Aug 2017 11:03:31 -0700
+Message-ID: <599b2073205c8_70493f85bb8fdc2c724ee@hookshot-fe5-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7663014763241228261==
+--===============1653772047720349379==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The first release candidate (rc0) for the upcoming 1.1.1 tabrmd release
-is up on github: https://github.com/01org/tpm2-abrmd/releases/tag/1.1.1_rc0
+  Branch: refs/heads/master
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: f54bc769d0bf1944cb9ba837b2fde58fd7f00196
+      https://github.com/01org/tpm2-tools/commit/f54bc769d0bf1944cb9ba837b2=
+fde58fd7f00196
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-08-21 (Mon, 21 Aug 2017)
 
-The changelog is available here:
-https://github.com/01org/tpm2-abrmd/blob/1.1.1_rc0/CHANGELOG.md
+  Changed paths:
+    A .ci/patches/abrmd/0001-Fix-buffer-may-be-used-uninitialized.patch
+    A .ci/patches/abrmd/0002-tpm2-command-fix-cast-error.patch
+    A .ci/patches/abrmd/0003-tpm2-command-fix-cast.patch
+    A .ci/patches/abrmd/0004-travis-use-master-branch-for-tss.patch
+    M .travis.yml
 
-Regards,
-Philip
+  Log Message:
+  -----------
+  travis: patch abrmd builds against master
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
---===============7663014763241228261==
-Content-Type: application/pgp-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="signature.asc"
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KVmVyc2lvbjogR251UEcgdjIKCmlRSWNCQUVC
-Q2dBR0JRSlptSEphQUFvSkVETDNmblhDNGRPNmF4c1FBS3IzZVllNXRCZ2tHRzRhUWlYOWp2SS8K
-ZlJlOFdFUFZwWjVnR3ZtWldITHNuK2JSUW55ZmI1cHRQeXFpblErcnp6NVJTRWpMbHZZZ25MTkQv
-c3dhWjFzawpHQjAyVWdUS05zRTBGam1GSXkwZkZidC9XSU1JMCtWbkIzNGVQT3gzcEw2REp1Qit2
-RGdxZmFuRlR1a2h2cDNQCnEzRmp0ODY1K3FJcjJVYWVZdmFtSXlBMUVXS0E4Mk5GdlNqOXZDYmxu
-ajdmNzJMaGxzbU13N3ZlSG1TV3BWYjYKTjIyQmcrYVovNTcyU0V4Mkt2VnlubFdndWRjRjVEWDRH
-KzR2NW93T244MlIwOXAwZ0pTdWdKQWNPYU5JUzFzRgpmQzU0Z1p3OWxXbmVkOUQrTVJlQkZ2OG5Y
-Z1VUWGZpK2VWbEhEY1gwOGxTRVVXQ1lvRUxkSlpiRjJ4dzd6eHNXCkk2UWtoUmxLenRWRDlJdHVt
-aHZFSm9EZkJRcFlSY0RYUUd0cERteXNQL0lQUzNXaWpmcVJvMThCNWdmTlNKamwKcU1rdjREOTFE
-WEZ0Zy9SUldOZkFQTGtmeEM4NG1LKzBUMDcyU3ppRVl2MHNpUTlIMHNVQndGWjVYVUNHU2tmawox
-eEkyOWwzZ1VWL3Z2NEtvWnNJc0pyeHpwZHNLNTRsNWdmdjN4WEJlaTNHKzlJL2prMzMzK3dtYmtF
-R2xPQXJICkU2b3ZvT2dlYWVUMUpUSDZGRk1UczNPREFzcEt4RzJVQjhtM0RSOS83NE5NaUpkTWdv
-cWhzSHJVcWZwOUE4WmQKZTVzQXVJYm9OSGg5NU84bElXUHhCNzlYOEZ0U0tCdGpSZUpLYytCaTMr
-SGYyb2xkRmhVUi9GMktUOTlaR2crVQpBdU0wZlVTRHRGMjNMQnhYaEQyOAo9bWlFcQotLS0tLUVO
-RCBQR1AgU0lHTkFUVVJFLS0tLS0K
-
---===============7663014763241228261==--
+--===============1653772047720349379==--
 
