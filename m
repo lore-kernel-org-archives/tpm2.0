@@ -1,37 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============6006981039759383063=="
+Content-Type: multipart/mixed; boundary="===============3695484848459120595=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 58f675: tpm2_dump_capability: Display
- specification minor ...
-Date: Mon, 21 Aug 2017 11:37:42 -0700
-Message-ID: <599b2876e48eb_90b3fd2973e7c3c6086f@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] 47fd59: coveralls: fix uploads
+Date: Mon, 21 Aug 2017 12:55:57 -0700
+Message-ID: <599b3acdd2d30_2d243f830065fc30659bb@hookshot-fe5-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6006981039759383063==
+--===============3695484848459120595==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 58f675bbdac451e4ae98a1d72fb6733497a97302
-      https://github.com/01org/tpm2-tools/commit/58f675bbdac451e4ae98a1d72f=
-b6733497a97302
-  Author: Alexander Steffen <webmeister(a)users.noreply.github.com>
+  Commit: 47fd59d7fb1f811b564a9022a8695457ae3c0fec
+      https://github.com/01org/tpm2-tools/commit/47fd59d7fb1f811b564a9022a8=
+695457ae3c0fec
+  Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-21 (Mon, 21 Aug 2017)
 
   Changed paths:
-    M tools/tpm2_dump_capability.c
+    M .ci/coveralls-upload.sh
+    M .ci/travis-build-and-run-tests.sh
+    M .travis.yml
 
   Log Message:
   -----------
-  tpm2_dump_capability: Display specification minor version correctly
+  coveralls: fix uploads
 
-value needs to be converted to float before doing the division, otherwise t=
-he minor version will be truncated to zero.
+Coveralls was not being updated as ENABLE_COVERAGE was exported in
+a seperate environment and not preserved when invoking the coveralls
+upload script. Move the coveralls upload invocation within that
+environment.
+
+Also, the COVERALLS_REPO_TOKEN is not set by travis when building
+PRs, so make it a non fatal error if it's not set
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============6006981039759383063==--
+--===============3695484848459120595==--
 
