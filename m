@@ -1,58 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============2272731840400781234=="
+Content-Type: multipart/mixed; boundary="===============7361979356790120363=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] e12d4d: CHANGELOG: fix typos
-Date: Mon, 28 Aug 2017 10:50:14 -0700
-Message-ID: <59a457d65f5c9_109803f8a78df1c3028783@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] ef1aab: man pages: include some
+ clarifications and fix som...
+Date: Mon, 28 Aug 2017 11:00:11 -0700
+Message-ID: <59a45a2b44dbd_64723fe13c4ebc2485237@hookshot-fe1-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2272731840400781234==
+--===============7361979356790120363==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: e12d4d3c11b8fbe6160d529fdfbd2b9591325caa
-      https://github.com/01org/tpm2-tools/commit/e12d4d3c11b8fbe6160d529fdf=
-bd2b9591325caa
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Commit: ef1aab2c39a1f15fe913361a923b3c4948f395c6
+      https://github.com/01org/tpm2-tools/commit/ef1aab2c39a1f15fe913361a92=
+3b3c4948f395c6
+  Author: Matthias Gerstner <matthias.gerstner(a)suse.de>
   Date:   2017-08-28 (Mon, 28 Aug 2017)
 
   Changed paths:
-    M CHANGELOG
+    M Makefile.am
+    M man/alg-common.troff
+    A man/alg-notes-common.troff
+    M man/tpm2_akparse.8.in
+    M man/tpm2_getpubak.8.in
+    M man/tpm2_getpubek.8.in
+    M man/tpm2_quote.8.in
 
   Log Message:
   -----------
-  CHANGELOG: fix typos
+  man pages: include some clarifications and fix some typos
 
-There were a couple of spellcheck errors in the CHANGELOG, fix them.
+For new users it is helpful to know which key lengths and parameters are
+actually produced by tpm2_getpub*, also what kind of data is output for
+public key portions and by tpm2_akparse.
 
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
-
-  Commit: 57e0e4d40e64c85f4b87d55a9012c22e987f7e94
-      https://github.com/01org/tpm2-tools/commit/57e0e4d40e64c85f4b87d55a90=
-12c22e987f7e94
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Commit: 0f22b29c40ee31f3dd1f6bf99db60d27e810aac1
+      https://github.com/01org/tpm2-tools/commit/0f22b29c40ee31f3dd1f6bf99d=
+b60d27e810aac1
+  Author: Matthias Gerstner <matthias.gerstner(a)suse.de>
   Date:   2017-08-28 (Mon, 28 Aug 2017)
 
   Changed paths:
-    M CHANGELOG
+    M man/tpm2_akparse.8.in
 
   Log Message:
   -----------
-  CHANGELOG: Document that new --quiet option was added
+  tpm2_akparse man page: remove format details from description
 
-A new option was added to supress the tools output, but a note was not
-added to the CHANGELOG.
-
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+According to PR #426 comment it's supposed to be opaque.
 
 
-Compare: https://github.com/01org/tpm2-tools/compare/b8951abd20a1...57e0e4d=
-40e64
+Compare: https://github.com/01org/tpm2-tools/compare/57e0e4d40e64...0f22b29=
+c40ee
 
---===============2272731840400781234==--
+--===============7361979356790120363==--
 
