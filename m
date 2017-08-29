@@ -1,40 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============5375920736955184335=="
+Content-Type: multipart/mixed; boundary="===============2714279586462083138=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 73f228: tpm2_akparse: drop duplicate
- routines
-Date: Tue, 29 Aug 2017 09:50:27 -0700
-Message-ID: <59a59b53e0cc0_10b43fc3a7133c388664f@hookshot-fe3-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] ca9af8: update abrmd master tss build
+Date: Tue, 29 Aug 2017 12:36:03 -0700
+Message-ID: <59a5c223d7e09_b5e3fefa9139c40859f4@hookshot-fe5-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5375920736955184335==
+--===============2714279586462083138==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 73f2281f0b2b0ebfcaa15f5d102bc9a8fef66f5d
-      https://github.com/01org/tpm2-tools/commit/73f2281f0b2b0ebfcaa15f5d10=
-2bc9a8fef66f5d
+  Commit: ca9af876dd6b5b447948e7ebb0f5d86923a1f069
+      https://github.com/01org/tpm2-tools/commit/ca9af876dd6b5b447948e7ebb0=
+f5d86923a1f069
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-08-29 (Tue, 29 Aug 2017)
 
   Changed paths:
-    M tools/tpm2_akparse.c
+    A .ci/patches/abrmd/0001-tpm2-command-fix-compile-errors.patch
+    A .ci/patches/abrmd/0002-bump-sapi-version-to-2.0.patch
+    R .ci/patches/abrmd/0002-tpm2-command-fix-cast-error.patch
+    R .ci/patches/abrmd/0003-tpm2-command-fix-cast.patch
+    R .ci/patches/abrmd/0004-travis-use-master-branch-for-tss.patch
 
   Log Message:
   -----------
-  tpm2_akparse: drop duplicate routines
-
-tpm2_akparse had bigendian conversion and file saving routines.
-These duplicated the routines available in files.h, drop them
-and replace with the files.h versions.
+  update abrmd master tss build
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============5375920736955184335==--
+--===============2714279586462083138==--
 
