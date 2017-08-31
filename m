@@ -1,49 +1,19 @@
-Content-Type: multipart/mixed; boundary="===============0115553252230799492=="
+Content-Type: multipart/mixed; boundary="===============8327188661685263255=="
 MIME-Version: 1.0
-From: Jerry Snitselaar <jsnitsel at redhat.com>
-Subject: Re: [tpm2] 2.1.0 tag for tpm2.0-tools?
-Date: Thu, 31 Aug 2017 11:44:31 -0700
-Message-ID: <20170831184431.vgkshwn5hdc6fpic@rhwork>
-In-Reply-To: 20170831153931.wd7ndwisgqrkkgmz@rhwork
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools]
+Date: Thu, 31 Aug 2017 14:47:48 -0700
+Message-ID: <59a88404619e2_1d613fd97c639c38706e1@hookshot-fe3-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0115553252230799492==
+--===============8327188661685263255==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu Aug 31 17, Jerry Snitselaar wrote:
->On Thu Aug 31 17, Javier Martinez Canillas wrote:
->>Hello Jerry,
->>
->>On 08/29/2017 06:32 PM, Jerry Snitselaar wrote:
->>>Should there be a 2.1.0 tag? The last I see is the -rc1.
->>>
->>
->>I do see a 2.1.0 tag in the repo:
->>
->>$ git tag | grep 2.1.0
->>2.1.0
->>2.1.0-rc0
->>2.1.0-rc1
->>
->>Best regards,
->>-- =
+  Branch: refs/heads/tpm2-option-revamp
+  Home:   https://github.com/01org/tpm2-tools
 
->>Javier Martinez Canillas
->>Software Engineer - Desktop Hardware Enablement
->>Red Hat
->
->Thanks Javier. Yeah, I needed to fetch --tags. Robert, should
->
-
-:( I meant to say William there. More caffine needed.
-
->27d34a6 | 2017-07-24 | CHANGELOG: update for 2.1.0 release (William Robert=
-s)
->
->be on the 2.X branch? Currently it is off by itself.
-
---===============0115553252230799492==--
+--===============8327188661685263255==--
 
