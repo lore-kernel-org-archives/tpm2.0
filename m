@@ -1,44 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============1417312145961698692=="
+Content-Type: multipart/mixed; boundary="===============7047483413329504992=="
 MIME-Version: 1.0
-From: Jerry Snitselaar <jsnitsel at redhat.com>
-Subject: Re: [tpm2] 2.1.0 tag for tpm2.0-tools?
-Date: Thu, 31 Aug 2017 08:39:31 -0700
-Message-ID: <20170831153931.wd7ndwisgqrkkgmz@rhwork>
-In-Reply-To: 4b1c93b8-4afe-2b55-1fee-eafab02c1bab@redhat.com
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] 57feb3: tpm2_hash: Drop -I option in man
+ page example
+Date: Thu, 31 Aug 2017 11:39:05 -0700
+Message-ID: <59a857c9f1b06_fae3fe3edf23c38420384@hookshot-fe3-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1417312145961698692==
+--===============7047483413329504992==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu Aug 31 17, Javier Martinez Canillas wrote:
->Hello Jerry,
->
->On 08/29/2017 06:32 PM, Jerry Snitselaar wrote:
->> Should there be a 2.1.0 tag? The last I see is the -rc1.
->>
->
->I do see a 2.1.0 tag in the repo:
->
->$ git tag | grep 2.1.0
->2.1.0
->2.1.0-rc0
->2.1.0-rc1
->
->Best regards,
->-- =
+  Branch: refs/heads/master
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: 57feb39b33570a2dd59c4d7aa6f8256b32b24ff6
+      https://github.com/01org/tpm2-tools/commit/57feb39b33570a2dd59c4d7aa6=
+f8256b32b24ff6
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-08-31 (Thu, 31 Aug 2017)
 
->Javier Martinez Canillas
->Software Engineer - Desktop Hardware Enablement
->Red Hat
+  Changed paths:
+    M man/tpm2_hash.8.in
 
-Thanks Javier. Yeah, I needed to fetch --tags. Robert, should
+  Log Message:
+  -----------
+  tpm2_hash: Drop -I option in man page example
 
-27d34a6 | 2017-07-24 | CHANGELOG: update for 2.1.0 release (William Roberts)
+The commit 6388831 ("tpm2_hash: drop -I option") changed tpm2_hash tool
+to get the data to hash from either the standard input or a file. So it
+removed the -I option.
 
-be on the 2.X branch? Currently it is off by itself.
+But forgot to update the example in the man page. While being there, do
+as other examples in man pages and show a specific command instead of a
+generic one.
 
---===============1417312145961698692==--
+Fixes: #441
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+
+--===============7047483413329504992==--
 
