@@ -1,19 +1,19 @@
-Content-Type: multipart/mixed; boundary="===============2171066485859513579=="
+Content-Type: multipart/mixed; boundary="===============6700206888568325462=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
 Subject: [tpm2] [01org/tpm2-tools] c7c1bc: test: remove duplicate execution of
  test_tpm2_evic...
-Date: Fri, 01 Sep 2017 07:44:52 -0700
-Message-ID: <59a972646f880_311d3f9a5546bc3c92769@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Date: Fri, 01 Sep 2017 07:51:28 -0700
+Message-ID: <59a973f03f7ce_14263ffc63ca5c34403b4@hookshot-fe5-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2171066485859513579==
+--===============6700206888568325462==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
+  Branch: refs/heads/tpm2-option-revamp
   Home:   https://github.com/01org/tpm2-tools
   Commit: c7c1bc4c70e327e048a4424b9dfb5fba50524d04
       https://github.com/01org/tpm2-tools/commit/c7c1bc4c70e327e048a4424b9d=
@@ -66,5 +66,5 @@ Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 Compare: https://github.com/01org/tpm2-tools/compare/57feb39b3357...5b24404=
 7e445
 
---===============2171066485859513579==--
+--===============6700206888568325462==--
 
