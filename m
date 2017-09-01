@@ -1,70 +1,152 @@
-Content-Type: multipart/mixed; boundary="===============6700206888568325462=="
+Content-Type: multipart/mixed; boundary="===============6360611747079007765=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] c7c1bc: test: remove duplicate execution of
- test_tpm2_evic...
-Date: Fri, 01 Sep 2017 07:51:28 -0700
-Message-ID: <59a973f03f7ce_14263ffc63ca5c34403b4@hookshot-fe5-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] e09c09: option fixing: move to single getopt
+Date: Fri, 01 Sep 2017 07:56:25 -0700
+Message-ID: <59a97519c7e7_40e93fbb9dfffc38587c7@hookshot-fe2-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6700206888568325462==
+--===============6360611747079007765==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/tpm2-option-revamp
   Home:   https://github.com/01org/tpm2-tools
-  Commit: c7c1bc4c70e327e048a4424b9dfb5fba50524d04
-      https://github.com/01org/tpm2-tools/commit/c7c1bc4c70e327e048a4424b9d=
-fb5fba50524d04
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Commit: e09c09506fe9f052daf9864df85646345eba27f1
+      https://github.com/01org/tpm2-tools/commit/e09c09506fe9f052daf9864df8=
+5646345eba27f1
+  Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-01 (Fri, 01 Sep 2017)
 
   Changed paths:
-    M test/system/test_all.sh
+    M Makefile.am
+    R lib/context-util.c
+    R lib/context-util.h
+    R lib/options.c
+    R lib/options.h
+    A lib/tcti/tpm2_tools_tcti_abrmd.c
+    A lib/tcti/tpm2_tools_tcti_abrmd.h
+    A lib/tcti/tpm2_tools_tcti_device.c
+    A lib/tcti/tpm2_tools_tcti_device.h
+    A lib/tcti/tpm2_tools_tcti_socket.c
+    A lib/tcti/tpm2_tools_tcti_socket.h
+    A lib/tpm2_options.c
+    A lib/tpm2_options.h
+    M lib/tpm2_util.h
+    R tools/main.c
+    R tools/main.h
+    M tools/tpm2_activatecredential.c
+    M tools/tpm2_akparse.c
+    M tools/tpm2_certify.c
+    M tools/tpm2_create.c
+    M tools/tpm2_createpolicy.c
+    M tools/tpm2_createprimary.c
+    M tools/tpm2_dictionarylockout.c
+    M tools/tpm2_dump_capability.c
+    M tools/tpm2_encryptdecrypt.c
+    M tools/tpm2_evictcontrol.c
+    M tools/tpm2_getmanufec.c
+    M tools/tpm2_getpubak.c
+    M tools/tpm2_getpubek.c
+    M tools/tpm2_getrandom.c
+    M tools/tpm2_hash.c
+    M tools/tpm2_hmac.c
+    M tools/tpm2_listpersistent.c
+    M tools/tpm2_load.c
+    M tools/tpm2_loadexternal.c
+    M tools/tpm2_makecredential.c
+    M tools/tpm2_nvdefine.c
+    M tools/tpm2_nvlist.c
+    M tools/tpm2_nvread.c
+    M tools/tpm2_nvreadlock.c
+    M tools/tpm2_nvrelease.c
+    M tools/tpm2_nvwrite.c
+    M tools/tpm2_pcrevent.c
+    M tools/tpm2_pcrextend.c
+    M tools/tpm2_pcrlist.c
+    M tools/tpm2_quote.c
+    M tools/tpm2_rc_decode.c
+    M tools/tpm2_readpublic.c
+    M tools/tpm2_rsadecrypt.c
+    M tools/tpm2_rsaencrypt.c
+    M tools/tpm2_send_command.c
+    M tools/tpm2_sign.c
+    M tools/tpm2_startup.c
+    M tools/tpm2_takeownership.c
+    A tools/tpm2_tool.c
+    A tools/tpm2_tool.h
+    M tools/tpm2_unseal.c
+    M tools/tpm2_verifysignature.c
 
   Log Message:
   -----------
-  test: remove duplicate execution of test_tpm2_evictcontrol.sh
+  option fixing: move to single getopt
 
-The test was executed twice in test_all.sh, remove one of them.
+Parsing with multiple invocations of getopt
+and strpping known options before invoking the
+tool has resulted in some bugs. getopt is set
+up to have all known options set up before the
+call. A side affect of the old design was that
+tool options could end up in a weird state.
 
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+For instance -I- for tpm2_create would not be parsed
+correctly and an extra optarg would be added to
+argv.
+
+Redesign the option handling to use a single getopt
+call, and develop new entry points for the tools.
+
+New Entry Points:
+1. tpm2_tool_onstart - The initial entry point to get
+   the option arguments for getopt. This entry point
+   also sets callbacks for:
+    - option handling
+    - argument handling
+
+2. tpm2_tool_onrun - The tool executes the requested
+   functionality.
+
+3. tpm2_tool_exit - this is guarenteed to be called
+   before exiting while the tcti context is still
+   valid. This can be used for any cleanup done in a
+   previous stage.
+
+TODO:
+ - clean ups
+ - port other tools
+ - error handling from main exits, tools need to
+   clean up, do we have a tool_exit() call or
+   just tell tools to set an at exit handler
+   during 1.
+   - maybe rename entry point 1 to tool_start?
+     I personally like this flow:
+     - tool_start
+     - tool_execute
+     - tool_exit
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 5b244047e445741549ab624eb199d120bc411994
-      https://github.com/01org/tpm2-tools/commit/5b244047e445741549ab624eb1=
-99d120bc411994
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Commit: 6b1f4847e0ec96b88e2c6e4c817e5fa3a7e6ea99
+      https://github.com/01org/tpm2-tools/commit/6b1f4847e0ec96b88e2c6e4c81=
+7e5fa3a7e6ea99
+  Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-01 (Fri, 01 Sep 2017)
 
   Changed paths:
-    M test/system/test_tpm2_pcrevent.sh
+    R .travis.yml
 
   Log Message:
   -----------
-  test: Use relative path for yaml_get.py in test_tpm2_pcrevent.sh
+  [REVERTME]remove travis.yml to prevent buildingwq
 
-The test_all.sh script adds the tests directory in the $PATH variable but
-that's not the case when the tests are executed standalone. In this case,
-the test_tpm2_pcrevent.sh doesn't find the yaml_get.py and fails with:
-
-$ ./test_tpm2_pcrevent.sh
-./test_tpm2_pcrevent.sh: line 74: yaml_get.py: command not found
-old_pcr_value=3D`yaml_get.py sha1 9 $yaml_out_file` on line 74 failed: 127
-
-Tests are expected to be executed inside the test/system sub-directory,
-so just use a relative path for the yaml_get.py script.
-
-While being there, add a printout to notify that the test was executed
-successfully to be consistent with the other tests that do the same.
-
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-Compare: https://github.com/01org/tpm2-tools/compare/57feb39b3357...5b24404=
-7e445
+Compare: https://github.com/01org/tpm2-tools/compare/5b244047e445...6b1f484=
+7e0ec
 
---===============6700206888568325462==--
+--===============6360611747079007765==--
 
