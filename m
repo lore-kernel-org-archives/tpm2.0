@@ -1,114 +1,150 @@
-Content-Type: multipart/mixed; boundary="===============6260439160881913079=="
+Content-Type: multipart/mixed; boundary="===============5572998590779569199=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] hardware TPM2 performance data
-Date: Mon, 04 Sep 2017 22:14:51 +0200
-Message-ID: <112ae3c4-18e7-5f8e-9e33-cb55c6c1f954@redhat.com>
-In-Reply-To: 44da64eb7bb84825a47e7e75d0233427@MUCSE603.infineon.com
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] e24040: tpm2_akparse: port to the new tool
+ options parsing...
+Date: Mon, 04 Sep 2017 14:40:08 -0700
+Message-ID: <59adc83894851_4de63fd5d702dc3466738@hookshot-fe1-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6260439160881913079==
+--===============5572998590779569199==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Alexander,
+  Branch: refs/heads/tpm2-option-revamp
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: e24040610c2616a8ee7d9fb80da09ac250bbe3ef
+      https://github.com/01org/tpm2-tools/commit/e24040610c2616a8ee7d9fb80d=
+a09ac250bbe3ef
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-09-04 (Mon, 04 Sep 2017)
 
-Thanks a lot for your feedback.
+  Changed paths:
+    M Makefile.am
+    M tools/tpm2_akparse.c
 
-On 09/04/2017 07:56 PM, Alexander.Steffen(a)infineon.com wrote:
->> Hello folks,
->>
->> I was wondering if you have any hardware TPM2 performance data.
->>
->> The only system I've access with a TPM2 for now, is a Lenovo Thinkpad X1
->> Carbon (4th generation) that has a Intel PTT firmware based TPM2.
->>
->> Executing the test/system/test_tpm2_unseal.sh takes ~6.5 seconds on my
->> machine.
->>
->> But my colleague Russell (please keep him on cc since I don't think he's=
- in the
->> list) has a machine with an Asus TPM-L R2.0 TTPM Module and it's painful=
-ly
->> slow.
->>
->> The same test takes more than 1 minute on his system. Are really hardware
->> TPM2s this slow? I understand that they are slow by design but is unseal=
-ing
->> some data really expected to take several seconds?
-> =
+  Log Message:
+  -----------
+  tpm2_akparse: port to the new tool options parsing infra
 
-> Unsealing itself (i.e. the execution of TPM2_Unseal) should be rather fas=
-t. But if you look at test_tpm2_unseal.sh, it does far more than just unsea=
-l some data. It creates several keys, which I'd expect to take up most of t=
-he time, since that is an expensive operation, especially in the case of pr=
-imary keys.
->
+Tested with:
 
-I see, for some reasons I (probably mis-)understood in the TCG spec that th=
-e KDF
-shouldn't be that expensive, since I thought that a nice feature of the TPM=
-2 was
-that it did not require to make the primary keys persistent, due being able=
- to
-generate them deterministic using the seeds.
- =
+$ ./test_tpm2_akparse.sh
+ee bd b4 e7 7d 87 fd fc b0 7a e8 d4 9d 3d 4d 55
+fb b9 38 93 fe 3a 10 f4 11 25 a5 9d 42 7b 08 e6
+b9 c2 d6 18 4a db f0 e3 1f 04 d3 f4 4b 93 4c 9a
+d1 8e fa e6 54 60 09 d9 c4 15 36 dc ce a7 b1 da
+f5 e7 92 74 49 4a a2 86 3a 93 60 e8 e9 7c ef 80
+3a 73 fa 4f c3 fc 8b e7 40 13 79 e5 1b 13 7b 7c
+67 9b 6d 26 e6 d2 74 32 38 64 4a 3e 49 f1 d5 25
+e5 92 fa b3 d0 66 3d 26 ad fe dd 5d 61 14 41 f7
+6a 25 53 d0 5f c7 f5 81 78 1f 9b 3a 68 61 19 c4
+31 68 62 fb d4 5d 82 f3 0b 86 53 30 34 df b2 00
+a2 19 a2 93 68 dc fb d7 6c 8a 93 7a be 69 e1 6b
+06 a8 f7 2c 8c db 7f 63 cf 7c d0 71 1c 34 25 b6
+78 b1 64 16 a8 49 c6 7c f0 9a 6c bf 6f e4 80 f5
+cf 9d e2 67 5e f0 1a f1 bb 1a 99 60 6b ab b0 5b
+d9 18 02 c9 0c 70 c7 4f fe 2f 6b 4b 30 1e 1c 3c
+9c b5 8b 6c b4 f8 a6 b2 3f 74 38 b5 14 88 f6 2b
 
->> I would like to know what TPM2 chips are you using and how long the
->> tpm2_unseal test takes to run on your system, to know if Russell's hw TP=
-M2
->> perf is the norm.
-> =
+akparse successfully!
 
-> Primary keys are derived from a seed value, so key generation basically m=
-eans generating an endless pseudo-random stream from the seed, looking for =
-suitable keys (e.g. prime numbers in the case of RSA) in there. Given the s=
-ame input, this allows the TPM to always generate the exact same key, witho=
-ut storing anything besides the small seed value that is shared between all=
- keys (in a hierarchy). But at the same time it prevents you from directly =
-comparing the performance of two TPMs for a TPM2_CreatePrimary call. Even i=
-f both TPMs run the same firmware, one TPM might use a seed so that for you=
-r particular call it needs to generate 1MB of pseudo-random data before it =
-has found acceptable keys, whereas the other TPM might use a seed that lead=
-s to a valid key after generating only 10kB of pseudo-random data. And for =
-other seeds/inputs this might look completely different again.
->
-
-Your explanation makes a lot of sense. I'm not making the primary key persi=
-stent
-in the TPM2 since I thought it would be simpler than having to manage them =
-as a
-persistent object in the TPM2. But I'll explore this approach now.
-
-> So for key generation you can only statistically compare a large number o=
-f key generations with different inputs. Or if you are interested in the un=
-seal performance, I'd suggest to remove the key generation entirely from yo=
-ur benchmark, working with pre-existing keys only.
->
-
-More than the unseal performance, I was interested in the performance of al=
-l the
-operations needed to seal and unseal data with the TPM2 (create primary key=
-, PCR
-policy creation for authentication, create and load object to seal, etc).
-
-Hopefully I should have access to systems with a hardware TPM2 soon, so I s=
-hould
-be able to test the performance implications of all these operations.
-
-> Kind regards
-> Alexander
-> =
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-Best regards,
--- =
+  Commit: 64a4cecdf9a2d036457795187d4189a917224f67
+      https://github.com/01org/tpm2-tools/commit/64a4cecdf9a2d036457795187d=
+4189a917224f67
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-09-04 (Mon, 04 Sep 2017)
 
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
+  Changed paths:
+    M Makefile.am
+    M tools/tpm2_certify.c
 
---===============6260439160881913079==--
+  Log Message:
+  -----------
+  tpm2_certify: port to the new tool options parsing infra
+
+Tested with:
+
+$ ./test/system/test_tpm2_certify.sh
+nameAlg =3D 0x000b
+type =3D 0x0001
+contextFile =3D context.p_B1
+
+CreatePrimary Succeed ! Handle: 0x80ffffff
+
+nameAlg =3D 0x000b
+type =3D 0x0001
+contextParentFile =3D context.p_B1
+ObjectAttribute: 0x00060072
+
+Create Object Succeed !
+contextParentFile =3D context.p_B1
+contextFile =3D context_load_out_B1_B8
+
+Load succ.
+LoadedHandle: 0x80fffffe
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+  Commit: 79916dde783dd8098482cfb195b0a8606d639c0a
+      https://github.com/01org/tpm2-tools/commit/79916dde783dd8098482cfb195=
+b0a8606d639c0a
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-09-04 (Mon, 04 Sep 2017)
+
+  Changed paths:
+    M Makefile.am
+    M tools/tpm2_create.c
+
+  Log Message:
+  -----------
+  tpm2_create: port to the new tool options parsing infra
+
+Tested with:
+
+$ ./test/system/test_tpm2_unseal.sh
+nameAlg =3D 0x0004
+type =3D 0x0001
+contextFile =3D context.p_0x0004_0x0001
+
+CreatePrimary Succeed ! Handle: 0x80ffffff
+
+ObjectAttribute: 0x00000052
+
+Create Object Succeed !
+contextParentFile =3D context.p_0x0004_0x0001
+contextFile =3D ctx_load_out_0x0004_0x0001-0x000B_0x0008
+
+Load succ.
+LoadedHandle: 0x80fffffe
+
+Bank/Algorithm: sha(0x0004)
+PCR_00:c72ec9e6cbc2b6a95f334dddd6513981da00f0c2
+PCR_01:2455942631ba0d81130c0b31aebfd1775e29fe8a
+PCR_02:b2a83b0ebf2f8374299a5b2bdfc31ea955ad7236
+PCR_03:b2a83b0ebf2f8374299a5b2bdfc31ea955ad7236
+ObjectAttribute: 0x00000492
+
+Create Object Succeed !
+contextParentFile =3D context.p_0x0004_0x0001
+contextFile =3D ctx_load_out_0x0004_0x0001-0x000B_0x0008
+
+Load succ.
+LoadedHandle: 0x80fffffe
+
+tpm2_unseal success
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/6b1f4847e0ec...79916dd=
+e783d
+
+--===============5572998590779569199==--
 
