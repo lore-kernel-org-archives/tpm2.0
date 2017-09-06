@@ -1,118 +1,127 @@
-Content-Type: multipart/mixed; boundary="===============6181369040650273291=="
+Content-Type: multipart/mixed; boundary="===============1048003303919124314=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] Issue Solved/Trusted Boot
-Date: Wed, 06 Sep 2017 21:28:14 +0200
-Message-ID: <15a53a7a-5d7e-1562-720d-580dade8cf9f@redhat.com>
-In-Reply-To: 1504714564.11928.12.camel@twobit.us
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] f046d8: option fixing: move to single getopt
+Date: Wed, 06 Sep 2017 13:13:07 -0700
+Message-ID: <59b056d326a08_6ec43fec6e829c2899726@hookshot-fe5-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6181369040650273291==
+--===============1048003303919124314==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 09/06/2017 06:16 PM, Philip Tricca wrote:
-> On Mon, 2017-09-04 at 12:04 +0200, Javier Martinez Canillas wrote:
->> Following a discussion on 01org/tpm2-tools #444 [https://github.com
->>> /01org/
->>> tpm2-tools/issues/444] I wanted to post an update on what the issue
->>> was.
->>>
->>
->> I'm glad that your issue got solved.
->>  > =
+  Branch: refs/heads/tpm2-option-revamp
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: f046d8d198fa59a1b52b0f9a20b665304edc0bc7
+      https://github.com/01org/tpm2-tools/commit/f046d8d198fa59a1b52b0f9a20=
+b665304edc0bc7
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-06 (Wed, 06 Sep 2017)
 
->>> If I could ask one further thing (I believe this is the correct
->>> place to
->>> post this?), I=E2=80=99m looking at setting up a trusted boot system on=
- my
->>> current
->>> setup (Ubuntu 16.04, kernel 4.4) to be used with the now working
->>> tpm2. I
->>> have previously done this with tpm1.2 but the process seems rather
->>> different this time, if anyone can point me to any good
->>> resources/tutorials
->>> that would be a massive help.
->>>
->>
->> There isn't a single way to do this, so it depends on what kind of
->> system you
->> want to use and what is your threat model.
->>
->> For example, do you want to boot your system in EFI or BIOS mode? do
->> you want
->> to use Secure Boot or no?
-> =
+  Changed paths:
+    R .travis.yml
+    M Makefile.am
+    R lib/context-util.c
+    R lib/context-util.h
+    R lib/options.c
+    R lib/options.h
+    A lib/tcti/tpm2_tools_tcti_abrmd.c
+    A lib/tcti/tpm2_tools_tcti_abrmd.h
+    A lib/tcti/tpm2_tools_tcti_device.c
+    A lib/tcti/tpm2_tools_tcti_device.h
+    A lib/tcti/tpm2_tools_tcti_socket.c
+    A lib/tcti/tpm2_tools_tcti_socket.h
+    A lib/tpm2_options.c
+    A lib/tpm2_options.h
+    M lib/tpm2_util.h
+    M man/tpm2_startup.8.in
+    M test/system/test_tpm2_startup.sh
+    R tools/main.c
+    R tools/main.h
+    M tools/tpm2_activatecredential.c
+    M tools/tpm2_akparse.c
+    M tools/tpm2_certify.c
+    M tools/tpm2_create.c
+    M tools/tpm2_createpolicy.c
+    M tools/tpm2_createprimary.c
+    M tools/tpm2_dictionarylockout.c
+    M tools/tpm2_dump_capability.c
+    M tools/tpm2_encryptdecrypt.c
+    M tools/tpm2_evictcontrol.c
+    M tools/tpm2_getmanufec.c
+    M tools/tpm2_getpubak.c
+    M tools/tpm2_getpubek.c
+    M tools/tpm2_getrandom.c
+    M tools/tpm2_hash.c
+    M tools/tpm2_hmac.c
+    M tools/tpm2_listpersistent.c
+    M tools/tpm2_load.c
+    M tools/tpm2_loadexternal.c
+    M tools/tpm2_makecredential.c
+    M tools/tpm2_nvdefine.c
+    M tools/tpm2_nvlist.c
+    M tools/tpm2_nvread.c
+    M tools/tpm2_nvreadlock.c
+    M tools/tpm2_nvrelease.c
+    M tools/tpm2_nvwrite.c
+    M tools/tpm2_pcrevent.c
+    M tools/tpm2_pcrextend.c
+    M tools/tpm2_pcrlist.c
+    M tools/tpm2_quote.c
+    M tools/tpm2_rc_decode.c
+    M tools/tpm2_readpublic.c
+    M tools/tpm2_rsadecrypt.c
+    M tools/tpm2_rsaencrypt.c
+    M tools/tpm2_send_command.c
+    M tools/tpm2_sign.c
+    M tools/tpm2_startup.c
+    M tools/tpm2_takeownership.c
+    A tools/tpm2_tool.c
+    A tools/tpm2_tool.h
+    M tools/tpm2_unseal.c
+    M tools/tpm2_verifysignature.c
 
-> Minor clarification: TPM2 has no support for legacy BIOS boot. UEFI
-> only.
->
+  Log Message:
+  -----------
+  option fixing: move to single getopt
 
-Right, and the TCG spec only describes an EFI interface for it in the "TCG =
-EFI
-Protocol Specification". I always get confused by this because when booting=
- a
-machine in BIOS (CSM) mode, I see a TPM2 chardev and the tpm2-tools work we=
-ll.
+Parsing with multiple invocations of getopt
+and strpping known options before invoking the
+tool has resulted in some bugs. getopt is set
+up to have all known options set up before the
+call. A side affect of the old design was that
+tool options could end up in a weird state.
 
->> For me the best way to do this is to use UEFI + Secure Boot and to
->> seal your
->> secrets against PCR7 as described in this blog post [0] from Matthew
->> Garret.
->>
->> But for that you need latest shim that measures certificates into
->> PCR7 [1] and
->> TPM2 measurement support in grub2 [2] that haven't landed yet.
->>
->> If you want to boot your system in BIOS mode, then you have other
->> options like
->> the TrustedGrub2 project [3].
-> =
+For instance -I- for tpm2_create would not be parsed
+correctly and an extra optarg would be added to
+argv.
 
-> There is a set of patches to Grub2 that integrates TPM2 measurements
-> for loadable modules, kernel, initramfs & command line that was sent to
-> the grub2 devel list a while back. I've not seen the RSC TrustedGrub2
+Redesign the option handling to use a single getopt
+call, and develop new entry points for the tools.
 
-Yes, that was my reference [2]. I tested the patches and works correctly fo=
-r me.
+New Entry Points:
+1. tpm2_tool_onstart - The initial entry point to get
+   the option arguments for getopt. This entry point
+   also sets callbacks for:
+    - option handling
+    - argument handling
 
-> work before (thanks for the link by the way) but IMHO forking Grub2 for
-> TPM2 work in the same way the original TrustedGrub did isn't the right
+2. tpm2_tool_onrun - The tool executes the requested
+   functionality.
 
-Absolutely agree, I was just trying to list the available projects out there
-that have TPM support. Although I double checked and they still don't have
-TPM2 support. For some reasons I thought it did, sorry for the confusion.
+3. tpm2_tool_exit - this is guarenteed to be called
+   before exiting while the tcti context is still
+   valid. This can be used for any cleanup done in a
+   previous stage.
 
-> way to do this. Better to get more people talking about this on the
-> grub devel mailing list to try to get the patches upstreamed.
->
+Major Contributors:
+ - Javier Martinez Canillas <javierm(a)redhat.com>
 
-Yeah, the problem is that the grub2 TPM2 measurements patches depends on ot=
-her
-in-flight patch-set (the verifier framework) and AFAIU there are still some
-discussion needed about those patches:
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
-http://lists.gnu.org/archive/html/grub-devel/2017-07/msg00040.html
 
-> Regards,
-> Philip
-> =
 
->> [0]: https://mjg59.dreamwidth.org/48897.html
->> [1]: https://github.com/rhboot/shim/commit/8af7c4cacaf753f38f2564b26b
->> 962a7a2942d664
->> [2]: http://lists.gnu.org/archive/html/grub-devel/2017-07/msg00003.ht
->> ml
->> [3]: https://github.com/Rohde-Schwarz-Cybersecurity/TrustedGRUB2
-
-Best regards,
--- =
-
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
-
---===============6181369040650273291==--
+--===============1048003303919124314==--
 
