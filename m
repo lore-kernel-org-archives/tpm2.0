@@ -1,27 +1,26 @@
-Content-Type: multipart/mixed; boundary="===============1048003303919124314=="
+Content-Type: multipart/mixed; boundary="===============1760238436089846330=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] f046d8: option fixing: move to single getopt
-Date: Wed, 06 Sep 2017 13:13:07 -0700
-Message-ID: <59b056d326a08_6ec43fec6e829c2899726@hookshot-fe5-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] db1ab2: option fixing: move to single getopt
+Date: Wed, 06 Sep 2017 13:14:12 -0700
+Message-ID: <59b05714447b1_1aa03fd732da9c302234@hookshot-fe2-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1048003303919124314==
+--===============1760238436089846330==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/tpm2-option-revamp
   Home:   https://github.com/01org/tpm2-tools
-  Commit: f046d8d198fa59a1b52b0f9a20b665304edc0bc7
-      https://github.com/01org/tpm2-tools/commit/f046d8d198fa59a1b52b0f9a20=
-b665304edc0bc7
+  Commit: db1ab22c0fa85df6cef1838268889dc709019d32
+      https://github.com/01org/tpm2-tools/commit/db1ab22c0fa85df6cef1838268=
+889dc709019d32
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-06 (Wed, 06 Sep 2017)
 
   Changed paths:
-    R .travis.yml
     M Makefile.am
     R lib/context-util.c
     R lib/context-util.h
@@ -123,5 +122,5 @@ Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============1048003303919124314==--
+--===============1760238436089846330==--
 
