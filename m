@@ -1,24 +1,24 @@
-Content-Type: multipart/mixed; boundary="===============1760238436089846330=="
+Content-Type: multipart/mixed; boundary="===============3600022911932254735=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] db1ab2: option fixing: move to single getopt
-Date: Wed, 06 Sep 2017 13:14:12 -0700
-Message-ID: <59b05714447b1_1aa03fd732da9c302234@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] 173042: option fixing: move to single getopt
+Date: Thu, 07 Sep 2017 08:44:34 -0700
+Message-ID: <59b169626ce7d_e1f3f827d0bbc30668f9@hookshot-fe2-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1760238436089846330==
+--===============3600022911932254735==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/tpm2-option-revamp
   Home:   https://github.com/01org/tpm2-tools
-  Commit: db1ab22c0fa85df6cef1838268889dc709019d32
-      https://github.com/01org/tpm2-tools/commit/db1ab22c0fa85df6cef1838268=
-889dc709019d32
+  Commit: 173042edc582748d370e1c6124751b1a5c29a82a
+      https://github.com/01org/tpm2-tools/commit/173042edc582748d370e1c6124=
+751b1a5c29a82a
   Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-06 (Wed, 06 Sep 2017)
+  Date:   2017-09-07 (Thu, 07 Sep 2017)
 
   Changed paths:
     M Makefile.am
@@ -121,6 +121,24 @@ Major Contributors:
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
+  Commit: 01ad76681e0d6d83dd05427b9998483c7ec71196
+      https://github.com/01org/tpm2-tools/commit/01ad76681e0d6d83dd05427b99=
+98483c7ec71196
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-07 (Thu, 07 Sep 2017)
 
---===============1760238436089846330==--
+  Changed paths:
+    R .travis.yml
+
+  Log Message:
+  -----------
+  REVERTME DISABLE CI BUILD
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/db1ab22c0fa8...01ad766=
+81e0d
+
+--===============3600022911932254735==--
 
