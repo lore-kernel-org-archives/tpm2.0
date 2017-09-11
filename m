@@ -1,54 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============7500042502880449551=="
+Content-Type: multipart/mixed; boundary="===============7218308491485069970=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 696cc1: man: update TCTI options man
- according to the new ...
-Date: Mon, 11 Sep 2017 10:43:47 -0700
-Message-ID: <59b6cb532a5a2_65163f931c757c38621ed@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] 0d4aed: tpm2_nvread: only print the number
+ of bytes read
+Date: Mon, 11 Sep 2017 10:53:44 -0700
+Message-ID: <59b6cda8333a_11c63f93e1443c3477068@hookshot-fe5-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7500042502880449551==
+--===============7218308491485069970==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 696cc1bbe384dac33fb673b65e23d53e7cc7e6af
-      https://github.com/01org/tpm2-tools/commit/696cc1bbe384dac33fb673b65e=
-23d53e7cc7e6af
+  Commit: 0d4aedd09b9e8e9764525aa8c9f49a659f1721aa
+      https://github.com/01org/tpm2-tools/commit/0d4aedd09b9e8e9764525aa8c9=
+f49a659f1721aa
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-09-11 (Mon, 11 Sep 2017)
 
   Changed paths:
-    M man/tcti-options.troff
+    M tools/tpm2_nvread.c
 
   Log Message:
   -----------
-  man: update TCTI options man according to the new options handling
+  tpm2_nvread: only print the number of bytes read
 
-Commit 1cb24d62d6b ("option fixing: move to single getopt") reworked how
-the options are handled by the tools, but it also changed how the TCTI
-specific options are passed to the TCTI initialization code.
+The nv_read() function queries the NV index public data size to know how
+much bytes have to be read. But the reported size may be bigger than the
+actual size read from the NV area.
 
-The man pages were not updated and still list the old way to specify the
-TCTI specific options, users reading the man page will face this issue:
+So instead of using the reported NV area public data size for printing,
+use the read NV area size.
 
-$ tpm2_pcrlist -L sha1:7 -T device -d /dev/tpm0
-tpm2_pcrlist: invalid option -- 'd'
-ERROR: Unknown Argument: d
+For example using the NV are public data size may lead to the following:
 
-Update man pages so users know that they instead need to do following:
+$ echo -n foobar > data.txt
 
-$ tpm2_pcrlist -L sha1:7 -T device:/dev/tpm0
+$ hexdump -C -v data.txt
+00000000  66 6f 6f 62 61 72                                 |foobar|
+00000006
 
-Bank/Algorithm: sha(0x0004)
-PCR_07:6d7206871c9c6f38ad3997baceebee95dadec04d
+$ tpm2_nvwrite -x 0x1500018 -a 0x40000001 -f data.txt
+66 6f 6f 62 61 72
+
+$ tpm2_nvread -x 0x1500018 -a 0x40000001 -s 6 -o 0
+data_size 32 ctx.size_to_read 0 data_offset 6
+000000: 66 6f 6f 62 61 72 00 00 c8 ad 07 91 78 7f 00 00  foobar......x...
+000010: 10 60 b2 e9 92 55 00 00 05 00 00 00 00 00 00 00  .`...U..........
+
+But after this patch using the read size, the data is correctly printed:
+
+$ tpm2_nvread -x 0x1500018 -a 0x40000001 -s 6 -o 0
+000000: 66 6f 6f 62 61 72                                foobar
 
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
 
---===============7500042502880449551==--
+--===============7218308491485069970==--
 
