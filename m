@@ -1,49 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============5628063932828140333=="
+Content-Type: multipart/mixed; boundary="===============2154449711431499307=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 3ea878: man: explain in tpm2_evictcontrol
- page how objects...
-Date: Thu, 14 Sep 2017 12:34:49 -0700
-Message-ID: <59bad9d929e30_2405d3f9c2d217c40500f1@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] 368770: tpm2_evictcontrol: make tool
+ smarter to not requir...
+Date: Fri, 15 Sep 2017 07:53:03 -0700
+Message-ID: <59bbe94f2620f_61e63f93e9da3c2c32655@hookshot-fe3-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5628063932828140333==
+--===============2154449711431499307==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 3ea878cbde11bca5d966a0a345374a513d2b934a
-      https://github.com/01org/tpm2-tools/commit/3ea878cbde11bca5d966a0a345=
-374a513d2b934a
+  Commit: 368770a0df10c6a95f2d7681d2ffe74d6a2c6250
+      https://github.com/01org/tpm2-tools/commit/368770a0df10c6a95f2d7681d2=
+ffe74d6a2c6250
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
-  Date:   2017-09-14 (Thu, 14 Sep 2017)
+  Date:   2017-09-15 (Fri, 15 Sep 2017)
 
   Changed paths:
     M man/tpm2_evictcontrol.1.md
+    M tools/tpm2_evictcontrol.c
 
   Log Message:
   -----------
-  man: explain in tpm2_evictcontrol page how objects are evicted
+  tpm2_evictcontrol: make tool smarter to not require -S to evict objects
 
-The specification says "If objectHandle is a persistent object, then the
-call evicts the persistent object" and "if objectHandle is a persistent
-object handle, then it shall be the same value as persistentHandle".
+The TCG TPM specification requires the same handle to be provided for both
+objectHandle and persistentHandle but this implementation detail leaked in
+the tool and so users need to provide both a -S and -H options to evict an
+object.
 
-So the tool is doing the correct thing by requiring both the object and
-persistent handles to be defined and being the same to evict an object.
+But the tool can be smarter, the handles are not just opaque values but
+they encode information. The first byte is the TPM_HT (Handle Type) and
+for persistent objects handles this is TPM_HT_PERSISTENT (0x81).
 
-But this isn't documented in the tool man page and it may not be evident
-to people not familiar with the TCG TPM specification.
-
-While being there, remove a -X option from one of the examples since the
-tpm2_evictcontrol tool doesn't have one.
+Fixes: #492
 
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
 
---===============5628063932828140333==--
+--===============2154449711431499307==--
 
