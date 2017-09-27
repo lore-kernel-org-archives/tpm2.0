@@ -1,206 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============1034231260814629574=="
+Content-Type: multipart/mixed; boundary="===============5348103983046026205=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] ce66d8: test: fix
- test_tpm2_activatecredential
-Date: Wed, 27 Sep 2017 15:13:20 -0700
-Message-ID: <59cc22808122e_3ebb3fe0852d9c404598@hookshot-fe5-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] 5f0121: test_tpm2_dictionarylockout:
+ cleanup tests
+Date: Wed, 27 Sep 2017 16:54:26 -0700
+Message-ID: <59cc3a327e733_1f183f998befdc386309f@hookshot-fe6-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1034231260814629574==
+--===============5348103983046026205==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: ce66d8bd3ed8c1abc105d01eb04f6afee60e9f6a
-      https://github.com/01org/tpm2-tools/commit/ce66d8bd3ed8c1abc105d01eb0=
-4f6afee60e9f6a
+  Commit: 5f012189b51798e8015515a4beb3b91467b81e06
+      https://github.com/01org/tpm2-tools/commit/5f012189b51798e8015515a4be=
+b3b91467b81e06
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-27 (Wed, 27 Sep 2017)
 
   Changed paths:
-    M test/system/test_tpm2_activecredential.sh
+    M test/system/test_tpm2_dictionarylockout.sh
 
   Log Message:
   -----------
-  test: fix test_tpm2_activatecredential
+  test_tpm2_dictionarylockout: cleanup tests
 
-Update to use trap handlers for file cleanup and evict
-persistent objects when done.
+Add an error handler and clean up testing output.
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: ddd8484b7f96e02de78c1d709af6b01f83270f48
-      https://github.com/01org/tpm2-tools/commit/ddd8484b7f96e02de78c1d709a=
-f6b01f83270f48
+  Commit: fe09aa97673c0faffe17b489aa1e1c47d3870395
+      https://github.com/01org/tpm2-tools/commit/fe09aa97673c0faffe17b489aa=
+1e1c47d3870395
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-27 (Wed, 27 Sep 2017)
 
   Changed paths:
-    M test/system/test_tpm2_akparse.sh
+    M test/system/test_tpm2_getmanufec.sh
 
   Log Message:
   -----------
-  test: fix test_tpm2_akparse
+  test_tpm2_getmanufec: cleanup tests
 
-Update to use trap handlers for file cleanup and evict
-persistent objects when done.
+Add an error handler and clean up testing output.
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 876985884a0a9d30193b706325f1ef407b5b76d6
-      https://github.com/01org/tpm2-tools/commit/876985884a0a9d30193b706325=
-f1ef407b5b76d6
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_certify.sh
-
-  Log Message:
-  -----------
-  test: fix test_tpm2_certify
-
-Update to use trap handlers for file cleanup.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 1ea34b69c11ad9517d4014a5f4c55b1c7c0dafe2
-      https://github.com/01org/tpm2-tools/commit/1ea34b69c11ad9517d4014a5f4=
-c55b1c7c0dafe2
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_createpolicy.sh
-
-  Log Message:
-  -----------
-  test: fix test_tpm2_policy
-
-Update to use trap handlers for file cleanup.
-Add assertion that PCR 0 sha and sha256 banks
-are equal to 3.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 5344f4c8d59383f842b35f77b4cdfb0b722a54c9
-      https://github.com/01org/tpm2-tools/commit/5344f4c8d59383f842b35f77b4=
-cdfb0b722a54c9
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M tools/tpm2_dump_capability.c
-
-  Log Message:
-  -----------
-  tpm2_dump_capability: support quiet option
-
-Use tpm2_tool_output to support the quiet option.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: ee7b07342f403e7f349ce197c5fb73296bbeb019
-      https://github.com/01org/tpm2-tools/commit/ee7b07342f403e7f349ce197c5=
-fb73296bbeb019
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_dump_capability.sh
-
-  Log Message:
-  -----------
-  test: fix test_tpm2_dump_capability
-
-Update to use trap handlers for error reporting.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: ac5b2e4cff42d2da099ce720bb1db3c7792bd5bd
-      https://github.com/01org/tpm2-tools/commit/ac5b2e4cff42d2da099ce720bb=
-1db3c7792bd5bd
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M Makefile.am
-
-  Log Message:
-  -----------
-  Makefile.am: fix include dir
-
-Including src was still present after the rename of src --> tools.
-It should be tools directory, not src, fix it.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 7311eb7d1f146decce51ff87bbf33588cf88355b
-      https://github.com/01org/tpm2-tools/commit/7311eb7d1f146decce51ff87bb=
-f33588cf88355b
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M lib/tpm2_util.c
-
-  Log Message:
-  -----------
-  lib/tpm2_util.c: tpm2_util_print_tpm2b respect -Q
-
-Make the tpm2_util_print_tpm2b routine respect the quiet option.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 42a775f611a792a87c6a8fef558c520781921fc0
-      https://github.com/01org/tpm2-tools/commit/42a775f611a792a87c6a8fef55=
-8c520781921fc0
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M tools/tpm2_getpubak.c
-
-  Log Message:
-  -----------
-  tpm2_getpubak: respect the quiet option
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 439acc44567d2f2e6ca1f1e97f51915e3acf5a9e
-      https://github.com/01org/tpm2-tools/commit/439acc44567d2f2e6ca1f1e97f=
-51915e3acf5a9e
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_encryptdecrypt.sh
-
-  Log Message:
-  -----------
-  test: fix test_tpm2_encryptdecrypt
-
-Use trap handlers for file cleanup and error reporting.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 71541ea68b17a9a0940604fbb86bb5bce407bac8
-      https://github.com/01org/tpm2-tools/commit/71541ea68b17a9a0940604fbb8=
-6bb5bce407bac8
+  Commit: d4bcf494a38a75e5afbce1d5619acfc97b9cc11e
+      https://github.com/01org/tpm2-tools/commit/d4bcf494a38a75e5afbce1d561=
+9acfc97b9cc11e
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-27 (Wed, 27 Sep 2017)
 
@@ -209,36 +62,166 @@ Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
   Log Message:
   -----------
-  test: tpm2_getpubak clear tpm state
+  test_tpm2_getpubak: cleanup tests
 
-Clear the tpm state with a takeownership -c call before running
-the test.
+Add an error handler and clean up testing output.
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 2a8ccbf0828cf40d2966a2ddbc1af9e13f46f35b
-      https://github.com/01org/tpm2-tools/commit/2a8ccbf0828cf40d2966a2ddbc=
-1af9e13f46f35b
+  Commit: 15880ea0bff4de95d1aac1219f8545f912d94036
+      https://github.com/01org/tpm2-tools/commit/15880ea0bff4de95d1aac1219f=
+8545f912d94036
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-27 (Wed, 27 Sep 2017)
 
   Changed paths:
-    A test/system/test.sh
-    M test/system/test_all.sh
+    M test/system/test_tpm2_getpubek.sh
 
   Log Message:
   -----------
-  test: test_all.sh generate test list vs hardcode
+  test_tpm2_getpubek: cleanup tests
 
-Rather than hardcode the test scripts, just take the list
-of test files and execute them.
+Add an error handler and clean up testing output.
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-Compare: https://github.com/01org/tpm2-tools/compare/08dcfa4381fb...2a8ccbf=
-0828c
+  Commit: db3f7cd48e68272368b97c45134719110d712eb3
+      https://github.com/01org/tpm2-tools/commit/db3f7cd48e68272368b97c4513=
+4719110d712eb3
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
 
---===============1034231260814629574==--
+  Changed paths:
+    M test/system/test_tpm2_getrandom.sh
+
+  Log Message:
+  -----------
+  test_tpm2_getrandom: cleanup tests
+
+Add an error handler and clean up testing output.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 57baccb0795674ba1c52526dc99feb29ba596648
+      https://github.com/01org/tpm2-tools/commit/57baccb0795674ba1c52526dc9=
+9feb29ba596648
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    R test/system/test_tpm2_getrandom_func.sh
+
+  Log Message:
+  -----------
+  test: remove test_tpm2_getrandom_func.sh
+
+This is already tested by test_tpm2_getrandom.sh
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 96af03778819a919ccf997aa201d806c5ae89c9c
+      https://github.com/01org/tpm2-tools/commit/96af03778819a919ccf997aa20=
+1d806c5ae89c9c
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    M test/system/test_tpm2_evictcontrol.sh
+
+  Log Message:
+  -----------
+  test: fix test_tpm2_evictcontrol
+
+Update to use trap handler for error reporting and
+cleanup duties.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: db879566a6c281a318b3697e65c403291e49cc7c
+      https://github.com/01org/tpm2-tools/commit/db879566a6c281a318b3697e65=
+c403291e49cc7c
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    A test/system/test_tpm2_createprimary.sh
+    R test/system/test_tpm2_createprimary_all.sh
+
+  Log Message:
+  -----------
+  renamse test_tpm2_createprimary_all.sh
+
+Rename test_tpm2_createprimary_all.sh to test_tpm2_createprimary.sh
+to follow the test naming conventions.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 58458fcfd5b2a769115bde1d93f702d0bef28f2e
+      https://github.com/01org/tpm2-tools/commit/58458fcfd5b2a769115bde1d93=
+f702d0bef28f2e
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    A test/system/test_tpm2_create.sh
+    R test/system/test_tpm2_create_all.sh
+
+  Log Message:
+  -----------
+  renamse test_tpm2_create_all.sh
+
+Rename test_tpm2_create_all.sh to test_tpm2_create.sh
+to follow the test naming conventions.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 0a3ac62ac0f2326b63595f3c94b38219b19b4760
+      https://github.com/01org/tpm2-tools/commit/0a3ac62ac0f2326b63595f3c94=
+b38219b19b4760
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    R test/system/test_tpm2_hash_all.sh
+
+  Log Message:
+  -----------
+  delete test_tpm2_hash_all.sh
+
+This test doesn't really add anything that test_tpm2_hash.sh does.
+It tests algorithms that may not be supported by the tpm as well.
+
+Since tpm2_tools is more about plumbing than exhaustivley testing
+the tpm, just remove it.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 9f486e19d916d3fca0e443d617e1108411a4adab
+      https://github.com/01org/tpm2-tools/commit/9f486e19d916d3fca0e443d617=
+e1108411a4adab
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    M test/system/test_tpm2_hmac.sh
+
+  Log Message:
+  -----------
+  test: tpm2_hmac clean up output
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/2a8ccbf0828c...9f486e1=
+9d916
+
+--===============5348103983046026205==--
 
