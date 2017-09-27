@@ -1,61 +1,163 @@
-Content-Type: multipart/mixed; boundary="===============5148376623717330170=="
+Content-Type: multipart/mixed; boundary="===============3426066947181420007=="
 MIME-Version: 1.0
-From: Anton Gerasimov <anton at advancedtelematic.com>
-Subject: Re: [tpm2] List supported EC curves
-Date: Wed, 27 Sep 2017 19:12:00 +0200
-Message-ID: <a22561d5-aee3-7599-0252-8fe6ab44fa6c@advancedtelematic.com>
-In-Reply-To: c4630d10-1979-ccce-8817-bce231b24e9b@advancedtelematic.com
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] bf363f: RELEASE: update to markdown
+Date: Wed, 27 Sep 2017 11:18:38 -0700
+Message-ID: <59cbeb7e6519a_73213fe003947c4411065@hookshot-fe2-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5148376623717330170==
+--===============3426066947181420007==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 09/27/2017 05:38 PM, Anton Gerasimov wrote:
->
-> Greetings,
->
-> is there a way to display list of supported elliptic curves in a TPM
-> device? There should a TPM_CAP_ECC_CURVES field for it, but I couldn't
-> find how to extract it (or just raw dump of capabilities) with tpm2-tools.
->
-> Thanks,
-> Anton Gerasimov
->
-Sorry, I've got the principle. I've made a patch in my working
-directory, if someone thinks it can be useful I can compose a proper PR.
+  Branch: refs/heads/master
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: bf363f88816247a11ae1c4e5289920a0aa1045bb
+      https://github.com/01org/tpm2-tools/commit/bf363f88816247a11ae1c4e528=
+9920a0aa1045bb
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
 
-Thanks,
-Anton Gerasimov
+  Changed paths:
+    R RELEASE
+    A RELEASE.md
+
+  Log Message:
+  -----------
+  RELEASE: update to markdown
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
---===============5148376623717330170==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+  Commit: 06c8e55a6e5259d053316ae22a33fae434d94e97
+      https://github.com/01org/tpm2-tools/commit/06c8e55a6e5259d053316ae22a=
+33fae434d94e97
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
 
-PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
-bnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+CiAgPC9oZWFkPgogIDxib2R5IHRleHQ9IiMw
-MDAwMDAiIGJnY29sb3I9IiNGRkZGRkYiPgogICAgPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4
-Ij5PbiAwOS8yNy8yMDE3IDA1OjM4IFBNLCBBbnRvbiBHZXJhc2ltb3YKICAgICAgd3JvdGU6PGJy
-PgogICAgPC9kaXY+CiAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIgogICAgICBjaXRlPSJtaWQ6
-YzQ2MzBkMTAtMTk3OS1jY2NlLTg4MTctYmNlMjMxYjI0ZTliQGFkdmFuY2VkdGVsZW1hdGljLmNv
-bSI+CiAgICAgIDxtZXRhIGh0dHAtZXF1aXY9ImNvbnRlbnQtdHlwZSIgY29udGVudD0idGV4dC9o
-dG1sOyBjaGFyc2V0PXV0Zi04Ij4KICAgICAgPHA+R3JlZXRpbmdzLDwvcD4KICAgICAgPHA+aXMg
-dGhlcmUgYSB3YXkgdG8gZGlzcGxheSBsaXN0IG9mIHN1cHBvcnRlZCBlbGxpcHRpYyBjdXJ2ZXMg
-aW4KICAgICAgICBhIFRQTSBkZXZpY2U/IFRoZXJlIHNob3VsZCBhIDxzcGFuIGNsYXNzPSJwbC1l
-biI+VFBNX0NBUF9FQ0NfQ1VSVkVTCiAgICAgICAgICBmaWVsZCBmb3IgaXQsIGJ1dCBJIGNvdWxk
-bid0IGZpbmQgaG93IHRvIGV4dHJhY3QgaXQgKG9yIGp1c3QKICAgICAgICAgIHJhdyBkdW1wIG9m
-IGNhcGFiaWxpdGllcykgd2l0aCB0cG0yLXRvb2xzLjwvc3Bhbj48L3A+CiAgICAgIDxwPjxzcGFu
-IGNsYXNzPSJwbC1lbiI+VGhhbmtzLDxicj4KICAgICAgICAgIEFudG9uIEdlcmFzaW1vdjxicj4K
-ICAgICAgICA8L3NwYW4+PC9wPgogICAgPC9ibG9ja3F1b3RlPgogICAgPHA+U29ycnksIEkndmUg
-Z290IHRoZSBwcmluY2lwbGUuIEkndmUgbWFkZSBhIHBhdGNoIGluIG15IHdvcmtpbmcKICAgICAg
-ZGlyZWN0b3J5LCBpZiBzb21lb25lIHRoaW5rcyBpdCBjYW4gYmUgdXNlZnVsIEkgY2FuIGNvbXBv
-c2UgYQogICAgICBwcm9wZXIgUFIuPC9wPgogICAgPHA+VGhhbmtzLDxicj4KICAgICAgQW50b24g
-R2VyYXNpbW92PGJyPgogICAgPC9wPgogIDwvYm9keT4KPC9odG1sPgo=
+  Changed paths:
+    R CONTRIBUTING
+    A CONTRIBUTING.md
 
---===============5148376623717330170==--
+  Log Message:
+  -----------
+  CONTRIBUTING: update to markdown
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: a362b43689b99e89b07d894541befa734eda8eb3
+      https://github.com/01org/tpm2-tools/commit/a362b43689b99e89b07d894541=
+befa734eda8eb3
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    R INSTALL
+    A INSTALL.md
+
+  Log Message:
+  -----------
+  INSTALL: update information
+
+Update the information in the INSTALL page and swicth to
+markdown.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: c32a037ecb0cd82a931c948e83d42516a57b9f72
+      https://github.com/01org/tpm2-tools/commit/c32a037ecb0cd82a931c948e83=
+d42516a57b9f72
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    R AUTHORS
+    A AUTHORS.md
+
+  Log Message:
+  -----------
+  AUTHORS: update to markdown
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: f1cea1552d3bc9a3855081525aa5eaaf4945c620
+      https://github.com/01org/tpm2-tools/commit/f1cea1552d3bc9a3855081525a=
+a5eaaf4945c620
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    R MAINTAINERS
+    A MAINTAINERS.md
+
+  Log Message:
+  -----------
+  MAINTAINERS: update to markdown
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: ab981dc44c5ec5731d975f7c1a28847b9da9e428
+      https://github.com/01org/tpm2-tools/commit/ab981dc44c5ec5731d975f7c1a=
+28847b9da9e428
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    R CHANGELOG
+    A CHANGELOG.md
+
+  Log Message:
+  -----------
+  CHANGELOG: update to markdown
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 9e36f6fb19c25715bf2ed41f2418cc9a113fd178
+      https://github.com/01org/tpm2-tools/commit/9e36f6fb19c25715bf2ed41f24=
+18cc9a113fd178
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    M README.md
+
+  Log Message:
+  -----------
+  README: update information
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: a55ad7d404109d6ee9d18ab96688671e1205495c
+      https://github.com/01org/tpm2-tools/commit/a55ad7d404109d6ee9d18ab966=
+88671e1205495c
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-09-27 (Wed, 27 Sep 2017)
+
+  Changed paths:
+    A .ci/resources/ibmtpm532.tar.xxd
+    M .travis.yml
+
+  Log Message:
+  -----------
+  travis: add ibmtar as an xxd file
+
+Sourceforge has been down, and the wget is fialing. Rather
+than depend on sourceforge, just keep an xxd dump of the
+simulator that can be converted back into binary form.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/06f057cacc7b...a55ad7d=
+40410
+
+--===============3426066947181420007==--
 
