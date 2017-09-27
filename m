@@ -1,163 +1,125 @@
-Content-Type: multipart/mixed; boundary="===============3426066947181420007=="
+Content-Type: multipart/mixed; boundary="===============9204388491487189868=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] bf363f: RELEASE: update to markdown
-Date: Wed, 27 Sep 2017 11:18:38 -0700
-Message-ID: <59cbeb7e6519a_73213fe003947c4411065@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] 12f596: remove abrmd patches
+Date: Wed, 27 Sep 2017 13:33:15 -0700
+Message-ID: <59cc0b0b5710a_6cc73fb6fa927c28987ec@hookshot-fe2-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3426066947181420007==
+--===============9204388491487189868==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: bf363f88816247a11ae1c4e5289920a0aa1045bb
-      https://github.com/01org/tpm2-tools/commit/bf363f88816247a11ae1c4e528=
-9920a0aa1045bb
+  Commit: 12f59673d4ba9ef25cf1d0528b8fb7c88420b69f
+      https://github.com/01org/tpm2-tools/commit/12f59673d4ba9ef25cf1d0528b=
+8fb7c88420b69f
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-27 (Wed, 27 Sep 2017)
 
   Changed paths:
-    R RELEASE
-    A RELEASE.md
+    R .ci/patches/abrmd/0001-tpm2-command-fix-compile-errors.patch
+    R .ci/patches/abrmd/0002-bump-sapi-version-to-2.0.patch
 
   Log Message:
   -----------
-  RELEASE: update to markdown
+  remove abrmd patches
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 06c8e55a6e5259d053316ae22a33fae434d94e97
-      https://github.com/01org/tpm2-tools/commit/06c8e55a6e5259d053316ae22a=
-33fae434d94e97
+  Commit: ea31ec23e2d29a5647c5eb60934383bd452a454d
+      https://github.com/01org/tpm2-tools/commit/ea31ec23e2d29a5647c5eb6093=
+4383bd452a454d
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-27 (Wed, 27 Sep 2017)
 
   Changed paths:
-    R CONTRIBUTING
-    A CONTRIBUTING.md
+    R test/system/test_algs_tpm2_encryptdecrypt.sh
+    R test/system/test_algs_tpm2_getpubak.sh
+    R test/system/test_algs_tpm2_getpubek.sh
+    R test/system/test_algs_tpm2_hmac.sh
+    R test/system/test_algs_tpm2_quote.sh
+    R test/system/test_algs_tpm2_readpublic.sh
+    R test/system/test_algs_tpm2_sign.sh
+    R test/system/test_algs_tpm2_unseal.sh
+    R test/system/test_algs_tpm2_verifysignature.sh
+    M test/system/test_all.sh
+    M test/system/test_tpm2_create_all.sh
 
   Log Message:
   -----------
-  CONTRIBUTING: update to markdown
+  test: fix test_tpm2_create_all
+
+This test was not running, fix it and update to
+use trap handlers for file cleanup.
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: a362b43689b99e89b07d894541befa734eda8eb3
-      https://github.com/01org/tpm2-tools/commit/a362b43689b99e89b07d894541=
-befa734eda8eb3
+  Commit: 0c91b43c9140ef3790fc51cfa7ef5dc25e198f2d
+      https://github.com/01org/tpm2-tools/commit/0c91b43c9140ef3790fc51cfa7=
+ef5dc25e198f2d
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-27 (Wed, 27 Sep 2017)
 
   Changed paths:
-    R INSTALL
-    A INSTALL.md
+    M test/system/test_all.sh
+    M test/system/test_tpm2_createprimary_all.sh
 
   Log Message:
   -----------
-  INSTALL: update information
+  test: fix test_tpm2_createprimary_all
 
-Update the information in the INSTALL page and swicth to
-markdown.
+This test was not running, fix it and update to
+use trap handlers for file cleanup.
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: c32a037ecb0cd82a931c948e83d42516a57b9f72
-      https://github.com/01org/tpm2-tools/commit/c32a037ecb0cd82a931c948e83=
-d42516a57b9f72
+  Commit: 46e1eed4f6b85e9527d044a2dd166651a32bcd00
+      https://github.com/01org/tpm2-tools/commit/46e1eed4f6b85e9527d044a2dd=
+166651a32bcd00
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-27 (Wed, 27 Sep 2017)
 
   Changed paths:
-    R AUTHORS
-    A AUTHORS.md
+    R test/system/test_algs.sh
 
   Log Message:
   -----------
-  AUTHORS: update to markdown
+  test: remove test_algs.sh since already tested
+
+The following tests test this functionality:
+  * test_tpm2_create_all.sh
+  * test_tpm2_createprimary_all.sh
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: f1cea1552d3bc9a3855081525aa5eaaf4945c620
-      https://github.com/01org/tpm2-tools/commit/f1cea1552d3bc9a3855081525a=
-a5eaaf4945c620
+  Commit: 08dcfa4381fbfdb1a735aaa2439f255659dee7d1
+      https://github.com/01org/tpm2-tools/commit/08dcfa4381fbfdb1a735aaa243=
+9f255659dee7d1
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-09-27 (Wed, 27 Sep 2017)
 
   Changed paths:
-    R MAINTAINERS
-    A MAINTAINERS.md
+    R test/system/test_smoking.sh
 
   Log Message:
   -----------
-  MAINTAINERS: update to markdown
+  test: remove test_smoking.sh
+
+Unused broken test
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: ab981dc44c5ec5731d975f7c1a28847b9da9e428
-      https://github.com/01org/tpm2-tools/commit/ab981dc44c5ec5731d975f7c1a=
-28847b9da9e428
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
+Compare: https://github.com/01org/tpm2-tools/compare/a55ad7d40410...08dcfa4=
+381fb
 
-  Changed paths:
-    R CHANGELOG
-    A CHANGELOG.md
-
-  Log Message:
-  -----------
-  CHANGELOG: update to markdown
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 9e36f6fb19c25715bf2ed41f2418cc9a113fd178
-      https://github.com/01org/tpm2-tools/commit/9e36f6fb19c25715bf2ed41f24=
-18cc9a113fd178
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M README.md
-
-  Log Message:
-  -----------
-  README: update information
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: a55ad7d404109d6ee9d18ab96688671e1205495c
-      https://github.com/01org/tpm2-tools/commit/a55ad7d404109d6ee9d18ab966=
-88671e1205495c
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    A .ci/resources/ibmtpm532.tar.xxd
-    M .travis.yml
-
-  Log Message:
-  -----------
-  travis: add ibmtar as an xxd file
-
-Sourceforge has been down, and the wget is fialing. Rather
-than depend on sourceforge, just keep an xxd dump of the
-simulator that can be converted back into binary form.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-Compare: https://github.com/01org/tpm2-tools/compare/06f057cacc7b...a55ad7d=
-40410
-
---===============3426066947181420007==--
+--===============9204388491487189868==--
 
