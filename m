@@ -1,40 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============0058791353025293978=="
+Content-Type: multipart/mixed; boundary="===============4492532279587194140=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] a9811a: Revert "travis: add ibmtar as an
- xxd file"
-Date: Thu, 28 Sep 2017 10:08:29 -0700
-Message-ID: <59cd2c8d91bc1_4eee3fb8fa613c38569f2@hookshot-fe5-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] c13c7d: tpm2_alg_util: remove duplicated
+ SHA-1 entry in al...
+Date: Thu, 28 Sep 2017 10:08:58 -0700
+Message-ID: <59cd2caaa5492_12c03ff02d9b5c3c2839a@hookshot-fe3-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0058791353025293978==
+--===============4492532279587194140==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: a9811a6c7867938ff41df2ff1ddcf7c0b48772a4
-      https://github.com/01org/tpm2-tools/commit/a9811a6c7867938ff41df2ff1d=
-dcf7c0b48772a4
-  Author: William Roberts <william.c.roberts(a)intel.com>
+  Commit: c13c7df88db73f67e4417eaacc3478ea0269c179
+      https://github.com/01org/tpm2-tools/commit/c13c7df88db73f67e4417eaacc=
+3478ea0269c179
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-09-28 (Thu, 28 Sep 2017)
 
   Changed paths:
-    R .ci/resources/ibmtpm532.tar.xxd
-    M .travis.yml
+    M lib/tpm2_alg_util.c
+    M test/system/test_tpm2_create.sh
+    M test/system/test_tpm2_encryptdecrypt.sh
+    M test/system/test_tpm2_hmac.sh
+    M test/system/test_tpm2_pcrextend.sh
+    M test/system/yaml_get.py
+    M test/unit/test_tpm2_alg_util.c
 
   Log Message:
   -----------
-  Revert "travis: add ibmtar as an xxd file"
+  tpm2_alg_util: remove duplicated SHA-1 entry in algorithms table and tests
 
-Temporary hack to deal with Source Forge outage. It appears
-to be back online.
+The specification makes it clear that both TPM_ALG_SHA and TPM_ALG_SHA1
+refer to the SHA-1 algorithm, but the algorithms table has entries for
+both even when they have the same hexadecimal value (0x0004).
 
-This reverts commit a55ad7d404109d6ee9d18ab96688671e1205495c.
+That means that TPM_ALG_SHA1 will never be matched, since a match will
+happen with TPM_ALG_SHA before. So all tools are currently printing a
+"sha" string when a "sha1" should be printed instead:
+
+$ tpm2_dump_capability -c algorithms | grep sha
+TPMA_ALGORITHM for ALG_ID: 0x4 - sha
+TPMA_ALGORITHM for ALG_ID: 0xb - sha256
+
+After this patch:
+
+$ tpm2_dump_capability -c algorithms | grep sha
+TPMA_ALGORITHM for ALG_ID: 0x4 - sha1
+TPMA_ALGORITHM for ALG_ID: 0xb - sha256
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
 
---===============0058791353025293978==--
+--===============4492532279587194140==--
 
