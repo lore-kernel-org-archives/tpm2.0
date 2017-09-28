@@ -1,61 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============8843616028415655401=="
+Content-Type: multipart/mixed; boundary="===============7986800689942881290=="
 MIME-Version: 1.0
 From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] tpm2-abrmd and tpm2_tools collision
-Date: Thu, 28 Sep 2017 12:11:59 +0200
-Message-ID: <bf78faea-0e4a-1fc7-5f62-3c9a097eaf3d@redhat.com>
-In-Reply-To: 54CD2916B052E04BBDD1393A6800D9FDDB6A9C78@NJ350EX02.ztgroup.com
+Subject: Re: [tpm2] tpm2_nvwrite with policy based authorization
+Date: Thu, 28 Sep 2017 12:24:27 +0200
+Message-ID: <73b7026f-07b6-c936-bc3c-82b7347977f7@redhat.com>
+In-Reply-To: 54CD2916B052E04BBDD1393A6800D9FDDB6A9CA3@NJ350EX02.ztgroup.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8843616028415655401==
+--===============7986800689942881290==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 09/28/2017 09:12 AM, Slash Wu wrote:
+On 09/28/2017 09:54 AM, Slash Wu wrote:
 > Hi,
 > =
 
-> I launched tpm2-abrmd, and then the tpm2-tools (e.g. tpm2_nvlist) failed =
-with the following msg, but it worked without the tpm2-abrmd been launched,=
- why ?
+> Is there any example shows how to tpm2_nvwrite via 'policy based authoriz=
+ation' ?
+> Much appreciate.
 > =
 
-> # /usr/local/bin/tpm2_nvlist -T device
-> ERROR: Failed to initialize device TCTI context: 0xa000a
->
 
-It's expected. If the tpm2-abrmd is running, then it has opened the TPM dev=
-ice.
-So when the device TCTI library tries to open the device again, the driver =
-will
-return an -EBUSY error.
+There's still no support for it. Please take a look to this issue:
 
-You can easily check this by running your process with strace or enabling t=
-he
-dynamic debug log messages for the TPM driver:
+https://github.com/01org/tpm2-tools/issues/348
 
-$ strace -f -eopenat tpm2_pcrlist -T device:/dev/tpm0 2>&1 | grep "/dev/tpm=
-0"
-openat(AT_FDCWD, "/dev/tpm0", O_RDWR)   =3D -1 EBUSY (Device or resource bu=
-sy)
+There's currently a very long discussion about sessions support for the too=
+ls
+in general. Please take a look to this issue:
 
-$ echo 'file drivers/char/tpm/tpm-dev.c +p' > /sys/kernel/debug/dynamic_deb=
-ug/control
+https://github.com/01org/tpm2-tools/issues/510
 
-$ dmesg | grep tpm
-[71684.903356] tpm tpm0: Another process owns this TPM
+The tpm2_unseal has some basic session support (basically the tool starts a=
+ new
+session and calculates the PCR policy to be used for TPM2_Unseal). This is =
+not
+an ideal solution, but it works for simple cases.
 
-What's your use case to bypass the tpm2-abrmd? I don't think that's a good =
-idea.
- =
-
-> Thanks.
-> =
-
-> =
-
+It shouldn't be hard to do the same for tpm2_nv{read,write}, and I believe =
+that
+is something we need to support.
 
 Best regards,
 -- =
@@ -64,5 +50,5 @@ Javier Martinez Canillas
 Software Engineer - Desktop Hardware Enablement
 Red Hat
 
---===============8843616028415655401==--
+--===============7986800689942881290==--
 
