@@ -1,60 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============4492532279587194140=="
+Content-Type: multipart/mixed; boundary="===============0711029490875223657=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] c13c7d: tpm2_alg_util: remove duplicated
- SHA-1 entry in al...
-Date: Thu, 28 Sep 2017 10:08:58 -0700
-Message-ID: <59cd2caaa5492_12c03ff02d9b5c3c2839a@hookshot-fe3-cp1-prd.iad.github.net.mail>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] List supported EC curves
+Date: Thu, 28 Sep 2017 17:13:13 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563EAF2D37@ORSMSX103.amr.corp.intel.com>
+In-Reply-To: a22561d5-aee3-7599-0252-8fe6ab44fa6c@advancedtelematic.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4492532279587194140==
+--===============0711029490875223657==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
-  Home:   https://github.com/01org/tpm2-tools
-  Commit: c13c7df88db73f67e4417eaacc3478ea0269c179
-      https://github.com/01org/tpm2-tools/commit/c13c7df88db73f67e4417eaacc=
-3478ea0269c179
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
-  Date:   2017-09-28 (Thu, 28 Sep 2017)
+Thank you, we merged your PR for this recently: https://github.com/01org/tp=
+m2-tools/pull/530
 
-  Changed paths:
-    M lib/tpm2_alg_util.c
-    M test/system/test_tpm2_create.sh
-    M test/system/test_tpm2_encryptdecrypt.sh
-    M test/system/test_tpm2_hmac.sh
-    M test/system/test_tpm2_pcrextend.sh
-    M test/system/yaml_get.py
-    M test/unit/test_tpm2_alg_util.c
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Anton Gerasimov
+Sent: Wednesday, September 27, 2017 10:12 AM
+To: tpm2(a)lists.01.org
+Subject: Re: [tpm2] List supported EC curves
 
-  Log Message:
-  -----------
-  tpm2_alg_util: remove duplicated SHA-1 entry in algorithms table and tests
+On 09/27/2017 05:38 PM, Anton Gerasimov wrote:
+Greetings,
+is there a way to display list of supported elliptic curves in a TPM device=
+? There should a TPM_CAP_ECC_CURVES field for it, but I couldn't find how t=
+o extract it (or just raw dump of capabilities) with tpm2-tools.
+Thanks,
+Anton Gerasimov
+Sorry, I've got the principle. I've made a patch in my working directory, i=
+f someone thinks it can be useful I can compose a proper PR.
+Thanks,
+Anton Gerasimov
 
-The specification makes it clear that both TPM_ALG_SHA and TPM_ALG_SHA1
-refer to the SHA-1 algorithm, but the algorithms table has entries for
-both even when they have the same hexadecimal value (0x0004).
-
-That means that TPM_ALG_SHA1 will never be matched, since a match will
-happen with TPM_ALG_SHA before. So all tools are currently printing a
-"sha" string when a "sha1" should be printed instead:
-
-$ tpm2_dump_capability -c algorithms | grep sha
-TPMA_ALGORITHM for ALG_ID: 0x4 - sha
-TPMA_ALGORITHM for ALG_ID: 0xb - sha256
-
-After this patch:
-
-$ tpm2_dump_capability -c algorithms | grep sha
-TPMA_ALGORITHM for ALG_ID: 0x4 - sha1
-TPMA_ALGORITHM for ALG_ID: 0xb - sha256
-
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
-
-
-
---===============4492532279587194140==--
+--===============0711029490875223657==--
 
