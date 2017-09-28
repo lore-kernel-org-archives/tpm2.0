@@ -1,64 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============1849944730152762882=="
+Content-Type: multipart/mixed; boundary="===============0417481205574945038=="
 MIME-Version: 1.0
-From: Slash Wu <slash.wu at ztsystems.com>
-Subject: [tpm2] tpm2_nvwrite with policy based authorization
-Date: Thu, 28 Sep 2017 07:54:04 +0000
-Message-ID: <54CD2916B052E04BBDD1393A6800D9FDDB6A9CA3@NJ350EX02.ztgroup.com>
+From: Javier Martinez Canillas <javierm at redhat.com>
+Subject: Re: [tpm2] List supported EC curves
+Date: Thu, 28 Sep 2017 10:49:40 +0200
+Message-ID: <855d2ae9-816a-78f9-db91-cc1d2a3472c3@redhat.com>
+In-Reply-To: a22561d5-aee3-7599-0252-8fe6ab44fa6c@advancedtelematic.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1849944730152762882==
+--===============0417481205574945038==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello Anton,
 
-Is there any example shows how to tpm2_nvwrite via 'policy based authorizat=
-ion' ?
-Much appreciate.
+On 09/27/2017 07:12 PM, Anton Gerasimov wrote:
+> On 09/27/2017 05:38 PM, Anton Gerasimov wrote:
+>>
+>> Greetings,
+>>
+>> is there a way to display list of supported elliptic curves in a TPM
+>> device? There should a TPM_CAP_ECC_CURVES field for it, but I couldn't
+>> find how to extract it (or just raw dump of capabilities) with tpm2-tool=
+s.
+>>
+>> Thanks,
+>> Anton Gerasimov
+>>
+> Sorry, I've got the principle. I've made a patch in my working
+> directory, if someone thinks it can be useful I can compose a proper PR.
+>
 
---===============1849944730152762882==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+I think others may find useful to have that information shown by
+tpm2_dump_capability tool. So please feel free to propose a PR.
+ =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpcNjVC
-MFw3RDMwXDY2MEVcOUFENDsKCXBhbm9zZS0xOjIgMiA1IDAgMCAwIDAgMCAwIDA7fQpAZm9udC1m
-YWNlCgl7Zm9udC1mYW1pbHk6IkNhbWJyaWEgTWF0aCI7CglwYW5vc2UtMToyIDQgNSAzIDUgNCA2
-IDMgMiA0O30KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7CglwYW5vc2UtMToyIDE1
-IDUgMiAyIDIgNCAzIDIgNDt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseToiXEBcNjVCMFw3RDMw
-XDY2MEVcOUFENCI7CglwYW5vc2UtMToyIDIgNSAwIDAgMCAwIDAgMCAwO30KLyogU3R5bGUgRGVm
-aW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21h
-cmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEuMHB0OwoJZm9u
-dC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5r
-Cgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQtZGVjb3JhdGlv
-bjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQKCXttc28t
-c3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVy
-bGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9z
-ZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93dGV4dDt9
-Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250LWZhbWls
-eToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3NpemU6OC41aW4g
-MTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMjVpbiAxLjBpbiAxLjI1aW47fQpkaXYuV29yZFNlY3Rp
-b24xCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48
-eG1sPgo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPgo8L3ht
-bD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVsYXlvdXQgdjpl
-eHQ9ImVkaXQiPgo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4KPC9vOnNoYXBlbGF5
-b3V0PjwveG1sPjwhW2VuZGlmXS0tPgo8L2hlYWQ+Cjxib2R5IGxhbmc9IkVOLVVTIiBsaW5rPSIj
-MDU2M0MxIiB2bGluaz0iIzk1NEY3MiI+CjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+CjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPkhpLDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SXMgdGhlcmUgYW55IGV4
-YW1wbGUgc2hvd3MgaG93IHRvIHRwbTJfbnZ3cml0ZSB2aWEgJiM4MjE2O3BvbGljeSBiYXNlZCBh
-dXRob3JpemF0aW9uJiM4MjE3OyA/PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-Pk11Y2ggYXBwcmVjaWF0ZS48bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+> Thanks,
+> Anton Gerasimov
+> =
 
---===============1849944730152762882==--
+
+Best regards,
+-- =
+
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
+
+--===============0417481205574945038==--
 
