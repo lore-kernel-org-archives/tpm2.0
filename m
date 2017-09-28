@@ -1,227 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============5348103983046026205=="
+Content-Type: multipart/mixed; boundary="===============3551193982610273826=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 5f0121: test_tpm2_dictionarylockout:
- cleanup tests
-Date: Wed, 27 Sep 2017 16:54:26 -0700
-Message-ID: <59cc3a327e733_1f183f998befdc386309f@hookshot-fe6-cp1-prd.iad.github.net.mail>
+From: Slash Wu <slash.wu at ztsystems.com>
+Subject: [tpm2] tpm2-abrmd and tpm2_tools collision
+Date: Thu, 28 Sep 2017 07:12:31 +0000
+Message-ID: <54CD2916B052E04BBDD1393A6800D9FDDB6A9C78@NJ350EX02.ztgroup.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5348103983046026205==
+--===============3551193982610273826==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
-  Home:   https://github.com/01org/tpm2-tools
-  Commit: 5f012189b51798e8015515a4beb3b91467b81e06
-      https://github.com/01org/tpm2-tools/commit/5f012189b51798e8015515a4be=
-b3b91467b81e06
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_dictionarylockout.sh
-
-  Log Message:
-  -----------
-  test_tpm2_dictionarylockout: cleanup tests
-
-Add an error handler and clean up testing output.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: fe09aa97673c0faffe17b489aa1e1c47d3870395
-      https://github.com/01org/tpm2-tools/commit/fe09aa97673c0faffe17b489aa=
-1e1c47d3870395
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_getmanufec.sh
-
-  Log Message:
-  -----------
-  test_tpm2_getmanufec: cleanup tests
-
-Add an error handler and clean up testing output.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: d4bcf494a38a75e5afbce1d5619acfc97b9cc11e
-      https://github.com/01org/tpm2-tools/commit/d4bcf494a38a75e5afbce1d561=
-9acfc97b9cc11e
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_getpubak.sh
-
-  Log Message:
-  -----------
-  test_tpm2_getpubak: cleanup tests
-
-Add an error handler and clean up testing output.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 15880ea0bff4de95d1aac1219f8545f912d94036
-      https://github.com/01org/tpm2-tools/commit/15880ea0bff4de95d1aac1219f=
-8545f912d94036
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_getpubek.sh
-
-  Log Message:
-  -----------
-  test_tpm2_getpubek: cleanup tests
-
-Add an error handler and clean up testing output.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: db3f7cd48e68272368b97c45134719110d712eb3
-      https://github.com/01org/tpm2-tools/commit/db3f7cd48e68272368b97c4513=
-4719110d712eb3
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_getrandom.sh
-
-  Log Message:
-  -----------
-  test_tpm2_getrandom: cleanup tests
-
-Add an error handler and clean up testing output.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 57baccb0795674ba1c52526dc99feb29ba596648
-      https://github.com/01org/tpm2-tools/commit/57baccb0795674ba1c52526dc9=
-9feb29ba596648
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    R test/system/test_tpm2_getrandom_func.sh
-
-  Log Message:
-  -----------
-  test: remove test_tpm2_getrandom_func.sh
-
-This is already tested by test_tpm2_getrandom.sh
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 96af03778819a919ccf997aa201d806c5ae89c9c
-      https://github.com/01org/tpm2-tools/commit/96af03778819a919ccf997aa20=
-1d806c5ae89c9c
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_evictcontrol.sh
-
-  Log Message:
-  -----------
-  test: fix test_tpm2_evictcontrol
-
-Update to use trap handler for error reporting and
-cleanup duties.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: db879566a6c281a318b3697e65c403291e49cc7c
-      https://github.com/01org/tpm2-tools/commit/db879566a6c281a318b3697e65=
-c403291e49cc7c
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    A test/system/test_tpm2_createprimary.sh
-    R test/system/test_tpm2_createprimary_all.sh
-
-  Log Message:
-  -----------
-  renamse test_tpm2_createprimary_all.sh
-
-Rename test_tpm2_createprimary_all.sh to test_tpm2_createprimary.sh
-to follow the test naming conventions.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 58458fcfd5b2a769115bde1d93f702d0bef28f2e
-      https://github.com/01org/tpm2-tools/commit/58458fcfd5b2a769115bde1d93=
-f702d0bef28f2e
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    A test/system/test_tpm2_create.sh
-    R test/system/test_tpm2_create_all.sh
-
-  Log Message:
-  -----------
-  renamse test_tpm2_create_all.sh
-
-Rename test_tpm2_create_all.sh to test_tpm2_create.sh
-to follow the test naming conventions.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 0a3ac62ac0f2326b63595f3c94b38219b19b4760
-      https://github.com/01org/tpm2-tools/commit/0a3ac62ac0f2326b63595f3c94=
-b38219b19b4760
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    R test/system/test_tpm2_hash_all.sh
-
-  Log Message:
-  -----------
-  delete test_tpm2_hash_all.sh
-
-This test doesn't really add anything that test_tpm2_hash.sh does.
-It tests algorithms that may not be supported by the tpm as well.
-
-Since tpm2_tools is more about plumbing than exhaustivley testing
-the tpm, just remove it.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-  Commit: 9f486e19d916d3fca0e443d617e1108411a4adab
-      https://github.com/01org/tpm2-tools/commit/9f486e19d916d3fca0e443d617=
-e1108411a4adab
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-09-27 (Wed, 27 Sep 2017)
-
-  Changed paths:
-    M test/system/test_tpm2_hmac.sh
-
-  Log Message:
-  -----------
-  test: tpm2_hmac clean up output
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-Compare: https://github.com/01org/tpm2-tools/compare/2a8ccbf0828c...9f486e1=
-9d916
-
---===============5348103983046026205==--
+Hi,
+
+I launched tpm2-abrmd, and then the tpm2-tools (e.g. tpm2_nvlist) failed wi=
+th the following msg, but it worked without the tpm2-abrmd been launched, w=
+hy ?
+
+# /usr/local/bin/tpm2_nvlist -T device
+ERROR: Failed to initialize device TCTI context: 0xa000a
+
+Thanks.
+
+--===============3551193982610273826==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpQTWlu
+Z0xpVTsKCXBhbm9zZS0xOjIgMiA1IDAgMCAwIDAgMCAwIDA7fQpAZm9udC1mYWNlCgl7Zm9udC1m
+YW1pbHk6IkNhbWJyaWEgTWF0aCI7CglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMgMiA0O30KQGZv
+bnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7CglwYW5vc2UtMToyIDE1IDUgMiAyIDIgNCAz
+IDIgNDt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpQTWluZ0xpVTsKCXBhbm9zZS0xOjIgMiA1
+IDAgMCAwIDAgMCAwIDA7fQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLwpwLk1zb05vcm1hbCwgbGku
+TXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBpbjsKCW1hcmdpbi1ib3R0b206LjAw
+MDFwdDsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJp
+Zjt9CmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cglj
+b2xvcjojMDU2M0MxOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlzaXRlZCwgc3Bh
+bi5Nc29IeXBlcmxpbmtGb2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOiM5
+NTRGNzI7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30Kc3Bhbi5FbWFpbFN0eWxlMTcKCXtt
+c28tc3R5bGUtdHlwZTpwZXJzb25hbC1jb21wb3NlOwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNh
+bnMtc2VyaWY7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0NocERlZmF1bHQKCXttc28tc3R5bGUt
+dHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30KQHBh
+Z2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo4LjVpbiAxMS4waW47CgltYXJnaW46MS4waW4gMS4yNWlu
+IDEuMGluIDEuMjVpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0t
+Pjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9
+ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1z
+byA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJl
+ZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVh
+ZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRp
+diBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGksPG86cD48L286
+cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj5JIGxhdW5jaGVkIHRwbTItYWJybWQsIGFuZCB0aGVuIHRoZSB0cG0yLXRv
+b2xzIChlLmcuIHRwbTJfbnZsaXN0KSBmYWlsZWQgd2l0aCB0aGUgZm9sbG93aW5nIG1zZywgYnV0
+IGl0IHdvcmtlZCB3aXRob3V0IHRoZSB0cG0yLWFicm1kIGJlZW4gbGF1bmNoZWQsIHdoeSA/PG86
+cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj4jIC91c3IvbG9jYWwvYmluL3RwbTJfbnZsaXN0IC1UIGRldmlj
+ZTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5FUlJPUjogRmFpbGVkIHRvIGlu
+aXRpYWxpemUgZGV2aWNlIFRDVEkgY29udGV4dDogMHhhMDAwYTxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+VGhhbmtzLjxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============3551193982610273826==--
 
