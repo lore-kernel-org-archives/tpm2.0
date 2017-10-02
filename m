@@ -1,24 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============8463896588670962236=="
+Content-Type: multipart/mixed; boundary="===============1796333583075755812=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] ad947b: test: ignore testing the hash
- algorithm without th...
-Date: Mon, 02 Oct 2017 09:04:39 -0700
-Message-ID: <59d26397e4829_141493fd04013bc30120798@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] bdb1b9: test: cleanup test_tpm2_nv.sh output
+Date: Mon, 02 Oct 2017 09:26:30 -0700
+Message-ID: <59d268b646c1d_1893fa21f19bc2498497@hookshot-fe5-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8463896588670962236==
+--===============1796333583075755812==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: ad947b30c3551625e01aacf4d253a89a65761236
-      https://github.com/01org/tpm2-tools/commit/ad947b30c3551625e01aacf4d2=
-53a89a65761236
-  Author: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+  Commit: bdb1b9d116973e6b9d6f5d7aaa104b1f1ab5680c
+      https://github.com/01org/tpm2-tools/commit/bdb1b9d116973e6b9d6f5d7aaa=
+104b1f1ab5680c
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-10-02 (Mon, 02 Oct 2017)
+
+  Changed paths:
+    M test/system/test_tpm2_nv.sh
+
+  Log Message:
+  -----------
+  test: cleanup test_tpm2_nv.sh output
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: b7bf1b8e83b89360ce8b72c137d892375d8b340e
+      https://github.com/01org/tpm2-tools/commit/b7bf1b8e83b89360ce8b72c137=
+d892375d8b340e
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-10-02 (Mon, 02 Oct 2017)
+
+  Changed paths:
+    M tools/tpm2_nvread.c
+
+  Log Message:
+  -----------
+  tools: tpm2_nvread respect -Q option
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 7e4fe9a5b8b44ac83c9fad7b759c0cec9a17096f
+      https://github.com/01org/tpm2-tools/commit/7e4fe9a5b8b44ac83c9fad7b75=
+9c0cec9a17096f
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-10-02 (Mon, 02 Oct 2017)
+
+  Changed paths:
+    M tools/tpm2_nvwrite.c
+
+  Log Message:
+  -----------
+  tools: tpm2_nvwrite respect -Q option
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 9023d912d6e83e4271af664c19ad9ef30e18ee96
+      https://github.com/01org/tpm2-tools/commit/9023d912d6e83e4271af664c19=
+ad9ef30e18ee96
+  Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-10-02 (Mon, 02 Oct 2017)
 
   Changed paths:
@@ -26,16 +73,13 @@ Content-Transfer-Encoding: quoted-printable
 
   Log Message:
   -----------
-  test: ignore testing the hash algorithm without the corresponding sum pro=
-gram
+  test: tpm2_pcrevent.sh cleanup output
 
-Currently, there is no equivalent like sha256sum for sm3_256. So just simpl=
-y ignore
-testing this sort of hash algorithm.
-
-Signed-off-by: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
+Compare: https://github.com/01org/tpm2-tools/compare/ad947b30c355...9023d91=
+2d6e8
 
---===============8463896588670962236==--
+--===============1796333583075755812==--
 
