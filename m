@@ -1,39 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============4802305709384438148=="
+Content-Type: multipart/mixed; boundary="===============8218797129848523266=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 5c87d3: test/system: remove pipe to
- /dev/null for rm -f ca...
-Date: Fri, 13 Oct 2017 12:21:33 -0700
-Message-ID: <59e1123d4ddb3_a56b3fe445035c281001c5@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] c65be9: nvread: fix missing 'f' in optstring
+Date: Fri, 13 Oct 2017 12:26:51 -0700
+Message-ID: <59e1137be8c15_43593f844d9ebc34685d4@hookshot-fe3-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4802305709384438148==
+--===============8218797129848523266==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 5c87d356b6bde7f148aa376dc3d544db29b1d53c
-      https://github.com/01org/tpm2-tools/commit/5c87d356b6bde7f148aa376dc3=
-d544db29b1d53c
-  Author: Alexander Steffen <Alexander.Steffen(a)infineon.com>
+  Commit: c65be9b68c01f1eb9baa45cde5823dd1b45dbff9
+      https://github.com/01org/tpm2-tools/commit/c65be9b68c01f1eb9baa45cde5=
+823dd1b45dbff9
+  Author: Fabien Parent <fparent(a)baylibre.com>
   Date:   2017-10-13 (Fri, 13 Oct 2017)
 
   Changed paths:
-    M test/system/test_tpm2_activecredential.sh
-    M test/system/test_tpm2_akparse.sh
-    M test/system/test_tpm2_createpolicy.sh
+    M tools/tpm2_nvread.c
 
   Log Message:
   -----------
-  test/system: remove pipe to /dev/null for rm -f calls
+  nvread: fix missing 'f' in optstring
 
-The -f parameter already suppresses the common but harmless error messages,
-e.g. file not found, so this is unnecessary.
+nvread is not understanding the "-f" parameter because the
+option is missing from the optstring. Add it to the optstring.
+
+Signed-off-by: Fabien Parent <fparent(a)baylibre.com>
 
 
 
---===============4802305709384438148==--
+--===============8218797129848523266==--
 
