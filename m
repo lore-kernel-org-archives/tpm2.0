@@ -1,42 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============3409190382992207679=="
+Content-Type: multipart/mixed; boundary="===============4802305709384438148=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 49cfc0: test_tpm2_pcrextend.sh: add sm3_256
- hash
-Date: Fri, 13 Oct 2017 12:01:32 -0700
-Message-ID: <59e10d8c48710_44963f8cf8dabc3065765@hookshot-fe3-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] 5c87d3: test/system: remove pipe to
+ /dev/null for rm -f ca...
+Date: Fri, 13 Oct 2017 12:21:33 -0700
+Message-ID: <59e1123d4ddb3_a56b3fe445035c281001c5@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3409190382992207679==
+--===============4802305709384438148==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 49cfc027fbd315b524c990e584743b9afa3b78e0
-      https://github.com/01org/tpm2-tools/commit/49cfc027fbd315b524c990e584=
-743b9afa3b78e0
-  Author: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+  Commit: 5c87d356b6bde7f148aa376dc3d544db29b1d53c
+      https://github.com/01org/tpm2-tools/commit/5c87d356b6bde7f148aa376dc3=
+d544db29b1d53c
+  Author: Alexander Steffen <Alexander.Steffen(a)infineon.com>
   Date:   2017-10-13 (Fri, 13 Oct 2017)
 
   Changed paths:
-    M test/system/test_tpm2_pcrextend.sh
+    M test/system/test_tpm2_activecredential.sh
+    M test/system/test_tpm2_akparse.sh
+    M test/system/test_tpm2_createpolicy.sh
 
   Log Message:
   -----------
-  test_tpm2_pcrextend.sh: add sm3_256 hash
+  test/system: remove pipe to /dev/null for rm -f calls
 
-This fix resolves the following errors printed if sm3_256 is supported
-by TPM.
-
-ERROR: Algorithm "sm3_256" expects a size of 32 bytes, got: 0
-Could not perform command: tpm2_pcrextend 9:sm3_256=3D - 0
-
-Signed-off-by: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+The -f parameter already suppresses the common but harmless error messages,
+e.g. file not found, so this is unnecessary.
 
 
 
---===============3409190382992207679==--
+--===============4802305709384438148==--
 
