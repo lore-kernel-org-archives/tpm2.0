@@ -1,54 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============4929348398581016172=="
+Content-Type: multipart/mixed; boundary="===============5900249434432619639=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 1e1ba9: test: tpm2_createpolicy: explicitly
- define a base ...
-Date: Fri, 13 Oct 2017 12:27:54 -0700
-Message-ID: <59e113ba69d66_14e83fc0ebac3c4423829@hookshot-fe1-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] c3e072: man: specify correct long option
+ for '-C'
+Date: Fri, 13 Oct 2017 12:25:53 -0700
+Message-ID: <59e113413737a_2ea93fa9dce5dc2c613ec@hookshot-fe2-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4929348398581016172==
+--===============5900249434432619639==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 1e1ba978f7ab87403c0e305862d89dae8688fa61
-      https://github.com/01org/tpm2-tools/commit/1e1ba978f7ab87403c0e305862=
-d89dae8688fa61
-  Author: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+  Commit: c3e0729f52040fb30760e8b4157e525e5d3d483e
+      https://github.com/01org/tpm2-tools/commit/c3e0729f52040fb30760e8b415=
+7e525e5d3d483e
+  Author: Satish Bysany <>
   Date:   2017-10-13 (Fri, 13 Oct 2017)
 
   Changed paths:
-    M test/system/test_tpm2_createpolicy.sh
+    M man/tpm2_load.1.md
 
   Log Message:
   -----------
-  test: tpm2_createpolicy: explicitly define a base when comparing hex valu=
-es
+  man: specify correct long option for '-C'
 
-If the base is omitted in an arithmetic expression bash assumes a base 10,
-unless the constant starts with a 0 or 0x. In these cases, base 8 and 16
-are used respectively.
+Manpage says '-n' and '-C' both have the long option '--name'. But
+code says '-C' =3D> '--context' and '-n' =3D> '--name'
 
-So the test was only working because assumes a PCR0 value of 3, which
-has the same value in both bases, but this isn't true for all values and
-will lead to the following issue:
-
-./test_tpm2_createpolicy.sh: line 57: [[:
-9872964b9b40cdd0363fcd6af8c267c9cb34200b: value too great for base
-(error token is "9872964b9b40cdd0363fcd6af8c267c9cb34200b")
-Failure: Creating Policy Digest with PCR policy for index 0 and sha1
-pcr index hash
-
-Fix this by explicitly define a base 16 so bash know that the constant
-value is an hexadecimal number.
-
-Signed-off-by: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+Signed-off-by: Satish Bysany <>
 
 
+  Commit: be887aa2894e974ece1885cf862179c64d40ed5f
+      https://github.com/01org/tpm2-tools/commit/be887aa2894e974ece1885cf86=
+2179c64d40ed5f
+  Author: Satish Bysany <>
+  Date:   2017-10-13 (Fri, 13 Oct 2017)
 
---===============4929348398581016172==--
+  Changed paths:
+    M tools/tpm2_create.c
+
+  Log Message:
+  -----------
+  tpm2_create: enforce-policy does not require arguments
+
+-E option (aka --enforce-policy) is a boolean parameter, so does
+not require any more arguments.
+
+See 'man 3 getopt_long' for 'struct option' and its interpretation.
+
+Signed-off-by: Satish Bysany <>
+
+
+  Commit: 527d6b9e6e482cd9274f5f0fd06a3f27f81d5fdb
+      https://github.com/01org/tpm2-tools/commit/527d6b9e6e482cd9274f5f0fd0=
+6a3f27f81d5fdb
+  Author: Satish Bysany <>
+  Date:   2017-10-13 (Fri, 13 Oct 2017)
+
+  Changed paths:
+    M tools/tpm2_unseal.c
+
+  Log Message:
+  -----------
+  tpm2_unseal: align code with manpage's CLI options
+
+Manpage says -P means --pwdk but code says --pwdi.
+Seems --pwdk is used everywhere, so change it accordingly.
+
+Signed-off-by: Satish Bysany <>
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/5c87d356b6bd...527d6b9=
+e6e48
+
+--===============5900249434432619639==--
 
