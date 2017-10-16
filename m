@@ -1,81 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============5900249434432619639=="
+Content-Type: multipart/mixed; boundary="===============6705009690870937275=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] c3e072: man: specify correct long option
- for '-C'
-Date: Fri, 13 Oct 2017 12:25:53 -0700
-Message-ID: <59e113413737a_2ea93fa9dce5dc2c613ec@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] 47662b: update travis to use openssl 1.0.1g
+Date: Mon, 16 Oct 2017 09:11:06 -0700
+Message-ID: <59e4da1adc75c_9ef33fac566c9c28495f1@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5900249434432619639==
+--===============6705009690870937275==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: c3e0729f52040fb30760e8b4157e525e5d3d483e
-      https://github.com/01org/tpm2-tools/commit/c3e0729f52040fb30760e8b415=
-7e525e5d3d483e
-  Author: Satish Bysany <>
-  Date:   2017-10-13 (Fri, 13 Oct 2017)
+  Commit: 47662b002757e8fdb9862aad9a94b6510e957d56
+      https://github.com/01org/tpm2-tools/commit/47662b002757e8fdb9862aad9a=
+94b6510e957d56
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-10-16 (Mon, 16 Oct 2017)
 
   Changed paths:
-    M man/tpm2_load.1.md
+    M .travis.yml
 
   Log Message:
   -----------
-  man: specify correct long option for '-C'
+  update travis to use openssl 1.0.1g
 
-Manpage says '-n' and '-C' both have the long option '--name'. But
-code says '-C' =3D> '--context' and '-n' =3D> '--name'
-
-Signed-off-by: Satish Bysany <>
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: be887aa2894e974ece1885cf862179c64d40ed5f
-      https://github.com/01org/tpm2-tools/commit/be887aa2894e974ece1885cf86=
-2179c64d40ed5f
-  Author: Satish Bysany <>
-  Date:   2017-10-13 (Fri, 13 Oct 2017)
+  Commit: e7e2ccf76b44059058f2f3ca9ed2355609293b4d
+      https://github.com/01org/tpm2-tools/commit/e7e2ccf76b44059058f2f3ca9e=
+d2355609293b4d
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-10-16 (Mon, 16 Oct 2017)
 
   Changed paths:
-    M tools/tpm2_create.c
+    M configure.ac
 
   Log Message:
   -----------
-  tpm2_create: enforce-policy does not require arguments
+  configure: libcrypto must be newer than 1.0.2g
 
--E option (aka --enforce-policy) is a boolean parameter, so does
-not require any more arguments.
+tpm2_import has a dependency on:
+RSA_padding_add_PKCS1_OAEP_mgf1
 
-See 'man 3 getopt_long' for 'struct option' and its interpretation.
+This is not available in older version of libcrypto.
 
-Signed-off-by: Satish Bysany <>
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 527d6b9e6e482cd9274f5f0fd06a3f27f81d5fdb
-      https://github.com/01org/tpm2-tools/commit/527d6b9e6e482cd9274f5f0fd0=
-6a3f27f81d5fdb
-  Author: Satish Bysany <>
-  Date:   2017-10-13 (Fri, 13 Oct 2017)
+  Commit: eccba17e6ce1beb4721088c12f1b39016913361c
+      https://github.com/01org/tpm2-tools/commit/eccba17e6ce1beb4721088c12f=
+1b39016913361c
+  Author: Imran Desai <imran.desai(a)intel.com>
+  Date:   2017-10-16 (Mon, 16 Oct 2017)
 
   Changed paths:
-    M tools/tpm2_unseal.c
+    M Makefile.am
+    M lib/tpm2_util.h
+    A man/tpm2_import.1.md
+    A test/system/test_tpm2_import.sh
+    A tools/tpm2_import.c
 
   Log Message:
   -----------
-  tpm2_unseal: align code with manpage's CLI options
+  [WIP] tpm2_import: new tool that uses tpm2_import to import a key
 
-Manpage says -P means --pwdk but code says --pwdi.
-Seems --pwdk is used everywhere, so change it accordingly.
+TODO:
+1. --parent-key-public should be optional, just read it in if not specified.
 
-Signed-off-by: Satish Bysany <>
+Limited to importing a symmetric AES-128 key.
+^^^
+Is this true? Can we import asymmetric keys through import command?
+
+Add tests.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-Compare: https://github.com/01org/tpm2-tools/compare/5c87d356b6bd...527d6b9=
-e6e48
+Compare: https://github.com/01org/tpm2-tools/compare/1e1ba978f7ab...eccba17=
+e6ce1
 
---===============5900249434432619639==--
+--===============6705009690870937275==--
 
