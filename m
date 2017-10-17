@@ -1,19 +1,22 @@
-Content-Type: multipart/mixed; boundary="===============6462527618446171319=="
+Content-Type: multipart/mixed; boundary="===============2028922670596502412=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools]
-Date: Tue, 17 Oct 2017 10:36:20 -0700
-Message-ID: <59e63f94d0733_468b3fcc1fca7c38771f8@hookshot-fe5-cp1-prd.iad.github.net.mail>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] [RELEASE CANDIDATE] 2.1.1-rc0 for review
+Date: Tue, 17 Oct 2017 17:40:29 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563F4B10DF@ORSMSX115.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6462527618446171319==
+--===============2028922670596502412==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/tags/2.1.1-rc0
-  Home:   https://github.com/01org/tpm2-tools
+I still need to perform the static analysis on this with coverity and fix a=
+ny issues.
 
---===============6462527618446171319==--
+https://github.com/01org/tpm2-tools/releases/tag/2.1.1-rc0
+
+
+--===============2028922670596502412==--
 
