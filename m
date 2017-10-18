@@ -1,33 +1,29 @@
-Content-Type: multipart/mixed; boundary="===============7740707287909036094=="
+Content-Type: multipart/mixed; boundary="===============0747621672766567656=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 4aa249: Update README.md
-Date: Tue, 17 Oct 2017 11:44:41 -0700
-Message-ID: <59e64f9981a4f_1a363fab5a307c2c69716@hookshot-fe1-cp1-prd.iad.github.net.mail>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] CVE-2017-15361
+Date: Wed, 18 Oct 2017 16:08:23 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563F4B157D@ORSMSX115.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7740707287909036094==
+--===============0747621672766567656==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
-  Home:   https://github.com/01org/tpm2-tools
-  Commit: 4aa24907be92847a54ebbee5d111e8535d4de79f
-      https://github.com/01org/tpm2-tools/commit/4aa24907be92847a54ebbee5d1=
-11e8535d4de79f
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-10-17 (Tue, 17 Oct 2017)
+FYI.
+A CVE was recently made public that may affect users on this list. Infineon=
+ had a law in its RSA key generation, that allows private keys to be genera=
+ted from public keys.
 
-  Changed paths:
-    M README.md
+CVE:
+http://www.cvedetails.com/cve/CVE-2017-15361/
 
-  Log Message:
-  -----------
-  Update README.md
+Writeup:
+http://www.zdnet.com/article/as-devastating-as-krack-new-vulnerability-unde=
+rmines-rsa-encryption-keys/
 
 
-
---===============7740707287909036094==--
+--===============0747621672766567656==--
 
