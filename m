@@ -1,33 +1,24 @@
-Content-Type: multipart/mixed; boundary="===============0125239548983358488=="
+Content-Type: multipart/mixed; boundary="===============3448369382552212666=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 134b74: Update CHANGELOG
-Date: Thu, 19 Oct 2017 09:11:27 -0700
-Message-ID: <59e8ceafadbf7_255d3fcfac6dbc3810322a@hookshot-fe3-cp1-prd.iad.github.net.mail>
+From: Alexander.Steffen at infineon.com
+Subject: [tpm2] TPM meetup in Prague?
+Date: Thu, 19 Oct 2017 17:31:06 +0000
+Message-ID: <0068162d9f5e40b0b38390e93ecac8f7@infineon.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0125239548983358488==
+--===============3448369382552212666==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/2.X
-  Home:   https://github.com/01org/tpm2-tools
-  Commit: 134b74410ef2b307c06bef3a46d85d33c300a9e6
-      https://github.com/01org/tpm2-tools/commit/134b74410ef2b307c06bef3a46=
-d85d33c300a9e6
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-10-19 (Thu, 19 Oct 2017)
+I have noticed that a TPM focused session appeared on the agenda for the Op=
+en Source Summit Europe in Prague next week (https://kernsec.org/wiki/index=
+.php/Linux_Kernel_Summit_2017,_Security_Session). I am going to be there. D=
+oes anybody else attend who is interested in TPM development and wants to m=
+eet?
 
-  Changed paths:
-    M CHANGELOG
+Alexander
 
-  Log Message:
-  -----------
-  Update CHANGELOG
-
-
-
---===============0125239548983358488==--
+--===============3448369382552212666==--
 
