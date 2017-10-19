@@ -1,42 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============8531300725514255860=="
+Content-Type: multipart/mixed; boundary="===============7352238749550208677=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 9e27f7: tpm2_import: remove unneeded
- ifdefery to call the ...
-Date: Wed, 18 Oct 2017 19:37:49 -0700
-Message-ID: <59e80ffd1b5b3_48ea3ff88e60bc301747e@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] 4e4306: test: work around TPM 2.0 spec 1.16
+ errata on decr...
+Date: Wed, 18 Oct 2017 19:38:29 -0700
+Message-ID: <59e81025bd534_480f3fe265951c30127422@hookshot-fe3-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8531300725514255860==
+--===============7352238749550208677==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 9e27f70a7e48d1a66733ff818dad6fad55d1bb83
-      https://github.com/01org/tpm2-tools/commit/9e27f70a7e48d1a66733ff818d=
-ad6fad55d1bb83
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Commit: 4e43061fe9e6edef1d37fe11cbd697df27d58563
+      https://github.com/01org/tpm2-tools/commit/4e43061fe9e6edef1d37fe11cb=
+d697df27d58563
+  Author: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
   Date:   2017-10-18 (Wed, 18 Oct 2017)
 
   Changed paths:
-    M tools/tpm2_import.c
+    M test/system/test_helpers.sh
+    M test/system/test_tpm2_create.sh
+    M test/system/test_tpm2_encryptdecrypt.sh
+    M test/system/test_tpm2_quote.sh
 
   Log Message:
   -----------
-  tpm2_import: remove unneeded ifdefery to call the RSA_set0_key function
+  test: work around TPM 2.0 spec 1.16 errata on decrypt and sign set for a =
+symcipher object
 
-The ssl_RSA_set0_key() function already has an error path, but the error
-was not propagated to the caller. Since the function has basically the
-same signature than the OpenSSL 1.1.0 RSA_set0_key() function, define it
-for OpenSSL < 1.1.0 so there is no need for the ifdefery in the caller.
+Certain TPM 2.0 chip, e.g, Nationz Z32H320TC, and tpm2simulator
+referring to TPM 2.0 spec 1.16 may have an errata, disallowing both
+decrypt and sign set for a symcipher object, and in response to
+RC_ATTRIBUTES.
 
-Suggested-by: Matthias Gerstner <matthias.gerstner(a)suse.de>
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+In order to work around it, we attempt to run tpm2_create again with
+sign bit clear.
+
+This workaround works for the testcases:
+- test_tpm2_encryptdecrypt.sh
+- test_tpm2_create.sh
+- test_tpm2_quote.sh
+
+This change partially resolves the issue #335 (Make sure that all
+tests work on a real TPM hardware) for helping on it regard
+
+Signed-off-by: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
 
 
 
---===============8531300725514255860==--
+--===============7352238749550208677==--
 
