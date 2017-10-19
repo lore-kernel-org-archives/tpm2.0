@@ -1,24 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============3448369382552212666=="
+Content-Type: multipart/mixed; boundary="===============7182892683806637060=="
 MIME-Version: 1.0
-From: Alexander.Steffen at infineon.com
-Subject: [tpm2] TPM meetup in Prague?
-Date: Thu, 19 Oct 2017 17:31:06 +0000
-Message-ID: <0068162d9f5e40b0b38390e93ecac8f7@infineon.com>
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] 102e5c: README: Add wiki url to resources
+Date: Thu, 19 Oct 2017 11:13:13 -0700
+Message-ID: <59e8eb39d9cc9_582f3f8924151c3c133843@hookshot-fe1-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3448369382552212666==
+--===============7182892683806637060==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I have noticed that a TPM focused session appeared on the agenda for the Op=
-en Source Summit Europe in Prague next week (https://kernsec.org/wiki/index=
-.php/Linux_Kernel_Summit_2017,_Security_Session). I am going to be there. D=
-oes anybody else attend who is interested in TPM development and wants to m=
-eet?
+  Branch: refs/heads/master
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: 102e5c16bef653d7dd4210fd6b4500c1e487b35b
+      https://github.com/01org/tpm2-tools/commit/102e5c16bef653d7dd4210fd6b=
+4500c1e487b35b
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-10-19 (Thu, 19 Oct 2017)
 
-Alexander
+  Changed paths:
+    M README.md
 
---===============3448369382552212666==--
+  Log Message:
+  -----------
+  README: Add wiki url to resources
+
+Fixes: #440
+
+
+
+--===============7182892683806637060==--
 
