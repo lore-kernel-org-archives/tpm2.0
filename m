@@ -1,19 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============5815707870894080056=="
+Content-Type: multipart/mixed; boundary="===============5676673460446830026=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools]
-Date: Mon, 23 Oct 2017 16:41:44 -0700
-Message-ID: <59ee7e38d07bf_1ffb3fa7b4db1c301997dc@hookshot-fe1-cp1-prd.iad.github.net.mail>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] RC 2.1.1-rc1 for review
+Date: Mon, 23 Oct 2017 23:46:09 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563F4B3CAA@ORSMSX115.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5815707870894080056==
+--===============5676673460446830026==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/tags/2.1.1-rc1
-  Home:   https://github.com/01org/tpm2-tools
+A new release candidate is available for the 2.1.1 release:
+https://github.com/01org/tpm2-tools/releases/tag/2.1.1-rc1
 
---===============5815707870894080056==--
+The change between rc0 is:
+* Potential memory leak fix when tcti/sapi initialization fails.
+
+A new week of testing commences, If no changes are submitted by Oct 31 2017=
+, then
+rc1 will be the released version.
+
+Thank you all who contribute.
+
+---
+Bill
+
+--===============5676673460446830026==--
 
