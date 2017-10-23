@@ -1,31 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============5676673460446830026=="
+Content-Type: multipart/mixed; boundary="===============7064182945275226682=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] RC 2.1.1-rc1 for review
-Date: Mon, 23 Oct 2017 23:46:09 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563F4B3CAA@ORSMSX115.amr.corp.intel.com>
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] 9caee6: configure: add python and pyaml
+ configure check
+Date: Mon, 23 Oct 2017 16:46:36 -0700
+Message-ID: <59ee7f5c4295c_34aa3fce1d6f1c3058463@hookshot-fe1-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5676673460446830026==
+--===============7064182945275226682==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-A new release candidate is available for the 2.1.1 release:
-https://github.com/01org/tpm2-tools/releases/tag/2.1.1-rc1
+  Branch: refs/heads/master
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: 9caee6b616cb7be221d2b005ebb5c91367fdfbc9
+      https://github.com/01org/tpm2-tools/commit/9caee6b616cb7be221d2b005eb=
+b5c91367fdfbc9
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-10-23 (Mon, 23 Oct 2017)
 
-The change between rc0 is:
-* Potential memory leak fix when tcti/sapi initialization fails.
+  Changed paths:
+    M configure.ac
 
-A new week of testing commences, If no changes are submitted by Oct 31 2017=
-, then
-rc1 will be the released version.
+  Log Message:
+  -----------
+  configure: add python and pyaml configure check
 
-Thank you all who contribute.
+Warn that without python and pyyaml, that some system
+test scripts will fail.
 
----
-Bill
+Fixes: #450
 
---===============5676673460446830026==--
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 7e02a35f7157cbe581b3bff97d3a1af6a6c468d4
+      https://github.com/01org/tpm2-tools/commit/7e02a35f7157cbe581b3bff97d=
+3a1af6a6c468d4
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-10-23 (Mon, 23 Oct 2017)
+
+  Changed paths:
+    M configure.ac
+
+  Log Message:
+  -----------
+  configure: add check for bash
+
+Warn if bash isn't present that system tests won't run.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/f3eb247ff2af...7e02a35=
+f7157
+
+--===============7064182945275226682==--
 
