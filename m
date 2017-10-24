@@ -1,61 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============7064182945275226682=="
+Content-Type: multipart/mixed; boundary="===============6921219871924141312=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 9caee6: configure: add python and pyaml
- configure check
-Date: Mon, 23 Oct 2017 16:46:36 -0700
-Message-ID: <59ee7f5c4295c_34aa3fce1d6f1c3058463@hookshot-fe1-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] 41b141: tpm2_import: add -A option to
+ specify the object a...
+Date: Tue, 24 Oct 2017 10:03:56 -0700
+Message-ID: <59ef727c6078c_403f3fe31b27dc401478fb@hookshot-fe-92cdb05.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7064182945275226682==
+--===============6921219871924141312==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 9caee6b616cb7be221d2b005ebb5c91367fdfbc9
-      https://github.com/01org/tpm2-tools/commit/9caee6b616cb7be221d2b005eb=
-b5c91367fdfbc9
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-10-23 (Mon, 23 Oct 2017)
+  Commit: 41b14163d20eeef7a2aec3a0d0322706b079f67e
+      https://github.com/01org/tpm2-tools/commit/41b14163d20eeef7a2aec3a0d0=
+322706b079f67e
+  Author: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+  Date:   2017-10-24 (Tue, 24 Oct 2017)
 
   Changed paths:
-    M configure.ac
+    M man/tpm2_import.1.md
+    M tools/tpm2_import.c
 
   Log Message:
   -----------
-  configure: add python and pyaml configure check
+  tpm2_import: add -A option to specify the object attributes
 
-Warn that without python and pyyaml, that some system
-test scripts will fail.
-
-Fixes: #450
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+Signed-off-by: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
 
 
-  Commit: 7e02a35f7157cbe581b3bff97d3a1af6a6c468d4
-      https://github.com/01org/tpm2-tools/commit/7e02a35f7157cbe581b3bff97d=
-3a1af6a6c468d4
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-10-23 (Mon, 23 Oct 2017)
 
-  Changed paths:
-    M configure.ac
-
-  Log Message:
-  -----------
-  configure: add check for bash
-
-Warn if bash isn't present that system tests won't run.
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-Compare: https://github.com/01org/tpm2-tools/compare/f3eb247ff2af...7e02a35=
-f7157
-
---===============7064182945275226682==--
+--===============6921219871924141312==--
 
