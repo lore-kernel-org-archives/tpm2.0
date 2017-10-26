@@ -1,64 +1,101 @@
-Content-Type: multipart/mixed; boundary="===============0203437819753344358=="
+Content-Type: multipart/mixed; boundary="===============0236909385501477906=="
 MIME-Version: 1.0
-From: Thomas Dalen, van <thomasvdalen at gmail.com>
-Subject: [tpm2] (no subject)
-Date: Wed, 25 Oct 2017 14:21:45 +0200
-Message-ID: <CAPpupMR+qyZxP7ieEP0sttfvO0BjXmy0c3Mu41mq9sKdhv_+CQ@mail.gmail.com>
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [01org/tpm2-tools] 049a42: tpm2_errata: implement a generic
+ handling for erra...
+Date: Thu, 26 Oct 2017 13:20:57 -0700
+Message-ID: <59f243a9d7610_393f3f7f7e0d1c3043559@hookshot-fe6-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0203437819753344358==
+--===============0236909385501477906==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+  Branch: refs/heads/master
+  Home:   https://github.com/01org/tpm2-tools
+  Commit: 049a424dd85bc0c82d550b1824a589a0a6945022
+      https://github.com/01org/tpm2-tools/commit/049a424dd85bc0c82d550b1824=
+a589a0a6945022
+  Author: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+  Date:   2017-10-26 (Thu, 26 Oct 2017)
 
-I have a costumer with bitlocker enabled, we lost his key. Now recently the
-tpm breach is online to hold the public rsa key again a generator to see if
-we can recover it.
+  Changed paths:
+    M Makefile.am
+    A lib/tpm2_errata.c
+    A lib/tpm2_errata.h
+    M tools/tpm2_tool.c
 
-I tried a few days with a bootable ubuntu. apt-get install tpm2-tools
-and
-tpm_nvlist stull figurting out how to get the public key.
-Now im keep getting Resource Mgr, resMgr failed initializations: 0x1.
-Exiting..
+  Log Message:
+  -----------
+  tpm2_errata: implement a generic handling for errata
 
-Can someone please, please help me find out how to get TPM its public key?
+The TPM errata should be addressed and handled transparently by design.
 
-Thank you so much
+In order to handle an errata, the errata info should be recorded in
+tpm2_errata.[ch], and the tools need to query the errata handler with
+a pre-defined errata index number and fixup handler.
 
--- =
+During the initialization, the TPM spec and errata info will be
+remembered and used to check the errata query issued by the callers.
 
-Met vriendelijke Groet,
+If the errata is omitted, nothing would happen. In contrast, the log
+records which errata is applied.
 
-Thomas van Dalen
-*E*: thomasvdalen(a)gmail.com
-*T*: 06 239 88 343
+Signed-off-by: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
 
---===============0203437819753344358==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGJyIGNsZWFyPSJhbGwiPjxkaXY+SGkgYWxsLDwvZGl2PjxkaXY+PGJy
-PjwvZGl2PjxkaXY+SSBoYXZlIGEgY29zdHVtZXIgd2l0aCBiaXRsb2NrZXIgZW5hYmxlZCwgd2Ug
-bG9zdCBoaXMga2V5LiBOb3cgcmVjZW50bHkgdGhlIHRwbSBicmVhY2ggaXMgb25saW5lIHRvIGhv
-bGQgdGhlIHB1YmxpYyByc2Ega2V5IGFnYWluIGEgZ2VuZXJhdG9yIHRvIHNlZSBpZiB3ZSBjYW4g
-cmVjb3ZlciBpdC48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkkgdHJpZWQgYSBmZXcgZGF5cyB3
-aXRoIGEgYm9vdGFibGUgdWJ1bnR1LiBhcHQtZ2V0IGluc3RhbGwgdHBtMi10b29sczwvZGl2Pjxk
-aXY+YW5kPC9kaXY+PGRpdj50cG1fbnZsaXN0IHN0dWxsIGZpZ3VydGluZyBvdXQgaG93IHRvIGdl
-dCB0aGUgcHVibGljIGtleS48YnI+Tm93IGltIGtlZXAgZ2V0dGluZyBSZXNvdXJjZSBNZ3IsIHJl
-c01nciBmYWlsZWQgaW5pdGlhbGl6YXRpb25zOiAweDEuIEV4aXRpbmcuLjwvZGl2PjxkaXY+PGJy
-PjwvZGl2PjxkaXY+Q2FuIHNvbWVvbmUgcGxlYXNlLCBwbGVhc2UgaGVscCBtZSBmaW5kIG91dCBo
-b3cgdG8gZ2V0IFRQTSBpdHMgcHVibGljIGtleT88YnI+PGJyPlRoYW5rIHlvdSBzbyBtdWNoPGJy
-Pjxicj48L2Rpdj4tLSA8YnI+PGRpdiBjbGFzcz0iZ21haWxfc2lnbmF0dXJlIiBkYXRhLXNtYXJ0
-bWFpbD0iZ21haWxfc2lnbmF0dXJlIj48ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXYgZGlyPSJsdHIi
-Pk1ldCB2cmllbmRlbGlqa2UgR3JvZXQsPGJyPjxicj5UaG9tYXMgdmFuIERhbGVuPGJyPjxiPkU8
-L2I+OiA8YSBocmVmPSJtYWlsdG86dGhvbWFzdmRhbGVuQGdtYWlsLmNvbSIgdGFyZ2V0PSJfYmxh
-bmsiPnRob21hc3ZkYWxlbkBnbWFpbC5jb208L2E+PGJyPjxiPlQ8L2I+OiAwNiAyMzkgODggMzQz
-PGJyPjxicj48YnI+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+CjwvZGl2Pgo=
+  Commit: 81b20dd81c22a1c95603a16d2778e8c65980b526
+      https://github.com/01org/tpm2-tools/commit/81b20dd81c22a1c95603a16d27=
+78e8c65980b526
+  Author: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+  Date:   2017-10-26 (Thu, 26 Oct 2017)
 
---===============0203437819753344358==--
+  Changed paths:
+    M tools/tpm2_create.c
+    M tools/tpm2_import.c
+
+  Log Message:
+  -----------
+  tpm2_create, tpm2_import: work around a spec 1.16 errata
+
+TPM 2.0 spec 1.16 errata on decrypt and sign set for a symcipher.
+
+Certain TPM 2.0 chip, e.g, Nationz Z32H320TC, and tpm2simulator
+referring to TPM 2.0 spec 1.16 may have an errata, disallowing both
+decrypt and sign set for a symcipher object, and in response to
+RC_ATTRIBUTES.
+
+This change partially resolves the issue #335 (Make sure that all
+tests work on a real TPM hardware) for helping on it regard.
+
+Signed-off-by: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+
+
+  Commit: 67aee61995fa91ceca7d4dc15c1481e523d03808
+      https://github.com/01org/tpm2-tools/commit/67aee61995fa91ceca7d4dc15c=
+1481e523d03808
+  Author: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+  Date:   2017-10-26 (Thu, 26 Oct 2017)
+
+  Changed paths:
+    M test/system/test_helpers.sh
+    M test/system/test_tpm2_create.sh
+    M test/system/test_tpm2_encryptdecrypt.sh
+    M test/system/test_tpm2_quote.sh
+
+  Log Message:
+  -----------
+  test: clean up errata wrapper create_object()
+
+This errata is already transparently handled in tools.
+
+Signed-off-by: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
+
+
+Compare: https://github.com/01org/tpm2-tools/compare/41b14163d20e...67aee61=
+995fa
+
+--===============0236909385501477906==--
 
