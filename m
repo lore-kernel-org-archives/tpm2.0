@@ -1,33 +1,30 @@
-Content-Type: multipart/mixed; boundary="===============7107814295025644573=="
+Content-Type: multipart/mixed; boundary="===============8783271118204675482=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 555183: Update CHANGELOG.md
-Date: Tue, 31 Oct 2017 09:58:45 -0700
-Message-ID: <59f8abc5348f5_47133feba59cdc249272b@hookshot-fe1-cp1-prd.iad.github.net.mail>
+From: philip.b.tricca at intel.com
+Subject: [tpm2] tpm2-tss 1.3.0-rc0 available
+Date: Wed, 01 Nov 2017 20:29:00 -0700
+Message-ID: <c11fa167-0f09-568b-f290-779807645caf@twobit.us>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7107814295025644573==
+--===============8783271118204675482==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
-  Home:   https://github.com/01org/tpm2-tools
-  Commit: 55518380da9da4c104990581977af373914abda9
-      https://github.com/01org/tpm2-tools/commit/55518380da9da4c10499058197=
-7af373914abda9
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-10-31 (Tue, 31 Oct 2017)
+I've just pushed a tag for the first release candidate for version 1.3.0
+of the TSS libraries. It's available here:
+https://github.com/01org/tpm2-tss/releases/tag/1.3.0-rc0
 
-  Changed paths:
-    M CHANGELOG.md
+The CHANGELOG is very short, just fixing two broken macros and adding
+support for the EncryptDecrypt2 command. This release is necessary for
+users with TPM2 devices that have deprecated support for the
+EncryptDecrypt function. Support for this function in the tools is
+forthcoming.
 
-  Log Message:
-  -----------
-  Update CHANGELOG.md
+Any additional testing & feedback would be much appreciated.
 
+Philip
 
-
---===============7107814295025644573==--
+--===============8783271118204675482==--
 
