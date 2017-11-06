@@ -1,22 +1,22 @@
-Content-Type: multipart/mixed; boundary="===============3257921011742539215=="
+Content-Type: multipart/mixed; boundary="===============6357684843910816661=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] 97658a: configure: fix check for bash shell
-Date: Mon, 06 Nov 2017 09:00:25 -0800
-Message-ID: <5a0095294ffa2_7893fc3e5b4fc38449b8@hookshot-fe3-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [01org/tpm2-tools] e467da: configure: fix check for bash shell
+Date: Mon, 06 Nov 2017 09:51:35 -0800
+Message-ID: <5a00a1278fea1_11983fbbe0987c3c809c1@hookshot-fe-92cdb05.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3257921011742539215==
+--===============6357684843910816661==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
+  Branch: refs/heads/3.X
   Home:   https://github.com/01org/tpm2-tools
-  Commit: 97658a53ef54b9619a49e20bf9bf7d288f0ca8bf
-      https://github.com/01org/tpm2-tools/commit/97658a53ef54b9619a49e20bf9=
-bf7d288f0ca8bf
+  Commit: e467da975d819cacebd24060923b45d809f363ee
+      https://github.com/01org/tpm2-tools/commit/e467da975d819cacebd2406092=
+3b45d809f363ee
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-11-06 (Mon, 06 Nov 2017)
 
@@ -45,5 +45,5 @@ Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
 
---===============3257921011742539215==--
+--===============6357684843910816661==--
 
