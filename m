@@ -1,19 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============0054411022153250018=="
+Content-Type: multipart/mixed; boundary="===============5381252660936213367=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools]
-Date: Fri, 03 Nov 2017 09:45:45 -0700
-Message-ID: <59fc9d397d7a8_15db3f8fcc50fc4436145@hookshot-fe1-cp1-prd.iad.github.net.mail>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Github Repository Links Moving from 01org to Intel
+Date: Mon, 06 Nov 2017 16:54:34 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563F4B8CD1@ORSMSX115.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0054411022153250018==
+--===============5381252660936213367==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/3.X
-  Home:   https://github.com/01org/tpm2-tools
+We will be migrating the following GitHub projects from 01org to Intel on W=
+ednesday, November 8th: =
 
---===============0054411022153250018==--
+
+        https://github.com/01org/tpm2-abrmd =
+
+        https://github.com/01org/tpm2-tools
+        https://github.com/01org/tpm2-tss =
+
+
+
+There will be redirects from the old links. Once active, the new redirect w=
+ill be:
+
+        https://github.com/intel/tpm2-abrmd =
+
+        https://github.com/intel/tpm2-tools =
+
+        https://github.com/intel/tpm2-tss =
+
+        (please note these links are not active yet)
+
+Thanks,
+Bill
+
+--===============5381252660936213367==--
 
