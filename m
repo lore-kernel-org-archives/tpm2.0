@@ -1,23 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============4107688825625413040=="
+Content-Type: multipart/mixed; boundary="===============1030596082034980253=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [01org/tpm2-tools] debf70: lib: add object attribute firendly
+Subject: [tpm2] [01org/tpm2-tools] 51aeaa: lib: add object attribute firendly
  name support
-Date: Tue, 07 Nov 2017 07:35:05 -0800
-Message-ID: <5a01d2a94a50a_11b33fdd18293c38822a4@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Date: Tue, 07 Nov 2017 07:55:22 -0800
+Message-ID: <5a01d76abbb6d_6fb43fe643e3fc244872d@hookshot-fe1-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4107688825625413040==
+--===============1030596082034980253==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
+  Branch: refs/heads/3.X
   Home:   https://github.com/01org/tpm2-tools
-  Commit: debf70b716356ae42b00368ef5589ff007fa64a5
-      https://github.com/01org/tpm2-tools/commit/debf70b716356ae42b00368ef5=
-589ff007fa64a5
+  Commit: 51aeaabbc5ef9ce07026e68aeae1cba3ad450855
+      https://github.com/01org/tpm2-tools/commit/51aeaabbc5ef9ce07026e68aea=
+e1cba3ad450855
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-07 (Tue, 07 Nov 2017)
 
@@ -50,9 +50,9 @@ and add newe tests for the object attribute routines.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: b56cb4a5472092df0a46be6019dde2c5d0a3af78
-      https://github.com/01org/tpm2-tools/commit/b56cb4a5472092df0a46be6019=
-dde2c5d0a3af78
+  Commit: f1c64d50fbe4774808421e70c1eff4716f8b9502
+      https://github.com/01org/tpm2-tools/commit/f1c64d50fbe4774808421e70c1=
+eff4716f8b9502
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-07 (Tue, 07 Nov 2017)
 
@@ -77,9 +77,9 @@ persistent-handle[0]:0x81000000 key-alg:rsa hash-alg:sha256 object-attr:0x3=
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 2cba83be35cab3806b0b2bb1e7bb7abac2798d0e
-      https://github.com/01org/tpm2-tools/commit/2cba83be35cab3806b0b2bb1e7=
-bb7abac2798d0e
+  Commit: cbda767231850505ea92fe1a114f066616f242fe
+      https://github.com/01org/tpm2-tools/commit/cbda767231850505ea92fe1a11=
+4f066616f242fe
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-07 (Tue, 07 Nov 2017)
 
@@ -99,9 +99,9 @@ before handing off to the friendly conversion routine.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 035d7bc81cea7b8504f14312175d106efde64db0
-      https://github.com/01org/tpm2-tools/commit/035d7bc81cea7b8504f1431217=
-5d106efde64db0
+  Commit: 4552b9edb2ab74a3ae0a48b8a12704301b0a0066
+      https://github.com/01org/tpm2-tools/commit/4552b9edb2ab74a3ae0a48b8a1=
+2704301b0a0066
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-07 (Tue, 07 Nov 2017)
 
@@ -125,9 +125,9 @@ Update tests that use -E to use -A.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 634ea6a795e5f350e82fd66a1b76dcc5f99bf07a
-      https://github.com/01org/tpm2-tools/commit/634ea6a795e5f350e82fd66a1b=
-76dcc5f99bf07a
+  Commit: 289bb848e629f696e5e439e5480086c1c599c4b9
+      https://github.com/01org/tpm2-tools/commit/289bb848e629f696e5e439e548=
+0086c1c599c4b9
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-07 (Tue, 07 Nov 2017)
 
@@ -165,9 +165,9 @@ consistent with tpm2_create for the -A option.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: aae96585c24f25a36089d2368c7ecc6ec76253e8
-      https://github.com/01org/tpm2-tools/commit/aae96585c24f25a36089d2368c=
-7ecc6ec76253e8
+  Commit: 9d503ba5bf5e81ed831666b745ff8ab4a155327c
+      https://github.com/01org/tpm2-tools/commit/9d503ba5bf5e81ed831666b745=
+ff8ab4a155327c
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-07 (Tue, 07 Nov 2017)
 
@@ -181,8 +181,8 @@ Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-Compare: https://github.com/01org/tpm2-tools/compare/97658a53ef54...aae9658=
-5c24f
+Compare: https://github.com/01org/tpm2-tools/compare/e467da975d81...9d503ba=
+5bf5e
 
---===============4107688825625413040==--
+--===============1030596082034980253==--
 
