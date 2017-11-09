@@ -1,108 +1,100 @@
-Content-Type: multipart/mixed; boundary="===============4768302615658024337=="
+Content-Type: multipart/mixed; boundary="===============3201030808839793788=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] d33a71: lib: add an xxd compatible hexdump
- routine
-Date: Thu, 09 Nov 2017 08:59:45 -0800
-Message-ID: <5a048981d7168_17223f986bde7c3453276@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] 7eb26d: man/tpm2_quote: add missing -s
+ option
+Date: Thu, 09 Nov 2017 09:22:30 -0800
+Message-ID: <5a048ed6a6463_44c3fb65c799c3899b3@hookshot-fe1-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4768302615658024337==
+--===============3201030808839793788==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/3.X
+  Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: d33a71cb95a3ca598d22eac460c08d5c7d91c5f6
-      https://github.com/intel/tpm2-tools/commit/d33a71cb95a3ca598d22eac460=
-c08d5c7d91c5f6
+  Commit: 7eb26d482c9fa63e90289f308e7ff5ebffe4a959
+      https://github.com/intel/tpm2-tools/commit/7eb26d482c9fa63e90289f308e=
+7ff5ebffe4a959
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-09 (Thu, 09 Nov 2017)
 
   Changed paths:
-    M lib/tpm2_util.c
-    M lib/tpm2_util.h
+    M man/tpm2_quote.1.md
 
   Log Message:
   -----------
-  lib: add an xxd compatible hexdump routine
+  man/tpm2_quote: add missing -s option
+
+The -s option was not recorded in the man page,
+record it.
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: ec2fb0153abe87589e4a0e78dfc9108fa33b3b1e
-      https://github.com/intel/tpm2-tools/commit/ec2fb0153abe87589e4a0e78df=
-c9108fa33b3b1e
+  Commit: 5bdab63d0a1ca4f5ce2f4f667bc45d53049b1aea
+      https://github.com/intel/tpm2-tools/commit/5bdab63d0a1ca4f5ce2f4f667b=
+c45d53049b1aea
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-09 (Thu, 09 Nov 2017)
 
   Changed paths:
-    M tools/tpm2_nvread.c
+    M man/tpm2_quote.1.md
 
   Log Message:
   -----------
-  tpm2_nvread.c: use public hexdump routine
+  man/tpm2_quote: fix whitespace error
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 7359baca4669efd02ef6875385996377112cce9d
-      https://github.com/intel/tpm2-tools/commit/7359baca4669efd02ef6875385=
-996377112cce9d
+  Commit: 01054bc7d3a0faaac38e666e90349da4b2a223e0
+      https://github.com/intel/tpm2-tools/commit/01054bc7d3a0faaac38e666e90=
+349da4b2a223e0
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-09 (Thu, 09 Nov 2017)
 
   Changed paths:
-    M man/tpm2_rsaencrypt.1.md
-    M test/system/test_tpm2_rsaencrypt.sh
-    M tools/tpm2_rsaencrypt.c
+    M man/tpm2_quote.1.md
+    M test/system/test_output_formats.sh
+    M test/system/test_tpm2_quote.sh
+    M tools/tpm2_quote.c
 
   Log Message:
   -----------
-  tpm2_rsaencrypt.c: make -o optional
+  tpm2_quote: drop -o option
 
-Make -o option optional and default to stdout. When
-printing to stdout, use an xxd compatible hexdump
-format.
+Not only were the output files not used and in a near
+unuseable state, teh tool now has output formats for
+either tss or openssl structures. Use the -m and -s
+options which output the same data as the old -o option,
+in a cleaner, useable way.
+
+Fixes: #495
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 6b855b3308a19d612213c408ac66a10d7650bd50
-      https://github.com/intel/tpm2-tools/commit/6b855b3308a19d612213c408ac=
-66a10d7650bd50
+  Commit: e13a2b0d71ad20057c981dc1d773e6abf92a6188
+      https://github.com/intel/tpm2-tools/commit/e13a2b0d71ad20057c981dc1d7=
+73e6abf92a6188
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-09 (Thu, 09 Nov 2017)
 
   Changed paths:
-    M lib/files.c
-    M lib/files.h
-    M man/tpm2_rsaencrypt.1.md
-    M test/system/test_tpm2_rsadecrypt.sh
-    M test/system/test_tpm2_rsaencrypt.sh
-    M tools/tpm2_create.c
-    M tools/tpm2_rsaencrypt.c
+    M tools/tpm2_quote.c
 
   Log Message:
   -----------
-  tpm2_rsaencrypt: support -I as an argument
-
-Make -I an argument and default to stdin.
-
-Update tpm2_create to use a common helper since both these
-tools have similair stdin logic.
-
-Drop unused routines from files.h
-
-Fixes: #508
+  tpm2_quote: drop if 0 code
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-Compare: https://github.com/intel/tpm2-tools/compare/6352ede2337e...6b855b3=
-308a1
+Compare: https://github.com/intel/tpm2-tools/compare/ce7c160cdd17...e13a2b0=
+d71ad
 
---===============4768302615658024337==--
+--===============3201030808839793788==--
 
