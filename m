@@ -1,76 +1,110 @@
-Content-Type: multipart/mixed; boundary="===============5020876617365451580=="
+Content-Type: multipart/mixed; boundary="===============5597176741819735909=="
 MIME-Version: 1.0
 From: Patrick Ohly <patrick.ohly at intel.com>
 Subject: Re: [tpm2] using TPM2 NVRAM for storing LUKS password
-Date: Thu, 09 Nov 2017 21:40:16 +0100
-Message-ID: <1510260016.22094.42.camel@intel.com>
-In-Reply-To: daad79b4-05ac-1e08-0f06-abd7d7bbe940@linux.vnet.ibm.com
+Date: Thu, 09 Nov 2017 21:43:32 +0100
+Message-ID: <1510260212.22094.43.camel@intel.com>
+In-Reply-To: b598f17c-038b-07d7-eae9-b60b9be71e5b@redhat.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5020876617365451580==
+--===============5597176741819735909==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2017-11-09 at 10:17 -0500, Stefan Berger wrote:
-> On 11/09/2017 10:10 AM, Patrick Ohly wrote:
-> > On Thu, 2017-11-09 at 09:55 -0500, Stefan Berger wrote:
-> > > I did all of this with the latest versions of libtpms and swtpm
-> > > and
-> > > it works fine for me.
-> > =
+On Thu, 2017-11-09 at 15:12 +0100, Javier Martinez Canillas wrote:
+> Hello Patrick,
+> =
 
-> > Which TPM tools (project and revision?) did you use?
+> On 11/09/2017 01:53 PM, Patrick Ohly wrote:
+> > I tried also without tpm2_nvreadlock and without
+> > tpm2_takeownership,
+> > but neither of that made a difference.
 > > =
 
 > =
 
-> I used the tpm2-tools and tpm2-tss available from Fedora 26.
+> Are you sure that the TPM2 state is maintained between VM reboots?
 
-That's 2.1.1, which is a bit more recent than the 2.1.0 that I am
-currently building with meta-measured. But that difference is minor.
+It should be.
 
-How did you connect to swtpm from inside QEMU? Did your test involve
-restarting swtpm?
+> I mean, did
+> you try for example making a transient object (i.e: a key) persistent
+> using the
+> TPM2_EvictControl command and then check if is still listed after a
+> VM reboot?
+> =
 
-When I reboot the virtual machine without restarting QEMU and swtpm,
-then NVRAM survives the reboot.
+> I wonder if the problem is only with the objects written with
+> tpm2_nvwrite or
+> anything that ends being persisted in the NVRAM.
+> =
 
-But when I stop QEMU and swtpm and then boot up again, swtpm modifies
-the tpm2-00.permall data file when QEMU connects and the previously
-defined NVRAM entry is gone. This can already be reproduced with just
-"tpm2_nvdefine".
+> For example, you can try something like the following commands:
+> =
 
-Here's roughly what I ran:
+> $ tpm2_createprimary -A o -g 0x4 -G 0x25 -C primary.context=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> nameAlg =3D 0x0004=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0
+> type =3D 0x0025=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> contextFile =3D primary.context=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> =
 
-    swtpm socket --ctrl type=3Dunixio,path=3D/tmp/swtpm.sock --tpmstate dir=
-=3Dtpm --log file=3Dswtpm.log --tpm2 &
+> CreatePrimary Succeed ! Handle: 0x80ffffff
+> =
 
-    qemu ... -chardev 'socket,id=3Dchrtpm0,path=3D/tmp/swtpm.sock' -tpmdev =
-emulator,id=3Dtpm0,chardev=3Dchrtpm0 -device tpm-tis,tpmdev=3Dtpm0 ...
+> $ tpm2_evictcontrol -A o -c primary.context -S 0x81000000=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> persistentHandle: 0x8100000
+> =
 
-    # export TPM2TOOLS_TCTI_NAME=3Ddevice
-    # tpm2_nvdefine -x 0x1500001 -s 40 -a 0x40000001 -t 0x80020002
-    ^ac
-    (qemu) q
+> And then after a reboot:
+> =
 
-swtpm terminates now and one can take a copy of the current state:
+> $ tpm2_listpersistent=C2=A0
+> 1 persistent objects defined.
+> =
 
-    cp tpm/tpm2-00.permall /tmp
+> =C2=A0 0. Persistent handle: 0x81000000
+> =C2=A0 {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Type: 0x25
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Hash algorithm(nameAlg): =
+0x4
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Attributes: 0x30072
+> =C2=A0 }
 
-Then start both swtpm and qemu again as above, without any TPM
-operations from userspace, and check:
+That works if I keep swtpm running across the reboot. But as with
+tpm2_nvdefine (see my other mail to Stefan), the persistent object is
+gone after restarting swtpm.
 
-    cmp tpm/tpm2-00.permall /tmp/tpm2-00.permall =
+> > Conceptually this is similar to the commands used with TPM 1.2. The
+> > simplifying assumption is that only a single OS is getting
+> > installed to
+> > virgin hardware and then Secure Boot ensures that no other code
+> > ever
+> > gets access to the active TPM. Therefore a fixed index and no real
+> > access protection for the slot are okay. A read-lock is set to
+> > ensure
+> > that the key is protected from potentially malicious applications
+> > which
+> > =C2=A0might have access to /dev/tpm0. Does that sound alright?
+> > =
 
-    tpm/tpm2-00.permall /tmp/tpm2-00.permall differ: byte 313, line 1
+> =
 
-BTW, should the swtpm instance above really terminate when qemu
-disconnects? It currently does, although -terminate is not given.
+> That sounds reasonable. There are other attack vectors like someone
+> replacing your initramfs (that's not signed in a Secure Boot) and
+> reading the LUKS pass before the tpm2_nvreadlock.
 
-How can I enable more debug logging inside swtpm? Increasing the level
-does not really provide much useful information.
+True. In refkit, the UEFI firmware directly loads a signed UEFI
+combined app which contains initramfs, kernel and boot parameters, so
+there shouldn't be a way for an attacker to intercept booting before
+the initramfs runs.
 
 -- =
 
@@ -83,5 +117,5 @@ on behalf of Intel on this matter.
 
 
 
---===============5020876617365451580==--
+--===============5597176741819735909==--
 
