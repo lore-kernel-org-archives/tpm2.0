@@ -1,79 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============1181246047846700842=="
+Content-Type: multipart/mixed; boundary="===============5109270898206653133=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 00964c: travis.yml: fix issue with trying
- to download unav...
-Date: Thu, 09 Nov 2017 11:15:46 -0800
-Message-ID: <5a04a962874d6_643a3fd04b2c5c443093d@hookshot-fe3-cp1-prd.iad.github.net.mail>
+From: Patrick Ohly <patrick.ohly at intel.com>
+Subject: Re: [tpm2] using TPM2 NVRAM for storing LUKS password
+Date: Thu, 09 Nov 2017 20:51:14 +0100
+Message-ID: <1510257074.22094.40.camel@intel.com>
+In-Reply-To: 1510232036.22094.29.camel@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1181246047846700842==
+--===============5109270898206653133==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
-  Home:   https://github.com/intel/tpm2-tools
-  Commit: 00964ce0485d6af5cbc9f98adff658c33f874be8
-      https://github.com/intel/tpm2-tools/commit/00964ce0485d6af5cbc9f98adf=
-f658c33f874be8
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
-  Date:   2017-11-09 (Thu, 09 Nov 2017)
+On Thu, 2017-11-09 at 13:53 +0100, Patrick Ohly wrote:
+> The commands that run as part of installation are:
+> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_takeownership -o ownerpass -e endorsepass -l=
+ lockpass
+> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvdefine -x 0x1500001 -s 40 -a 0x40000001 -t=
+ 0x80020002 -P
+> ownerpass
+> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvwrite -x 0x1500001 -a 0x40000001 -f
+> /dev/shm/keydir.sVrmLQ/keyfile -P ownerpass
+> =C2=A0=C2=A0=C2=A0=C2=A052 45 46 4b 49 54 5f 30 70 e6 2b b9 ca 0c 1c 00 1=
+d 6d eb 58 a1 7a
+> cf 0d 1d 71 46 bc fd 7a 80 a0 8f 8b 0a 30 fc 89 9b db=C2=A0
+> =
 
-  Changed paths:
-    M .travis.yml
+> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvlist
+> =C2=A0=C2=A0=C2=A0=C2=A01 NV indexes defined.
+> =
 
-  Log Message:
-  -----------
-  travis.yml: fix issue with trying to download unavailable OpenSSL pkgs
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0. NV Index: 0x1500001
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
+> =C2=A0=C2=A0=C2=A0=C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0Hash algorithm(nameAlg):=
+11
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0	=C2=A0=C2=A0=C2=A0=
+=C2=A0The Index attributes(attributes):0xa0020002
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0	=C2=A0=C2=A0=C2=A0=
+=C2=A0The size of the data area(dataSize):40
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> =
 
-The CI build is failing since Travis tries to download OpenSSL packages
-that are not longer available. Update the configuration file to fetch
-the latest version of these packages.
+> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvreadlock -x 0x1500001 -a 0x40000001 -P own=
+erpass
+> =
 
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+> =
 
+> Then the initramfs does:
+> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvlist
+> =C2=A0=C2=A0=C2=A0=C2=A00 NV indexes defined.
+> =
 
-  Commit: d97d23784e3a4d65239961ffab9c7e22aa9e52fd
-      https://github.com/intel/tpm2-tools/commit/d97d23784e3a4d65239961ffab=
-9c7e22aa9e52fd
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-11-09 (Thu, 09 Nov 2017)
+> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvread -x 0x1500001 -a 0x40000001 -s 40 -o 0=
+ -P ownerpass
+> =C2=A0=C2=A0=C2=A0=C2=A0ERROR: Failed to read NVRAM area at index 0x15000=
+01 (22020097).
+> Error:0x28b
+> =
 
-  Changed paths:
-    M test/unit/test_tpm2_password_util.c
+> I tried also without tpm2_nvreadlock and without tpm2_takeownership,
+> but neither of that made a difference.
 
-  Log Message:
-  -----------
-  test_tpm2_password_util: update test for .b/.t removal
+I forgot to ask one conceptual question: in the proposed usage
+scenario, does it make sense to take ownership of the TPM? All
+passwords would have to be well-known, because there is no user or
+other form of input available which could provide them. So taking
+ownership doesn't really change much from a security perspective.
 
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+https://github.com/intel/tpm2-tools/wiki/How-to-use-tpm2-tools shows
+that all NVRAM operations also work without taking ownership, but
+doesn't go into the pros and cons of that.
 
+-- =
 
-  Commit: 3505187191b1bb540ccd62af019b51678064ba76
-      https://github.com/intel/tpm2-tools/commit/3505187191b1bb540ccd62af01=
-9b51678064ba76
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-11-09 (Thu, 09 Nov 2017)
+Best Regards, Patrick Ohly
 
-  Changed paths:
-    M test/system/test_tpm2_activecredential.sh
-
-  Log Message:
-  -----------
-  [REVERTME] test_tpm2_activecredential is failing
-
-Skip this test so we get CI up and running. The fix is
-not immediately clear to me.
-
-ERROR: ActivateCredential failed. TPM Error:0x1df
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+The content of this message is my personal opinion only and although
+I am an employee of Intel, the statements I make here in no way
+represent Intel's position on the issue, nor am I authorized to speak
+on behalf of Intel on this matter.
 
 
-Compare: https://github.com/intel/tpm2-tools/compare/18c1491ca93b...3505187=
-191b1
 
---===============1181246047846700842==--
+--===============5109270898206653133==--
 
