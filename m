@@ -1,23 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============6069876028125183690=="
+Content-Type: multipart/mixed; boundary="===============8309272877486835825=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 18c149: README.md: update badge for 01org
+Subject: [tpm2] [intel/tpm2-tools] 8378ca: README.md: update travis for 01org
  to intel rename
-Date: Thu, 09 Nov 2017 10:31:41 -0800
-Message-ID: <5a049f0d54fd3_5c923f9629d9dc2c36637@hookshot-fe3-cp1-prd.iad.github.net.mail>
+Date: Thu, 09 Nov 2017 10:36:28 -0800
+Message-ID: <5a04a02c1d18f_66413fe811481c3043516@hookshot-fe-92cdb05.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6069876028125183690==
+--===============8309272877486835825==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
+  Branch: refs/heads/3.X
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 18c1491ca93b5d558f67ce9f00be7fa9adbce1d4
-      https://github.com/intel/tpm2-tools/commit/18c1491ca93b5d558f67ce9f00=
-be7fa9adbce1d4
+  Commit: 8378cab298dccf48e31c9b272a6f04560762b18a
+      https://github.com/intel/tpm2-tools/commit/8378cab298dccf48e31c9b272a=
+6f04560762b18a
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-09 (Thu, 09 Nov 2017)
 
@@ -26,9 +26,12 @@ be7fa9adbce1d4
 
   Log Message:
   -----------
-  README.md: update badge for 01org to intel rename
+  README.md: update travis for 01org to intel rename
+
+Update the travis badge for the 01org to intel rename and update to the 3.X=
+ branch
 
 
 
---===============6069876028125183690==--
+--===============8309272877486835825==--
 
