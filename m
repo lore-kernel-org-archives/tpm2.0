@@ -1,77 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============5109270898206653133=="
+Content-Type: multipart/mixed; boundary="===============5020876617365451580=="
 MIME-Version: 1.0
 From: Patrick Ohly <patrick.ohly at intel.com>
 Subject: Re: [tpm2] using TPM2 NVRAM for storing LUKS password
-Date: Thu, 09 Nov 2017 20:51:14 +0100
-Message-ID: <1510257074.22094.40.camel@intel.com>
-In-Reply-To: 1510232036.22094.29.camel@intel.com
+Date: Thu, 09 Nov 2017 21:40:16 +0100
+Message-ID: <1510260016.22094.42.camel@intel.com>
+In-Reply-To: daad79b4-05ac-1e08-0f06-abd7d7bbe940@linux.vnet.ibm.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5109270898206653133==
+--===============5020876617365451580==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2017-11-09 at 13:53 +0100, Patrick Ohly wrote:
-> The commands that run as part of installation are:
-> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_takeownership -o ownerpass -e endorsepass -l=
- lockpass
-> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvdefine -x 0x1500001 -s 40 -a 0x40000001 -t=
- 0x80020002 -P
-> ownerpass
-> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvwrite -x 0x1500001 -a 0x40000001 -f
-> /dev/shm/keydir.sVrmLQ/keyfile -P ownerpass
-> =C2=A0=C2=A0=C2=A0=C2=A052 45 46 4b 49 54 5f 30 70 e6 2b b9 ca 0c 1c 00 1=
-d 6d eb 58 a1 7a
-> cf 0d 1d 71 46 bc fd 7a 80 a0 8f 8b 0a 30 fc 89 9b db=C2=A0
-> =
+On Thu, 2017-11-09 at 10:17 -0500, Stefan Berger wrote:
+> On 11/09/2017 10:10 AM, Patrick Ohly wrote:
+> > On Thu, 2017-11-09 at 09:55 -0500, Stefan Berger wrote:
+> > > I did all of this with the latest versions of libtpms and swtpm
+> > > and
+> > > it works fine for me.
+> > =
 
-> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvlist
-> =C2=A0=C2=A0=C2=A0=C2=A01 NV indexes defined.
-> =
-
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0. NV Index: 0x1500001
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
-> =C2=A0=C2=A0=C2=A0=C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0Hash algorithm(nameAlg):=
-11
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0	=C2=A0=C2=A0=C2=A0=
-=C2=A0The Index attributes(attributes):0xa0020002
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0	=C2=A0=C2=A0=C2=A0=
-=C2=A0The size of the data area(dataSize):40
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> =
-
-> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvreadlock -x 0x1500001 -a 0x40000001 -P own=
-erpass
-> =
+> > Which TPM tools (project and revision?) did you use?
+> > =
 
 > =
 
-> Then the initramfs does:
-> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvlist
-> =C2=A0=C2=A0=C2=A0=C2=A00 NV indexes defined.
-> =
+> I used the tpm2-tools and tpm2-tss available from Fedora 26.
 
-> =C2=A0=C2=A0=C2=A0=C2=A0tpm2_nvread -x 0x1500001 -a 0x40000001 -s 40 -o 0=
- -P ownerpass
-> =C2=A0=C2=A0=C2=A0=C2=A0ERROR: Failed to read NVRAM area at index 0x15000=
-01 (22020097).
-> Error:0x28b
-> =
+That's 2.1.1, which is a bit more recent than the 2.1.0 that I am
+currently building with meta-measured. But that difference is minor.
 
-> I tried also without tpm2_nvreadlock and without tpm2_takeownership,
-> but neither of that made a difference.
+How did you connect to swtpm from inside QEMU? Did your test involve
+restarting swtpm?
 
-I forgot to ask one conceptual question: in the proposed usage
-scenario, does it make sense to take ownership of the TPM? All
-passwords would have to be well-known, because there is no user or
-other form of input available which could provide them. So taking
-ownership doesn't really change much from a security perspective.
+When I reboot the virtual machine without restarting QEMU and swtpm,
+then NVRAM survives the reboot.
 
-https://github.com/intel/tpm2-tools/wiki/How-to-use-tpm2-tools shows
-that all NVRAM operations also work without taking ownership, but
-doesn't go into the pros and cons of that.
+But when I stop QEMU and swtpm and then boot up again, swtpm modifies
+the tpm2-00.permall data file when QEMU connects and the previously
+defined NVRAM entry is gone. This can already be reproduced with just
+"tpm2_nvdefine".
+
+Here's roughly what I ran:
+
+    swtpm socket --ctrl type=3Dunixio,path=3D/tmp/swtpm.sock --tpmstate dir=
+=3Dtpm --log file=3Dswtpm.log --tpm2 &
+
+    qemu ... -chardev 'socket,id=3Dchrtpm0,path=3D/tmp/swtpm.sock' -tpmdev =
+emulator,id=3Dtpm0,chardev=3Dchrtpm0 -device tpm-tis,tpmdev=3Dtpm0 ...
+
+    # export TPM2TOOLS_TCTI_NAME=3Ddevice
+    # tpm2_nvdefine -x 0x1500001 -s 40 -a 0x40000001 -t 0x80020002
+    ^ac
+    (qemu) q
+
+swtpm terminates now and one can take a copy of the current state:
+
+    cp tpm/tpm2-00.permall /tmp
+
+Then start both swtpm and qemu again as above, without any TPM
+operations from userspace, and check:
+
+    cmp tpm/tpm2-00.permall /tmp/tpm2-00.permall =
+
+    tpm/tpm2-00.permall /tmp/tpm2-00.permall differ: byte 313, line 1
+
+BTW, should the swtpm instance above really terminate when qemu
+disconnects? It currently does, although -terminate is not given.
+
+How can I enable more debug logging inside swtpm? Increasing the level
+does not really provide much useful information.
 
 -- =
 
@@ -84,5 +83,5 @@ on behalf of Intel on this matter.
 
 
 
---===============5109270898206653133==--
+--===============5020876617365451580==--
 
