@@ -1,23 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============4233520722624345537=="
+Content-Type: multipart/mixed; boundary="===============4768302615658024337=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 71586e: lib: add an xxd compatible hexdump
+Subject: [tpm2] [intel/tpm2-tools] d33a71: lib: add an xxd compatible hexdump
  routine
-Date: Thu, 09 Nov 2017 08:55:46 -0800
-Message-ID: <5a048892192ff_bf53fcce099dc38206cc@hookshot-fe2-cp1-prd.iad.github.net.mail>
+Date: Thu, 09 Nov 2017 08:59:45 -0800
+Message-ID: <5a048981d7168_17223f986bde7c3453276@hookshot-fe2-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4233520722624345537==
+--===============4768302615658024337==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
+  Branch: refs/heads/3.X
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 71586ebba51a2776fd6d4c93340a3279f16727e3
-      https://github.com/intel/tpm2-tools/commit/71586ebba51a2776fd6d4c9334=
-0a3279f16727e3
+  Commit: d33a71cb95a3ca598d22eac460c08d5c7d91c5f6
+      https://github.com/intel/tpm2-tools/commit/d33a71cb95a3ca598d22eac460=
+c08d5c7d91c5f6
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-09 (Thu, 09 Nov 2017)
 
@@ -32,9 +32,9 @@ Content-Transfer-Encoding: quoted-printable
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: cc66580c03eb59c703fed2d009a352ffb35fdca3
-      https://github.com/intel/tpm2-tools/commit/cc66580c03eb59c703fed2d009=
-a352ffb35fdca3
+  Commit: ec2fb0153abe87589e4a0e78dfc9108fa33b3b1e
+      https://github.com/intel/tpm2-tools/commit/ec2fb0153abe87589e4a0e78df=
+c9108fa33b3b1e
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-09 (Thu, 09 Nov 2017)
 
@@ -48,9 +48,9 @@ a352ffb35fdca3
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: c937989767835f4751536163f3b78af0a480c51f
-      https://github.com/intel/tpm2-tools/commit/c937989767835f4751536163f3=
-b78af0a480c51f
+  Commit: 7359baca4669efd02ef6875385996377112cce9d
+      https://github.com/intel/tpm2-tools/commit/7359baca4669efd02ef6875385=
+996377112cce9d
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-09 (Thu, 09 Nov 2017)
 
@@ -70,9 +70,9 @@ format.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: ce7c160cdd174c4a14b6e9f1aed7bd5aee17b288
-      https://github.com/intel/tpm2-tools/commit/ce7c160cdd174c4a14b6e9f1ae=
-d7bd5aee17b288
+  Commit: 6b855b3308a19d612213c408ac66a10d7650bd50
+      https://github.com/intel/tpm2-tools/commit/6b855b3308a19d612213c408ac=
+66a10d7650bd50
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-09 (Thu, 09 Nov 2017)
 
@@ -101,8 +101,8 @@ Fixes: #508
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-Compare: https://github.com/intel/tpm2-tools/compare/3ed305a013aa...ce7c160=
-cdd17
+Compare: https://github.com/intel/tpm2-tools/compare/6352ede2337e...6b855b3=
+308a1
 
---===============4233520722624345537==--
+--===============4768302615658024337==--
 
