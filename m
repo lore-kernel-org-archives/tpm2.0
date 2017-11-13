@@ -1,33 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============2251347977455724916=="
+Content-Type: multipart/mixed; boundary="===============3547251031268035116=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 258289: Update README.md
-Date: Fri, 10 Nov 2017 09:53:39 -0800
-Message-ID: <5a05e7a372c12_31b3fbd99fabc34982a5@hookshot-fe1-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] b44530: Makefile.am: fix make distcheck
+Date: Mon, 13 Nov 2017 07:40:42 -0800
+Message-ID: <5a09bcfa8a3ef_75d93fac0e5f3c24125656@hookshot-fe-92cdb05.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2251347977455724916==
+--===============3547251031268035116==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
+  Branch: refs/heads/2.X
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 2582891bd4d19177b142f9fc96d6f949cfe994d9
-      https://github.com/intel/tpm2-tools/commit/2582891bd4d19177b142f9fc96=
-d6f949cfe994d9
+  Commit: b44530dbc98ca49ba2be55750115b909aa9e9f9d
+      https://github.com/intel/tpm2-tools/commit/b44530dbc98ca49ba2be557501=
+15b909aa9e9f9d
   Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-11-10 (Fri, 10 Nov 2017)
+  Date:   2017-11-13 (Mon, 13 Nov 2017)
 
   Changed paths:
-    M README.md
+    M Makefile.am
 
   Log Message:
   -----------
-  Update README.md
+  Makefile.am: fix make distcheck
+
+The missing header files and man pages were fixed after the 2.X
+release. Backport that fix.
+
+Fixes: #601
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============2251347977455724916==--
+--===============3547251031268035116==--
 
