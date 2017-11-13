@@ -1,35 +1,29 @@
-Content-Type: multipart/mixed; boundary="===============4139280240049878683=="
+Content-Type: multipart/mixed; boundary="===============4619493320179804424=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] fcb94b: Update CHANGELOG
-Date: Mon, 13 Nov 2017 07:58:53 -0800
-Message-ID: <5a09c13dac006_6eb73fcfbaf4dc3c7453f@hookshot-fe6-cp1-prd.iad.github.net.mail>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] RELEASE CANIDATE: 2.1.2-rc0
+Date: Mon, 13 Nov 2017 16:03:01 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563F4BBE37@ORSMSX115.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4139280240049878683==
+--===============4619493320179804424==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/tags/2.1.2-rc0
-  Home:   https://github.com/intel/tpm2-tools
-  Commit: fcb94b2dcb0ffc0815d5600db179647edc4aa4df
-      https://github.com/intel/tpm2-tools/commit/fcb94b2dcb0ffc0815d5600db1=
-79647edc4aa4df
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-11-13 (Mon, 13 Nov 2017)
+A new release candidate on the 2.X series is released and currently correct=
+s the dist tarballs as pointed out in this issue
+https://github.com/intel/tpm2-tools/issues/601
 
-  Changed paths:
-    M CHANGELOG
+The RC can be found here:
+https://github.com/intel/tpm2-tools/releases/tag/2.1.2-rc0
 
-  Log Message:
-  -----------
-  Update CHANGELOG
+When the final release is cut, I will update the release date from "next" t=
+o "<actual date>" in the CHANGELOG and upload
+The dist tarballs to the release page on github.
 
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+Bill
 
-
-
---===============4139280240049878683==--
+--===============4619493320179804424==--
 
