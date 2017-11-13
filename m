@@ -1,40 +1,19 @@
-Content-Type: multipart/mixed; boundary="===============3547251031268035116=="
+Content-Type: multipart/mixed; boundary="===============3793536396977314136=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] b44530: Makefile.am: fix make distcheck
-Date: Mon, 13 Nov 2017 07:40:42 -0800
-Message-ID: <5a09bcfa8a3ef_75d93fac0e5f3c24125656@hookshot-fe-92cdb05.cp1-iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools]
+Date: Mon, 13 Nov 2017 07:55:55 -0800
+Message-ID: <5a09c08b9e8c3_6e533f8fc0fb3c381247da@hookshot-fe6-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3547251031268035116==
+--===============3793536396977314136==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/2.X
+  Branch: refs/tags/2.1.2-rc0
   Home:   https://github.com/intel/tpm2-tools
-  Commit: b44530dbc98ca49ba2be55750115b909aa9e9f9d
-      https://github.com/intel/tpm2-tools/commit/b44530dbc98ca49ba2be557501=
-15b909aa9e9f9d
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-11-13 (Mon, 13 Nov 2017)
 
-  Changed paths:
-    M Makefile.am
-
-  Log Message:
-  -----------
-  Makefile.am: fix make distcheck
-
-The missing header files and man pages were fixed after the 2.X
-release. Backport that fix.
-
-Fixes: #601
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-
---===============3547251031268035116==--
+--===============3793536396977314136==--
 
