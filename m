@@ -1,65 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============9140736981673206836=="
+Content-Type: multipart/mixed; boundary="===============2300544750490780183=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] tpm2-tss 1.3.0-rc0 available
-Date: Tue, 14 Nov 2017 12:43:19 -0800
-Message-ID: <7f193f87-33c3-0b2d-bbd4-90b8eade9b51@twobit.us>
-In-Reply-To: c11fa167-0f09-568b-f290-779807645caf@twobit.us
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [intel/tpm2-tools] a22a25: tpm2_nvlist: fix property endian
+ conversion
+Date: Tue, 14 Nov 2017 13:25:00 -0800
+Message-ID: <5a0b5f2cd6ecd_d9f13fadcf227c2c5838d@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9140736981673206836==
+--===============2300544750490780183==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 11/01/2017 08:29 PM, philip.b.tricca(a)intel.com wrote:
-> I've just pushed a tag for the first release candidate for version 1.3.0
-> of the TSS libraries. It's available here:
-> https://github.com/01org/tpm2-tss/releases/tag/1.3.0-rc0
-> =
+  Branch: refs/heads/master
+  Home:   https://github.com/intel/tpm2-tools
+  Commit: a22a25b5a884c95db2eae59f342db6534c5de87c
+      https://github.com/intel/tpm2-tools/commit/a22a25b5a884c95db2eae59f34=
+2db6534c5de87c
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-11-14 (Tue, 14 Nov 2017)
 
-> The CHANGELOG is very short, just fixing two broken macros and adding
-> support for the EncryptDecrypt2 command. This release is necessary for
-> users with TPM2 devices that have deprecated support for the
-> EncryptDecrypt function. Support for this function in the tools is
-> forthcoming.
+  Changed paths:
+    M tools/tpm2_nvlist.c
 
-I've just signed an RC1 tag for 1.3.0. Tarballs and the changelog are
-available here:
-https://github.com/intel/tpm2-tss/releases/tag/1.3.0-rc1. This should
-bring us up to parity with what's required for the 3.x release of the tools.
+  Log Message:
+  -----------
+  tpm2_nvlist: fix property endian conversion
 
-Please provide feedback from testing. I'll be doing the static analysis
-through coverity next. Changes (if any) required for the static analysis
-will be in RC2.
+property endianess was always being swapped from
+the tpm provided big endian version to little endian.
+Thus, this only worked on LE hosts, only convert if
+the host is little endian.
 
-Thanks,
-Philip
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
---===============9140736981673206836==
-Content-Type: application/pgp-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="signature.asc"
+  Commit: b42c2daf32c94ff0af88ea7f649fa8e9615261fe
+      https://github.com/intel/tpm2-tools/commit/b42c2daf32c94ff0af88ea7f64=
+9fa8e9615261fe
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-11-14 (Tue, 14 Nov 2017)
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSkVCQUVCQ2dBdUZpRUVPOXJlUmQza1N2
-MUJJQ21BTXZkK2RjTGgwN29GQWxvTFZXc1FIR1pzYVdod1FIUjMKYjJKcGRDNTFjd0FLQ1JBeTkz
-NTF3dUhUdXJoSkQvOW1XRGtDdUtuZmZ2N2JtTytsa051bk05d2tUWUVDcHpMdwpMMVFUL1BFSVBq
-dVFyM0M5b2wya2FtNnRvcDB0UTVJR1U0Smc0TWR1N2hsWDBXKzRFeFJhRlhianRTVjBvVDdwCkJB
-Q0NidDhsNmtrc3pFM3BxZ0lhcTFZSGhTZW9oT0d3K1NTYTY1VXFDQzAzZFRjN1UyUEhtdDVIN3FP
-WFV1SHgKQXFnczhiYmtSWWdUWUlHQ3pnRll3SCtsNUdSeHdndm1uT2FCaHdMNk9RcmxqeDhpNWd5
-cUNudjFuNDJJa0E2WQo0VUhRWXZSejNQbS8xc3ZjanRFaWJiZ1ZBRElZRGdTQ1N3a3ZxK2wwMDJY
-b1kxMlo2R1BWNjBHSXFyK0Y2L21EClFQNnVpdkJKUEJJYU1LYjFGM1hOazZKTlJITndYeVZKQXN1
-YzBCSjFwV1liSjRqalhzUkJpdVNIWmQrNklybE0KbFJoekUySk9EcXZFYjBOajVCdzFiWCtEKzZw
-VkJzTHRwN2I1bnBQbElBSjY5SjVmajUzcjk0YURXUlB6WTFGVQp2cG1ETHpZbTNGRFNEQ3FjN0Rw
-NU81bDdXcTU1OGFNM1dUb1Rka3k3RlozdWc1eXRqWWpSTkE4aDVKMGJnUnFLCmVKVTJlb1JmYkc4
-dlFLRTljWGc4Wis2TWp5bjlpZWxNc05uOHpLVEFlRHhHSENDZkRFYmZzRWtKVko5eng0NmYKVWhz
-cEwxd3NRNFNkM3Z5N202UUJNalN0Q3lGOFI2cjd2c2hwNGRzNkFjZ1hGNmNJS1VmNGdibllRdktB
-Mks5egoyb3EyVG5GdVRhM2Y2OURhZ283cnNtSVlqRXNXSEdaL1Z6cm5uYzBjaERQRy8za1l0MUxX
-THRNK3pzUGlqdllwCnlwdWlQWWFxckE9PQo9WDBNRgotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0t
-LS0K
+  Changed paths:
+    M man/tpm2_nvlist.1.md
+    M test/system/test_tpm2_nv.sh
+    M tools/tpm2_nvlist.c
 
---===============9140736981673206836==--
+  Log Message:
+  -----------
+  tpm2_nvlist: output in yaml
+
+Output in a human readable and machine parseable YAML output.
+
+Example output:
+0x1500015:
+  hash algorithm:
+    friendly: sha256
+    value: 0xB
+  attributes:
+    friendly: ownerwrite|ownerread
+    value: 0x2000200
+  size: 32
+  authorization policy:
+
+0x1500017:
+  hash algorithm:
+    friendly: sha256
+    value: 0xB
+  attributes:
+    friendly: ownerwrite|ownerread
+    value: 0x2000200
+  size: 32
+  authorization policy:
+
+Fixes #513
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: db89a48e009817862276a210fd23c6e3904d9667
+      https://github.com/intel/tpm2-tools/commit/db89a48e009817862276a210fd=
+23c6e3904d9667
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-11-14 (Tue, 14 Nov 2017)
+
+  Changed paths:
+    M CHANGELOG.md
+
+  Log Message:
+  -----------
+  Update CHANGELOG.md
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+Compare: https://github.com/intel/tpm2-tools/compare/2582891bd4d1...db89a48=
+e0098
+
+--===============2300544750490780183==--
 
