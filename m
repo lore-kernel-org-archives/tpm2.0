@@ -1,23 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============9117045706340895004=="
+Content-Type: multipart/mixed; boundary="===============8375250036908217805=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 58a941: tpm2_pcrlist: document in the man
+Subject: [tpm2] [intel/tpm2-tools] c31bf3: tpm2_pcrlist: document in the man
  page the --outpu...
-Date: Wed, 15 Nov 2017 09:19:20 -0800
-Message-ID: <5a0c77185a4a4_9423fd10e7a3c347562e@hookshot-fe5-cp1-prd.iad.github.net.mail>
+Date: Wed, 15 Nov 2017 09:19:30 -0800
+Message-ID: <5a0c77223d1ab_cd973f9ec2d7dc2841583@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9117045706340895004==
+--===============8375250036908217805==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/3.X
+  Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 58a94147f0797bf3705d93e91c69be65ff9ac372
-      https://github.com/intel/tpm2-tools/commit/58a94147f0797bf3705d93e91c=
-69be65ff9ac372
+  Commit: c31bf3c852cea9dbe6797cb8dc92a0f6887339c0
+      https://github.com/intel/tpm2-tools/commit/c31bf3c852cea9dbe6797cb8dc=
+92a0f6887339c0
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-11-15 (Wed, 15 Nov 2017)
 
@@ -33,9 +33,9 @@ The -o option is not documented in the tool man page, add it.
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-  Commit: cb7b3c2f01eb94df9d2955eea5d678eada1c8755
-      https://github.com/intel/tpm2-tools/commit/cb7b3c2f01eb94df9d2955eea5=
-d678eada1c8755
+  Commit: 52c812e7fb9e49bfb066e80cc470c7ad54cd85bd
+      https://github.com/intel/tpm2-tools/commit/52c812e7fb9e49bfb066e80cc4=
+70c7ad54cd85bd
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-11-15 (Wed, 15 Nov 2017)
 
@@ -53,9 +53,9 @@ already only reports the PCR banks for the supported hash algoritms.
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-  Commit: 9f46ff0a7b5da9f39269c291ec87dbde13d36a92
-      https://github.com/intel/tpm2-tools/commit/9f46ff0a7b5da9f39269c291ec=
-87dbde13d36a92
+  Commit: da23bd8083bf512f4a537e82dfbdca4b4a6f3802
+      https://github.com/intel/tpm2-tools/commit/da23bd8083bf512f4a537e82df=
+bdca4b4a6f3802
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-11-15 (Wed, 15 Nov 2017)
 
@@ -73,15 +73,14 @@ tpm2_nvwrite tool was not doing this cleanup.
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-  Commit: 38981a6f84bcd5ba5b1fa5ee88c5fda380f40a9e
-      https://github.com/intel/tpm2-tools/commit/38981a6f84bcd5ba5b1fa5ee88=
-c5fda380f40a9e
+  Commit: 1a27c864a01b83e62095100c7701bad41d68af1b
+      https://github.com/intel/tpm2-tools/commit/1a27c864a01b83e62095100c77=
+01bad41d68af1b
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-11-15 (Wed, 15 Nov 2017)
 
   Changed paths:
     M tools/tpm2_create.c
-    M tools/tpm2_createprimary.c
 
   Log Message:
   -----------
@@ -90,8 +89,8 @@ c5fda380f40a9e
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-Compare: https://github.com/intel/tpm2-tools/compare/d60d899eb121...38981a6=
-f84bc
+Compare: https://github.com/intel/tpm2-tools/compare/db89a48e0098...1a27c86=
+4a01b
 
---===============9117045706340895004==--
+--===============8375250036908217805==--
 
