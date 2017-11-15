@@ -1,22 +1,22 @@
-Content-Type: multipart/mixed; boundary="===============1269956892341028842=="
+Content-Type: multipart/mixed; boundary="===============7247598452436579060=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 6b4f25: log: fix verbose option
-Date: Wed, 15 Nov 2017 11:26:35 -0800
-Message-ID: <5a0c94eb45e09_ebf3fbe55607c3481372@hookshot-fe-92cdb05.cp1-iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] 9f3893: log: fix verbose option
+Date: Wed, 15 Nov 2017 11:27:16 -0800
+Message-ID: <5a0c95146c9fb_78363fbdccea5c44126443@hookshot-fe5-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1269956892341028842==
+--===============7247598452436579060==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/3.X
+  Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 6b4f25725709b5b0659c9f08c895843268d70ae0
-      https://github.com/intel/tpm2-tools/commit/6b4f25725709b5b0659c9f08c8=
-95843268d70ae0
+  Commit: 9f389320ae2fd5b4551003333d14de39c8ecf776
+      https://github.com/intel/tpm2-tools/commit/9f389320ae2fd5b4551003333d=
+14de39c8ecf776
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-15 (Wed, 15 Nov 2017)
 
@@ -36,5 +36,5 @@ Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============1269956892341028842==--
+--===============7247598452436579060==--
 
