@@ -1,59 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============7421695970081874587=="
+Content-Type: multipart/mixed; boundary="===============2051077309954621403=="
 MIME-Version: 1.0
 From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] [tpm2-abrmd] 1.2.0-rc0 available
-Date: Tue, 21 Nov 2017 13:34:13 -0800
-Message-ID: <2965d42a-0b2d-6100-0caf-b8d875038fb7@twobit.us>
-In-Reply-To: 0e7f6240-1536-95cb-3ab4-16dffca1fbd4@twobit.us
+Subject: Re: [tpm2] tpm2-tss 1.3.0-rc0 available
+Date: Tue, 21 Nov 2017 13:45:05 -0800
+Message-ID: <d432025c-5971-56da-ce69-48bf74790806@twobit.us>
+In-Reply-To: 7f193f87-33c3-0b2d-bbd4-90b8eade9b51@twobit.us
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7421695970081874587==
+--===============2051077309954621403==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 11/14/2017 08:44 PM, Philip Tricca wrote:
-> RC0 tag for 1.2.0 release is now available on github:
-> https://github.com/intel/tpm2-abrmd/releases/tag/1.2.0-rc0. The
-> changelog documents all significant changes.
+On 11/14/2017 12:43 PM, Philip Tricca wrote:
+> On 11/01/2017 08:29 PM, philip.b.tricca(a)intel.com wrote:
+>> I've just pushed a tag for the first release candidate for version 1.3.0
+>> of the TSS libraries. It's available here:
+>> https://github.com/01org/tpm2-tss/releases/tag/1.3.0-rc0
+>>
+>> The CHANGELOG is very short, just fixing two broken macros and adding
+>> support for the EncryptDecrypt2 command. This release is necessary for
+>> users with TPM2 devices that have deprecated support for the
+>> EncryptDecrypt function. Support for this function in the tools is
+>> forthcoming.
 > =
 
-> As always, feedback and testing is very welcome. Changes (if any)
-> required for the static analysis will be in an RC1.
-RC1 tag for 1.2.0 release is now available on github:
-https://github.com/intel/tpm2-abrmd/releases/tag/1.2.0-rc1. The changes
-since RC0 were minimal but important (thanks!).
+> I've just signed an RC1 tag for 1.3.0. Tarballs and the changelog are
+> available here:
+> https://github.com/intel/tpm2-tss/releases/tag/1.3.0-rc1. This should
+> bring us up to parity with what's required for the 3.x release of the too=
+ls.
+> =
 
-While the 3.x tpm2-tools RCs stabilize please use this RC in your
-testing as the releases will happen around the same time.
+> Please provide feedback from testing. I'll be doing the static analysis
+> through coverity next. Changes (if any) required for the static analysis
+> will be in RC2.
 
-Thanks,
+There's now an RC2 tag for 1.3.0 & tarballs on github. The only change
+since the last RC are minor changes to keep coverity happy.
+
+Like the 1.2.0 release of tpm2-abrmd this one is intended to be paired
+with the 3.x tools release so please use this tag in your testing.
+
+Regards,
 Philip
 
 
---===============7421695970081874587==
+--===============2051077309954621403==
 Content-Type: application/pgp-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="signature.asc"
 
 LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSkVCQUVCQ2dBdUZpRUVPOXJlUmQza1N2
-MUJJQ21BTXZkK2RjTGgwN29GQWxvVW05a1FIR1pzYVdod1FIUjMKYjJKcGRDNTFjd0FLQ1JBeTkz
-NTF3dUhUdXJIaUVBQ0kzWGNnM0lOS3Fnc25mUjlEUDVnU2tmclVTSFlWS21NZAo2dzRDaG9TaGxT
-cE1NWDZRblFLTjZkN1RRN1E0ZXFZSVlFbXRVTVNhRGlaQVBRbGJWN1pKdUhmTmhkdDNTaUs4CjlZ
-UnpOb1BkV285RzJ6Zk1SWlJDVDN5RkdQWHZ0NlZxTmtET0lhVDZaT3VVQytHNGFDVHdCZG9Oa3ds
-ZlYwRCsKMzVseldJOFZjVnE4dFIybjBuTE9hZzBrVkhMNmg4Sk9SaWQrZVUwL2NtdkpWK1p3dFdu
-d1RmTklLL0lPTjFaego3blZxUUVOcjl5Rmo5Rk0rRWl2VThuZFpVbDV1SFdmZHNoVExYNHFoakRZ
-dzdhek00VEtsczZ2enNlK0ZZd2I5CmQ5NURGVWxIbjJlMnJTa2l3eWpjenFiMzNTR212NHlBTzRM
-Rmh1djFhTmwrQUFHQ3JWM0xTQm1BL0FZNEY5cmgKZlhldjVkUzMvT1RCWWo3d09mOVJzUnFwQ2Mv
-MHZKOEJZZ0JiYzZGU1luZDV2UjRla0R3WkRydkpUTlE3VCtQcAo5b3laZzRqVVVuWThNMDFZY2Nu
-SUkrVmMrZXYydmFLcGthWlQrUUZZM0lyajFWa2ROaE0vemg4S3YvYWtUWUIyCjhnUCsyK0J4a3dY
-THcwbWJWL0xKUW9hZ0pWV0tZcmszN0xMUmJKUFhoUVVSc2tLVTh4bFNEaHYySW54UzR2aFQKYjJm
-RVBacmN5YXVnSWwyRVB5MmNDS3pvMUVVWE9ub1VyeGMvbHI4QTBxRDJDMi9uYU0vUm1GWHJ0VUQ5
-RmVtNgpzUjI5a0Nrem1uL1FTcnR6Snc3bWVrWWdHeXJDd3h1SkVQS0dibGpSSFp6dFluNHhJSHox
-Q2xSM2g5WHpXdGpWClA0U3pQRjNqdHc9PQo9YnNReQotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0t
+MUJJQ21BTXZkK2RjTGgwN29GQWxvVW5tRVFIR1pzYVdod1FIUjMKYjJKcGRDNTFjd0FLQ1JBeTkz
+NTF3dUhUdXZTdkQvOXAzNElMelhWZGxaUmtTZEEwVEJFNDdPaGpTVkk0SkxXagpmR3kyZktFNGM4
+V0F1SXNKUWdrMjMxc3hJWjZEYjdkcDhBMkV2YzNHT05aK2hsUEFDY0NiQzc4ejNMTnhrc29KCjRW
+OVc1UzNHTHozck9DVXNlSGtidHBpQjdRaTRMREJQeUwvN2FibjNYL2o5N25JNHA2YVN2Um9PZ0lm
+LzNZcXkKdUpmTDlsT0ttMVZ1ZlFScGJhMXlnaHR1YzlvVFhoOVN6c0t2NmZlWnE5cXltQ21xUVJ0
+elU2d3FZSng0MHp0Lwp3S3NyWEhpZ2VaM2tJR0IxSUtEZUlxclJvd3hGcXN3cy8yR1dxV3gyY2dU
+WmN3RTFsUGdoUlhJZUdVTk1GK3B2CnVVRkJOSks4Zk9KZlRmWHBhSSs3M2pXOVlQQTNMdkdEMkhE
+emRJd1pFZTdsS1RhdDNkM0ZtYWU2aFRPeDRlakYKd29nNWNhcnErZ2NWWEViS2ZrZVlWVlN2NzIy
+WkFXL08xOUgyaC8vaFV0Unc4eUtWcjRUYkxjb2I4cVVlbjlIMQo0S0xYLzVIUVdWbFc5cTFYMFNn
+RVcrMWtoRnQrZlFhbXdDS2hMTTgxcmpiSEVRYU1SYnZhWmJRaUhCdDFVL3ZECm9WZlhxaUpoV2x5
+U2VaMHB5bDBNbkwwYWxHMkxDM2d1TFd4OWRZTGpvMVZGam9ITXcxdEdHcXJSZzRBYlhRd3gKRkwx
+K0RzN0lBMEIrRCtnUndCcmFZZ2xWbEo4cGdCVS9ZS1JwRUlMUU9kU25OZDI5SzVYWHV4OUFRcXBM
+UTNDQgo0SlZlUk5nYnViM1d0V1BOYnFCNXBnbVpidEJJY2FJNENORTdvc0UraE1RcG9nT3RYVE5F
+dHkxN0twM3RQbCtnCnEvRkVCQm5BcHc9PQo9aVJEdAotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0t
 LS0K
 
---===============7421695970081874587==--
+--===============2051077309954621403==--
 
