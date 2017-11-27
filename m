@@ -1,19 +1,24 @@
-Content-Type: multipart/mixed; boundary="===============8207996272829433326=="
+Content-Type: multipart/mixed; boundary="===============2567465248736341033=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools]
-Date: Mon, 27 Nov 2017 12:57:49 -0800
-Message-ID: <5a1c7c4d3a7f1_1a8da3fceb5967c38542dd@hookshot-fe-6dbb0c4.cp1-iad.github.net.mail>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] RELEASE CANIDATE 3.0-rc1 is ready
+Date: Mon, 27 Nov 2017 21:00:45 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563F4C0AA8@ORSMSX115.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8207996272829433326==
+--===============2567465248736341033==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/tags/3.0-rc1
-  Home:   https://github.com/intel/tpm2-tools
+Release Canidate 3.0-rc1 is available for review:
+https://github.com/intel/tpm2-tools/releases/tag/3.0-rc1
 
---===============8207996272829433326==--
+All feedback is appreciated.
+
+Bill
+
+
+--===============2567465248736341033==--
 
