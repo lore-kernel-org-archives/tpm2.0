@@ -1,45 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============7383761962177069962=="
+Content-Type: multipart/mixed; boundary="===============2853522386160958488=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] c10484: tpm2_rsaencrypt: fix file argument
-Date: Tue, 28 Nov 2017 15:01:00 -0800
-Message-ID: <5a1deaacd9731_41603f9afa0c7c34119090@hookshot-fe5-cp1-prd.iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] 1fccfc: tpm2_createpolicy: support to save
+ session context...
+Date: Tue, 28 Nov 2017 15:22:38 -0800
+Message-ID: <5a1defbe909d3_18f33fe655ae5c24626e@hookshot-fe6-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7383761962177069962==
+--===============2853522386160958488==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: c104848f6d8f24dfa891a94ce0a169544ad86bd8
-      https://github.com/intel/tpm2-tools/commit/c104848f6d8f24dfa891a94ce0=
-a169544ad86bd8
-  Author: William Roberts <william.c.roberts(a)intel.com>
+  Commit: 1fccfc218e091900c2ef317c3407234883894b28
+      https://github.com/intel/tpm2-tools/commit/1fccfc218e091900c2ef317c34=
+07234883894b28
+  Author: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
   Date:   2017-11-28 (Tue, 28 Nov 2017)
 
   Changed paths:
-    M tools/tpm2_rsaencrypt.c
+    M man/tpm2_createpolicy.1.md
+    M tools/tpm2_createpolicy.c
 
   Log Message:
   -----------
-  tpm2_rsaencrypt: fix file argument
+  tpm2_createpolicy: support to save session context with the option -S
 
-Based on argument ordering and getopt handling, the code was getting lucky =
-and
-actually properly grabing the input file at argv[1]. However, the first
-item in the array is really argv[0].
+The new option -S, associated with either -e or -a option, allows to
+save the session context to a file.
 
-A result could be that the input file is NULL, which means read data
-from stdin and the tool will hang.
-
-Fixes: #664
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+Signed-off-by: Jia Zhang <qianyue.zj(a)alibaba-inc.com>
 
 
 
---===============7383761962177069962==--
+--===============2853522386160958488==--
 
