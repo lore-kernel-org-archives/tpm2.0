@@ -1,23 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============6505090357939590526=="
+Content-Type: multipart/mixed; boundary="===============1148141758746418220=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 13a62d: lib: sort TPM2_RC entries for base
+Subject: [tpm2] [intel/tpm2-tools] bac18d: lib: sort TPM2_RC entries for base
  response code v...
-Date: Tue, 28 Nov 2017 10:46:00 -0800
-Message-ID: <5a1daee8c29f4_35123f803ab69c30498c8@hookshot-fe6-cp1-prd.iad.github.net.mail>
+Date: Tue, 28 Nov 2017 10:46:12 -0800
+Message-ID: <5a1daef424f82_42993f7fbbcb5c30122473@hookshot-fe6-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6505090357939590526==
+--===============1148141758746418220==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/3.X
+  Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 13a62dc705356aa42a21875627335c3f0ec74c94
-      https://github.com/intel/tpm2-tools/commit/13a62dc705356aa42a21875627=
-335c3f0ec74c94
+  Commit: bac18deb6c95487da940d314bed1696b358cd5d3
+      https://github.com/intel/tpm2-tools/commit/bac18deb6c95487da940d314be=
+d1696b358cd5d3
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-11-28 (Tue, 28 Nov 2017)
 
@@ -38,9 +38,9 @@ the specifications and add more entries.
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-  Commit: d45afa832aab6d7df0a1985a255dc64128455627
-      https://github.com/intel/tpm2-tools/commit/d45afa832aab6d7df0a1985a25=
-5dc64128455627
+  Commit: 122e8f05f8de0d11ef6b86617991ea244533e658
+      https://github.com/intel/tpm2-tools/commit/122e8f05f8de0d11ef6b866179=
+91ea244533e658
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-11-28 (Tue, 28 Nov 2017)
 
@@ -75,8 +75,8 @@ Fixes: #647
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-Compare: https://github.com/intel/tpm2-tools/compare/99654e03bbf0...d45afa8=
-32aab
+Compare: https://github.com/intel/tpm2-tools/compare/573ce6ee9ea8...122e8f0=
+5f8de
 
---===============6505090357939590526==--
+--===============1148141758746418220==--
 
