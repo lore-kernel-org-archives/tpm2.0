@@ -1,22 +1,22 @@
-Content-Type: multipart/mixed; boundary="===============1790051462633584044=="
+Content-Type: multipart/mixed; boundary="===============7383761962177069962=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 76a4c6: tpm2_rsaencrypt: fix file argument
-Date: Tue, 28 Nov 2017 15:00:56 -0800
-Message-ID: <5a1deaa89e98f_6e9e3ffb4a995c34100593@hookshot-fe-92cdb05.cp1-iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] c10484: tpm2_rsaencrypt: fix file argument
+Date: Tue, 28 Nov 2017 15:01:00 -0800
+Message-ID: <5a1deaacd9731_41603f9afa0c7c34119090@hookshot-fe5-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1790051462633584044==
+--===============7383761962177069962==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/3.X
+  Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 76a4c6ecfeca9772675bf2e117e57c8d204d530e
-      https://github.com/intel/tpm2-tools/commit/76a4c6ecfeca9772675bf2e117=
-e57c8d204d530e
+  Commit: c104848f6d8f24dfa891a94ce0a169544ad86bd8
+      https://github.com/intel/tpm2-tools/commit/c104848f6d8f24dfa891a94ce0=
+a169544ad86bd8
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-28 (Tue, 28 Nov 2017)
 
@@ -41,5 +41,5 @@ Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============1790051462633584044==--
+--===============7383761962177069962==--
 
