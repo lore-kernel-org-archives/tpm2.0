@@ -1,41 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============9164183951966536655=="
+Content-Type: multipart/mixed; boundary="===============1790051462633584044=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 2b1b86: tpm2_listpersistent: add
- integration test
-Date: Tue, 28 Nov 2017 13:48:28 -0800
-Message-ID: <5a1dd9ac3021b_25153fdb78ae3c40713ca@hookshot-fe-92cdb05.cp1-iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] 76a4c6: tpm2_rsaencrypt: fix file argument
+Date: Tue, 28 Nov 2017 15:00:56 -0800
+Message-ID: <5a1deaa89e98f_6e9e3ffb4a995c34100593@hookshot-fe-92cdb05.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9164183951966536655==
+--===============1790051462633584044==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
+  Branch: refs/heads/3.X
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 2b1b865837d209d9cc4f32098a5e74ee7e333d78
-      https://github.com/intel/tpm2-tools/commit/2b1b865837d209d9cc4f32098a=
-5e74ee7e333d78
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Commit: 76a4c6ecfeca9772675bf2e117e57c8d204d530e
+      https://github.com/intel/tpm2-tools/commit/76a4c6ecfeca9772675bf2e117=
+e57c8d204d530e
+  Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-11-28 (Tue, 28 Nov 2017)
 
   Changed paths:
-    A test/system/test_tpm2_listpersistent.sh
+    M tools/tpm2_rsaencrypt.c
 
   Log Message:
   -----------
-  tpm2_listpersistent: add integration test
+  tpm2_rsaencrypt: fix file argument
 
-The tool is exercised as a part of the tpm2_getmanufec integration test,
-but there should also be a test specific for the tpm2_listpersistent tool.
+Based on argument ordering and getopt handling, the code was getting lucky =
+and
+actually properly grabing the input file at argv[1]. However, the first
+item in the array is really argv[0].
 
-Fixes: #461
+A result could be that the input file is NULL, which means read data
+from stdin and the tool will hang.
 
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+Fixes: #664
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============9164183951966536655==--
+--===============1790051462633584044==--
 
