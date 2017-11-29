@@ -1,49 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============9104935705683179091=="
+Content-Type: multipart/mixed; boundary="===============1655180664887753001=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 01269b: tpm2_encryptdecrypt: drop -D YES|NO
- argument
-Date: Tue, 28 Nov 2017 18:11:55 -0800
-Message-ID: <5a1e176bae863_14c3f86b953bc34114928@hookshot-fe1-cp1-prd.iad.github.net.mail>
+From: Javier Martinez Canillas <javierm at redhat.com>
+Subject: Re: [tpm2] RELEASE CANIDATE 3.0-rc1 is ready
+Date: Wed, 29 Nov 2017 12:14:47 +0100
+Message-ID: <9246f204-a357-c811-de49-dc659af88dbc@redhat.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563F4C0AA8@ORSMSX115.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9104935705683179091==
+--===============1655180664887753001==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
-  Home:   https://github.com/intel/tpm2-tools
-  Commit: 01269b0cc8b2ed86cf828f6224ff123ff34fd8a9
-      https://github.com/intel/tpm2-tools/commit/01269b0cc8b2ed86cf828f6224=
-ff123ff34fd8a9
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-11-28 (Tue, 28 Nov 2017)
+On 11/27/2017 10:00 PM, Roberts, William C wrote:
+> Release Canidate 3.0-rc1 is available for review:
+> https://github.com/intel/tpm2-tools/releases/tag/3.0-rc1
+> =
 
-  Changed paths:
-    M test/system/test_tpm2_encryptdecrypt.sh
-    M test/system/test_tpm2_import.sh
-    M tools/tpm2_encryptdecrypt.c
+> All feedback is appreciated.
+>
 
-  Log Message:
-  -----------
-  tpm2_encryptdecrypt: drop -D YES|NO argument
+For Fedora users, tpm2-tools 3.0-rc1 and tpm2-tss 1.3.0-rc2 packages can be
+tested using my personal COPR repository:
 
-tpm2_encryptdecrypt takes a -D argument to indicate to the
-tool to perform a decrypt operation. The option currently
-requires an argument of YES or NO. Remove this requirment
-and make the default operation encrypt and the -D option
-trigger a decryption.
+$ sudo dnf copr enable javierm/tpm-test-pkgs
+$ sudo dnf install tpm2-{tss,tools}
+ =
 
-No update to the manpage is required, as this change places it
-in line with the man page.
+Best regards,
+-- =
 
-Fixes: #614
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
 
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-
---===============9104935705683179091==--
+--===============1655180664887753001==--
 
