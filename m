@@ -1,39 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============1655180664887753001=="
+Content-Type: multipart/mixed; boundary="===============1120769423132065922=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] RELEASE CANIDATE 3.0-rc1 is ready
-Date: Wed, 29 Nov 2017 12:14:47 +0100
-Message-ID: <9246f204-a357-c811-de49-dc659af88dbc@redhat.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563F4C0AA8@ORSMSX115.amr.corp.intel.com
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [intel/tpm2-tools] 9fbb0c: tpm2_encryptdecrypt: remove magic
+ size calculation
+Date: Thu, 30 Nov 2017 14:06:38 -0800
+Message-ID: <5a2080ee62268_161c3fa279ffdc2c1367b5@hookshot-fe3-cp1-prd.iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1655180664887753001==
+--===============1120769423132065922==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 11/27/2017 10:00 PM, Roberts, William C wrote:
-> Release Canidate 3.0-rc1 is available for review:
-> https://github.com/intel/tpm2-tools/releases/tag/3.0-rc1
-> =
+  Branch: refs/heads/master
+  Home:   https://github.com/intel/tpm2-tools
+  Commit: 9fbb0cc630e789ac9e41d1eb9ee49c99c914da83
+      https://github.com/intel/tpm2-tools/commit/9fbb0cc630e789ac9e41d1eb9e=
+e49c99c914da83
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-11-30 (Thu, 30 Nov 2017)
 
-> All feedback is appreciated.
->
+  Changed paths:
+    M tools/tpm2_encryptdecrypt.c
 
-For Fedora users, tpm2-tools 3.0-rc1 and tpm2-tss 1.3.0-rc2 packages can be
-tested using my personal COPR repository:
+  Log Message:
+  -----------
+  tpm2_encryptdecrypt: remove magic size calculation
 
-$ sudo dnf copr enable javierm/tpm-test-pkgs
-$ sudo dnf install tpm2-{tss,tools}
- =
+Use the sizeof the buffer rather than the whole struct
+adn subtract the magic 2 bytes for the UINT16 length
+field.
 
-Best regards,
--- =
+We do not use BUFFER_SIZE() as that should be deprecated
+now that the .t .b unions of doom are gone.
 
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
---===============1655180664887753001==--
+
+  Commit: e81ce451189103e05f5184e1ff4aac7d14e3750c
+      https://github.com/intel/tpm2-tools/commit/e81ce451189103e05f5184e1ff=
+4aac7d14e3750c
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-11-30 (Thu, 30 Nov 2017)
+
+  Changed paths:
+    M tools/tpm2_evictcontrol.c
+
+  Log Message:
+  -----------
+  tpm2_evictcontrol: stop using strcasecmp
+
+Make auth hierachy match manpage and not be case insensitive.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 7c17997cddf38b37e8b5528920291f4236ca64a2
+      https://github.com/intel/tpm2-tools/commit/7c17997cddf38b37e8b5528920=
+291f4236ca64a2
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-11-30 (Thu, 30 Nov 2017)
+
+  Changed paths:
+    M tools/tpm2_createprimary.c
+
+  Log Message:
+  -----------
+  tpm2_createprimary: stop using strcasecmp
+
+Make auth hierachy match manpage and not be case insensitive.
+
+Fixes: #514
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+Compare: https://github.com/intel/tpm2-tools/compare/01269b0cc8b2...7c17997=
+cddf3
+
+--===============1120769423132065922==--
 
