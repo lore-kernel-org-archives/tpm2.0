@@ -1,67 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============6929150112856721123=="
+Content-Type: multipart/mixed; boundary="===============8510650670845782438=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 7c6e30: options: remove unused ':' case
- option and error m...
-Date: Wed, 06 Dec 2017 08:47:47 -0800
-Message-ID: <5a281f336c9b7_363f2ad843d41c144659e@hookshot-fe-cace476.cp1-iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] 6d6656: Rename *_ERROR_LEVEL macros
+ *_RC_LAYER to account ...
+Date: Wed, 06 Dec 2017 08:48:30 -0800
+Message-ID: <5a281f5e1f6fc_78452ac1cf447c109897e@hookshot-fe-8867ff3.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6929150112856721123==
+--===============8510650670845782438==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 7c6e3027b58977b23ffe7cc6e91b6601da0f45bd
-      https://github.com/intel/tpm2-tools/commit/7c6e3027b58977b23ffe7cc6e9=
-1b6601da0f45bd
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Commit: 6d6656f91e5fc9999247dfc73d4c3d8f06abc8de
+      https://github.com/intel/tpm2-tools/commit/6d6656f91e5fc9999247dfc73d=
+4c3d8f06abc8de
+  Author: Philip Tricca <philip.b.tricca(a)intel.com>
   Date:   2017-12-06 (Wed, 06 Dec 2017)
 
   Changed paths:
-    M lib/tpm2_options.c
+    M lib/rc-decode.c
+    M lib/rc-decode.h
+    M lib/tpm2_util.h
+    M lib/tpm_hash.c
+    M lib/tpm_session.h
+    M test/unit/tpm2-rc-decode_unit.c
+    M test/unit/tpm2-rc-entry_unit.c
+    M tools/tpm2_hmac.c
+    M tools/tpm2_pcrevent.c
+    M tools/tpm2_rc_decode.c
 
   Log Message:
   -----------
-  options: remove unused ':' case option and error messages
+  Rename *_ERROR_LEVEL macros *_RC_LAYER to account for spec changes.
 
-By default the getopt_long() function prints an error message and returns
-a '?' character to indicate an error. And it only returns a ':' on error
-if the optstring starts with a colon.
+This accounts for the change in the TSS headers from commit
+e66804b9ad5864a73a3a6260c22a98a125dce3ca.
 
-So the ':' switch case wasn't used and also the printed error is unneeded
-since getopt_long() already prints this.
-
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+Signed-off-by: Philip Tricca <philip.b.tricca(a)intel.com>
 
 
-  Commit: f383b3d38afb903242017c70022c486e8086b99f
-      https://github.com/intel/tpm2-tools/commit/f383b3d38afb903242017c7002=
-2c486e8086b99f
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
-  Date:   2017-12-06 (Wed, 06 Dec 2017)
 
-  Changed paths:
-    M lib/tpm2_options.c
-
-  Log Message:
-  -----------
-  options: print a message to use --help on wrong options
-
-If a user provided wrong options to a tool, print a message indicating
-that the --help option can be used to know how to use the tool.
-
-While being there, remove assignments to the result variable that were
-not used.
-
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
-
-
-Compare: https://github.com/intel/tpm2-tools/compare/20df3a07b597...f383b3d=
-38afb
-
---===============6929150112856721123==--
+--===============8510650670845782438==--
 
