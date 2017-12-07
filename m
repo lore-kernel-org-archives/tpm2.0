@@ -1,22 +1,22 @@
-Content-Type: multipart/mixed; boundary="===============6633364636778563116=="
+Content-Type: multipart/mixed; boundary="===============0646778120830975207=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] b241b3: coverity: fix scan issue
-Date: Thu, 07 Dec 2017 11:57:23 -0800
-Message-ID: <5a299d23d1c48_4b6a2b22f7aefc143156@hookshot-fe-6e9b612.cp1-iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] a7ac8a: coverity: fix scan issue
+Date: Thu, 07 Dec 2017 11:57:42 -0800
+Message-ID: <5a299d36ef8ca_1f212ad162203c0432822@hookshot-fe-32b5f5b.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6633364636778563116==
+--===============0646778120830975207==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
+  Branch: refs/heads/3.X
   Home:   https://github.com/intel/tpm2-tools
-  Commit: b241b309f3382f7349749061636be36302193928
-      https://github.com/intel/tpm2-tools/commit/b241b309f3382f734974906163=
-6be36302193928
+  Commit: a7ac8a61d653e2b79afc9a85c6133b299a6dbb3d
+      https://github.com/intel/tpm2-tools/commit/a7ac8a61d653e2b79afc9a85c6=
+133b299a6dbb3d
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-12-07 (Thu, 07 Dec 2017)
 
@@ -42,9 +42,9 @@ so re-encrypt the coverity scan token.
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 02442803cbf553404cf3cd4b46ec376de7889ca1
-      https://github.com/intel/tpm2-tools/commit/02442803cbf553404cf3cd4b46=
-ec376de7889ca1
+  Commit: 426e56ce7133a1df0b092abe6f54b97f53fd6253
+      https://github.com/intel/tpm2-tools/commit/426e56ce7133a1df0b092abe6f=
+54b97f53fd6253
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-12-07 (Thu, 07 Dec 2017)
 
@@ -62,9 +62,9 @@ https://scan7.coverity.com/reports.htm#v31687/p15508/fileInstanceId=3D42447=
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 1f14ccc9a11b447faa8af4d2b32174bd0c21fab5
-      https://github.com/intel/tpm2-tools/commit/1f14ccc9a11b447faa8af4d2b3=
-2174bd0c21fab5
+  Commit: d1ec86db5c35f738d6b5bbfc0f1a20f1142ea015
+      https://github.com/intel/tpm2-tools/commit/d1ec86db5c35f738d6b5bbfc0f=
+1a20f1142ea015
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-12-07 (Thu, 07 Dec 2017)
 
@@ -84,8 +84,8 @@ Fixes: #684
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-Compare: https://github.com/intel/tpm2-tools/compare/6d6656f91e5f...1f14ccc=
-9a11b
+Compare: https://github.com/intel/tpm2-tools/compare/4ab96a4e76e4...d1ec86d=
+b5c35
 
---===============6633364636778563116==--
+--===============0646778120830975207==--
 
