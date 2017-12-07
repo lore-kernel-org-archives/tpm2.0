@@ -1,46 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============8476272713026579980=="
+Content-Type: multipart/mixed; boundary="===============6582873194628692260=="
 MIME-Version: 1.0
-From: Patrick Ohly <patrick.ohly at intel.com>
-Subject: Re: [tpm2] tpm2-tss 1.3.0-rc0 available
-Date: Thu, 07 Dec 2017 18:45:13 +0100
-Message-ID: <1512668713.5979.157.camel@intel.com>
-In-Reply-To: 0dc5a8e2-eeb8-1975-a90c-227393562696@twobit.us
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [intel/tpm2-tools] c6e342: coverity: fix scan issue
+Date: Thu, 07 Dec 2017 10:30:14 -0800
+Message-ID: <5a2988b663fd8_60ce2af75255fc0c2038f@hookshot-fe-88eb02d.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8476272713026579980==
+--===============6582873194628692260==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2017-12-06 at 08:50 -0800, Philip Tricca wrote:
-> There's now an RC3 tag for 1.3.0 & tarballs on github:
-> https://github.com/intel/tpm2-tss/releases/tag/1.3.0-rc3
-> =
+  Branch: refs/heads/coverity_scan
+  Home:   https://github.com/intel/tpm2-tools
+  Commit: c6e34225cbc388da75ec9ca51dd6bf2bb23fed8c
+      https://github.com/intel/tpm2-tools/commit/c6e34225cbc388da75ec9ca51d=
+d6bf2bb23fed8c
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-07 (Thu, 07 Dec 2017)
 
-> There has only been a single commit added since RC2 and it only
-> affects
-> the test code.
+  Changed paths:
+    M .travis.yml
 
-I prepared a fork of meta-measured which builds the release candidate
-code and successfully tested it with the refkit TPM2-enabled whole-disk =
+  Log Message:
+  -----------
+  coverity: fix scan issue
 
-encryption:
-https://github.com/pohly/meta-measured/tree/tpm2-tools-3.0
+coverity_scan builds are failing with API access issues:
+https://travis-ci.org/intel/tpm2-tools/builds/312695074
 
-So from my perspective, the release is good to go. But admittedly my
-testing is fairly limited ;-}
+Error:
+Coverity Scan analysis selected for branch coverity_scan.
+Coverity Scan API access denied. Check $PROJECT_NA
 
--- =
+I suspect it has to do with name.
 
-Best Regards, Patrick Ohly
-
-The content of this message is my personal opinion only and although
-I am an employee of Intel, the statements I make here in no way
-represent Intel's position on the issue, nor am I authorized to speak
-on behalf of Intel on this matter.
-
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
---===============8476272713026579980==--
+
+--===============6582873194628692260==--
 
