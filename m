@@ -1,41 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============1419699358070150288=="
+Content-Type: multipart/mixed; boundary="===============0263040416096480563=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] tpm2-tss 1.3.0-rc0 available
-Date: Thu, 07 Dec 2017 15:38:22 -0800
-Message-ID: <e15d6763-2db7-f8fa-6183-75df3632627b@twobit.us>
-In-Reply-To: 1512668713.5979.157.camel@intel.com
+From: Ian Oliver <ian.justin.oliver at gmail.com>
+Subject: [tpm2] rsaencrypt/create file size limits
+Date: Fri, 08 Dec 2017 10:09:41 +0200
+Message-ID: <CAAxBZJta5rXsfLnDTLvzEpYZiXaaNjrvGyzThH_KmWn5DAimdQ@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1419699358070150288==
+--===============0263040416096480563==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 12/07/2017 09:45 AM, Patrick Ohly wrote:
-> On Wed, 2017-12-06 at 08:50 -0800, Philip Tricca wrote:
->> There's now an RC3 tag for 1.3.0 & tarballs on github:
->> https://github.com/intel/tpm2-tss/releases/tag/1.3.0-rc3
->>
->> There has only been a single commit added since RC2 and it only
->> affects
->> the test code.
-> =
+Hi,
 
-> I prepared a fork of meta-measured which builds the release candidate
-> code and successfully tested it with the refkit TPM2-enabled whole-disk =
+could you confirm that tpm2_rsaencrypt, create etc have a limit of 256
+bytes as the input file size as that this is the expected behaviour?
 
-> encryption:
-> https://github.com/pohly/meta-measured/tree/tpm2-tools-3.0
-> =
+t.
 
-> So from my perspective, the release is good to go. But admittedly my
-> testing is fairly limited ;-}
+Ian
 
-Thanks for taking this on Patrick. We'll take any testing we can get.
+-- =
 
-Philip
+*Dr. Ian Oliver*
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
+*Twitter: @i_j_oliver*
 
---===============1419699358070150288==--
+--===============0263040416096480563==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2PjxkaXY+SGksPGJyPjxicj48L2Rpdj5jb3VsZCB5b3Ug
+Y29uZmlybSB0aGF0IHRwbTJfcnNhZW5jcnlwdCwgY3JlYXRlIGV0YyBoYXZlIGEgbGltaXQgb2Yg
+MjU2IGJ5dGVzIGFzIHRoZSBpbnB1dCBmaWxlIHNpemUgYXMgdGhhdCB0aGlzIGlzIHRoZSBleHBl
+Y3RlZCBiZWhhdmlvdXI/PGJyPjxicj48L2Rpdj50Ljxicj48YnI+PC9kaXY+SWFuPGJyIGNsZWFy
+PSJhbGwiPjxkaXY+PGRpdj48ZGl2PjxkaXY+PGRpdj48YnI+LS0gPGJyPjxkaXYgY2xhc3M9Imdt
+YWlsX3NpZ25hdHVyZSIgZGF0YS1zbWFydG1haWw9ImdtYWlsX3NpZ25hdHVyZSI+PGRpdiBkaXI9
+Imx0ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBk
+aXI9Imx0ciI+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6YXJpYWw7Zm9udC1zaXplOnNtYWxsIj48
+Yj5Eci4gSWFuIE9saXZlcjwvYj48YnI+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PTxi
+cj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTphcmlhbDtmb250LXNpemU6c21hbGwiPlBy
+aXZhY3kgRW5naW5lZXJpbmc6wqAgPGI+PC9iPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMTcsMTcs
+MTcpO2ZvbnQtZmFtaWx5OkFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEzcHg7bGluZS1oZWln
+aHQ6MTlweCI+PGEgaHJlZj0iaHR0cDovL3d3dy5hbWF6b24uY28udWsvZHAvMTQ5NzU2OTcxMCIg
+dGFyZ2V0PSJfYmxhbmsiPnZpYSBBbWF6b248L2E+PC9zcGFuPjxiPjxicj5Ud2l0dGVyOiBAaV9q
+X29saXZlcjwvYj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rp
+dj48L2Rpdj4KPC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+Cg==
+
+--===============0263040416096480563==--
 
