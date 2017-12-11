@@ -1,23 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============6718435046270250779=="
+Content-Type: multipart/mixed; boundary="===============6915508478415523031=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 9acbaa: Makefile.am: include rest of the
+Subject: [tpm2] [intel/tpm2-tools] 459a42: Makefile.am: include rest of the
  markdown files to...
-Date: Mon, 11 Dec 2017 07:32:16 -0800
-Message-ID: <5a2ea500a7883_65cf2b272cb81c0c132093@hookshot-fe-2cc8887.cp1-iad.github.net.mail>
+Date: Mon, 11 Dec 2017 07:32:26 -0800
+Message-ID: <5a2ea50aab68_38e92ab7213b5bfc104027@hookshot-fe-cace476.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6718435046270250779==
+--===============6915508478415523031==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/3.X
+  Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 9acbaa3a6eca685ecb970f293603fe0365f15063
-      https://github.com/intel/tpm2-tools/commit/9acbaa3a6eca685ecb970f2936=
-03fe0365f15063
+  Commit: 459a42b24d87e98504d6e576675dea202dba8a58
+      https://github.com/intel/tpm2-tools/commit/459a42b24d87e98504d6e57667=
+5dea202dba8a58
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-12-11 (Mon, 11 Dec 2017)
 
@@ -34,5 +34,5 @@ Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
 
---===============6718435046270250779==--
+--===============6915508478415523031==--
 
