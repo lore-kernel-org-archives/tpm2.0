@@ -1,23 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============3812673320758247353=="
+Content-Type: multipart/mixed; boundary="===============5038343050591280984=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] a3f568: Makefile.am: include integration
+Subject: [tpm2] [intel/tpm2-tools] 341241: Makefile.am: include integration
  tests to generate...
-Date: Thu, 14 Dec 2017 10:05:47 -0800
-Message-ID: <5a32bd7b7fe73_28a92ac7bbcf1c0c672e3@hookshot-fe-31feec6.cp1-iad.github.net.mail>
+Date: Thu, 14 Dec 2017 10:05:51 -0800
+Message-ID: <5a32bd7fa70e_530d2ab8700f3c0c50194@hookshot-fe-d252ca1.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3812673320758247353==
+--===============5038343050591280984==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/3.X
+  Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: a3f568ce40ca1de5f0f5caaee491641ce9297bc9
-      https://github.com/intel/tpm2-tools/commit/a3f568ce40ca1de5f0f5caaee4=
-91641ce9297bc9
+  Commit: 341241ed9aacfbd4e7668573e71684b85f341602
+      https://github.com/intel/tpm2-tools/commit/341241ed9aacfbd4e7668573e7=
+1684b85f341602
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-12-14 (Thu, 14 Dec 2017)
 
@@ -35,5 +35,5 @@ Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
 
---===============3812673320758247353==--
+--===============5038343050591280984==--
 
