@@ -1,23 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============0480605781476013803=="
+Content-Type: multipart/mixed; boundary="===============9153394291700626372=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 438059: travis.yml: build and install
+Subject: [tpm2] [intel/tpm2-tools] bdcb7d: travis.yml: build and install
  autoconf-archive fro...
-Date: Thu, 14 Dec 2017 08:53:13 -0800
-Message-ID: <5a32ac795f390_8a12ac33e261c14425b@hookshot-fe-d2afb11.cp1-iad.github.net.mail>
+Date: Thu, 14 Dec 2017 09:05:19 -0800
+Message-ID: <5a32af4feaa0a_34bc2b176e13fc1c800af@hookshot-fe-265448d.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0480605781476013803==
+--===============9153394291700626372==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/3.X
+  Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 438059053b5545226f993986d36b6ed78b6a78da
-      https://github.com/intel/tpm2-tools/commit/438059053b5545226f993986d3=
-6b6ed78b6a78da
+  Commit: bdcb7d66f1a0b909a7de9a4322ac54c00d9fcf72
+      https://github.com/intel/tpm2-tools/commit/bdcb7d66f1a0b909a7de9a4322=
+ac54c00d9fcf72
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-12-14 (Thu, 14 Dec 2017)
 
@@ -36,14 +36,14 @@ directory.
 But now tpm2-abrmd also uses the macro for code coverage and so instead
 of duplicating the same logic, install autoconf-archive in the machine.
 
-While being there, clone the tpm2-{tss,abrmd} repos from the latest URL.
+While being there, clone the tpm2-abrmd repo from the latest URL.
 
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-  Commit: b08643267775aa45d71dfe41b01da60879f160a3
-      https://github.com/intel/tpm2-tools/commit/b08643267775aa45d71dfe41b0=
-1da60879f160a3
+  Commit: 077524f627bc39cad61886c9991085dffe3ca590
+      https://github.com/intel/tpm2-tools/commit/077524f627bc39cad61886c999=
+1085dffe3ca590
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-12-14 (Thu, 14 Dec 2017)
 
@@ -60,8 +60,8 @@ to download the ones that are no longer available.
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-Compare: https://github.com/intel/tpm2-tools/compare/771a1831d01a...b086432=
-67775
+Compare: https://github.com/intel/tpm2-tools/compare/a725cde27a24...077524f=
+627bc
 
---===============0480605781476013803==--
+--===============9153394291700626372==--
 
