@@ -1,19 +1,29 @@
-Content-Type: multipart/mixed; boundary="===============6209547269116596185=="
+Content-Type: multipart/mixed; boundary="===============7781516446094340417=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools]
-Date: Fri, 15 Dec 2017 11:20:35 -0800
-Message-ID: <5a34208398cbe_bcc2ae4c0559c0c62e1@hookshot-fe-d252ca1.cp1-iad.github.net.mail>
+From: Jerry Snitselaar <jsnitsel at redhat.com>
+Subject: [tpm2] test_tpm2_nv.sh
+Date: Fri, 15 Dec 2017 12:31:57 -0700
+Message-ID: <20171215193157.x2nlz4jr744hx2w5@cantor>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6209547269116596185==
+--===============7781516446094340417==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/williamcroberts-patch-2
-  Home:   https://github.com/intel/tpm2-tools
+Hi William,
 
---===============6209547269116596185==--
+With fixing the redirection for the tpm2_nvwrite portion of the large file =
+test,
+I see a buffer overflow with tpm2_nvwrite. I don't know if you are seeing t=
+hat
+there. This is with 3.0.1 using the PTT device. Prior to that and the fix f=
+or
+the filename I was seeing an error with the tpm2_nvread portion that is most
+likely the following issue: https://github.com/intel/tpm2-tss/issues/667
+
+I'll add an issue on github to track it.
+
+--===============7781516446094340417==--
 
