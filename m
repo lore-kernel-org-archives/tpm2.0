@@ -1,27 +1,26 @@
-Content-Type: multipart/mixed; boundary="===============4855172236563968342=="
+Content-Type: multipart/mixed; boundary="===============0900752542574641635=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 368e5a: configure: enable code coverage
-Date: Fri, 15 Dec 2017 10:01:02 -0800
-Message-ID: <5a340dde9533a_6a3f2af11b131c087207c@hookshot-fe-88eb02d.cp1-iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] 7b7a87: configure: enable code coverage
+Date: Fri, 15 Dec 2017 10:01:08 -0800
+Message-ID: <5a340de4bd603_345a2b0e9573fc0c28420@hookshot-fe-d252ca1.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4855172236563968342==
+--===============0900752542574641635==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/3.X
+  Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 368e5a13743bb131cc15300bc156a01f11763433
-      https://github.com/intel/tpm2-tools/commit/368e5a13743bb131cc15300bc1=
-56a01f11763433
+  Commit: 7b7a8752643186d108030003e7fb0742c68277c5
+      https://github.com/intel/tpm2-tools/commit/7b7a8752643186d108030003e7=
+fb0742c68277c5
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-12-15 (Fri, 15 Dec 2017)
 
   Changed paths:
-    M .ci/travis-build-and-run-tests.sh
     M .travis.yml
     M Makefile.am
     M configure.ac
@@ -41,30 +40,25 @@ Fixes: #711
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 68aaeddeda98379b29837218f12ad7eb1e234687
-      https://github.com/intel/tpm2-tools/commit/68aaeddeda98379b29837218f1=
-2ad7eb1e234687
-  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Commit: dd6085ba67e6751889f4c4357dcdcb42c853a67b
+      https://github.com/intel/tpm2-tools/commit/dd6085ba67e6751889f4c4357d=
+cdcb42c853a67b
+  Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-12-15 (Fri, 15 Dec 2017)
 
   Changed paths:
-    M Makefile.am
-    M configure.ac
+    M CHANGELOG.md
 
   Log Message:
   -----------
-  configure.ac: enable silent-rules configure option by default
+  CHANGELOG: update for 3.X release
 
-This change is inspired by Andreas Fuchs enabling the silent-rules option
-by default on tpm2-tss. The output is much nicer and one can have the old
-output anyways by either disabling the silent-rules option or "make V=3D1".
-
-Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 0c366e6addcfd5c0444a2039904d80226dfc05d8
-      https://github.com/intel/tpm2-tools/commit/0c366e6addcfd5c0444a203990=
-4d80226dfc05d8
+  Commit: 31cee15cff6e185f3c212bd3dbfd67f00dd8140d
+      https://github.com/intel/tpm2-tools/commit/31cee15cff6e185f3c212bd3db=
+fd67f00dd8140d
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2017-12-15 (Fri, 15 Dec 2017)
 
@@ -78,8 +72,8 @@ Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-Compare: https://github.com/intel/tpm2-tools/compare/a3f568ce40ca...0c366e6=
-addcf
+Compare: https://github.com/intel/tpm2-tools/compare/25fe2890ffc8...31cee15=
+cff6e
 
---===============4855172236563968342==--
+--===============0900752542574641635==--
 
