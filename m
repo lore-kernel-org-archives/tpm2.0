@@ -1,35 +1,21 @@
-Content-Type: multipart/mixed; boundary="===============1532058923077970930=="
+Content-Type: multipart/mixed; boundary="===============8246984016812706180=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] e09fbb: CHANGELOG: set release date
-Date: Mon, 18 Dec 2017 09:42:55 -0800
-Message-ID: <5a37fe1f3d31_32d2b1da7d9dc04817f3@hookshot-fe-b0febf1.cp1-iad.github.net.mail>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] RELEASE: tpm2-tools v 3.0.2
+Date: Mon, 18 Dec 2017 17:46:54 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FE6D2B6@ORSMSX101.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1532058923077970930==
+--===============8246984016812706180==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/tags/3.0.2
-  Home:   https://github.com/intel/tpm2-tools
-  Commit: e09fbb3ca65f4ff1e8bf1fa619e21f14a2efe4dc
-      https://github.com/intel/tpm2-tools/commit/e09fbb3ca65f4ff1e8bf1fa619=
-e21f14a2efe4dc
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-12-18 (Mon, 18 Dec 2017)
+A new stable 3.X release has been posted: https://github.com/intel/tpm2-too=
+ls/releases/tag/3.0.2
 
-  Changed paths:
-    M CHANGELOG.md
+Bill
 
-  Log Message:
-  -----------
-  CHANGELOG: set release date
-
-Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
-
-
-
---===============1532058923077970930==--
+--===============8246984016812706180==--
 
