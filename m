@@ -1,21 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============8246984016812706180=="
+Content-Type: multipart/mixed; boundary="===============0407287674708436576=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] RELEASE: tpm2-tools v 3.0.2
-Date: Mon, 18 Dec 2017 17:46:54 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FE6D2B6@ORSMSX101.amr.corp.intel.com>
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [intel/tpm2-tools] 974e32: Update README.md
+Date: Mon, 18 Dec 2017 09:49:37 -0800
+Message-ID: <5a37ffb1b4a37_510e2b0949bdfc0423438@hookshot-fe-2cc8887.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8246984016812706180==
+--===============0407287674708436576==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-A new stable 3.X release has been posted: https://github.com/intel/tpm2-too=
-ls/releases/tag/3.0.2
+  Branch: refs/heads/3.X
+  Home:   https://github.com/intel/tpm2-tools
+  Commit: 974e32d2907de38d69c063e802211949c618ccd8
+      https://github.com/intel/tpm2-tools/commit/974e32d2907de38d69c063e802=
+211949c618ccd8
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-18 (Mon, 18 Dec 2017)
 
-Bill
+  Changed paths:
+    M README.md
 
---===============8246984016812706180==--
+  Log Message:
+  -----------
+  Update README.md
+
+
+
+--===============0407287674708436576==--
 
