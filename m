@@ -1,60 +1,442 @@
-Content-Type: multipart/mixed; boundary="===============0190342396861605719=="
+Content-Type: multipart/mixed; boundary="===============0621405419786427761=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RFC] Session Handling/Policy Support in Tools
-Date: Tue, 19 Dec 2017 18:01:38 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FE6D774@ORSMSX101.amr.corp.intel.com>
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [intel/tpm2-tools] 438059: travis.yml: build and install
+ autoconf-archive fro...
+Date: Tue, 19 Dec 2017 10:43:23 -0800
+Message-ID: <5a395dcb4c3fa_4c452abed6da1c1c42198@hookshot-fe-31feec6.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0190342396861605719==
+--===============0621405419786427761==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-There are two main parts to the direction I see the tools policy/session su=
-pport heading:
+  Branch: refs/heads/master
+  Home:   https://github.com/intel/tpm2-tools
+  Commit: 438059053b5545226f993986d36b6ed78b6a78da
+      https://github.com/intel/tpm2-tools/commit/438059053b5545226f993986d3=
+6b6ed78b6a78da
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-12-14 (Thu, 14 Dec 2017)
 
-1. The first is cleaning up all the code around session support and policy =
-building.  I think now that I understand the topic better, I can organize t=
-his code a little better. This is rather trivial and beside the main point.
+  Changed paths:
+    M .travis.yml
 
-2. Since abrmd 1.3 we have support for sessions across RM IPC connections a=
-nd direct tpm communications (/dev/tmp0) also has the same support. We have=
- tools like tpm2_createpolicy that are made up of multiple
-commands to work around session flushing on IPC RM disconnections. tpm2_cre=
-atepolicy is really comprised of 3 commands: tpm2_startauthsession, tpm2_po=
-licypcr and tpm2_flushcontext.
+  Log Message:
+  -----------
+  travis.yml: build and install autoconf-archive from source
 
-I'm proposing we leave tpm2_createpolicy, for in-kernel-rm users, but add t=
-pm2_startauthsession and tpm2_policypcr for the abrmd and direct tpm usages=
-. Abrmd works by using Tss2_Sys_ContextSave as the
-marker of NOT flushing a session handle. Granted you also need the sessionA=
-ttributes set to continue so the TPM doesn't kill it.
+Commit 590ed9d2ed21 ("travis: fix autconf dependency on tss") fixed the
+tpm2-tss dependency with the AX_CODE_COVERAGE macro, by fetching latest
+autoconf-archive and copying the macro into the tpm2-tss source code m4
+directory.
 
-I think the flow for using the new tools would be something like this:
+But now tpm2-abrmd also uses the macro for code coverage and so instead
+of duplicating the same logic, install autoconf-archive in the machine.
 
-1. tpm2_createpolicy - create a pcr policy and spit out the policy digest
-2. tpm2_create - create an object and set its policy digest as obtained in =
-step 1
-3. tpm2_startauthsession - create a pcr policy and spit out the session han=
-dle
-4. tpm2_policypcr - satisfy policy via policy digest and pcr list obtained/=
-used in step 1 as well as taking the session handle from step 3
-5. tpm2_<tool> - use some tool passing the session handle from step 3
-6. tpm2_flushcontext - flushes the handle from step 3
+While being there, clone the tpm2-{tss,abrmd} repos from the latest URL.
 
-With that said, since tpm2_createpolicy is really a combination of the tpm2=
-_startauthsession, tpm2_pcrlist, tpm2_policypcr and tpm2_flushcontext, all =
-that could be moved into lib, so each new tool and
-create policy are really just calling into the same code.
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
-Thoughts, am I missing something here?
 
-This is a lot of work, so I would like to start it now, as it would be the =
-major feature set going towards 4.0 release.
+  Commit: b08643267775aa45d71dfe41b01da60879f160a3
+      https://github.com/intel/tpm2-tools/commit/b08643267775aa45d71dfe41b0=
+1da60879f160a3
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-12-14 (Thu, 14 Dec 2017)
 
-Bill
+  Changed paths:
+    M .travis.yml
 
---===============0190342396861605719==--
+  Log Message:
+  -----------
+  travis.yml: fix travis error by fetching latest OpenSSL packages
+
+The OpenSSL packages version changed so Travis CI was failing due trying
+to download the ones that are no longer available.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+  Commit: a3f568ce40ca1de5f0f5caaee491641ce9297bc9
+      https://github.com/intel/tpm2-tools/commit/a3f568ce40ca1de5f0f5caaee4=
+91641ce9297bc9
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-12-14 (Thu, 14 Dec 2017)
+
+  Changed paths:
+    M Makefile.am
+
+  Log Message:
+  -----------
+  Makefile.am: include integration tests to generated tarball
+
+The integration tests are not included in the tarball generated by the
+make dist target.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+  Commit: 368e5a13743bb131cc15300bc156a01f11763433
+      https://github.com/intel/tpm2-tools/commit/368e5a13743bb131cc15300bc1=
+56a01f11763433
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-15 (Fri, 15 Dec 2017)
+
+  Changed paths:
+    M .ci/travis-build-and-run-tests.sh
+    M .travis.yml
+    M Makefile.am
+    M configure.ac
+
+  Log Message:
+  -----------
+  configure: enable code coverage
+
+This patch adds support for code coverage calculation
+using gcov and lcov by configures --enable-code-coverage
+and make check-code-coverage.
+
+Use this option in the travis build.
+
+Fixes: #711
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 68aaeddeda98379b29837218f12ad7eb1e234687
+      https://github.com/intel/tpm2-tools/commit/68aaeddeda98379b29837218f1=
+2ad7eb1e234687
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-12-15 (Fri, 15 Dec 2017)
+
+  Changed paths:
+    M Makefile.am
+    M configure.ac
+
+  Log Message:
+  -----------
+  configure.ac: enable silent-rules configure option by default
+
+This change is inspired by Andreas Fuchs enabling the silent-rules option
+by default on tpm2-tss. The output is much nicer and one can have the old
+output anyways by either disabling the silent-rules option or "make V=3D1".
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+  Commit: 0c366e6addcfd5c0444a2039904d80226dfc05d8
+      https://github.com/intel/tpm2-tools/commit/0c366e6addcfd5c0444a203990=
+4d80226dfc05d8
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-15 (Fri, 15 Dec 2017)
+
+  Changed paths:
+    M CHANGELOG.md
+
+  Log Message:
+  -----------
+  CHANGELOG.md: update for code-coverage
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: b713ec83610480e05960165fc606795c57d00771
+      https://github.com/intel/tpm2-tools/commit/b713ec83610480e05960165fc6=
+06795c57d00771
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-15 (Fri, 15 Dec 2017)
+
+  Changed paths:
+    M CHANGELOG.md
+
+  Log Message:
+  -----------
+  Update CHANGELOG.md
+
+
+  Commit: 5437abdd960acf87464f23f2435bb506b1f872ca
+      https://github.com/intel/tpm2-tools/commit/5437abdd960acf87464f23f243=
+5bb506b1f872ca
+  Author: Jerry Snitselaar <jsnitsel(a)redhat.com>
+  Date:   2017-12-15 (Fri, 15 Dec 2017)
+
+  Changed paths:
+    M test/system/test_tpm2_nv.sh
+
+  Log Message:
+  -----------
+  test: test_tpm2_nv.sh large_file_name and large_file_read_name should be =
+different
+
+Currently both are set as nv.test_large_w, so the cmp -s after the redirect=
+ tests
+will be comparing nv.test_large_w to itself. Change large_file_read_name to
+nv.test_large_r.
+
+Signed-off-by: Jerry Snitselaar <jsnitsel(a)redhat.com>
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: fb0edff055301769d0bdc3616d5feba7e9c277d4
+      https://github.com/intel/tpm2-tools/commit/fb0edff055301769d0bdc3616d=
+5feba7e9c277d4
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-15 (Fri, 15 Dec 2017)
+
+  Changed paths:
+    M test/system/test_tpm2_nv.sh
+
+  Log Message:
+  -----------
+  test_tpm2_nv.sh: whitespace fix
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: ab1a2d468c4b2ac09a0ac651563653f36a73215f
+      https://github.com/intel/tpm2-tools/commit/ab1a2d468c4b2ac09a0ac65156=
+3653f36a73215f
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-15 (Fri, 15 Dec 2017)
+
+  Changed paths:
+    M tools/tpm2_nvwrite.c
+
+  Log Message:
+  -----------
+  tpm2_nvwrite: fix buffer overflow
+
+As reported by clang asan:
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=3D=3D435=3D=3DERROR: AddressSanitizer: stack-buffer-overflow on address 0x=
+7ffe036c0902 at pc 0x0000004a326d bp 0x7ffe036c02f0 sp 0x7ffe036bfaa0
+WRITE of size 2048 at 0x7ffe036c0902 thread T0
+    #0 0x4a326c in __asan_memcpy (/home/wcrobert/workspace/tpm2-tools/tools=
+/tpm2_nvwrite+0x4a326c)
+    #1 0x4e887b in nv_write /home/wcrobert/workspace/tpm2-tools/tools/tpm2_=
+nvwrite.c:129:9
+    #2 0x4e82c4 in tpm2_tool_onrun /home/wcrobert/workspace/tpm2-tools/tool=
+s/tpm2_nvwrite.c:316:11
+    #3 0x4e90d9 in main /home/wcrobert/workspace/tpm2-tools/tools/tpm2_tool=
+.c:150:11
+    #4 0x7fdfc968d82f in __libc_start_main /build/glibc-bfm8X4/glibc-2.23/c=
+su/../csu/libc-start.c:291
+    #5 0x4195c8 in _start (/home/wcrobert/workspace/tpm2-tools/tools/tpm2_n=
+vwrite+0x4195c8)
+
+Address 0x7ffe036c0902 is located in stack of thread T0 at offset 1538 in f=
+rame
+    #0 0x4e846f in nv_write /home/wcrobert/workspace/tpm2-tools/tools/tpm2_=
+nvwrite.c:76
+
+  This frame has 8 object(s):
+    [32, 172) 'session_data_out'
+    [240, 256) 'sessions_data'
+    [272, 288) 'sessions_data_out'
+    [304, 312) 'session_data_array'
+    [336, 344) 'session_data_out_array'
+    [368, 452) 'nv_public'
+    [496, 500) 'max_data_size'
+    [512, 1538) 'nv_write_data' <=3D=3D Memory access at offset 1538 overfl=
+ows this variable
+HINT: this may be a false positive if your program uses some custom stack u=
+nwind mechanism or swapcontext
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow (/home/wcrobert/workspace/=
+tpm2-tools/tools/tpm2_nvwrite+0x4a326c) in __asan_memcpy
+Shadow bytes around the buggy address:
+  0x1000406d00d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x1000406d00e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x1000406d00f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x1000406d0100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x1000406d0110: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=3D>0x1000406d0120:[02]f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3
+  0x1000406d0130: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
+  0x1000406d0140: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
+  0x1000406d0150: 00 00 00 00 00 00 00 00 02 f2 f2 f2 f2 f2 00 f3
+  0x1000406d0160: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
+  0x1000406d0170: 00 00 00 00 f1 f1 f1 f1 00 f2 f2 f2 01 f2 00 f3
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07
+  Heap left redzone:       fa
+  Heap right redzone:      fb
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack partial redzone:   f4
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=3D=3D435=3D=3DABORTING
+
+Fix by using the max buffer's size field, not the loaded from
+file buffers size field.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 666a436384c69d18704c2a55a5368a5e184606f3
+      https://github.com/intel/tpm2-tools/commit/666a436384c69d18704c2a55a5=
+368a5e184606f3
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-15 (Fri, 15 Dec 2017)
+
+  Changed paths:
+    M CHANGELOG.md
+
+  Log Message:
+  -----------
+  Update CHANGELOG.md
+
+
+  Commit: f0d1920910166c093d08172f31501767f8b04328
+      https://github.com/intel/tpm2-tools/commit/f0d1920910166c093d08172f31=
+501767f8b04328
+  Author: Jerry Snitselaar <jsnitsel(a)redhat.com>
+  Date:   2017-12-18 (Mon, 18 Dec 2017)
+
+  Changed paths:
+    M tools/tpm2_nvread.c
+    M tools/tpm2_nvwrite.c
+
+  Log Message:
+  -----------
+  nv: don't exceed max nv buffer size for TSS
+
+Currently if a tpm device supports a max nv buffer size greater than
+tss supports we can get buffer overflows. Check the size returned by
+the tpm device, and use the min of that and the max supported by tss.
+
+Signed-off-by: Jerry Snitselaar <jsnitsel(a)redhat.com>
+
+
+  Commit: e428daa8e778595924748a148653a4162da3cfe8
+      https://github.com/intel/tpm2-tools/commit/e428daa8e778595924748a1486=
+53a4162da3cfe8
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-18 (Mon, 18 Dec 2017)
+
+  Changed paths:
+    M CHANGELOG.md
+
+  Log Message:
+  -----------
+  Update CHANGELOG.md
+
+
+  Commit: e09fbb3ca65f4ff1e8bf1fa619e21f14a2efe4dc
+      https://github.com/intel/tpm2-tools/commit/e09fbb3ca65f4ff1e8bf1fa619=
+e21f14a2efe4dc
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-18 (Mon, 18 Dec 2017)
+
+  Changed paths:
+    M CHANGELOG.md
+
+  Log Message:
+  -----------
+  CHANGELOG: set release date
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 974e32d2907de38d69c063e802211949c618ccd8
+      https://github.com/intel/tpm2-tools/commit/974e32d2907de38d69c063e802=
+211949c618ccd8
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-18 (Mon, 18 Dec 2017)
+
+  Changed paths:
+    M README.md
+
+  Log Message:
+  -----------
+  Update README.md
+
+
+  Commit: a8bdbdcc5bbf13d50f6ab50ef9c3a6f5abc9e885
+      https://github.com/intel/tpm2-tools/commit/a8bdbdcc5bbf13d50f6ab50ef9=
+c3a6f5abc9e885
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-19 (Tue, 19 Dec 2017)
+
+  Changed paths:
+    M CHANGELOG.md
+
+  Log Message:
+  -----------
+  CHANGELOG: set release date
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: a1145cd5f6eaa0d61de7ca249d10842b9b2da2a2
+      https://github.com/intel/tpm2-tools/commit/a1145cd5f6eaa0d61de7ca249d=
+10842b9b2da2a2
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-19 (Tue, 19 Dec 2017)
+
+  Changed paths:
+    M .ci/travis-build-and-run-tests.sh
+    M CHANGELOG.md
+
+  Log Message:
+  -----------
+  Merge 3.X' into master
+
+
+  Commit: f392466e389f9556dd2e7683f148b6cc4f3639d6
+      https://github.com/intel/tpm2-tools/commit/f392466e389f9556dd2e7683f1=
+48b6cc4f3639d6
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-19 (Tue, 19 Dec 2017)
+
+  Log Message:
+  -----------
+  Merge tag '3.0.2' into into-master
+
+3.0.2 - 2017-12-18
+ * configure: enable code coverage option.
+ * build: enable silent rules options.
+ * Add system tests to dist tarball.
+ * tpm2_nv(read|write): fix buffer overflows.
+
+
+  Commit: da1045acace8142f44820ba1a819d14b6c8cc605
+      https://github.com/intel/tpm2-tools/commit/da1045acace8142f44820ba1a8=
+19d14b6c8cc605
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2017-12-19 (Tue, 19 Dec 2017)
+
+  Changed paths:
+    M .ci/travis-build-and-run-tests.sh
+    M CHANGELOG.md
+
+  Log Message:
+  -----------
+  Merge pull request #739 from williamcroberts/merge-3.X-into-master
+
+Merge 3.x into master
+
+
+Compare: https://github.com/intel/tpm2-tools/compare/561a9778808a...da1045a=
+cace8
+
+--===============0621405419786427761==--
 
