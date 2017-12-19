@@ -1,47 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============8998977691575903134=="
+Content-Type: multipart/mixed; boundary="===============6784203757912473855=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 13f11a: travis.yml: build and install
- autoconf-archive fro...
-Date: Tue, 19 Dec 2017 08:23:47 -0800
-Message-ID: <5a393d13b170a_16182b086eae5c1c83694@hookshot-fe-6b2eebc.cp1-iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] 561a97: tpm2_getmanufec: don't attempt to
+ free a pointer t...
+Date: Tue, 19 Dec 2017 08:25:16 -0800
+Message-ID: <5a393d6cc8e60_256c2ac45b9a9c102059f@hookshot-fe-88eb02d.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8998977691575903134==
+--===============6784203757912473855==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/2.X
+  Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 13f11a4e038ad0bce37aa73340572ab3e2020932
-      https://github.com/intel/tpm2-tools/commit/13f11a4e038ad0bce37aa73340=
-572ab3e2020932
+  Commit: 561a9778808a1fcbcd4aceb87791b5b51b03a7c9
+      https://github.com/intel/tpm2-tools/commit/561a9778808a1fcbcd4aceb877=
+91b5b51b03a7c9
   Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-12-19 (Tue, 19 Dec 2017)
 
   Changed paths:
-    M .ci/travis-tss-install.sh
-    M .travis.yml
+    M tools/tpm2_getmanufec.c
 
   Log Message:
   -----------
-  travis.yml: build and install autoconf-archive from source
+  tpm2_getmanufec: don't attempt to free a pointer that is already NULL
 
-Commit 590ed9d2ed21 ("travis: fix autconf dependency on tss") fixed the
-tpm2-tss dependency with the AX_CODE_COVERAGE macro, by fetching latest
-autoconf-archive and copying the macro into the tpm2-tss source code m4
-directory.
+Commit cc51f9fe188a ("tpm2_getmanufec: fix a memory leak") fixed a memory
+leak in TPMinitialProvisioning(), but after this change a pointer that is
+already NULL is attempted to be freed.
 
-But now tpm2-abrmd also uses the macro for code coverage and so instead
-of duplicating the same logic, install autoconf-archive in the machine.
+This doesn't matter since free(3) is a no-op if a pointer is already NULL
+but still it's a good practice to free the resources in the inverse order
+than were allocated and also makes no sense to attempt to free a NULL ptr.
 
-While being there, clone the tpm2-{tss,abrmd} repos from the latest URL.
-
+Reported-by: Jerry Snitselaar <jsnitsel(a)redhat.com>
 Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
 
---===============8998977691575903134==--
+--===============6784203757912473855==--
 
