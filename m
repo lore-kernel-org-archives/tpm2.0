@@ -1,129 +1,188 @@
-Content-Type: multipart/mixed; boundary="===============7219905679063625949=="
+Content-Type: multipart/mixed; boundary="===============4128869587370938660=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 2f4b0c: man: make tpm2_clear.1.md similar
- to other .md fil...
-Date: Thu, 21 Dec 2017 08:39:29 -0800
-Message-ID: <5a3be3c12f6d7_79d32ad8b5a8dc083510@hookshot-fe-b0febf1.cp1-iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] be3cca: tools: remove sentinel entry in
+ struct options arr...
+Date: Thu, 21 Dec 2017 08:41:07 -0800
+Message-ID: <5a3be423ac16f_76272ae0abc27c14457fe@hookshot-fe-7191cb1.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7219905679063625949==
+--===============4128869587370938660==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 2f4b0cb4286e7effe626156f341529e15790b1b7
-      https://github.com/intel/tpm2-tools/commit/2f4b0cb4286e7effe626156f34=
-1529e15790b1b7
-  Author: Emmanuel Deloget <logout(a)free.fr>
+  Commit: be3ccacfde1cb89a9cdafc278dcc21f7e436d1eb
+      https://github.com/intel/tpm2-tools/commit/be3ccacfde1cb89a9cdafc278d=
+cc21f7e436d1eb
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-12-21 (Thu, 21 Dec 2017)
 
   Changed paths:
-    M man/tpm2_clear.1.md
+    M tools/tpm2_certify.c
+    M tools/tpm2_create.c
+    M tools/tpm2_createprimary.c
+    M tools/tpm2_encryptdecrypt.c
+    M tools/tpm2_evictcontrol.c
+    M tools/tpm2_hmac.c
+    M tools/tpm2_load.c
+    M tools/tpm2_makecredential.c
+    M tools/tpm2_unseal.c
 
   Log Message:
   -----------
-  man: make tpm2_clear.1.md similar to other .md files
+  tools: remove sentinel entry in struct options array
 
-For unknown reasons, the previous commiter of this file decided
-to use an out of date presentation for this markdown file and
-not to follow the exemples given by the other .1.md files.
+There's no need for a sentinel entry in the options array, remove them.
 
-Change this to use the presentation used in the other similar files.
-
-Signed-off-by: Emmanuel Deloget <logout(a)free.fr>
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-  Commit: 475fe5a678eae0b73d161b057f4dd5e9af3859f4
-      https://github.com/intel/tpm2-tools/commit/475fe5a678eae0b73d161b057f=
-4dd5e9af3859f4
-  Author: Emmanuel Deloget <logout(a)free.fr>
+  Commit: c92d1664aa217af9fabcc98e14e33e0b4e489be7
+      https://github.com/intel/tpm2-tools/commit/c92d1664aa217af9fabcc98e14=
+e33e0b4e489be7
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-12-21 (Thu, 21 Dec 2017)
 
   Changed paths:
-    M man/tpm2_hmac.1.md
-    M man/tpm2_verifysignature.1.md
+    M tools/tpm2_activatecredential.c
+    M tools/tpm2_flushcontext.c
+    M tools/tpm2_hmac.c
+    M tools/tpm2_loadexternal.c
+    M tools/tpm2_makecredential.c
 
   Log Message:
   -----------
-  man: fix a few formating issues
+  tools: fix error codes returned in the tpm2_tool_onrun() functions
 
-Signed-off-by: Emmanuel Deloget <logout(a)free.fr>
+Some tools are still returning false instead of a non-zero value as an
+error when they fail. This will wrongly report an exit status that is
+for success.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-  Commit: 881048996a51d23151c310172d4421b914b4898b
-      https://github.com/intel/tpm2-tools/commit/881048996a51d23151c310172d=
-4421b914b4898b
-  Author: Emmanuel Deloget <logout(a)free.fr>
+  Commit: c7b9fb58a0a5d172c19efb13af60947d2b70474d
+      https://github.com/intel/tpm2-tools/commit/c7b9fb58a0a5d172c19efb13af=
+60947d2b70474d
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
   Date:   2017-12-21 (Thu, 21 Dec 2017)
 
   Changed paths:
-    M Makefile.am
-    A man/common/footer.md
-    M man/tpm2_activatecredential.1.md
-    M man/tpm2_certify.1.md
-    M man/tpm2_changeauth.1.md
-    M man/tpm2_clear.1.md
-    M man/tpm2_create.1.md
-    M man/tpm2_createpolicy.1.md
-    M man/tpm2_createprimary.1.md
-    M man/tpm2_dictionarylockout.1.md
-    M man/tpm2_encryptdecrypt.1.md
-    M man/tpm2_evictcontrol.1.md
-    M man/tpm2_flushcontext.1.md
-    M man/tpm2_getcap.1.md
-    M man/tpm2_getmanufec.1.md
-    M man/tpm2_getpubak.1.md
-    M man/tpm2_getpubek.1.md
-    M man/tpm2_getrandom.1.md
-    M man/tpm2_hash.1.md
-    M man/tpm2_hmac.1.md
-    M man/tpm2_import.1.md
-    M man/tpm2_listpersistent.1.md
-    M man/tpm2_load.1.md
-    M man/tpm2_loadexternal.1.md
-    M man/tpm2_makecredential.1.md
-    M man/tpm2_nvdefine.1.md
-    M man/tpm2_nvlist.1.md
-    M man/tpm2_nvread.1.md
-    M man/tpm2_nvreadlock.1.md
-    M man/tpm2_nvrelease.1.md
-    M man/tpm2_nvwrite.1.md
-    M man/tpm2_pcrevent.1.md
-    M man/tpm2_pcrextend.1.md
-    M man/tpm2_pcrlist.1.md
-    M man/tpm2_quote.1.md
-    M man/tpm2_rc_decode.1.md
-    M man/tpm2_readpublic.1.md
-    M man/tpm2_rsadecrypt.1.md
-    M man/tpm2_rsaencrypt.1.md
-    M man/tpm2_send.1.md
-    M man/tpm2_sign.1.md
-    M man/tpm2_startup.1.md
-    M man/tpm2_unseal.1.md
-    M man/tpm2_verifysignature.1.md
+    M lib/tpm2_options.c
+    M lib/tpm2_options.h
 
   Log Message:
   -----------
-  man: move the footer definition in its own included file
+  lib: move struct tpm2_options definition to header file
 
-This change simplify further modification of the BUGS or HELP sections
-of the man pages.
+The structure fields will need to be accessed from the tool to parse the
+options so move its definition to the header file.
 
-It also update the BUGS address to match the current, correct one
-(https://github.com/intel/tpm2-tools/issues instead of
-https://github.com/01org/tpm2-tools/issues).
-
-Fixes: #745
-
-Signed-off-by: Emmanuel Deloget <logout(a)free.fr>
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-Compare: https://github.com/intel/tpm2-tools/compare/da1045acace8...8810489=
-96a51
+  Commit: 0b74c8c99de6fe1cdaf53317d1fc772fdaeef91f
+      https://github.com/intel/tpm2-tools/commit/0b74c8c99de6fe1cdaf53317d1=
+fc772fdaeef91f
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-12-21 (Thu, 21 Dec 2017)
 
---===============7219905679063625949==--
+  Changed paths:
+    M lib/tpm2_options.c
+    M lib/tpm2_options.h
+    M tools/tpm2_activatecredential.c
+    M tools/tpm2_certify.c
+    M tools/tpm2_changeauth.c
+    M tools/tpm2_clear.c
+    M tools/tpm2_create.c
+    M tools/tpm2_createpolicy.c
+    M tools/tpm2_createprimary.c
+    M tools/tpm2_dictionarylockout.c
+    M tools/tpm2_encryptdecrypt.c
+    M tools/tpm2_evictcontrol.c
+    M tools/tpm2_flushcontext.c
+    M tools/tpm2_getcap.c
+    M tools/tpm2_getmanufec.c
+    M tools/tpm2_getpubak.c
+    M tools/tpm2_getpubek.c
+    M tools/tpm2_getrandom.c
+    M tools/tpm2_hash.c
+    M tools/tpm2_hmac.c
+    M tools/tpm2_import.c
+    M tools/tpm2_listpersistent.c
+    M tools/tpm2_load.c
+    M tools/tpm2_loadexternal.c
+    M tools/tpm2_makecredential.c
+    M tools/tpm2_nvdefine.c
+    M tools/tpm2_nvread.c
+    M tools/tpm2_nvreadlock.c
+    M tools/tpm2_nvrelease.c
+    M tools/tpm2_nvwrite.c
+    M tools/tpm2_pcrevent.c
+    M tools/tpm2_pcrextend.c
+    M tools/tpm2_pcrlist.c
+    M tools/tpm2_quote.c
+    M tools/tpm2_rc_decode.c
+    M tools/tpm2_readpublic.c
+    M tools/tpm2_rsadecrypt.c
+    M tools/tpm2_rsaencrypt.c
+    M tools/tpm2_send.c
+    M tools/tpm2_sign.c
+    M tools/tpm2_startup.c
+    M tools/tpm2_unseal.c
+    M tools/tpm2_verifysignature.c
+
+  Log Message:
+  -----------
+  tools: add a boolean to display or not usage text
+
+Not all tools require an option in order to be executed correctly, some
+tools can be executed without providing any option to them.
+
+Add a boolean so tools can choose whether they want their usage text to
+be displayed or not if a user executes them without providing an option.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+  Commit: 5190f1c892bb1b39f969522b8a04f935342699a2
+      https://github.com/intel/tpm2-tools/commit/5190f1c892bb1b39f969522b8a=
+04f935342699a2
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2017-12-21 (Thu, 21 Dec 2017)
+
+  Changed paths:
+    M tools/tpm2_tool.c
+
+  Log Message:
+  -----------
+  tools: add support to print usage summary when executed with no options
+
+When the tools are executed with no options, print a usage text so users
+know what are the available options. This may be useful in systems where
+the man pages are not installed.
+
+After this patch the tools will print a usage text like the following:
+
+$ tpm2_activatecredential
+usage: tpm2_activatecredential [OPTIONS]
+[ -H | --handle=3DVALUE] [ -c | --context=3DVALUE] [ -k | --key-handle=3DVA=
+LUE] [ -C | --key-context=3DVALUE]
+[ -P | --Password=3DVALUE] [ -e | --endorse-passwd=3DVALUE] [ -f | --in-fil=
+e=3DVALUE] [ -o | --out-file=3DVALUE]
+[ -X | --passwdInHex]
+
+Fixes: #730
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+Compare: https://github.com/intel/tpm2-tools/compare/881048996a51...5190f1c=
+892bb
+
+--===============4128869587370938660==--
 
