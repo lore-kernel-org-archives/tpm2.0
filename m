@@ -1,33 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============7442210484158375231=="
+Content-Type: multipart/mixed; boundary="===============6002073372547466257=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 3ab33f: Update CHANGELOG.md
-Date: Fri, 22 Dec 2017 09:17:49 -0800
-Message-ID: <5a3d3e3dd88cf_4dfd2b1e91d6dc0862717@hookshot-fe-d2afb11.cp1-iad.github.net.mail>
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: [tpm2] holiday season
+Date: Fri, 22 Dec 2017 18:41:53 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838905F0B6250@ORSMSX103.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7442210484158375231==
+--===============6002073372547466257==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
-  Home:   https://github.com/intel/tpm2-tools
-  Commit: 3ab33f7ef49cb4e12b6169efb4e0139460dbea0b
-      https://github.com/intel/tpm2-tools/commit/3ab33f7ef49cb4e12b6169efb4=
-e0139460dbea0b
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2017-12-22 (Fri, 22 Dec 2017)
+The holiday season is upon us and the new year is fast approaching! The Int=
+el folks on the tpm2 project are getting ready to take some time off over t=
+he next few weeks so responses on the list and github will be delayed. Than=
+ks to all who have participated over in 2017. We're very grateful for your =
+work & are looking forward to another productive year ahead.
 
-  Changed paths:
-    M CHANGELOG.md
-
-  Log Message:
-  -----------
-  Update CHANGELOG.md
+Regards,
+Philip
 
 
+--===============6002073372547466257==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
---===============7442210484158375231==--
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
+ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
+b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
+emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
+cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
+c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
+Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
+b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
+aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
+bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGUgaG9saWRheSBzZWFzb24gaXMgdXBvbiB1cyBhbmQg
+dGhlIG5ldyB5ZWFyIGlzIGZhc3QgYXBwcm9hY2hpbmchIFRoZSBJbnRlbCBmb2xrcyBvbiB0aGUg
+dHBtMiBwcm9qZWN0IGFyZSBnZXR0aW5nIHJlYWR5IHRvIHRha2Ugc29tZSB0aW1lIG9mZiBvdmVy
+IHRoZSBuZXh0IGZldyB3ZWVrcyBzbyByZXNwb25zZXMgb24gdGhlIGxpc3QgYW5kIGdpdGh1YiB3
+aWxsIGJlIGRlbGF5ZWQuIFRoYW5rcyB0byBhbGwgd2hvCiBoYXZlIHBhcnRpY2lwYXRlZCBvdmVy
+IGluIDIwMTcuIFdlJiM4MjE3O3JlIHZlcnkgZ3JhdGVmdWwgZm9yIHlvdXIgd29yayAmYW1wOyBh
+cmUgbG9va2luZyBmb3J3YXJkIHRvIGFub3RoZXIgcHJvZHVjdGl2ZSB5ZWFyIGFoZWFkLjxvOnA+
+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+UmVnYXJkcyw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+UGhpbGlwPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5i
+c3A7PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============6002073372547466257==--
 
