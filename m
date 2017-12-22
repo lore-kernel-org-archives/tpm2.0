@@ -1,141 +1,150 @@
-Content-Type: multipart/mixed; boundary="===============7968651675888683194=="
+Content-Type: multipart/mixed; boundary="===============3366784790636980214=="
 MIME-Version: 1.0
 From: Javier Martinez Canillas <javierm at redhat.com>
 Subject: Re: [tpm2] [RFC] Session Handling/Policy Support in Tools
-Date: Fri, 22 Dec 2017 16:14:57 +0100
-Message-ID: <cdd90652-cd1e-b8e2-b8f6-286982a04b82@redhat.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563FE6D774@ORSMSX101.amr.corp.intel.com
+Date: Fri, 22 Dec 2017 16:47:25 +0100
+Message-ID: <91b8c5ea-3dac-6251-2e3a-70217222d173@redhat.com>
+In-Reply-To: CAAxBZJuE6ftmtc=2tSWs3LDbPZMToSY0fM_T+JVoZdzfzvGcPg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7968651675888683194==
+--===============3366784790636980214==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Bill,
+Hello Ian,
 
-On 12/19/2017 07:01 PM, Roberts, William C wrote:
-> There are two main parts to the direction I see the tools policy/session =
-support heading:
+On 12/20/2017 03:35 PM, Ian Oliver wrote:
+> Forgive me if this is obvious to you :-) but I'd like to understand and
+> clarify the above a bit more. In the procedure you've presented above does
+> step #4 change the state of the session to one that can be used?
 > =
 
-> 1. The first is cleaning up all the code around session support and polic=
-y building.  I think now that I understand the topic better, I can organize=
- this code a little better. This is rather trivial and beside the main poin=
-t.
-
-Agreed, I've seen your PR in the repo and I think it's good.
-
+> Is then the procedure then something like:
 > =
-
-> 2. Since abrmd 1.3 we have support for sessions across RM IPC connections=
- and direct tpm communications (/dev/tmp0) also has the same support. We ha=
-ve tools like tpm2_createpolicy that are made up of multiple
-> commands to work around session flushing on IPC RM disconnections. tpm2_c=
-reatepolicy is really comprised of 3 commands: tpm2_startauthsession, tpm2_=
-policypcr and tpm2_flushcontext.
->
-
-Absolutely agree. And as a matter of fact that's exactly what's done by the=
- IBM
-TSS, it has separate tools called startauthsession, policypcr and flushcont=
-ext.
-
-> I'm proposing we leave tpm2_createpolicy, for in-kernel-rm users, but add=
- tpm2_startauthsession and tpm2_policypcr for the abrmd and direct tpm usag=
-es. Abrmd works by using Tss2_Sys_ContextSave as the
-
-Agreed too.
-
-> marker of NOT flushing a session handle. Granted you also need the sessio=
-nAttributes set to continue so the TPM doesn't kill it.
->
-
-Yes, in fact I don't know how chaining different commands with the current =
--S
-option that takes a session handle is working nowadays since the tools aren=
-'t
-setting the continueSession attribute. I guess the answer is that it doesn'=
-t?
-
-> I think the flow for using the new tools would be something like this:
->
-
-NOTE: I haven't looked at the final tpm2-abrmd implementation, I'm assuming=
- that
-      it was implemented as previously discussed in the GitHub issues so pl=
-ease
-      let me know if I got some assumption wrong in the following:
 
 > 1. tpm2_createpolicy - create a pcr policy and spit out the policy digest
-> 2. tpm2_create - create an object and set its policy digest as obtained i=
-n step 1
-> 3. tpm2_startauthsession - create a pcr policy and spit out the session h=
-andle
-
-To be precise, this tool won't sit out a session handle but a session conte=
-xt
-(what's returned by a TPM2_ContextSave() command), right? Otherwise the ses=
-sion
-will be flushed by the tpm2-abrmd since a call to Tss2_Sys_ContextSave() wo=
-n't
-be made.
-
-> 4. tpm2_policypcr - satisfy policy via policy digest and pcr list obtaine=
-d/used in step 1 as well as taking the session handle from step 3
-> 5. tpm2_<tool> - use some tool passing the session handle from step 3
-
-This will work for a single tool, but my understanding is that sessions that
-are saved with TPM2_ContextSave() can only be loaded once to prevent replay
-attacks.
-
-So the tpm2_<tool> should both get a session context and load it using the
-TPM2_ContextLoad() command and export it again using a TPM2_ContextSave().
-
-The next command can't use the same saved session context that the previous
-command since the TPM will prevent it to be loaded. Even if the TPM would
-allow, the session handle would already be flushed since TPM2_ContextLoad()
-wouldn't be called before closing the SAPI connection.
-
-> 6. tpm2_flushcontext - flushes the handle from step 3
 > =
 
-> With that said, since tpm2_createpolicy is really a combination of the tp=
-m2_startauthsession, tpm2_pcrlist, tpm2_policypcr and tpm2_flushcontext, al=
-l that could be moved into lib, so each new tool and
-> create policy are really just calling into the same code.
+> eg: I create a policy based upon the current state of (eg) sha1:0,1,2,3 a=
+nd
+> save this as  0123.policy
+> =
+
+> 2. tpm2_create - create an object containing the policy created in #1 (+
+> keys?)
+> =
+
+> eg: I create an object which is sealed (???) against 0123.policy
+> =
+
+> Question: is there a need to perform a tpm2_load here or is it sufficient
+> that this exists temporarily?
 >
 
-Agreed, I factored out a little bit so at least the tools that are doing
-the session auth on each execute wouldn't duplicate the code. But we will
-need to better split things since some functions logic are too monolithic.
-
-> Thoughts, am I missing something here?
->
-
-I think your plan is the correct one. One question is if we will replace the
--S option that takes a session handle and instead take a session context or
-if we will want to support the 3 options:
-
-1) Chain tools passing session handles as long as are executed in an enviro=
-nment
-   that doesn't close the SAPI context (and so flushes the session).
-2) Allow individual tools to manage their own session and auth like is the =
-case
-   for tpm2_unseal and tpm2_nv{read,write}
-3) Chain tools by passing saved session contexts.
-
-In theory we currently support 1 and 2 (although as mentioned I don't know =
-how
-2 works if the tools don't set continueSession). So my question is if we wa=
-nt
-to also include 3 or replace 2 by 3.
-
-> This is a lot of work, so I would like to start it now, as it would be th=
-e major feature set going towards 4.0 release.
->
+You always need to do a TPM2_Load if you want to use an object created by t=
+he
+TPM. The TPM2_Create commands just returns the public and private parts of =
+an
+object but doesn't keep anything in the TPM memory after is completed.
  =
+
+> 3. tpm2_startauthsession - create a session handle for a given pcr policy
+> =
+
+> eg: I generate a session handle for a given policy, eg: 0123.policy and
+> return this as, say   session.bin
+>
+
+No, here Bill weren't precise in the wording AFAICT. He said "creates a ses=
+sion
+handle for a given pcr policy" but he should had said "creates a session ha=
+ndle
+for a given session policy".
+
+In other words, you are just creating an authentication session but still d=
+idn't
+do any authentication based on the PCR state.
+
+> 4. tpm2_policypcr, given #1 and #3, check if either a supplied set of PCR
+> values or the current state of the PCR registers are specified in #1 matc=
+h,
+> if so then the session handle is marked as being valid until step #6
+>
+
+Yes, this tool will send a TPM2_PolicyPCR() command to the TPM with the PCR
+digest and so the session is changed from policySession to policyDigest.
+
+About the session handle being valid until #6, this really depends if the
+command sets TPM_ST_SESSIONS in the header tag field or TPM_ST_NO_SESSIONS?
+
+If the latter, the provided session is flushed after the command completes
+unless the policySession continueSession attribute is SET.
+
+> 5. tpm2_* with -S taking the output of #3 as input as required
+> =
+
+> Question: what happens if I issue a tpm2_* command without -S during this
+> time?
+>
+
+If you are not provided a session that could satisfy the authentication
+policy for your object, then the TPM will refuse the command to succeed
+returning a TPM2_RC_BAD_AUTH response code as an error.
+
+> 6. tpm2_flushcontext   taking the session handle and/or  object from #2 as
+> input.  Any further attempts to use the session handle with tpm2_* -S
+> fails.
+>
+
+Yes. After the session handle has been flushed from the TPM, any attempts
+to authenticate using it will fail (in fact the session context won't even
+load AFAICT).
+
+> =
+
+> So an example session might proceed
+> =
+
+> $tpm2_createpolicy -P -f 0123.policy -g sha256 -L sha1:0,1,2
+> $ls
+> 0123.policy
+> $tpm2_create -H 0x81010001 -g sha256 -G rsa -L 0123.policy
+> 0x810100ff         <- output handle, also assume 0x81010001 exists in the
+> above
+> $tpm2_startauthsession -L 0123.policy -s session.bin
+> $ls
+> session.bin
+> =
+
+> Now this is pure guesswork here
+> =
+
+> $tpm2_decrypt -k 0x81010001 -I secret.enc -o plain.txt -S session.bin
+> FAIL
+> =
+
+> $tpm2_policypcr -k 0x81010001 -s session.bin -L
+> 0123.policy                    <- reads sha1:0,1,2,3 from the TPM
+> OK
+> =
+
+> $tpm2_decrypt -k 0x81010001 -I secret.enc -o plain.txt -S session.bin
+> $cat plain.txt
+> "This is a secret message"
+> =
+
+> $tpm2_flushcontext -H 0x810100ff            <- our object from above
+> =
+
+> $tpm2_decrypt -k 0x81010001 -I secret.enc -o plain.txt -S session.bin
+> FAIL
+> =
+
+
+Yes, this is mostly correct. Please read my previous emails regardless
+some of the details, but in general it will work as you said.
 
 Best regards,
 -- =
@@ -144,5 +153,5 @@ Javier Martinez Canillas
 Software Engineer - Desktop Hardware Enablement
 Red Hat
 
---===============7968651675888683194==--
+--===============3366784790636980214==--
 
