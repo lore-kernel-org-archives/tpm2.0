@@ -1,71 +1,99 @@
-Content-Type: multipart/mixed; boundary="===============6002073372547466257=="
+Content-Type: multipart/mixed; boundary="===============6725534594547868410=="
 MIME-Version: 1.0
-From: Tricca, Philip B <philip.b.tricca at intel.com>
-Subject: [tpm2] holiday season
-Date: Fri, 22 Dec 2017 18:41:53 +0000
-Message-ID: <DB638850A6A2434A93ECADDA0BC838905F0B6250@ORSMSX103.amr.corp.intel.com>
+From: Adrian Shaw <adrian.l.shaw at gmail.com>
+Subject: [tpm2] tpm2_quote output structure
+Date: Sat, 23 Dec 2017 16:18:41 +0000
+Message-ID: <C4F3A88D-9B2D-4F47-912C-B2540F48E040@gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6002073372547466257==
+--===============6725534594547868410==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The holiday season is upon us and the new year is fast approaching! The Int=
-el folks on the tpm2 project are getting ready to take some time off over t=
-he next few weeks so responses on the list and github will be delayed. Than=
-ks to all who have participated over in 2017. We're very grateful for your =
-work & are looking forward to another productive year ahead.
+Hi all,
 
-Regards,
-Philip
+I=E2=80=99ve seen that this project has progressed a lot since the initial =
+1.0.0 release. The tpm2_quote tool output file (using the -o flag) combines=
+ both the blob and the signature. It=E2=80=99s not ideal, since a developer=
+ like me would want to separate it out afterwards for manual verification. =
+Without in-depth knowledge of the TSS objects and endianess I=E2=80=99ve fo=
+und this a bit difficult.
 
+The master branch seems to show some preliminary support for separating the=
+ signature from the attestation data. I=E2=80=99d like to be able to suppor=
+t older versions of the TPM tools, hence I=E2=80=99d like to see how I coul=
+d separate the data from the signature. I=E2=80=99ve been looking at the co=
+de and have made some custom tests but have been unsuccessful so far.
 
---===============6002073372547466257==
+What is the format of the combined data and signature? Is there a magic val=
+ue I can look for to separate them?
+
+Many thanks,
+Adrian
+
+--===============6725534594547868410==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
-cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
-Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
-b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
-bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGUgaG9saWRheSBzZWFzb24gaXMgdXBvbiB1cyBhbmQg
-dGhlIG5ldyB5ZWFyIGlzIGZhc3QgYXBwcm9hY2hpbmchIFRoZSBJbnRlbCBmb2xrcyBvbiB0aGUg
-dHBtMiBwcm9qZWN0IGFyZSBnZXR0aW5nIHJlYWR5IHRvIHRha2Ugc29tZSB0aW1lIG9mZiBvdmVy
-IHRoZSBuZXh0IGZldyB3ZWVrcyBzbyByZXNwb25zZXMgb24gdGhlIGxpc3QgYW5kIGdpdGh1YiB3
-aWxsIGJlIGRlbGF5ZWQuIFRoYW5rcyB0byBhbGwgd2hvCiBoYXZlIHBhcnRpY2lwYXRlZCBvdmVy
-IGluIDIwMTcuIFdlJiM4MjE3O3JlIHZlcnkgZ3JhdGVmdWwgZm9yIHlvdXIgd29yayAmYW1wOyBh
-cmUgbG9va2luZyBmb3J3YXJkIHRvIGFub3RoZXIgcHJvZHVjdGl2ZSB5ZWFyIGFoZWFkLjxvOnA+
-PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+UmVnYXJkcyw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+UGhpbGlwPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5i
-c3A7PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0
+L2h0bWwgY2hhcnNldD11dGYtOCI+PC9oZWFkPjxib2R5IHN0eWxlPSJ3b3JkLXdyYXA6IGJyZWFr
+LXdvcmQ7IC13ZWJraXQtbmJzcC1tb2RlOiBzcGFjZTsgLXdlYmtpdC1saW5lLWJyZWFrOiBhZnRl
+ci13aGl0ZS1zcGFjZTsiIGNsYXNzPSIiPjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4OyBsaW5lLWhl
+aWdodDogbm9ybWFsOyBjb2xvcjogcmdiKDY5LCA2OSwgNjkpOyIgY2xhc3M9IiI+SGkgYWxsLCZu
+YnNwOzwvZGl2PjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4OyBsaW5lLWhlaWdodDogbm9ybWFsOyBj
+b2xvcjogcmdiKDY5LCA2OSwgNjkpOyBtaW4taGVpZ2h0OiAxNHB4OyIgY2xhc3M9IiI+PGJyIGNs
+YXNzPSIiPjwvZGl2PjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4OyBsaW5lLWhlaWdodDogbm9ybWFs
+OyBjb2xvcjogcmdiKDY5LCA2OSwgNjkpOyIgY2xhc3M9IiI+SeKAmXZlIHNlZW4gdGhhdCB0aGlz
+IHByb2plY3QgaGFzIHByb2dyZXNzZWQgYSBsb3Qgc2luY2UgdGhlIGluaXRpYWwgMS4wLjAgcmVs
+ZWFzZS4gVGhlIHRwbTJfcXVvdGUgdG9vbCBvdXRwdXQgZmlsZSAodXNpbmcgdGhlIC1vIGZsYWcp
+IGNvbWJpbmVzIGJvdGggdGhlIGJsb2IgYW5kIHRoZSBzaWduYXR1cmUuIEl04oCZcyBub3QgaWRl
+YWwsIHNpbmNlIGEgZGV2ZWxvcGVyIGxpa2UgbWUgd291bGQgd2FudCB0byBzZXBhcmF0ZSBpdCBv
+dXQgYWZ0ZXJ3YXJkcyBmb3IgbWFudWFsIHZlcmlmaWNhdGlvbi4gV2l0aG91dCBpbi1kZXB0aCBr
+bm93bGVkZ2Ugb2YgdGhlIFRTUyBvYmplY3RzIGFuZCBlbmRpYW5lc3MgSeKAmXZlIGZvdW5kIHRo
+aXMgYSBiaXQgZGlmZmljdWx0LiZuYnNwOzwvZGl2PjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4OyBs
+aW5lLWhlaWdodDogbm9ybWFsOyBjb2xvcjogcmdiKDY5LCA2OSwgNjkpOyBtaW4taGVpZ2h0OiAx
+NHB4OyIgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4
+OyBsaW5lLWhlaWdodDogbm9ybWFsOyBjb2xvcjogcmdiKDY5LCA2OSwgNjkpOyIgY2xhc3M9IiI+
+VGhlIG1hc3RlciBicmFuY2ggc2VlbXMgdG8gc2hvdyBzb21lIHByZWxpbWluYXJ5IHN1cHBvcnQg
+Zm9yIHNlcGFyYXRpbmcgdGhlIHNpZ25hdHVyZSBmcm9tIHRoZSBhdHRlc3RhdGlvbiBkYXRhLiBJ
+4oCZZCBsaWtlIHRvIGJlIGFibGUgdG8gc3VwcG9ydCBvbGRlciB2ZXJzaW9ucyBvZiB0aGUgVFBN
+IHRvb2xzLCBoZW5jZSBJ4oCZZCBsaWtlIHRvIHNlZSBob3cgSSBjb3VsZCBzZXBhcmF0ZSB0aGUg
+ZGF0YSBmcm9tIHRoZSBzaWduYXR1cmUuIEnigJl2ZSBiZWVuIGxvb2tpbmcgYXQgdGhlIGNvZGUg
+YW5kIGhhdmUgbWFkZSBzb21lIGN1c3RvbSB0ZXN0cyBidXQgaGF2ZSBiZWVuIHVuc3VjY2Vzc2Z1
+bCBzbyBmYXIuJm5ic3A7PC9kaXY+PGRpdiBzdHlsZT0ibWFyZ2luOiAwcHg7IGxpbmUtaGVpZ2h0
+OiBub3JtYWw7IGNvbG9yOiByZ2IoNjksIDY5LCA2OSk7IG1pbi1oZWlnaHQ6IDE0cHg7IiBjbGFz
+cz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBzdHlsZT0ibWFyZ2luOiAwcHg7IGxpbmUtaGVp
+Z2h0OiBub3JtYWw7IGNvbG9yOiByZ2IoNjksIDY5LCA2OSk7IiBjbGFzcz0iIj5XaGF0IGlzIHRo
+ZSBmb3JtYXQgb2YgdGhlIGNvbWJpbmVkIGRhdGEgYW5kIHNpZ25hdHVyZT8gSXMgdGhlcmUgYSBt
+YWdpYyB2YWx1ZSBJIGNhbiBsb29rIGZvciB0byBzZXBhcmF0ZSB0aGVtPzwvZGl2PjxkaXYgc3R5
+bGU9Im1hcmdpbjogMHB4OyBsaW5lLWhlaWdodDogbm9ybWFsOyBjb2xvcjogcmdiKDY5LCA2OSwg
+NjkpOyBtaW4taGVpZ2h0OiAxNHB4OyIgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYg
+c3R5bGU9Im1hcmdpbjogMHB4OyBsaW5lLWhlaWdodDogbm9ybWFsOyBjb2xvcjogcmdiKDY5LCA2
+OSwgNjkpOyIgY2xhc3M9IiI+TWFueSB0aGFua3MsPC9kaXY+PGRpdiBzdHlsZT0ibWFyZ2luOiAw
+cHg7IGxpbmUtaGVpZ2h0OiBub3JtYWw7IGNvbG9yOiByZ2IoNjksIDY5LCA2OSk7IiBjbGFzcz0i
+Ij5BZHJpYW48L2Rpdj48L2JvZHk+PC9odG1sPg==
+--===============6725534594547868410==
+Content-Type: application/pgp-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="signature.asc"
 
---===============6002073372547466257==--
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KQ29tbWVudDogR1BHVG9vbHMKCmlRR3pCQUVC
+Q2dBZEZpRUVHczd4Z21FS3BsZ2g1d3YxRmVnaDlYY2QvcllGQWxvK2dlRUFDZ2tRRmVnaDlYY2QK
+L3JaV3NBditOMFdyMXo5QzJmd0N4ZS9zUjNpSkxJeDBTTlhOZEdYVWdjZS9nckx0SGtiVG5XWE9T
+N1MvV0ZiLwpNY3ZLdkQ5ZnFLbjNxT0NLNUVjMEhyM0k2bVo1S2pObjZDY0R6ZG1TOEdOT2tYSE1Z
+Z21jdnQ0VVgxU05KNTNjCkY3M3JRVThpcUw0TnN6a0xPZGYzRHNYL0hzSTFoZkM3dFpEekJ3UHFn
+STZBSnVNNFBGejMxYjBaTVM5aFdSYVMKSjY4YjJ5b1FsdGtnSU5MdDkzcndxUUFNZHJNTitYSVg2
+Q3RpZHcxTnJqcHBQaEd1TjN4c3lkOURlazdZdUYvawpNSlh6OFhpYzVjV3lqeDFFYTIzSk5BV2hv
+QWRlMXoySHo4NEdtVXMwdi9XSWZSVEJQQlVLbldyMnFUNkFFWDlFCmtmSDdSVGZoa1VsZzl2MnRq
+YitieVp4cFpRZUhRc0ZRNEZFYXErbWlZU0JERHVtdXA2Yi83cElFM3hqeFJXaEMKWlR5VG81SWo5
+a3VIaVUrWGZGVHJzR1U0Y0tpZjhKU21ST3R0TnFPV1NBeTVMLzEvbUZtbWZNZmQvTklWSkI1MApM
+NUdrdnV6TGVnbmN1dWF6N2h5N2xwOWNVbldVWHEwR3kyeWJ3dlVqUjF6bXgrSzdPdFV2d3QrMVZ5
+TGZFTDFNCkJ3R1FLNzFrCj02STY4Ci0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
+
+--===============6725534594547868410==--
 
