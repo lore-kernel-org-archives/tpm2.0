@@ -1,99 +1,149 @@
-Content-Type: multipart/mixed; boundary="===============6725534594547868410=="
+Content-Type: multipart/mixed; boundary="===============5509381981673516557=="
 MIME-Version: 1.0
-From: Adrian Shaw <adrian.l.shaw at gmail.com>
-Subject: [tpm2] tpm2_quote output structure
-Date: Sat, 23 Dec 2017 16:18:41 +0000
-Message-ID: <C4F3A88D-9B2D-4F47-912C-B2540F48E040@gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] tpm2-tss question
+Date: Tue, 26 Dec 2017 17:30:34 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FE7163A@ORSMSX106.amr.corp.intel.com>
+In-Reply-To: 52a6881d-5626-3dde-3ad0-2b06a1726502@ntt-el.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6725534594547868410==
+--===============5509381981673516557==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+0x98e is:
 
-I=E2=80=99ve seen that this project has progressed a lot since the initial =
-1.0.0 release. The tpm2_quote tool output file (using the -o flag) combines=
- both the blob and the signature. It=E2=80=99s not ideal, since a developer=
- like me would want to separate it out afterwards for manual verification. =
-Without in-depth knowledge of the TSS objects and endianess I=E2=80=99ve fo=
-und this a bit difficult.
+$ ./tpm2_rc_decode 0x98e
+error layer
+  hex: 0x0
+  identifier: TSS2_TPM_RC_LAYER
+  description: Error produced by the TPM
+format 1 error code
+  hex: 0x0e
+  identifier: TPM2_RC_AUTH_FAIL
+  description: the authorization HMAC check failed and DA counter increment=
+ed
+session
+  hex: 0x100
+  identifier: TPM2_RC_1
+  description:  (null)
 
-The master branch seems to show some preliminary support for separating the=
- signature from the attestation data. I=E2=80=99d like to be able to suppor=
-t older versions of the TPM tools, hence I=E2=80=99d like to see how I coul=
-d separate the data from the signature. I=E2=80=99ve been looking at the co=
-de and have made some custom tests but have been unsuccessful so far.
+SO it looks like you're not setting up the auth properly in the session.
 
-What is the format of the combined data and signature? Is there a magic val=
-ue I can look for to separate them?
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Yasuhiro Hos=
+oda
+> Sent: Wednesday, December 13, 2017 10:59 PM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] tpm2-tss question
+> =
 
-Many thanks,
-Adrian
+> MY name is Yasuhiro Hosoda.
+> =
 
---===============6725534594547868410==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> =
 
-PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0
-L2h0bWwgY2hhcnNldD11dGYtOCI+PC9oZWFkPjxib2R5IHN0eWxlPSJ3b3JkLXdyYXA6IGJyZWFr
-LXdvcmQ7IC13ZWJraXQtbmJzcC1tb2RlOiBzcGFjZTsgLXdlYmtpdC1saW5lLWJyZWFrOiBhZnRl
-ci13aGl0ZS1zcGFjZTsiIGNsYXNzPSIiPjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4OyBsaW5lLWhl
-aWdodDogbm9ybWFsOyBjb2xvcjogcmdiKDY5LCA2OSwgNjkpOyIgY2xhc3M9IiI+SGkgYWxsLCZu
-YnNwOzwvZGl2PjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4OyBsaW5lLWhlaWdodDogbm9ybWFsOyBj
-b2xvcjogcmdiKDY5LCA2OSwgNjkpOyBtaW4taGVpZ2h0OiAxNHB4OyIgY2xhc3M9IiI+PGJyIGNs
-YXNzPSIiPjwvZGl2PjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4OyBsaW5lLWhlaWdodDogbm9ybWFs
-OyBjb2xvcjogcmdiKDY5LCA2OSwgNjkpOyIgY2xhc3M9IiI+SeKAmXZlIHNlZW4gdGhhdCB0aGlz
-IHByb2plY3QgaGFzIHByb2dyZXNzZWQgYSBsb3Qgc2luY2UgdGhlIGluaXRpYWwgMS4wLjAgcmVs
-ZWFzZS4gVGhlIHRwbTJfcXVvdGUgdG9vbCBvdXRwdXQgZmlsZSAodXNpbmcgdGhlIC1vIGZsYWcp
-IGNvbWJpbmVzIGJvdGggdGhlIGJsb2IgYW5kIHRoZSBzaWduYXR1cmUuIEl04oCZcyBub3QgaWRl
-YWwsIHNpbmNlIGEgZGV2ZWxvcGVyIGxpa2UgbWUgd291bGQgd2FudCB0byBzZXBhcmF0ZSBpdCBv
-dXQgYWZ0ZXJ3YXJkcyBmb3IgbWFudWFsIHZlcmlmaWNhdGlvbi4gV2l0aG91dCBpbi1kZXB0aCBr
-bm93bGVkZ2Ugb2YgdGhlIFRTUyBvYmplY3RzIGFuZCBlbmRpYW5lc3MgSeKAmXZlIGZvdW5kIHRo
-aXMgYSBiaXQgZGlmZmljdWx0LiZuYnNwOzwvZGl2PjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4OyBs
-aW5lLWhlaWdodDogbm9ybWFsOyBjb2xvcjogcmdiKDY5LCA2OSwgNjkpOyBtaW4taGVpZ2h0OiAx
-NHB4OyIgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4
-OyBsaW5lLWhlaWdodDogbm9ybWFsOyBjb2xvcjogcmdiKDY5LCA2OSwgNjkpOyIgY2xhc3M9IiI+
-VGhlIG1hc3RlciBicmFuY2ggc2VlbXMgdG8gc2hvdyBzb21lIHByZWxpbWluYXJ5IHN1cHBvcnQg
-Zm9yIHNlcGFyYXRpbmcgdGhlIHNpZ25hdHVyZSBmcm9tIHRoZSBhdHRlc3RhdGlvbiBkYXRhLiBJ
-4oCZZCBsaWtlIHRvIGJlIGFibGUgdG8gc3VwcG9ydCBvbGRlciB2ZXJzaW9ucyBvZiB0aGUgVFBN
-IHRvb2xzLCBoZW5jZSBJ4oCZZCBsaWtlIHRvIHNlZSBob3cgSSBjb3VsZCBzZXBhcmF0ZSB0aGUg
-ZGF0YSBmcm9tIHRoZSBzaWduYXR1cmUuIEnigJl2ZSBiZWVuIGxvb2tpbmcgYXQgdGhlIGNvZGUg
-YW5kIGhhdmUgbWFkZSBzb21lIGN1c3RvbSB0ZXN0cyBidXQgaGF2ZSBiZWVuIHVuc3VjY2Vzc2Z1
-bCBzbyBmYXIuJm5ic3A7PC9kaXY+PGRpdiBzdHlsZT0ibWFyZ2luOiAwcHg7IGxpbmUtaGVpZ2h0
-OiBub3JtYWw7IGNvbG9yOiByZ2IoNjksIDY5LCA2OSk7IG1pbi1oZWlnaHQ6IDE0cHg7IiBjbGFz
-cz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBzdHlsZT0ibWFyZ2luOiAwcHg7IGxpbmUtaGVp
-Z2h0OiBub3JtYWw7IGNvbG9yOiByZ2IoNjksIDY5LCA2OSk7IiBjbGFzcz0iIj5XaGF0IGlzIHRo
-ZSBmb3JtYXQgb2YgdGhlIGNvbWJpbmVkIGRhdGEgYW5kIHNpZ25hdHVyZT8gSXMgdGhlcmUgYSBt
-YWdpYyB2YWx1ZSBJIGNhbiBsb29rIGZvciB0byBzZXBhcmF0ZSB0aGVtPzwvZGl2PjxkaXYgc3R5
-bGU9Im1hcmdpbjogMHB4OyBsaW5lLWhlaWdodDogbm9ybWFsOyBjb2xvcjogcmdiKDY5LCA2OSwg
-NjkpOyBtaW4taGVpZ2h0OiAxNHB4OyIgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPjwvZGl2PjxkaXYg
-c3R5bGU9Im1hcmdpbjogMHB4OyBsaW5lLWhlaWdodDogbm9ybWFsOyBjb2xvcjogcmdiKDY5LCA2
-OSwgNjkpOyIgY2xhc3M9IiI+TWFueSB0aGFua3MsPC9kaXY+PGRpdiBzdHlsZT0ibWFyZ2luOiAw
-cHg7IGxpbmUtaGVpZ2h0OiBub3JtYWw7IGNvbG9yOiByZ2IoNjksIDY5LCA2OSk7IiBjbGFzcz0i
-Ij5BZHJpYW48L2Rpdj48L2JvZHk+PC9odG1sPg==
---===============6725534594547868410==
-Content-Type: application/pgp-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="signature.asc"
+> I am developing a program using TSS1.0(Nov=EF=BC=91=EF=BC=8E2016).
+> I encountered a problem with PolicySecret error 0x98e and need help.
+> My program uses tpmtest.cpp as a base of development.
+> The situation is as follows:
+> =
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KQ29tbWVudDogR1BHVG9vbHMKCmlRR3pCQUVC
-Q2dBZEZpRUVHczd4Z21FS3BsZ2g1d3YxRmVnaDlYY2QvcllGQWxvK2dlRUFDZ2tRRmVnaDlYY2QK
-L3JaV3NBditOMFdyMXo5QzJmd0N4ZS9zUjNpSkxJeDBTTlhOZEdYVWdjZS9nckx0SGtiVG5XWE9T
-N1MvV0ZiLwpNY3ZLdkQ5ZnFLbjNxT0NLNUVjMEhyM0k2bVo1S2pObjZDY0R6ZG1TOEdOT2tYSE1Z
-Z21jdnQ0VVgxU05KNTNjCkY3M3JRVThpcUw0TnN6a0xPZGYzRHNYL0hzSTFoZkM3dFpEekJ3UHFn
-STZBSnVNNFBGejMxYjBaTVM5aFdSYVMKSjY4YjJ5b1FsdGtnSU5MdDkzcndxUUFNZHJNTitYSVg2
-Q3RpZHcxTnJqcHBQaEd1TjN4c3lkOURlazdZdUYvawpNSlh6OFhpYzVjV3lqeDFFYTIzSk5BV2hv
-QWRlMXoySHo4NEdtVXMwdi9XSWZSVEJQQlVLbldyMnFUNkFFWDlFCmtmSDdSVGZoa1VsZzl2MnRq
-YitieVp4cFpRZUhRc0ZRNEZFYXErbWlZU0JERHVtdXA2Yi83cElFM3hqeFJXaEMKWlR5VG81SWo5
-a3VIaVUrWGZGVHJzR1U0Y0tpZjhKU21ST3R0TnFPV1NBeTVMLzEvbUZtbWZNZmQvTklWSkI1MApM
-NUdrdnV6TGVnbmN1dWF6N2h5N2xwOWNVbldVWHEwR3kyeWJ3dlVqUjF6bXgrSzdPdFV2d3QrMVZ5
-TGZFTDFNCkJ3R1FLNzFrCj02STY4Ci0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
+> 1 Create TPM Keys like this.
+> =
 
---===============6725534594547868410==--
+> EK
+> =EF=BD=9C--------
+> =EF=BD=9C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0 |
+> MK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AK
+> =EF=BD=9C
+> SK
+> =
+
+> 2 Execute PolicySecret twice using HMAC session. At first, it ends withou=
+t error.
+> Then it ends with 0x98e For clarification, I print out the values of Virt=
+ual Handle
+> and Real Handle.
+> The value of Virtual/Real Handles differ at 2nd excution of the command.
+> (See NO 25/26 Below)
+> =
+
+> I understand that the resource manager assigns Virtual Handle and my prog=
+ram
+> calculates HMAC using that handles.
+> On the other hand, TPM may calculate HMAC using Real Handle.
+> That is my hypothesis.
+> =
+
+> Any suggestion about the usage of Session Handle?
+> =
+
+> NO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Command=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 Virtual/Real Handle=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 LOC 1.=C2=A0=C2=A0=C2=A0 CreatePrimary(EK)
+> real=3D80000000, virtual=3D80000000 8381 2.=C2=A0=C2=A0=C2=A0 HierarchyCh=
+angeAuth1 8421
+> 3.=C2=A0=C2=A0=C2=A0 HierarchyChangeAuth2 8431 4.=C2=A0=C2=A0=C2=A0 Start=
+AuthSession(Policy) real=3D3000000,
+> virtual=3D3000000 8480 5.=C2=A0=C2=A0=C2=A0 PolicySecret(ENDORSEMENT) 849=
+4 6.=C2=A0=C2=A0=C2=A0 Create(MK) 8515
+> 7.=C2=A0=C2=A0=C2=A0 PolicySecret(ENDORSEMENT) 8529 8.=C2=A0=C2=A0=C2=A0 =
+Load(MK) real=3D80000001,
+> virtual=3D80000001 8542 9.=C2=A0=C2=A0=C2=A0 Evict(MK) 8552 10.=C2=A0=C2=
+=A0=C2=A0 Create(SK) 8590 11.=C2=A0=C2=A0=C2=A0 Load(SK)
+> real=3D80000001, virtual=3D80000002 8598 12.=C2=A0=C2=A0=C2=A0 PolicySecr=
+et(ENDORSEMENT) 8609
+> 13.=C2=A0=C2=A0=C2=A0 Create(AK) 8635 14.=C2=A0=C2=A0=C2=A0 PolicySecret(=
+ENDORSEMENT) 8645 15.=C2=A0=C2=A0=C2=A0 Load(AK)
+> real=3D80000001, virtual=3D80000003 8655 16.=C2=A0=C2=A0=C2=A0 FlushConte=
+xt(POLICY) 8664
+> 17.=C2=A0=C2=A0=C2=A0 StartAuthSession(POLICY) real=3D3000000, virtual=3D=
+3000000 8668
+> 18.=C2=A0=C2=A0=C2=A0 StartAuthSession(HMAC) real=3D2000001, virtual=3D20=
+00001 8678
+> 19.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(LoadExternal) real=3D80000000, v=
+irtual=3D80000004
+> 3706 20.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(HMAC_Start) real=3D80000001,
+> virtual=3D80000005 3706 21.=C2=A0=C2=A0=C2=A0 PolicySecret(SK) 8711 22.=
+=C2=A0=C2=A0=C2=A0 FlushContext(HMAC) 8717
+> 23.=C2=A0=C2=A0=C2=A0 FlushContext(POLICY) 8724 24.=C2=A0=C2=A0=C2=A0 Cer=
+tifyCreation(SK) 8738
+> 25.=C2=A0=C2=A0=C2=A0 StartAuthSession(POLICY) real=3D3000000, virtual=3D=
+3000001 8745
+> 26.=C2=A0=C2=A0=C2=A0 StartAuthSession(HMAC) real=3D2000001, virtual=3D20=
+00000 8754
+> 27.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(LoadExternal) real=3D80000000, v=
+irtual=3D80000005
+> 8782 28.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(HMAC_Start) real=3D80000001,
+> virtual=3D80000004 8782 29.=C2=A0=C2=A0=C2=A0 PolicySecret(SK) 8789
+> =
+
+> The whole=C2=A0 source program can be found here.
+> https://github.com/intel/tpm2-tss/files/1516612/tpmtest.cpp_0x98e_2.txt
+> =
+
+> =
+
+> Kind regards,
+> =
+
+> --
+> Yasuhiro Hosoda
+> =
+
+> NTT Electronics Corporation =EF=BC=88NEL)
+> Security Support Project
+> =
+
+> =
+
+> _______________________________________________
+> tpm2 mailing list
+> tpm2(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/tpm2
+
+--===============5509381981673516557==--
 
