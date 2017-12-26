@@ -1,207 +1,143 @@
-Content-Type: multipart/mixed; boundary="===============0963887571715227773=="
+Content-Type: multipart/mixed; boundary="===============4798177282568760024=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] [RFC] Session Handling/Policy Support in Tools
-Date: Tue, 26 Dec 2017 17:40:15 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FE716BD@ORSMSX106.amr.corp.intel.com>
-In-Reply-To: cdd90652-cd1e-b8e2-b8f6-286982a04b82@redhat.com
+Subject: Re: [tpm2] tpm2_quote output structure
+Date: Tue, 26 Dec 2017 17:43:27 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FE716DD@ORSMSX106.amr.corp.intel.com>
+In-Reply-To: C4F3A88D-9B2D-4F47-912C-B2540F48E040@gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0963887571715227773==
+--===============4798177282568760024==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Master currently sends a YAML format of quoted and signature to stdout:
+https://github.com/intel/tpm2-tools/blob/master/tools/tpm2_quote.c#L121
 
+I think that ended up on 3.X
 
-> -----Original Message-----
-> From: Javier Martinez Canillas [mailto:javierm(a)redhat.com]
-> Sent: Friday, December 22, 2017 7:15 AM
-> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.o=
-rg
-> Subject: Re: [tpm2] [RFC] Session Handling/Policy Support in Tools
-> =
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Adrian Shaw
+Sent: Saturday, December 23, 2017 8:19 AM
+To: tpm2(a)lists.01.org
+Subject: [tpm2] tpm2_quote output structure
 
-> Hello Bill,
-> =
+Hi all,
 
-> On 12/19/2017 07:01 PM, Roberts, William C wrote:
-> > There are two main parts to the direction I see the tools policy/sessio=
-n support
-> heading:
-> >
-> > 1. The first is cleaning up all the code around session support and pol=
-icy
-> building.  I think now that I understand the topic better, I can organize=
- this code a
-> little better. This is rather trivial and beside the main point.
-> =
+I=E2=80=99ve seen that this project has progressed a lot since the initial =
+1.0.0 release. The tpm2_quote tool output file (using the -o flag) combines=
+ both the blob and the signature. It=E2=80=99s not ideal, since a developer=
+ like me would want to separate it out afterwards for manual verification. =
+Without in-depth knowledge of the TSS objects and endianess I=E2=80=99ve fo=
+und this a bit difficult.
 
-> Agreed, I've seen your PR in the repo and I think it's good.
-> =
+The master branch seems to show some preliminary support for separating the=
+ signature from the attestation data. I=E2=80=99d like to be able to suppor=
+t older versions of the TPM tools, hence I=E2=80=99d like to see how I coul=
+d separate the data from the signature. I=E2=80=99ve been looking at the co=
+de and have made some custom tests but have been unsuccessful so far.
 
-> >
-> > 2. Since abrmd 1.3 we have support for sessions across RM IPC
-> > connections and direct tpm communications (/dev/tmp0) also has the same
-> support. We have tools like tpm2_createpolicy that are made up of multiple
-> commands to work around session flushing on IPC RM disconnections.
-> tpm2_createpolicy is really comprised of 3 commands: tpm2_startauthsessio=
-n,
-> tpm2_policypcr and tpm2_flushcontext.
-> >
-> =
+What is the format of the combined data and signature? Is there a magic val=
+ue I can look for to separate them?
 
-> Absolutely agree. And as a matter of fact that's exactly what's done by t=
-he IBM
-> TSS, it has separate tools called startauthsession, policypcr and flushco=
-ntext.
-> =
+Many thanks,
+Adrian
 
-> > I'm proposing we leave tpm2_createpolicy, for in-kernel-rm users, but
-> > add tpm2_startauthsession and tpm2_policypcr for the abrmd and direct
-> > tpm usages. Abrmd works by using Tss2_Sys_ContextSave as the
-> =
+--===============4798177282568760024==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-> Agreed too.
-> =
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
+Zm9udC1zaXplOjEyLjBwdDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZjt9
+DQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCglj
+b2xvcjojMDU2M0MxOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBz
+cGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
+cjojOTU0RjcyOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0Kc3Bhbi5FbWFpbFN0eWxl
+MTcNCgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtcmVwbHk7DQoJZm9udC1mYW1pbHk6IkNhbGli
+cmkiLHNhbnMtc2VyaWY7DQoJY29sb3I6IzFGNDk3RDt9DQouTXNvQ2hwRGVmYXVsdA0KCXttc28t
+c3R5bGUtdHlwZTpleHBvcnQtb25seTsNCglmb250LXNpemU6MTAuMHB0O30NCkBwYWdlIFdvcmRT
+ZWN0aW9uMQ0KCXtzaXplOjguNWluIDExLjBpbjsNCgltYXJnaW46MS4waW4gMS4waW4gMS4waW4g
+MS4waW47fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQotLT48L3N0
+eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRp
+dCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5
+XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9ImVk
+aXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+DQo8L2hl
+YWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPg0K
+PGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0
+eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fu
+cy1zZXJpZjtjb2xvcjojMUY0OTdEIj5NYXN0ZXIgY3VycmVudGx5IHNlbmRzIGEgWUFNTCBmb3Jt
+YXQgb2YgcXVvdGVkIGFuZCBzaWduYXR1cmUgdG8gc3Rkb3V0OjxvOnA+PC9vOnA+PC9zcGFuPjwv
+cD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2Zv
+bnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj48
+YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vaW50ZWwvdHBtMi10b29scy9ibG9iL21hc3Rlci90
+b29scy90cG0yX3F1b3RlLmMjTDEyMSI+aHR0cHM6Ly9naXRodWIuY29tL2ludGVsL3RwbTItdG9v
+bHMvYmxvYi9tYXN0ZXIvdG9vbHMvdHBtMl9xdW90ZS5jI0wxMjE8L2E+PG86cD48L286cD48L3Nw
+YW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4w
+cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5
+N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxz
+cGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVv
+dDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj5JIHRoaW5rIHRoYXQgZW5kZWQgdXAgb24gMy5Y
+PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9
+ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNl
+cmlmO2NvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxkaXYgc3R5
+bGU9ImJvcmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlkIGJsdWUgMS41cHQ7cGFkZGluZzowaW4g
+MGluIDBpbiA0LjBwdCI+DQo8ZGl2Pg0KPGRpdiBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLXRv
+cDpzb2xpZCAjRTFFMUUxIDEuMHB0O3BhZGRpbmc6My4wcHQgMGluIDBpbiAwaW4iPg0KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1p
+bHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj5Gcm9tOjwvc3Bhbj48L2I+PHNwYW4g
+c3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90Oyxz
+YW5zLXNlcmlmIj4gdHBtMiBbbWFpbHRvOnRwbTItYm91bmNlc0BsaXN0cy4wMS5vcmddDQo8Yj5P
+biBCZWhhbGYgT2YgPC9iPkFkcmlhbiBTaGF3PGJyPg0KPGI+U2VudDo8L2I+IFNhdHVyZGF5LCBE
+ZWNlbWJlciAyMywgMjAxNyA4OjE5IEFNPGJyPg0KPGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9y
+Zzxicj4NCjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gdHBtMl9xdW90ZSBvdXRwdXQgc3RydWN0dXJl
+PG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxz
+cGFuIHN0eWxlPSJjb2xvcjojNDU0NTQ1Ij5IaSBhbGwsJm5ic3A7PG86cD48L286cD48L3NwYW4+
+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNv
+bG9yOiM0NTQ1NDUiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJjb2xvcjojNDU0NTQ1Ij5J4oCZdmUg
+c2VlbiB0aGF0IHRoaXMgcHJvamVjdCBoYXMgcHJvZ3Jlc3NlZCBhIGxvdCBzaW5jZSB0aGUgaW5p
+dGlhbCAxLjAuMCByZWxlYXNlLiBUaGUgdHBtMl9xdW90ZSB0b29sIG91dHB1dCBmaWxlICh1c2lu
+ZyB0aGUgLW8gZmxhZykgY29tYmluZXMgYm90aCB0aGUgYmxvYiBhbmQgdGhlIHNpZ25hdHVyZS4g
+SXTigJlzIG5vdCBpZGVhbCwgc2luY2UgYSBkZXZlbG9wZXINCiBsaWtlIG1lIHdvdWxkIHdhbnQg
+dG8gc2VwYXJhdGUgaXQgb3V0IGFmdGVyd2FyZHMgZm9yIG1hbnVhbCB2ZXJpZmljYXRpb24uIFdp
+dGhvdXQgaW4tZGVwdGgga25vd2xlZGdlIG9mIHRoZSBUU1Mgb2JqZWN0cyBhbmQgZW5kaWFuZXNz
+IEnigJl2ZSBmb3VuZCB0aGlzIGEgYml0IGRpZmZpY3VsdC4mbmJzcDs8bzpwPjwvbzpwPjwvc3Bh
+bj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0i
+Y29sb3I6IzQ1NDU0NSI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOiM0NTQ1NDUiPlRoZSBt
+YXN0ZXIgYnJhbmNoIHNlZW1zIHRvIHNob3cgc29tZSBwcmVsaW1pbmFyeSBzdXBwb3J0IGZvciBz
+ZXBhcmF0aW5nIHRoZSBzaWduYXR1cmUgZnJvbSB0aGUgYXR0ZXN0YXRpb24gZGF0YS4gSeKAmWQg
+bGlrZSB0byBiZSBhYmxlIHRvIHN1cHBvcnQgb2xkZXIgdmVyc2lvbnMgb2YgdGhlIFRQTSB0b29s
+cywgaGVuY2UgSeKAmWQgbGlrZSB0byBzZWUgaG93IEkgY291bGQNCiBzZXBhcmF0ZSB0aGUgZGF0
+YSBmcm9tIHRoZSBzaWduYXR1cmUuIEnigJl2ZSBiZWVuIGxvb2tpbmcgYXQgdGhlIGNvZGUgYW5k
+IGhhdmUgbWFkZSBzb21lIGN1c3RvbSB0ZXN0cyBidXQgaGF2ZSBiZWVuIHVuc3VjY2Vzc2Z1bCBz
+byBmYXIuJm5ic3A7PG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOiM0NTQ1NDUiPjxvOnA+Jm5ic3A7PC9v
+OnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
+IHN0eWxlPSJjb2xvcjojNDU0NTQ1Ij5XaGF0IGlzIHRoZSBmb3JtYXQgb2YgdGhlIGNvbWJpbmVk
+IGRhdGEgYW5kIHNpZ25hdHVyZT8gSXMgdGhlcmUgYSBtYWdpYyB2YWx1ZSBJIGNhbiBsb29rIGZv
+ciB0byBzZXBhcmF0ZSB0aGVtPzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJjb2xvcjojNDU0NTQ1Ij48bzpwPiZu
+YnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij48c3BhbiBzdHlsZT0iY29sb3I6IzQ1NDU0NSI+TWFueSB0aGFua3MsPG86cD48L286cD48L3Nw
+YW4+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9
+ImNvbG9yOiM0NTQ1NDUiPkFkcmlhbjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPC9k
+aXY+DQo8L2Rpdj4NCjwvYm9keT4NCjwvaHRtbD4NCg==
 
-> > marker of NOT flushing a session handle. Granted you also need the
-> sessionAttributes set to continue so the TPM doesn't kill it.
-> >
-> =
-
-> Yes, in fact I don't know how chaining different commands with the curren=
-t -S
-> option that takes a session handle is working nowadays since the tools ar=
-en't
-> setting the continueSession attribute. I guess the answer is that it does=
-n't?
-> =
-
-> > I think the flow for using the new tools would be something like this:
-> >
-> =
-
-> NOTE: I haven't looked at the final tpm2-abrmd implementation, I'm assumi=
-ng
-> that
->       it was implemented as previously discussed in the GitHub issues so =
-please
->       let me know if I got some assumption wrong in the following:
-> =
-
-> > 1. tpm2_createpolicy - create a pcr policy and spit out the policy
-> > digest 2. tpm2_create - create an object and set its policy digest as
-> > obtained in step 1 3. tpm2_startauthsession - create a pcr policy and
-> > spit out the session handle
-> =
-
-> To be precise, this tool won't sit out a session handle but a session con=
-text
-> (what's returned by a TPM2_ContextSave() command), right? Otherwise the
-> session will be flushed by the tpm2-abrmd since a call to Tss2_Sys_Contex=
-tSave()
-> won't be made.
-
-Correct. It needs to call ContextSave() for abrmd to mark it as not to be f=
-lushed.
-It also need the continue bits set on the session IIUC.
-
-> =
-
-> > 4. tpm2_policypcr - satisfy policy via policy digest and pcr list
-> > obtained/used in step 1 as well as taking the session handle from step
-> > 3 5. tpm2_<tool> - use some tool passing the session handle from step
-> > 3
-> =
-
-> This will work for a single tool, but my understanding is that sessions t=
-hat are
-> saved with TPM2_ContextSave() can only be loaded once to prevent replay
-> attacks.
-> =
-
-> So the tpm2_<tool> should both get a session context and load it using the
-> TPM2_ContextLoad() command and export it again using a TPM2_ContextSave().
-> =
-
-> The next command can't use the same saved session context that the previo=
-us
-> command since the TPM will prevent it to be loaded. Even if the TPM would
-> allow, the session handle would already be flushed since TPM2_ContextLoad=
-()
-> wouldn't be called before closing the SAPI connection.
-> =
-
-> > 6. tpm2_flushcontext - flushes the handle from step 3
-> >
-> > With that said, since tpm2_createpolicy is really a combination of the
-> > tpm2_startauthsession, tpm2_pcrlist, tpm2_policypcr and tpm2_flushconte=
-xt,
-> all that could be moved into lib, so each new tool and create policy are =
-really just
-> calling into the same code.
-> >
-> =
-
-> Agreed, I factored out a little bit so at least the tools that are doing =
-the session
-> auth on each execute wouldn't duplicate the code. But we will need to bet=
-ter
-> split things since some functions logic are too monolithic.
-> =
-
-> > Thoughts, am I missing something here?
-> >
-> =
-
-> I think your plan is the correct one. One question is if we will replace =
-the -S option
-> that takes a session handle and instead take a session context or if we w=
-ill want
-> to support the 3 options:
-
-I don't think I made that clear, but I plan on -S to support:
-1. a hex handle
-2. a file path.
-
-In the case of a file path, it would call context load/save every-call, so =
-essentially
--S is both an input and output parameter via a file and that would get us a=
-round the 1
-load per handle IIUC. Whenever -S is specified, the continueSession bit wil=
-l get set
-so the TPM itself doesn't flush it.
-
-> =
-
-> 1) Chain tools passing session handles as long as are executed in an envi=
-ronment
->    that doesn't close the SAPI context (and so flushes the session).
-> 2) Allow individual tools to manage their own session and auth like is th=
-e case
->    for tpm2_unseal and tpm2_nv{read,write}
-> 3) Chain tools by passing saved session contexts.
-> =
-
-> In theory we currently support 1 and 2 (although as mentioned I don't kno=
-w how
-> 2 works if the tools don't set continueSession). So my question is if we =
-want to
-> also include 3 or replace 2 by 3.
-> =
-
-> > This is a lot of work, so I would like to start it now, as it would be =
-the major
-> feature set going towards 4.0 release.
-> >
-> =
-
-> Best regards,
-> --
-> Javier Martinez Canillas
-> Software Engineer - Desktop Hardware Enablement Red Hat
-
---===============0963887571715227773==--
+--===============4798177282568760024==--
 
