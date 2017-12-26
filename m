@@ -1,149 +1,207 @@
-Content-Type: multipart/mixed; boundary="===============5509381981673516557=="
+Content-Type: multipart/mixed; boundary="===============0963887571715227773=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] tpm2-tss question
-Date: Tue, 26 Dec 2017 17:30:34 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FE7163A@ORSMSX106.amr.corp.intel.com>
-In-Reply-To: 52a6881d-5626-3dde-3ad0-2b06a1726502@ntt-el.com
+Subject: Re: [tpm2] [RFC] Session Handling/Policy Support in Tools
+Date: Tue, 26 Dec 2017 17:40:15 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FE716BD@ORSMSX106.amr.corp.intel.com>
+In-Reply-To: cdd90652-cd1e-b8e2-b8f6-286982a04b82@redhat.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5509381981673516557==
+--===============0963887571715227773==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-0x98e is:
 
-$ ./tpm2_rc_decode 0x98e
-error layer
-  hex: 0x0
-  identifier: TSS2_TPM_RC_LAYER
-  description: Error produced by the TPM
-format 1 error code
-  hex: 0x0e
-  identifier: TPM2_RC_AUTH_FAIL
-  description: the authorization HMAC check failed and DA counter increment=
-ed
-session
-  hex: 0x100
-  identifier: TPM2_RC_1
-  description:  (null)
-
-SO it looks like you're not setting up the auth properly in the session.
 
 > -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Yasuhiro Hos=
-oda
-> Sent: Wednesday, December 13, 2017 10:59 PM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] tpm2-tss question
+> From: Javier Martinez Canillas [mailto:javierm(a)redhat.com]
+> Sent: Friday, December 22, 2017 7:15 AM
+> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.o=
+rg
+> Subject: Re: [tpm2] [RFC] Session Handling/Policy Support in Tools
 > =
 
-> MY name is Yasuhiro Hosoda.
+> Hello Bill,
 > =
+
+> On 12/19/2017 07:01 PM, Roberts, William C wrote:
+> > There are two main parts to the direction I see the tools policy/sessio=
+n support
+> heading:
+> >
+> > 1. The first is cleaning up all the code around session support and pol=
+icy
+> building.  I think now that I understand the topic better, I can organize=
+ this code a
+> little better. This is rather trivial and beside the main point.
+> =
+
+> Agreed, I've seen your PR in the repo and I think it's good.
+> =
+
+> >
+> > 2. Since abrmd 1.3 we have support for sessions across RM IPC
+> > connections and direct tpm communications (/dev/tmp0) also has the same
+> support. We have tools like tpm2_createpolicy that are made up of multiple
+> commands to work around session flushing on IPC RM disconnections.
+> tpm2_createpolicy is really comprised of 3 commands: tpm2_startauthsessio=
+n,
+> tpm2_policypcr and tpm2_flushcontext.
+> >
+> =
+
+> Absolutely agree. And as a matter of fact that's exactly what's done by t=
+he IBM
+> TSS, it has separate tools called startauthsession, policypcr and flushco=
+ntext.
+> =
+
+> > I'm proposing we leave tpm2_createpolicy, for in-kernel-rm users, but
+> > add tpm2_startauthsession and tpm2_policypcr for the abrmd and direct
+> > tpm usages. Abrmd works by using Tss2_Sys_ContextSave as the
+> =
+
+> Agreed too.
+> =
+
+> > marker of NOT flushing a session handle. Granted you also need the
+> sessionAttributes set to continue so the TPM doesn't kill it.
+> >
+> =
+
+> Yes, in fact I don't know how chaining different commands with the curren=
+t -S
+> option that takes a session handle is working nowadays since the tools ar=
+en't
+> setting the continueSession attribute. I guess the answer is that it does=
+n't?
+> =
+
+> > I think the flow for using the new tools would be something like this:
+> >
+> =
+
+> NOTE: I haven't looked at the final tpm2-abrmd implementation, I'm assumi=
+ng
+> that
+>       it was implemented as previously discussed in the GitHub issues so =
+please
+>       let me know if I got some assumption wrong in the following:
+> =
+
+> > 1. tpm2_createpolicy - create a pcr policy and spit out the policy
+> > digest 2. tpm2_create - create an object and set its policy digest as
+> > obtained in step 1 3. tpm2_startauthsession - create a pcr policy and
+> > spit out the session handle
+> =
+
+> To be precise, this tool won't sit out a session handle but a session con=
+text
+> (what's returned by a TPM2_ContextSave() command), right? Otherwise the
+> session will be flushed by the tpm2-abrmd since a call to Tss2_Sys_Contex=
+tSave()
+> won't be made.
+
+Correct. It needs to call ContextSave() for abrmd to mark it as not to be f=
+lushed.
+It also need the continue bits set on the session IIUC.
 
 > =
 
-> I am developing a program using TSS1.0(Nov=EF=BC=91=EF=BC=8E2016).
-> I encountered a problem with PolicySecret error 0x98e and need help.
-> My program uses tpmtest.cpp as a base of development.
-> The situation is as follows:
+> > 4. tpm2_policypcr - satisfy policy via policy digest and pcr list
+> > obtained/used in step 1 as well as taking the session handle from step
+> > 3 5. tpm2_<tool> - use some tool passing the session handle from step
+> > 3
 > =
 
-> 1 Create TPM Keys like this.
+> This will work for a single tool, but my understanding is that sessions t=
+hat are
+> saved with TPM2_ContextSave() can only be loaded once to prevent replay
+> attacks.
 > =
 
-> EK
-> =EF=BD=9C--------
-> =EF=BD=9C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0 |
-> MK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AK
-> =EF=BD=9C
-> SK
+> So the tpm2_<tool> should both get a session context and load it using the
+> TPM2_ContextLoad() command and export it again using a TPM2_ContextSave().
 > =
 
-> 2 Execute PolicySecret twice using HMAC session. At first, it ends withou=
-t error.
-> Then it ends with 0x98e For clarification, I print out the values of Virt=
-ual Handle
-> and Real Handle.
-> The value of Virtual/Real Handles differ at 2nd excution of the command.
-> (See NO 25/26 Below)
+> The next command can't use the same saved session context that the previo=
+us
+> command since the TPM will prevent it to be loaded. Even if the TPM would
+> allow, the session handle would already be flushed since TPM2_ContextLoad=
+()
+> wouldn't be called before closing the SAPI connection.
 > =
 
-> I understand that the resource manager assigns Virtual Handle and my prog=
-ram
-> calculates HMAC using that handles.
-> On the other hand, TPM may calculate HMAC using Real Handle.
-> That is my hypothesis.
+> > 6. tpm2_flushcontext - flushes the handle from step 3
+> >
+> > With that said, since tpm2_createpolicy is really a combination of the
+> > tpm2_startauthsession, tpm2_pcrlist, tpm2_policypcr and tpm2_flushconte=
+xt,
+> all that could be moved into lib, so each new tool and create policy are =
+really just
+> calling into the same code.
+> >
 > =
 
-> Any suggestion about the usage of Session Handle?
+> Agreed, I factored out a little bit so at least the tools that are doing =
+the session
+> auth on each execute wouldn't duplicate the code. But we will need to bet=
+ter
+> split things since some functions logic are too monolithic.
 > =
 
-> NO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Command=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 Virtual/Real Handle=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 LOC 1.=C2=A0=C2=A0=C2=A0 CreatePrimary(EK)
-> real=3D80000000, virtual=3D80000000 8381 2.=C2=A0=C2=A0=C2=A0 HierarchyCh=
-angeAuth1 8421
-> 3.=C2=A0=C2=A0=C2=A0 HierarchyChangeAuth2 8431 4.=C2=A0=C2=A0=C2=A0 Start=
-AuthSession(Policy) real=3D3000000,
-> virtual=3D3000000 8480 5.=C2=A0=C2=A0=C2=A0 PolicySecret(ENDORSEMENT) 849=
-4 6.=C2=A0=C2=A0=C2=A0 Create(MK) 8515
-> 7.=C2=A0=C2=A0=C2=A0 PolicySecret(ENDORSEMENT) 8529 8.=C2=A0=C2=A0=C2=A0 =
-Load(MK) real=3D80000001,
-> virtual=3D80000001 8542 9.=C2=A0=C2=A0=C2=A0 Evict(MK) 8552 10.=C2=A0=C2=
-=A0=C2=A0 Create(SK) 8590 11.=C2=A0=C2=A0=C2=A0 Load(SK)
-> real=3D80000001, virtual=3D80000002 8598 12.=C2=A0=C2=A0=C2=A0 PolicySecr=
-et(ENDORSEMENT) 8609
-> 13.=C2=A0=C2=A0=C2=A0 Create(AK) 8635 14.=C2=A0=C2=A0=C2=A0 PolicySecret(=
-ENDORSEMENT) 8645 15.=C2=A0=C2=A0=C2=A0 Load(AK)
-> real=3D80000001, virtual=3D80000003 8655 16.=C2=A0=C2=A0=C2=A0 FlushConte=
-xt(POLICY) 8664
-> 17.=C2=A0=C2=A0=C2=A0 StartAuthSession(POLICY) real=3D3000000, virtual=3D=
-3000000 8668
-> 18.=C2=A0=C2=A0=C2=A0 StartAuthSession(HMAC) real=3D2000001, virtual=3D20=
-00001 8678
-> 19.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(LoadExternal) real=3D80000000, v=
-irtual=3D80000004
-> 3706 20.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(HMAC_Start) real=3D80000001,
-> virtual=3D80000005 3706 21.=C2=A0=C2=A0=C2=A0 PolicySecret(SK) 8711 22.=
-=C2=A0=C2=A0=C2=A0 FlushContext(HMAC) 8717
-> 23.=C2=A0=C2=A0=C2=A0 FlushContext(POLICY) 8724 24.=C2=A0=C2=A0=C2=A0 Cer=
-tifyCreation(SK) 8738
-> 25.=C2=A0=C2=A0=C2=A0 StartAuthSession(POLICY) real=3D3000000, virtual=3D=
-3000001 8745
-> 26.=C2=A0=C2=A0=C2=A0 StartAuthSession(HMAC) real=3D2000001, virtual=3D20=
-00000 8754
-> 27.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(LoadExternal) real=3D80000000, v=
-irtual=3D80000005
-> 8782 28.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(HMAC_Start) real=3D80000001,
-> virtual=3D80000004 8782 29.=C2=A0=C2=A0=C2=A0 PolicySecret(SK) 8789
+> > Thoughts, am I missing something here?
+> >
 > =
 
-> The whole=C2=A0 source program can be found here.
-> https://github.com/intel/tpm2-tss/files/1516612/tpmtest.cpp_0x98e_2.txt
-> =
+> I think your plan is the correct one. One question is if we will replace =
+the -S option
+> that takes a session handle and instead take a session context or if we w=
+ill want
+> to support the 3 options:
+
+I don't think I made that clear, but I plan on -S to support:
+1. a hex handle
+2. a file path.
+
+In the case of a file path, it would call context load/save every-call, so =
+essentially
+-S is both an input and output parameter via a file and that would get us a=
+round the 1
+load per handle IIUC. Whenever -S is specified, the continueSession bit wil=
+l get set
+so the TPM itself doesn't flush it.
 
 > =
 
-> Kind regards,
+> 1) Chain tools passing session handles as long as are executed in an envi=
+ronment
+>    that doesn't close the SAPI context (and so flushes the session).
+> 2) Allow individual tools to manage their own session and auth like is th=
+e case
+>    for tpm2_unseal and tpm2_nv{read,write}
+> 3) Chain tools by passing saved session contexts.
 > =
 
+> In theory we currently support 1 and 2 (although as mentioned I don't kno=
+w how
+> 2 works if the tools don't set continueSession). So my question is if we =
+want to
+> also include 3 or replace 2 by 3.
+> =
+
+> > This is a lot of work, so I would like to start it now, as it would be =
+the major
+> feature set going towards 4.0 release.
+> >
+> =
+
+> Best regards,
 > --
-> Yasuhiro Hosoda
-> =
+> Javier Martinez Canillas
+> Software Engineer - Desktop Hardware Enablement Red Hat
 
-> NTT Electronics Corporation =EF=BC=88NEL)
-> Security Support Project
-> =
-
-> =
-
-> _______________________________________________
-> tpm2 mailing list
-> tpm2(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/tpm2
-
---===============5509381981673516557==--
+--===============0963887571715227773==--
 
