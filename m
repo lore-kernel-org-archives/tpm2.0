@@ -1,35 +1,29 @@
-Content-Type: multipart/mixed; boundary="===============6374165038985548910=="
+Content-Type: multipart/mixed; boundary="===============9078762506315284765=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 375a53: Update tpm2_util.h
-Date: Thu, 28 Dec 2017 08:28:51 -0800
-Message-ID: <5a451bc39dffb_2a822abc0f5adc00102857@hookshot-fe-265448d.cp1-iad.github.net.mail>
+From: Jerry Snitselaar <jsnitsel at redhat.com>
+Subject: [tpm2] question about tpm2-tools pull request: Update tpm2_pcrlist.c
+ #728
+Date: Tue, 02 Jan 2018 16:05:50 -0700
+Message-ID: <20180102230550.hcgairgol7mmk6ts@cantor>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6374165038985548910==
+--===============9078762506315284765==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
-  Home:   https://github.com/intel/tpm2-tools
-  Commit: 375a534a52b1035b213fbb9228ec5b7ec50a3e32
-      https://github.com/intel/tpm2-tools/commit/375a534a52b1035b213fbb9228=
-ec5b7ec50a3e32
-  Author: yunusemreayhan <yunusemreayhan(a)users.noreply.github.com>
-  Date:   2017-12-28 (Thu, 28 Dec 2017)
+I'm wondering if that is the correct solution. I don't think I've ever
+seen sizeofSelect greater than 3, so the change of pcr_id to UINT8
+probably doesn't hurt, but I'm not sure how the compiler decided that
+was okay all the sudden over the UINT32 since I think the problem
+arose from the * 8. I think the more correct thing probably is to
+explicitly make that 8 unsigned, so '* 8u', and leave pcr_id alone.
 
-  Changed paths:
-    M lib/tpm2_util.h
+I still don't comletely understand the type conversions taking
+place in the for loop condition check with and without the patch.
 
-  Log Message:
-  -----------
-  Update tpm2_util.h
+Thoughts?
 
-Not compiling on arm-unknown-linux-uclibcgnueabi-gcc
-
-
-
---===============6374165038985548910==--
+--===============9078762506315284765==--
 
