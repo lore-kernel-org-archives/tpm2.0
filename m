@@ -1,60 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============1455128578180388943=="
+Content-Type: multipart/mixed; boundary="===============7263064446624955733=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] question about tpm2-tools pull request: Update
- tpm2_pcrlist.c #728
-Date: Mon, 08 Jan 2018 17:11:00 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FE77A60@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 20180102230550.hcgairgol7mmk6ts@cantor
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [intel/tpm2-tools] df96b4: lib: use the exelp() exec* wrapper
+ instead of exec...
+Date: Mon, 08 Jan 2018 09:42:20 -0800
+Message-ID: <5a53ad7c4bb1c_6c362aed43f1fc10339b8@hookshot-fe-6e9b612.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1455128578180388943==
+--===============7263064446624955733==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+  Branch: refs/heads/master
+  Home:   https://github.com/intel/tpm2-tools
+  Commit: df96b4a35b5cab06e5d37805c95466f714e0c5ff
+      https://github.com/intel/tpm2-tools/commit/df96b4a35b5cab06e5d37805c9=
+5466f714e0c5ff
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2018-01-08 (Mon, 08 Jan 2018)
+
+  Changed paths:
+    M lib/tpm2_options.c
+
+  Log Message:
+  -----------
+  lib: use the exelp() exec* wrapper instead of execvpe()
+
+The execvpe() wrapper is a GNU extension, but there isn't a reason to use
+it. The command-line arguments array only contains the man pager command
+and page, and the calling program's environment variables is used anyways.
+
+So just use the execlp() wrapper that has the same behaviour, but it's a
+POSIX standard execve() wrapper and leads simpler code.
+
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
 
-> -----Original Message-----
-> From: Jerry Snitselaar [mailto:jsnitsel(a)redhat.com]
-> Sent: Tuesday, January 2, 2018 3:06 PM
-> To: tpm2(a)lists.01.org; Roberts, William C <william.c.roberts(a)intel.co=
-m>; Javier
-> Martinez Canillas <javierm(a)redhat.com>
-> Subject: question about tpm2-tools pull request: Update tpm2_pcrlist.c #7=
-28
-> =
+  Commit: f3c0e94bc4f9cd0790c3e05533091e28d9a09f13
+      https://github.com/intel/tpm2-tools/commit/f3c0e94bc4f9cd0790c3e05533=
+091e28d9a09f13
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2018-01-08 (Mon, 08 Jan 2018)
 
-> I'm wondering if that is the correct solution. I don't think I've ever se=
-en
-> sizeofSelect greater than 3, so the change of pcr_id to UINT8 probably do=
-esn't
-> hurt, but I'm not sure how the compiler decided that was okay all the sud=
-den
-> over the UINT32 since I think the problem arose from the * 8. I think the=
- more
-> correct thing probably is to explicitly make that 8 unsigned, so '* 8u', =
-and leave
-> pcr_id alone.
-> =
+  Changed paths:
+    M lib/tpm2_options.c
 
-> I still don't comletely understand the type conversions taking place in t=
-he for loop
-> condition check with and without the patch.
-> =
+  Log Message:
+  -----------
+  lib: check for the man pager exit status
 
-> Thoughts?
+When passing the --help option to the tools, its manual page is displayed
+but there's no check for the man command exit status.
 
-I don't either, and that code is a terrible leftover. Feel free to re-write=
- large swaths
-In simpler, more clear logic. I'll take just about anything that reduces co=
-mplexity, LoC,
-Etc.
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
 
-Sorry for the delay, I was away last week.
 
-Bill
+  Commit: 30d8053e196cfa7af5e8b603911c038585e95e6e
+      https://github.com/intel/tpm2-tools/commit/30d8053e196cfa7af5e8b60391=
+1c038585e95e6e
+  Author: Javier Martinez Canillas <javierm(a)redhat.com>
+  Date:   2018-01-08 (Mon, 08 Jan 2018)
 
---===============1455128578180388943==--
+  Changed paths:
+    M lib/tpm2_options.c
+    M lib/tpm2_options.h
+    M tools/tpm2_tool.c
+
+  Log Message:
+  -----------
+  lib: print usage text for the tool if the manual page can't be displayed
+
+When passing the --help option to the tools, its manual page is displayed
+but this can fail (i.e: if the manual pages are not installed) so in that
+case print the summary usage text as a fallback.
+
+Suggested-by: William Roberts <william.c.roberts(a)intel.com>
+Signed-off-by: Javier Martinez Canillas <javierm(a)redhat.com>
+
+
+Compare: https://github.com/intel/tpm2-tools/compare/bd2265283b73...30d8053=
+e196c
+
+--===============7263064446624955733==--
 
