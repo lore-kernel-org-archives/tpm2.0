@@ -1,82 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============0609430434056033986=="
+Content-Type: multipart/mixed; boundary="===============7131633493266877001=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 221401: tools: avoid sapi init if tool
- doesn't need it
-Date: Mon, 15 Jan 2018 13:03:08 -0800
-Message-ID: <5a5d170ced15_3b502aec9ad47c0c885ba@hookshot-fe-265448d.cp1-iad.github.net.mail>
+Subject: [tpm2] [intel/tpm2-tools] 6e2274: tpm2_options: remove NULL check
+Date: Mon, 15 Jan 2018 14:03:53 -0800
+Message-ID: <5a5d2549d54a6_4d3c2b1f7176fc1c50785@hookshot-fe-32b5f5b.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0609430434056033986==
+--===============7131633493266877001==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/3.X
   Home:   https://github.com/intel/tpm2-tools
-  Commit: 221401729d2ee7d56f90585c1faabde20e25c585
-      https://github.com/intel/tpm2-tools/commit/221401729d2ee7d56f90585c1f=
-aabde20e25c585
+  Commit: 6e22742833dd034f903a2cee2dc16ddc64f5a603
+      https://github.com/intel/tpm2-tools/commit/6e22742833dd034f903a2cee2d=
+c16ddc64f5a603
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2018-01-15 (Mon, 15 Jan 2018)
 
   Changed paths:
     M lib/tpm2_options.c
-    M lib/tpm2_options.h
-    M tools/tpm2_activatecredential.c
-    M tools/tpm2_certify.c
-    M tools/tpm2_create.c
-    M tools/tpm2_createpolicy.c
-    M tools/tpm2_createprimary.c
-    M tools/tpm2_dictionarylockout.c
-    M tools/tpm2_encryptdecrypt.c
-    M tools/tpm2_evictcontrol.c
-    M tools/tpm2_getcap.c
-    M tools/tpm2_getmanufec.c
-    M tools/tpm2_getpubak.c
-    M tools/tpm2_getpubek.c
-    M tools/tpm2_getrandom.c
-    M tools/tpm2_hash.c
-    M tools/tpm2_hmac.c
-    M tools/tpm2_listpersistent.c
-    M tools/tpm2_load.c
-    M tools/tpm2_loadexternal.c
-    M tools/tpm2_makecredential.c
-    M tools/tpm2_nvdefine.c
-    M tools/tpm2_nvread.c
-    M tools/tpm2_nvreadlock.c
-    M tools/tpm2_nvrelease.c
-    M tools/tpm2_nvwrite.c
-    M tools/tpm2_pcrevent.c
-    M tools/tpm2_pcrextend.c
-    M tools/tpm2_pcrlist.c
-    M tools/tpm2_quote.c
-    M tools/tpm2_rc_decode.c
-    M tools/tpm2_readpublic.c
-    M tools/tpm2_rsadecrypt.c
-    M tools/tpm2_rsaencrypt.c
-    M tools/tpm2_send.c
-    M tools/tpm2_sign.c
-    M tools/tpm2_startup.c
-    M tools/tpm2_takeownership.c
-    M tools/tpm2_tool.c
-    M tools/tpm2_unseal.c
-    M tools/tpm2_verifysignature.c
 
   Log Message:
   -----------
-  tools: avoid sapi init if tool doesn't need it
+  tpm2_options: remove NULL check
 
-Avoid the sapi initialization if tools request that
-they don't need it via a flags argument to
-tpm2_options_new();
-
-Fixes: #737
+flags is always initialized, no need for a NULL check.
 
 Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
+  Commit: 4f7789f180b5835019483a0fbaa375f2cfb11985
+      https://github.com/intel/tpm2-tools/commit/4f7789f180b5835019483a0fba=
+a375f2cfb11985
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2018-01-15 (Mon, 15 Jan 2018)
 
---===============0609430434056033986==--
+  Changed paths:
+    M lib/tpm2_options.h
+
+  Log Message:
+  -----------
+  tpm2_options: don't interleave option flag defines
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+  Commit: 6b4385f098bd5d39e1cfc6cd2b038b68c960413f
+      https://github.com/intel/tpm2-tools/commit/6b4385f098bd5d39e1cfc6cd2b=
+038b68c960413f
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2018-01-15 (Mon, 15 Jan 2018)
+
+  Changed paths:
+    M CHANGELOG.md
+
+  Log Message:
+  -----------
+  CHANGELOG: update for 3.0.3 release
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+Compare: https://github.com/intel/tpm2-tools/compare/221401729d2e...6b4385f=
+098bd
+
+--===============7131633493266877001==--
 
