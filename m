@@ -1,195 +1,165 @@
-Content-Type: multipart/mixed; boundary="===============7240625641204181168=="
+Content-Type: multipart/mixed; boundary="===============2989988167970901475=="
 MIME-Version: 1.0
-From: GitHub <noreply at github.com>
-Subject: [tpm2] [intel/tpm2-tools] 2e9198: tpm2_options: Replace "show_usage"
- with "flags" in...
-Date: Tue, 16 Jan 2018 07:55:20 -0800
-Message-ID: <5a5e206857aa7_3d542ad5d6495c107718@hookshot-fe-b0febf1.cp1-iad.github.net.mail>
+From: Yasuhiro Hosoda <hosoda-yasuhiro at ntt-el.com>
+Subject: Re: [tpm2] tpm2-tss question
+Date: Thu, 18 Jan 2018 23:43:52 +0900
+Message-ID: <c8a3b29c-20b9-b384-7e79-07a3f700a14f@ntt-el.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563FEC1B9D@FMSMSX152.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7240625641204181168==
+--===============2989988167970901475==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
-  Home:   https://github.com/intel/tpm2-tools
-  Commit: 2e9198eb1dd0d2673def3c92e12812b47b56f76d
-      https://github.com/intel/tpm2-tools/commit/2e9198eb1dd0d2673def3c92e1=
-2812b47b56f76d
-  Author: Haris Okanovic <haris.okanovic(a)ni.com>
-  Date:   2018-01-16 (Tue, 16 Jan 2018)
-
-  Changed paths:
-    M lib/tpm2_options.c
-    M lib/tpm2_options.h
-    M tools/tpm2_activatecredential.c
-    M tools/tpm2_certify.c
-    M tools/tpm2_changeauth.c
-    M tools/tpm2_clear.c
-    M tools/tpm2_clearlock.c
-    M tools/tpm2_create.c
-    M tools/tpm2_createpolicy.c
-    M tools/tpm2_createprimary.c
-    M tools/tpm2_dictionarylockout.c
-    M tools/tpm2_encryptdecrypt.c
-    M tools/tpm2_evictcontrol.c
-    M tools/tpm2_flushcontext.c
-    M tools/tpm2_getcap.c
-    M tools/tpm2_getmanufec.c
-    M tools/tpm2_getpubak.c
-    M tools/tpm2_getpubek.c
-    M tools/tpm2_getrandom.c
-    M tools/tpm2_hash.c
-    M tools/tpm2_hmac.c
-    M tools/tpm2_import.c
-    M tools/tpm2_listpersistent.c
-    M tools/tpm2_load.c
-    M tools/tpm2_loadexternal.c
-    M tools/tpm2_makecredential.c
-    M tools/tpm2_nvdefine.c
-    M tools/tpm2_nvread.c
-    M tools/tpm2_nvreadlock.c
-    M tools/tpm2_nvrelease.c
-    M tools/tpm2_nvwrite.c
-    M tools/tpm2_pcrevent.c
-    M tools/tpm2_pcrextend.c
-    M tools/tpm2_pcrlist.c
-    M tools/tpm2_policypcr.c
-    M tools/tpm2_policyrestart.c
-    M tools/tpm2_quote.c
-    M tools/tpm2_rc_decode.c
-    M tools/tpm2_readpublic.c
-    M tools/tpm2_rsadecrypt.c
-    M tools/tpm2_rsaencrypt.c
-    M tools/tpm2_send.c
-    M tools/tpm2_sign.c
-    M tools/tpm2_startauthsession.c
-    M tools/tpm2_startup.c
-    M tools/tpm2_tool.c
-    M tools/tpm2_unseal.c
-    M tools/tpm2_verifysignature.c
-
-  Log Message:
-  -----------
-  tpm2_options: Replace "show_usage" with "flags" in tpm2_options_new()
-
-Replace the "show_usage" bool param with "flags" bit mask so that tools
-may pass multiple flags in a single field.
-
-Add "TPM2_OPTIONS_SHOW_USAGE" flag to replace "show_usage" behavior and
-refactor tools to use it.
-
-Signed-off-by: Haris Okanovic <haris.okanovic(a)ni.com>
-
-
-  Commit: 6293f714f70a6c4b067e9e638dfd4efabb23662f
-      https://github.com/intel/tpm2-tools/commit/6293f714f70a6c4b067e9e638d=
-fd4efabb23662f
-  Author: Haris Okanovic <haris.okanovic(a)ni.com>
-  Date:   2018-01-16 (Tue, 16 Jan 2018)
-
-  Changed paths:
-    M lib/tpm2_options.c
-    M lib/tpm2_options.h
-    M tools/tpm2_tool.c
-
-  Log Message:
-  -----------
-  tpm2_options: Add TPM2_OPTIONS_NO_SAPI flag
-
-A flag to disable SAPI initialization. Setting this flag also removes
-the "-T" common option.
-
-Signed-off-by: Haris Okanovic <haris.okanovic(a)ni.com>
-
-
-  Commit: 7b90b216426bfdb3140ed9d4d87e38b870d69eab
-      https://github.com/intel/tpm2-tools/commit/7b90b216426bfdb3140ed9d4d8=
-7e38b870d69eab
-  Author: Haris Okanovic <haris.okanovic(a)ni.com>
-  Date:   2018-01-16 (Tue, 16 Jan 2018)
-
-  Changed paths:
-    M lib/tpm2_util.c
-    M lib/tpm2_util.h
-
-  Log Message:
-  -----------
-  tpm2_util.c: Add tpm2_util_hexdump_file()
-
-A function to dump specified number of bytes from a FILE*
-via tpm2_util_hexdump().
-
-Add `const` to tpm2_util_hexdump()'s `data` param.
-
-Signed-off-by: Haris Okanovic <haris.okanovic(a)ni.com>
-
-
-  Commit: fafe5a49b2d2c6002c99094e44d0a7e0e3705cc0
-      https://github.com/intel/tpm2-tools/commit/fafe5a49b2d2c6002c99094e44=
-d0a7e0e3705cc0
-  Author: Haris Okanovic <haris.okanovic(a)ni.com>
-  Date:   2018-01-16 (Tue, 16 Jan 2018)
-
-  Changed paths:
-    M lib/tpm2_util.c
-    M lib/tpm2_util.h
-
-  Log Message:
-  -----------
-  tpm2_util.c: Add Add tpm2_util_print_tpm2b_file()
-
-Reads a TPM2B object from FILE* and dumps hex.
-
-Signed-off-by: Haris Okanovic <haris.okanovic(a)ni.com>
-
-
-  Commit: 7819a719b5a46f01f37069989c04492c3503a699
-      https://github.com/intel/tpm2-tools/commit/7819a719b5a46f01f37069989c=
-04492c3503a699
-  Author: Haris Okanovic <haris.okanovic(a)ni.com>
-  Date:   2018-01-16 (Tue, 16 Jan 2018)
-
-  Changed paths:
-    M lib/tpm2_util.c
-    M lib/tpm2_util.h
-
-  Log Message:
-  -----------
-  tpm2_util.c: Add print_yaml_indent()
-
-Signed-off-by: Haris Okanovic <haris.okanovic(a)ni.com>
+I appreciate much for your help. I am expecting for your information about
+tpm2-tools.
+>
+>> -----Original Message-----
+>> From: Yasuhiro Hosoda [mailto:hosoda-yasuhiro(a)ntt-el.com]
+>> Sent: Friday, January 12, 2018 1:47 AM
+>> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.=
+org
+>> Subject: Re: [tpm2] tpm2-tss question
+>>
+>> Hi, Mr. Roberts, William
+>>
+>> Thank you for your advice.
+>> I had already checked the details of this error code.
+>> My understanding is that the problem is not the setting of the auth but =
+there
+>> occurs the discrepancy between the virtual handles and the real handles =
+in the
+>> resource manager.
+> Unless you took an RM virtualized handle and went directly to the TPM wit=
+h it, there shouldn't
+> Be a problem. The RM should be swapping out virtualized handles with real=
+ ones for you before
+> They hit the tpm, and thus, should be transparent.
+>
+> As far as what the problem is, it's hard to tell offhand. I would look at=
+ how the tpm2-tools do it, they
+> make for decent reference code.
+>
+>> Any help will be greatly appreciated
+>>
+>> Regard,
+>>> 0x98e is:
+>>>
+>>> $ ./tpm2_rc_decode 0x98e
+>>> error layer
+>>>     hex: 0x0
+>>>     identifier: TSS2_TPM_RC_LAYER
+>>>     description: Error produced by the TPM format 1 error code
+>>>     hex: 0x0e
+>>>     identifier: TPM2_RC_AUTH_FAIL
+>>>     description: the authorization HMAC check failed and DA counter
+>>> incremented session
+>>>     hex: 0x100
+>>>     identifier: TPM2_RC_1
+>>>     description:  (null)
+>>>
+>>> SO it looks like you're not setting up the auth properly in the session.
+>>>
+>>>> -----Original Message-----
+>>>> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Yasuhiro
+>>>> Hosoda
+>>>> Sent: Wednesday, December 13, 2017 10:59 PM
+>>>> To: tpm2(a)lists.01.org
+>>>> Subject: [tpm2] tpm2-tss question
+>>>>
+>>>> MY name is Yasuhiro Hosoda.
+>>>>
+>>>>
+>>>> I am developing a program using TSS1.0(Nov=EF=BC=91=EF=BC=8E2016).
+>>>> I encountered a problem with PolicySecret error 0x98e and need help.
+>>>> My program uses tpmtest.cpp as a base of development.
+>>>> The situation is as follows:
+>>>>
+>>>> 1 Create TPM Keys like this.
+>>>>
+>>>> EK
+>>>> =EF=BD=9C--------
+>>>> =EF=BD=9C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0 |
+>>>> MK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AK
+>>>> =EF=BD=9C
+>>>> SK
+>>>>
+>>>> 2 Execute PolicySecret twice using HMAC session. At first, it ends wit=
+hout
+>> error.
+>>>> Then it ends with 0x98e For clarification, I print out the values of
+>>>> Virtual Handle and Real Handle.
+>>>> The value of Virtual/Real Handles differ at 2nd excution of the comman=
+d.
+>>>> (See NO 25/26 Below)
+>>>>
+>>>> I understand that the resource manager assigns Virtual Handle and my
+>>>> program calculates HMAC using that handles.
+>>>> On the other hand, TPM may calculate HMAC using Real Handle.
+>>>> That is my hypothesis.
+>>>>
+>>>> Any suggestion about the usage of Session Handle?
+>>>>
+>>>> NO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Command=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Virtual/Real Handle=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 LOC 1.
+>>>> CreatePrimary(EK) real=3D80000000, virtual=3D80000000 8381 2.
+>>>> HierarchyChangeAuth1 8421 3.=C2=A0=C2=A0=C2=A0 HierarchyChangeAuth2 84=
+31 4.
+>>>> StartAuthSession(Policy) real=3D3000000,
+>>>> virtual=3D3000000 8480 5.=C2=A0=C2=A0=C2=A0 PolicySecret(ENDORSEMENT) =
+8494 6.
+>>>> Create(MK) 8515 7.=C2=A0=C2=A0=C2=A0 PolicySecret(ENDORSEMENT) 8529 8.=
+=C2=A0=C2=A0=C2=A0 Load(MK)
+>>>> real=3D80000001,
+>>>> virtual=3D80000001 8542 9.=C2=A0=C2=A0=C2=A0 Evict(MK) 8552 10.=C2=A0=
+=C2=A0=C2=A0 Create(SK) 8590 11.
+>>>> Load(SK) real=3D80000001, virtual=3D80000002 8598 12.
+>>>> PolicySecret(ENDORSEMENT) 8609 13.=C2=A0=C2=A0=C2=A0 Create(AK) 8635 1=
+4.
+>>>> PolicySecret(ENDORSEMENT) 8645 15.=C2=A0=C2=A0=C2=A0 Load(AK) real=3D8=
+0000001,
+>>>> virtual=3D80000003 8655 16.=C2=A0=C2=A0=C2=A0 FlushContext(POLICY) 866=
+4 17.
+>>>> StartAuthSession(POLICY) real=3D3000000, virtual=3D3000000 8668 18.
+>>>> StartAuthSession(HMAC) real=3D2000001, virtual=3D2000001 8678 19.
+>>>> ComputeCommandHMAC(LoadExternal) real=3D80000000, virtual=3D80000004
+>>>> 3706 20.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(HMAC_Start) real=3D80000=
+001,
+>>>> virtual=3D80000005 3706 21.=C2=A0=C2=A0=C2=A0 PolicySecret(SK) 8711 22.
+>>>> FlushContext(HMAC) 8717 23.=C2=A0=C2=A0=C2=A0 FlushContext(POLICY) 872=
+4 24.
+>>>> CertifyCreation(SK) 8738 25.=C2=A0=C2=A0=C2=A0 StartAuthSession(POLICY)
+>>>> real=3D3000000, virtual=3D3000001 8745 26.=C2=A0=C2=A0=C2=A0 StartAuth=
+Session(HMAC)
+>>>> real=3D2000001, virtual=3D2000000 8754 27.
+>>>> ComputeCommandHMAC(LoadExternal) real=3D80000000, virtual=3D80000005
+>>>> 8782 28.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(HMAC_Start) real=3D80000=
+001,
+>>>> virtual=3D80000004 8782 29.=C2=A0=C2=A0=C2=A0 PolicySecret(SK) 8789
+>>>>
+>>>> The whole=C2=A0 source program can be found here.
+>>>> https://github.com/intel/tpm2-tss/files/1516612/tpmtest.cpp_0x98e_2.t
+>>>> xt
+>>>>
+>>>>
+>>>> Kind regards,
+>>>>
+>>>> --
+>>>> Yasuhiro Hosoda
+>>>>
+>>>> NTT Electronics Corporation =EF=BC=88NEL)
+>>>> Security Support Project
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> tpm2 mailing list
+>>>> tpm2(a)lists.01.org
+>>>> https://lists.01.org/mailman/listinfo/tpm2
+>>
 
 
-  Commit: a350ab1052bb62f4ab41d55adba0e72ce210feff
-      https://github.com/intel/tpm2-tools/commit/a350ab1052bb62f4ab41d55adb=
-a0e72ce210feff
-  Author: Haris Okanovic <haris.okanovic(a)ni.com>
-  Date:   2018-01-16 (Tue, 16 Jan 2018)
-
-  Changed paths:
-    M Makefile.am
-    A man/tpm2_print.1.md
-    A tools/aux/tpm2_print.c
-
-  Log Message:
-  -----------
-  tpm2_print: A tool to print TPM data structures
-
-Takes an object type + file path as inputs and prints enclosed elements
-to stdout in YAML.
-
-Presently only supports TPMS_ATTEST objects for the purpose of printing
-TPM generated quotes. Does NOT authenticate input file, which can be
-done using other tools -- E.g. see edc3e022 for openssl example.
-
-Signed-off-by: Haris Okanovic <haris.okanovic(a)ni.com>
-
-
-Compare: https://github.com/intel/tpm2-tools/compare/8f318a115e76...a350ab1=
-052bb
-
---===============7240625641204181168==--
+--===============2989988167970901475==--
 
