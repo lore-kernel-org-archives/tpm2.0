@@ -1,27 +1,110 @@
-Content-Type: multipart/mixed; boundary="===============8980098569894393667=="
+Content-Type: multipart/mixed; boundary="===============2041784380260274797=="
 MIME-Version: 1.0
-From: Alexander Steffen <Alexander.Steffen at infineon.com>
-Subject: [tpm2] FOSDEM 2018
-Date: Mon, 29 Jan 2018 15:07:32 +0100
-Message-ID: <02187b98-12e7-9a5d-c4a1-a3f463632022@infineon.com>
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: [tpm2] fall-out from repo migration: coveralls
+Date: Mon, 29 Jan 2018 18:54:12 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838905F11E7C6@ORSMSX103.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8980098569894393667==
+--===============2041784380260274797==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I've met some nice people at the Open Source Summit in Prague last year, =
+Hello,
 
-so is anyone going to be at FOSDEM this weekend?
+Last week we migrated to the new tpm2-software github organization without =
+too much hassle. We've migrated our infrastructure / CI as well but coveral=
+ls is being problematic (thanks to Peter for pointing out the initial probl=
+em). I've created an issue in the tpm2-tss tracker here:
+https://github.com/tpm2-software/tpm2-tss/issues/736
+and reported the issue to coveralls / lemurheavy here:
+https://github.com/lemurheavy/coveralls-public/issues/1066.
 
-There is even a TPM talk as part of the main track "Security and =
+Hopefully we'll hear back from them with a work-around but I'm not very opt=
+imistic based on the small bit of research I've done: this issue has been s=
+een by others:
+https://github.com/mapbox/protozero/issues/68
+and their work around was to abandon coveralls and use codecov instead:
+https://github.com/mapbox/protozero/pull/78
 
-Encryption": https://fosdem.org/2018/schedule/event/tpm/
-(more details: https://fosdem.org/2018/interviews/james-bottomley/)
+I'd like to keep from switching services like this but we may not have a ch=
+oice. I'll keep the issue tracker up to date as we triage this issue and wi=
+ll update this thread with links to new issues if we have problems in the o=
+ther repos.
 
-Alexander
+Thanks for your patience,
+Philip
 
---===============8980098569894393667==--
+--===============2041784380260274797==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
+ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
+b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
+emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
+cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
+c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
+Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
+b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
+aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
+bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbyw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkxhc3Qg
+d2VlayB3ZSBtaWdyYXRlZCB0byB0aGUgbmV3IHRwbTItc29mdHdhcmUgZ2l0aHViIG9yZ2FuaXph
+dGlvbiB3aXRob3V0IHRvbyBtdWNoIGhhc3NsZS4gV2UmIzgyMTc7dmUgbWlncmF0ZWQgb3VyIGlu
+ZnJhc3RydWN0dXJlIC8gQ0kgYXMgd2VsbCBidXQgY292ZXJhbGxzIGlzIGJlaW5nIHByb2JsZW1h
+dGljICh0aGFua3MgdG8gUGV0ZXIgZm9yIHBvaW50aW5nIG91dCB0aGUgaW5pdGlhbCBwcm9ibGVt
+KS4gSSYjODIxNzt2ZSBjcmVhdGVkCiBhbiBpc3N1ZSBpbiB0aGUgdHBtMi10c3MgdHJhY2tlciBo
+ZXJlOjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBocmVmPSJodHRwczov
+L2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9pc3N1ZXMvNzM2Ij5odHRwczovL2dp
+dGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9pc3N1ZXMvNzM2PC9hPjxvOnA+PC9vOnA+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5hbmQgcmVwb3J0ZWQgdGhlIGlzc3VlIHRvIGNvdmVy
+YWxscyAvIGxlbXVyaGVhdnkgaGVyZTo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL2xlbXVyaGVhdnkvY292ZXJhbGxzLXB1Ymxp
+Yy9pc3N1ZXMvMTA2NiI+aHR0cHM6Ly9naXRodWIuY29tL2xlbXVyaGVhdnkvY292ZXJhbGxzLXB1
+YmxpYy9pc3N1ZXMvMTA2NjwvYT4uPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5Ib3BlZnVsbHkgd2Um
+IzgyMTc7bGwgaGVhciBiYWNrIGZyb20gdGhlbSB3aXRoIGEgd29yay1hcm91bmQgYnV0IEkmIzgy
+MTc7bSBub3QgdmVyeSBvcHRpbWlzdGljIGJhc2VkIG9uIHRoZSBzbWFsbCBiaXQgb2YgcmVzZWFy
+Y2ggSSYjODIxNzt2ZSBkb25lOiB0aGlzIGlzc3VlIGhhcyBiZWVuIHNlZW4gYnkgb3RoZXJzOjxv
+OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBocmVmPSJodHRwczovL2dpdGh1
+Yi5jb20vbWFwYm94L3Byb3RvemVyby9pc3N1ZXMvNjgiPmh0dHBzOi8vZ2l0aHViLmNvbS9tYXBi
+b3gvcHJvdG96ZXJvL2lzc3Vlcy82ODwvYT48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+YW5kIHRoZWlyIHdvcmsgYXJvdW5kIHdhcyB0byBhYmFuZG9uIGNvdmVyYWxscyBhbmQg
+dXNlIGNvZGVjb3YgaW5zdGVhZDo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL21hcGJveC9wcm90b3plcm8vcHVsbC83OCI+aHR0
+cHM6Ly9naXRodWIuY29tL21hcGJveC9wcm90b3plcm8vcHVsbC83ODwvYT48bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPkkmIzgyMTc7ZCBsaWtlIHRvIGtlZXAgZnJvbSBzd2l0Y2hpbmcgc2VydmljZXMg
+bGlrZSB0aGlzIGJ1dCB3ZSBtYXkgbm90IGhhdmUgYSBjaG9pY2UuIEkmIzgyMTc7bGwga2VlcCB0
+aGUgaXNzdWUgdHJhY2tlciB1cCB0byBkYXRlIGFzIHdlIHRyaWFnZSB0aGlzIGlzc3VlIGFuZCB3
+aWxsIHVwZGF0ZSB0aGlzIHRocmVhZCB3aXRoIGxpbmtzIHRvIG5ldyBpc3N1ZXMgaWYgd2UgaGF2
+ZSBwcm9ibGVtcyBpbiB0aGUgb3RoZXIgcmVwb3MuPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGFu
+a3MgZm9yIHlvdXIgcGF0aWVuY2UsPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PlBoaWxpcDxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============2041784380260274797==--
 
