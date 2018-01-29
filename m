@@ -1,110 +1,221 @@
-Content-Type: multipart/mixed; boundary="===============2041784380260274797=="
+Content-Type: multipart/mixed; boundary="===============0965231682681209864=="
 MIME-Version: 1.0
-From: Tricca, Philip B <philip.b.tricca at intel.com>
-Subject: [tpm2] fall-out from repo migration: coveralls
-Date: Mon, 29 Jan 2018 18:54:12 +0000
-Message-ID: <DB638850A6A2434A93ECADDA0BC838905F11E7C6@ORSMSX103.amr.corp.intel.com>
+From: Yasuhiro Hosoda <hosoda-yasuhiro at ntt-el.com>
+Subject: Re: [tpm2] tpm2-tss question
+Date: Tue, 30 Jan 2018 07:37:54 +0900
+Message-ID: <a4ce55c6-fb04-c970-1fe7-b7a190a52741@ntt-el.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563FEE29FF@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2041784380260274797==
+--===============0965231682681209864==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Thank you for your reply.
 
-Last week we migrated to the new tpm2-software github organization without =
-too much hassle. We've migrated our infrastructure / CI as well but coveral=
-ls is being problematic (thanks to Peter for pointing out the initial probl=
-em). I've created an issue in the tpm2-tss tracker here:
-https://github.com/tpm2-software/tpm2-tss/issues/736
-and reported the issue to coveralls / lemurheavy here:
-https://github.com/lemurheavy/coveralls-public/issues/1066.
+Where can I find necessary information for "get HMAC to work"?
 
-Hopefully we'll hear back from them with a work-around but I'm not very opt=
-imistic based on the small bit of research I've done: this issue has been s=
-een by others:
-https://github.com/mapbox/protozero/issues/68
-and their work around was to abandon coveralls and use codecov instead:
-https://github.com/mapbox/protozero/pull/78
+And, where can I find extended-sessions.sh?
 
-I'd like to keep from switching services like this but we may not have a ch=
-oice. I'll keep the issue tracker up to date as we triage this issue and wi=
-ll update this thread with links to new issues if we have problems in the o=
-ther repos.
+Many thanks.
+> test/system/tests/tcti/abrmd/extended-sessions.sh
+>
+> That uses abrmd which has an RM extension to allow session handles
+> to be marked for non-flushing on client disconnection, but that
+> point likely won't concern you.
+>
+> This test script uses tools that start a pcr policy session, satisfy or b=
+uild the policy,
+> and use it for unsealing data.
+>
+> It might be good to see if you can get HMAC to work in this framework fro=
+m a
+> Learning perspective and then you could contribute hmac policy session su=
+pport
+> Back to the tools.
+>
+>
+>> -----Original Message-----
+>> From: Yasuhiro Hosoda [mailto:hosoda-yasuhiro(a)ntt-el.com]
+>> Sent: Thursday, January 18, 2018 3:11 PM
+>> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.=
+org
+>> Subject: Re: [tpm2] tpm2-tss question
+>>
+>> You said that "I would look at how the tpm2-tools do it, they make for d=
+ecent
+>> reference code."
+>> Would you tell me the place of tpm2-tools where I should look as referen=
+ce code.
+>> Regards,
+>>
+>>>> -----Original Message-----
+>>>> From: Yasuhiro Hosoda [mailto:hosoda-yasuhiro(a)ntt-el.com]
+>>>> Sent: Thursday, January 18, 2018 6:44 AM
+>>>> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.0=
+1.org
+>>>> Subject: Re: [tpm2] tpm2-tss question
+>>>>
+>>>> I appreciate much for your help. I am expecting for your information a=
+bout
+>> tpm2-
+>>>> tools.
+>>> What information are you expecting?
+>>>
+>>>>>> -----Original Message-----
+>>>>>> From: Yasuhiro Hosoda [mailto:hosoda-yasuhiro(a)ntt-el.com]
+>>>>>> Sent: Friday, January 12, 2018 1:47 AM
+>>>>>> To: Roberts, William C <william.c.roberts(a)intel.com>;
+>>>>>> tpm2(a)lists.01.org
+>>>>>> Subject: Re: [tpm2] tpm2-tss question
+>>>>>>
+>>>>>> Hi, Mr. Roberts, William
+>>>>>>
+>>>>>> Thank you for your advice.
+>>>>>> I had already checked the details of this error code.
+>>>>>> My understanding is that the problem is not the setting of the auth
+>>>>>> but there occurs the discrepancy between the virtual handles and the
+>>>>>> real handles in the resource manager.
+>>>>> Unless you took an RM virtualized handle and went directly to the TPM
+>>>>> with it, there shouldn't Be a problem. The RM should be swapping out
+>>>>> virtualized handles with real ones for you before They hit the tpm, a=
+nd thus,
+>>>> should be transparent.
+>>>>> As far as what the problem is, it's hard to tell offhand. I would look
+>>>>> at how the tpm2-tools do it, they make for decent reference code.
+>>>>>
+>>>>>> Any help will be greatly appreciated
+>>>>>>
+>>>>>> Regard,
+>>>>>>> 0x98e is:
+>>>>>>>
+>>>>>>> $ ./tpm2_rc_decode 0x98e
+>>>>>>> error layer
+>>>>>>>       hex: 0x0
+>>>>>>>       identifier: TSS2_TPM_RC_LAYER
+>>>>>>>       description: Error produced by the TPM format 1 error code
+>>>>>>>       hex: 0x0e
+>>>>>>>       identifier: TPM2_RC_AUTH_FAIL
+>>>>>>>       description: the authorization HMAC check failed and DA count=
+er
+>>>>>>> incremented session
+>>>>>>>       hex: 0x100
+>>>>>>>       identifier: TPM2_RC_1
+>>>>>>>       description:  (null)
+>>>>>>>
+>>>>>>> SO it looks like you're not setting up the auth properly in the ses=
+sion.
+>>>>>>>
+>>>>>>>> -----Original Message-----
+>>>>>>>> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Yasuh=
+iro
+>>>>>>>> Hosoda
+>>>>>>>> Sent: Wednesday, December 13, 2017 10:59 PM
+>>>>>>>> To: tpm2(a)lists.01.org
+>>>>>>>> Subject: [tpm2] tpm2-tss question
+>>>>>>>>
+>>>>>>>> MY name is Yasuhiro Hosoda.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> I am developing a program using TSS1.0(Nov=EF=BC=91=EF=BC=8E2016).
+>>>>>>>> I encountered a problem with PolicySecret error 0x98e and need hel=
+p.
+>>>>>>>> My program uses tpmtest.cpp as a base of development.
+>>>>>>>> The situation is as follows:
+>>>>>>>>
+>>>>>>>> 1 Create TPM Keys like this.
+>>>>>>>>
+>>>>>>>> EK
+>>>>>>>> =EF=BD=9C--------
+>>>>>>>> =EF=BD=9C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0 |
+>>>>>>>> MK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AK
+>>>>>>>> =EF=BD=9C
+>>>>>>>> SK
+>>>>>>>>
+>>>>>>>> 2 Execute PolicySecret twice using HMAC session. At first, it ends
+>>>>>>>> without
+>>>>>> error.
+>>>>>>>> Then it ends with 0x98e For clarification, I print out the values
+>>>>>>>> of Virtual Handle and Real Handle.
+>>>>>>>> The value of Virtual/Real Handles differ at 2nd excution of the co=
+mmand.
+>>>>>>>> (See NO 25/26 Below)
+>>>>>>>>
+>>>>>>>> I understand that the resource manager assigns Virtual Handle and
+>>>>>>>> my program calculates HMAC using that handles.
+>>>>>>>> On the other hand, TPM may calculate HMAC using Real Handle.
+>>>>>>>> That is my hypothesis.
+>>>>>>>>
+>>>>>>>> Any suggestion about the usage of Session Handle?
+>>>>>>>>
+>>>>>>>> NO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Command=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Virtual/Real Handle=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LOC 1.
+>>>>>>>> CreatePrimary(EK) real=3D80000000, virtual=3D80000000 8381 2.
+>>>>>>>> HierarchyChangeAuth1 8421 3.=C2=A0=C2=A0=C2=A0 HierarchyChangeAuth=
+2 8431 4.
+>>>>>>>> StartAuthSession(Policy) real=3D3000000,
+>>>>>>>> virtual=3D3000000 8480 5.=C2=A0=C2=A0=C2=A0 PolicySecret(ENDORSEME=
+NT) 8494 6.
+>>>>>>>> Create(MK) 8515 7.=C2=A0=C2=A0=C2=A0 PolicySecret(ENDORSEMENT) 852=
+9 8.=C2=A0=C2=A0=C2=A0 Load(MK)
+>>>>>>>> real=3D80000001,
+>>>>>>>> virtual=3D80000001 8542 9.=C2=A0=C2=A0=C2=A0 Evict(MK) 8552 10.=C2=
+=A0=C2=A0=C2=A0 Create(SK) 8590 11.
+>>>>>>>> Load(SK) real=3D80000001, virtual=3D80000002 8598 12.
+>>>>>>>> PolicySecret(ENDORSEMENT) 8609 13.=C2=A0=C2=A0=C2=A0 Create(AK) 86=
+35 14.
+>>>>>>>> PolicySecret(ENDORSEMENT) 8645 15.=C2=A0=C2=A0=C2=A0 Load(AK) real=
+=3D80000001,
+>>>>>>>> virtual=3D80000003 8655 16.=C2=A0=C2=A0=C2=A0 FlushContext(POLICY)=
+ 8664 17.
+>>>>>>>> StartAuthSession(POLICY) real=3D3000000, virtual=3D3000000 8668 18.
+>>>>>>>> StartAuthSession(HMAC) real=3D2000001, virtual=3D2000001 8678 19.
+>>>>>>>> ComputeCommandHMAC(LoadExternal) real=3D80000000,
+>> virtual=3D80000004
+>>>>>>>> 3706 20.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(HMAC_Start) real=3D8=
+0000001,
+>>>>>>>> virtual=3D80000005 3706 21.=C2=A0=C2=A0=C2=A0 PolicySecret(SK) 871=
+1 22.
+>>>>>>>> FlushContext(HMAC) 8717 23.=C2=A0=C2=A0=C2=A0 FlushContext(POLICY)=
+ 8724 24.
+>>>>>>>> CertifyCreation(SK) 8738 25.=C2=A0=C2=A0=C2=A0 StartAuthSession(PO=
+LICY)
+>>>>>>>> real=3D3000000, virtual=3D3000001 8745 26.=C2=A0=C2=A0=C2=A0 Start=
+AuthSession(HMAC)
+>>>>>>>> real=3D2000001, virtual=3D2000000 8754 27.
+>>>>>>>> ComputeCommandHMAC(LoadExternal) real=3D80000000,
+>> virtual=3D80000005
+>>>>>>>> 8782 28.=C2=A0=C2=A0=C2=A0 ComputeCommandHMAC(HMAC_Start) real=3D8=
+0000001,
+>>>>>>>> virtual=3D80000004 8782 29.=C2=A0=C2=A0=C2=A0 PolicySecret(SK) 8789
+>>>>>>>>
+>>>>>>>> The whole=C2=A0 source program can be found here.
+>>>>>>>> https://github.com/intel/tpm2-tss/files/1516612/tpmtest.cpp_0x98e_2
+>>>>>>>> .t
+>>>>>>>> xt
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Kind regards,
+>>>>>>>>
+>>>>>>>> --
+>>>>>>>> Yasuhiro Hosoda
+>>>>>>>>
+>>>>>>>> NTT Electronics Corporation =EF=BC=88NEL)
+>>>>>>>> Security Support Project
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> _______________________________________________
+>>>>>>>> tpm2 mailing list
+>>>>>>>> tpm2(a)lists.01.org
+>>>>>>>> https://lists.01.org/mailman/listinfo/tpm2
+>>
 
-Thanks for your patience,
-Philip
+-- =
 
---===============2041784380260274797==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
-cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
-Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
-b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
-bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbyw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkxhc3Qg
-d2VlayB3ZSBtaWdyYXRlZCB0byB0aGUgbmV3IHRwbTItc29mdHdhcmUgZ2l0aHViIG9yZ2FuaXph
-dGlvbiB3aXRob3V0IHRvbyBtdWNoIGhhc3NsZS4gV2UmIzgyMTc7dmUgbWlncmF0ZWQgb3VyIGlu
-ZnJhc3RydWN0dXJlIC8gQ0kgYXMgd2VsbCBidXQgY292ZXJhbGxzIGlzIGJlaW5nIHByb2JsZW1h
-dGljICh0aGFua3MgdG8gUGV0ZXIgZm9yIHBvaW50aW5nIG91dCB0aGUgaW5pdGlhbCBwcm9ibGVt
-KS4gSSYjODIxNzt2ZSBjcmVhdGVkCiBhbiBpc3N1ZSBpbiB0aGUgdHBtMi10c3MgdHJhY2tlciBo
-ZXJlOjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBocmVmPSJodHRwczov
-L2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9pc3N1ZXMvNzM2Ij5odHRwczovL2dp
-dGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9pc3N1ZXMvNzM2PC9hPjxvOnA+PC9vOnA+
-PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5hbmQgcmVwb3J0ZWQgdGhlIGlzc3VlIHRvIGNvdmVy
-YWxscyAvIGxlbXVyaGVhdnkgaGVyZTo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL2xlbXVyaGVhdnkvY292ZXJhbGxzLXB1Ymxp
-Yy9pc3N1ZXMvMTA2NiI+aHR0cHM6Ly9naXRodWIuY29tL2xlbXVyaGVhdnkvY292ZXJhbGxzLXB1
-YmxpYy9pc3N1ZXMvMTA2NjwvYT4uPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5Ib3BlZnVsbHkgd2Um
-IzgyMTc7bGwgaGVhciBiYWNrIGZyb20gdGhlbSB3aXRoIGEgd29yay1hcm91bmQgYnV0IEkmIzgy
-MTc7bSBub3QgdmVyeSBvcHRpbWlzdGljIGJhc2VkIG9uIHRoZSBzbWFsbCBiaXQgb2YgcmVzZWFy
-Y2ggSSYjODIxNzt2ZSBkb25lOiB0aGlzIGlzc3VlIGhhcyBiZWVuIHNlZW4gYnkgb3RoZXJzOjxv
-OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBocmVmPSJodHRwczovL2dpdGh1
-Yi5jb20vbWFwYm94L3Byb3RvemVyby9pc3N1ZXMvNjgiPmh0dHBzOi8vZ2l0aHViLmNvbS9tYXBi
-b3gvcHJvdG96ZXJvL2lzc3Vlcy82ODwvYT48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+YW5kIHRoZWlyIHdvcmsgYXJvdW5kIHdhcyB0byBhYmFuZG9uIGNvdmVyYWxscyBhbmQg
-dXNlIGNvZGVjb3YgaW5zdGVhZDo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL21hcGJveC9wcm90b3plcm8vcHVsbC83OCI+aHR0
-cHM6Ly9naXRodWIuY29tL21hcGJveC9wcm90b3plcm8vcHVsbC83ODwvYT48bzpwPjwvbzpwPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPkkmIzgyMTc7ZCBsaWtlIHRvIGtlZXAgZnJvbSBzd2l0Y2hpbmcgc2VydmljZXMg
-bGlrZSB0aGlzIGJ1dCB3ZSBtYXkgbm90IGhhdmUgYSBjaG9pY2UuIEkmIzgyMTc7bGwga2VlcCB0
-aGUgaXNzdWUgdHJhY2tlciB1cCB0byBkYXRlIGFzIHdlIHRyaWFnZSB0aGlzIGlzc3VlIGFuZCB3
-aWxsIHVwZGF0ZSB0aGlzIHRocmVhZCB3aXRoIGxpbmtzIHRvIG5ldyBpc3N1ZXMgaWYgd2UgaGF2
-ZSBwcm9ibGVtcyBpbiB0aGUgb3RoZXIgcmVwb3MuPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGFu
-a3MgZm9yIHlvdXIgcGF0aWVuY2UsPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PlBoaWxpcDxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
---===============2041784380260274797==--
+--===============0965231682681209864==--
 
