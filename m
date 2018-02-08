@@ -1,16 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============3048372453351492342=="
+Content-Type: multipart/mixed; boundary="===============2449337233794773368=="
 MIME-Version: 1.0
 From: Duncan.Palmer at data61.csiro.au
-Subject: [tpm2] tpm2_nvwrite hanging on 3.X
-Date: Thu, 08 Feb 2018 06:32:41 +0000
-Message-ID: <1518071561427.40356@data61.csiro.au>
+Subject: Re: [tpm2] tpm2_nvwrite hanging on 3.X
+Date: Thu, 08 Feb 2018 11:46:16 +0000
+Message-ID: <1518090376915.11789@data61.csiro.au>
+In-Reply-To: 1518071561427.40356@data61.csiro.au
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3048372453351492342==
+--===============2449337233794773368==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+I get the same behaviour on master., tho it builds without issues.
+
+Duncan Palmer
+Senior Software Engineer | Autonomous Systems
+Data61 | CSIRO
+E duncan.palmer(a)csiro.au
+Queensland Centre for Advanced Technologies (QCAT),
+1 Technology Court, Pullenvale QLD, 4069
+www.data61.csiro.au
+
+CSIRO=E2=80=99s Digital Productivity business unit and NICTA have joined fo=
+rces to create digital powerhouse Data61
+
+________________________________________
+From: tpm2 <tpm2-bounces(a)lists.01.org> on behalf of Duncan.Palmer(a)data6=
+1.csiro.au <Duncan.Palmer(a)data61.csiro.au>
+Sent: 08 February 2018 16:32
+To: tpm2(a)lists.01.org
+Subject: [ExternalEmail] [tpm2] tpm2_nvwrite hanging on 3.X
 
 Hi,
 
@@ -69,5 +90,10 @@ root(a)tpm:/home/foo/install/bin# ./tpm2_nvread -x 0x1500016 -a 0x40000001
  Duncan Palmer
  Senior Software Engineer | Autonomous Systems
  Data61 | CSIRO
---===============3048372453351492342==--
+_______________________________________________
+tpm2 mailing list
+tpm2(a)lists.01.org
+https://lists.01.org/mailman/listinfo/tpm2
+
+--===============2449337233794773368==--
 
