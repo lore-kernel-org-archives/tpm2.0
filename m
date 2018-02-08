@@ -1,130 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============3975217316163034367=="
+Content-Type: multipart/mixed; boundary="===============0378244156034464719=="
 MIME-Version: 1.0
-From: Duncan.Palmer at data61.csiro.au
-Subject: Re: [tpm2] tpm2_nvwrite hanging on 3.X
-Date: Thu, 08 Feb 2018 23:19:11 +0000
-Message-ID: <1518131951781.81366@data61.csiro.au>
-In-Reply-To: 1518090376915.11789@data61.csiro.au
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [tpm2-software/tpm2-tools] ba5184: travis: update tcti options
+ for abrmd
+Date: Thu, 08 Feb 2018 15:58:22 -0800
+Message-ID: <5a7ce41e52d47_94f2b1da4ffbc1076650@hookshot-fe-d252ca1.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3975217316163034367==
+--===============0378244156034464719==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The issue results from the change in 937d234 (tpm2_nv(read|write): query tpm
-for max buffer size). On my platform, the max buffer size determined by
-tpm2_util_nv_max_buffer_size() is 0.
+  Branch: refs/heads/master
+  Home:   https://github.com/tpm2-software/tpm2-tools
+  Commit: ba518453e280e85b32ffcbb12dd0bf032c49f25a
+      https://github.com/tpm2-software/tpm2-tools/commit/ba518453e280e85b32=
+ffcbb12dd0bf032c49f25a
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2018-02-08 (Thu, 08 Feb 2018)
 
-I'll happily hack around this for now, however is this something worth rais=
-ing
-further? I'm using an Intel NUC (model NUC5i7RYH) which has recently gone o=
-ut
-of production, so unless this is very unexpected and likely to impact other
-platforms, I'm guessing it's not worth worrying too much about.
+  Changed paths:
+    M .travis.yml
 
-Regards,
-Dunk
+  Log Message:
+  -----------
+  travis: update tcti options for abrmd
 
+abrmd has a new dynamic tcti option, update travis to use
+it.
 
-Duncan Palmer
-Senior Software Engineer | Autonomous Systems
-Data61 | CSIRO
+Note: --disable-dlclose works around these bugs:
+  - https://github.com/tpm2-software/tpm2-abrmd/issues/323
+  - https://github.com/tpm2-software/tpm2-tools/commit/130582559d7c51d18e3c=
+e82803c30bc161d9c34d#diff-9a57bc4e2757e72fe020a15ac7775dfa
 
-
-________________________________________
-From: tpm2 <tpm2-bounces(a)lists.01.org> on behalf of Duncan.Palmer(a)data6=
-1.csiro.au <Duncan.Palmer(a)data61.csiro.au>
-Sent: 08 February 2018 21:46
-To: tpm2(a)lists.01.org
-Subject: [ExternalEmail] Re: [tpm2] tpm2_nvwrite hanging on 3.X
-
-I get the same behaviour on master., tho it builds without issues.
-
-Duncan Palmer
-Senior Software Engineer | Autonomous Systems
-Data61 | CSIRO
-E duncan.palmer(a)csiro.au
-Queensland Centre for Advanced Technologies (QCAT),
-1 Technology Court, Pullenvale QLD, 4069
-www.data61.csiro.au
-
-CSIRO=E2=80=99s Digital Productivity business unit and NICTA have joined fo=
-rces to create digital powerhouse Data61
-
-________________________________________
-From: tpm2 <tpm2-bounces(a)lists.01.org> on behalf of Duncan.Palmer(a)data6=
-1.csiro.au <Duncan.Palmer(a)data61.csiro.au>
-Sent: 08 February 2018 16:32
-To: tpm2(a)lists.01.org
-Subject: [ExternalEmail] [tpm2] tpm2_nvwrite hanging on 3.X
-
-Hi,
-
-I've come back to something I stopped work on early last November. I was wo=
-rking with the tpm2_tools master branch at the time, and have moved to 3.X =
-to get support for PCR based authorisation with tpm2_nvread/write. With 3.X=
-, tpm2_nvwrite is hanging when trying to write to the tpm device file. Usin=
-g the code from last year (sorry, I no longer have a record of what revisio=
-n this was), it was working fine (see log snippet below).
-
-I'm using the 1.x branch of tpm2-tss, and I configure tpm2-tools with '--wi=
-th-tcti-device --without-tcti-socket'. I've also had to modify Makefile.am =
-to get this combination to build;
-
-
---LIBMARSHAL_CFLAGS =3D \
---    -DALG_ECMQV=3D1
-++#LIBMARSHAL_CFLAGS =3D \
-++#    -DALG_ECMQV=3D1
-
-
-Can anyone comment on this? Should I raise a bug on your tracker?
-
-
-Regards,
-Duncan
-
-
-tpm2_nvwrite logs from my testing last year;
-
-root(a)tpm:/home/foo/install/bin# ./tpm2_nvdefine -x 0x1500016 -a 0x4000000=
-1 -s 32 -t 0x2000A
-root(a)tpm:/home/foo/install/bin# ./tpm2_nvlist
-1 NV indexes defined.
-
-  0. NV Index: 0x1500016
-  {
-    Hash algorithm(nameAlg):11
-     attributes: ownerwrite|policywrite|ownerread(0xA000200)
-     The size of the data area(dataSize):32
-     Authorization Policy for R/W/D:
-  }
-
-root(a)tpm:/home/foo/install/bin# echo 'foo' > nv.dat
-root(a)tpm:/home/foo/install/bin# ./tpm2_nvwrite -x 0x1500016 -a 0x40000001=
- nv.dat
-66 6f 6f 0a
-
-root(a)tpm:/home/foo/install/bin# ./tpm2_nvread -x 0x1500016 -a 0x40000001
-000000: 66 6f 6f 0a 00 00 00 00 00 00 00 00 00 00 00 00  foo.............
-000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
-
- Duncan Palmer
- Senior Software Engineer | Autonomous Systems
- Data61 | CSIRO
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org
-https://lists.01.org/mailman/listinfo/tpm2
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org
-https://lists.01.org/mailman/listinfo/tpm2
-
---===============3975217316163034367==--
+--===============0378244156034464719==--
 
