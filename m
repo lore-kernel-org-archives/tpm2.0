@@ -1,99 +1,252 @@
-Content-Type: multipart/mixed; boundary="===============2449337233794773368=="
+Content-Type: multipart/mixed; boundary="===============4815617464988383434=="
 MIME-Version: 1.0
-From: Duncan.Palmer at data61.csiro.au
-Subject: Re: [tpm2] tpm2_nvwrite hanging on 3.X
-Date: Thu, 08 Feb 2018 11:46:16 +0000
-Message-ID: <1518090376915.11789@data61.csiro.au>
-In-Reply-To: 1518071561427.40356@data61.csiro.au
+From: Yasuhiro Hosoda <hosoda-yasuhiro at ntt-el.com>
+Subject: Re: [tpm2] tpm2-tss question
+Date: Thu, 08 Feb 2018 22:26:09 +0900
+Message-ID: <1a5a28dc-433b-29a1-b1c1-e92e23e0b929@ntt-el.com>
+In-Reply-To: a4ce55c6-fb04-c970-1fe7-b7a190a52741@ntt-el.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2449337233794773368==
+--===============4815617464988383434==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I get the same behaviour on master., tho it builds without issues.
+You said in the former mail that
+"Unless you took an RM virtualized handle and went directly to the TPM
+with it, there shouldn't Be a problem"
+I have checked again and found that my program uses an RM
+virtualized handle for computing HMAC and if I substitute the virtual
+handle to real one, the error 0x98e disappears,
+Any advice?
 
-Duncan Palmer
-Senior Software Engineer | Autonomous Systems
-Data61 | CSIRO
-E duncan.palmer(a)csiro.au
-Queensland Centre for Advanced Technologies (QCAT),
-1 Technology Court, Pullenvale QLD, 4069
-www.data61.csiro.au
+> Thank you for your reply.
+>
+> Where can I find necessary information for "get HMAC to work"?
+>
+> And, where can I find extended-sessions.sh?
+>
+> Many thanks.
+>> test/system/tests/tcti/abrmd/extended-sessions.sh
+>>
+>> That uses abrmd which has an RM extension to allow session handles
+>> to be marked for non-flushing on client disconnection, but that
+>> point likely won't concern you.
+>>
+>> This test script uses tools that start a pcr policy session, satisfy =
 
-CSIRO=E2=80=99s Digital Productivity business unit and NICTA have joined fo=
-rces to create digital powerhouse Data61
+>> or build the policy,
+>> and use it for unsealing data.
+>>
+>> It might be good to see if you can get HMAC to work in this framework =
 
-________________________________________
-From: tpm2 <tpm2-bounces(a)lists.01.org> on behalf of Duncan.Palmer(a)data6=
-1.csiro.au <Duncan.Palmer(a)data61.csiro.au>
-Sent: 08 February 2018 16:32
-To: tpm2(a)lists.01.org
-Subject: [ExternalEmail] [tpm2] tpm2_nvwrite hanging on 3.X
+>> from a
+>> Learning perspective and then you could contribute hmac policy =
 
-Hi,
+>> session support
+>> Back to the tools.
+>>
+>>
+>>> -----Original Message-----
+>>> From: Yasuhiro Hosoda [mailto:hosoda-yasuhiro(a)ntt-el.com]
+>>> Sent: Thursday, January 18, 2018 3:11 PM
+>>> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01=
+.org
+>>> Subject: Re: [tpm2] tpm2-tss question
+>>>
+>>> You said that "I would look at how the tpm2-tools do it, they make =
 
-I've come back to something I stopped work on early last November. I was wo=
-rking with the tpm2_tools master branch at the time, and have moved to 3.X =
-to get support for PCR based authorisation with tpm2_nvread/write. With 3.X=
-, tpm2_nvwrite is hanging when trying to write to the tpm device file. Usin=
-g the code from last year (sorry, I no longer have a record of what revisio=
-n this was), it was working fine (see log snippet below).
+>>> for decent
+>>> reference code."
+>>> Would you tell me the place of tpm2-tools where I should look as =
 
-I'm using the 1.x branch of tpm2-tss, and I configure tpm2-tools with '--wi=
-th-tcti-device --without-tcti-socket'. I've also had to modify Makefile.am =
-to get this combination to build;
+>>> reference code.
+>>> Regards,
+>>>
+>>>>> -----Original Message-----
+>>>>> From: Yasuhiro Hosoda [mailto:hosoda-yasuhiro(a)ntt-el.com]
+>>>>> Sent: Thursday, January 18, 2018 6:44 AM
+>>>>> To: Roberts, William C <william.c.roberts(a)intel.com>; =
 
+>>>>> tpm2(a)lists.01.org
+>>>>> Subject: Re: [tpm2] tpm2-tss question
+>>>>>
+>>>>> I appreciate much for your help. I am expecting for your =
 
---LIBMARSHAL_CFLAGS =3D \
---    -DALG_ECMQV=3D1
-++#LIBMARSHAL_CFLAGS =3D \
-++#    -DALG_ECMQV=3D1
+>>>>> information about
+>>> tpm2-
+>>>>> tools.
+>>>> What information are you expecting?
+>>>>
+>>>>>>> -----Original Message-----
+>>>>>>> From: Yasuhiro Hosoda [mailto:hosoda-yasuhiro(a)ntt-el.com]
+>>>>>>> Sent: Friday, January 12, 2018 1:47 AM
+>>>>>>> To: Roberts, William C <william.c.roberts(a)intel.com>;
+>>>>>>> tpm2(a)lists.01.org
+>>>>>>> Subject: Re: [tpm2] tpm2-tss question
+>>>>>>>
+>>>>>>> Hi, Mr. Roberts, William
+>>>>>>>
+>>>>>>> Thank you for your advice.
+>>>>>>> I had already checked the details of this error code.
+>>>>>>> My understanding is that the problem is not the setting of the auth
+>>>>>>> but there occurs the discrepancy between the virtual handles and =
 
+>>>>>>> the
+>>>>>>> real handles in the resource manager.
+>>>>>> Unless you took an RM virtualized handle and went directly to the =
 
-Can anyone comment on this? Should I raise a bug on your tracker?
+>>>>>> TPM
+>>>>>> with it, there shouldn't Be a problem. The RM should be swapping out
+>>>>>> virtualized handles with real ones for you before They hit the =
 
+>>>>>> tpm, and thus,
+>>>>> should be transparent.
+>>>>>> As far as what the problem is, it's hard to tell offhand. I would =
 
-Regards,
-Duncan
+>>>>>> look
+>>>>>> at how the tpm2-tools do it, they make for decent reference code.
+>>>>>>
+>>>>>>> Any help will be greatly appreciated
+>>>>>>>
+>>>>>>> Regard,
+>>>>>>>> 0x98e is:
+>>>>>>>>
+>>>>>>>> $ ./tpm2_rc_decode 0x98e
+>>>>>>>> error layer
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hex: 0x0
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 identifier: TSS2_TPM_RC_LAYER
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 description: Error produced by the =
+TPM format 1 error code
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hex: 0x0e
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 identifier: TPM2_RC_AUTH_FAIL
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 description: the authorization HMAC=
+ check failed and DA =
 
+>>>>>>>> counter
+>>>>>>>> incremented session
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hex: 0x100
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 identifier: TPM2_RC_1
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 description:=C2=A0 (null)
+>>>>>>>>
+>>>>>>>> SO it looks like you're not setting up the auth properly in the =
 
-tpm2_nvwrite logs from my testing last year;
+>>>>>>>> session.
+>>>>>>>>
+>>>>>>>>> -----Original Message-----
+>>>>>>>>> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of =
 
-root(a)tpm:/home/foo/install/bin# ./tpm2_nvdefine -x 0x1500016 -a 0x4000000=
-1 -s 32 -t 0x2000A
-root(a)tpm:/home/foo/install/bin# ./tpm2_nvlist
-1 NV indexes defined.
+>>>>>>>>> Yasuhiro
+>>>>>>>>> Hosoda
+>>>>>>>>> Sent: Wednesday, December 13, 2017 10:59 PM
+>>>>>>>>> To: tpm2(a)lists.01.org
+>>>>>>>>> Subject: [tpm2] tpm2-tss question
+>>>>>>>>>
+>>>>>>>>> MY name is Yasuhiro Hosoda.
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> I am developing a program using TSS1.0(Nov=EF=BC=91=EF=BC=8E2016).
+>>>>>>>>> I encountered a problem with PolicySecret error 0x98e and need =
 
-  0. NV Index: 0x1500016
-  {
-    Hash algorithm(nameAlg):11
-     attributes: ownerwrite|policywrite|ownerread(0xA000200)
-     The size of the data area(dataSize):32
-     Authorization Policy for R/W/D:
-  }
+>>>>>>>>> help.
+>>>>>>>>> My program uses tpmtest.cpp as a base of development.
+>>>>>>>>> The situation is as follows:
+>>>>>>>>>
+>>>>>>>>> 1 Create TPM Keys like this.
+>>>>>>>>>
+>>>>>>>>> EK
+>>>>>>>>> =EF=BD=9C--------
+>>>>>>>>> =EF=BD=9C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0 |
+>>>>>>>>> MK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AK
+>>>>>>>>> =EF=BD=9C
+>>>>>>>>> SK
+>>>>>>>>>
+>>>>>>>>> 2 Execute PolicySecret twice using HMAC session. At first, it =
 
-root(a)tpm:/home/foo/install/bin# echo 'foo' > nv.dat
-root(a)tpm:/home/foo/install/bin# ./tpm2_nvwrite -x 0x1500016 -a 0x40000001=
- nv.dat
-66 6f 6f 0a
+>>>>>>>>> ends
+>>>>>>>>> without
+>>>>>>> error.
+>>>>>>>>> Then it ends with 0x98e For clarification, I print out the values
+>>>>>>>>> of Virtual Handle and Real Handle.
+>>>>>>>>> The value of Virtual/Real Handles differ at 2nd excution of =
 
-root(a)tpm:/home/foo/install/bin# ./tpm2_nvread -x 0x1500016 -a 0x40000001
-000000: 66 6f 6f 0a 00 00 00 00 00 00 00 00 00 00 00 00  foo.............
-000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>>>>>>>>> the command.
+>>>>>>>>> (See NO 25/26 Below)
+>>>>>>>>>
+>>>>>>>>> I understand that the resource manager assigns Virtual Handle and
+>>>>>>>>> my program calculates HMAC using that handles.
+>>>>>>>>> On the other hand, TPM may calculate HMAC using Real Handle.
+>>>>>>>>> That is my hypothesis.
+>>>>>>>>>
+>>>>>>>>> Any suggestion about the usage of Session Handle?
+>>>>>>>>>
+>>>>>>>>> NO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Command=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Virtual/Real Handle=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LOC 1.
+>>>>>>>>> CreatePrimary(EK) real=3D80000000, virtual=3D80000000 8381 2.
+>>>>>>>>> HierarchyChangeAuth1 8421 3. HierarchyChangeAuth2 8431 4.
+>>>>>>>>> StartAuthSession(Policy) real=3D3000000,
+>>>>>>>>> virtual=3D3000000 8480 5. PolicySecret(ENDORSEMENT) 8494 6.
+>>>>>>>>> Create(MK) 8515 7.=C2=A0=C2=A0=C2=A0 PolicySecret(ENDORSEMENT) 85=
+29 8.=C2=A0=C2=A0=C2=A0 =
 
+>>>>>>>>> Load(MK)
+>>>>>>>>> real=3D80000001,
+>>>>>>>>> virtual=3D80000001 8542 9.=C2=A0=C2=A0=C2=A0 Evict(MK) 8552 10. C=
+reate(SK) 8590 =
 
+>>>>>>>>> 11.
+>>>>>>>>> Load(SK) real=3D80000001, virtual=3D80000002 8598 12.
+>>>>>>>>> PolicySecret(ENDORSEMENT) 8609 13.=C2=A0=C2=A0=C2=A0 Create(AK) 8=
+635 14.
+>>>>>>>>> PolicySecret(ENDORSEMENT) 8645 15.=C2=A0=C2=A0=C2=A0 Load(AK) rea=
+l=3D80000001,
+>>>>>>>>> virtual=3D80000003 8655 16.=C2=A0=C2=A0=C2=A0 FlushContext(POLICY=
+) 8664 17.
+>>>>>>>>> StartAuthSession(POLICY) real=3D3000000, virtual=3D3000000 8668 1=
+8.
+>>>>>>>>> StartAuthSession(HMAC) real=3D2000001, virtual=3D2000001 8678 19.
+>>>>>>>>> ComputeCommandHMAC(LoadExternal) real=3D80000000,
+>>> virtual=3D80000004
+>>>>>>>>> 3706 20. ComputeCommandHMAC(HMAC_Start) real=3D80000001,
+>>>>>>>>> virtual=3D80000005 3706 21.=C2=A0=C2=A0=C2=A0 PolicySecret(SK) 87=
+11 22.
+>>>>>>>>> FlushContext(HMAC) 8717 23. FlushContext(POLICY) 8724 24.
+>>>>>>>>> CertifyCreation(SK) 8738 25. StartAuthSession(POLICY)
+>>>>>>>>> real=3D3000000, virtual=3D3000001 8745 26. StartAuthSession(HMAC)
+>>>>>>>>> real=3D2000001, virtual=3D2000000 8754 27.
+>>>>>>>>> ComputeCommandHMAC(LoadExternal) real=3D80000000,
+>>> virtual=3D80000005
+>>>>>>>>> 8782 28. ComputeCommandHMAC(HMAC_Start) real=3D80000001,
+>>>>>>>>> virtual=3D80000004 8782 29.=C2=A0=C2=A0=C2=A0 PolicySecret(SK) 87=
+89
+>>>>>>>>>
+>>>>>>>>> The whole=C2=A0 source program can be found here.
+>>>>>>>>> https://github.com/intel/tpm2-tss/files/1516612/tpmtest.cpp_0x98e=
+_2 =
 
+>>>>>>>>>
+>>>>>>>>> .t
+>>>>>>>>> xt
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Kind regards,
+>>>>>>>>>
+>>>>>>>>> -- =
 
- Duncan Palmer
- Senior Software Engineer | Autonomous Systems
- Data61 | CSIRO
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org
-https://lists.01.org/mailman/listinfo/tpm2
+>>>>>>>>> Yasuhiro Hosoda
+>>>>>>>>>
+>>>>>>>>> NTT Electronics Corporation =EF=BC=88NEL)
+>>>>>>>>> Security Support Project
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> _______________________________________________
+>>>>>>>>> tpm2 mailing list
+>>>>>>>>> tpm2(a)lists.01.org
+>>>>>>>>> https://lists.01.org/mailman/listinfo/tpm2
+>>>
+>
 
---===============2449337233794773368==--
+--===============4815617464988383434==--
 
