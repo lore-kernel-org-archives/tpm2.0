@@ -1,44 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============6072155408747936097=="
+Content-Type: multipart/mixed; boundary="===============0190719548438015511=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [tpm2-software/tpm2-tools] 9daf00: tpm2_createprimary:
- refactor onrun() and cleanup
-Date: Mon, 12 Feb 2018 10:38:42 -0800
-Message-ID: <5a81df32a827f_60ec2af1daf6dc08629dd@hookshot-fe-2cc8887.cp1-iad.github.net.mail>
+Subject: [tpm2] [tpm2-software/tpm2-tools] 5d3837: options: fix no-sapi init
+Date: Mon, 12 Feb 2018 13:11:01 -0800
+Message-ID: <5a8202e5466a5_6e0b2b00048b7c00884d2@hookshot-fe-6b2eebc.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6072155408747936097==
+--===============0190719548438015511==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/tpm2-software/tpm2-tools
-  Commit: 9daf005b0fea684b18168bf9c6fb7e52e8af07cd
-      https://github.com/tpm2-software/tpm2-tools/commit/9daf005b0fea684b18=
-168bf9c6fb7e52e8af07cd
-  Author: Kristen Carlson Accardi <kristen(a)linux.intel.com>
+  Commit: 5d3837d22c5675f0ddab0d672a528b9f136ebfa1
+      https://github.com/tpm2-software/tpm2-tools/commit/5d3837d22c5675f0dd=
+ab0d672a528b9f136ebfa1
+  Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2018-02-12 (Mon, 12 Feb 2018)
 
   Changed paths:
-    M tools/tpm2_createprimary.c
+    M lib/tpm2_options.c
 
   Log Message:
   -----------
-  tpm2_createprimary: refactor onrun() and cleanup
+  options: fix no-sapi init
 
-Cleanup onrun() a little bit to make it easier to read, and refactor
-the code to eliminate the .C flag. Use the .H flag instead of the .A
-flag to be more consistent with the options.
+The code for skipping sapi initilization was removed,
+add it back for aux tools.
 
-Signed-off-by: Kristen Carlson Accardi <kristen(a)linux.intel.com>
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-  Commit: 1c74ad7f96222a6aa04a15bb2ee989baee736bc2
-      https://github.com/tpm2-software/tpm2-tools/commit/1c74ad7f96222a6aa0=
-4a15bb2ee989baee736bc2
-  Author: Kristen Carlson Accardi <kristen(a)linux.intel.com>
+  Commit: f165635d4e907fc6ceef7a0bdd558a3fc6cdbe71
+      https://github.com/tpm2-software/tpm2-tools/commit/f165635d4e907fc6ce=
+ef7a0bdd558a3fc6cdbe71
+  Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2018-02-12 (Mon, 12 Feb 2018)
 
   Changed paths:
@@ -46,15 +44,35 @@ Signed-off-by: Kristen Carlson Accardi <kristen(a)linux.intel.com>
 
   Log Message:
   -----------
-  tpm2_tool: log an error when tool onrun() fails.
+  tpm2_tool: add NULL check on sapi_init
 
-If onrun() returns failure, log an error.
+If a tcti/sapi context is requested by the tool, and sapi_init fails,
+return an error rather than handing the tool a NULL sapi context.
 
-Signed-off-by: Kristen Carlson Accardi <kristen(a)linux.intel.com>
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
-Compare: https://github.com/tpm2-software/tpm2-tools/compare/0a14be277c05..=
-.1c74ad7f9622
+  Commit: b08dd6738d2d98706e68e31da14be7d4df195bd6
+      https://github.com/tpm2-software/tpm2-tools/commit/b08dd6738d2d98706e=
+68e31da14be7d4df195bd6
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2018-02-12 (Mon, 12 Feb 2018)
 
---===============6072155408747936097==--
+  Changed paths:
+    M tools/aux/tpm2_rc_decode.c
+
+  Log Message:
+  -----------
+  tpm2_rc_decode: request no sapi-init
+
+tpm2_rc_decode doesn't need a sapi context, thus request
+that it is not initialized.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
+
+
+Compare: https://github.com/tpm2-software/tpm2-tools/compare/1c74ad7f9622..=
+.b08dd6738d2d
+
+--===============0190719548438015511==--
 
