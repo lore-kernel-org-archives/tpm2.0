@@ -1,175 +1,257 @@
-Content-Type: multipart/mixed; boundary="===============7796360516625802403=="
+Content-Type: multipart/mixed; boundary="===============5955753457908146914=="
 MIME-Version: 1.0
-From: Moneeb Azhar <moneeb777 at hotmail.com>
+From: Javier Martinez Canillas <javierm at redhat.com>
 Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
-Date: Wed, 14 Feb 2018 07:42:23 +0000
-Message-ID: <DBXPR03MB5756CC564E5F9D1BDF95D5FF6F50@DBXPR03MB575.eurprd03.prod.outlook.com>
-In-Reply-To: DB638850A6A2434A93ECADDA0BC838905F123BD6@ORSMSX103.amr.corp.intel.com
+Date: Wed, 14 Feb 2018 09:02:56 +0100
+Message-ID: <33ea4bba-a270-5b81-29a5-162f484360e0@redhat.com>
+In-Reply-To: DBXPR03MB5756CC564E5F9D1BDF95D5FF6F50@DBXPR03MB575.eurprd03.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7796360516625802403==
+--===============5955753457908146914==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I am  using the ibm simulator and it starts up fine. However:
+On 02/14/2018 08:42 AM, Moneeb Azhar wrote:
+> I am  using the ibm simulator and it starts up fine. However:
+> =
 
-$ ls -l /dev/tpm0
-ls: cannot access '/dev/tpm0': No such file or directory
+> $ ls -l /dev/tpm0
+> ls: cannot access '/dev/tpm0': No such file or directory
+> =
 
+> =
 
-Is /dev/tpm0 required while using the simulator?
+> Is /dev/tpm0 required while using the simulator?
+>
 
-________________________________
-From: Tricca, Philip B <philip.b.tricca(a)intel.com>
-Sent: Wednesday, February 14, 2018 3:11 AM
-To: Moneeb Azhar
-Cc: tpm2(a)lists.01.org
-Subject: RE: TCTI initialization fails with error 0xc000b
+If you are using the simulator, then you need to use the socket TCTI instead
+of the device TCTI.
 
+I can't say what's the exact command to do it because there were some chang=
+es
+in master recently and I still didn't have time to catch up.
 
-You=E2=80=99re making progress. This time the daemon loaded the TCTI proper=
-ly but the TCTI initialization function failed. For the device TCTI this is=
- 99% an issue with permissions on /dev/tpm0. Check to see which user can ac=
-cess this device (root?) and then run the daemon as that user. Ideally this=
- will be an unprivileged user and most distros use one called =E2=80=98tss=
-=E2=80=99: https://github.com/tpm2-software/tpm2-abrmd/blob/master/INSTALL.=
-md#system-user--group
+Best regards,
+-- =
 
-[https://avatars2.githubusercontent.com/u/34488697?s=3D400&v=3D4]<https://g=
-ithub.com/tpm2-software/tpm2-abrmd/blob/master/INSTALL.md#system-user--grou=
-p>
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
 
-tpm2-abrmd/INSTALL.md at master - github.com<https://github.com/tpm2-softwa=
-re/tpm2-abrmd/blob/master/INSTALL.md#system-user--group>
-github.com
-This is a quick set of instructions to build, install and run the tpm2-abrm=
-d. Dependencies. To build and install the tpm2-abrmd software the following=
- dependencies ...
+> ________________________________
+> From: Tricca, Philip B <philip.b.tricca(a)intel.com>
+> Sent: Wednesday, February 14, 2018 3:11 AM
+> To: Moneeb Azhar
+> Cc: tpm2(a)lists.01.org
+> Subject: RE: TCTI initialization fails with error 0xc000b
+> =
 
+> =
 
+> You=E2=80=99re making progress. This time the daemon loaded the TCTI prop=
+erly but the TCTI initialization function failed. For the device TCTI this =
+is 99% an issue with permissions on /dev/tpm0. Check to see which user can =
+access this device (root?) and then run the daemon as that user. Ideally th=
+is will be an unprivileged user and most distros use one called =E2=80=98ts=
+s=E2=80=99: https://github.com/tpm2-software/tpm2-abrmd/blob/master/INSTALL=
+.md#system-user--group
+> =
 
+> [https://avatars2.githubusercontent.com/u/34488697?s=3D400&v=3D4]<https:/=
+/github.com/tpm2-software/tpm2-abrmd/blob/master/INSTALL.md#system-user--gr=
+oup>
+> =
 
-Philip
+> tpm2-abrmd/INSTALL.md at master - github.com<https://github.com/tpm2-soft=
+ware/tpm2-abrmd/blob/master/INSTALL.md#system-user--group>
+> github.com
+> This is a quick set of instructions to build, install and run the tpm2-ab=
+rmd. Dependencies. To build and install the tpm2-abrmd software the followi=
+ng dependencies ...
+> =
 
+> =
 
+> =
 
-From: Moneeb Azhar [mailto:moneeb777(a)hotmail.com]
-Sent: 13 February, 2018 12:45
-To: Tricca, Philip B <philip.b.tricca(a)intel.com>
-Cc: tpm2(a)lists.01.org
-Subject: Re: TCTI initialization fails with error 0xc000b
+> =
 
+> Philip
+> =
 
+> =
 
-The workaround leads to a similar error:
+> =
 
+> From: Moneeb Azhar [mailto:moneeb777(a)hotmail.com]
+> Sent: 13 February, 2018 12:45
+> To: Tricca, Philip B <philip.b.tricca(a)intel.com>
+> Cc: tpm2(a)lists.01.org
+> Subject: Re: TCTI initialization fails with error 0xc000b
+> =
 
+> =
 
-ubuntu:~/Desktop/ibmtpm974/src$ tpm2-abrmd --tcti=3Dlibtcti-device.so
-** (tpm2-abrmd:4065): WARNING **: failed to initialize device TCTI context:=
- 0xa000a
-** (tpm2-abrmd:4065): CRITICAL **: TCTI initialization failed: 0xa000a
+> =
 
-This is similar to issue #92 but I am already following the steps suggested=
- in the comments there.
+> The workaround leads to a similar error:
+> =
 
+> =
 
+> =
 
+> ubuntu:~/Desktop/ibmtpm974/src$ tpm2-abrmd --tcti=3Dlibtcti-device.so
+> ** (tpm2-abrmd:4065): WARNING **: failed to initialize device TCTI contex=
+t: 0xa000a
+> ** (tpm2-abrmd:4065): CRITICAL **: TCTI initialization failed: 0xa000a
+> =
 
+> This is similar to issue #92 but I am already following the steps suggest=
+ed in the comments there.
+> =
 
-________________________________
+> =
 
-From: Tricca, Philip B <philip.b.tricca(a)intel.com<mailto:philip.b.tricca(=
+> =
+
+> =
+
+> =
+
+> ________________________________
+> =
+
+> From: Tricca, Philip B <philip.b.tricca(a)intel.com<mailto:philip.b.tricc=
+a(a)intel.com>>
+> Sent: Tuesday, February 13, 2018 11:38 PM
+> To: Moneeb Azhar
+> Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
+> Subject: RE: TCTI initialization fails with error 0xc000b
+> =
+
+> =
+
+> =
+
+> I triaged this last night. It=E2=80=99s a bug in the logic that selects t=
+he default TCTI. I=E2=80=99ve got an issue in the tracker for it here: http=
+s://github.com/tpm2-software/tpm2-abrmd/issues/327. You can work around it =
+by explicitly selecting the device TCTI with the following option: `--tcti=
+=3Dlibtcti-device.so`. I=E2=80=99ll be fixing this up today and likely chan=
+ging the way we specify the TCTI to align with the tools `--tcti` option.
+> =
+
+> [https://avatars0.githubusercontent.com/u/1550813?s=3D400&v=3D4]<https://=
+github.com/tpm2-software/tpm2-abrmd/issues/327>
+> =
+
+> =
+
+> sane default TCTI =C2=B7 Issue #327 =C2=B7 tpm2-software/tpm2-abrmd<https=
+://github.com/tpm2-software/tpm2-abrmd/issues/327>
+> =
+
+> github.com
+> =
+
+> It looks like, when provided with no --tcti option we're not picking a sa=
+ne default value for the TCTI library. If the option is omitted we should d=
+efault to the device TCTI.
+> =
+
+> =
+
+> =
+
+> =
+
+> Best,
+> =
+
+> Philip
+> =
+
+> =
+
+> =
+
+> From: Moneeb Azhar [mailto:moneeb777(a)hotmail.com]
+> Sent: 13 February, 2018 04:50
+> To: Tricca, Philip B <philip.b.tricca(a)intel.com<mailto:philip.b.tricca(=
 a)intel.com>>
-Sent: Tuesday, February 13, 2018 11:38 PM
-To: Moneeb Azhar
-Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Subject: RE: TCTI initialization fails with error 0xc000b
+> Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
+> Subject: Re: TCTI initialization fails with error 0xc000b
+> =
 
+> =
 
+> =
 
-I triaged this last night. It=E2=80=99s a bug in the logic that selects the=
- default TCTI. I=E2=80=99ve got an issue in the tracker for it here: https:=
-//github.com/tpm2-software/tpm2-abrmd/issues/327. You can work around it by=
- explicitly selecting the device TCTI with the following option: `--tcti=3D=
-libtcti-device.so`. I=E2=80=99ll be fixing this up today and likely changin=
-g the way we specify the TCTI to align with the tools `--tcti` option.
+> Hey,
+> =
 
-[https://avatars0.githubusercontent.com/u/1550813?s=3D400&v=3D4]<https://gi=
-thub.com/tpm2-software/tpm2-abrmd/issues/327>
+> =
 
+> =
 
-sane default TCTI =C2=B7 Issue #327 =C2=B7 tpm2-software/tpm2-abrmd<https:/=
-/github.com/tpm2-software/tpm2-abrmd/issues/327>
+> So from what I have gathered, tabrmd is designed to connect directly to t=
+he simulator without the need to pass any options by using --tcti. I tried =
+doing this and get the exact same error:
+> =
 
-github.com
+> =
 
-It looks like, when provided with no --tcti option we're not picking a sane=
- default value for the TCTI library. If the option is omitted we should def=
-ault to the device TCTI.
+> =
 
+> ubuntu:~/Desktop/ibmtpm974/src$ sudo tpm2-abrmd  --allow-root
+> ** (tpm2-abrmd:105445): WARNING **: Failed to get reference to symbol: tp=
+m2-abrmd: undefined symbol: Tss2_Tcti_Info
+> ** (tpm2-abrmd:105445): CRITICAL **: TCTI initialization failed: 0xc000b
+> =
 
+> I  must be doing something wrong but I don't know what. Are there any log=
+ files I can go through  which could tell me what is happening?
+> =
 
+> Regards,
+> Moneeb
+> =
 
-Best,
+> =
 
-Philip
+> =
 
+> =
 
+> =
 
-From: Moneeb Azhar [mailto:moneeb777(a)hotmail.com]
-Sent: 13 February, 2018 04:50
-To: Tricca, Philip B <philip.b.tricca(a)intel.com<mailto:philip.b.tricca(a)=
-intel.com>>
-Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Subject: Re: TCTI initialization fails with error 0xc000b
+> ________________________________
+> =
 
+> From: Tricca, Philip B <philip.b.tricca(a)intel.com<mailto:philip.b.tricc=
+a(a)intel.com>>
+> Sent: Monday, February 12, 2018 9:04 PM
+> To: Moneeb Azhar
+> Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
+> Subject: RE: TCTI initialization fails with error 0xc000b
+> =
 
+> =
 
-Hey,
+> =
 
+> Apologies in advance for top posting. I=E2=80=99m stuck on a windows syst=
+em while traveling.
+> =
 
+> =
 
-So from what I have gathered, tabrmd is designed to connect directly to the=
- simulator without the need to pass any options by using --tcti. I tried do=
-ing this and get the exact same error:
+> =
 
-
-
-ubuntu:~/Desktop/ibmtpm974/src$ sudo tpm2-abrmd  --allow-root
-** (tpm2-abrmd:105445): WARNING **: Failed to get reference to symbol: tpm2=
--abrmd: undefined symbol: Tss2_Tcti_Info
-** (tpm2-abrmd:105445): CRITICAL **: TCTI initialization failed: 0xc000b
-
-I  must be doing something wrong but I don't know what. Are there any log f=
-iles I can go through  which could tell me what is happening?
-
-Regards,
-Moneeb
-
-
-
-
-
-________________________________
-
-From: Tricca, Philip B <philip.b.tricca(a)intel.com<mailto:philip.b.tricca(=
-a)intel.com>>
-Sent: Monday, February 12, 2018 9:04 PM
-To: Moneeb Azhar
-Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Subject: RE: TCTI initialization fails with error 0xc000b
-
-
-
-Apologies in advance for top posting. I=E2=80=99m stuck on a windows system=
- while traveling.
-
-
-
-It seems as though your issue is related to a recent change to the way we=
+> It seems as though your issue is related to a recent change to the way we=
 =E2=80=99re initializing the TCTI modules. This caused a few changes to the=
  relevant command line options like `--tcti`. If you=E2=80=99re connecting =
 the tabrmd up to the TPM device and not the simulator as is described in th=
@@ -182,436 +264,88 @@ orm of the `--tcti` option which is documented in our man pages. The source=
 ed via the `--tcti` option is passed directly to dlopen so the same lookup =
 rules apply. `--tcti=3Dlibtcti-device.so` should work for you assuming your=
  LD_CONFIG_PATH is set up right.
+> =
+
+> =
+
+> =
+
+> Just a heads up though: https://github.com/tpm2-software/tpm2-abrmd/issue=
+s/321 is tracking our work to align the `--tcti` option across the tabrmd a=
+nd the tools. The tabrmd is very probably going to adopt the same conventio=
+n that Bill implemented for the tools before the next release.
+> =
+
+> =
+
+> =
+
+> Hope this helps,
+> =
+
+> Philip
+> =
+
+> =
+
+> =
+
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Moneeb Azhar
+> Sent: 12 February, 2018 05:43
+> To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
+> Subject: [tpm2] TCTI initialization fails with error 0xc000b
+> =
+
+> =
+
+> =
+
+> Hi,
+> =
+
+> I am trying to setup a TPM development environment on ubuntu16.04 by foll=
+owing the installation wiki here: https://github.com/tpm2-software/tpm2-too=
+ls/wiki/Getting-Started#installing
+> =
+
+> Everything installs correctly but I get the following error:
+> =
+
+> $ sudo -u tss tpm2-abrmd --tcti=3Ddevice
+> ** (tpm2-abrmd:104197): WARNING **: failed to dlopen file device: device:=
+ cannot open shared object file: No such file or directory
+> ** (tpm2-abrmd:104197): CRITICAL **: TCTI initialization failed: 0xc000b
+> =
+
+> systemctl  show me the following:
+> $ sudo systemctl status tpm2-abrmd.service
+> =E2=97=8F tpm2-abrmd.service - TPM2 Access Broker and Resource Management=
+ Daemon
+>    Loaded: loaded (/lib/systemd/system/tpm2-abrmd.service; enabled; vendo=
+r preset: enabl
+>    Active: inactive (dead)
+> =
+
+> How would I go about figuring out what is wrong? I am new to this so any =
+help would be highly appreciated.
+> =
+
+> Regards,
+> Moneeb
+> =
+
+> =
+
+> =
+
+> _______________________________________________
+> tpm2 mailing list
+> tpm2(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/tpm2
+> =
 
 
 
-Just a heads up though: https://github.com/tpm2-software/tpm2-abrmd/issues/=
-321 is tracking our work to align the `--tcti` option across the tabrmd and=
- the tools. The tabrmd is very probably going to adopt the same convention =
-that Bill implemented for the tools before the next release.
 
-
-
-Hope this helps,
-
-Philip
-
-
-
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Moneeb Azhar
-Sent: 12 February, 2018 05:43
-To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Subject: [tpm2] TCTI initialization fails with error 0xc000b
-
-
-
-Hi,
-
-I am trying to setup a TPM development environment on ubuntu16.04 by follow=
-ing the installation wiki here: https://github.com/tpm2-software/tpm2-tools=
-/wiki/Getting-Started#installing
-
-Everything installs correctly but I get the following error:
-
-$ sudo -u tss tpm2-abrmd --tcti=3Ddevice
-** (tpm2-abrmd:104197): WARNING **: failed to dlopen file device: device: c=
-annot open shared object file: No such file or directory
-** (tpm2-abrmd:104197): CRITICAL **: TCTI initialization failed: 0xc000b
-
-systemctl  show me the following:
-$ sudo systemctl status tpm2-abrmd.service
-=E2=97=8F tpm2-abrmd.service - TPM2 Access Broker and Resource Management D=
-aemon
-   Loaded: loaded (/lib/systemd/system/tpm2-abrmd.service; enabled; vendor =
-preset: enabl
-   Active: inactive (dead)
-
-How would I go about figuring out what is wrong? I am new to this so any he=
-lp would be highly appreciated.
-
-Regards,
-Moneeb
-
---===============7796360516625802403==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1rc19jXzU2MDEtMTk4NyI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIg
-c3R5bGU9ImRpc3BsYXk6bm9uZTsiPjwhLS0gUCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206
-MDt9IC0tPjwvc3R5bGU+CjwvaGVhZD4KPGJvZHkgZGlyPSJsdHIiPgo8ZGl2IGlkPSJkaXZ0YWdk
-ZWZhdWx0d3JhcHBlciIgc3R5bGU9ImZvbnQtc2l6ZToxMnB0O2NvbG9yOiMwMDAwMDA7Zm9udC1m
-YW1pbHk6Q2FsaWJyaSxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsiIGRpcj0ibHRyIj4KPHAgc3R5bGU9
-Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjAiPkkgYW0mbmJzcDsgdXNpbmcgdGhlIGlibSBz
-aW11bGF0b3IgYW5kIGl0IHN0YXJ0cyB1cCBmaW5lLiBIb3dldmVyOjxicj4KPC9wPgo8YnI+Cjxk
-aXY+JCBscyAtbCAvZGV2L3RwbTA8YnI+CmxzOiBjYW5ub3QgYWNjZXNzICcvZGV2L3RwbTAnOiBO
-byBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5PGJyPgo8YnI+CjwvZGl2Pgo8cCBzdHlsZT0ibWFyZ2lu
-LXRvcDowO21hcmdpbi1ib3R0b206MCI+SXMgL2Rldi90cG0wIHJlcXVpcmVkIHdoaWxlIHVzaW5n
-IHRoZSBzaW11bGF0b3I/PC9wPgo8ZGl2IHN0eWxlPSJjb2xvcjogcmdiKDAsIDAsIDApOyI+Cjxo
-ciBzdHlsZT0iZGlzcGxheTppbmxpbmUtYmxvY2s7d2lkdGg6OTglIiB0YWJpbmRleD0iLTEiPgo8
-ZGl2IGlkPSJkaXZScGx5RndkTXNnIiBkaXI9Imx0ciI+PGZvbnQgc3R5bGU9ImZvbnQtc2l6ZTox
-MXB0IiBjb2xvcj0iIzAwMDAwMCIgZmFjZT0iQ2FsaWJyaSwgc2Fucy1zZXJpZiI+PGI+RnJvbTo8
-L2I+IFRyaWNjYSwgUGhpbGlwIEIgJmx0O3BoaWxpcC5iLnRyaWNjYUBpbnRlbC5jb20mZ3Q7PGJy
-Pgo8Yj5TZW50OjwvYj4gV2VkbmVzZGF5LCBGZWJydWFyeSAxNCwgMjAxOCAzOjExIEFNPGJyPgo8
-Yj5Ubzo8L2I+IE1vbmVlYiBBemhhcjxicj4KPGI+Q2M6PC9iPiB0cG0yQGxpc3RzLjAxLm9yZzxi
-cj4KPGI+U3ViamVjdDo8L2I+IFJFOiBUQ1RJIGluaXRpYWxpemF0aW9uIGZhaWxzIHdpdGggZXJy
-b3IgMHhjMDAwYjwvZm9udD4KPGRpdj4mbmJzcDs8L2Rpdj4KPC9kaXY+CjxkaXYgbGluaz0iYmx1
-ZSIgdmxpbms9InB1cnBsZSIgbGFuZz0iRU4tVVMiPgo8ZGl2IGNsYXNzPSJ4X1dvcmRTZWN0aW9u
-MSI+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7
-IGZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6IzFGNDk3
-RCI+WW91oa9yZSBtYWtpbmcgcHJvZ3Jlc3MuIFRoaXMgdGltZSB0aGUgZGFlbW9uIGxvYWRlZCB0
-aGUgVENUSSBwcm9wZXJseSBidXQgdGhlIFRDVEkgaW5pdGlhbGl6YXRpb24gZnVuY3Rpb24gZmFp
-bGVkLiBGb3IgdGhlIGRldmljZSBUQ1RJIHRoaXMgaXMgOTklIGFuIGlzc3VlCiB3aXRoIHBlcm1p
-c3Npb25zIG9uIC9kZXYvdHBtMC4gQ2hlY2sgdG8gc2VlIHdoaWNoIHVzZXIgY2FuIGFjY2VzcyB0
-aGlzIGRldmljZSAocm9vdD8pIGFuZCB0aGVuIHJ1biB0aGUgZGFlbW9uIGFzIHRoYXQgdXNlci4g
-SWRlYWxseSB0aGlzIHdpbGwgYmUgYW4gdW5wcml2aWxlZ2VkIHVzZXIgYW5kIG1vc3QgZGlzdHJv
-cyB1c2Ugb25lIGNhbGxlZCChrnRzc6GvOgo8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBt
-Mi1zb2Z0d2FyZS90cG0yLWFicm1kL2Jsb2IvbWFzdGVyL0lOU1RBTEwubWQjc3lzdGVtLXVzZXIt
-LWdyb3VwIiBpZD0iTFBsbms1ODQ5MjMiIHByZXZpZXdyZW1vdmVkPSJ0cnVlIj4KaHR0cHM6Ly9n
-aXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9ibG9iL21hc3Rlci9JTlNUQUxMLm1k
-I3N5c3RlbS11c2VyLS1ncm91cDwvYT48L3NwYW4+PC9wPgo8ZGl2IGlkPSJMUEJvcmRlcl9HVF8x
-NTE4NTkzNjYzNzg1MC40NzEzMTk4OTcwNDM2OTc4IiBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMjBw
-eDsgb3ZlcmZsb3c6IGF1dG87IHdpZHRoOiAxMDAlOyB0ZXh0LWluZGVudDogMHB4OyI+Cjx0YWJs
-ZSBpZD0iTFBDb250YWluZXJfMTUxODU5MzY2Mzc3OTAuNjU1ODMzOTAzNTgyMTY2IiBzdHlsZT0i
-d2lkdGg6IDkwJTsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1NSwgMjU1LCAyNTUpOyBwb3NpdGlv
-bjogcmVsYXRpdmU7IG92ZXJmbG93OiBhdXRvOyBwYWRkaW5nLXRvcDogMjBweDsgcGFkZGluZy1i
-b3R0b206IDIwcHg7IG1hcmdpbi10b3A6IDIwcHg7IGJvcmRlci10b3A6IDFweCBkb3R0ZWQgcmdi
-KDIwMCwgMjAwLCAyMDApOyBib3JkZXItYm90dG9tOiAxcHggZG90dGVkIHJnYigyMDAsIDIwMCwg
-MjAwKTsiIHJvbGU9InByZXNlbnRhdGlvbiIgY2VsbHNwYWNpbmc9IjAiPgo8dGJvZHk+Cjx0ciBz
-dHlsZT0iYm9yZGVyLXNwYWNpbmc6IDBweDsiIHZhbGlnbj0idG9wIj4KPHRkIGlkPSJJbWFnZUNl
-bGxfMTUxODU5MzY2Mzc4MTAuMzYxMDA0NjkxNjQ2MzkyMDQiIHN0eWxlPSJ3aWR0aDogMjUwcHg7
-IHBvc2l0aW9uOiByZWxhdGl2ZTsgZGlzcGxheTogdGFibGUtY2VsbDsgcGFkZGluZy1yaWdodDog
-MjBweDsiIGNvbHNwYW49IjEiPgo8ZGl2IGlkPSJMUEltYWdlQ29udGFpbmVyXzE1MTg1OTM2NjM3
-ODEwLjkyMzcwNDIxNzY0NTY5NjEiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAy
-NTUsIDI1NSk7IGhlaWdodDogMjUwcHg7IHBvc2l0aW9uOiByZWxhdGl2ZTsgbWFyZ2luOiBhdXRv
-OyBkaXNwbGF5OiB0YWJsZTsgd2lkdGg6IDI1MHB4OyI+CjxhIGlkPSJMUEltYWdlQW5jaG9yXzE1
-MTg1OTM2NjM3ODEwLjQ2Nzk5NjcyNjA3NjkwNzciIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxs
-OyB0ZXh0LWFsaWduOiBjZW50ZXI7IiBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0
-d2FyZS90cG0yLWFicm1kL2Jsb2IvbWFzdGVyL0lOU1RBTEwubWQjc3lzdGVtLXVzZXItLWdyb3Vw
-IiB0YXJnZXQ9Il9ibGFuayI+PGltZyBzdHlsZT0iZGlzcGxheTogaW5saW5lLWJsb2NrOyBtYXgt
-d2lkdGg6IDI1MHB4OyBtYXgtaGVpZ2h0OiAyNTBweDsgaGVpZ2h0OiAyNTBweDsgd2lkdGg6IDI1
-MHB4OyBib3JkZXItd2lkdGg6IDBweDsgdmVydGljYWwtYWxpZ246IGJvdHRvbTsiIGlkPSJMUFRo
-dW1ibmFpbEltYWdlSURfMTUxODU5MzY2Mzc4MjAuMDgyNTU0NjIwNDgyNjQ5MDUiIHdpZHRoPSIy
-NTAiIGhlaWdodD0iMjUwIiBzcmM9Imh0dHBzOi8vYXZhdGFyczIuZ2l0aHVidXNlcmNvbnRlbnQu
-Y29tL3UvMzQ0ODg2OTc/cz00MDAmYW1wO3Y9NCI+PC9hPjwvZGl2Pgo8L3RkPgo8dGQgaWQ9IlRl
-eHRDZWxsXzE1MTg1OTM2NjM3ODIwLjY4MTc0MDU3NTE3MDc5OTMiIHN0eWxlPSJ2ZXJ0aWNhbC1h
-bGlnbjogdG9wOyBwb3NpdGlvbjogcmVsYXRpdmU7IHBhZGRpbmc6IDBweDsgZGlzcGxheTogdGFi
-bGUtY2VsbDsiIGNvbHNwYW49IjIiPgo8ZGl2IGlkPSJMUFJlbW92ZVByZXZpZXdDb250YWluZXJf
-MTUxODU5MzY2Mzc4MjAuOTkwMDIwNTAxNTc1ODkzMiI+PC9kaXY+CjxkaXYgaWQ9IkxQVGl0bGVf
-MTUxODU5MzY2Mzc4MjAuODU5NDAxNjYxNzk3MDQyNyIgc3R5bGU9InRvcDogMHB4OyBjb2xvcjog
-cmdiKDAsIDEyMCwgMjE1KTsgZm9udC13ZWlnaHQ6IDQwMDsgZm9udC1zaXplOiAyMXB4OyBmb250
-LWZhbWlseTogJnF1b3Q7d2Zfc2Vnb2UtdWlfbGlnaHQmcXVvdDssICZxdW90O1NlZ29lIFVJIExp
-Z2h0JnF1b3Q7LCAmcXVvdDtTZWdvZSBXUCBMaWdodCZxdW90OywgJnF1b3Q7U2Vnb2UgVUkmcXVv
-dDssICZxdW90O1NlZ29lIFdQJnF1b3Q7LCBUYWhvbWEsIEFyaWFsLCBzYW5zLXNlcmlmOyBsaW5l
-LWhlaWdodDogMjFweDsiPgo8YSBpZD0iTFBVcmxBbmNob3JfMTUxODU5MzY2Mzc4MzAuMjAyOTUw
-NTk3NzA0ODM0OTIiIHN0eWxlPSJ0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBocmVmPSJodHRwczov
-L2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL2Jsb2IvbWFzdGVyL0lOU1RBTEwu
-bWQjc3lzdGVtLXVzZXItLWdyb3VwIiB0YXJnZXQ9Il9ibGFuayI+dHBtMi1hYnJtZC9JTlNUQUxM
-Lm1kIGF0IG1hc3RlciAtIGdpdGh1Yi5jb208L2E+PC9kaXY+CjxkaXYgaWQ9IkxQTWV0YWRhdGFf
-MTUxODU5MzY2Mzc4NDAuNzM5NjIzNzAxNDYzNTk1NCIgc3R5bGU9Im1hcmdpbjogMTBweCAwcHgg
-MTZweDsgY29sb3I6IHJnYigxMDIsIDEwMiwgMTAyKTsgZm9udC13ZWlnaHQ6IDQwMDsgZm9udC1m
-YW1pbHk6ICZxdW90O3dmX3NlZ29lLXVpX25vcm1hbCZxdW90OywgJnF1b3Q7U2Vnb2UgVUkmcXVv
-dDssICZxdW90O1NlZ29lIFdQJnF1b3Q7LCBUYWhvbWEsIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250
-LXNpemU6IDE0cHg7IGxpbmUtaGVpZ2h0OiAxNHB4OyI+CmdpdGh1Yi5jb208L2Rpdj4KPGRpdiBp
-ZD0iTFBEZXNjcmlwdGlvbl8xNTE4NTkzNjYzNzg0MC41Mzk1MTcyMjYxMzEzOTc0IiBzdHlsZT0i
-ZGlzcGxheTogYmxvY2s7IGNvbG9yOiByZ2IoMTAyLCAxMDIsIDEwMik7IGZvbnQtd2VpZ2h0OiA0
-MDA7IGZvbnQtZmFtaWx5OiAmcXVvdDt3Zl9zZWdvZS11aV9ub3JtYWwmcXVvdDssICZxdW90O1Nl
-Z29lIFVJJnF1b3Q7LCAmcXVvdDtTZWdvZSBXUCZxdW90OywgVGFob21hLCBBcmlhbCwgc2Fucy1z
-ZXJpZjsgZm9udC1zaXplOiAxNHB4OyBsaW5lLWhlaWdodDogMjBweDsgbWF4LWhlaWdodDogMTAw
-cHg7IG92ZXJmbG93OiBoaWRkZW47Ij4KVGhpcyBpcyBhIHF1aWNrIHNldCBvZiBpbnN0cnVjdGlv
-bnMgdG8gYnVpbGQsIGluc3RhbGwgYW5kIHJ1biB0aGUgdHBtMi1hYnJtZC4gRGVwZW5kZW5jaWVz
-LiBUbyBidWlsZCBhbmQgaW5zdGFsbCB0aGUgdHBtMi1hYnJtZCBzb2Z0d2FyZSB0aGUgZm9sbG93
-aW5nIGRlcGVuZGVuY2llcyAuLi48L2Rpdj4KPC90ZD4KPC90cj4KPC90Ym9keT4KPC90YWJsZT4K
-PC9kaXY+CjxwPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1z
-aXplOjExLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBj
-b2xvcjojMUY0OTdEIj4mbmJzcDs8L3NwYW4+PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPjxz
-cGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1
-b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOiMxRjQ5N0QiPlBoaWxpcDwvc3Bhbj48L3A+CjxwIGNsYXNz
-PSJ4X01zb05vcm1hbCI+PGEgbmFtZT0ieF9fTWFpbEVuZENvbXBvc2UiPjxzcGFuIHN0eWxlPSJm
-b250LXNpemU6MTEuMHB0OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2Vy
-aWY7IGNvbG9yOiMxRjQ5N0QiPiZuYnNwOzwvc3Bhbj48L2E+PC9wPgo8ZGl2Pgo8ZGl2IHN0eWxl
-PSJib3JkZXI6bm9uZTsgYm9yZGVyLXRvcDpzb2xpZCAjRTFFMUUxIDEuMHB0OyBwYWRkaW5nOjMu
-MHB0IDBpbiAwaW4gMGluIj4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48YSBuYW1lPSJ4X19fX19f
-cmVwbHlzZXBhcmF0b3IiPjwvYT48Yj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDsgZm9u
-dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj5Gcm9tOjwvc3Bhbj48L2I+
-PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
-cXVvdDssc2Fucy1zZXJpZiI+IE1vbmVlYiBBemhhciBbbWFpbHRvOm1vbmVlYjc3N0Bob3RtYWls
-LmNvbV0KPGJyPgo8Yj5TZW50OjwvYj4gMTMgRmVicnVhcnksIDIwMTggMTI6NDU8YnI+CjxiPlRv
-OjwvYj4gVHJpY2NhLCBQaGlsaXAgQiAmbHQ7cGhpbGlwLmIudHJpY2NhQGludGVsLmNvbSZndDs8
-YnI+CjxiPkNjOjwvYj4gdHBtMkBsaXN0cy4wMS5vcmc8YnI+CjxiPlN1YmplY3Q6PC9iPiBSZTog
-VENUSSBpbml0aWFsaXphdGlvbiBmYWlscyB3aXRoIGVycm9yIDB4YzAwMGI8L3NwYW4+PC9wPgo8
-L2Rpdj4KPC9kaXY+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+Jm5ic3A7PC9wPgo8ZGl2IGlkPSJ4
-X2RpdnRhZ2RlZmF1bHR3cmFwcGVyIj4KPHA+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90
-O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPlRoZSB3b3JrYXJvdW5kIGxl
-YWRzIHRvIGEgc2ltaWxhciBlcnJvcjo8L3NwYW4+PC9wPgo8cD48c3BhbiBzdHlsZT0iZm9udC1m
-YW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFjayI+Jm5ic3A7
-PC9zcGFuPjwvcD4KPGRpdj4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9u
-dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFjayI+dWJ1
-bnR1On4vRGVza3RvcC9pYm10cG05NzQvc3JjJCB0cG0yLWFicm1kIC0tdGN0aT1saWJ0Y3RpLWRl
-dmljZS5zbwo8YnI+CioqICh0cG0yLWFicm1kOjQwNjUpOiBXQVJOSU5HICoqOiBmYWlsZWQgdG8g
-aW5pdGlhbGl6ZSBkZXZpY2UgVENUSSBjb250ZXh0OiAweGEwMDBhPGJyPgoqKiAodHBtMi1hYnJt
-ZDo0MDY1KTogQ1JJVElDQUwgKio6IFRDVEkgaW5pdGlhbGl6YXRpb24gZmFpbGVkOiAweGEwMDBh
-PGJyPgo8YnI+ClRoaXMgaXMgc2ltaWxhciB0byBpc3N1ZSAjOTIgYnV0IEkgYW0gYWxyZWFkeSBm
-b2xsb3dpbmcgdGhlIHN0ZXBzIHN1Z2dlc3RlZCBpbiB0aGUgY29tbWVudHMgdGhlcmUuCjwvc3Bh
-bj48L3A+CjwvZGl2Pgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZh
-bWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj4mbmJzcDs8
-L3NwYW4+PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEy
-LjBwdCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1z
-ZXJpZjsgY29sb3I6YmxhY2siPiZuYnNwOzwvc3Bhbj48L3A+CjxkaXY+CjxkaXYgY2xhc3M9Inhf
-TXNvTm9ybWFsIiBzdHlsZT0idGV4dC1hbGlnbjpjZW50ZXIiIGFsaWduPSJjZW50ZXIiPjxzcGFu
-IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9y
-OmJsYWNrIj4KPGhyIHdpZHRoPSI5OCUiIHNpemU9IjMiIGFsaWduPSJjZW50ZXIiPgo8L3NwYW4+
-PC9kaXY+CjxkaXYgaWQ9InhfZGl2UnBseUZ3ZE1zZyI+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+
-PGI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0NhbGli
-cmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPkZyb206PC9zcGFuPjwvYj48c3BhbiBz
-dHlsZT0iZm9udC1zaXplOjExLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90Oyxz
-YW5zLXNlcmlmOyBjb2xvcjpibGFjayI+IFRyaWNjYSwgUGhpbGlwIEIgJmx0OzxhIGhyZWY9Im1h
-aWx0bzpwaGlsaXAuYi50cmljY2FAaW50ZWwuY29tIj5waGlsaXAuYi50cmljY2FAaW50ZWwuY29t
-PC9hPiZndDs8YnI+CjxiPlNlbnQ6PC9iPiBUdWVzZGF5LCBGZWJydWFyeSAxMywgMjAxOCAxMToz
-OCBQTTxicj4KPGI+VG86PC9iPiBNb25lZWIgQXpoYXI8YnI+CjxiPkNjOjwvYj4gPGEgaHJlZj0i
-bWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIj50cG0yQGxpc3RzLjAxLm9yZzwvYT48YnI+CjxiPlN1
-YmplY3Q6PC9iPiBSRTogVENUSSBpbml0aWFsaXphdGlvbiBmYWlscyB3aXRoIGVycm9yIDB4YzAw
-MGI8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fu
-cy1zZXJpZjsgY29sb3I6YmxhY2siPgo8L3NwYW4+PC9wPgo8ZGl2Pgo8cCBjbGFzcz0ieF9Nc29O
-b3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMt
-c2VyaWY7IGNvbG9yOmJsYWNrIj4mbmJzcDs8L3NwYW4+PC9wPgo8L2Rpdj4KPC9kaXY+CjxkaXY+
-CjxkaXY+CjxwIGNsYXNzPSJ4X3htc29ub3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEu
-MHB0OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOiMx
-RjQ5N0QiPkkgdHJpYWdlZCB0aGlzIGxhc3QgbmlnaHQuIEl0oa9zIGEgYnVnIGluIHRoZSBsb2dp
-YyB0aGF0IHNlbGVjdHMgdGhlIGRlZmF1bHQgVENUSS4gSaGvdmUgZ290IGFuIGlzc3VlIGluIHRo
-ZSB0cmFja2VyIGZvciBpdCBoZXJlOgo8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1z
-b2Z0d2FyZS90cG0yLWFicm1kL2lzc3Vlcy8zMjciIGlkPSJMUGxuazk4MjkzNyIgcHJldmlld3Jl
-bW92ZWQ9InRydWUiPgpodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1k
-L2lzc3Vlcy8zMjc8L2E+LiBZb3UgY2FuIHdvcmsgYXJvdW5kIGl0IGJ5IGV4cGxpY2l0bHkgc2Vs
-ZWN0aW5nIHRoZSBkZXZpY2UgVENUSSB3aXRoIHRoZSBmb2xsb3dpbmcgb3B0aW9uOiBgLS10Y3Rp
-PWxpYnRjdGktZGV2aWNlLnNvYC4gSaGvbGwgYmUgZml4aW5nIHRoaXMgdXAgdG9kYXkgYW5kIGxp
-a2VseSBjaGFuZ2luZyB0aGUgd2F5IHdlIHNwZWNpZnkgdGhlIFRDVEkgdG8KIGFsaWduIHdpdGgg
-dGhlIHRvb2xzIGAtLXRjdGlgIG9wdGlvbi48L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5
-OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPjwvc3Bhbj48L3A+
-CjxkaXYgaWQ9IkxQQm9yZGVyX0dUXzE1MTg1NTQ1Mzg0NjkwLjU1MTQ4MzQ5MzI4MzU1MTciIHN0
-eWxlPSJtYXJnaW4tYm90dG9tOjE1LjBwdDsgb3ZlcmZsb3c6YXV0byI+Cjx0YWJsZSBjbGFzcz0i
-eF9Nc29Ob3JtYWxUYWJsZSIgc3R5bGU9IndpZHRoOjkwLjAlOyBiYWNrZ3JvdW5kOndoaXRlOyBi
-b3JkZXItdG9wOmRvdHRlZCAjQzhDOEM4IDEuMHB0OyBib3JkZXItbGVmdDpub25lOyBib3JkZXIt
-Ym90dG9tOmRvdHRlZCAjQzhDOEM4IDEuMHB0OyBib3JkZXItcmlnaHQ6bm9uZSIgd2lkdGg9Ijkw
-JSIgY2VsbHNwYWNpbmc9IjAiIGNlbGxwYWRkaW5nPSIwIiBib3JkZXI9IjEiPgo8dGJvZHk+Cjx0
-cj4KPHRkIHN0eWxlPSJ3aWR0aDoxODcuNXB0OyBib3JkZXI6bm9uZTsgcGFkZGluZzoxNS4wcHQg
-MTUuMHB0IDE1LjBwdCAuNzVwdCIgd2lkdGg9IjI3MSIgdmFsaWduPSJ0b3AiPgo8ZGl2IGlkPSJM
-UEltYWdlQ29udGFpbmVyXzE1MTg1NTQ1Mzg0NjQwLjczNDQzMTQ2MzA0OTc0OSIgc3R5bGU9Im1h
-cmdpbi10b3A6NS4wcHQ7IG1hcmdpbi1ib3R0b206NS4wcHQ7IGRpc3BsYXk6dGFibGUiPgo8cCBj
-bGFzcz0ieF9Nc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tdG9wOjE1LjBwdDsgYmFja2dyb3VuZDp3
-aGl0ZSI+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJt
-ZC9pc3N1ZXMvMzI3IiB0YXJnZXQ9Il9ibGFuayI+PHNwYW4gc3R5bGU9InRleHQtZGVjb3JhdGlv
-bjpub25lIj48aW1nIGlkPSJMUFRodW1ibmFpbEltYWdlSURfMTUxODU1NDUzODQ2NjAuNDY2MzY0
-MzUyMzQwMjczMiIgd2lkdGg9IjI1MCIgaGVpZ2h0PSIyNTAiIGJvcmRlcj0iMCIgc3JjPSJodHRw
-czovL2F2YXRhcnMwLmdpdGh1YnVzZXJjb250ZW50LmNvbS91LzE1NTA4MTM/cz00MDAmYW1wO3Y9
-NCI+PC9zcGFuPjwvYT48L3A+CjwvZGl2Pgo8L3RkPgo8dGQgaWQ9InhfVGV4dENlbGxfMTUxODU1
-NDUzODQ2NjAuOTg2MzMwOTUxMjEwMzkwMyIgc3R5bGU9ImJvcmRlcjpub25lOyBwYWRkaW5nOjBp
-biAwaW4gMGluIDBpbjsgZGlzcGxheTp0YWJsZS1jZWxsIiB2YWxpZ249InRvcCI+CjxkaXYgaWQ9
-IkxQVGl0bGVfMTUxODU1NDUzODQ2NjAuNDk5MTQ4NzAwODczNDU0MiI+CjxwIGNsYXNzPSJ4X01z
-b05vcm1hbCIgc3R5bGU9Im1hcmdpbi10b3A6MTUuMHB0Ij48c3BhbiBzdHlsZT0iZm9udC1zaXpl
-OjE2LjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7U2Vnb2UgVUkgTGlnaHQmcXVvdDssc2Fucy1zZXJp
-ZjsgY29sb3I6IzAwNzhENyI+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdh
-cmUvdHBtMi1hYnJtZC9pc3N1ZXMvMzI3IiB0YXJnZXQ9Il9ibGFuayI+PHNwYW4gc3R5bGU9InRl
-eHQtZGVjb3JhdGlvbjpub25lIj5zYW5lCiBkZWZhdWx0IFRDVEkgoaQgSXNzdWUgIzMyNyChpCB0
-cG0yLXNvZnR3YXJlL3RwbTItYWJybWQ8L3NwYW4+PC9hPjwvc3Bhbj48L3A+CjwvZGl2Pgo8ZGl2
-IGlkPSJMUE1ldGFkYXRhXzE1MTg1NTQ1Mzg0NjcwLjM2NDEyOTE3ODY4NDEyNjIiIHN0eWxlPSJt
-YXJnaW4tdG9wOjcuNXB0OyBtYXJnaW4tYm90dG9tOjEyLjBwdCI+CjxwIGNsYXNzPSJ4X01zb05v
-cm1hbCIgc3R5bGU9Im1hcmdpbi10b3A6MTUuMHB0OyBsaW5lLWhlaWdodDoxMC41cHQiPjxzcGFu
-IHN0eWxlPSJmb250LXNpemU6MTAuNXB0OyBmb250LWZhbWlseTomcXVvdDtTZWdvZSBVSSZxdW90
-OyxzYW5zLXNlcmlmOyBjb2xvcjojNjY2NjY2Ij5naXRodWIuY29tPC9zcGFuPjwvcD4KPC9kaXY+
-CjxkaXYgaWQ9IkxQRGVzY3JpcHRpb25fMTUxODU1NDUzODQ2ODAuMDk4NDkxODA2MTgzMDgxNjIi
-Pgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tdG9wOjE1LjBwdDsgbGluZS1o
-ZWlnaHQ6MTUuMHB0Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjVwdDsgZm9udC1mYW1pbHk6
-JnF1b3Q7U2Vnb2UgVUkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6IzY2NjY2NiI+SXQgbG9va3Mg
-bGlrZSwgd2hlbiBwcm92aWRlZCB3aXRoIG5vIC0tdGN0aSBvcHRpb24gd2UncmUgbm90IHBpY2tp
-bmcgYSBzYW5lIGRlZmF1bHQgdmFsdWUgZm9yIHRoZSBUQ1RJIGxpYnJhcnkuCiBJZiB0aGUgb3B0
-aW9uIGlzIG9taXR0ZWQgd2Ugc2hvdWxkIGRlZmF1bHQgdG8gdGhlIGRldmljZSBUQ1RJLjwvc3Bh
-bj48L3A+CjwvZGl2Pgo8L3RkPgo8L3RyPgo8L3Rib2R5Pgo8L3RhYmxlPgo8L2Rpdj4KPHAgY2xh
-c3M9InhfeG1zb25vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7IGZvbnQtZmFt
-aWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6IzFGNDk3RCI+Jm5ic3A7
-PC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMt
-c2VyaWY7IGNvbG9yOmJsYWNrIj48L3NwYW4+PC9wPgo8cCBjbGFzcz0ieF94bXNvbm9ybWFsIj48
-c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZx
-dW90OyxzYW5zLXNlcmlmOyBjb2xvcjojMUY0OTdEIj5CZXN0LDwvc3Bhbj48c3BhbiBzdHlsZT0i
-Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFjayI+
-PC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfeG1zb25vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
-ZToxMS4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29s
-b3I6IzFGNDk3RCI+UGhpbGlwPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtD
-YWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj48L3NwYW4+PC9wPgo8cCBjbGFz
-cz0ieF94bXNvbm9ybWFsIj48YSBuYW1lPSJ4X3hfX01haWxFbmRDb21wb3NlIj48c3BhbiBzdHls
-ZT0iZm9udC1zaXplOjExLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5z
-LXNlcmlmOyBjb2xvcjojMUY0OTdEIj4mbmJzcDs8L3NwYW4+PC9hPjxzcGFuIHN0eWxlPSJmb250
-LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj48L3Nw
-YW4+PC9wPgo8ZGl2Pgo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTsgYm9yZGVyLXRvcDpzb2xpZCAj
-RTFFMUUxIDEuMHB0OyBwYWRkaW5nOjMuMHB0IDBpbiAwaW4gMGluIj4KPHAgY2xhc3M9InhfeG1z
-b25vcm1hbCI+PGEgbmFtZT0ieF94X19fX19fcmVwbHlzZXBhcmF0b3IiPjwvYT48Yj48c3BhbiBz
-dHlsZT0iZm9udC1zaXplOjExLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90Oyxz
-YW5zLXNlcmlmOyBjb2xvcjpibGFjayI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6MTEuMHB0OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7
-IGNvbG9yOmJsYWNrIj4gTW9uZWViIEF6aGFyIFs8YSBocmVmPSJtYWlsdG86bW9uZWViNzc3QGhv
-dG1haWwuY29tIj5tYWlsdG86bW9uZWViNzc3QGhvdG1haWwuY29tPC9hPl0KPGJyPgo8Yj5TZW50
-OjwvYj4gMTMgRmVicnVhcnksIDIwMTggMDQ6NTA8YnI+CjxiPlRvOjwvYj4gVHJpY2NhLCBQaGls
-aXAgQiAmbHQ7PGEgaHJlZj0ibWFpbHRvOnBoaWxpcC5iLnRyaWNjYUBpbnRlbC5jb20iPnBoaWxp
-cC5iLnRyaWNjYUBpbnRlbC5jb208L2E+Jmd0Ozxicj4KPGI+Q2M6PC9iPiA8YSBocmVmPSJtYWls
-dG86dHBtMkBsaXN0cy4wMS5vcmciPnRwbTJAbGlzdHMuMDEub3JnPC9hPjxicj4KPGI+U3ViamVj
-dDo8L2I+IFJlOiBUQ1RJIGluaXRpYWxpemF0aW9uIGZhaWxzIHdpdGggZXJyb3IgMHhjMDAwYjwv
-c3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNl
-cmlmOyBjb2xvcjpibGFjayI+PC9zcGFuPjwvcD4KPC9kaXY+CjwvZGl2Pgo8cCBjbGFzcz0ieF94
-bXNvbm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90Oyxz
-YW5zLXNlcmlmOyBjb2xvcjpibGFjayI+Jm5ic3A7PC9zcGFuPjwvcD4KPGRpdiBpZD0ieF94X2Rp
-dnRhZ2RlZmF1bHR3cmFwcGVyIj4KPHA+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0Nh
-bGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPkhleSw8L3NwYW4+PC9wPgo8cD48
-c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBj
-b2xvcjpibGFjayI+Jm5ic3A7PC9zcGFuPjwvcD4KPHA+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5
-OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPlNvIGZyb20gd2hh
-dCBJIGhhdmUgZ2F0aGVyZWQsIHRhYnJtZCBpcyBkZXNpZ25lZCB0byBjb25uZWN0IGRpcmVjdGx5
-IHRvIHRoZSBzaW11bGF0b3Igd2l0aG91dCB0aGUgbmVlZCB0byBwYXNzIGFueSBvcHRpb25zIGJ5
-IHVzaW5nIC0tdGN0aS4gSSB0cmllZCBkb2luZyB0aGlzIGFuZCBnZXQgdGhlIGV4YWN0IHNhbWUg
-ZXJyb3I6PC9zcGFuPjwvcD4KPHA+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0NhbGli
-cmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPiZuYnNwOzwvc3Bhbj48L3A+CjxkaXY+
-CjxwIGNsYXNzPSJ4X3htc29ub3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+PHNw
-YW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29s
-b3I6YmxhY2siPnVidW50dTp+L0Rlc2t0b3AvaWJtdHBtOTc0L3NyYyQgc3VkbyB0cG0yLWFicm1k
-Jm5ic3A7IC0tYWxsb3ctcm9vdDxicj4KKiogKHRwbTItYWJybWQ6MTA1NDQ1KTogV0FSTklORyAq
-KjogRmFpbGVkIHRvIGdldCByZWZlcmVuY2UgdG8gc3ltYm9sOiB0cG0yLWFicm1kOiB1bmRlZmlu
-ZWQgc3ltYm9sOiBUc3MyX1RjdGlfSW5mbzxicj4KKiogKHRwbTItYWJybWQ6MTA1NDQ1KTogQ1JJ
-VElDQUwgKio6IFRDVEkgaW5pdGlhbGl6YXRpb24gZmFpbGVkOiAweGMwMDBiPGJyPgo8YnI+Ckkm
-bmJzcDsgbXVzdCBiZSBkb2luZyBzb21ldGhpbmcgd3JvbmcgYnV0IEkgZG9uJ3Qga25vdyB3aGF0
-LiBBcmUgdGhlcmUgYW55IGxvZyBmaWxlcyBJIGNhbiBnbyB0aHJvdWdoJm5ic3A7IHdoaWNoIGNv
-dWxkIHRlbGwgbWUgd2hhdCBpcyBoYXBwZW5pbmc/Cjxicj4KPGJyPgpSZWdhcmRzLDxicj4KTW9u
-ZWViPC9zcGFuPjwvcD4KPC9kaXY+CjxwIGNsYXNzPSJ4X3htc29ub3JtYWwiPjxzcGFuIHN0eWxl
-PSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNr
-Ij4mbmJzcDs8L3NwYW4+PC9wPgo8cCBjbGFzcz0ieF94bXNvbm9ybWFsIiBzdHlsZT0ibWFyZ2lu
-LWJvdHRvbToxMi4wcHQiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1
-b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj4mbmJzcDs8L3NwYW4+PC9wPgo8ZGl2Pgo8ZGl2
-IGNsYXNzPSJ4X01zb05vcm1hbCIgc3R5bGU9InRleHQtYWxpZ246Y2VudGVyIiBhbGlnbj0iY2Vu
-dGVyIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNl
-cmlmOyBjb2xvcjpibGFjayI+CjxociB3aWR0aD0iOTglIiBzaXplPSIzIiBhbGlnbj0iY2VudGVy
-Ij4KPC9zcGFuPjwvZGl2Pgo8ZGl2IGlkPSJ4X3hfZGl2UnBseUZ3ZE1zZyI+CjxwIGNsYXNzPSJ4
-X3htc29ub3JtYWwiPjxiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0OyBmb250LWZhbWls
-eTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj5Gcm9tOjwvc3Bh
-bj48L2I+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0Nh
-bGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPiBUcmljY2EsIFBoaWxpcCBCICZs
-dDs8YSBocmVmPSJtYWlsdG86cGhpbGlwLmIudHJpY2NhQGludGVsLmNvbSI+cGhpbGlwLmIudHJp
-Y2NhQGludGVsLmNvbTwvYT4mZ3Q7PGJyPgo8Yj5TZW50OjwvYj4gTW9uZGF5LCBGZWJydWFyeSAx
-MiwgMjAxOCA5OjA0IFBNPGJyPgo8Yj5Ubzo8L2I+IE1vbmVlYiBBemhhcjxicj4KPGI+Q2M6PC9i
-PiA8YSBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciPnRwbTJAbGlzdHMuMDEub3JnPC9h
-Pjxicj4KPGI+U3ViamVjdDo8L2I+IFJFOiBUQ1RJIGluaXRpYWxpemF0aW9uIGZhaWxzIHdpdGgg
-ZXJyb3IgMHhjMDAwYjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJy
-aSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFjayI+Cjwvc3Bhbj48L3A+CjxkaXY+CjxwIGNs
-YXNzPSJ4X3htc29ub3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJp
-JnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj4mbmJzcDs8L3NwYW4+PC9wPgo8L2Rpdj4K
-PC9kaXY+CjxkaXY+CjxkaXY+CjxwIGNsYXNzPSJ4X3h4bXNvbm9ybWFsIj48c3BhbiBzdHlsZT0i
-Zm9udC1zaXplOjExLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNl
-cmlmOyBjb2xvcjojMUY0OTdEIj5BcG9sb2dpZXMgaW4gYWR2YW5jZSBmb3IgdG9wIHBvc3Rpbmc8
-YSBuYW1lPSJ4X3hfeF9fTWFpbEVuZENvbXBvc2UiPi4gSaGvbSBzdHVjayBvbiBhIHdpbmRvd3Mg
-c3lzdGVtIHdoaWxlIHRyYXZlbGluZy48L2E+PC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWls
-eTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj48L3NwYW4+PC9w
-Pgo8cCBjbGFzcz0ieF94eG1zb25vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7
-IGZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6IzFGNDk3
-RCI+Jm5ic3A7PC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1
-b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj48L3NwYW4+PC9wPgo8cCBjbGFzcz0ieF94eG1z
-b25vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90
-O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6IzFGNDk3RCI+SXQgc2VlbXMgYXMgdGhv
-dWdoIHlvdXIgaXNzdWUgaXMgcmVsYXRlZCB0byBhIHJlY2VudCBjaGFuZ2UgdG8gdGhlIHdheSB3
-ZaGvcmUgaW5pdGlhbGl6aW5nIHRoZSBUQ1RJIG1vZHVsZXMuIFRoaXMgY2F1c2VkIGEgZmV3IGNo
-YW5nZXMgdG8gdGhlIHJlbGV2YW50IGNvbW1hbmQKIGxpbmUgb3B0aW9ucyBsaWtlIGAtLXRjdGlg
-LiBJZiB5b3Whr3JlIGNvbm5lY3RpbmcgdGhlIHRhYnJtZCB1cCB0byB0aGUgVFBNIGRldmljZSBh
-bmQgbm90IHRoZSBzaW11bGF0b3IgYXMgaXMgZGVzY3JpYmVkIGluIHRoZSB3aWtpIHBhZ2UgeW91
-IGxpbmssIHRoZW4geW91oa9sbCBlaXRoZXIgbmVlZCB0byBlaXRoZXIgbGVhdmUgdGhlIGAtLXRj
-dGlgIG9wdGlvbiBvdXQgKHRoZSBkZXZpY2UgVENUSSBzaG91bGQgYmUgdGhlIGRlZmF1bHQpIG9y
-IHVzZQogdGhlIG5ldyBmb3JtIG9mIHRoZSBgLS10Y3RpYCBvcHRpb24gd2hpY2ggaXMgZG9jdW1l
-bnRlZCBpbiBvdXIgbWFuIHBhZ2VzLiBUaGUgc291cmNlIGZvciB0aGUgbWFuIHBhZ2UgYW5kIHRo
-ZSByZWxldmFudCBvcHRpb24gY2FuIGJlIGZvdW5kIGhlcmU6Cjwvc3Bhbj48c3BhbiBzdHlsZT0i
-Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFjayI+
-PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9ibG9i
-L21hc3Rlci9tYW4vdHBtMi1hYnJtZC44LmluI0wyMSIgdGl0bGU9IkN0cmwmIzQzO0NsaWNrIG9y
-IHRhcCB0byBmb2xsb3cgdGhlIGxpbmsiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0Ij5o
-dHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL2Jsb2IvbWFzdGVyL21h
-bi90cG0yLWFicm1kLjguaW4jTDIxPC9zcGFuPjwvYT48L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQt
-c2l6ZToxMS4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsg
-Y29sb3I6IzFGNDk3RCI+LgogU2luY2Ugd2Whr3JlIG5vdyBsb2FkaW5nIHRoZSBUQ1RJIHNoYXJl
-ZCBvYmplY3QgdXNpbmcgZGxvcGVuIHRoZSBzdHJpbmcgcGFzc2VkIHZpYSB0aGUgYC0tdGN0aWAg
-b3B0aW9uIGlzIHBhc3NlZCBkaXJlY3RseSB0byBkbG9wZW4gc28gdGhlIHNhbWUgbG9va3VwIHJ1
-bGVzIGFwcGx5LiBgLS10Y3RpPWxpYnRjdGktZGV2aWNlLnNvYCBzaG91bGQgd29yayBmb3IgeW91
-IGFzc3VtaW5nIHlvdXIgTERfQ09ORklHX1BBVEggaXMgc2V0IHVwIHJpZ2h0Ljwvc3Bhbj48c3Bh
-biBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xv
-cjpibGFjayI+PC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfeHhtc29ub3JtYWwiPjxzcGFuIHN0eWxl
-PSJmb250LXNpemU6MTEuMHB0OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMt
-c2VyaWY7IGNvbG9yOiMxRjQ5N0QiPiZuYnNwOzwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1p
-bHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFjayI+PC9zcGFuPjwv
-cD4KPHAgY2xhc3M9InhfeHhtc29ub3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0
-OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOiMxRjQ5
-N0QiPkp1c3QgYSBoZWFkcyB1cCB0aG91Z2g6Cjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1p
-bHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFjayI+PGEgaHJlZj0i
-aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9pc3N1ZXMvMzIxIj48
-c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdCI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29m
-dHdhcmUvdHBtMi1hYnJtZC9pc3N1ZXMvMzIxPC9zcGFuPjwvYT48L3NwYW4+PHNwYW4gc3R5bGU9
-ImZvbnQtc2l6ZToxMS4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1z
-ZXJpZjsgY29sb3I6IzFGNDk3RCI+CiBpcyB0cmFja2luZyBvdXIgd29yayB0byBhbGlnbiB0aGUg
-YC0tdGN0aWAgb3B0aW9uIGFjcm9zcyB0aGUgdGFicm1kIGFuZCB0aGUgdG9vbHMuIFRoZSB0YWJy
-bWQgaXMgdmVyeSBwcm9iYWJseSBnb2luZyB0byBhZG9wdCB0aGUgc2FtZSBjb252ZW50aW9uIHRo
-YXQgQmlsbCBpbXBsZW1lbnRlZCBmb3IgdGhlIHRvb2xzIGJlZm9yZSB0aGUgbmV4dCByZWxlYXNl
-Ljwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5z
-LXNlcmlmOyBjb2xvcjpibGFjayI+PC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfeHhtc29ub3JtYWwi
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJp
-JnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOiMxRjQ5N0QiPiZuYnNwOzwvc3Bhbj48c3BhbiBzdHls
-ZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFj
-ayI+PC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfeHhtc29ub3JtYWwiPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6MTEuMHB0OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7
-IGNvbG9yOiMxRjQ5N0QiPkhvcGUgdGhpcyBoZWxwcyw8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQt
-ZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPjwvc3Bh
-bj48L3A+CjxwIGNsYXNzPSJ4X3h4bXNvbm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEx
-LjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjoj
-MUY0OTdEIj5QaGlsaXA8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0NhbGli
-cmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJ4
-X3h4bXNvbm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDsgZm9udC1mYW1pbHk6
-JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjojMUY0OTdEIj4mbmJzcDs8L3Nw
-YW4+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJp
-ZjsgY29sb3I6YmxhY2siPjwvc3Bhbj48L3A+CjxkaXY+CjxkaXYgc3R5bGU9ImJvcmRlcjpub25l
-OyBib3JkZXItdG9wOnNvbGlkICNFMUUxRTEgMS4wcHQ7IHBhZGRpbmc6My4wcHQgMGluIDBpbiAw
-aW4iPgo8cCBjbGFzcz0ieF94eG1zb25vcm1hbCI+PGEgbmFtZT0ieF94X3hfX19fX19yZXBseXNl
-cGFyYXRvciI+PC9hPjxiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0OyBmb250LWZhbWls
-eTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj5Gcm9tOjwvc3Bh
-bj48L2I+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0Nh
-bGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPiB0cG0yIFs8YSBocmVmPSJtYWls
-dG86dHBtMi1ib3VuY2VzQGxpc3RzLjAxLm9yZyI+bWFpbHRvOnRwbTItYm91bmNlc0BsaXN0cy4w
-MS5vcmc8L2E+XQo8Yj5PbiBCZWhhbGYgT2YgPC9iPk1vbmVlYiBBemhhcjxicj4KPGI+U2VudDo8
-L2I+IDEyIEZlYnJ1YXJ5LCAyMDE4IDA1OjQzPGJyPgo8Yj5Ubzo8L2I+IDxhIGhyZWY9Im1haWx0
-bzp0cG0yQGxpc3RzLjAxLm9yZyI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+PGJyPgo8Yj5TdWJqZWN0
-OjwvYj4gW3RwbTJdIFRDVEkgaW5pdGlhbGl6YXRpb24gZmFpbHMgd2l0aCBlcnJvciAweGMwMDBi
-PC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMt
-c2VyaWY7IGNvbG9yOmJsYWNrIj48L3NwYW4+PC9wPgo8L2Rpdj4KPC9kaXY+CjxwIGNsYXNzPSJ4
-X3h4bXNvbm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90
-OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFjayI+Jm5ic3A7PC9zcGFuPjwvcD4KPGRpdiBpZD0ieF94
-X3hfZGl2dGFnZGVmYXVsdHdyYXBwZXIiPgo8cD48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBw
-dDsgZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFj
-ayI+SGksPGJyPgo8YnI+CkkgYW0gdHJ5aW5nIHRvIHNldHVwIGEgVFBNIGRldmVsb3BtZW50IGVu
-dmlyb25tZW50IG9uIHVidW50dTE2LjA0IGJ5IGZvbGxvd2luZyB0aGUgaW5zdGFsbGF0aW9uIHdp
-a2kgaGVyZToKPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10
-b29scy93aWtpL0dldHRpbmctU3RhcnRlZCNpbnN0YWxsaW5nIiB0YXJnZXQ9Il9ibGFuayIgaWQ9
-IkxQbG5rNTkxNDM5IiBwcmV2aWV3cmVtb3ZlZD0idHJ1ZSI+Cmh0dHBzOi8vZ2l0aHViLmNvbS90
-cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvd2lraS9HZXR0aW5nLVN0YXJ0ZWQjaW5zdGFsbGluZzwv
-YT48YnI+Cjxicj4KRXZlcnl0aGluZyBpbnN0YWxscyBjb3JyZWN0bHkgYnV0IEkgZ2V0IHRoZSBm
-b2xsb3dpbmcgZXJyb3I6PGJyPgo8YnI+CiQgc3VkbyAtdSB0c3MgdHBtMi1hYnJtZCAtLXRjdGk9
-ZGV2aWNlPGJyPgoqKiAodHBtMi1hYnJtZDoxMDQxOTcpOiBXQVJOSU5HICoqOiBmYWlsZWQgdG8g
-ZGxvcGVuIGZpbGUgZGV2aWNlOiBkZXZpY2U6IGNhbm5vdCBvcGVuIHNoYXJlZCBvYmplY3QgZmls
-ZTogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeTxicj4KKiogKHRwbTItYWJybWQ6MTA0MTk3KTog
-Q1JJVElDQUwgKio6IFRDVEkgaW5pdGlhbGl6YXRpb24gZmFpbGVkOiAweGMwMDBiPGJyPgo8YnI+
-CnN5c3RlbWN0bCZuYnNwOyBzaG93IG1lIHRoZSBmb2xsb3dpbmc6PGJyPgokIHN1ZG8gc3lzdGVt
-Y3RsIHN0YXR1cyB0cG0yLWFicm1kLnNlcnZpY2U8YnI+CqHcIHRwbTItYWJybWQuc2VydmljZSAt
-IFRQTTIgQWNjZXNzIEJyb2tlciBhbmQgUmVzb3VyY2UgTWFuYWdlbWVudCBEYWVtb248YnI+CiZu
-YnNwOyZuYnNwOyBMb2FkZWQ6IGxvYWRlZCAoL2xpYi9zeXN0ZW1kL3N5c3RlbS90cG0yLWFicm1k
-LnNlcnZpY2U7IGVuYWJsZWQ7IHZlbmRvciBwcmVzZXQ6IGVuYWJsPGJyPgombmJzcDsmbmJzcDsg
-QWN0aXZlOiBpbmFjdGl2ZSAoZGVhZCk8YnI+Cjxicj4KSG93IHdvdWxkIEkgZ28gYWJvdXQgZmln
-dXJpbmcgb3V0IHdoYXQgaXMgd3Jvbmc/IEkgYW0gbmV3IHRvIHRoaXMgc28gYW55IGhlbHAgd291
-bGQgYmUgaGlnaGx5IGFwcHJlY2lhdGVkLgo8YnI+Cjxicj4KUmVnYXJkcyw8YnI+Ck1vbmVlYjwv
-c3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNl
-cmlmOyBjb2xvcjpibGFjayI+PC9zcGFuPjwvcD4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+
-CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4K
-PC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
-
---===============7796360516625802403==--
+--===============5955753457908146914==--
 
