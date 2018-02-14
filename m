@@ -1,28 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============5955753457908146914=="
+Content-Type: multipart/mixed; boundary="===============0676549458331109607=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
+From: Moneeb Azhar <moneeb777 at hotmail.com>
 Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
-Date: Wed, 14 Feb 2018 09:02:56 +0100
-Message-ID: <33ea4bba-a270-5b81-29a5-162f484360e0@redhat.com>
-In-Reply-To: DBXPR03MB5756CC564E5F9D1BDF95D5FF6F50@DBXPR03MB575.eurprd03.prod.outlook.com
+Date: Wed, 14 Feb 2018 10:05:57 +0000
+Message-ID: <DBXPR03MB57599CBEB53C27C2CA9D6FEF6F50@DBXPR03MB575.eurprd03.prod.outlook.com>
+In-Reply-To: 33ea4bba-a270-5b81-29a5-162f484360e0@redhat.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5955753457908146914==
+--===============0676549458331109607==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+I finally got it to work. I looked for a reference to tcti-socket in the so=
+urce  code and found the following;
+
+./tpm2-tools/lib/tpm2_tcti_ldr.h:37: *  library name: path =3D libtcti-sock=
+et.so
+./tpm2-abrmd/scripts/int-test-funcs.sh:113:        tabrmd_opts=3D"$tabrmd_o=
+pts --tcti=3Dlibtcti-socket.so --tcti-conf=3Dtcp://127.0.0.1:${tabrmd_port}=
+/"
+
+So I tried the following:
+$ sudo -u tss tpm2-abrmd --tcti=3Dlibtcti-socket.so
+Client accepted
+Client accepted
+
+Thanks a lot for all the help and quick replies.
+
+Regards,
+Moneeb
+
+
+
+
+
+________________________________
+From: Javier Martinez Canillas <javierm(a)redhat.com>
+Sent: Wednesday, February 14, 2018 1:02 PM
+To: Moneeb Azhar; Tricca, Philip B
+Cc: tpm2(a)lists.01.org
+Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
+
 On 02/14/2018 08:42 AM, Moneeb Azhar wrote:
 > I am  using the ibm simulator and it starts up fine. However:
-> =
-
+>
 > $ ls -l /dev/tpm0
 > ls: cannot access '/dev/tpm0': No such file or directory
-> =
-
-> =
-
+>
+>
 > Is /dev/tpm0 required while using the simulator?
 >
 
@@ -34,8 +61,7 @@ es
 in master recently and I still didn't have time to catch up.
 
 Best regards,
--- =
-
+--
 Javier Martinez Canillas
 Software Engineer - Desktop Hardware Enablement
 Red Hat
@@ -46,10 +72,8 @@ Red Hat
 > To: Moneeb Azhar
 > Cc: tpm2(a)lists.01.org
 > Subject: RE: TCTI initialization fails with error 0xc000b
-> =
-
-> =
-
+>
+>
 > You=E2=80=99re making progress. This time the daemon loaded the TCTI prop=
 erly but the TCTI initialization function failed. For the device TCTI this =
 is 99% an issue with permissions on /dev/tpm0. Check to see which user can =
@@ -57,200 +81,163 @@ access this device (root?) and then run the daemon as that user. Ideally th=
 is will be an unprivileged user and most distros use one called =E2=80=98ts=
 s=E2=80=99: https://github.com/tpm2-software/tpm2-abrmd/blob/master/INSTALL=
 .md#system-user--group
-> =
+[https://avatars2.githubusercontent.com/u/34488697?s=3D400&v=3D4]<https://g=
+ithub.com/tpm2-software/tpm2-abrmd/blob/master/INSTALL.md#system-user--grou=
+p>
 
+tpm2-abrmd/INSTALL.md at master - github.com<https://github.com/tpm2-softwa=
+re/tpm2-abrmd/blob/master/INSTALL.md#system-user--group>
+github.com
+This is a quick set of instructions to build, install and run the tpm2-abrm=
+d. Dependencies. To build and install the tpm2-abrmd software the following=
+ dependencies ...
+
+
+>
 > [https://avatars2.githubusercontent.com/u/34488697?s=3D400&v=3D4]<https:/=
 /github.com/tpm2-software/tpm2-abrmd/blob/master/INSTALL.md#system-user--gr=
 oup>
-> =
-
+>
 > tpm2-abrmd/INSTALL.md at master - github.com<https://github.com/tpm2-soft=
 ware/tpm2-abrmd/blob/master/INSTALL.md#system-user--group>
+[https://avatars2.githubusercontent.com/u/34488697?s=3D400&v=3D4]<https://g=
+ithub.com/tpm2-software/tpm2-abrmd/blob/master/INSTALL.md#system-user--grou=
+p>
+
+tpm2-abrmd/INSTALL.md at master - github.com<https://github.com/tpm2-softwa=
+re/tpm2-abrmd/blob/master/INSTALL.md#system-user--group>
+github.com
+This is a quick set of instructions to build, install and run the tpm2-abrm=
+d. Dependencies. To build and install the tpm2-abrmd software the following=
+ dependencies ...
+
+
 > github.com
 > This is a quick set of instructions to build, install and run the tpm2-ab=
 rmd. Dependencies. To build and install the tpm2-abrmd software the followi=
 ng dependencies ...
-> =
-
-> =
-
-> =
-
-> =
-
+>
+>
+>
+>
 > Philip
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > From: Moneeb Azhar [mailto:moneeb777(a)hotmail.com]
 > Sent: 13 February, 2018 12:45
 > To: Tricca, Philip B <philip.b.tricca(a)intel.com>
 > Cc: tpm2(a)lists.01.org
 > Subject: Re: TCTI initialization fails with error 0xc000b
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > The workaround leads to a similar error:
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > ubuntu:~/Desktop/ibmtpm974/src$ tpm2-abrmd --tcti=3Dlibtcti-device.so
 > ** (tpm2-abrmd:4065): WARNING **: failed to initialize device TCTI contex=
 t: 0xa000a
 > ** (tpm2-abrmd:4065): CRITICAL **: TCTI initialization failed: 0xa000a
-> =
-
+>
 > This is similar to issue #92 but I am already following the steps suggest=
 ed in the comments there.
-> =
-
-> =
-
-> =
-
-> =
-
-> =
-
+>
+>
+>
+>
+>
 > ________________________________
-> =
-
+>
 > From: Tricca, Philip B <philip.b.tricca(a)intel.com<mailto:philip.b.tricc=
 a(a)intel.com>>
 > Sent: Tuesday, February 13, 2018 11:38 PM
 > To: Moneeb Azhar
 > Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
 > Subject: RE: TCTI initialization fails with error 0xc000b
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > I triaged this last night. It=E2=80=99s a bug in the logic that selects t=
 he default TCTI. I=E2=80=99ve got an issue in the tracker for it here: http=
 s://github.com/tpm2-software/tpm2-abrmd/issues/327. You can work around it =
 by explicitly selecting the device TCTI with the following option: `--tcti=
 =3Dlibtcti-device.so`. I=E2=80=99ll be fixing this up today and likely chan=
 ging the way we specify the TCTI to align with the tools `--tcti` option.
-> =
-
+>
 > [https://avatars0.githubusercontent.com/u/1550813?s=3D400&v=3D4]<https://=
 github.com/tpm2-software/tpm2-abrmd/issues/327>
-> =
-
-> =
-
+>
+>
 > sane default TCTI =C2=B7 Issue #327 =C2=B7 tpm2-software/tpm2-abrmd<https=
 ://github.com/tpm2-software/tpm2-abrmd/issues/327>
-> =
-
+>
 > github.com
-> =
-
+>
 > It looks like, when provided with no --tcti option we're not picking a sa=
 ne default value for the TCTI library. If the option is omitted we should d=
 efault to the device TCTI.
-> =
-
-> =
-
-> =
-
-> =
-
+>
+>
+>
+>
 > Best,
-> =
-
+>
 > Philip
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > From: Moneeb Azhar [mailto:moneeb777(a)hotmail.com]
 > Sent: 13 February, 2018 04:50
 > To: Tricca, Philip B <philip.b.tricca(a)intel.com<mailto:philip.b.tricca(=
 a)intel.com>>
 > Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
 > Subject: Re: TCTI initialization fails with error 0xc000b
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > Hey,
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > So from what I have gathered, tabrmd is designed to connect directly to t=
 he simulator without the need to pass any options by using --tcti. I tried =
 doing this and get the exact same error:
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > ubuntu:~/Desktop/ibmtpm974/src$ sudo tpm2-abrmd  --allow-root
 > ** (tpm2-abrmd:105445): WARNING **: Failed to get reference to symbol: tp=
 m2-abrmd: undefined symbol: Tss2_Tcti_Info
 > ** (tpm2-abrmd:105445): CRITICAL **: TCTI initialization failed: 0xc000b
-> =
-
+>
 > I  must be doing something wrong but I don't know what. Are there any log=
  files I can go through  which could tell me what is happening?
-> =
-
+>
 > Regards,
 > Moneeb
-> =
-
-> =
-
-> =
-
-> =
-
-> =
-
+>
+>
+>
+>
+>
 > ________________________________
-> =
-
+>
 > From: Tricca, Philip B <philip.b.tricca(a)intel.com<mailto:philip.b.tricc=
 a(a)intel.com>>
 > Sent: Monday, February 12, 2018 9:04 PM
 > To: Moneeb Azhar
 > Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
 > Subject: RE: TCTI initialization fails with error 0xc000b
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > Apologies in advance for top posting. I=E2=80=99m stuck on a windows syst=
 em while traveling.
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > It seems as though your issue is related to a recent change to the way we=
 =E2=80=99re initializing the TCTI modules. This caused a few changes to the=
  relevant command line options like `--tcti`. If you=E2=80=99re connecting =
@@ -264,59 +251,42 @@ orm of the `--tcti` option which is documented in our man pages. The source=
 ed via the `--tcti` option is passed directly to dlopen so the same lookup =
 rules apply. `--tcti=3Dlibtcti-device.so` should work for you assuming your=
  LD_CONFIG_PATH is set up right.
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > Just a heads up though: https://github.com/tpm2-software/tpm2-abrmd/issue=
 s/321 is tracking our work to align the `--tcti` option across the tabrmd a=
 nd the tools. The tabrmd is very probably going to adopt the same conventio=
 n that Bill implemented for the tools before the next release.
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > Hope this helps,
-> =
-
+>
 > Philip
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Moneeb Azhar
 > Sent: 12 February, 2018 05:43
 > To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
 > Subject: [tpm2] TCTI initialization fails with error 0xc000b
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > Hi,
-> =
-
+>
 > I am trying to setup a TPM development environment on ubuntu16.04 by foll=
 owing the installation wiki here: https://github.com/tpm2-software/tpm2-too=
 ls/wiki/Getting-Started#installing
-> =
-
+>
 > Everything installs correctly but I get the following error:
-> =
-
+>
 > $ sudo -u tss tpm2-abrmd --tcti=3Ddevice
 > ** (tpm2-abrmd:104197): WARNING **: failed to dlopen file device: device:=
  cannot open shared object file: No such file or directory
 > ** (tpm2-abrmd:104197): CRITICAL **: TCTI initialization failed: 0xc000b
-> =
-
+>
 > systemctl  show me the following:
 > $ sudo systemctl status tpm2-abrmd.service
 > =E2=97=8F tpm2-abrmd.service - TPM2 Access Broker and Resource Management=
@@ -324,28 +294,347 @@ ls/wiki/Getting-Started#installing
 >    Loaded: loaded (/lib/systemd/system/tpm2-abrmd.service; enabled; vendo=
 r preset: enabl
 >    Active: inactive (dead)
-> =
-
+>
 > How would I go about figuring out what is wrong? I am new to this so any =
 help would be highly appreciated.
-> =
-
+>
 > Regards,
 > Moneeb
-> =
-
-> =
-
-> =
-
+>
+>
+>
 > _______________________________________________
 > tpm2 mailing list
 > tpm2(a)lists.01.org
 > https://lists.01.org/mailman/listinfo/tpm2
-> =
+>
 
 
 
+--===============0676549458331109607==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
---===============5955753457908146914==--
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1rc19jXzU2MDEtMTk4NyI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIg
+c3R5bGU9ImRpc3BsYXk6bm9uZTsiPjwhLS0gUCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206
+MDt9IC0tPjwvc3R5bGU+CjwvaGVhZD4KPGJvZHkgZGlyPSJsdHIiPgo8ZGl2IGlkPSJkaXZ0YWdk
+ZWZhdWx0d3JhcHBlciIgc3R5bGU9ImZvbnQtc2l6ZToxMnB0O2NvbG9yOiMwMDAwMDA7Zm9udC1m
+YW1pbHk6Q2FsaWJyaSxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsiIGRpcj0ibHRyIj4KPHAgc3R5bGU9
+Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjAiPkkgZmluYWxseSBnb3QgaXQgdG8gd29yay4g
+SSBsb29rZWQgZm9yIGEgcmVmZXJlbmNlIHRvIHRjdGktc29ja2V0IGluIHRoZSBzb3VyY2UmbmJz
+cDsgY29kZSBhbmQgZm91bmQgdGhlIGZvbGxvd2luZzs8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9w
+OjA7bWFyZ2luLWJvdHRvbTowIj48L3A+CjxkaXY+Li90cG0yLXRvb2xzL2xpYi90cG0yX3RjdGlf
+bGRyLmg6Mzc6ICombmJzcDsgbGlicmFyeSBuYW1lOiBwYXRoID0gbGlidGN0aS1zb2NrZXQuc288
+YnI+CjxkaXY+Li90cG0yLWFicm1kL3NjcmlwdHMvaW50LXRlc3QtZnVuY3Muc2g6MTEzOiZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB0YWJybWRfb3B0cz0mcXVvdDsk
+dGFicm1kX29wdHMgLS10Y3RpPWxpYnRjdGktc29ja2V0LnNvIC0tdGN0aS1jb25mPXRjcDovLzEy
+Ny4wLjAuMToke3RhYnJtZF9wb3J0fS8mcXVvdDs8YnI+Cjxicj4KU28gSSB0cmllZCB0aGUgZm9s
+bG93aW5nOjxicj4KPGRpdj4kIHN1ZG8gLXUgdHNzIHRwbTItYWJybWQgLS10Y3RpPWxpYnRjdGkt
+c29ja2V0LnNvPGJyPgpDbGllbnQgYWNjZXB0ZWQ8YnI+CkNsaWVudCBhY2NlcHRlZDxicj4KPGJy
+PgpUaGFua3MgYSBsb3QgZm9yIGFsbCB0aGUgaGVscCBhbmQgcXVpY2sgcmVwbGllcy48YnI+Cjxi
+cj4KUmVnYXJkcyw8YnI+Ck1vbmVlYjxicj4KPGJyPgo8L2Rpdj4KPGJyPgo8L2Rpdj4KPC9kaXY+
+Cjxicj4KPHA+PC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MCI+PGJy
+Pgo8L3A+Cjxicj4KPGRpdiBzdHlsZT0iY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8aHIgc3R5bGU9
+ImRpc3BsYXk6aW5saW5lLWJsb2NrO3dpZHRoOjk4JSIgdGFiaW5kZXg9Ii0xIj4KPGRpdiBpZD0i
+ZGl2UnBseUZ3ZE1zZyIgZGlyPSJsdHIiPjxmb250IHN0eWxlPSJmb250LXNpemU6MTFwdCIgY29s
+b3I9IiMwMDAwMDAiIGZhY2U9IkNhbGlicmksIHNhbnMtc2VyaWYiPjxiPkZyb206PC9iPiBKYXZp
+ZXIgTWFydGluZXogQ2FuaWxsYXMgJmx0O2phdmllcm1AcmVkaGF0LmNvbSZndDs8YnI+CjxiPlNl
+bnQ6PC9iPiBXZWRuZXNkYXksIEZlYnJ1YXJ5IDE0LCAyMDE4IDE6MDIgUE08YnI+CjxiPlRvOjwv
+Yj4gTW9uZWViIEF6aGFyOyBUcmljY2EsIFBoaWxpcCBCPGJyPgo8Yj5DYzo8L2I+IHRwbTJAbGlz
+dHMuMDEub3JnPGJyPgo8Yj5TdWJqZWN0OjwvYj4gUmU6IFt0cG0yXSBUQ1RJIGluaXRpYWxpemF0
+aW9uIGZhaWxzIHdpdGggZXJyb3IgMHhjMDAwYjwvZm9udD4KPGRpdj4mbmJzcDs8L2Rpdj4KPC9k
+aXY+CjxkaXYgY2xhc3M9IkJvZHlGcmFnbWVudCI+PGZvbnQgc2l6ZT0iMiI+PHNwYW4gc3R5bGU9
+ImZvbnQtc2l6ZToxMXB0OyI+CjxkaXYgY2xhc3M9IlBsYWluVGV4dCI+T24gMDIvMTQvMjAxOCAw
+ODo0MiBBTSwgTW9uZWViIEF6aGFyIHdyb3RlOjxicj4KJmd0OyBJIGFtJm5ic3A7IHVzaW5nIHRo
+ZSBpYm0gc2ltdWxhdG9yIGFuZCBpdCBzdGFydHMgdXAgZmluZS4gSG93ZXZlcjo8YnI+CiZndDsg
+PGJyPgomZ3Q7ICQgbHMgLWwgL2Rldi90cG0wPGJyPgomZ3Q7IGxzOiBjYW5ub3QgYWNjZXNzICcv
+ZGV2L3RwbTAnOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5PGJyPgomZ3Q7IDxicj4KJmd0OyA8
+YnI+CiZndDsgSXMgL2Rldi90cG0wIHJlcXVpcmVkIHdoaWxlIHVzaW5nIHRoZSBzaW11bGF0b3I/
+PGJyPgomZ3Q7PGJyPgo8YnI+CklmIHlvdSBhcmUgdXNpbmcgdGhlIHNpbXVsYXRvciwgdGhlbiB5
+b3UgbmVlZCB0byB1c2UgdGhlIHNvY2tldCBUQ1RJIGluc3RlYWQ8YnI+Cm9mIHRoZSBkZXZpY2Ug
+VENUSS48YnI+Cjxicj4KSSBjYW4ndCBzYXkgd2hhdCdzIHRoZSBleGFjdCBjb21tYW5kIHRvIGRv
+IGl0IGJlY2F1c2UgdGhlcmUgd2VyZSBzb21lIGNoYW5nZXM8YnI+CmluIG1hc3RlciByZWNlbnRs
+eSBhbmQgSSBzdGlsbCBkaWRuJ3QgaGF2ZSB0aW1lIHRvIGNhdGNoIHVwLjxicj4KPGJyPgpCZXN0
+IHJlZ2FyZHMsPGJyPgotLSA8YnI+CkphdmllciBNYXJ0aW5leiBDYW5pbGxhczxicj4KU29mdHdh
+cmUgRW5naW5lZXIgLSBEZXNrdG9wIEhhcmR3YXJlIEVuYWJsZW1lbnQ8YnI+ClJlZCBIYXQ8YnI+
+Cjxicj4KJmd0OyBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXzxicj4KJmd0OyBGcm9t
+OiBUcmljY2EsIFBoaWxpcCBCICZsdDtwaGlsaXAuYi50cmljY2FAaW50ZWwuY29tJmd0Ozxicj4K
+Jmd0OyBTZW50OiBXZWRuZXNkYXksIEZlYnJ1YXJ5IDE0LCAyMDE4IDM6MTEgQU08YnI+CiZndDsg
+VG86IE1vbmVlYiBBemhhcjxicj4KJmd0OyBDYzogdHBtMkBsaXN0cy4wMS5vcmc8YnI+CiZndDsg
+U3ViamVjdDogUkU6IFRDVEkgaW5pdGlhbGl6YXRpb24gZmFpbHMgd2l0aCBlcnJvciAweGMwMDBi
+PGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDsgWW91oa9yZSBtYWtpbmcgcHJvZ3Jlc3MuIFRo
+aXMgdGltZSB0aGUgZGFlbW9uIGxvYWRlZCB0aGUgVENUSSBwcm9wZXJseSBidXQgdGhlIFRDVEkg
+aW5pdGlhbGl6YXRpb24gZnVuY3Rpb24gZmFpbGVkLiBGb3IgdGhlIGRldmljZSBUQ1RJIHRoaXMg
+aXMgOTklIGFuIGlzc3VlIHdpdGggcGVybWlzc2lvbnMgb24gL2Rldi90cG0wLiBDaGVjayB0byBz
+ZWUgd2hpY2ggdXNlciBjYW4gYWNjZXNzIHRoaXMgZGV2aWNlIChyb290PykgYW5kIHRoZW4gcnVu
+CiB0aGUgZGFlbW9uIGFzIHRoYXQgdXNlci4gSWRlYWxseSB0aGlzIHdpbGwgYmUgYW4gdW5wcml2
+aWxlZ2VkIHVzZXIgYW5kIG1vc3QgZGlzdHJvcyB1c2Ugb25lIGNhbGxlZCChrnRzc6GvOgo8YSBo
+cmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL2Jsb2IvbWFz
+dGVyL0lOU1RBTEwubWQjc3lzdGVtLXVzZXItLWdyb3VwIiBpZD0iTFBsbmsxMzY5MDUiIHByZXZp
+ZXdyZW1vdmVkPSJ0cnVlIj4KaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1h
+YnJtZC9ibG9iL21hc3Rlci9JTlNUQUxMLm1kI3N5c3RlbS11c2VyLS1ncm91cDwvYT4KPGRpdiBp
+ZD0iTFBCb3JkZXJfR1RfMTUxODYwMjMzNTc2MDAuMTAxOTM2NTc1MzEwMDg1ODIiIHN0eWxlPSJt
+YXJnaW4tYm90dG9tOiAyMHB4OyBvdmVyZmxvdzogYXV0bzsgd2lkdGg6IDEwMCU7IHRleHQtaW5k
+ZW50OiAwcHg7Ij4KPHRhYmxlIGlkPSJMUENvbnRhaW5lcl8xNTE4NjAyMzM1NzU1MC40MjM2NDQy
+MTEzODY3NzUiIHN0eWxlPSJ3aWR0aDogOTAlOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAy
+NTUsIDI1NSk7IHBvc2l0aW9uOiByZWxhdGl2ZTsgb3ZlcmZsb3c6IGF1dG87IHBhZGRpbmctdG9w
+OiAyMHB4OyBwYWRkaW5nLWJvdHRvbTogMjBweDsgbWFyZ2luLXRvcDogMjBweDsgYm9yZGVyLXRv
+cDogMXB4IGRvdHRlZCByZ2IoMjAwLCAyMDAsIDIwMCk7IGJvcmRlci1ib3R0b206IDFweCBkb3R0
+ZWQgcmdiKDIwMCwgMjAwLCAyMDApOyIgcm9sZT0icHJlc2VudGF0aW9uIiBjZWxsc3BhY2luZz0i
+MCI+Cjx0Ym9keT4KPHRyIHN0eWxlPSJib3JkZXItc3BhY2luZzogMHB4OyIgdmFsaWduPSJ0b3Ai
+Pgo8dGQgaWQ9IkltYWdlQ2VsbF8xNTE4NjAyMzM1NzU2MC4wNjY1NTU5MzY1OTc2MjkxNSIgc3R5
+bGU9IndpZHRoOiAyNTBweDsgcG9zaXRpb246IHJlbGF0aXZlOyBkaXNwbGF5OiB0YWJsZS1jZWxs
+OyBwYWRkaW5nLXJpZ2h0OiAyMHB4OyIgY29sc3Bhbj0iMSI+CjxkaXYgaWQ9IkxQSW1hZ2VDb250
+YWluZXJfMTUxODYwMjMzNTc1NjAuODY2MjYwMjQzNzc4NzIxNCIgc3R5bGU9ImJhY2tncm91bmQt
+Y29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsgaGVpZ2h0OiAyNTBweDsgcG9zaXRpb246IHJlbGF0
+aXZlOyBtYXJnaW46IGF1dG87IGRpc3BsYXk6IHRhYmxlOyB3aWR0aDogMjUwcHg7Ij4KPGEgaWQ9
+IkxQSW1hZ2VBbmNob3JfMTUxODYwMjMzNTc1NzAuODc3MzE1Mjg2NDE4MDg1OCIgc3R5bGU9ImRp
+c3BsYXk6IHRhYmxlLWNlbGw7IHRleHQtYWxpZ246IGNlbnRlcjsiIGhyZWY9Imh0dHBzOi8vZ2l0
+aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQvYmxvYi9tYXN0ZXIvSU5TVEFMTC5tZCNz
+eXN0ZW0tdXNlci0tZ3JvdXAiIHRhcmdldD0iX2JsYW5rIj48aW1nIHN0eWxlPSJkaXNwbGF5OiBp
+bmxpbmUtYmxvY2s7IG1heC13aWR0aDogMjUwcHg7IG1heC1oZWlnaHQ6IDI1MHB4OyBoZWlnaHQ6
+IDI1MHB4OyB3aWR0aDogMjUwcHg7IGJvcmRlci13aWR0aDogMHB4OyB2ZXJ0aWNhbC1hbGlnbjog
+Ym90dG9tOyIgaWQ9IkxQVGh1bWJuYWlsSW1hZ2VJRF8xNTE4NjAyMzM1NzU3MC4xNDY4ODIzOTYz
+MTAwNTQ1IiB3aWR0aD0iMjUwIiBoZWlnaHQ9IjI1MCIgc3JjPSJodHRwczovL2F2YXRhcnMyLmdp
+dGh1YnVzZXJjb250ZW50LmNvbS91LzM0NDg4Njk3P3M9NDAwJmFtcDt2PTQiPjwvYT48L2Rpdj4K
+PC90ZD4KPHRkIGlkPSJUZXh0Q2VsbF8xNTE4NjAyMzM1NzU4MC40ODQyMzEzNjM3NDY5NzI3MyIg
+c3R5bGU9InZlcnRpY2FsLWFsaWduOiB0b3A7IHBvc2l0aW9uOiByZWxhdGl2ZTsgcGFkZGluZzog
+MHB4OyBkaXNwbGF5OiB0YWJsZS1jZWxsOyIgY29sc3Bhbj0iMiI+CjxkaXYgaWQ9IkxQUmVtb3Zl
+UHJldmlld0NvbnRhaW5lcl8xNTE4NjAyMzM1NzU4MC4xODc1MTU5Mjg3OTM1MTY1MyI+PC9kaXY+
+CjxkaXYgaWQ9IkxQVGl0bGVfMTUxODYwMjMzNTc1ODAuODUzNjgxMTYyNTc5NjU5NiIgc3R5bGU9
+InRvcDogMHB4OyBjb2xvcjogcmdiKDAsIDEyMCwgMjE1KTsgZm9udC13ZWlnaHQ6IDQwMDsgZm9u
+dC1zaXplOiAyMXB4OyBmb250LWZhbWlseTogJnF1b3Q7d2Zfc2Vnb2UtdWlfbGlnaHQmcXVvdDss
+ICZxdW90O1NlZ29lIFVJIExpZ2h0JnF1b3Q7LCAmcXVvdDtTZWdvZSBXUCBMaWdodCZxdW90Oywg
+JnF1b3Q7U2Vnb2UgVUkmcXVvdDssICZxdW90O1NlZ29lIFdQJnF1b3Q7LCBUYWhvbWEsIEFyaWFs
+LCBzYW5zLXNlcmlmOyBsaW5lLWhlaWdodDogMjFweDsiPgo8YSBpZD0iTFBVcmxBbmNob3JfMTUx
+ODYwMjMzNTc1ODAuNzk0NDQzOTk4ODE3NDA3NSIgc3R5bGU9InRleHQtZGVjb3JhdGlvbjogbm9u
+ZTsiIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQvYmxv
+Yi9tYXN0ZXIvSU5TVEFMTC5tZCNzeXN0ZW0tdXNlci0tZ3JvdXAiIHRhcmdldD0iX2JsYW5rIj50
+cG0yLWFicm1kL0lOU1RBTEwubWQgYXQgbWFzdGVyIC0gZ2l0aHViLmNvbTwvYT48L2Rpdj4KPGRp
+diBpZD0iTFBNZXRhZGF0YV8xNTE4NjAyMzM1NzU5MC4wNTgyMTkzODA3ODI0MzEwNSIgc3R5bGU9
+Im1hcmdpbjogMTBweCAwcHggMTZweDsgY29sb3I6IHJnYigxMDIsIDEwMiwgMTAyKTsgZm9udC13
+ZWlnaHQ6IDQwMDsgZm9udC1mYW1pbHk6ICZxdW90O3dmX3NlZ29lLXVpX25vcm1hbCZxdW90Oywg
+JnF1b3Q7U2Vnb2UgVUkmcXVvdDssICZxdW90O1NlZ29lIFdQJnF1b3Q7LCBUYWhvbWEsIEFyaWFs
+LCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDE0cHg7IGxpbmUtaGVpZ2h0OiAxNHB4OyI+CmdpdGh1
+Yi5jb208L2Rpdj4KPGRpdiBpZD0iTFBEZXNjcmlwdGlvbl8xNTE4NjAyMzM1NzYwMC42MDEwNTY5
+NjQ2MjA1MDgzIiBzdHlsZT0iZGlzcGxheTogYmxvY2s7IGNvbG9yOiByZ2IoMTAyLCAxMDIsIDEw
+Mik7IGZvbnQtd2VpZ2h0OiA0MDA7IGZvbnQtZmFtaWx5OiAmcXVvdDt3Zl9zZWdvZS11aV9ub3Jt
+YWwmcXVvdDssICZxdW90O1NlZ29lIFVJJnF1b3Q7LCAmcXVvdDtTZWdvZSBXUCZxdW90OywgVGFo
+b21hLCBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4OyBsaW5lLWhlaWdodDogMjBw
+eDsgbWF4LWhlaWdodDogMTAwcHg7IG92ZXJmbG93OiBoaWRkZW47Ij4KVGhpcyBpcyBhIHF1aWNr
+IHNldCBvZiBpbnN0cnVjdGlvbnMgdG8gYnVpbGQsIGluc3RhbGwgYW5kIHJ1biB0aGUgdHBtMi1h
+YnJtZC4gRGVwZW5kZW5jaWVzLiBUbyBidWlsZCBhbmQgaW5zdGFsbCB0aGUgdHBtMi1hYnJtZCBz
+b2Z0d2FyZSB0aGUgZm9sbG93aW5nIGRlcGVuZGVuY2llcyAuLi48L2Rpdj4KPC90ZD4KPC90cj4K
+PC90Ym9keT4KPC90YWJsZT4KPC9kaXY+Cjxicj4KJmd0OyA8YnI+CiZndDsgWzxhIGhyZWY9Imh0
+dHBzOi8vYXZhdGFyczIuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3UvMzQ0ODg2OTc/cz00MDAmYW1w
+O3Y9NF0mbHQ7aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9ibG9i
+L21hc3Rlci9JTlNUQUxMLm1kI3N5c3RlbS11c2VyLS1ncm91cCIgaWQ9IkxQbG5rNjkzMjc3IiBw
+cmV2aWV3cmVtb3ZlZD0idHJ1ZSI+aHR0cHM6Ly9hdmF0YXJzMi5naXRodWJ1c2VyY29udGVudC5j
+b20vdS8zNDQ4ODY5Nz9zPTQwMCZhbXA7dj00XSZsdDtodHRwczovL2dpdGh1Yi5jb20vdHBtMi1z
+b2Z0d2FyZS90cG0yLWFicm1kL2Jsb2IvbWFzdGVyL0lOU1RBTEwubWQjc3lzdGVtLXVzZXItLWdy
+b3VwPC9hPiZndDs8YnI+CiZndDsgPGJyPgomZ3Q7IHRwbTItYWJybWQvSU5TVEFMTC5tZCBhdCBt
+YXN0ZXIgLSBnaXRodWIuY29tJmx0OzxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNv
+ZnR3YXJlL3RwbTItYWJybWQvYmxvYi9tYXN0ZXIvSU5TVEFMTC5tZCNzeXN0ZW0tdXNlci0tZ3Jv
+dXAiIGlkPSJMUGxuazI5Mzc5NyIgcHJldmlld3JlbW92ZWQ9InRydWUiPmh0dHBzOi8vZ2l0aHVi
+LmNvbS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQvYmxvYi9tYXN0ZXIvSU5TVEFMTC5tZCNzeXN0
+ZW0tdXNlci0tZ3JvdXA8L2E+Jmd0Owo8ZGl2IGlkPSJMUEJvcmRlcl9HVF8xNTE4NjAyMzY0MzA2
+MC4yNDk2ODU5NjgxMDE3OTA2NyIgc3R5bGU9Im1hcmdpbi1ib3R0b206IDIwcHg7IG92ZXJmbG93
+OiBhdXRvOyB3aWR0aDogMTAwJTsgdGV4dC1pbmRlbnQ6IDBweDsiPgo8dGFibGUgaWQ9IkxQQ29u
+dGFpbmVyXzE1MTg2MDIzNjQzMDAwLjIxNTQ1MjUxODQ1Njc5NTAzIiBzdHlsZT0id2lkdGg6IDkw
+JTsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1NSwgMjU1LCAyNTUpOyBwb3NpdGlvbjogcmVsYXRp
+dmU7IG92ZXJmbG93OiBhdXRvOyBwYWRkaW5nLXRvcDogMjBweDsgcGFkZGluZy1ib3R0b206IDIw
+cHg7IG1hcmdpbi10b3A6IDIwcHg7IGJvcmRlci10b3A6IDFweCBkb3R0ZWQgcmdiKDIwMCwgMjAw
+LCAyMDApOyBib3JkZXItYm90dG9tOiAxcHggZG90dGVkIHJnYigyMDAsIDIwMCwgMjAwKTsiIHJv
+bGU9InByZXNlbnRhdGlvbiIgY2VsbHNwYWNpbmc9IjAiPgo8dGJvZHk+Cjx0ciBzdHlsZT0iYm9y
+ZGVyLXNwYWNpbmc6IDBweDsiIHZhbGlnbj0idG9wIj4KPHRkIGlkPSJJbWFnZUNlbGxfMTUxODYw
+MjM2NDMwMzAuMjEyMTY1NDQzNjk5MDQ0NDQiIHN0eWxlPSJ3aWR0aDogMjUwcHg7IHBvc2l0aW9u
+OiByZWxhdGl2ZTsgZGlzcGxheTogdGFibGUtY2VsbDsgcGFkZGluZy1yaWdodDogMjBweDsiIGNv
+bHNwYW49IjEiPgo8ZGl2IGlkPSJMUEltYWdlQ29udGFpbmVyXzE1MTg2MDIzNjQzMDQwLjc5MTgy
+MDE5MTMyNjY4OTUiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7
+IGhlaWdodDogMjUwcHg7IHBvc2l0aW9uOiByZWxhdGl2ZTsgbWFyZ2luOiBhdXRvOyBkaXNwbGF5
+OiB0YWJsZTsgd2lkdGg6IDI1MHB4OyI+CjxhIGlkPSJMUEltYWdlQW5jaG9yXzE1MTg2MDIzNjQz
+MDQwLjM0NjM3OTQ5MzQ0OTUyMTgiIHN0eWxlPSJkaXNwbGF5OiB0YWJsZS1jZWxsOyB0ZXh0LWFs
+aWduOiBjZW50ZXI7IiBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0y
+LWFicm1kL2Jsb2IvbWFzdGVyL0lOU1RBTEwubWQjc3lzdGVtLXVzZXItLWdyb3VwIiB0YXJnZXQ9
+Il9ibGFuayI+PGltZyBzdHlsZT0iZGlzcGxheTogaW5saW5lLWJsb2NrOyBtYXgtd2lkdGg6IDI1
+MHB4OyBtYXgtaGVpZ2h0OiAyNTBweDsgaGVpZ2h0OiAyNTBweDsgd2lkdGg6IDI1MHB4OyBib3Jk
+ZXItd2lkdGg6IDBweDsgdmVydGljYWwtYWxpZ246IGJvdHRvbTsiIGlkPSJMUFRodW1ibmFpbElt
+YWdlSURfMTUxODYwMjM2NDMwNDAuNzQyNzcwNDM5NjQ4MjcwNiIgd2lkdGg9IjI1MCIgaGVpZ2h0
+PSIyNTAiIHNyYz0iaHR0cHM6Ly9hdmF0YXJzMi5naXRodWJ1c2VyY29udGVudC5jb20vdS8zNDQ4
+ODY5Nz9zPTQwMCZhbXA7dj00Ij48L2E+PC9kaXY+CjwvdGQ+Cjx0ZCBpZD0iVGV4dENlbGxfMTUx
+ODYwMjM2NDMwNDAuNjE0MjQxNjI2OTYxNDUyMyIgc3R5bGU9InZlcnRpY2FsLWFsaWduOiB0b3A7
+IHBvc2l0aW9uOiByZWxhdGl2ZTsgcGFkZGluZzogMHB4OyBkaXNwbGF5OiB0YWJsZS1jZWxsOyIg
+Y29sc3Bhbj0iMiI+CjxkaXYgaWQ9IkxQUmVtb3ZlUHJldmlld0NvbnRhaW5lcl8xNTE4NjAyMzY0
+MzA0MC41NjMxNDQ5Mzg3ODY4MjU3Ij48L2Rpdj4KPGRpdiBpZD0iTFBUaXRsZV8xNTE4NjAyMzY0
+MzA1MC42MDE1MDA0NTA5MDMwMDY5IiBzdHlsZT0idG9wOiAwcHg7IGNvbG9yOiByZ2IoMCwgMTIw
+LCAyMTUpOyBmb250LXdlaWdodDogNDAwOyBmb250LXNpemU6IDIxcHg7IGZvbnQtZmFtaWx5OiAm
+cXVvdDt3Zl9zZWdvZS11aV9saWdodCZxdW90OywgJnF1b3Q7U2Vnb2UgVUkgTGlnaHQmcXVvdDss
+ICZxdW90O1NlZ29lIFdQIExpZ2h0JnF1b3Q7LCAmcXVvdDtTZWdvZSBVSSZxdW90OywgJnF1b3Q7
+U2Vnb2UgV1AmcXVvdDssIFRhaG9tYSwgQXJpYWwsIHNhbnMtc2VyaWY7IGxpbmUtaGVpZ2h0OiAy
+MXB4OyI+CjxhIGlkPSJMUFVybEFuY2hvcl8xNTE4NjAyMzY0MzA1MC4xNzAxMzAzOTkwODUwMzI5
+IiBzdHlsZT0idGV4dC1kZWNvcmF0aW9uOiBub25lOyIgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29t
+L3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9ibG9iL21hc3Rlci9JTlNUQUxMLm1kI3N5c3RlbS11
+c2VyLS1ncm91cCIgdGFyZ2V0PSJfYmxhbmsiPnRwbTItYWJybWQvSU5TVEFMTC5tZCBhdCBtYXN0
+ZXIgLSBnaXRodWIuY29tPC9hPjwvZGl2Pgo8ZGl2IGlkPSJMUE1ldGFkYXRhXzE1MTg2MDIzNjQz
+MDUwLjA1NDAwOTExMTcxMDEzNTM0IiBzdHlsZT0ibWFyZ2luOiAxMHB4IDBweCAxNnB4OyBjb2xv
+cjogcmdiKDEwMiwgMTAyLCAxMDIpOyBmb250LXdlaWdodDogNDAwOyBmb250LWZhbWlseTogJnF1
+b3Q7d2Zfc2Vnb2UtdWlfbm9ybWFsJnF1b3Q7LCAmcXVvdDtTZWdvZSBVSSZxdW90OywgJnF1b3Q7
+U2Vnb2UgV1AmcXVvdDssIFRhaG9tYSwgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTRw
+eDsgbGluZS1oZWlnaHQ6IDE0cHg7Ij4KZ2l0aHViLmNvbTwvZGl2Pgo8ZGl2IGlkPSJMUERlc2Ny
+aXB0aW9uXzE1MTg2MDIzNjQzMDYwLjU0NTQzNzQ2MjUxNzM3NyIgc3R5bGU9ImRpc3BsYXk6IGJs
+b2NrOyBjb2xvcjogcmdiKDEwMiwgMTAyLCAxMDIpOyBmb250LXdlaWdodDogNDAwOyBmb250LWZh
+bWlseTogJnF1b3Q7d2Zfc2Vnb2UtdWlfbm9ybWFsJnF1b3Q7LCAmcXVvdDtTZWdvZSBVSSZxdW90
+OywgJnF1b3Q7U2Vnb2UgV1AmcXVvdDssIFRhaG9tYSwgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQt
+c2l6ZTogMTRweDsgbGluZS1oZWlnaHQ6IDIwcHg7IG1heC1oZWlnaHQ6IDEwMHB4OyBvdmVyZmxv
+dzogaGlkZGVuOyI+ClRoaXMgaXMgYSBxdWljayBzZXQgb2YgaW5zdHJ1Y3Rpb25zIHRvIGJ1aWxk
+LCBpbnN0YWxsIGFuZCBydW4gdGhlIHRwbTItYWJybWQuIERlcGVuZGVuY2llcy4gVG8gYnVpbGQg
+YW5kIGluc3RhbGwgdGhlIHRwbTItYWJybWQgc29mdHdhcmUgdGhlIGZvbGxvd2luZyBkZXBlbmRl
+bmNpZXMgLi4uPC9kaXY+CjwvdGQ+CjwvdHI+CjwvdGJvZHk+CjwvdGFibGU+CjwvZGl2Pgo8YnI+
+CiZndDsgZ2l0aHViLmNvbTxicj4KJmd0OyBUaGlzIGlzIGEgcXVpY2sgc2V0IG9mIGluc3RydWN0
+aW9ucyB0byBidWlsZCwgaW5zdGFsbCBhbmQgcnVuIHRoZSB0cG0yLWFicm1kLiBEZXBlbmRlbmNp
+ZXMuIFRvIGJ1aWxkIGFuZCBpbnN0YWxsIHRoZSB0cG0yLWFicm1kIHNvZnR3YXJlIHRoZSBmb2xs
+b3dpbmcgZGVwZW5kZW5jaWVzIC4uLjxicj4KJmd0OyA8YnI+CiZndDsgPGJyPgomZ3Q7IDxicj4K
+Jmd0OyA8YnI+CiZndDsgUGhpbGlwPGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDsgPGJyPgom
+Z3Q7IEZyb206IE1vbmVlYiBBemhhciBbPGEgaHJlZj0ibWFpbHRvOm1vbmVlYjc3N0Bob3RtYWls
+LmNvbSI+bWFpbHRvOm1vbmVlYjc3N0Bob3RtYWlsLmNvbTwvYT5dPGJyPgomZ3Q7IFNlbnQ6IDEz
+IEZlYnJ1YXJ5LCAyMDE4IDEyOjQ1PGJyPgomZ3Q7IFRvOiBUcmljY2EsIFBoaWxpcCBCICZsdDtw
+aGlsaXAuYi50cmljY2FAaW50ZWwuY29tJmd0Ozxicj4KJmd0OyBDYzogdHBtMkBsaXN0cy4wMS5v
+cmc8YnI+CiZndDsgU3ViamVjdDogUmU6IFRDVEkgaW5pdGlhbGl6YXRpb24gZmFpbHMgd2l0aCBl
+cnJvciAweGMwMDBiPGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDsgPGJyPgomZ3Q7IFRoZSB3
+b3JrYXJvdW5kIGxlYWRzIHRvIGEgc2ltaWxhciBlcnJvcjo8YnI+CiZndDsgPGJyPgomZ3Q7IDxi
+cj4KJmd0OyA8YnI+CiZndDsgdWJ1bnR1On4vRGVza3RvcC9pYm10cG05NzQvc3JjJCB0cG0yLWFi
+cm1kIC0tdGN0aT1saWJ0Y3RpLWRldmljZS5zbzxicj4KJmd0OyAqKiAodHBtMi1hYnJtZDo0MDY1
+KTogV0FSTklORyAqKjogZmFpbGVkIHRvIGluaXRpYWxpemUgZGV2aWNlIFRDVEkgY29udGV4dDog
+MHhhMDAwYTxicj4KJmd0OyAqKiAodHBtMi1hYnJtZDo0MDY1KTogQ1JJVElDQUwgKio6IFRDVEkg
+aW5pdGlhbGl6YXRpb24gZmFpbGVkOiAweGEwMDBhPGJyPgomZ3Q7IDxicj4KJmd0OyBUaGlzIGlz
+IHNpbWlsYXIgdG8gaXNzdWUgIzkyIGJ1dCBJIGFtIGFscmVhZHkgZm9sbG93aW5nIHRoZSBzdGVw
+cyBzdWdnZXN0ZWQgaW4gdGhlIGNvbW1lbnRzIHRoZXJlLjxicj4KJmd0OyA8YnI+CiZndDsgPGJy
+PgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDsgPGJyPgomZ3Q7IF9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fPGJyPgomZ3Q7IDxicj4KJmd0OyBGcm9tOiBUcmljY2EsIFBoaWxpcCBCICZs
+dDtwaGlsaXAuYi50cmljY2FAaW50ZWwuY29tJmx0O21haWx0bzpwaGlsaXAuYi50cmljY2FAaW50
+ZWwuY29tJmd0OyZndDs8YnI+CiZndDsgU2VudDogVHVlc2RheSwgRmVicnVhcnkgMTMsIDIwMTgg
+MTE6MzggUE08YnI+CiZndDsgVG86IE1vbmVlYiBBemhhcjxicj4KJmd0OyBDYzogdHBtMkBsaXN0
+cy4wMS5vcmcmbHQ7PGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIj5tYWlsdG86dHBt
+MkBsaXN0cy4wMS5vcmc8L2E+Jmd0Ozxicj4KJmd0OyBTdWJqZWN0OiBSRTogVENUSSBpbml0aWFs
+aXphdGlvbiBmYWlscyB3aXRoIGVycm9yIDB4YzAwMGI8YnI+CiZndDsgPGJyPgomZ3Q7IDxicj4K
+Jmd0OyA8YnI+CiZndDsgSSB0cmlhZ2VkIHRoaXMgbGFzdCBuaWdodC4gSXShr3MgYSBidWcgaW4g
+dGhlIGxvZ2ljIHRoYXQgc2VsZWN0cyB0aGUgZGVmYXVsdCBUQ1RJLiBJoa92ZSBnb3QgYW4gaXNz
+dWUgaW4gdGhlIHRyYWNrZXIgZm9yIGl0IGhlcmU6CjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNv
+bS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQvaXNzdWVzLzMyNyI+aHR0cHM6Ly9naXRodWIuY29t
+L3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9pc3N1ZXMvMzI3PC9hPi4gWW91IGNhbiB3b3JrIGFy
+b3VuZCBpdCBieSBleHBsaWNpdGx5IHNlbGVjdGluZyB0aGUgZGV2aWNlIFRDVEkgd2l0aCB0aGUg
+Zm9sbG93aW5nIG9wdGlvbjogYC0tdGN0aT1saWJ0Y3RpLWRldmljZS5zb2AuIEmhr2xsIGJlIGZp
+eGluZwogdGhpcyB1cCB0b2RheSBhbmQgbGlrZWx5IGNoYW5naW5nIHRoZSB3YXkgd2Ugc3BlY2lm
+eSB0aGUgVENUSSB0byBhbGlnbiB3aXRoIHRoZSB0b29scyBgLS10Y3RpYCBvcHRpb24uPGJyPgom
+Z3Q7IDxicj4KJmd0OyBbPGEgaHJlZj0iaHR0cHM6Ly9hdmF0YXJzMC5naXRodWJ1c2VyY29udGVu
+dC5jb20vdS8xNTUwODEzP3M9NDAwJmFtcDt2PTRdJmx0O2h0dHBzOi8vZ2l0aHViLmNvbS90cG0y
+LXNvZnR3YXJlL3RwbTItYWJybWQvaXNzdWVzLzMyNyI+aHR0cHM6Ly9hdmF0YXJzMC5naXRodWJ1
+c2VyY29udGVudC5jb20vdS8xNTUwODEzP3M9NDAwJmFtcDt2PTRdJmx0O2h0dHBzOi8vZ2l0aHVi
+LmNvbS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQvaXNzdWVzLzMyNzwvYT4mZ3Q7PGJyPgomZ3Q7
+IDxicj4KJmd0OyA8YnI+CiZndDsgc2FuZSBkZWZhdWx0IFRDVEkgoaQgSXNzdWUgIzMyNyChpCB0
+cG0yLXNvZnR3YXJlL3RwbTItYWJybWQmbHQ7aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdh
+cmUvdHBtMi1hYnJtZC9pc3N1ZXMvMzI3Jmd0Ozxicj4KJmd0OyA8YnI+CiZndDsgZ2l0aHViLmNv
+bTxicj4KJmd0OyA8YnI+CiZndDsgSXQgbG9va3MgbGlrZSwgd2hlbiBwcm92aWRlZCB3aXRoIG5v
+IC0tdGN0aSBvcHRpb24gd2UncmUgbm90IHBpY2tpbmcgYSBzYW5lIGRlZmF1bHQgdmFsdWUgZm9y
+IHRoZSBUQ1RJIGxpYnJhcnkuIElmIHRoZSBvcHRpb24gaXMgb21pdHRlZCB3ZSBzaG91bGQgZGVm
+YXVsdCB0byB0aGUgZGV2aWNlIFRDVEkuPGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDsgPGJy
+PgomZ3Q7IDxicj4KJmd0OyBCZXN0LDxicj4KJmd0OyA8YnI+CiZndDsgUGhpbGlwPGJyPgomZ3Q7
+IDxicj4KJmd0OyA8YnI+CiZndDsgPGJyPgomZ3Q7IEZyb206IE1vbmVlYiBBemhhciBbPGEgaHJl
+Zj0ibWFpbHRvOm1vbmVlYjc3N0Bob3RtYWlsLmNvbSI+bWFpbHRvOm1vbmVlYjc3N0Bob3RtYWls
+LmNvbTwvYT5dPGJyPgomZ3Q7IFNlbnQ6IDEzIEZlYnJ1YXJ5LCAyMDE4IDA0OjUwPGJyPgomZ3Q7
+IFRvOiBUcmljY2EsIFBoaWxpcCBCICZsdDtwaGlsaXAuYi50cmljY2FAaW50ZWwuY29tJmx0O21h
+aWx0bzpwaGlsaXAuYi50cmljY2FAaW50ZWwuY29tJmd0OyZndDs8YnI+CiZndDsgQ2M6IHRwbTJA
+bGlzdHMuMDEub3JnJmx0OzxhIGhyZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9yZyI+bWFpbHRv
+OnRwbTJAbGlzdHMuMDEub3JnPC9hPiZndDs8YnI+CiZndDsgU3ViamVjdDogUmU6IFRDVEkgaW5p
+dGlhbGl6YXRpb24gZmFpbHMgd2l0aCBlcnJvciAweGMwMDBiPGJyPgomZ3Q7IDxicj4KJmd0OyA8
+YnI+CiZndDsgPGJyPgomZ3Q7IEhleSw8YnI+CiZndDsgPGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+
+CiZndDsgU28gZnJvbSB3aGF0IEkgaGF2ZSBnYXRoZXJlZCwgdGFicm1kIGlzIGRlc2lnbmVkIHRv
+IGNvbm5lY3QgZGlyZWN0bHkgdG8gdGhlIHNpbXVsYXRvciB3aXRob3V0IHRoZSBuZWVkIHRvIHBh
+c3MgYW55IG9wdGlvbnMgYnkgdXNpbmcgLS10Y3RpLiBJIHRyaWVkIGRvaW5nIHRoaXMgYW5kIGdl
+dCB0aGUgZXhhY3Qgc2FtZSBlcnJvcjo8YnI+CiZndDsgPGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+
+CiZndDsgdWJ1bnR1On4vRGVza3RvcC9pYm10cG05NzQvc3JjJCBzdWRvIHRwbTItYWJybWQmbmJz
+cDsgLS1hbGxvdy1yb290PGJyPgomZ3Q7ICoqICh0cG0yLWFicm1kOjEwNTQ0NSk6IFdBUk5JTkcg
+Kio6IEZhaWxlZCB0byBnZXQgcmVmZXJlbmNlIHRvIHN5bWJvbDogdHBtMi1hYnJtZDogdW5kZWZp
+bmVkIHN5bWJvbDogVHNzMl9UY3RpX0luZm88YnI+CiZndDsgKiogKHRwbTItYWJybWQ6MTA1NDQ1
+KTogQ1JJVElDQUwgKio6IFRDVEkgaW5pdGlhbGl6YXRpb24gZmFpbGVkOiAweGMwMDBiPGJyPgom
+Z3Q7IDxicj4KJmd0OyBJJm5ic3A7IG11c3QgYmUgZG9pbmcgc29tZXRoaW5nIHdyb25nIGJ1dCBJ
+IGRvbid0IGtub3cgd2hhdC4gQXJlIHRoZXJlIGFueSBsb2cgZmlsZXMgSSBjYW4gZ28gdGhyb3Vn
+aCZuYnNwOyB3aGljaCBjb3VsZCB0ZWxsIG1lIHdoYXQgaXMgaGFwcGVuaW5nPzxicj4KJmd0OyA8
+YnI+CiZndDsgUmVnYXJkcyw8YnI+CiZndDsgTW9uZWViPGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+
+CiZndDsgPGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDsgX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX188YnI+CiZndDsgPGJyPgomZ3Q7IEZyb206IFRyaWNjYSwgUGhpbGlwIEIgJmx0
+O3BoaWxpcC5iLnRyaWNjYUBpbnRlbC5jb20mbHQ7bWFpbHRvOnBoaWxpcC5iLnRyaWNjYUBpbnRl
+bC5jb20mZ3Q7Jmd0Ozxicj4KJmd0OyBTZW50OiBNb25kYXksIEZlYnJ1YXJ5IDEyLCAyMDE4IDk6
+MDQgUE08YnI+CiZndDsgVG86IE1vbmVlYiBBemhhcjxicj4KJmd0OyBDYzogdHBtMkBsaXN0cy4w
+MS5vcmcmbHQ7PGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIj5tYWlsdG86dHBtMkBs
+aXN0cy4wMS5vcmc8L2E+Jmd0Ozxicj4KJmd0OyBTdWJqZWN0OiBSRTogVENUSSBpbml0aWFsaXph
+dGlvbiBmYWlscyB3aXRoIGVycm9yIDB4YzAwMGI8YnI+CiZndDsgPGJyPgomZ3Q7IDxicj4KJmd0
+OyA8YnI+CiZndDsgQXBvbG9naWVzIGluIGFkdmFuY2UgZm9yIHRvcCBwb3N0aW5nLiBJoa9tIHN0
+dWNrIG9uIGEgd2luZG93cyBzeXN0ZW0gd2hpbGUgdHJhdmVsaW5nLjxicj4KJmd0OyA8YnI+CiZn
+dDsgPGJyPgomZ3Q7IDxicj4KJmd0OyBJdCBzZWVtcyBhcyB0aG91Z2ggeW91ciBpc3N1ZSBpcyBy
+ZWxhdGVkIHRvIGEgcmVjZW50IGNoYW5nZSB0byB0aGUgd2F5IHdloa9yZSBpbml0aWFsaXppbmcg
+dGhlIFRDVEkgbW9kdWxlcy4gVGhpcyBjYXVzZWQgYSBmZXcgY2hhbmdlcyB0byB0aGUgcmVsZXZh
+bnQgY29tbWFuZCBsaW5lIG9wdGlvbnMgbGlrZSBgLS10Y3RpYC4gSWYgeW91oa9yZSBjb25uZWN0
+aW5nIHRoZSB0YWJybWQgdXAgdG8gdGhlIFRQTSBkZXZpY2UgYW5kIG5vdCB0aGUgc2ltdWxhdG9y
+CiBhcyBpcyBkZXNjcmliZWQgaW4gdGhlIHdpa2kgcGFnZSB5b3UgbGluaywgdGhlbiB5b3Whr2xs
+IGVpdGhlciBuZWVkIHRvIGVpdGhlciBsZWF2ZSB0aGUgYC0tdGN0aWAgb3B0aW9uIG91dCAodGhl
+IGRldmljZSBUQ1RJIHNob3VsZCBiZSB0aGUgZGVmYXVsdCkgb3IgdXNlIHRoZSBuZXcgZm9ybSBv
+ZiB0aGUgYC0tdGN0aWAgb3B0aW9uIHdoaWNoIGlzIGRvY3VtZW50ZWQgaW4gb3VyIG1hbiBwYWdl
+cy4gVGhlIHNvdXJjZSBmb3IgdGhlIG1hbiBwYWdlCiBhbmQgdGhlIHJlbGV2YW50IG9wdGlvbiBj
+YW4gYmUgZm91bmQgaGVyZTogPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdh
+cmUvdHBtMi1hYnJtZC9ibG9iL21hc3Rlci9tYW4vdHBtMi1hYnJtZC44LmluI0wyMSI+Cmh0dHBz
+Oi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQvYmxvYi9tYXN0ZXIvbWFuL3Rw
+bTItYWJybWQuOC5pbiNMMjE8L2E+LiBTaW5jZSB3ZaGvcmUgbm93IGxvYWRpbmcgdGhlIFRDVEkg
+c2hhcmVkIG9iamVjdCB1c2luZyBkbG9wZW4gdGhlIHN0cmluZyBwYXNzZWQgdmlhIHRoZSBgLS10
+Y3RpYCBvcHRpb24gaXMgcGFzc2VkIGRpcmVjdGx5IHRvIGRsb3BlbiBzbyB0aGUgc2FtZSBsb29r
+dXAgcnVsZXMgYXBwbHkuIGAtLXRjdGk9bGlidGN0aS1kZXZpY2Uuc29gCiBzaG91bGQgd29yayBm
+b3IgeW91IGFzc3VtaW5nIHlvdXIgTERfQ09ORklHX1BBVEggaXMgc2V0IHVwIHJpZ2h0Ljxicj4K
+Jmd0OyA8YnI+CiZndDsgPGJyPgomZ3Q7IDxicj4KJmd0OyBKdXN0IGEgaGVhZHMgdXAgdGhvdWdo
+OiA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL2lz
+c3Vlcy8zMjEiPgpodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL2lz
+c3Vlcy8zMjE8L2E+IGlzIHRyYWNraW5nIG91ciB3b3JrIHRvIGFsaWduIHRoZSBgLS10Y3RpYCBv
+cHRpb24gYWNyb3NzIHRoZSB0YWJybWQgYW5kIHRoZSB0b29scy4gVGhlIHRhYnJtZCBpcyB2ZXJ5
+IHByb2JhYmx5IGdvaW5nIHRvIGFkb3B0IHRoZSBzYW1lIGNvbnZlbnRpb24gdGhhdCBCaWxsIGlt
+cGxlbWVudGVkIGZvciB0aGUgdG9vbHMgYmVmb3JlIHRoZSBuZXh0CiByZWxlYXNlLjxicj4KJmd0
+OyA8YnI+CiZndDsgPGJyPgomZ3Q7IDxicj4KJmd0OyBIb3BlIHRoaXMgaGVscHMsPGJyPgomZ3Q7
+IDxicj4KJmd0OyBQaGlsaXA8YnI+CiZndDsgPGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDsg
+RnJvbTogdHBtMiBbPGEgaHJlZj0ibWFpbHRvOnRwbTItYm91bmNlc0BsaXN0cy4wMS5vcmciPm1h
+aWx0bzp0cG0yLWJvdW5jZXNAbGlzdHMuMDEub3JnPC9hPl0gT24gQmVoYWxmIE9mIE1vbmVlYiBB
+emhhcjxicj4KJmd0OyBTZW50OiAxMiBGZWJydWFyeSwgMjAxOCAwNTo0Mzxicj4KJmd0OyBUbzog
+dHBtMkBsaXN0cy4wMS5vcmcmbHQ7PGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIj5t
+YWlsdG86dHBtMkBsaXN0cy4wMS5vcmc8L2E+Jmd0Ozxicj4KJmd0OyBTdWJqZWN0OiBbdHBtMl0g
+VENUSSBpbml0aWFsaXphdGlvbiBmYWlscyB3aXRoIGVycm9yIDB4YzAwMGI8YnI+CiZndDsgPGJy
+PgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDsgSGksPGJyPgomZ3Q7IDxicj4KJmd0OyBJIGFtIHRy
+eWluZyB0byBzZXR1cCBhIFRQTSBkZXZlbG9wbWVudCBlbnZpcm9ubWVudCBvbiB1YnVudHUxNi4w
+NCBieSBmb2xsb3dpbmcgdGhlIGluc3RhbGxhdGlvbiB3aWtpIGhlcmU6CjxhIGhyZWY9Imh0dHBz
+Oi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvd2lraS9HZXR0aW5nLVN0YXJ0
+ZWQjaW5zdGFsbGluZyI+Cmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdG9v
+bHMvd2lraS9HZXR0aW5nLVN0YXJ0ZWQjaW5zdGFsbGluZzwvYT48YnI+CiZndDsgPGJyPgomZ3Q7
+IEV2ZXJ5dGhpbmcgaW5zdGFsbHMgY29ycmVjdGx5IGJ1dCBJIGdldCB0aGUgZm9sbG93aW5nIGVy
+cm9yOjxicj4KJmd0OyA8YnI+CiZndDsgJCBzdWRvIC11IHRzcyB0cG0yLWFicm1kIC0tdGN0aT1k
+ZXZpY2U8YnI+CiZndDsgKiogKHRwbTItYWJybWQ6MTA0MTk3KTogV0FSTklORyAqKjogZmFpbGVk
+IHRvIGRsb3BlbiBmaWxlIGRldmljZTogZGV2aWNlOiBjYW5ub3Qgb3BlbiBzaGFyZWQgb2JqZWN0
+IGZpbGU6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3Rvcnk8YnI+CiZndDsgKiogKHRwbTItYWJybWQ6
+MTA0MTk3KTogQ1JJVElDQUwgKio6IFRDVEkgaW5pdGlhbGl6YXRpb24gZmFpbGVkOiAweGMwMDBi
+PGJyPgomZ3Q7IDxicj4KJmd0OyBzeXN0ZW1jdGwmbmJzcDsgc2hvdyBtZSB0aGUgZm9sbG93aW5n
+Ojxicj4KJmd0OyAkIHN1ZG8gc3lzdGVtY3RsIHN0YXR1cyB0cG0yLWFicm1kLnNlcnZpY2U8YnI+
+CiZndDsgodwgdHBtMi1hYnJtZC5zZXJ2aWNlIC0gVFBNMiBBY2Nlc3MgQnJva2VyIGFuZCBSZXNv
+dXJjZSBNYW5hZ2VtZW50IERhZW1vbjxicj4KJmd0OyZuYnNwOyZuYnNwOyZuYnNwOyBMb2FkZWQ6
+IGxvYWRlZCAoL2xpYi9zeXN0ZW1kL3N5c3RlbS90cG0yLWFicm1kLnNlcnZpY2U7IGVuYWJsZWQ7
+IHZlbmRvciBwcmVzZXQ6IGVuYWJsPGJyPgomZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7IEFjdGl2ZTog
+aW5hY3RpdmUgKGRlYWQpPGJyPgomZ3Q7IDxicj4KJmd0OyBIb3cgd291bGQgSSBnbyBhYm91dCBm
+aWd1cmluZyBvdXQgd2hhdCBpcyB3cm9uZz8gSSBhbSBuZXcgdG8gdGhpcyBzbyBhbnkgaGVscCB3
+b3VsZCBiZSBoaWdobHkgYXBwcmVjaWF0ZWQuPGJyPgomZ3Q7IDxicj4KJmd0OyBSZWdhcmRzLDxi
+cj4KJmd0OyBNb25lZWI8YnI+CiZndDsgPGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDsgX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188YnI+CiZndDsgdHBt
+MiBtYWlsaW5nIGxpc3Q8YnI+CiZndDsgdHBtMkBsaXN0cy4wMS5vcmc8YnI+CiZndDsgPGEgaHJl
+Zj0iaHR0cHM6Ly9saXN0cy4wMS5vcmcvbWFpbG1hbi9saXN0aW5mby90cG0yIj5odHRwczovL2xp
+c3RzLjAxLm9yZy9tYWlsbWFuL2xpc3RpbmZvL3RwbTI8L2E+PGJyPgomZ3Q7IDxicj4KPGJyPgo8
+YnI+CjwvZGl2Pgo8L3NwYW4+PC9mb250PjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvYm9keT4KPC9o
+dG1sPgo=
+
+--===============0676549458331109607==--
 
