@@ -1,82 +1,155 @@
-Content-Type: multipart/mixed; boundary="===============1570989291726034965=="
+Content-Type: multipart/mixed; boundary="===============8301814549546864826=="
 MIME-Version: 1.0
-From: Sun, Ning <ning.sun at intel.com>
-Subject: Re: [tpm2] ESYS API pull request review to start 2018-02-05
-Date: Fri, 16 Feb 2018 19:15:20 +0000
-Message-ID: <83BE7A8C0111FD48951B68B36BEFDFD40D16C457@ORSMSX107.amr.corp.intel.com>
-In-Reply-To: DB638850A6A2434A93ECADDA0BC838905F124692@ORSMSX103.amr.corp.intel.com
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
+Subject: [tpm2] git clone vs tar file of tpm2-tss & bitbake
+Date: Fri, 16 Feb 2018 19:25:47 +0000
+Message-ID: <c4268245e2b94d95b8f3dd761524181b@AZDC-MMB02.GD-MS.US>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1570989291726034965==
+--===============8301814549546864826==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Are there going to be another version of tpm2 tools based on ESAPI?
+I'm trying to incorporate tpm2-tss into my bitbake (Wind River Linux 8/yoct=
+o) build.  We're on an air-gapped network, so I started by downloading the =
+tpm2-tss-1.3.0.tar.gz file from the releases, moved that to the isolated ne=
+twork, and then used the tpm2-tss_1.2.0.bb and tpm2-tss.inc recipes, with t=
+he ARC_URI in the former being modified thusly:
 
-Thanks,
--Ning =
+                #SRC_URI =3D "git://github.com/01org/${BPN}.git;protocol=3D=
+git;tag=3D${PV};name=3D${BPN};destsuffix=3D${BPN};branch=3D1.x"
+       SRC_URI =3D "file://tpm2-tss<file:///\\tpm2-tss>"
+
+And I commented out the whole do_config_prepend section in tpm2-tss.inc sin=
+ce it shouldn't be necessary (right?  Besides, the tar file doesn't have th=
+e bootstrap script).
+
+But when I ran configure, I got errors (or perhaps they're warnings?) about=
+ tpm2-tss-1.3.0/ not being a git directory, which is true, it isn't-it isn'=
+t supposed to be, right?  So, next, I git cloned tpm2-tss via an outside ma=
+chine that did have internet access, tar'd up that directory, moved it to t=
+he isolated network, and plopped it into my bitbake build environment.  Now=
+ when I run configure, I don't get the git errors, although autoconf is sti=
+ll failing because of "possibly undefined macros" which happens even with t=
+he git version and which I've mentioned elsewhere*.  But to try to solve th=
+e autoconf issues, I'm trying to make my setup as orthodox as possible.  I =
+can take the release tar file and successfully build that outside my bitbak=
+e build environment, so I think I should be able to use it inside the bitba=
+ke build.  Suggestions?
 
 
------Original Message-----
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Tricca, Philip=
- B
-Sent: Friday, February 16, 2018 10:41 AM
-To: tpm2(a)lists.01.org
-Cc: Peter.Huewe(a)infineon.com; linux-integrity(a)vger.kernel.org
-Subject: Re: [tpm2] ESYS API pull request review to start 2018-02-05
-
-We got started a bit late, and the review ran a bit late, but the PR adding=
- the Enhanced System API (Esys, aka ESAPI) has now been merged into our TSS=
-2 library repo: https://github.com/tpm2-software/tpm2-tss/commit/ff821bd3ed=
-112c3ddfb27aadd6898789a2545d2d. Our PR queue is now unblocked and I'll be s=
-pending some time today doing the usual maintenance that's built up. Thanks=
- to everyone who put some of their time into the review. =
+BTW, should the recipe file be tpm2-tss-1.3.0.bb rather than tpm2-tss-1.2.0=
+.bb?
 
 
-Special thanks to SIT for all of their hard work writing the code and worki=
-ng with us through the review, and to Infineon for sponsoring the work and =
-enabling its release as OSS.
+*The real problem in building tpm2-tss inside bitbake is that it fails sayi=
+ng macros such as AC_SUBST "may be undefined".  This suggests that autoconf=
+-archive is missing, but it isn't.  We've added autconf-archive to our buil=
+d, tagged it as native so it's pulled into the build environment, listed it=
+ as a dependency for tpm2-tss, and can see it being built when we try to  b=
+uild tpm2-ss, but tpm2-tss still fails with the same AC_SUBST-may-be-undefi=
+ned error.  So, it seems something else is wrong somewhere.  Thus my effort=
+ to try to align my build for tpm2-tss to be as "normal" as possible.
 
-For those looking to work with the ESAPI library now that it's been merged,=
- the TCG has reshuffled their website (... again) and the spec is now here:=
- https://trustedcomputinggroup.org/tcg-tss-2-0-enhanced-system-api-esapi-sp=
-ecification/
+Peter
 
-Regards,
-Philip
 
------Original Message-----
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of philip.b.tricc=
-a(a)intel.com
-Sent: 1 February, 2018 23:39
-To: tpm2(a)lists.01.org
-Cc: linux-integrity(a)vger.kernel.org
-Subject: [tpm2] ESYS API pull request review to start 2018-02-05
+--===============8301814549546864826==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-Sorry for the spam but this topic has been discussed at the plumbers TPM mi=
-croconf and so I thought the wider audience might find this interesting / r=
-elevant:
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDYWxp
+YnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQpAZm9udC1mYWNlCgl7Zm9udC1m
+YW1pbHk6Q29uc29sYXM7CglwYW5vc2UtMToyIDExIDYgOSAyIDIgNCAzIDIgNDt9Ci8qIFN0eWxl
+IERlZmluaXRpb25zICovCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWwsIGRpdi5Nc29Ob3JtYWwK
+CXttYXJnaW46MGluOwoJbWFyZ2luLWJvdHRvbTouMDAwMXB0OwoJZm9udC1zaXplOjExLjBwdDsK
+CWZvbnQtZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7fQphOmxpbmssIHNwYW4uTXNvSHlw
+ZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6Ymx1ZTsKCXRleHQtZGVjb3Jh
+dGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQKCXtt
+c28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjpwdXJwbGU7Cgl0ZXh0LWRlY29yYXRpb246dW5k
+ZXJsaW5lO30Kc3Bhbi5FbWFpbFN0eWxlMTcKCXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1jb21w
+b3NlOwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLCJzYW5zLXNlcmlmIjsKCWNvbG9yOndpbmRvd3Rl
+eHQ7fQouTXNvQ2hwRGVmYXVsdAoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5OwoJZm9udC1m
+YW1pbHk6IkNhbGlicmkiLCJzYW5zLXNlcmlmIjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3NpemU6
+OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2LldvcmRT
+ZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28g
+OV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4K
+PC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0
+IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFw
+ZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIgbGlu
+az0iYmx1ZSIgdmxpbms9InB1cnBsZSI+CjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+CjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPkkmIzgyMTc7bSB0cnlpbmcgdG8gaW5jb3Jwb3JhdGUgdHBtMi10c3Mg
+aW50byBteSBiaXRiYWtlIChXaW5kIFJpdmVyIExpbnV4IDgveW9jdG8pIGJ1aWxkLiZuYnNwOyBX
+ZSYjODIxNztyZSBvbiBhbiBhaXItZ2FwcGVkIG5ldHdvcmssIHNvIEkgc3RhcnRlZCBieSBkb3du
+bG9hZGluZyB0aGUgdHBtMi10c3MtMS4zLjAudGFyLmd6IGZpbGUgZnJvbSB0aGUgcmVsZWFzZXMs
+IG1vdmVkIHRoYXQgdG8gdGhlIGlzb2xhdGVkIG5ldHdvcmssIGFuZAogdGhlbiB1c2VkIHRoZSB0
+cG0yLXRzc18xLjIuMC5iYiBhbmQgdHBtMi10c3MuaW5jIHJlY2lwZXMsIHdpdGggdGhlIEFSQ19V
+UkkgaW4gdGhlIGZvcm1lciBiZWluZyBtb2RpZmllZCB0aHVzbHk6Jm5ic3A7CjxvOnA+PC9vOnA+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICM8c3BhbiBzdHls
+ZT0iZm9udC1zaXplOjkuMHB0O2ZvbnQtZmFtaWx5OkNvbnNvbGFzO2NvbG9yOiMyNDI5MkU7YmFj
+a2dyb3VuZDp3aGl0ZSI+U1JDX1VSSSA9ICZxdW90O2dpdDovL2dpdGh1Yi5jb20vMDFvcmcvJHtC
+UE59LmdpdDtwcm90b2NvbD1naXQ7dGFnPSR7UFZ9O25hbWU9JHtCUE59O2Rlc3RzdWZmaXg9JHtC
+UE59O2JyYW5jaD0xLngmcXVvdDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OS4wcHQ7Zm9udC1mYW1pbHk6Q29uc29sYXM7
+Y29sb3I6IzI0MjkyRTtiYWNrZ3JvdW5kOndoaXRlIj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsgU1JDX1VSSSA9ICYjODIyMDs8YSBocmVmPSJmaWxlOi8vL1xcdHBtMi10c3Mi
+PmZpbGU6Ly90cG0yLXRzczwvYT4mIzgyMjE7PC9zcGFuPjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+QW5kIEkgY29tbWVudGVkIG91dCB0aGUgd2hvbGUgZG9fY29uZmlnX3ByZXBlbmQgc2VjdGlvbiBp
+biB0cG0yLXRzcy5pbmMgc2luY2UgaXQgc2hvdWxkbiYjODIxNzt0IGJlIG5lY2Vzc2FyeSAocmln
+aHQ/ICZuYnNwO0Jlc2lkZXMsIHRoZSB0YXIgZmlsZSBkb2VzbiYjODIxNzt0IGhhdmUgdGhlIGJv
+b3RzdHJhcCBzY3JpcHQpLjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpw
+PiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+QnV0IHdoZW4gSSByYW4gY29u
+ZmlndXJlLCBJIGdvdCBlcnJvcnMgKG9yIHBlcmhhcHMgdGhleSYjODIxNztyZSB3YXJuaW5ncz8p
+IGFib3V0IHRwbTItdHNzLTEuMy4wLyBub3QgYmVpbmcgYSBnaXQgZGlyZWN0b3J5LCB3aGljaCBp
+cyB0cnVlLCBpdCBpc24mIzgyMTc7dCYjODIxMjtpdCBpc24mIzgyMTc7dCBzdXBwb3NlZCB0byBi
+ZSwgcmlnaHQ/Jm5ic3A7IFNvLCBuZXh0LCBJIGdpdCBjbG9uZWQgdHBtMi10c3MgdmlhIGFuIG91
+dHNpZGUgbWFjaGluZSB0aGF0CiBkaWQgaGF2ZSBpbnRlcm5ldCBhY2Nlc3MsIHRhciYjODIxNztk
+IHVwIHRoYXQgZGlyZWN0b3J5LCBtb3ZlZCBpdCB0byB0aGUgaXNvbGF0ZWQgbmV0d29yaywgYW5k
+IHBsb3BwZWQgaXQgaW50byBteSBiaXRiYWtlIGJ1aWxkIGVudmlyb25tZW50LiZuYnNwOyBOb3cg
+d2hlbiBJIHJ1biBjb25maWd1cmUsIEkgZG9uJiM4MjE3O3QgZ2V0IHRoZSBnaXQgZXJyb3JzLCBh
+bHRob3VnaCBhdXRvY29uZiBpcyBzdGlsbCBmYWlsaW5nIGJlY2F1c2Ugb2YgJiM4MjIwO3Bvc3Np
+Ymx5IHVuZGVmaW5lZAogbWFjcm9zJiM4MjIxOyB3aGljaCBoYXBwZW5zIGV2ZW4gd2l0aCB0aGUg
+Z2l0IHZlcnNpb24gYW5kIHdoaWNoIEkmIzgyMTc7dmUgbWVudGlvbmVkIGVsc2V3aGVyZSouJm5i
+c3A7IEJ1dCB0byB0cnkgdG8gc29sdmUgdGhlIGF1dG9jb25mIGlzc3VlcywgSSYjODIxNzttIHRy
+eWluZyB0byBtYWtlIG15IHNldHVwIGFzIG9ydGhvZG94IGFzIHBvc3NpYmxlLiZuYnNwOyBJIGNh
+biB0YWtlIHRoZSByZWxlYXNlIHRhciBmaWxlIGFuZCBzdWNjZXNzZnVsbHkgYnVpbGQgdGhhdCBv
+dXRzaWRlIG15IGJpdGJha2UKIGJ1aWxkIGVudmlyb25tZW50LCBzbyBJIHRoaW5rIEkgc2hvdWxk
+IGJlIGFibGUgdG8gdXNlIGl0IGluc2lkZSB0aGUgYml0YmFrZSBidWlsZC4mbmJzcDsgU3VnZ2Vz
+dGlvbnM/PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9v
+OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+QlRXLCBzaG91bGQgdGhlIHJlY2lwZSBmaWxlIGJlIHRwbTItdHNzLTEu
+My4wLmJiIHJhdGhlciB0aGFuIHRwbTItdHNzLTEuMi4wLmJiPzxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPipUaGUgcmVhbCBw
+cm9ibGVtIGluIGJ1aWxkaW5nIHRwbTItdHNzIGluc2lkZSBiaXRiYWtlIGlzIHRoYXQgaXQgZmFp
+bHMgc2F5aW5nIG1hY3JvcyBzdWNoIGFzIEFDX1NVQlNUICYjODIyMDttYXkgYmUgdW5kZWZpbmVk
+JiM4MjIxOy4mbmJzcDsgVGhpcyBzdWdnZXN0cyB0aGF0IGF1dG9jb25mLWFyY2hpdmUgaXMgbWlz
+c2luZywgYnV0IGl0IGlzbiYjODIxNzt0LiZuYnNwOyBXZSYjODIxNzt2ZSBhZGRlZCBhdXRjb25m
+LWFyY2hpdmUgdG8gb3VyIGJ1aWxkLCB0YWdnZWQgaXQKIGFzIG5hdGl2ZSBzbyBpdCYjODIxNztz
+IHB1bGxlZCBpbnRvIHRoZSBidWlsZCBlbnZpcm9ubWVudCwgbGlzdGVkIGl0IGFzIGEgZGVwZW5k
+ZW5jeSBmb3IgdHBtMi10c3MsIGFuZCBjYW4gc2VlIGl0IGJlaW5nIGJ1aWx0IHdoZW4gd2UgdHJ5
+IHRvJm5ic3A7IGJ1aWxkIHRwbTItc3MsIGJ1dCB0cG0yLXRzcyBzdGlsbCBmYWlscyB3aXRoIHRo
+ZSBzYW1lIEFDX1NVQlNULW1heS1iZS11bmRlZmluZWQgZXJyb3IuJm5ic3A7IFNvLCBpdCBzZWVt
+cyBzb21ldGhpbmcgZWxzZSBpcyB3cm9uZwogc29tZXdoZXJlLiZuYnNwOyBUaHVzIG15IGVmZm9y
+dCB0byB0cnkgdG8gYWxpZ24gbXkgYnVpbGQgZm9yIHRwbTItdHNzIHRvIGJlIGFzICYjODIyMDtu
+b3JtYWwmIzgyMjE7IGFzIHBvc3NpYmxlLjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+UGV0ZXI8bzpw
+PjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+Cjwv
+ZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
 
-The OSS implementation of of the TCG TSS2 core libraries / APIs is working =
-its way toward a version 2.0 release and we're a few days away from startin=
-g a pull request & review that will add the "Enhanced System API". This new=
- API adds additional features like automating the application side of the h=
-ash and encryption operations for HMAC and encrypted sessions.
-
-If you're interested the spec is available here:
-https://trustedcomputinggroup.org/wp-content/uploads/TSS_ESAPI_Version-0.9_=
-Revision-04_reviewEND030918.pdf
-
-Given the size of this generous code contribution (our thanks to Fraunhofer=
- SIT and Infineon), this PR will be under review for several days. During t=
-his time lower priority PRs will be delayed and we may build up a bit of a =
-queue.
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org
-https://lists.01.org/mailman/listinfo/tpm2
-
---===============1570989291726034965==--
+--===============8301814549546864826==--
 
