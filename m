@@ -1,17 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============3035009638635480936=="
+Content-Type: multipart/mixed; boundary="===============1570989291726034965=="
 MIME-Version: 1.0
-From: Tricca, Philip B <philip.b.tricca at intel.com>
+From: Sun, Ning <ning.sun at intel.com>
 Subject: Re: [tpm2] ESYS API pull request review to start 2018-02-05
-Date: Fri, 16 Feb 2018 18:41:21 +0000
-Message-ID: <DB638850A6A2434A93ECADDA0BC838905F124692@ORSMSX103.amr.corp.intel.com>
-In-Reply-To: a525b28f-aaf3-58c1-7b13-1c4d8d52d22e@twobit.us
+Date: Fri, 16 Feb 2018 19:15:20 +0000
+Message-ID: <83BE7A8C0111FD48951B68B36BEFDFD40D16C457@ORSMSX107.amr.corp.intel.com>
+In-Reply-To: DB638850A6A2434A93ECADDA0BC838905F124692@ORSMSX103.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3035009638635480936==
+--===============1570989291726034965==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+Are there going to be another version of tpm2 tools based on ESAPI?
+
+Thanks,
+-Ning =
+
+
+-----Original Message-----
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Tricca, Philip=
+ B
+Sent: Friday, February 16, 2018 10:41 AM
+To: tpm2(a)lists.01.org
+Cc: Peter.Huewe(a)infineon.com; linux-integrity(a)vger.kernel.org
+Subject: Re: [tpm2] ESYS API pull request review to start 2018-02-05
 
 We got started a bit late, and the review ran a bit late, but the PR adding=
  the Enhanced System API (Esys, aka ESAPI) has now been merged into our TSS=
@@ -59,6 +73,10 @@ Given the size of this generous code contribution (our thanks to Fraunhofer=
  SIT and Infineon), this PR will be under review for several days. During t=
 his time lower priority PRs will be delayed and we may build up a bit of a =
 queue.
+_______________________________________________
+tpm2 mailing list
+tpm2(a)lists.01.org
+https://lists.01.org/mailman/listinfo/tpm2
 
---===============3035009638635480936==--
+--===============1570989291726034965==--
 
