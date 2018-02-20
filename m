@@ -1,296 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============2531241227662659804=="
+Content-Type: multipart/mixed; boundary="===============2495447210263355831=="
 MIME-Version: 1.0
-From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
-Subject: Re: [tpm2] git clone vs tar file of tpm2-tss & bitbake
-Date: Mon, 19 Feb 2018 21:24:10 +0000
-Message-ID: <70534a07bbf0453c91f05fa595aed245@AZDC-MMB02.GD-MS.US>
-In-Reply-To: CAKh=nwGLbUwLPZQJoYR0H7HBG0yFHHosEn+U=y5WBxp15wsPLA@mail.gmail.com
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [tpm2-software/tpm2-tools] 2096ee: ci: Disable ESAPI build in
+ tss.
+Date: Tue, 20 Feb 2018 09:24:32 -0800
+Message-ID: <5a8c59d0b9688_42fa2b2877dd9c106952c@hookshot-fe-6b2eebc.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2531241227662659804==
+--===============2495447210263355831==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Problem fixed.  I had to set PNWHITELIST_openembedded-layer_append =3D =E2=
-=80=9Cautoconf-archive=E2=80=9D and then get autoconf-archive-2012.04.07.ta=
-r.gz, not the latest autoconf-archive tar file.  This way I was able to use=
- the recipe built into WindRiver Linux.  And then everything built as expec=
-ted.  Thanks for the help everyone.
+  Branch: refs/heads/master
+  Home:   https://github.com/tpm2-software/tpm2-tools
+  Commit: 2096ee2f223a3a7afe9c07cdd99cd3de45a01f2f
+      https://github.com/tpm2-software/tpm2-tools/commit/2096ee2f223a3a7afe=
+9c07cdd99cd3de45a01f2f
+  Author: Philip Tricca <philip.b.tricca(a)intel.com>
+  Date:   2018-02-20 (Tue, 20 Feb 2018)
 
-Peter
+  Changed paths:
+    M .travis.yml
 
-From: emmanueldeloget53(a)gmail.com [mailto:emmanueldeloget53(a)gmail.com] =
-On Behalf Of Emmanuel Deloget
-Sent: Saturday, February 17, 2018 3:12 AM
-To: Scheie, Peter M
-Cc: tpm2(a)lists.01.org
-Subject: Re: [tpm2] git clone vs tar file of tpm2-tss & bitbake
+  Log Message:
+  -----------
+  ci: Disable ESAPI build in tss.
 
-Hello,
+Enabling the ESAPI library requires that we have libgcrypt 2.0 and its
+development packages. Installing the libgcrypt20-dev and
+libcurl4-openssl-dev package at the same time causes travis to freak out
+though. Till somone has the wearwithal to debug the broken / old Ubuntu
+packages that travis-ci still uses the easiest thing to do is to disable
+the ESAPI library since the tools don't need it.
 
-
-On Fri, Feb 16, 2018 at 8:25 PM, Scheie, Peter M <Petre.Scheie(a)gd-ms.com<=
-mailto:Petre.Scheie(a)gd-ms.com>> wrote:
-I=E2=80=99m trying to incorporate tpm2-tss into my bitbake (Wind River Linu=
-x 8/yocto) build.  We=E2=80=99re on an air-gapped network, so I started by =
-downloading the tpm2-tss-1.3.0.tar.gz file from the releases, moved that to=
- the isolated network, and then used the tpm2-tss_1.2.0.bb<http://tpm2-tss_=
-1.2.0.bb> and tpm2-tss.inc recipes, with the ARC_URI in the former being mo=
-dified thusly:
-
-                #SRC_URI =3D "git://github.com/01org/${BPN}.git;protocol=3D=
-git;tag=3D${PV};name=3D${BPN};destsuffix=3D${BPN};branch=3D1.x<http://githu=
-b.com/01org/$%7BBPN%7D.git;protocol=3Dgit;tag=3D$%7BPV%7D;name=3D$%7BBPN%7D=
-;destsuffix=3D$%7BBPN%7D;branch=3D1.x>"
-       SRC_URI =3D =E2=80=9Cfile://tpm2-tss<file:///\\tpm2-tss>=E2=80=9D
-
-And I commented out the whole do_config_prepend section in tpm2-tss.inc sin=
-ce it shouldn=E2=80=99t be necessary (right?  Besides, the tar file doesn=
-=E2=80=99t have the bootstrap script).
-
-But when I ran configure, I got errors (or perhaps they=E2=80=99re warnings=
-?) about tpm2-tss-1.3.0/ not being a git directory, which is true, it isn=
-=E2=80=99t=E2=80=94it isn=E2=80=99t supposed to be, right?  So, next, I git=
- cloned tpm2-tss via an outside machine that did have internet access, tar=
-=E2=80=99d up that directory, moved it to the isolated network, and plopped=
- it into my bitbake build environment.  Now when I run configure, I don=E2=
-=80=99t get the git errors, although autoconf is still failing because of =
-=E2=80=9Cpossibly undefined macros=E2=80=9D which happens even with the git=
- version and which I=E2=80=99ve mentioned elsewhere*.  But to try to solve =
-the autoconf issues, I=E2=80=99m trying to make my setup as orthodox as pos=
-sible.  I can take the release tar file and successfully build that outside=
- my bitbake build environment, so I think I should be able to use it inside=
- the bitbake build.  Suggestions?
+Signed-off-by: Philip Tricca <philip.b.tricca(a)intel.com>
 
 
-BTW, should the recipe file be tpm2-tss-1.3.0.bb<http://tpm2-tss-1.3.0.bb> =
-rather than tpm2-tss-1.2.0.bb<http://tpm2-tss-1.2.0.bb>?
+  Commit: 6f6f47a919eb1bc0068f0314f25dc702b26e9a7a
+      https://github.com/tpm2-software/tpm2-tools/commit/6f6f47a919eb1bc006=
+8f0314f25dc702b26e9a7a
+  Author: Philip Tricca <philip.b.tricca(a)intel.com>
+  Date:   2018-02-20 (Tue, 20 Feb 2018)
+
+  Changed paths:
+    M .travis.yml
+
+  Log Message:
+  -----------
+  ci: Set sudo to 'false' to use container build.
+
+This also removes the duplicate 'dist' entry.
+
+Signed-off-by: Philip Tricca <philip.b.tricca(a)intel.com>
 
 
-*The real problem in building tpm2-tss inside bitbake is that it fails sayi=
-ng macros such as AC_SUBST =E2=80=9Cmay be undefined=E2=80=9D.  This sugges=
-ts that autoconf-archive is missing, but it isn=E2=80=99t.  We=E2=80=99ve a=
-dded autconf-archive to our build, tagged it as native so it=E2=80=99s pull=
-ed into the build environment, listed it as a dependency for tpm2-tss, and =
-can see it being built when we try to  build tpm2-ss, but tpm2-tss still fa=
-ils with the same AC_SUBST-may-be-undefined error.  So, it seems something =
-else is wrong somewhere.  Thus my effort to try to align my build for tpm2-=
-tss to be as =E2=80=9Cnormal=E2=80=9D as possible.
+Compare: https://github.com/tpm2-software/tpm2-tools/compare/d3d4838bfe2d..=
+.6f6f47a919eb
 
-
-=E2=80=8BI did this job for integration in lede/openwrt, so I guess the wor=
-k is similar.
-
-The missing aclocal macros are from the =E2=80=8Bautoconf-archive package (=
-https://www.gnu.org/software/autoconf-archive/). You can download individua=
-l macros here: https://www.gnu.org/software/autoconf-archive/The-Macros.htm=
-l. I don't remember which one are used (you can find out by yourself by rea=
-ding the configure.ac<http://configure.ac> files). Copy the missing m4 file=
-s in the m4 directory before calling autoreconf and this should be ok.
-
-The version issue is less important - all you're missing is the version inf=
-ormation which is not that important. If it's really needed, you can patch =
-the configure.ac<http://configure.ac> file to either read the version from =
-a file or directly put the correct version number within the file.
-
-Best regards,
-
--- Emmanuel Deloget
-
---===============2531241227662659804==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpUYWhvbWE7DQoJcGFub3NlLTE6MiAxMSA2
-IDQgMyA1IDQgNCAyIDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpDb25zb2xhczsNCglw
-YW5vc2UtMToyIDExIDYgOSAyIDIgNCAzIDIgNDt9DQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLw0K
-cC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbA0KCXttYXJnaW46MGluOw0K
-CW1hcmdpbi1ib3R0b206LjAwMDFwdDsNCglmb250LXNpemU6MTIuMHB0Ow0KCWZvbnQtZmFtaWx5
-OiJUaW1lcyBOZXcgUm9tYW4iLCJzZXJpZiI7fQ0KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluaw0K
-CXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6Ymx1ZTsNCgl0ZXh0LWRlY29yYXRpb246
-dW5kZXJsaW5lO30NCmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBlcmxpbmtGb2xsb3dlZA0KCXttc28t
-c3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6cHVycGxlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRl
-cmxpbmU7fQ0Kc3Bhbi5FbWFpbFN0eWxlMTcNCgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtcmVw
-bHk7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLCJzYW5zLXNlcmlmIjsNCgljb2xvcjojMUY0OTdE
-O30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5Ow0KCWZvbnQt
-ZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3Np
-emU6OC41aW4gMTEuMGluOw0KCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9DQpkaXYu
-V29yZFNlY3Rpb24xDQoJe3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtpZiBn
-dGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIx
-MDI2IiAvPg0KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpz
-aGFwZWxheW91dCB2OmV4dD0iZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIg
-Lz4NCjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5IGxh
-bmc9IkVOLVVTIiBsaW5rPSJibHVlIiB2bGluaz0icHVycGxlIj4NCjxkaXYgY2xhc3M9IldvcmRT
-ZWN0aW9uMSI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEx
-LjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LCZxdW90O3NhbnMtc2VyaWYmcXVv
-dDs7Y29sb3I6IzFGNDk3RCI+UHJvYmxlbSBmaXhlZC4mbmJzcDsgSSBoYWQgdG8gc2V0IFBOV0hJ
-VEVMSVNUX29wZW5lbWJlZGRlZC1sYXllcl9hcHBlbmQgPSDigJxhdXRvY29uZi1hcmNoaXZl4oCd
-IGFuZCB0aGVuIGdldCBhdXRvY29uZi1hcmNoaXZlLTIwMTIuMDQuMDcudGFyLmd6LCBub3QgdGhl
-IGxhdGVzdCBhdXRvY29uZi1hcmNoaXZlDQogdGFyIGZpbGUuJm5ic3A7IFRoaXMgd2F5IEkgd2Fz
-IGFibGUgdG8gdXNlIHRoZSByZWNpcGUgYnVpbHQgaW50byBXaW5kUml2ZXIgTGludXguJm5ic3A7
-IEFuZCB0aGVuIGV2ZXJ5dGhpbmcgYnVpbHQgYXMgZXhwZWN0ZWQuJm5ic3A7IFRoYW5rcyBmb3Ig
-dGhlIGhlbHAgZXZlcnlvbmUuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2Fs
-aWJyaSZxdW90OywmcXVvdDtzYW5zLXNlcmlmJnF1b3Q7O2NvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5i
-c3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
-b250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssJnF1b3Q7c2Fu
-cy1zZXJpZiZxdW90Oztjb2xvcjojMUY0OTdEIj5QZXRlcjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4N
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQt
-ZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssJnF1b3Q7c2Fucy1zZXJpZiZxdW90Oztjb2xvcjoj
-MUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48Yj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtUYWhv
-bWEmcXVvdDssJnF1b3Q7c2Fucy1zZXJpZiZxdW90OyI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0
-eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OywmcXVv
-dDtzYW5zLXNlcmlmJnF1b3Q7Ij4gZW1tYW51ZWxkZWxvZ2V0NTNAZ21haWwuY29tIFttYWlsdG86
-ZW1tYW51ZWxkZWxvZ2V0NTNAZ21haWwuY29tXQ0KPGI+T24gQmVoYWxmIE9mIDwvYj5FbW1hbnVl
-bCBEZWxvZ2V0PGJyPg0KPGI+U2VudDo8L2I+IFNhdHVyZGF5LCBGZWJydWFyeSAxNywgMjAxOCAz
-OjEyIEFNPGJyPg0KPGI+VG86PC9iPiBTY2hlaWUsIFBldGVyIE08YnI+DQo8Yj5DYzo8L2I+IHRw
-bTJAbGlzdHMuMDEub3JnPGJyPg0KPGI+U3ViamVjdDo8L2I+IFJlOiBbdHBtMl0gZ2l0IGNsb25l
-IHZzIHRhciBmaWxlIG9mIHRwbTItdHNzICZhbXA7IGJpdGJha2U8bzpwPjwvbzpwPjwvc3Bhbj48
-L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxkaXY+DQo8
-ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90
-O0NvdXJpZXIgTmV3JnF1b3Q7Ij5IZWxsbywmbmJzcDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8
-L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1p
-bHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4N
-CjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9w
-Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPk9uIEZyaSwgRmViIDE2LCAyMDE4IGF0IDg6
-MjUgUE0sIFNjaGVpZSwgUGV0ZXIgTSAmbHQ7PGEgaHJlZj0ibWFpbHRvOlBldHJlLlNjaGVpZUBn
-ZC1tcy5jb20iIHRhcmdldD0iX2JsYW5rIj5QZXRyZS5TY2hlaWVAZ2QtbXMuY29tPC9hPiZndDsg
-d3JvdGU6PG86cD48L286cD48L3A+DQo8ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-IHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0
-byI+SeKAmW0gdHJ5aW5nIHRvIGluY29ycG9yYXRlIHRwbTItdHNzIGludG8gbXkgYml0YmFrZSAo
-V2luZCBSaXZlciBMaW51eCA4L3lvY3RvKSBidWlsZC4mbmJzcDsgV2XigJlyZSBvbiBhbiBhaXIt
-Z2FwcGVkIG5ldHdvcmssIHNvIEkgc3RhcnRlZCBieSBkb3dubG9hZGluZyB0aGUgdHBtMi10c3Mt
-MS4zLjAudGFyLmd6IGZpbGUNCiBmcm9tIHRoZSByZWxlYXNlcywgbW92ZWQgdGhhdCB0byB0aGUg
-aXNvbGF0ZWQgbmV0d29yaywgYW5kIHRoZW4gdXNlZCB0aGUgPGEgaHJlZj0iaHR0cDovL3RwbTIt
-dHNzXzEuMi4wLmJiIiB0YXJnZXQ9Il9ibGFuayI+DQp0cG0yLXRzc18xLjIuMC5iYjwvYT4gYW5k
-IHRwbTItdHNzLmluYyByZWNpcGVzLCB3aXRoIHRoZSBBUkNfVVJJIGluIHRoZSBmb3JtZXIgYmVp
-bmcgbW9kaWZpZWQgdGh1c2x5OiZuYnNwOw0KPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20t
-YWx0OmF1dG8iPiZuYnNwOzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5
-bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj4m
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgIzxzcGFuIHN0eWxlPSJmb250LXNpemU6
-OS4wcHQ7Zm9udC1mYW1pbHk6Q29uc29sYXM7Y29sb3I6IzI0MjkyRTtiYWNrZ3JvdW5kOndoaXRl
-Ij5TUkNfVVJJID0gJnF1b3Q7Z2l0Oi8vPGEgaHJlZj0iaHR0cDovL2dpdGh1Yi5jb20vMDFvcmcv
-JCU3QkJQTiU3RC5naXQ7cHJvdG9jb2w9Z2l0O3RhZz0kJTdCUFYlN0Q7bmFtZT0kJTdCQlBOJTdE
-O2Rlc3RzdWZmaXg9JCU3QkJQTiU3RDticmFuY2g9MS54IiB0YXJnZXQ9Il9ibGFuayI+Z2l0aHVi
-LmNvbS8wMW9yZy8ke0JQTn0uZ2l0O3Byb3RvY29sPWdpdDt0YWc9JHtQVn07bmFtZT0ke0JQTn07
-ZGVzdHN1ZmZpeD0ke0JQTn07YnJhbmNoPTEueDwvYT4mcXVvdDs8L3NwYW4+PG86cD48L286cD48
-L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87
-bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG8iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OS4wcHQ7
-Zm9udC1mYW1pbHk6Q29uc29sYXM7Y29sb3I6IzI0MjkyRTtiYWNrZ3JvdW5kOndoaXRlIj4mbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgU1JDX1VSSSA9IOKAnDxhIGhyZWY9ImZp
-bGU6Ly8vXFx0cG0yLXRzcyI+ZmlsZTovL3RwbTItdHNzPC9hPuKAnTwvc3Bhbj48bzpwPjwvbzpw
-PjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0
-bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+Jm5ic3A7PG86cD48L286cD48L3A+DQo8cCBj
-bGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdp
-bi1ib3R0b20tYWx0OmF1dG8iPkFuZCBJIGNvbW1lbnRlZCBvdXQgdGhlIHdob2xlIGRvX2NvbmZp
-Z19wcmVwZW5kIHNlY3Rpb24gaW4gdHBtMi10c3MuaW5jIHNpbmNlIGl0IHNob3VsZG7igJl0IGJl
-IG5lY2Vzc2FyeSAocmlnaHQ/Jm5ic3A7IEJlc2lkZXMsIHRoZSB0YXIgZmlsZSBkb2VzbuKAmXQg
-aGF2ZSB0aGUgYm9vdHN0cmFwIHNjcmlwdCkuPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20t
-YWx0OmF1dG8iPiZuYnNwOzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5
-bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj5C
-dXQgd2hlbiBJIHJhbiBjb25maWd1cmUsIEkgZ290IGVycm9ycyAob3IgcGVyaGFwcyB0aGV54oCZ
-cmUgd2FybmluZ3M/KSBhYm91dCB0cG0yLXRzcy0xLjMuMC8gbm90IGJlaW5nIGEgZ2l0IGRpcmVj
-dG9yeSwgd2hpY2ggaXMgdHJ1ZSwgaXQgaXNu4oCZdOKAlGl0IGlzbuKAmXQgc3VwcG9zZWQgdG8g
-YmUsIHJpZ2h0PyZuYnNwOyBTbywNCiBuZXh0LCBJIGdpdCBjbG9uZWQgdHBtMi10c3MgdmlhIGFu
-IG91dHNpZGUgbWFjaGluZSB0aGF0IGRpZCBoYXZlIGludGVybmV0IGFjY2VzcywgdGFy4oCZZCB1
-cCB0aGF0IGRpcmVjdG9yeSwgbW92ZWQgaXQgdG8gdGhlIGlzb2xhdGVkIG5ldHdvcmssIGFuZCBw
-bG9wcGVkIGl0IGludG8gbXkgYml0YmFrZSBidWlsZCBlbnZpcm9ubWVudC4mbmJzcDsgTm93IHdo
-ZW4gSSBydW4gY29uZmlndXJlLCBJIGRvbuKAmXQgZ2V0IHRoZSBnaXQgZXJyb3JzLCBhbHRob3Vn
-aCBhdXRvY29uZg0KIGlzIHN0aWxsIGZhaWxpbmcgYmVjYXVzZSBvZiDigJxwb3NzaWJseSB1bmRl
-ZmluZWQgbWFjcm9z4oCdIHdoaWNoIGhhcHBlbnMgZXZlbiB3aXRoIHRoZSBnaXQgdmVyc2lvbiBh
-bmQgd2hpY2ggSeKAmXZlIG1lbnRpb25lZCBlbHNld2hlcmUqLiZuYnNwOyBCdXQgdG8gdHJ5IHRv
-IHNvbHZlIHRoZSBhdXRvY29uZiBpc3N1ZXMsIEnigJltIHRyeWluZyB0byBtYWtlIG15IHNldHVw
-IGFzIG9ydGhvZG94IGFzIHBvc3NpYmxlLiZuYnNwOyBJIGNhbiB0YWtlIHRoZSByZWxlYXNlIHRh
-cg0KIGZpbGUgYW5kIHN1Y2Nlc3NmdWxseSBidWlsZCB0aGF0IG91dHNpZGUgbXkgYml0YmFrZSBi
-dWlsZCBlbnZpcm9ubWVudCwgc28gSSB0aGluayBJIHNob3VsZCBiZSBhYmxlIHRvIHVzZSBpdCBp
-bnNpZGUgdGhlIGJpdGJha2UgYnVpbGQuJm5ic3A7IFN1Z2dlc3Rpb25zPzxvOnA+PC9vOnA+PC9w
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21z
-by1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj4mbmJzcDs8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNz
-PSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJv
-dHRvbS1hbHQ6YXV0byI+Jm5ic3A7PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-IiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1
-dG8iPkJUVywgc2hvdWxkIHRoZSByZWNpcGUgZmlsZSBiZQ0KPGEgaHJlZj0iaHR0cDovL3RwbTIt
-dHNzLTEuMy4wLmJiIiB0YXJnZXQ9Il9ibGFuayI+dHBtMi10c3MtMS4zLjAuYmI8L2E+IHJhdGhl
-ciB0aGFuDQo8YSBocmVmPSJodHRwOi8vdHBtMi10c3MtMS4yLjAuYmIiIHRhcmdldD0iX2JsYW5r
-Ij50cG0yLXRzcy0xLjIuMC5iYjwvYT4/PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIiBzdHlsZT0ibXNvLW1hcmdpbi10b3AtYWx0OmF1dG87bXNvLW1hcmdpbi1ib3R0b20tYWx0
-OmF1dG8iPiZuYnNwOzxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9
-Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj4mbmJz
-cDs8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtc28tbWFyZ2lu
-LXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0byI+KlRoZSByZWFsIHByb2Js
-ZW0gaW4gYnVpbGRpbmcgdHBtMi10c3MgaW5zaWRlIGJpdGJha2UgaXMgdGhhdCBpdCBmYWlscyBz
-YXlpbmcgbWFjcm9zIHN1Y2ggYXMgQUNfU1VCU1Qg4oCcbWF5IGJlIHVuZGVmaW5lZOKAnS4mbmJz
-cDsgVGhpcyBzdWdnZXN0cyB0aGF0IGF1dG9jb25mLWFyY2hpdmUgaXMgbWlzc2luZywgYnV0IGl0
-DQogaXNu4oCZdC4mbmJzcDsgV2XigJl2ZSBhZGRlZCBhdXRjb25mLWFyY2hpdmUgdG8gb3VyIGJ1
-aWxkLCB0YWdnZWQgaXQgYXMgbmF0aXZlIHNvIGl04oCZcyBwdWxsZWQgaW50byB0aGUgYnVpbGQg
-ZW52aXJvbm1lbnQsIGxpc3RlZCBpdCBhcyBhIGRlcGVuZGVuY3kgZm9yIHRwbTItdHNzLCBhbmQg
-Y2FuIHNlZSBpdCBiZWluZyBidWlsdCB3aGVuIHdlIHRyeSB0byZuYnNwOyBidWlsZCB0cG0yLXNz
-LCBidXQgdHBtMi10c3Mgc3RpbGwgZmFpbHMgd2l0aCB0aGUgc2FtZSBBQ19TVUJTVC1tYXktYmUt
-dW5kZWZpbmVkDQogZXJyb3IuJm5ic3A7IFNvLCBpdCBzZWVtcyBzb21ldGhpbmcgZWxzZSBpcyB3
-cm9uZyBzb21ld2hlcmUuJm5ic3A7IFRodXMgbXkgZWZmb3J0IHRvIHRyeSB0byBhbGlnbiBteSBi
-dWlsZCBmb3IgdHBtMi10c3MgdG8gYmUgYXMg4oCcbm9ybWFs4oCdIGFzIHBvc3NpYmxlLjxvOnA+
-PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYW1icmlhIE1hdGgmcXVv
-dDssJnF1b3Q7c2VyaWYmcXVvdDsiPuKAizwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6
-JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPkkgZGlkIHRoaXMgam9iIGZvciBpbnRlZ3JhdGlvbiBp
-biBsZWRlL29wZW53cnQsIHNvIEkgZ3Vlc3MgdGhlIHdvcmsgaXMgc2ltaWxhci4mbmJzcDs8bzpw
-PjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPjxvOnA+Jm5i
-c3A7PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+VGhlIG1p
-c3NpbmcgYWNsb2NhbCBtYWNyb3MgYXJlIGZyb20gdGhlDQo8L3NwYW4+PHNwYW4gc3R5bGU9ImZv
-bnQtZmFtaWx5OiZxdW90O0NhbWJyaWEgTWF0aCZxdW90OywmcXVvdDtzZXJpZiZxdW90OyI+4oCL
-PC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+
-YXV0b2NvbmYtYXJjaGl2ZSBwYWNrYWdlICg8YSBocmVmPSJodHRwczovL3d3dy5nbnUub3JnL3Nv
-ZnR3YXJlL2F1dG9jb25mLWFyY2hpdmUvIj5odHRwczovL3d3dy5nbnUub3JnL3NvZnR3YXJlL2F1
-dG9jb25mLWFyY2hpdmUvPC9hPikuIFlvdSBjYW4gZG93bmxvYWQNCiBpbmRpdmlkdWFsIG1hY3Jv
-cyBoZXJlOiZuYnNwOzxhIGhyZWY9Imh0dHBzOi8vd3d3LmdudS5vcmcvc29mdHdhcmUvYXV0b2Nv
-bmYtYXJjaGl2ZS9UaGUtTWFjcm9zLmh0bWwiPmh0dHBzOi8vd3d3LmdudS5vcmcvc29mdHdhcmUv
-YXV0b2NvbmYtYXJjaGl2ZS9UaGUtTWFjcm9zLmh0bWw8L2E+LiBJIGRvbid0IHJlbWVtYmVyIHdo
-aWNoIG9uZSBhcmUgdXNlZCAoeW91IGNhbiBmaW5kIG91dCBieSB5b3Vyc2VsZiBieSByZWFkaW5n
-IHRoZQ0KPGEgaHJlZj0iaHR0cDovL2NvbmZpZ3VyZS5hYyI+Y29uZmlndXJlLmFjPC9hPiBmaWxl
-cykuIENvcHkgdGhlIG1pc3NpbmcgbTQgZmlsZXMgaW4gdGhlIG00IGRpcmVjdG9yeSBiZWZvcmUg
-Y2FsbGluZyBhdXRvcmVjb25mIGFuZCB0aGlzIHNob3VsZCBiZSBvay4mbmJzcDs8bzpwPjwvbzpw
-Pjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBz
-dHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPjxvOnA+Jm5ic3A7PC9v
-OnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+VGhlIHZlcnNpb24g
-aXNzdWUgaXMgbGVzcyBpbXBvcnRhbnQgLSBhbGwgeW91J3JlIG1pc3NpbmcgaXMgdGhlIHZlcnNp
-b24gaW5mb3JtYXRpb24gd2hpY2ggaXMgbm90IHRoYXQgaW1wb3J0YW50LiBJZiBpdCdzIHJlYWxs
-eSBuZWVkZWQsIHlvdSBjYW4gcGF0Y2ggdGhlDQo8YSBocmVmPSJodHRwOi8vY29uZmlndXJlLmFj
-Ij5jb25maWd1cmUuYWM8L2E+IGZpbGUgdG8gZWl0aGVyIHJlYWQgdGhlIHZlcnNpb24gZnJvbSBh
-IGZpbGUgb3IgZGlyZWN0bHkgcHV0IHRoZSBjb3JyZWN0IHZlcnNpb24gbnVtYmVyIHdpdGhpbiB0
-aGUgZmlsZS48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVv
-dDsiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNz
-PSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZx
-dW90OyI+QmVzdCByZWdhcmRzLCZuYnNwOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0K
-PC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFt
-aWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+
-DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1m
-YW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPi0tIEVtbWFudWVsIERlbG9nZXQ8bzpwPjwv
-bzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0K
-PC9ib2R5Pg0KPC9odG1sPg0K
-
---===============2531241227662659804==--
+--===============2495447210263355831==--
 
