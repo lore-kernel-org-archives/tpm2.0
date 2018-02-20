@@ -1,78 +1,170 @@
-Content-Type: multipart/mixed; boundary="===============4511217717365596048=="
+Content-Type: multipart/mixed; boundary="===============3590099791950636987=="
 MIME-Version: 1.0
-From: Anderson, Daniel <daniel.anderson at intel.com>
-Subject: [tpm2]  TCTI initialization fails with error 0xc000b
-Date: Tue, 20 Feb 2018 19:40:51 +0000
-Message-ID: <207C810BE4BA2440832668E0F208BFD3AF4D6A@ORSMSX108.amr.corp.intel.com>
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
+Subject: [tpm2] building tpm2-tools with bitbake fails even though tpm2-tss
+ builds fine
+Date: Tue, 20 Feb 2018 20:37:36 +0000
+Message-ID: <2ba64c1cd60f46bda1192e4741b926ef@AZDC-MMB02.GD-MS.US>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4511217717365596048==
+--===============3590099791950636987==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I have been getting the same error and cannot start the tpm2-service:
+I'm trying to build tpm2-tools with bitbake, but it fails saying it cannot =
+find sapi ("Package requirements (sapi >- 1.3.0 sapi < 2.0.0) were not met"=
+) which is provided by tpm2-tss (right?).  Tpm2-tss builds just fine, and w=
+hen I try to build tpm2-tools, I can see tpm2-tss being built since it's li=
+sted as a dependency in the recipe.  But something breaks somewhere.
 
-$ sudo systemctl start tpm2-abrmd.service
-Job for tpm2-abrmd.service failed because the control process exited with e=
-rror code. See "systemctl status tpm2-abrmd.service" and "journalctl -xe" f=
-or details.
+I should add that I'm not using the git clone of tpm2-tools, but rather the=
+ tar file from releases.  For my recipe, I've modified tpm2-tools_2.1.0.bb =
+so that it points to the tar file rather than the github repo, and renamed =
+it tpm2-tools_3.0.3.bb.  Working through this, I'm confused by several thin=
+gs:
 
-$ systemctl status tpm2-abrmd.service
-tpm2-abrmd.service: Main process exited, code=3Dexited, status=3D1/FA
-Failed to start TPM2 Access Broker and Resource Management Daemon
-Unit entered failed state.
-Failed with result 'exit-code'.
+*         Why is the recipe version 2.1.0 on the OpenEmbedded.org website w=
+hen the latest tar file is 3.0.3?
 
-# Start manually:
-$ /usr/local/sbin/tpm2-abrmd&
-** (tpm2-abrmd:1596): WARNING **: failed to initialize device TCTI context:=
- 0xa000a
-** (tpm2-abrmd:1596): CRITICAL **: TCTI Initializaiton: 0xa000a
+*          Why is the recipe made up of two files, tpm2-tools_2.1.0.bb and =
+tpm2-tools.inc instead  of just putting it all in the .bb file?
 
-$ tpm2_rc_decode 0xa000a
-tcti:IO failure
+*         Why does the SRC_URI in the .bb file point to gcc7.diff which ref=
+erences, among others, a main.c file that isn't in the tar file?
 
-So it seems that this is a known bug:
-https://github.com/tpm2-software/tpm2-abrmd/issues/321
-https://github.com/tpm2-software/tpm2-abrmd/pull/330
+As I said, I've modified the recipe files to use the 3.0.3 tar file for the=
+ SRC_URI, but I suspect something else is not quite right perhaps because o=
+f how I'm mixing versions of tar files and recipes (even though I've remove=
+d all references to the 2.1.0 version) and causing the sapi error.  Ideas?
 
-Is there a workaround?  The discussion is too cryptic for me. For example, =
- I can't find a tpm2_listpcrs command in  tpm2-tools (or -abrmd or -tss). I=
- am running on Ubuntu Linux with a simulator.
+Peter
 
-Dan
+--===============3590099791950636987==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
------Original Message-----
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of tpm2-request(a=
-)lists.01.org
-Sent: Friday, February 16, 2018 8:47 AM
-To: tpm2(a)lists.01.org
-Subject: tpm2 Digest, Vol 8, Issue 14
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpXaW5n
+ZGluZ3M7CglwYW5vc2UtMTo1IDAgMCAwIDAgMCAwIDAgMCAwO30KQGZvbnQtZmFjZQoJe2ZvbnQt
+ZmFtaWx5OldpbmdkaW5nczsKCXBhbm9zZS0xOjUgMCAwIDAgMCAwIDAgMCAwIDA7fQpAZm9udC1m
+YWNlCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0
+O30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2
+Lk1zb05vcm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNp
+emU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLCJzYW5zLXNlcmlmIjt9CmE6bGluaywg
+c3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjpibHVlOwoJ
+dGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBlcmxpbmtG
+b2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOnB1cnBsZTsKCXRleHQtZGVj
+b3JhdGlvbjp1bmRlcmxpbmU7fQpwLk1zb0xpc3RQYXJhZ3JhcGgsIGxpLk1zb0xpc3RQYXJhZ3Jh
+cGgsIGRpdi5Nc29MaXN0UGFyYWdyYXBoCgl7bXNvLXN0eWxlLXByaW9yaXR5OjM0OwoJbWFyZ2lu
+LXRvcDowaW47CgltYXJnaW4tcmlnaHQ6MGluOwoJbWFyZ2luLWJvdHRvbTowaW47CgltYXJnaW4t
+bGVmdDouNWluOwoJbWFyZ2luLWJvdHRvbTouMDAwMXB0OwoJZm9udC1zaXplOjExLjBwdDsKCWZv
+bnQtZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7fQpzcGFuLkVtYWlsU3R5bGUxNwoJe21z
+by1zdHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsInNh
+bnMtc2VyaWYiOwoJY29sb3I6d2luZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxl
+LXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsInNhbnMtc2VyaWYiO30K
+QHBhZ2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo4LjVpbiAxMS4waW47CgltYXJnaW46MS4waW4gMS4w
+aW4gMS4waW4gMS4waW47fQpkaXYuV29yZFNlY3Rpb24xCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQov
+KiBMaXN0IERlZmluaXRpb25zICovCkBsaXN0IGwwCgl7bXNvLWxpc3QtaWQ6MTU3MjU0NDI1MTsK
+CW1zby1saXN0LXR5cGU6aHlicmlkOwoJbXNvLWxpc3QtdGVtcGxhdGUtaWRzOjE3ODcwODU1ODQg
+Njc2OTg2ODkgNjc2OTg2OTEgNjc2OTg2OTMgNjc2OTg2ODkgNjc2OTg2OTEgNjc2OTg2OTMgNjc2
+OTg2ODkgNjc2OTg2OTEgNjc2OTg2OTM7fQpAbGlzdCBsMDpsZXZlbDEKCXttc28tbGV2ZWwtbnVt
+YmVyLWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpcRjBCNzsKCW1zby1sZXZlbC10YWIt
+c3RvcDpub25lOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJbWFyZ2luLWxlZnQ6
+MzguMjVwdDsKCXRleHQtaW5kZW50Oi0uMjVpbjsKCWZvbnQtZmFtaWx5OlN5bWJvbDt9CkBsaXN0
+IGwwOmxldmVsMgoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10
+ZXh0Om87Cgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXItcG9zaXRp
+b246bGVmdDsKCW1hcmdpbi1sZWZ0Ojc0LjI1cHQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250
+LWZhbWlseToiQ291cmllciBOZXciO30KQGxpc3QgbDA6bGV2ZWwzCgl7bXNvLWxldmVsLW51bWJl
+ci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6XEYwQTc7Cgltc28tbGV2ZWwtdGFiLXN0
+b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsKCW1hcmdpbi1sZWZ0OjEx
+MC4yNXB0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6V2luZ2RpbmdzO30KQGxp
+c3QgbDA6bGV2ZWw0Cgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVs
+LXRleHQ6XEYwQjc7Cgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXIt
+cG9zaXRpb246bGVmdDsKCW1hcmdpbi1sZWZ0OjE0Ni4yNXB0OwoJdGV4dC1pbmRlbnQ6LS4yNWlu
+OwoJZm9udC1mYW1pbHk6U3ltYm9sO30KQGxpc3QgbDA6bGV2ZWw1Cgl7bXNvLWxldmVsLW51bWJl
+ci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6bzsKCW1zby1sZXZlbC10YWItc3RvcDpu
+b25lOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJbWFyZ2luLWxlZnQ6MTgyLjI1
+cHQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseToiQ291cmllciBOZXciO30KQGxp
+c3QgbDA6bGV2ZWw2Cgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVs
+LXRleHQ6XEYwQTc7Cgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXIt
+cG9zaXRpb246bGVmdDsKCW1hcmdpbi1sZWZ0OjIxOC4yNXB0OwoJdGV4dC1pbmRlbnQ6LS4yNWlu
+OwoJZm9udC1mYW1pbHk6V2luZ2RpbmdzO30KQGxpc3QgbDA6bGV2ZWw3Cgl7bXNvLWxldmVsLW51
+bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6XEYwQjc7Cgltc28tbGV2ZWwtdGFi
+LXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsKCW1hcmdpbi1sZWZ0
+OjI1NC4yNXB0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6U3ltYm9sO30KQGxp
+c3QgbDA6bGV2ZWw4Cgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVs
+LXRleHQ6bzsKCW1zby1sZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVsLW51bWJlci1wb3Np
+dGlvbjpsZWZ0OwoJbWFyZ2luLWxlZnQ6MjkwLjI1cHQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglm
+b250LWZhbWlseToiQ291cmllciBOZXciO30KQGxpc3QgbDA6bGV2ZWw5Cgl7bXNvLWxldmVsLW51
+bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6XEYwQTc7Cgltc28tbGV2ZWwtdGFi
+LXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsKCW1hcmdpbi1sZWZ0
+OjMyNi4yNXB0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6V2luZ2RpbmdzO30K
+b2wKCXttYXJnaW4tYm90dG9tOjBpbjt9CnVsCgl7bWFyZ2luLWJvdHRvbTowaW47fQotLT48L3N0
+eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0
+IiBzcGlkbWF4PSIxMDI2IiAvPgo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+
+PHhtbD4KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPgo8bzppZG1hcCB2OmV4dD0iZWRpdCIg
+ZGF0YT0iMSIgLz4KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPgo8L2hlYWQ+Cjxi
+b2R5IGxhbmc9IkVOLVVTIiBsaW5rPSJibHVlIiB2bGluaz0icHVycGxlIj4KPGRpdiBjbGFzcz0i
+V29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSYjODIxNzttIHRyeWluZyB0byBi
+dWlsZCB0cG0yLXRvb2xzIHdpdGggYml0YmFrZSwgYnV0IGl0IGZhaWxzIHNheWluZyBpdCBjYW5u
+b3QgZmluZCBzYXBpICgmIzgyMjA7UGFja2FnZSByZXF1aXJlbWVudHMgKHNhcGkgJmd0Oy0gMS4z
+LjAgc2FwaSAmbHQ7IDIuMC4wKSB3ZXJlIG5vdCBtZXQmIzgyMjE7KSB3aGljaCBpcyBwcm92aWRl
+ZCBieSB0cG0yLXRzcyAocmlnaHQ/KS4mbmJzcDsgVHBtMi10c3MgYnVpbGRzIGp1c3QgZmluZSwg
+YW5kIHdoZW4gSSB0cnkgdG8KIGJ1aWxkIHRwbTItdG9vbHMsIEkgY2FuIHNlZSB0cG0yLXRzcyBi
+ZWluZyBidWlsdCBzaW5jZSBpdCYjODIxNztzIGxpc3RlZCBhcyBhIGRlcGVuZGVuY3kgaW4gdGhl
+IHJlY2lwZS4mbmJzcDsgQnV0IHNvbWV0aGluZyBicmVha3Mgc29tZXdoZXJlLjxvOnA+PC9vOnA+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+SSBzaG91bGQgYWRkIHRoYXQgSSYjODIxNzttIG5vdCB1c2luZyB0aGUgZ2l0
+IGNsb25lIG9mIHRwbTItdG9vbHMsIGJ1dCByYXRoZXIgdGhlIHRhciBmaWxlIGZyb20gcmVsZWFz
+ZXMuJm5ic3A7IEZvciBteSByZWNpcGUsIEkmIzgyMTc7dmUgbW9kaWZpZWQgdHBtMi10b29sc18y
+LjEuMC5iYiBzbyB0aGF0IGl0IHBvaW50cyB0byB0aGUgdGFyIGZpbGUgcmF0aGVyIHRoYW4gdGhl
+IGdpdGh1YiByZXBvLCBhbmQgcmVuYW1lZCBpdCB0cG0yLXRvb2xzXzMuMC4zLmJiLiZuYnNwOwog
+V29ya2luZyB0aHJvdWdoIHRoaXMsIEkmIzgyMTc7bSBjb25mdXNlZCBieSBzZXZlcmFsIHRoaW5n
+czo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb0xpc3RQYXJhZ3JhcGgiIHN0eWxlPSJtYXJn
+aW4tbGVmdDozOC4yNXB0O3RleHQtaW5kZW50Oi0uMjVpbjttc28tbGlzdDpsMCBsZXZlbDEgbGZv
+MSI+CjwhW2lmICFzdXBwb3J0TGlzdHNdPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTpTeW1ib2wi
+PjxzcGFuIHN0eWxlPSJtc28tbGlzdDpJZ25vcmUiPiZtaWRkb3Q7PHNwYW4gc3R5bGU9ImZvbnQ6
+Ny4wcHQgJnF1b3Q7VGltZXMgTmV3IFJvbWFuJnF1b3Q7Ij4mbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsKPC9zcGFuPjwvc3Bhbj48L3NwYW4+PCFbZW5kaWZd
+PldoeSBpcyB0aGUgcmVjaXBlIHZlcnNpb24gMi4xLjAgb24gdGhlIE9wZW5FbWJlZGRlZC5vcmcg
+d2Vic2l0ZSB3aGVuIHRoZSBsYXRlc3QgdGFyIGZpbGUgaXMgMy4wLjM/CjxvOnA+PC9vOnA+PC9w
+Pgo8cCBjbGFzcz0iTXNvTGlzdFBhcmFncmFwaCIgc3R5bGU9Im1hcmdpbi1sZWZ0OjM4LjI1cHQ7
+dGV4dC1pbmRlbnQ6LS4yNWluO21zby1saXN0OmwwIGxldmVsMSBsZm8xIj4KPCFbaWYgIXN1cHBv
+cnRMaXN0c10+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OlN5bWJvbCI+PHNwYW4gc3R5bGU9Im1z
+by1saXN0Oklnbm9yZSI+Jm1pZGRvdDs8c3BhbiBzdHlsZT0iZm9udDo3LjBwdCAmcXVvdDtUaW1l
+cyBOZXcgUm9tYW4mcXVvdDsiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOwo8L3NwYW4+PC9zcGFuPjwvc3Bhbj48IVtlbmRpZl0+Jm5ic3A7V2h5IGlzIHRo
+ZSByZWNpcGUgbWFkZSB1cCBvZiB0d28gZmlsZXMsIHRwbTItdG9vbHNfMi4xLjAuYmIgYW5kIHRw
+bTItdG9vbHMuaW5jIGluc3RlYWQmbmJzcDsgb2YganVzdCBwdXR0aW5nIGl0IGFsbCBpbiB0aGUg
+LmJiIGZpbGU/PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29MaXN0UGFyYWdyYXBoIiBzdHls
+ZT0ibWFyZ2luLWxlZnQ6MzguMjVwdDt0ZXh0LWluZGVudDotLjI1aW47bXNvLWxpc3Q6bDAgbGV2
+ZWwxIGxmbzEiPgo8IVtpZiAhc3VwcG9ydExpc3RzXT48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6
+U3ltYm9sIj48c3BhbiBzdHlsZT0ibXNvLWxpc3Q6SWdub3JlIj4mbWlkZG90OzxzcGFuIHN0eWxl
+PSJmb250OjcuMHB0ICZxdW90O1RpbWVzIE5ldyBSb21hbiZxdW90OyI+Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Cjwvc3Bhbj48L3NwYW4+PC9zcGFuPjwh
+W2VuZGlmXT5XaHkgZG9lcyB0aGUgU1JDX1VSSSBpbiB0aGUgLmJiIGZpbGUgcG9pbnQgdG8gZ2Nj
+Ny5kaWZmIHdoaWNoIHJlZmVyZW5jZXMsIGFtb25nIG90aGVycywgYSBtYWluLmMgZmlsZSB0aGF0
+IGlzbiYjODIxNzt0IGluIHRoZSB0YXIgZmlsZT8mbmJzcDsKPG86cD48L286cD48L3A+CjxwIGNs
+YXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tbGVmdDoyLjI1cHQiPjxvOnA+Jm5ic3A7PC9v
+OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWxlZnQ6Mi4yNXB0Ij5B
+cyBJIHNhaWQsIEkmIzgyMTc7dmUgbW9kaWZpZWQgdGhlIHJlY2lwZSBmaWxlcyB0byB1c2UgdGhl
+IDMuMC4zIHRhciBmaWxlIGZvciB0aGUgU1JDX1VSSSwgYnV0IEkgc3VzcGVjdCBzb21ldGhpbmcg
+ZWxzZSBpcyBub3QgcXVpdGUgcmlnaHQgcGVyaGFwcyBiZWNhdXNlIG9mIGhvdyBJJiM4MjE3O20g
+bWl4aW5nIHZlcnNpb25zIG9mIHRhciBmaWxlcyBhbmQgcmVjaXBlcyAoZXZlbiB0aG91Z2gKIEkm
+IzgyMTc7dmUgcmVtb3ZlZCBhbGwgcmVmZXJlbmNlcyB0byB0aGUgMi4xLjAgdmVyc2lvbikgYW5k
+IGNhdXNpbmcgdGhlIHNhcGkgZXJyb3IuJm5ic3A7IElkZWFzPzxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+UGV0ZXI8bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
 
-Send tpm2 mailing list submissions to
-	tpm2(a)lists.01.org
-
-To subscribe or unsubscribe via the World Wide Web, visit
-	https://lists.01.org/mailman/listinfo/tpm2
-or, via email, send a message with subject or body 'help' to
-	tpm2-request(a)lists.01.org
-
-You can reach the person managing the list at
-	tpm2-owner(a)lists.01.org
-
-When replying, please edit your Subject line so it is more specific than "R=
-e: Contents of tpm2 digest..."
-
-
-Today's Topics:
-
-   1. Re: TCTI initialization fails with error 0xc000b
-      (Roberts, William C)
-
-
-
-
---===============4511217717365596048==--
+--===============3590099791950636987==--
 
