@@ -1,60 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============4331988293723654450=="
+Content-Type: multipart/mixed; boundary="===============7900376307418635197=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] building tpm2-tools with bitbake fails even though
- tpm2-tss builds fine
-Date: Wed, 21 Feb 2018 00:33:38 +0100
-Message-ID: <b61e87c7-1207-593a-7a0a-a825587ed2a2@redhat.com>
-In-Reply-To: 20180220214907.GA6093@intel.com
+From: GitHub <noreply at github.com>
+Subject: [tpm2] [tpm2-software/tpm2-tools] 1f218d: tcti: handle option string
+ better
+Date: Tue, 20 Feb 2018 15:52:36 -0800
+Message-ID: <5a8cb4c4bb036_26032ac681955c141120e1@hookshot-fe-b0febf1.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4331988293723654450==
+--===============7900376307418635197==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+  Branch: refs/heads/master
+  Home:   https://github.com/tpm2-software/tpm2-tools
+  Commit: 1f218d99dec6c1ca11fee5d668970fdabb05ae56
+      https://github.com/tpm2-software/tpm2-tools/commit/1f218d99dec6c1ca11=
+fee5d668970fdabb05ae56
+  Author: William Roberts <william.c.roberts(a)intel.com>
+  Date:   2018-02-20 (Tue, 20 Feb 2018)
 
-[snip]
+  Changed paths:
+    M lib/tpm2_options.c
+    M lib/tpm2_tcti_ldr.c
+    M lib/tpm2_tcti_ldr.h
+    M man/common/tcti.md
 
->>
->> *          Why is the recipe made up of two files, tpm2-tools_2.1.0.bb a=
-nd tpm2-tools.inc instead  of just putting it all in the .bb file?
-> =
+  Log Message:
+  -----------
+  tcti: handle option string better
 
-> I don't remember. I think I was trying to support multiple versions of
-> one component at some point and the build required different
-> work-arounds in the bitbake metadata. As the build has gotten better the
-> version specific files (*.bb) have shrunk as the workarounds have come
-> out. Eventually they may go away completely ...
->
+Currently, the tcti option supported 3
+formats:
 
-I'm not a BitBake & OpenEmbedded expert, but AFAIR what you do is pretty
-common. That way you could for example develop / test against the latest
-git snapshot but also provide a stable release so people can switch them
-setting a PREFERRED_VERSION for the recipe in an image or machine config.
+--tcti=3D<name>
+--tcti=3D<name>:
+--tcti=3D<name>:<option(s)>
 
->> *         Why does the SRC_URI in the .bb file point to gcc7.diff which =
-references, among others, a main.c file that isn't in the tar file?
+Add support for:
+--tcti=3D:<option(s)>
 
-SRC_URI in tpm2-tools.inc is set to the tpm2.0-tools.git repo, but then
-the tpm2-tools_2.1.0.bb adds to the SRC_URI a patch. That's how you add
-patches on the BitBake recipes.
+This recitifes the tpm2-abrmd dynamic tcti handling with the
+tools.
 
-That patch was to allow building with GCC7, since it got much more strict
-on fall-throughs for switch case statements.
+Fixes: #902
 
-About the main.c not being in the tarball, it really depends on which
-version of the recipe you are using. The tpm2-tools_2.1.0.bb has SRCREV
-set to 27d34a61cb947780ab58508dfea70e696cff185c, which is the SHA-1 for
-2.1.0 tag so it should be there when using that version of the recipe.
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
-Best regards,
--- =
 
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
 
---===============4331988293723654450==--
+--===============7900376307418635197==--
 
