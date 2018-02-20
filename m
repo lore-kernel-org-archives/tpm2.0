@@ -1,72 +1,60 @@
-Content-Type: multipart/mixed; boundary="===============4360931946275745930=="
+Content-Type: multipart/mixed; boundary="===============4331988293723654450=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
+From: Javier Martinez Canillas <javierm at redhat.com>
 Subject: Re: [tpm2] building tpm2-tools with bitbake fails even though
  tpm2-tss builds fine
-Date: Tue, 20 Feb 2018 13:49:07 -0800
-Message-ID: <20180220214907.GA6093@intel.com>
-In-Reply-To: 2ba64c1cd60f46bda1192e4741b926ef@AZDC-MMB02.GD-MS.US
+Date: Wed, 21 Feb 2018 00:33:38 +0100
+Message-ID: <b61e87c7-1207-593a-7a0a-a825587ed2a2@redhat.com>
+In-Reply-To: 20180220214907.GA6093@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4360931946275745930==
+--===============4331988293723654450==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 20, 2018 at 08:37:36PM +0000, Scheie, Peter M wrote:
-> I'm trying to build tpm2-tools with bitbake, but it fails saying it canno=
-t find sapi ("Package requirements (sapi >- 1.3.0 sapi < 2.0.0) were not me=
-t") which is provided by tpm2-tss (right?).  Tpm2-tss builds just fine, and=
- when I try to build tpm2-tools, I can see tpm2-tss being built since it's =
-listed as a dependency in the recipe.  But something breaks somewhere.
 
-This is bitrot: I've been neglecting these recipes for a while now.
-They're a personal project, not on my Intel time. Still, Trevor has
-been proding me along with some very helpful patches. We've got a
-'rocko' branch where we're refreshing versions and accounting for
-minor changes in the upstream build.
+[snip]
 
-I think the TSS2 libraries and the daemon should now be building the
-latest release but I haven't done the tools yet. This could be part of
-what you're running into.
-
-> I should add that I'm not using the git clone of tpm2-tools, but rather t=
-he tar file from releases.  For my recipe, I've modified tpm2-tools_2.1.0.b=
-b so that it points to the tar file rather than the github repo, and rename=
-d it tpm2-tools_3.0.3.bb.  Working through this, I'm confused by several th=
-ings:
+>>
+>> *          Why is the recipe made up of two files, tpm2-tools_2.1.0.bb a=
+nd tpm2-tools.inc instead  of just putting it all in the .bb file?
 > =
 
-> *         Why is the recipe version 2.1.0 on the OpenEmbedded.org website=
- when the latest tar file is 3.0.3?
+> I don't remember. I think I was trying to support multiple versions of
+> one component at some point and the build required different
+> work-arounds in the bitbake metadata. As the build has gotten better the
+> version specific files (*.bb) have shrunk as the workarounds have come
+> out. Eventually they may go away completely ...
+>
 
-See above. Also: https://github.com/flihp/meta-measured/pulls/
+I'm not a BitBake & OpenEmbedded expert, but AFAIR what you do is pretty
+common. That way you could for example develop / test against the latest
+git snapshot but also provide a stable release so people can switch them
+setting a PREFERRED_VERSION for the recipe in an image or machine config.
 
-> =
+>> *         Why does the SRC_URI in the .bb file point to gcc7.diff which =
+references, among others, a main.c file that isn't in the tar file?
 
-> *          Why is the recipe made up of two files, tpm2-tools_2.1.0.bb an=
-d tpm2-tools.inc instead  of just putting it all in the .bb file?
+SRC_URI in tpm2-tools.inc is set to the tpm2.0-tools.git repo, but then
+the tpm2-tools_2.1.0.bb adds to the SRC_URI a patch. That's how you add
+patches on the BitBake recipes.
 
-I don't remember. I think I was trying to support multiple versions of
-one component at some point and the build required different
-work-arounds in the bitbake metadata. As the build has gotten better the
-version specific files (*.bb) have shrunk as the workarounds have come
-out. Eventually they may go away completely ...
+That patch was to allow building with GCC7, since it got much more strict
+on fall-throughs for switch case statements.
 
-> *         Why does the SRC_URI in the .bb file point to gcc7.diff which r=
-eferences, among others, a main.c file that isn't in the tar file?
+About the main.c not being in the tarball, it really depends on which
+version of the recipe you are using. The tpm2-tools_2.1.0.bb has SRCREV
+set to 27d34a61cb947780ab58508dfea70e696cff185c, which is the SHA-1 for
+2.1.0 tag so it should be there when using that version of the recipe.
 
-No clue. The right thing to do is to update the recipe to the latest and
-go from there.
+Best regards,
+-- =
 
-Philip
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
 
-> As I said, I've modified the recipe files to use the 3.0.3 tar file for t=
-he SRC_URI, but I suspect something else is not quite right perhaps because=
- of how I'm mixing versions of tar files and recipes (even though I've remo=
-ved all references to the 2.1.0 version) and causing the sapi error.  Ideas?
-
-
---===============4360931946275745930==--
+--===============4331988293723654450==--
 
