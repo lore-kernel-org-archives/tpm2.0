@@ -1,244 +1,96 @@
-Content-Type: multipart/mixed; boundary="===============8225560075941794494=="
+Content-Type: multipart/mixed; boundary="===============2551755677230428268=="
 MIME-Version: 1.0
-From: Schoenberger Klaus <Klaus.Schoenberger at engel.at>
-Subject: [tpm2] Library libtcti-device.so not found in initramfs
-Date: Wed, 21 Feb 2018 14:44:29 +0000
-Message-ID: <08b9d880f9d34497b940d522ff111f07@WIN0011224.engel.int>
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
+Subject: Re: [tpm2] building tpm2-tools with bitbake fails even though
+ tpm2-tss builds fine
+Date: Wed, 21 Feb 2018 16:19:03 +0000
+Message-ID: <8761e9ab15b34002906cc40efc127fcd@AZDC-MMB02.GD-MS.US>
+In-Reply-To: b61e87c7-1207-593a-7a0a-a825587ed2a2@redhat.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8225560075941794494==
+--===============2551755677230428268==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
+I should add that I'm having the same problem as reported in Issue 764 on g=
+ithub (https://github.com/tpm2-software/tpm2-tools/issues/764).  In my case=
+, I *am* using the release tarball.
+
+-----Original Message-----
+From: Scheie, Peter M =
+
+Sent: Wednesday, February 21, 2018 8:28 AM
+To: 'Javier Martinez Canillas'; Philip Tricca
+Cc: tpm2(a)lists.01.org
+Subject: RE: [tpm2] building tpm2-tools with bitbake fails even though tpm2=
+-tss builds fine
+
+Thanks for the explanations.
+
+I notice that if I just run ./configure in tpm2-tools-3.0.3, I get a simila=
+r error to when I try to run bitbake, that it can't find SAPI.  With ./conf=
+igure, I can solve this by setting PGK_CONFIG_PATH=3D/usr/local/lib/pkgconf=
+ig, as that's where 'make install' for tpm2-tss puts the pkgconfig/ directo=
+ry by default.  How do I do that with bitbake?  That is, how do I specify i=
+n my recipe for tpm2-tools the location of pkgconfig as set by the tpm2-tss=
+ build/recipe?
+
+Peter
+
+-----Original Message-----
+From: Javier Martinez Canillas [mailto:javierm(a)redhat.com] =
+
+Sent: Tuesday, February 20, 2018 5:34 PM
+To: Philip Tricca; Scheie, Peter M
+Cc: tpm2(a)lists.01.org
+Subject: Re: [tpm2] building tpm2-tools with bitbake fails even though tpm2=
+-tss builds fine
 
 
+[snip]
 
-I want to use tpm2_tools in the initramfs, but I get following error:
+>>
+>> *          Why is the recipe made up of two files, tpm2-tools_2.1.0.bb a=
+nd tpm2-tools.inc instead  of just putting it all in the .bb file?
+> =
 
+> I don't remember. I think I was trying to support multiple versions of =
 
+> one component at some point and the build required different =
 
->(initramfs) /usr/local/bin/tpm2_pcrlist --tcti=3Ddevice
-> ERROR: Could not dlopen library: "libtcti-device.so"
-> ERROR: Unknown tcti, got: "device"
+> work-arounds in the bitbake metadata. As the build has gotten better =
 
+> the version specific files (*.bb) have shrunk as the workarounds have =
 
+> come out. Eventually they may go away completely ...
+>
 
-When I run the command in my local Terminal (after I stopped the tpm2-abrmd=
- service) everything works fine and I receive the PCR-Values from the tpm 2=
-.0.
+I'm not a BitBake & OpenEmbedded expert, but AFAIR what you do is pretty co=
+mmon. That way you could for example develop / test against the latest git =
+snapshot but also provide a stable release so people can switch them settin=
+g a PREFERRED_VERSION for the recipe in an image or machine config.
 
+>> *         Why does the SRC_URI in the .bb file point to gcc7.diff which =
+references, among others, a main.c file that isn't in the tar file?
 
+SRC_URI in tpm2-tools.inc is set to the tpm2.0-tools.git repo, but then the=
+ tpm2-tools_2.1.0.bb adds to the SRC_URI a patch. That's how you add patche=
+s on the BitBake recipes.
 
-What i have done:
+That patch was to allow building with GCC7, since it got much more strict o=
+n fall-throughs for switch case statements.
 
-I've searched the dependencies from tpm2_nvread and tpm2_pcrlist for an ini=
-tramfs-hook:
-> root(a)ts:~# ldd $(which tpm2_nvread)
-> linux-vdso.so.1 =3D> (0x00007ffe4b5b7000)
-> libsapi.so.0 =3D> /usr/local/lib/libsapi.so.0 (0x00007fb1a429f000)
-> libmarshal.so.0 =3D> /usr/local/lib/libmarshal.so.0 (0x00007fb1a4061000)
-> libcrypto.so.1.0.0 =3D> /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 (0x00007=
-fb1a3c1d000)
-> libdl.so.2 =3D> /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fb1a3a19000)
-> libc.so.6 =3D> /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb1a364f000)
-> /lib64/ld-linux-x86-64.so.2 (0x00007fb1a46d1000)
-
-
-
-Then i generated a initramfs-hook where i copied the binaries and the libra=
-ries from above to initramfs. Additionally I copied the libtcti-device.so t=
-o initramfs (every file to the same location as in the main system). Afterw=
-ards I created an initramfs-script to the init-premount scripts that will r=
-ead the data from the tpm2 and i included the tpm_crb Kernelmodule to the i=
-nitramfs.
-
-
-
-Afterwards I generated a new Initramfs with update-initramfs -u and reboote=
-d the system. Then the error occurs.
-I added the boot option "break=3Dmount" to drop to an initramfs shell, so t=
-hat I can test and verify everything by myself. --> Every library and binar=
-y is at the right directory and I have no idea what I can do, to manually c=
-onfigure the path from the libtcti-device.so. Furthermore I don't want to r=
-un the whole tpm2-abrmd in initramfs because then I have problems with dbus=
- and so on...
-
-
-
-Btw: I'm on Ubuntu 16.04 LTS with Kernel 14.04 and I'm using tpm2-tools und=
- tpm2-tss master branch.
-
-
-
-Please, can anyone help me?
-
-
+About the main.c not being in the tarball, it really depends on which versi=
+on of the recipe you are using. The tpm2-tools_2.1.0.bb has SRCREV set to 2=
+7d34a61cb947780ab58508dfea70e696cff185c, which is the SHA-1 for
+2.1.0 tag so it should be there when using that version of the recipe.
 
 Best regards,
+--
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement Red Hat
 
-Klaus
-
-
-Important Notice:
-This electronic transmission (including any attachments) is intended solely=
- for the use and information
-of the addressee(s). It may contain confidential or legally privileged info=
-rmation. Any unauthorized use
-or disclosure of this message is strictly prohibited.If you are not the int=
-ended recipient, please notify
-the sender immediately and delete the message and its attachments.
-The sender does not guarantee the integrity of this transmission and shall =
-therefore never be liable if
-the message is altered or falsified nor for any virus, interception or dama=
-ge to your system.
-
---===============8225560075941794494==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KQGZv
-bnQtZmFjZQoJe2ZvbnQtZmFtaWx5OlZlcmRhbmE7CglwYW5vc2UtMToyIDExIDYgNCAzIDUgNCA0
-IDIgNDt9Ci8qIFN0eWxlIERlZmluaXRpb25zICovCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwKCXttYXJnaW46MGNtOwoJbWFyZ2luLWJvdHRvbTouMDAwMXB0OwoJZm9u
-dC1zaXplOjEwLjBwdDsKCWZvbnQtZmFtaWx5OiJBcmlhbCIsc2Fucy1zZXJpZjsKCW1zby1mYXJl
-YXN0LWxhbmd1YWdlOkVOLVVTO30KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluawoJe21zby1zdHls
-ZS1wcmlvcml0eTo5OTsKCWNvbG9yOiM5NkMwM0E7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5l
-O30KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkCgl7bXNvLXN0eWxlLXByaW9y
-aXR5Ojk5OwoJY29sb3I6Izk2QzAzQTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQpzcGFu
-LkUtTWFpbEZvcm1hdHZvcmxhZ2UxNwoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7
-Cglmb250LWZhbWlseToiQXJpYWwiLHNhbnMtc2VyaWY7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1z
-b0NocERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJD
-YWxpYnJpIixzYW5zLXNlcmlmOwoJbXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVM7fQpAcGFnZSBX
-b3JkU2VjdGlvbjEKCXtzaXplOjYxMi4wcHQgNzkyLjBwdDsKCW1hcmdpbjo3MC44NXB0IDcwLjg1
-cHQgMi4wY20gNzAuODVwdDt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9
-Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpl
-eHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3Rl
-IG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0
-PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+Cjwv
-aGVhZD4KPGJvZHkgbGFuZz0iREUtQVQiIGxpbms9IiM5NkMwM0EiIHZsaW5rPSIjOTZDMDNBIj4K
-PGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgc3R5bGU9Im1hcmdpbjowY207bWFyZ2luLWJv
-dHRvbTouMDAwMXB0Ij48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTo5LjBwdDtm
-b250LWZhbWlseTomcXVvdDtWZXJkYW5hJnF1b3Q7LHNhbnMtc2VyaWYiPkhlbGxvIGV2ZXJ5b25l
-LDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgc3R5bGU9Im1hcmdpbjowY207bWFyZ2luLWJvdHRv
-bTouMDAwMXB0Ij48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTo5LjBwdDtmb250
-LWZhbWlseTomcXVvdDtWZXJkYW5hJnF1b3Q7LHNhbnMtc2VyaWYiPiZuYnNwOzxvOnA+PC9vOnA+
-PC9zcGFuPjwvcD4KPHAgc3R5bGU9Im1hcmdpbjowY207bWFyZ2luLWJvdHRvbTouMDAwMXB0Ij48
-c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTo5LjBwdDtmb250LWZhbWlseTomcXVv
-dDtWZXJkYW5hJnF1b3Q7LHNhbnMtc2VyaWYiPkkgd2FudCB0byB1c2UgdHBtMl90b29scyBpbiB0
-aGUgaW5pdHJhbWZzLCBidXQgSSBnZXQgZm9sbG93aW5nIGVycm9yOjxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4KPHAgc3R5bGU9Im1hcmdpbjowY207bWFyZ2luLWJvdHRvbTouMDAwMXB0Ij48c3BhbiBs
-YW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTo5LjBwdDtmb250LWZhbWlseTomcXVvdDtWZXJk
-YW5hJnF1b3Q7LHNhbnMtc2VyaWYiPiZuYnNwOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgc3R5
-bGU9Im1hcmdpbjowY207bWFyZ2luLWJvdHRvbTouMDAwMXB0Ij48c3BhbiBsYW5nPSJFTi1VUyIg
-c3R5bGU9ImZvbnQtc2l6ZTo5LjBwdDtmb250LWZhbWlseTomcXVvdDtWZXJkYW5hJnF1b3Q7LHNh
-bnMtc2VyaWYiPiZndDsoaW5pdHJhbWZzKSAvdXNyL2xvY2FsL2Jpbi90cG0yX3Bjcmxpc3QgLS10
-Y3RpPWRldmljZTxicj4KJmd0OyBFUlJPUjogQ291bGQgbm90IGRsb3BlbiBsaWJyYXJ5OiAmcXVv
-dDtsaWJ0Y3RpLWRldmljZS5zbyZxdW90Ozxicj4KJmd0OyBFUlJPUjogVW5rbm93biB0Y3RpLCBn
-b3Q6ICZxdW90O2RldmljZSZxdW90OzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgc3R5bGU9Im1h
-cmdpbjowY207bWFyZ2luLWJvdHRvbTouMDAwMXB0Ij48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9
-ImZvbnQtc2l6ZTo5LjBwdDtmb250LWZhbWlseTomcXVvdDtWZXJkYW5hJnF1b3Q7LHNhbnMtc2Vy
-aWYiPiZuYnNwOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgc3R5bGU9Im1hcmdpbjowY207bWFy
-Z2luLWJvdHRvbTouMDAwMXB0Ij48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTo5
-LjBwdDtmb250LWZhbWlseTomcXVvdDtWZXJkYW5hJnF1b3Q7LHNhbnMtc2VyaWYiPldoZW4mbmJz
-cDtJIHJ1biB0aGUgY29tbWFuZCBpbiBteSBsb2NhbCBUZXJtaW5hbCAoYWZ0ZXIgSSBzdG9wcGVk
-IHRoZSB0cG0yLWFicm1kJm5ic3A7c2VydmljZSkgZXZlcnl0aGluZyB3b3JrcyBmaW5lIGFuZCBJ
-IHJlY2VpdmUgdGhlIFBDUi1WYWx1ZXMgZnJvbQogdGhlIHRwbSAyLjAuPG86cD48L286cD48L3Nw
-YW4+PC9wPgo8cCBzdHlsZT0ibWFyZ2luOjBjbTttYXJnaW4tYm90dG9tOi4wMDAxcHQiPjxzcGFu
-IGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXplOjkuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1Zl
-cmRhbmEmcXVvdDssc2Fucy1zZXJpZiI+Jm5ic3A7PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBz
-dHlsZT0ibWFyZ2luOjBjbTttYXJnaW4tYm90dG9tOi4wMDAxcHQiPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6OS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7VmVyZGFuYSZxdW90OyxzYW5zLXNlcmlmIj5X
-aGF0IGkgaGF2ZSBkb25lOjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgc3R5bGU9Im1hcmdpbjow
-Y207bWFyZ2luLWJvdHRvbTouMDAwMXB0Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjkuMHB0O2Zv
-bnQtZmFtaWx5OiZxdW90O1ZlcmRhbmEmcXVvdDssc2Fucy1zZXJpZiI+PGJyPgpJJ3ZlIHNlYXJj
-aGVkIHRoZSBkZXBlbmRlbmNpZXMgZnJvbSB0cG0yX252cmVhZCBhbmQgdHBtMl9wY3JsaXN0IGZv
-ciBhbiBpbml0cmFtZnMtaG9vazo8YnI+CiZndDsgcm9vdEB0czp+IyBsZGQgJCh3aGljaCB0cG0y
-X252cmVhZCk8YnI+CiZndDsgbGludXgtdmRzby5zby4xID0mZ3Q7ICgweDAwMDA3ZmZlNGI1Yjcw
-MDApPGJyPgomZ3Q7IGxpYnNhcGkuc28uMCA9Jmd0OyAvdXNyL2xvY2FsL2xpYi9saWJzYXBpLnNv
-LjAgKDB4MDAwMDdmYjFhNDI5ZjAwMCk8YnI+CiZndDsgbGlibWFyc2hhbC5zby4wID0mZ3Q7IC91
-c3IvbG9jYWwvbGliL2xpYm1hcnNoYWwuc28uMCAoMHgwMDAwN2ZiMWE0MDYxMDAwKTxicj4KJmd0
-OyBsaWJjcnlwdG8uc28uMS4wLjAgPSZndDsgL2xpYi94ODZfNjQtbGludXgtZ251L2xpYmNyeXB0
-by5zby4xLjAuMCAoMHgwMDAwN2ZiMWEzYzFkMDAwKTxicj4KJmd0OyBsaWJkbC5zby4yID0mZ3Q7
-IC9saWIveDg2XzY0LWxpbnV4LWdudS9saWJkbC5zby4yICgweDAwMDA3ZmIxYTNhMTkwMDApPGJy
-PgomZ3Q7IGxpYmMuc28uNiA9Jmd0OyAvbGliL3g4Nl82NC1saW51eC1nbnUvbGliYy5zby42ICgw
-eDAwMDA3ZmIxYTM2NGYwMDApPGJyPgomZ3Q7IC9saWI2NC9sZC1saW51eC14ODYtNjQuc28uMiAo
-MHgwMDAwN2ZiMWE0NmQxMDAwKTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgc3R5bGU9Im1hcmdp
-bjowY207bWFyZ2luLWJvdHRvbTouMDAwMXB0Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjkuMHB0
-O2ZvbnQtZmFtaWx5OiZxdW90O1ZlcmRhbmEmcXVvdDssc2Fucy1zZXJpZiI+Jm5ic3A7PG86cD48
-L286cD48L3NwYW4+PC9wPgo8cCBzdHlsZT0ibWFyZ2luOjBjbTttYXJnaW4tYm90dG9tOi4wMDAx
-cHQiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXplOjkuMHB0O2ZvbnQtZmFtaWx5
-OiZxdW90O1ZlcmRhbmEmcXVvdDssc2Fucy1zZXJpZiI+VGhlbiBpIGdlbmVyYXRlZCBhIGluaXRy
-YW1mcy1ob29rIHdoZXJlIGkgY29waWVkIHRoZSBiaW5hcmllcyBhbmQgdGhlIGxpYnJhcmllcyBm
-cm9tIGFib3ZlIHRvIGluaXRyYW1mcy4gQWRkaXRpb25hbGx5IEkgY29waWVkIHRoZSBsaWJ0Y3Rp
-LWRldmljZS5zbwogdG8gaW5pdHJhbWZzIChldmVyeSBmaWxlIHRvIHRoZSBzYW1lIGxvY2F0aW9u
-IGFzIGluIHRoZSBtYWluIHN5c3RlbSkuIEFmdGVyd2FyZHMgSSBjcmVhdGVkIGFuIGluaXRyYW1m
-cy1zY3JpcHQgdG8gdGhlIGluaXQtcHJlbW91bnQgc2NyaXB0cyB0aGF0IHdpbGwgcmVhZCB0aGUg
-ZGF0YSBmcm9tIHRoZSB0cG0yIGFuZCBpIGluY2x1ZGVkIHRoZSB0cG1fY3JiIEtlcm5lbG1vZHVs
-ZSB0byB0aGUgaW5pdHJhbWZzLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgc3R5bGU9Im1hcmdp
-bjowY207bWFyZ2luLWJvdHRvbTouMDAwMXB0Ij48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZv
-bnQtc2l6ZTo5LjBwdDtmb250LWZhbWlseTomcXVvdDtWZXJkYW5hJnF1b3Q7LHNhbnMtc2VyaWYi
-PiZuYnNwOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgc3R5bGU9Im1hcmdpbjowY207bWFyZ2lu
-LWJvdHRvbTouMDAwMXB0Ij48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZTo5LjBw
-dDtmb250LWZhbWlseTomcXVvdDtWZXJkYW5hJnF1b3Q7LHNhbnMtc2VyaWYiPkFmdGVyd2FyZHMg
-SSZuYnNwO2dlbmVyYXRlZCBhIG5ldyBJbml0cmFtZnMgd2l0aCB1cGRhdGUtaW5pdHJhbWZzIC11
-IGFuZCByZWJvb3RlZCB0aGUgc3lzdGVtLiBUaGVuIHRoZSBlcnJvciBvY2N1cnMuPGJyPgpJIGFk
-ZGVkIHRoZSBib290IG9wdGlvbiAmcXVvdDticmVhaz1tb3VudCZxdW90OyB0byBkcm9wIHRvIGFu
-IGluaXRyYW1mcyBzaGVsbCwgc28gdGhhdCBJIGNhbiB0ZXN0IGFuZCB2ZXJpZnkgZXZlcnl0aGlu
-ZyBieSBteXNlbGYuIC0tJmd0OyBFdmVyeSBsaWJyYXJ5IGFuZCBiaW5hcnkgaXMgYXQgdGhlIHJp
-Z2h0IGRpcmVjdG9yeSBhbmQgSSBoYXZlIG5vIGlkZWEgd2hhdCBJIGNhbiBkbywgdG8gbWFudWFs
-bHkgY29uZmlndXJlIHRoZSBwYXRoIGZyb20gdGhlIGxpYnRjdGktZGV2aWNlLnNvLgogRnVydGhl
-cm1vcmUmbmJzcDtJIGRvbid0IHdhbnQgdG8gcnVuIHRoZSB3aG9sZSB0cG0yLWFicm1kIGluIGlu
-aXRyYW1mcyBiZWNhdXNlIHRoZW4gSSBoYXZlIHByb2JsZW1zIHdpdGggZGJ1cyBhbmQgc28gb24u
-Li48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIHN0eWxlPSJtYXJnaW46MGNtO21hcmdpbi1ib3R0
-b206LjAwMDFwdCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6OS4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7VmVyZGFuYSZxdW90OyxzYW5zLXNlcmlmIj4mbmJzcDs8bzpwPjwvbzpw
-Pjwvc3Bhbj48L3A+CjxwIHN0eWxlPSJtYXJnaW46MGNtO21hcmdpbi1ib3R0b206LjAwMDFwdCI+
-PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6OS4wcHQ7Zm9udC1mYW1pbHk6JnF1
-b3Q7VmVyZGFuYSZxdW90OyxzYW5zLXNlcmlmIj5CdHc6IEknbSBvbiBVYnVudHUgMTYuMDQgTFRT
-IHdpdGggS2VybmVsIDE0LjA0IGFuZCBJJ20gdXNpbmcgdHBtMi10b29scyB1bmQgdHBtMi10c3Mg
-bWFzdGVyIGJyYW5jaC48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIHN0eWxlPSJtYXJnaW46MGNt
-O21hcmdpbi1ib3R0b206LjAwMDFwdCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNp
-emU6OS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7VmVyZGFuYSZxdW90OyxzYW5zLXNlcmlmIj4mbmJz
-cDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIHN0eWxlPSJtYXJnaW46MGNtO21hcmdpbi1ib3R0
-b206LjAwMDFwdCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6OS4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7VmVyZGFuYSZxdW90OyxzYW5zLXNlcmlmIj5QbGVhc2UsIGNhbiBhbnlv
-bmUgaGVscCBtZT88bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIHN0eWxlPSJtYXJnaW46MGNtO21h
-cmdpbi1ib3R0b206LjAwMDFwdCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6
-OS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7VmVyZGFuYSZxdW90OyxzYW5zLXNlcmlmIj4mbmJzcDs8
-bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIHN0eWxlPSJtYXJnaW46MGNtO21hcmdpbi1ib3R0b206
-LjAwMDFwdCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5LjBwdDtmb250LWZhbWlseTomcXVvdDtW
-ZXJkYW5hJnF1b3Q7LHNhbnMtc2VyaWYiPkJlc3QgcmVnYXJkcyw8bzpwPjwvbzpwPjwvc3Bhbj48
-L3A+CjxwIHN0eWxlPSJtYXJnaW46MGNtO21hcmdpbi1ib3R0b206LjAwMDFwdCI+PHNwYW4gc3R5
-bGU9ImZvbnQtc2l6ZTo5LjBwdDtmb250LWZhbWlseTomcXVvdDtWZXJkYW5hJnF1b3Q7LHNhbnMt
-c2VyaWYiPktsYXVzPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-bzpwPiZuYnNwOzwvbzpwPjwvcD4KPC9kaXY+CjxwIGFsaWduPSJqdXN0aWZ5Ij48Zm9udCBzaXpl
-PSIyIiBmYWNlPSJBcmlhbCIgY29sb3I9IiM4MDgwODAiPkltcG9ydGFudCBOb3RpY2U6PGJyPgpU
-aGlzIGVsZWN0cm9uaWMgdHJhbnNtaXNzaW9uIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBp
-cyBpbnRlbmRlZCBzb2xlbHkgZm9yIHRoZSB1c2UgYW5kIGluZm9ybWF0aW9uPGJyPgpvZiB0aGUg
-YWRkcmVzc2VlKHMpLiBJdCBtYXkgY29udGFpbiBjb25maWRlbnRpYWwgb3IgbGVnYWxseSBwcml2
-aWxlZ2VkIGluZm9ybWF0aW9uLiBBbnkgdW5hdXRob3JpemVkIHVzZTxicj4Kb3IgZGlzY2xvc3Vy
-ZSBvZiB0aGlzIG1lc3NhZ2UgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC5JZiB5b3UgYXJlIG5vdCB0
-aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBwbGVhc2Ugbm90aWZ5PGJyPgp0aGUgc2VuZGVyIGltbWVk
-aWF0ZWx5IGFuZCBkZWxldGUgdGhlIG1lc3NhZ2UgYW5kIGl0cyBhdHRhY2htZW50cy48YnI+ClRo
-ZSBzZW5kZXIgZG9lcyBub3QgZ3VhcmFudGVlIHRoZSBpbnRlZ3JpdHkgb2YgdGhpcyB0cmFuc21p
-c3Npb24gYW5kIHNoYWxsIHRoZXJlZm9yZSBuZXZlciBiZSBsaWFibGUgaWY8YnI+CnRoZSBtZXNz
-YWdlIGlzIGFsdGVyZWQgb3IgZmFsc2lmaWVkIG5vciBmb3IgYW55IHZpcnVzLCBpbnRlcmNlcHRp
-b24gb3IgZGFtYWdlIHRvIHlvdXIgc3lzdGVtLjxicj4KPC9mb250PjwvcD4KPC9ib2R5Pgo8L2h0
-bWw+Cg==
-
---===============8225560075941794494==--
+--===============2551755677230428268==--
 
