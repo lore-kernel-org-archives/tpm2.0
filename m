@@ -1,18 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============2551755677230428268=="
+Content-Type: multipart/mixed; boundary="===============5599217342292208862=="
 MIME-Version: 1.0
 From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
 Subject: Re: [tpm2] building tpm2-tools with bitbake fails even though
  tpm2-tss builds fine
-Date: Wed, 21 Feb 2018 16:19:03 +0000
-Message-ID: <8761e9ab15b34002906cc40efc127fcd@AZDC-MMB02.GD-MS.US>
+Date: Wed, 21 Feb 2018 20:38:24 +0000
+Message-ID: <2243cfeafc96491eb8844f9c9682277a@AZDC-MMB02.GD-MS.US>
 In-Reply-To: b61e87c7-1207-593a-7a0a-a825587ed2a2@redhat.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2551755677230428268==
+--===============5599217342292208862==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+I noticed that Version: in sapi.pc has no value assigned to it, so I think =
+that's why tpm2-tools is failing to build.  IOW, the root of the problem is=
+ that tpm2-tss is not setting the Version when it creates sapi.pc when I bu=
+ild with bitbake (it does set it when I run ./configure, make, make install=
+ myself).  Tpm2-tss's configure contains a "PACKAGE_VERSION=3D'1.3.0' line =
+so I'm not sure why sapi.pc isn't getting that value assigned.
+
+
+-----Original Message-----
+From: Scheie, Peter M =
+
+Sent: Wednesday, February 21, 2018 10:19 AM
+To: 'Javier Martinez Canillas'; 'Philip Tricca'
+Cc: 'tpm2(a)lists.01.org'
+Subject: RE: [tpm2] building tpm2-tools with bitbake fails even though tpm2=
+-tss builds fine
 
 I should add that I'm having the same problem as reported in Issue 764 on g=
 ithub (https://github.com/tpm2-software/tpm2-tools/issues/764).  In my case=
@@ -92,5 +109,5 @@ Best regards,
 Javier Martinez Canillas
 Software Engineer - Desktop Hardware Enablement Red Hat
 
---===============2551755677230428268==--
+--===============5599217342292208862==--
 
