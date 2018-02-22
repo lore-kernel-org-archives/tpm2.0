@@ -1,150 +1,173 @@
-Content-Type: multipart/mixed; boundary="===============0546518871549964476=="
+Content-Type: multipart/mixed; boundary="===============1459690567707329063=="
 MIME-Version: 1.0
-From: Anderson, Daniel <daniel.anderson at intel.com>
-Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
-Date: Thu, 22 Feb 2018 17:17:57 +0000
-Message-ID: <207C810BE4BA2440832668E0F208BFD3AF6398@ORSMSX108.amr.corp.intel.com>
-In-Reply-To: 09b4a528-26cb-8b26-786f-58b43276bf81@redhat.com
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
+Subject: Re: [tpm2] building tpm2-tools with bitbake fails even though
+ tpm2-tss builds fine
+Date: Thu, 22 Feb 2018 19:39:10 +0000
+Message-ID: <087695a418874241b253dc47aa5a2330@AZDC-MMB02.GD-MS.US>
+In-Reply-To: b08016d5-682a-f4dd-38e8-e7844fb7ef11@twobit.us
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0546518871549964476==
+--===============1459690567707329063==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Javier,
-Thanks for your reply--it is really useful as there are multiple undocument=
-ed options I need to use.  I am using MS Outlook which is lame for inline r=
-eplies,  so I'll manually mark it with "dan> "
+Hi Philip,
+I switched to the rocko branch and now tpm2-tss and tpm2-abrmd build withou=
+t errors, so thanks for that.  For tpm2-tools, the patch referenced in the =
+recipe doesn't seem necessary any more (right?) so I've removed it from the=
+ recipe for now.  Next I've got to get our OpenSSL package updated, as WRL8=
+ provides 1.0.2d and tpm2-tools says it needs 1.0.2g (we're actually going =
+to 1.0.2h because another package needs that, but that's all the responsibi=
+lity of another fellow in my group).  Thanks for your help.
 
-Dan
+Peter
 
 -----Original Message-----
-From: Javier Martinez Canillas [mailto:javierm(a)redhat.com] =
+From: Philip Tricca [mailto:flihp(a)twobit.us] =
 
-Sent: Thursday, February 22, 2018 8:52 AM
-To: Anderson, Daniel <daniel.anderson(a)intel.com>; tpm2(a)lists.01.org
-Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
+Sent: Wednesday, February 21, 2018 11:05 PM
+To: Scheie, Peter M
+Cc: Javier Martinez Canillas; tpm2(a)lists.01.org
+Subject: Re: [tpm2] building tpm2-tools with bitbake fails even though tpm2=
+-tss builds fine
 
-Hello Dan,
+Hi Peter,
 
-On 02/22/2018 05:01 PM, Anderson, Daniel wrote:
-> Javier,
-> Thanks!
+On 02/21/2018 12:38 PM, Scheie, Peter M wrote:
+> I noticed that Version: in sapi.pc has no value assigned to it, so I thin=
+k that's why tpm2-tools is failing to build.  IOW, the root of the problem =
+is that tpm2-tss is not setting the Version when it creates sapi.pc when I =
+build with bitbake (it does set it when I run ./configure, make, make insta=
+ll myself).  Tpm2-tss's configure contains a "PACKAGE_VERSION=3D'1.3.0' lin=
+e so I'm not sure why sapi.pc isn't getting that value assigned.
+
+I've been bringing these recipes up to date on a branch named 'rocko'.
+This corresponds to the current OE / Yocto release. The branch is here:
+
+https://github.com/flihp/meta-measured/commits/rocko
+
+I've already addressed the issue you've run into here:
+
+https://github.com/flihp/meta-measured/commit/a11f6da298cb0f2c4fcbd14855b8b=
+508e91456b8
+
+Philip
+
+> -----Original Message-----
+> From: Scheie, Peter M
+> Sent: Wednesday, February 21, 2018 10:19 AM
+> To: 'Javier Martinez Canillas'; 'Philip Tricca'
+> Cc: 'tpm2(a)lists.01.org'
+> Subject: RE: [tpm2] building tpm2-tools with bitbake fails even though =
+
+> tpm2-tss builds fine
 > =
 
-> The version is the latest source as of the message--I pulled the latest s=
-ource and rebuilt several times.
-
-Ok, I'm also building today's master branch for all projects.
-
-> I will try again today and see if there has been a fix in the past week.
-> There is no /dev/tpm--I am using the simulator and specify that in the op=
-tions.
-
-I didn't see the option specified in the command you shared in this thread.
-You have to run with tpm2-abrmd --tcti socket.
-
-dan> OK. That may be the missing option.  The "tpm2-abrmd --tcti socket" op=
-tion is not mentioned anywhere in dan> the INSTALL.md or README.md files.  =
-
-dan> I found a tpm2-abrmd man page with several examples, but it doesn't me=
-ntion which one to use for the dan> simulator.
-
-dan> Also, since tpm2-abrmd is started automatically by systemd, apparently=
-, how does one add this option dan> (whatever the correct syntax) to the sy=
-stem configuration?
-
-
-> There may be another option or setting that I am missing though.
-> Here is what I build with:
+> I should add that I'm having the same problem as reported in Issue 764 on=
+ github (https://github.com/tpm2-software/tpm2-tools/issues/764).  In my ca=
+se, I *am* using the release tarball.
 > =
 
-> For tpm2-tss:
-> configure --enable-unit
->         --with-simulatorbin=3D$TPM_SERVER
+> -----Original Message-----
+> From: Scheie, Peter M
+> Sent: Wednesday, February 21, 2018 8:28 AM
+> To: 'Javier Martinez Canillas'; Philip Tricca
+> Cc: tpm2(a)lists.01.org
+> Subject: RE: [tpm2] building tpm2-tools with bitbake fails even though =
 
-Only these are valid options for tpm2-tss, from here are tpm2-abrmd options:
+> tpm2-tss builds fine
+> =
 
->         --with-dbuspolicydir=3D/etc/dbus-1/system.d
->         --with-systemdsystemunitdir=3D/lib/systemd/system
->         --with-systemdpresetdir=3D/lib/systemd/system-preset
->         --with-udevrulesdir=3D/etc/udev/rules.d
->         --with-sysdefaultdir=3D/etc/default
->         --with-dbusdatadir=3D/usr/share/dbus-1/system-services
->
-> For tpm2-abrmd:
-> configure --enable-unit =
+> Thanks for the explanations.
+> =
 
-> --with-simulatorbin=3D$HOME/tpm/simulator/src/tpm_server
->
+> I notice that if I just run ./configure in tpm2-tools-3.0.3, I get a simi=
+lar error to when I try to run bitbake, that it can't find SAPI.  With ./co=
+nfigure, I can solve this by setting PGK_CONFIG_PATH=3D/usr/local/lib/pkgco=
+nfig, as that's where 'make install' for tpm2-tss puts the pkgconfig/ direc=
+tory by default.  How do I do that with bitbake?  That is, how do I specify=
+ in my recipe for tpm2-tools the location of pkgconfig as set by the tpm2-t=
+ss build/recipe?
+> =
 
-As mentioned, you either got the configure options mixed up or are using it=
- wrong.
+> Peter
+> =
 
-There are my configure options for tpm2-tss, tpm2-abrmd and tpm2-tools:
+> -----Original Message-----
+> From: Javier Martinez Canillas [mailto:javierm(a)redhat.com]
+> Sent: Tuesday, February 20, 2018 5:34 PM
+> To: Philip Tricca; Scheie, Peter M
+> Cc: tpm2(a)lists.01.org
+> Subject: Re: [tpm2] building tpm2-tools with bitbake fails even though =
 
-tpm2-tss:
+> tpm2-tss builds fine
+> =
 
-$ ./configure --prefix=3D/usr
+> =
 
-tpm2-abrmd:
+> [snip]
+> =
 
-$ ./configure --with-dbuspolicydir=3D/etc/dbus-1/system.d --with-udevrulesd=
-ir=3D/usr/lib/udev/rules.d --with-systemdsystemunitdir=3D/usr/lib/systemd/s=
-ystem --libdir=3D/usr/lib64
+>>>
+>>> *          Why is the recipe made up of two files, tpm2-tools_2.1.0.bb =
+and tpm2-tools.inc instead  of just putting it all in the .bb file?
+>>
+>> I don't remember. I think I was trying to support multiple versions =
 
-dan> This is useful. The systemdsystemunitdir (not mentioned in the README =
-or INSTALL) should help.
+>> of one component at some point and the build required different =
 
-tpm2-tools
+>> work-arounds in the bitbake metadata. As the build has gotten better =
 
-$ ./configure --prefix=3D/usr
+>> the version specific files (*.bb) have shrunk as the workarounds have =
 
-> I cannot believe that anyone has tpm2-abrmd working without special hand-=
-copied fixes. The com.intel.tss2.tabrmd.service for example is not installe=
-d in /usr/share/dbus-1/system-services/ but in /usr/local/share/dbus-1/syst=
-em-services/.
->
+>> come out. Eventually they may go away completely ...
+>>
+> =
 
-I think this is because you didn't specify a correct --with-dbuspolicydir a=
-s mentioned before. Another thing that you have to keep in mind, is that th=
-e default D-Bus config only allows the tss and root user to acquire the com=
-.intel.tss2.Tabrmd D-Bus well-known name.
+> I'm not a BitBake & OpenEmbedded expert, but AFAIR what you do is pretty =
+common. That way you could for example develop / test against the latest gi=
+t snapshot but also provide a stable release so people can switch them sett=
+ing a PREFERRED_VERSION for the recipe in an image or machine config.
+> =
 
-So after installing latest master with these configure options, I just do:
+>>> *         Why does the SRC_URI in the .bb file point to gcc7.diff which=
+ references, among others, a main.c file that isn't in the tar file?
+> =
 
-$ ./tpm_server
+> SRC_URI in tpm2-tools.inc is set to the tpm2.0-tools.git repo, but then t=
+he tpm2-tools_2.1.0.bb adds to the SRC_URI a patch. That's how you add patc=
+hes on the BitBake recipes.
+> =
 
-$ sudo -u tss /usr/local/sbin/tpm2-abrmd --tcti socket
+> That patch was to allow building with GCC7, since it got much more strict=
+ on fall-throughs for switch case statements.
+> =
 
-dan> so you do not use system to start tpm2-abrmd.
+> About the main.c not being in the tarball, it really depends on which =
 
-$ tpm2_pcrlist -L sha1:0 -T abrmd                           =
+> version of the recipe you are using. The tpm2-tools_2.1.0.bb has =
 
-sha1:                      =
+> SRCREV set to 27d34a61cb947780ab58508dfea70e696cff185c, which is the =
 
-  0 : 0x0000000000000000000000000000000000000003
+> SHA-1 for
+> 2.1.0 tag so it should be there when using that version of the recipe.
+> =
 
-And using the device TCTI also works for me:
+> Best regards,
+> --
+> Javier Martinez Canillas
+> Software Engineer - Desktop Hardware Enablement Red Hat =
 
-$ sudo -u tss /usr/local/sbin/tpm2-abrmd --tcti device
+> _______________________________________________
+> tpm2 mailing list
+> tpm2(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/tpm2
+> =
 
-dan> neither tpm2-abrmd --tcti socket or tpm2-abrmd --tcti device is mentio=
-ned in the README.md, INSTALL.md, or tpm2-abrmd(8) man page, so I'll add th=
-ose.
 
-$ tpm2_pcrlist -L sha1:0 -T abrmd                           =
 
-sha1:                      =
-
-  0 : 0xC72EC9E6CBC2B6A95F334DDDD6513981DA00F0C2
-
-Best regards,
---
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement Red Hat
-
---===============0546518871549964476==--
+--===============1459690567707329063==--
 
