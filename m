@@ -1,65 +1,150 @@
-Content-Type: multipart/mixed; boundary="===============4164771066479076329=="
+Content-Type: multipart/mixed; boundary="===============0546518871549964476=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] Some issues with tpm2-tss, tpm2-tools regarding packaging
-Date: Thu, 22 Feb 2018 09:14:42 -0800
-Message-ID: <20180222171442.GB6409@intel.com>
-In-Reply-To: 880372d3-738f-c18c-8409-f2bffa8fff27@redhat.com
+From: Anderson, Daniel <daniel.anderson at intel.com>
+Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
+Date: Thu, 22 Feb 2018 17:17:57 +0000
+Message-ID: <207C810BE4BA2440832668E0F208BFD3AF6398@ORSMSX108.amr.corp.intel.com>
+In-Reply-To: 09b4a528-26cb-8b26-786f-58b43276bf81@redhat.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4164771066479076329==
+--===============0546518871549964476==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Javier,
+Thanks for your reply--it is really useful as there are multiple undocument=
+ed options I need to use.  I am using MS Outlook which is lame for inline r=
+eplies,  so I'll manually mark it with "dan> "
 
-On Thu, Feb 22, 2018 at 03:09:33PM +0100, Javier Martinez Canillas wrote:
-> On 02/22/2018 01:34 PM, Matthias Gerstner wrote:
+Dan
 
-snip
+-----Original Message-----
+From: Javier Martinez Canillas [mailto:javierm(a)redhat.com] =
 
-> > - I wanted to verify the GPG signature of the tpm2-tools distribution
-> >   tarball tpm2-tools-3.0.3.tar.gz, but cannot seem to find the matching
-> >   public key 0x6DE2E9078E1F50C1 on the public key servers.
-> >
+Sent: Thursday, February 22, 2018 8:52 AM
+To: Anderson, Daniel <daniel.anderson(a)intel.com>; tpm2(a)lists.01.org
+Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
+
+Hello Dan,
+
+On 02/22/2018 05:01 PM, Anderson, Daniel wrote:
+> Javier,
+> Thanks!
 > =
 
-> Indeed. The same problem happens with tpm2-tss, so I guess neither Bill n=
-or Philip
-> have pushed their public GPG keys to a key server:
+> The version is the latest source as of the message--I pulled the latest s=
+ource and rebuilt several times.
+
+Ok, I'm also building today's master branch for all projects.
+
+> I will try again today and see if there has been a fix in the past week.
+> There is no /dev/tpm--I am using the simulator and specify that in the op=
+tions.
+
+I didn't see the option specified in the command you shared in this thread.
+You have to run with tpm2-abrmd --tcti socket.
+
+dan> OK. That may be the missing option.  The "tpm2-abrmd --tcti socket" op=
+tion is not mentioned anywhere in dan> the INSTALL.md or README.md files.  =
+
+dan> I found a tpm2-abrmd man page with several examples, but it doesn't me=
+ntion which one to use for the dan> simulator.
+
+dan> Also, since tpm2-abrmd is started automatically by systemd, apparently=
+, how does one add this option dan> (whatever the correct syntax) to the sy=
+stem configuration?
+
+
+> There may be another option or setting that I am missing though.
+> Here is what I build with:
 > =
 
-> $ gpg --verify tpm2-tss-1.3.0.tar.gz.asc tpm2-tss-1.3.0.tar.gz
-> gpg: Signature made Fri 08 Dec 2017 02:12:30 AM CET using RSA key ID C2E1=
-D3BA
-> gpg: Can't check signature: public key not found
+> For tpm2-tss:
+> configure --enable-unit
+>         --with-simulatorbin=3D$TPM_SERVER
 
-I don't know how you've got gpg configured but my signing key is up on
-the MIT PGP key server. Try:
+Only these are valid options for tpm2-tss, from here are tpm2-abrmd options:
 
-gpg --keyserver hkp://pgp.mit.edu --search-keys 0xc2e1d3ba =
+>         --with-dbuspolicydir=3D/etc/dbus-1/system.d
+>         --with-systemdsystemunitdir=3D/lib/systemd/system
+>         --with-systemdpresetdir=3D/lib/systemd/system-preset
+>         --with-udevrulesdir=3D/etc/udev/rules.d
+>         --with-sysdefaultdir=3D/etc/default
+>         --with-dbusdatadir=3D/usr/share/dbus-1/system-services
+>
+> For tpm2-abrmd:
+> configure --enable-unit =
 
+> --with-simulatorbin=3D$HOME/tpm/simulator/src/tpm_server
+>
 
-When I first started using PGP the MIT key server was the only one that
-could cope with subkeys (0xc2e1d3ba is a subkey of 0x43dec7c3). That may
-have changed since but I've never had cause to push my key to other
-servers. What's the default key server for your distro? Do we need to
-put our keys there too?
+As mentioned, you either got the configure options mixed up or are using it=
+ wrong.
 
-> $ gpg --verify tpm2-tools-3.0.3.tar.gz.asc tpm2-tools-3.0.3.tar.gz       =
-             =
+There are my configure options for tpm2-tss, tpm2-abrmd and tpm2-tools:
 
-> gpg: Signature made Mon 15 Jan 2018 11:08:10 PM CET using RSA key ID 8E1F=
-50C1                                    =
+tpm2-tss:
 
-> gpg: Can't check signature: public key not found
+$ ./configure --prefix=3D/usr
 
-I couldn't find Bills key either. I vaguely remember having a discussion
-about this a while back but don't remember the resolution.
+tpm2-abrmd:
 
-Philip
+$ ./configure --with-dbuspolicydir=3D/etc/dbus-1/system.d --with-udevrulesd=
+ir=3D/usr/lib/udev/rules.d --with-systemdsystemunitdir=3D/usr/lib/systemd/s=
+ystem --libdir=3D/usr/lib64
 
---===============4164771066479076329==--
+dan> This is useful. The systemdsystemunitdir (not mentioned in the README =
+or INSTALL) should help.
+
+tpm2-tools
+
+$ ./configure --prefix=3D/usr
+
+> I cannot believe that anyone has tpm2-abrmd working without special hand-=
+copied fixes. The com.intel.tss2.tabrmd.service for example is not installe=
+d in /usr/share/dbus-1/system-services/ but in /usr/local/share/dbus-1/syst=
+em-services/.
+>
+
+I think this is because you didn't specify a correct --with-dbuspolicydir a=
+s mentioned before. Another thing that you have to keep in mind, is that th=
+e default D-Bus config only allows the tss and root user to acquire the com=
+.intel.tss2.Tabrmd D-Bus well-known name.
+
+So after installing latest master with these configure options, I just do:
+
+$ ./tpm_server
+
+$ sudo -u tss /usr/local/sbin/tpm2-abrmd --tcti socket
+
+dan> so you do not use system to start tpm2-abrmd.
+
+$ tpm2_pcrlist -L sha1:0 -T abrmd                           =
+
+sha1:                      =
+
+  0 : 0x0000000000000000000000000000000000000003
+
+And using the device TCTI also works for me:
+
+$ sudo -u tss /usr/local/sbin/tpm2-abrmd --tcti device
+
+dan> neither tpm2-abrmd --tcti socket or tpm2-abrmd --tcti device is mentio=
+ned in the README.md, INSTALL.md, or tpm2-abrmd(8) man page, so I'll add th=
+ose.
+
+$ tpm2_pcrlist -L sha1:0 -T abrmd                           =
+
+sha1:                      =
+
+  0 : 0xC72EC9E6CBC2B6A95F334DDDD6513981DA00F0C2
+
+Best regards,
+--
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement Red Hat
+
+--===============0546518871549964476==--
 
