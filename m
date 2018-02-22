@@ -1,102 +1,148 @@
-Content-Type: multipart/mixed; boundary="===============5906589950423233569=="
+Content-Type: multipart/mixed; boundary="===============4500744369831909210=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] Library libtcti-device.so not found in initramfs
-Date: Thu, 22 Feb 2018 00:48:48 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FEEBC34@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 08b9d880f9d34497b940d522ff111f07@WIN0011224.engel.int
+From: Philip Tricca <flihp at twobit.us>
+Subject: Re: [tpm2] building tpm2-tools with bitbake fails even though
+ tpm2-tss builds fine
+Date: Wed, 21 Feb 2018 21:04:46 -0800
+Message-ID: <b08016d5-682a-f4dd-38e8-e7844fb7ef11@twobit.us>
+In-Reply-To: 2243cfeafc96491eb8844f9c9682277a@AZDC-MMB02.GD-MS.US
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5906589950423233569==
+--===============4500744369831909210==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When you specify --tcti=3Ddevice, the tool attempts to:
-1. dlopen exactly what was provided, as this could be a path/proper library=
- name, so in this case dlopen("device"), which fails.
-2. dlopen(libtcti-device.so) which fails.
+Hi Peter,
 
-In this case, you would need to have libtcti-device.so packaged in the init=
-ramfs, and I'm assuming dlopen() is smart enough to
-find it. (dlopen has its own search rules and respects LD_LIBRARY_PATH). Yo=
-u could optionally pass the library path to
-the --tcti option, so dlopen doesn't perform it's search practices: --tcti=
-=3D/usr/local/lib/libtcti-device.so
+On 02/21/2018 12:38 PM, Scheie, Peter M wrote:
+> I noticed that Version: in sapi.pc has no value assigned to it, so I thin=
+k that's why tpm2-tools is failing to build.  IOW, the root of the problem =
+is that tpm2-tss is not setting the Version when it creates sapi.pc when I =
+build with bitbake (it does set it when I run ./configure, make, make insta=
+ll myself).  Tpm2-tss's configure contains a "PACKAGE_VERSION=3D'1.3.0' lin=
+e so I'm not sure why sapi.pc isn't getting that value assigned.
 
-Bill
+I've been bringing these recipes up to date on a branch named 'rocko'.
+This corresponds to the current OE / Yocto release. The branch is here:
 
---EOF--
+https://github.com/flihp/meta-measured/commits/rocko
 
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Schoenberger K=
-laus
-Sent: Wednesday, February 21, 2018 6:44 AM
-To: 'tpm2(a)lists.01.org' <tpm2(a)lists.01.org>
-Subject: [tpm2] Library libtcti-device.so not found in initramfs
+I've already addressed the issue you've run into here:
 
-Hello everyone,
-=C2=A0
-I want to use tpm2_tools in the initramfs, but I get following error:
-=C2=A0
->(initramfs) /usr/local/bin/tpm2_pcrlist --tcti=3Ddevice
-> ERROR: Could not dlopen library: "libtcti-device.so"
-> ERROR: Unknown tcti, got: "device"
-=C2=A0
-When=C2=A0I run the command in my local Terminal (after I stopped the tpm2-=
-abrmd=C2=A0service) everything works fine and I receive the PCR-Values from=
- the tpm 2.0.
-=C2=A0
-What i have done:
+https://github.com/flihp/meta-measured/commit/a11f6da298cb0f2c4fcbd14855b8b=
+508e91456b8
 
-I've searched the dependencies from tpm2_nvread and tpm2_pcrlist for an ini=
-tramfs-hook:
-> root(a)ts:~# ldd $(which tpm2_nvread)
-> linux-vdso.so.1 =3D> (0x00007ffe4b5b7000)
-> libsapi.so.0 =3D> /usr/local/lib/libsapi.so.0 (0x00007fb1a429f000)
-> libmarshal.so.0 =3D> /usr/local/lib/libmarshal.so.0 (0x00007fb1a4061000)
-> libcrypto.so.1.0.0 =3D> /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 (0x00007=
-fb1a3c1d000)
-> libdl.so.2 =3D> /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fb1a3a19000)
-> libc.so.6 =3D> /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb1a364f000)
-> /lib64/ld-linux-x86-64.so.2 (0x00007fb1a46d1000)
-=C2=A0
-Then i generated a initramfs-hook where i copied the binaries and the libra=
-ries from above to initramfs. Additionally I copied the libtcti-device.so t=
-o initramfs (every file to the same location as in the main system). Afterw=
-ards I created an initramfs-script to the init-premount scripts that will r=
-ead the data from the tpm2 and i included the tpm_crb Kernelmodule to the i=
-nitramfs.
-=C2=A0
-Afterwards I=C2=A0generated a new Initramfs with update-initramfs -u and re=
-booted the system. Then the error occurs.
-I added the boot option "break=3Dmount" to drop to an initramfs shell, so t=
-hat I can test and verify everything by myself. --> Every library and binar=
-y is at the right directory and I have no idea what I can do, to manually c=
-onfigure the path from the libtcti-device.so. Furthermore=C2=A0I don't want=
- to run the whole tpm2-abrmd in initramfs because then I have problems with=
- dbus and so on...
-=C2=A0
-Btw: I'm on Ubuntu 16.04 LTS with Kernel 14.04 and I'm using tpm2-tools und=
- tpm2-tss master branch.
-=C2=A0
-Please, can anyone help me?
-=C2=A0
-Best regards,
-Klaus
+Philip
 
-Important Notice:
-This electronic transmission (including any attachments) is intended solely=
- for the use and information
-of the addressee(s). It may contain confidential or legally privileged info=
-rmation. Any unauthorized use
-or disclosure of this message is strictly prohibited.If you are not the int=
-ended recipient, please notify
-the sender immediately and delete the message and its attachments.
-The sender does not guarantee the integrity of this transmission and shall =
-therefore never be liable if
-the message is altered or falsified nor for any virus, interception or dama=
-ge to your system.
+> -----Original Message-----
+> From: Scheie, Peter M =
 
---===============5906589950423233569==--
+> Sent: Wednesday, February 21, 2018 10:19 AM
+> To: 'Javier Martinez Canillas'; 'Philip Tricca'
+> Cc: 'tpm2(a)lists.01.org'
+> Subject: RE: [tpm2] building tpm2-tools with bitbake fails even though tp=
+m2-tss builds fine
+> =
+
+> I should add that I'm having the same problem as reported in Issue 764 on=
+ github (https://github.com/tpm2-software/tpm2-tools/issues/764).  In my ca=
+se, I *am* using the release tarball.
+> =
+
+> -----Original Message-----
+> From: Scheie, Peter M =
+
+> Sent: Wednesday, February 21, 2018 8:28 AM
+> To: 'Javier Martinez Canillas'; Philip Tricca
+> Cc: tpm2(a)lists.01.org
+> Subject: RE: [tpm2] building tpm2-tools with bitbake fails even though tp=
+m2-tss builds fine
+> =
+
+> Thanks for the explanations.
+> =
+
+> I notice that if I just run ./configure in tpm2-tools-3.0.3, I get a simi=
+lar error to when I try to run bitbake, that it can't find SAPI.  With ./co=
+nfigure, I can solve this by setting PGK_CONFIG_PATH=3D/usr/local/lib/pkgco=
+nfig, as that's where 'make install' for tpm2-tss puts the pkgconfig/ direc=
+tory by default.  How do I do that with bitbake?  That is, how do I specify=
+ in my recipe for tpm2-tools the location of pkgconfig as set by the tpm2-t=
+ss build/recipe?
+> =
+
+> Peter
+> =
+
+> -----Original Message-----
+> From: Javier Martinez Canillas [mailto:javierm(a)redhat.com] =
+
+> Sent: Tuesday, February 20, 2018 5:34 PM
+> To: Philip Tricca; Scheie, Peter M
+> Cc: tpm2(a)lists.01.org
+> Subject: Re: [tpm2] building tpm2-tools with bitbake fails even though tp=
+m2-tss builds fine
+> =
+
+> =
+
+> [snip]
+> =
+
+>>>
+>>> *          Why is the recipe made up of two files, tpm2-tools_2.1.0.bb =
+and tpm2-tools.inc instead  of just putting it all in the .bb file?
+>>
+>> I don't remember. I think I was trying to support multiple versions of =
+
+>> one component at some point and the build required different =
+
+>> work-arounds in the bitbake metadata. As the build has gotten better =
+
+>> the version specific files (*.bb) have shrunk as the workarounds have =
+
+>> come out. Eventually they may go away completely ...
+>>
+> =
+
+> I'm not a BitBake & OpenEmbedded expert, but AFAIR what you do is pretty =
+common. That way you could for example develop / test against the latest gi=
+t snapshot but also provide a stable release so people can switch them sett=
+ing a PREFERRED_VERSION for the recipe in an image or machine config.
+> =
+
+>>> *         Why does the SRC_URI in the .bb file point to gcc7.diff which=
+ references, among others, a main.c file that isn't in the tar file?
+> =
+
+> SRC_URI in tpm2-tools.inc is set to the tpm2.0-tools.git repo, but then t=
+he tpm2-tools_2.1.0.bb adds to the SRC_URI a patch. That's how you add patc=
+hes on the BitBake recipes.
+> =
+
+> That patch was to allow building with GCC7, since it got much more strict=
+ on fall-throughs for switch case statements.
+> =
+
+> About the main.c not being in the tarball, it really depends on which ver=
+sion of the recipe you are using. The tpm2-tools_2.1.0.bb has SRCREV set to=
+ 27d34a61cb947780ab58508dfea70e696cff185c, which is the SHA-1 for
+> 2.1.0 tag so it should be there when using that version of the recipe.
+> =
+
+> Best regards,
+> --
+> Javier Martinez Canillas
+> Software Engineer - Desktop Hardware Enablement Red Hat
+> _______________________________________________
+> tpm2 mailing list
+> tpm2(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/tpm2
+> =
+
+
+
+--===============4500744369831909210==--
 
