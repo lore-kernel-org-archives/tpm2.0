@@ -1,76 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============7192437344039208810=="
+Content-Type: multipart/mixed; boundary="===============6729608383931160355=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
-Date: Thu, 22 Feb 2018 09:48:45 +0100
-Message-ID: <b8c21126-da70-cf9c-ee01-ac0271418602@redhat.com>
-In-Reply-To: 207C810BE4BA2440832668E0F208BFD3AF4D6A@ORSMSX108.amr.corp.intel.com
+From: Matthias Gerstner <mgerstner at suse.de>
+Subject: [tpm2] Some issues with tpm2-tss, tpm2-tools regarding packaging
+Date: Thu, 22 Feb 2018 13:34:36 +0100
+Message-ID: <20180222123436.34cuhliqfxnpstp4@f195.suse.de>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7192437344039208810==
+--===============6729608383931160355==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Dan,
+Hello,
 
-On 02/20/2018 08:40 PM, Anderson, Daniel wrote:
-> I have been getting the same error and cannot start the tpm2-service:
-> =
+I want to share some issues I have experienced while updating the tpm2
+packages in SUSE distributions:
 
-> $ sudo systemctl start tpm2-abrmd.service
-> Job for tpm2-abrmd.service failed because the control process exited with=
- error code. See "systemctl status tpm2-abrmd.service" and "journalctl -xe"=
- for details.
-> =
+- The distribution tarballs of tpm2-tss and tpm2-tools try to determine
+  the package version via `git describe [...]` in configure.ac. This
+  doesn't work, because there is no git repository any more. This caused
+  e.g. the pkgconfig files like sapi.pc to contain an empty version
+  number, which in turn caused tpm2-tools to fail to build, because the
+  version check failed.
 
-> $ systemctl status tpm2-abrmd.service
-> tpm2-abrmd.service: Main process exited, code=3Dexited, status=3D1/FA
-> Failed to start TPM2 Access Broker and Resource Management Daemon
-> Unit entered failed state.
-> Failed with result 'exit-code'.
-> =
+  Philip fixed the same issue in tpm2-abrmd a while ago via these
+  commits:
 
-> # Start manually:
-> $ /usr/local/sbin/tpm2-abrmd&
-> ** (tpm2-abrmd:1596): WARNING **: failed to initialize device TCTI contex=
-t: 0xa000a
-> ** (tpm2-abrmd:1596): CRITICAL **: TCTI Initializaiton: 0xa000a
-> =
+  https://github.com/tpm2-software/tpm2-abrmd/commit/7f0d83903b842fc806e007=
+d0c31c2f97cb2d7bd7
+  https://github.com/tpm2-software/tpm2-abrmd/commit/5fe185714abe269a9ccd37=
+ed5d33b61f923e6d65
 
-> $ tpm2_rc_decode 0xa000a
-> tcti:IO failure
-> =
+- The current tpm2-tss-1.3.0 distribution tarball is missing files like
+  README.md, CHANGELOG.md and LICENSE. But this has already been fixed
+  via commit c0841fc6, so the next version should be fine.
 
+- I wanted to verify the GPG signature of the tpm2-tools distribution
+  tarball tpm2-tools-3.0.3.tar.gz, but cannot seem to find the matching
+  public key 0x6DE2E9078E1F50C1 on the public key servers.
 
-What versions of the tpm2-tss, tools and abrmd are you using? I'll try to
-reproduce the issue. But yes, the problem seems to be that it's defaulting
-to the device TCTI instead of the socket TCTI. And since you don't have a
-/dev/tpm? (or your user doesn't have access to it), the tpm2-abrmd dies.
+I can open GitHub issues for some of the issues if you deem it helpful.
 
-> So it seems that this is a known bug:
-> https://github.com/tpm2-software/tpm2-abrmd/issues/321
-> https://github.com/tpm2-software/tpm2-abrmd/pull/330
->
-> Is there a workaround?  The discussion is too cryptic for me. For example=
-,  I can't find a tpm2_listpcrs command in  tpm2-tools (or -abrmd or -tss).=
- I am running on Ubuntu Linux with a simulator.
->
+Regards
 
-PR #300 has been merged already so if you think that's related, it may be
-worth to give a try to master. I still didn't have time to catch up on all
-the TCTI dynamic loading changes so I can't say if #330 is related to this
-issue or not.
+Matthias
 
-> Dan
-
-Best regards,
 -- =
 
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
+Matthias Gerstner <matthias.gerstner(a)suse.de>
+Dipl.-Wirtsch.-Inf. (FH), Security Engineer
+https://www.suse.com/security
+Telefon: +49 911 740 53 290
+GPG Key ID: 0x14C405C971923553
 
---===============7192437344039208810==--
+SUSE Linux GmbH
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nuernberg)
+
+--===============6729608383931160355==
+Content-Type: application/pgp-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="signature.asc"
+
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KVmVyc2lvbjogR251UEcgdjIKCmlRSWNCQUVC
+QWdBR0JRSmFqcmpjQUFvSkVCVEVCY2x4a2pWVDN6a1AvUjR0WURSdGtMTmJYNjBEYnVEaXNVbHoK
+MVhUaUlMUXJ4TWNVWVFSUnU1aldkMEczWHIyOFhjbUlXOUM0eGFTTmk4MjZOWlZnemkweVhiaU1O
+dlJtTjFWMAplRWNsbmhwNkNNejhtUndpUldZU0NPQWdoNDhJS2pwYk1OcEhpZ1haWElNSEkyWjlK
+RlFTMW93ZnM1KzhhK000CktERU9qblNvNnlJeDQrdkZ6WS9DWkNaSisxTGVmVElvV1MraDRXYWpr
+QWx4a1ZuUkpHL3h3VTdYT2Flb1F3eTkKR3NVYS82akhlZFNhWmZkMHR6Yk9GQmIwMzVyVTJoWlhX
+bmJkSjVQaUhqUWRKUjlhb2ZnaDkzSDJYL2JjWC8vcwpGY1NUN2V4WUkwUUNxZUFIOTNMVVB0aU1H
+akdXaEoxUytxcWlIQTJzVml1TXBzVjd3RGNKRzV1eFJTcG1MRmZpCktSMSsvZ3FUUDIxNTZxbTdo
+NFE2Y3NFMDVqanVjeXN2amVUU1FEWnVoWmVpalRvVEF2UVVPeGs4czM2UjdrTTEKVkQ1WkhKeHpa
+dVZNRFhNU2hHNjhsb0lQaFlFMWk2ZEt6eFlCL1FpbkJUU0s2R0pCNmkwc0E2TWlkRHE1OU0vSQpH
+b1pMaXFqYzFTMEk3YStFN29Na2k4bWJnc0Vrd0hIY0IzaG1lblRmSHBaaTFGYWJZRkQrUHpNd25J
+TGk5bEJSClZRQUxHTVJlcTFYVy9zN2RQU2cyazdORldia3Q0ZzVHN0pKMnBpeFlFTHVUN3k0QWZW
+blYySlRJd2xvOURsWUkKYXBCQUM5S3BIV0FvWEUyQXg1UXVLc2lVSVk5QkVEQS9xY2Z1WlhLeXJh
+cEh2cnhCOXd1VGEvTnM3cEhSZitxZApvNkl4cGxjTk1Ed2xzQTl6ZWVRZQo9ODVZYwotLS0tLUVO
+RCBQR1AgU0lHTkFUVVJFLS0tLS0K
+
+--===============6729608383931160355==--
 
