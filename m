@@ -1,257 +1,332 @@
-Content-Type: multipart/mixed; boundary="===============1359664009812312887=="
+Content-Type: multipart/mixed; boundary="===============8321228899129082298=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: Philip Tricca <philip.b.tricca at intel.com>
 Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
-Date: Fri, 23 Feb 2018 17:23:04 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FEEC8F2@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 207C810BE4BA2440832668E0F208BFD3AF644B@ORSMSX108.amr.corp.intel.com
+Date: Fri, 23 Feb 2018 11:49:34 -0800
+Message-ID: <20180223194934.GC6409@intel.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563FEEC8F2@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1359664009812312887==
+--===============8321228899129082298==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-
-
-> -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Anderson, Da=
-niel
-> Sent: Thursday, February 22, 2018 2:14 PM
-> To: Javier Martinez Canillas <javierm(a)redhat.com>; tpm2(a)lists.01.org
-> Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
+On Fri, Feb 23, 2018 at 05:23:04PM +0000, Roberts, William C wrote:
 > =
-
-> I finally got tpm2_tools talking to tpm2.
-> =
-
-> The remaining tpm2-abrmd problems:
-> =
-
-> 1. To use the simulator, you do *NOT* use: tpm2-abrmd --tcti socket This =
-worked
-> for me: tpm2-abrmd --tcti=3Dsocket (it is mentioned in an example in the =
-tpm2-
-> abrmd(8) man page, although not mentioned that it's for the simulator).
-
-Yeah the socket tcti is a terrible name. It's specific to the simulator.
 
 > =
 
-> 2. Also, I had to su to tss to start it (another non-root user or root us=
-er does not
-> work).
+> > -----Original Message-----
+> > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Anderson, =
+Daniel
+> > Sent: Thursday, February 22, 2018 2:14 PM
+> > To: Javier Martinez Canillas <javierm(a)redhat.com>; tpm2(a)lists.01.org
+> > Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
+> > =
 
-This is dbus. There's a few ways to do this, I think the easiest is to laun=
-ch it on
-a session bus via dbus-launch:
-https://dbus.freedesktop.org/doc/dbus-launch.1.html
+> > I finally got tpm2_tools talking to tpm2.
+> > =
 
-dbus-launch tpm2-abrmd --tcti=3Dlibtcti-socket.so
+> > The remaining tpm2-abrmd problems:
+> > =
 
-The other way is to use the system bus, that config file
-For abrmd on Ubuntu gets installed to:
-/etc/dbus-1/system.d/tpm2-abrmd.conf
-
-You can either use the tss user that is defined (you need to create this)
-And then run abrmd as the tss user, or hack that confide and allow
-your current user to do it:
-I added this to bus config:
-  <policy user=3D"wcrobert">
-    <allow own=3D"com.intel.tss2.Tabrmd"/>
-  </policy>
-
-Abrmd init also has options for bus-type, not sure offhand how to invoke it.
-
+> > 1. To use the simulator, you do *NOT* use: tpm2-abrmd --tcti socket Thi=
+s worked
+> > for me: tpm2-abrmd --tcti=3Dsocket (it is mentioned in an example in th=
+e tpm2-
+> > abrmd(8) man page, although not mentioned that it's for the simulator).
 > =
 
-> $ tpm2-tools/tools/tpm2_getrandom 8
-> 0x6F 0xA7 0xE0 0x28 0x98 0x33 0x62 0x78
+> Yeah the socket tcti is a terrible name. It's specific to the simulator.
+
+I made an 'issue' for this 5 months back:
+
+https://github.com/tpm2-software/tpm2-tss/issues/556
+
+It's on the 2.0 task list and will likely be the last part of the TCTI
+related PRs I've been pumping out.
+
+Having someone walk through the documentation and organize some data w/r
+to what we're missing and what we need to add would be helpful. Seems
+like Dan's recent airing of greviences make him imminently qualified
+for the job :)
+
+> > 2. Also, I had to su to tss to start it (another non-root user or root =
+user does not
+> > work).
 > =
 
-> -----Original Message-----
-> From: Anderson, Daniel
-> Sent: Thursday, February 22, 2018 9:18 AM
-> To: 'Javier Martinez Canillas' <javierm(a)redhat.com>; tpm2(a)lists.01.org
-> Subject: RE: [tpm2] TCTI initialization fails with error 0xc000b
-> =
+> This is dbus. There's a few ways to do this, I think the easiest is to la=
+unch it on
+> a session bus via dbus-launch:
+> https://dbus.freedesktop.org/doc/dbus-launch.1.html
 
-> Javier,
-> Thanks for your reply--it is really useful as there are multiple undocume=
-nted
-> options I need to use.  I am using MS Outlook which is lame for inline re=
-plies,  so
-> I'll manually mark it with "dan> "
-> =
+There are a few things at play here. On the master branch the daemon
+will refuse to run as the root user. This was a feature requested &
+implemented by Matthias @ Suse. It can be overriden on the command line
+as documented in the appropriate man page:
+https://github.com/tpm2-software/tpm2-abrmd/blob/master/man/tpm2-abrmd.8.in=
+#L42
 
-> Dan
-> =
+> dbus-launch tpm2-abrmd --tcti=3Dlibtcti-socket.so
 
-> -----Original Message-----
-> From: Javier Martinez Canillas [mailto:javierm(a)redhat.com]
-> Sent: Thursday, February 22, 2018 8:52 AM
-> To: Anderson, Daniel <daniel.anderson(a)intel.com>; tpm2(a)lists.01.org
-> Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
-> =
+`dbus-launch` should only be necessary if you're on a system that
+doesn't have a session bus setup for your user. This is the case for
+remote / ssh logins but every graphical login I've ever seen creates a
+session bus for the user @ login. We use `dbus-launch` heavily for
+testing on travis so that we can run the daemon as an unprivileged
+(and unknown) user running the build in a container and in parallel:
 
-> Hello Dan,
-> =
+https://github.com/tpm2-software/tpm2-abrmd/blob/master/.travis.yml#L89
 
-> On 02/22/2018 05:01 PM, Anderson, Daniel wrote:
+But the ability to run the daemon on the session bus was only added for
+testing purposes and the common use case should be installing the dbus
+config to the distro-appropriate location and having systemd run the
+daemon on the system bus.
+
+> The other way is to use the system bus, that config file
+> For abrmd on Ubuntu gets installed to:
+> /etc/dbus-1/system.d/tpm2-abrmd.conf
+
+This is the "right" (and default) way to run the daemon in the most
+common configuration (being started on boot by systemd, or on demand by
+dbus). Getting the source build to install the file there takes a bit of
+autotools knowledge but it's all documented by the upstream GNU project:
+https://www.gnu.org/prep/standards/html_node/Directory-Variables.html
+
+> You can either use the tss user that is defined (you need to create this)
+> And then run abrmd as the tss user, or hack that confide and allow
+> your current user to do it:
+> I added this to bus config:
+>   <policy user=3D"wcrobert">
+>     <allow own=3D"com.intel.tss2.Tabrmd"/>
+>   </policy>
+
+Not the hack I'd suggest but it gets the job done :)
+
+> Abrmd init also has options for bus-type, not sure offhand how to invoke =
+it.
+
+The configuration options for the TCTI have bitrotted a bit
+unfortunately in the run up to the 2.0 release from the tpm2-tss repo.
+I've made a few tickets for this:
+
+https://github.com/tpm2-software/tpm2-abrmd/issues/340
+https://github.com/tpm2-software/tpm2-abrmd/issues/341
+
+and would gladly take patches to help bring the docs up to speed. The
+existing initialization functions are documented here:
+https://github.com/tpm2-software/tpm2-abrmd/blob/master/man/tss2_tcti_tabrm=
+d_init.3.in
+
+Also worth noting that I've been pushing a bunch of cleanup /
+refactoring patches to the TCTIs this week. Part of this has been
+improving the debug output from these libraries so be sure to dial
+up the logging to get yourself more data for bug reports / github
+issues.
+
+We can add a wiki page with debugging strategies to our documentation
+wish list too.
+
+Philip
+
+> > $ tpm2-tools/tools/tpm2_getrandom 8
+> > 0x6F 0xA7 0xE0 0x28 0x98 0x33 0x62 0x78
+> > =
+
+> > -----Original Message-----
+> > From: Anderson, Daniel
+> > Sent: Thursday, February 22, 2018 9:18 AM
+> > To: 'Javier Martinez Canillas' <javierm(a)redhat.com>; tpm2(a)lists.01.=
+org
+> > Subject: RE: [tpm2] TCTI initialization fails with error 0xc000b
+> > =
+
 > > Javier,
-> > Thanks!
-> >
-> > The version is the latest source as of the message--I pulled the latest=
- source
-> and rebuilt several times.
-> =
+> > Thanks for your reply--it is really useful as there are multiple undocu=
+mented
+> > options I need to use.  I am using MS Outlook which is lame for inline =
+replies,  so
+> > I'll manually mark it with "dan> "
+> > =
 
-> Ok, I'm also building today's master branch for all projects.
-> =
+> > Dan
+> > =
 
-> > I will try again today and see if there has been a fix in the past week.
-> > There is no /dev/tpm--I am using the simulator and specify that in the =
-options.
-> =
+> > -----Original Message-----
+> > From: Javier Martinez Canillas [mailto:javierm(a)redhat.com]
+> > Sent: Thursday, February 22, 2018 8:52 AM
+> > To: Anderson, Daniel <daniel.anderson(a)intel.com>; tpm2(a)lists.01.org
+> > Subject: Re: [tpm2] TCTI initialization fails with error 0xc000b
+> > =
 
-> I didn't see the option specified in the command you shared in this threa=
-d.
-> You have to run with tpm2-abrmd --tcti socket.
-> =
+> > Hello Dan,
+> > =
 
-> dan> OK. That may be the missing option.  The "tpm2-abrmd --tcti socket" =
-option
-> is not mentioned anywhere in dan> the INSTALL.md or README.md files.
-> dan> I found a tpm2-abrmd man page with several examples, but it doesn't
-> mention which one to use for the dan> simulator.
-> =
+> > On 02/22/2018 05:01 PM, Anderson, Daniel wrote:
+> > > Javier,
+> > > Thanks!
+> > >
+> > > The version is the latest source as of the message--I pulled the late=
+st source
+> > and rebuilt several times.
+> > =
 
-> dan> Also, since tpm2-abrmd is started automatically by systemd, apparent=
-ly,
-> how does one add this option dan> (whatever the correct syntax) to the sy=
-stem
-> configuration?
-> =
+> > Ok, I'm also building today's master branch for all projects.
+> > =
 
-> =
+> > > I will try again today and see if there has been a fix in the past we=
+ek.
+> > > There is no /dev/tpm--I am using the simulator and specify that in th=
+e options.
+> > =
 
-> > There may be another option or setting that I am missing though.
-> > Here is what I build with:
-> >
-> > For tpm2-tss:
-> > configure --enable-unit
-> >         --with-simulatorbin=3D$TPM_SERVER
-> =
+> > I didn't see the option specified in the command you shared in this thr=
+ead.
+> > You have to run with tpm2-abrmd --tcti socket.
+> > =
 
-> Only these are valid options for tpm2-tss, from here are tpm2-abrmd optio=
-ns:
-> =
+> > dan> OK. That may be the missing option.  The "tpm2-abrmd --tcti socket=
+" option
+> > is not mentioned anywhere in dan> the INSTALL.md or README.md files.
+> > dan> I found a tpm2-abrmd man page with several examples, but it doesn't
+> > mention which one to use for the dan> simulator.
+> > =
 
-> >         --with-dbuspolicydir=3D/etc/dbus-1/system.d
-> >         --with-systemdsystemunitdir=3D/lib/systemd/system
-> >         --with-systemdpresetdir=3D/lib/systemd/system-preset
-> >         --with-udevrulesdir=3D/etc/udev/rules.d
-> >         --with-sysdefaultdir=3D/etc/default
-> >         --with-dbusdatadir=3D/usr/share/dbus-1/system-services
-> >
-> > For tpm2-abrmd:
-> > configure --enable-unit
-> > --with-simulatorbin=3D$HOME/tpm/simulator/src/tpm_server
-> >
-> =
+> > dan> Also, since tpm2-abrmd is started automatically by systemd, appare=
+ntly,
+> > how does one add this option dan> (whatever the correct syntax) to the =
+system
+> > configuration?
+> > =
 
-> As mentioned, you either got the configure options mixed up or are using =
-it
-> wrong.
-> =
+> > =
 
-> There are my configure options for tpm2-tss, tpm2-abrmd and tpm2-tools:
-> =
+> > > There may be another option or setting that I am missing though.
+> > > Here is what I build with:
+> > >
+> > > For tpm2-tss:
+> > > configure --enable-unit
+> > >         --with-simulatorbin=3D$TPM_SERVER
+> > =
 
-> tpm2-tss:
-> =
+> > Only these are valid options for tpm2-tss, from here are tpm2-abrmd opt=
+ions:
+> > =
 
-> $ ./configure --prefix=3D/usr
-> =
+> > >         --with-dbuspolicydir=3D/etc/dbus-1/system.d
+> > >         --with-systemdsystemunitdir=3D/lib/systemd/system
+> > >         --with-systemdpresetdir=3D/lib/systemd/system-preset
+> > >         --with-udevrulesdir=3D/etc/udev/rules.d
+> > >         --with-sysdefaultdir=3D/etc/default
+> > >         --with-dbusdatadir=3D/usr/share/dbus-1/system-services
+> > >
+> > > For tpm2-abrmd:
+> > > configure --enable-unit
+> > > --with-simulatorbin=3D$HOME/tpm/simulator/src/tpm_server
+> > >
+> > =
 
-> tpm2-abrmd:
-> =
+> > As mentioned, you either got the configure options mixed up or are usin=
+g it
+> > wrong.
+> > =
 
-> $ ./configure --with-dbuspolicydir=3D/etc/dbus-1/system.d --with-
-> udevrulesdir=3D/usr/lib/udev/rules.d --with-
-> systemdsystemunitdir=3D/usr/lib/systemd/system --libdir=3D/usr/lib64
-> =
+> > There are my configure options for tpm2-tss, tpm2-abrmd and tpm2-tools:
+> > =
 
-> dan> This is useful. The systemdsystemunitdir (not mentioned in the READM=
-E or
-> INSTALL) should help.
-> =
+> > tpm2-tss:
+> > =
 
-> tpm2-tools
-> =
+> > $ ./configure --prefix=3D/usr
+> > =
 
-> $ ./configure --prefix=3D/usr
-> =
+> > tpm2-abrmd:
+> > =
 
-> > I cannot believe that anyone has tpm2-abrmd working without special han=
-d-
-> copied fixes. The com.intel.tss2.tabrmd.service for example is not instal=
-led in
-> /usr/share/dbus-1/system-services/ but in /usr/local/share/dbus-1/system-
-> services/.
-> >
-> =
+> > $ ./configure --with-dbuspolicydir=3D/etc/dbus-1/system.d --with-
+> > udevrulesdir=3D/usr/lib/udev/rules.d --with-
+> > systemdsystemunitdir=3D/usr/lib/systemd/system --libdir=3D/usr/lib64
+> > =
 
-> I think this is because you didn't specify a correct --with-dbuspolicydir=
- as
-> mentioned before. Another thing that you have to keep in mind, is that the
-> default D-Bus config only allows the tss and root user to acquire the
-> com.intel.tss2.Tabrmd D-Bus well-known name.
-> =
+> > dan> This is useful. The systemdsystemunitdir (not mentioned in the REA=
+DME or
+> > INSTALL) should help.
+> > =
 
-> So after installing latest master with these configure options, I just do:
-> =
+> > tpm2-tools
+> > =
 
-> $ ./tpm_server
-> =
+> > $ ./configure --prefix=3D/usr
+> > =
 
-> $ sudo -u tss /usr/local/sbin/tpm2-abrmd --tcti socket
-> =
+> > > I cannot believe that anyone has tpm2-abrmd working without special h=
+and-
+> > copied fixes. The com.intel.tss2.tabrmd.service for example is not inst=
+alled in
+> > /usr/share/dbus-1/system-services/ but in /usr/local/share/dbus-1/syste=
+m-
+> > services/.
+> > >
+> > =
 
-> dan> so you do not use system to start tpm2-abrmd.
-> =
+> > I think this is because you didn't specify a correct --with-dbuspolicyd=
+ir as
+> > mentioned before. Another thing that you have to keep in mind, is that =
+the
+> > default D-Bus config only allows the tss and root user to acquire the
+> > com.intel.tss2.Tabrmd D-Bus well-known name.
+> > =
 
-> $ tpm2_pcrlist -L sha1:0 -T abrmd
-> sha1:
->   0 : 0x0000000000000000000000000000000000000003
-> =
+> > So after installing latest master with these configure options, I just =
+do:
+> > =
 
-> And using the device TCTI also works for me:
-> =
+> > $ ./tpm_server
+> > =
 
-> $ sudo -u tss /usr/local/sbin/tpm2-abrmd --tcti device
-> =
+> > $ sudo -u tss /usr/local/sbin/tpm2-abrmd --tcti socket
+> > =
 
-> dan> neither tpm2-abrmd --tcti socket or tpm2-abrmd --tcti device is ment=
-ioned
-> in the README.md, INSTALL.md, or tpm2-abrmd(8) man page, so I'll add thos=
-e.
-> =
+> > dan> so you do not use system to start tpm2-abrmd.
+> > =
 
-> $ tpm2_pcrlist -L sha1:0 -T abrmd
-> sha1:
->   0 : 0xC72EC9E6CBC2B6A95F334DDDD6513981DA00F0C2
-> =
+> > $ tpm2_pcrlist -L sha1:0 -T abrmd
+> > sha1:
+> >   0 : 0x0000000000000000000000000000000000000003
+> > =
 
-> Best regards,
-> --
-> Javier Martinez Canillas
-> Software Engineer - Desktop Hardware Enablement Red Hat
+> > And using the device TCTI also works for me:
+> > =
+
+> > $ sudo -u tss /usr/local/sbin/tpm2-abrmd --tcti device
+> > =
+
+> > dan> neither tpm2-abrmd --tcti socket or tpm2-abrmd --tcti device is me=
+ntioned
+> > in the README.md, INSTALL.md, or tpm2-abrmd(8) man page, so I'll add th=
+ose.
+> > =
+
+> > $ tpm2_pcrlist -L sha1:0 -T abrmd
+> > sha1:
+> >   0 : 0xC72EC9E6CBC2B6A95F334DDDD6513981DA00F0C2
+> > =
+
+> > Best regards,
+> > --
+> > Javier Martinez Canillas
+> > Software Engineer - Desktop Hardware Enablement Red Hat
+> > _______________________________________________
+> > tpm2 mailing list
+> > tpm2(a)lists.01.org
+> > https://lists.01.org/mailman/listinfo/tpm2
 > _______________________________________________
 > tpm2 mailing list
 > tpm2(a)lists.01.org
 > https://lists.01.org/mailman/listinfo/tpm2
 
---===============1359664009812312887==--
+--===============8321228899129082298==--
 
