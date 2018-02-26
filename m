@@ -1,33 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============3432743802833751345=="
+Content-Type: multipart/mixed; boundary="===============3804069823433192669=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [tpm2-software/tpm2-tools] 031f72: Update README.md
-Date: Fri, 23 Feb 2018 15:26:50 -0800
-Message-ID: <5a90a33a34448_2ce62aaf7836fc0c16746a@hookshot-fe-b0febf1.cp1-iad.github.net.mail>
+Subject: [tpm2] [tpm2-software/tpm2-tools] ea9f94: tools: Fix typos in
+ tpm2_send and tpm2_tool
+Date: Mon, 26 Feb 2018 13:49:46 -0800
+Message-ID: <5a9480fa7919f_1e532ab4824bbc1426214@hookshot-fe-32b5f5b.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3432743802833751345==
+--===============3804069823433192669==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
   Branch: refs/heads/master
   Home:   https://github.com/tpm2-software/tpm2-tools
-  Commit: 031f72d938d8e5b952d9f9d75eee2dab8389a760
-      https://github.com/tpm2-software/tpm2-tools/commit/031f72d938d8e5b952=
-d9f9d75eee2dab8389a760
-  Author: William Roberts <william.c.roberts(a)intel.com>
-  Date:   2018-02-23 (Fri, 23 Feb 2018)
+  Commit: ea9f944051daa4c0ee61e52f0624361b24527ec1
+      https://github.com/tpm2-software/tpm2-tools/commit/ea9f944051daa4c0ee=
+61e52f0624361b24527ec1
+  Author: Manolis Ragkousis <manolis837(a)gmail.com>
+  Date:   2018-02-26 (Mon, 26 Feb 2018)
 
   Changed paths:
-    M README.md
+    M tools/tpm2_send.c
+    M tools/tpm2_tool.c
 
   Log Message:
   -----------
-  Update README.md
+  tools: Fix typos in tpm2_send and tpm2_tool
+
+Without this patch build fails with 'implicit declaration of function'.
+
+* tools/tpm2_send.c (tpm2_tool_onrun): Replace tss2_tcti_transmit with
+  Tss2_Tcti_Transmit.  Replace tss2_tcti_receive with Tss2_Tcti_Receive.
+* tools/tpm2_tool.c (tcti_teardown): Replace tss2_tcti_finalize with
+  Tss2_Tcti_Finalize.
+
+Signed-off-by: Manolis Ragkousis <manolis837(a)gmail.com>
 
 
 
---===============3432743802833751345==--
+--===============3804069823433192669==--
 
