@@ -1,37 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============8075528903883301560=="
+Content-Type: multipart/mixed; boundary="===============5630537144278712400=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: [tpm2] [ANNOUNCE] Brace yourself: API & ABI incompatible changes in
- coming!
-Date: Mon, 26 Feb 2018 15:39:42 -0800
-Message-ID: <20180226233942.GA2550@intel.com>
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
+Subject: [tpm2] tpm2-abrmd can't connect to IBM's tpm_server
+Date: Tue, 27 Feb 2018 18:51:40 +0000
+Message-ID: <4dbc7c4b20d5477c9b0df40ea74d5e1d@AZDC-MMB02.GD-MS.US>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8075528903883301560==
+--===============5630537144278712400==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+I'm trying to get tpm2-abrmd to connect to the IBM tpm_server simulator, as=
+ described in https://github.com/tpm2-software/tpm2-tools/wiki/Getting-Star=
+ted,  but it fails saying
 
-We're getting pretty close to an RC0 for the next major release of the
-TSS2 libraries. Before we can make RCo though there are a number of
-changes that still need to be made to the header files to bring them
-in line with the latest TPM2 and TSS2 specifications. We've just
-started rolling these out and during this time, due to the nature of
-the changes, we'll be breaking backward compatibility (API and ABI
-both).
+Failed to initialize device TCTI context: 0xa000a
 
-If you're following along at home you've probably seen changes to the
-TCTI headers and implemnetation happening in rapid succession over the
-last few days (when our CI isn't down). Expect similar changes to
-happen in the rest of the public headers over the course of this week.
-These changes will likely cause some issues for downstream projects but
-feel free to get on the list and we'll help sort things out.
+I've tried versions 1119 and 974 of tpm_server, but got the same result.  F=
+or tpm2-abrmd, I'm using version 1.2.0 from the tarball under 'Releases'.  =
+Netstat shows tpm_server is listening on ports 2322 and 2321, so I suspect =
+something is wrong on the tpm2-abrmd end.
 
-Regards,
-Philip
+Suggestions?
 
---===============8075528903883301560==--
+Peter
+
+
+
+--===============5630537144278712400==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDYWxp
+YnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9u
+cyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBp
+bjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWls
+eToiQ2FsaWJyaSIsInNhbnMtc2VyaWYiO30KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluawoJe21z
+by1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOmJsdWU7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJs
+aW5lO30KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkCgl7bXNvLXN0eWxlLXBy
+aW9yaXR5Ojk5OwoJY29sb3I6cHVycGxlOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnNw
+YW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsKCWZvbnQt
+ZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0No
+cERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxp
+YnJpIiwic2Fucy1zZXJpZiI7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBp
+bjsKCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtw
+YWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+Cjxv
+OnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2Vu
+ZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRp
+dCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94
+bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJsdWUiIHZs
+aW5rPSJwdXJwbGUiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5JJiM4MjE3O20gdHJ5aW5nIHRvIGdldCB0cG0yLWFicm1kIHRvIGNvbm5lY3QgdG8gdGhl
+IElCTSB0cG1fc2VydmVyIHNpbXVsYXRvciwgYXMgZGVzY3JpYmVkIGluCjxhIGhyZWY9Imh0dHBz
+Oi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvd2lraS9HZXR0aW5nLVN0YXJ0
+ZWQiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvd2lraS9HZXR0
+aW5nLVN0YXJ0ZWQ8L2E+LCAmbmJzcDtidXQgaXQgZmFpbHMgc2F5aW5nPG86cD48L286cD48L3A+
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj5GYWlsZWQgdG8gaW5pdGlhbGl6ZSBkZXZpY2UgVENUSSBjb250ZXh0OiAweGEwMDBh
+PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9w
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JJiM4MjE3O3ZlIHRyaWVkIHZlcnNpb25zIDExMTkgYW5k
+IDk3NCBvZiB0cG1fc2VydmVyLCBidXQgZ290IHRoZSBzYW1lIHJlc3VsdC4mbmJzcDsgRm9yIHRw
+bTItYWJybWQsIEkmIzgyMTc7bSB1c2luZyB2ZXJzaW9uIDEuMi4wIGZyb20gdGhlIHRhcmJhbGwg
+dW5kZXIgJiM4MjE2O1JlbGVhc2VzJiM4MjE3Oy4mbmJzcDsgTmV0c3RhdCBzaG93cyB0cG1fc2Vy
+dmVyIGlzIGxpc3RlbmluZyBvbiBwb3J0cyAyMzIyIGFuZCAyMzIxLCBzbyBJIHN1c3BlY3Qgc29t
+ZXRoaW5nIGlzCiB3cm9uZyBvbiB0aGUgdHBtMi1hYnJtZCBlbmQuPG86cD48L286cD48L3A+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5TdWdnZXN0aW9ucz88bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86
+cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlBldGVyIDxvOnA+PC9vOnA+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
+
+--===============5630537144278712400==--
 
