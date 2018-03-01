@@ -1,54 +1,193 @@
-Content-Type: multipart/mixed; boundary="===============5157855954175301647=="
+Content-Type: multipart/mixed; boundary="===============0582676976403669938=="
 MIME-Version: 1.0
 From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] tpm2-abrmd can't connect to IBM's tpm_server
-Date: Thu, 01 Mar 2018 00:53:22 +0100
-Message-ID: <b0d1a928-f6af-9e4a-98e3-2b12094a34a3@redhat.com>
-In-Reply-To: 4dbc7c4b20d5477c9b0df40ea74d5e1d@AZDC-MMB02.GD-MS.US
+Subject: Re: [tpm2] Simple (hopefully) git rebase question
+Date: Thu, 01 Mar 2018 01:16:40 +0100
+Message-ID: <c54481f3-2d28-8153-7fbb-7a4a566672bc@redhat.com>
+In-Reply-To: 207C810BE4BA2440832668E0F208BFD3AF7233@ORSMSX108.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5157855954175301647==
+--===============0582676976403669938==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Peter,
+Hello Dan,
 
-On 02/27/2018 07:51 PM, Scheie, Peter M wrote:
-> I'm trying to get tpm2-abrmd to connect to the IBM tpm_server simulator, =
-as described in https://github.com/tpm2-software/tpm2-tools/wiki/Getting-St=
-arted,  but it fails saying
+On 02/28/2018 10:03 PM, Anderson, Daniel wrote:
+> I am having trouble with git rebase.  It seems to be much more complex th=
+an it needs to be.  All I need to do is to merge commits=E2=80=94no conflic=
+ts, no undo.
+> =
+
+> So I edited the rebase file below and changed the last =E2=80=9Cpick=E2=
+=80=9D to =E2=80=9Csquash=E2=80=9D and moved the previous =E2=80=9Cpick=E2=
+=80=9D down two lines (because I think the commits I am rebasing must be to=
+gether).  Here is the session with the file after editing (changes in bold,=
+ deleted lines underlined bold).
 > =
 
 
-That document is pretty outdated, I've filled an issue to take care of it:
+I'm using a plain text email client so hard to tell which ones are in bold =
+:)
 
-https://github.com/tpm2-software/tpm2-tools/issues/915
+> Any hints?
+> =
 
-> Failed to initialize device TCTI context: 0xa000a
+> Dan
+> =
+
+> =
+
+> =
+
+> $ git rebase --abort
+> =
+
+> $ git rebase -i HEAD~10
+> =
+
+> pick 1c68b3d tabrmd: Set default tcti & conf string in option structure i=
+nitialization.
+> =
+
+> pick 98a3dd1 TctiDynamic: Fix bad default TCTI library string.
+> =
+
+> pick 6f8e54d ci: Install libgcrypt development package.
+> =
+
+> pick 52de684 tabrmd: Combine --tcti and --tcti-conf string.
+> =
+
+> pick 377792a tcti-util: Allow shortened TCTI library names to align with =
+the tools.
+> =
+
+> pick 5c4be78 D-Bus: install a service file to allow on-demand systemd uni=
+t activation
+> =
+
+> pick 84e9e9a tcti: fix build error due wrong TCTI transmit functions sign=
+atures
+> =
+
+> pick fb9bc17 Update our TCTI implementation to align with upstream change=
+s.
+> =
+
+> pick 1317cbe D-Bus: install a service file to allow on-demand systemd uni=
+t activation
 > =
 
 
-Yes, my guess is that this is related to the fact that the tpm2-abrmd defau=
-lt
-TCTI is the device one, so if you don't have a TPM device or are running wi=
+All these commits are already in the master branch. You should just rebase =
+your
+commits. Although it doens't hurt, I don't see why not just rebasing yours.
+
+> pick 70c9fac INSTALL.md: Document Configure Flags Better [Moved down 2 li=
+nes]
+> =
+
+> pick 5c6ec7f tcti: fix build error due wrong TCTI transmit functions sign=
+atures
+>
+
+This one is strange... it looks like my commit:
+
+  84e9e9a tcti: fix build error due wrong TCTI transmit functions signatures
+
+But with a different SHA-1... how did it ended there?
+
+> pick 3dbc9f2 Update our TCTI implementation to align with upstream change=
+s.
+>
+
+And this seems to be Philip's
+
+  fb9bc17 Update our TCTI implementation to align with upstream changes.
+
+Again with a different SHA-1. =
+
+
+> pick 70c9fac INSTALL.md: Document Configure Flags Better
+>
+
+And this is a duplication of your commit 70c9fac listed above, but again wi=
 th
-an user without access to the TPM character device, then will fail with that
-error code.
+a different SHA-1.
 
-> I've tried versions 1119 and 974 of tpm_server, but got the same result. =
- For tpm2-abrmd, I'm using version 1.2.0 from the tarball under 'Releases'.=
-  Netstat shows tpm_server is listening on ports 2322 and 2321, so I suspec=
-t something is wrong on the tpm2-abrmd end.
->
-> Suggestions?
+> pick squash 23515f7 INSTALL.md: Document Configure Flags Better
 >
 
-Can you share the command you are using to start the tpm2-abrmd? You need to
-pass the --tcti socket option, i.e:
+And this. I can't see the commit content, I just say this because the subje=
+ct
+lines "INSTALL.md: Document Configure Flags Better" are the same.
 
-sudo -u tss /usr/local/sbin/tpm2-abrmd --tcti socket
+BTW, you didn't replace pick for squash but have both "pick squash" there.
+
+> # Rebase 1743dca..8e6b37c onto 1743dca (13 command(s))
+> =
+
+> =
+
+> =
+
+> =
+
+> =
+
+> Rebasing (6/13)Rebasing (7/13)Rebasing (8/13)Rebasing (9/13)The previous =
+cherry-pick is now empty, possibly due to conflict resolution.
+> =
+
+> If you wish to commit it anyway, use:
+> =
+
+> =
+
+> =
+
+>     git commit --allow-empty
+> =
+
+> =
+
+> =
+
+> Otherwise, please use 'git reset'
+> =
+
+> interactive rebase in progress; onto 1743dca
+> =
+
+> Last commands done (9 commands done):
+> =
+
+>    pick fb9bc17 Update our TCTI implementation to align with upstream cha=
+nges.
+> =
+
+>    pick 1317cbe D-Bus: install a service file to allow on-demand systemd =
+unit activation
+> =
+
+> Next commands to do (4 remaining commands):
+> =
+
+>    pick 5c6ec7f tcti: fix build error due wrong TCTI transmit functions s=
+ignatures
+>
+
+So the empty cherry-pick is because as mentioned, this commit already exists
+in the branch. I don't know why it ended there but I guess it may have some=
+thing
+to do with a merge you did before.
+
+It would be good if you can start from a fresh checkout and share the exact=
+ list
+of commands you executed to see how you ended in that state.
 
 Best regards,
 -- =
@@ -57,5 +196,5 @@ Javier Martinez Canillas
 Software Engineer - Desktop Hardware Enablement
 Red Hat
 
---===============5157855954175301647==--
+--===============0582676976403669938==--
 
