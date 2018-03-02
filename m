@@ -1,35 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============6703726179307589911=="
+Content-Type: multipart/mixed; boundary="===============2242064536402470443=="
 MIME-Version: 1.0
 From: GitHub <noreply at github.com>
-Subject: [tpm2] [tpm2-software/tpm2-tools] 68f740: Fix build status link
-Date: Thu, 01 Mar 2018 15:14:31 -0800
-Message-ID: <5a988957a2ec4_2b622b1a72311c003304e@hookshot-fe-d252ca1.cp1-iad.github.net.mail>
+Subject: [tpm2] [tpm2-software/tpm2-tools] 5baac1: .ci/docker.env: fix
+ coveralls
+Date: Thu, 01 Mar 2018 16:25:05 -0800
+Message-ID: <5a9899e1c9ba5_1fa62ac94da89bfc120e4@hookshot-fe-d2afb11.cp1-iad.github.net.mail>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6703726179307589911==
+--===============2242064536402470443==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-  Branch: refs/heads/master
+  Branch: refs/heads/master-fix-coveralls
   Home:   https://github.com/tpm2-software/tpm2-tools
-  Commit: 68f74069510514d87929b7cc224fe86998b807cc
-      https://github.com/tpm2-software/tpm2-tools/commit/68f74069510514d879=
-29b7cc224fe86998b807cc
+  Commit: 5baac10e752e11d20b91cc0ef9d3a66cf0816c00
+      https://github.com/tpm2-software/tpm2-tools/commit/5baac10e752e11d20b=
+91cc0ef9d3a66cf0816c00
   Author: William Roberts <william.c.roberts(a)intel.com>
   Date:   2018-03-01 (Thu, 01 Mar 2018)
 
   Changed paths:
-    M README.md
+    M .ci/docker.env
+    M .ci/docker.run
 
   Log Message:
   -----------
-  Fix build status link
+  .ci/docker.env: fix coveralls
 
-The link was still heading to intel and not tpm2-software, fix this.
+Add COVERALLS_REPO_TOKEN so it's passed through
+to docker and the coverage data can be uploaded.
+
+Add the location of where coveralls binary is installed
+to PATH so it can be found.
+
+Signed-off-by: William Roberts <william.c.roberts(a)intel.com>
 
 
 
---===============6703726179307589911==--
+--===============2242064536402470443==--
 
