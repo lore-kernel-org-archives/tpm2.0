@@ -1,31 +1,28 @@
-Content-Type: multipart/mixed; boundary="===============9093804849265967448=="
+Content-Type: multipart/mixed; boundary="===============5617117796912221126=="
 MIME-Version: 1.0
 From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] [ANNOUNCE] tpm2-tss version 1.4.0 RC0 tagged
-Date: Mon, 05 Mar 2018 11:15:25 -0800
-Message-ID: <20180305191525.GB19790@intel.com>
-In-Reply-To: 20180223200624.GA2386@intel.com
+Subject: [tpm2] [ANNOUNCE] tpm2-abrmd version 1.3.1
+Date: Thu, 08 Mar 2018 11:04:39 -0800
+Message-ID: <20180308190439.GA31257@intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9093804849265967448==
+--===============5617117796912221126==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2018 at 12:06:24PM -0800, Philip Tricca wrote:
-> We're starting the release candidate cycle for another minor release
-> from the tpm2-tss repo. The changelog should be up to date with info
-> about the minor changes that have gone into this release. Please
-> provide whatever feedback you have and we can roll the RCs forward
-> as necessary.
+Hello,
 
-In the week since this RC was posted no issues were raised. The signed
-release is now here:
-https://github.com/tpm2-software/tpm2-tss/releases/tag/1.4.0
+The recent 1.3.0 release of the tpm2-abrmd had a packaging error that
+slipped through the cracks. Many thanks to Javier for the fix. Now that
+this is resolved I've created a 1.3.1_rc0 tag in the git repo to mark
+the beginning of the review process for the 1.3.1 bugfix release:
+
+https://github.com/tpm2-software/tpm2-abrmd/releases/tag/1.3.1_rc0
 
 Regards,
 Philip
 
---===============9093804849265967448==--
+--===============5617117796912221126==--
 
