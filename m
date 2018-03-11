@@ -1,28 +1,25 @@
-Content-Type: multipart/mixed; boundary="===============5617117796912221126=="
+Content-Type: multipart/mixed; boundary="===============8595300387586395811=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: [tpm2] [ANNOUNCE] tpm2-abrmd version 1.3.1
-Date: Thu, 08 Mar 2018 11:04:39 -0800
-Message-ID: <20180308190439.GA31257@intel.com>
+From: Sven Schwermer <sven at svenschwermer.de>
+Subject: [tpm2] ESAPI Release & FAPI Implementation
+Date: Sun, 11 Mar 2018 19:36:52 +0100
+Message-ID: <b2614c11-fea5-f6ac-927a-055ce8913505@svenschwermer.de>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5617117796912221126==
+--===============8595300387586395811==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi!
 
-The recent 1.3.0 release of the tpm2-abrmd had a packaging error that
-slipped through the cracks. Many thanks to Javier for the fix. Now that
-this is resolved I've created a 1.3.1_rc0 tag in the git repo to mark
-the beginning of the review process for the 1.3.1 bugfix release:
+I was wondering when there will be a tpm2-tss release including the
+ESAPI layer? Secondly, I couldn't find an open source implementation of
+the highest API layer (FAPI). Are there any out there? Will this be or
+is this in the scope of tpm2-tss?
 
-https://github.com/tpm2-software/tpm2-abrmd/releases/tag/1.3.1_rc0
+Thanks, Sven
 
-Regards,
-Philip
-
---===============5617117796912221126==--
+--===============8595300387586395811==--
 
