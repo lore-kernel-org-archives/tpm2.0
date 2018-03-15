@@ -1,161 +1,244 @@
-Content-Type: multipart/mixed; boundary="===============6540890981319447024=="
+Content-Type: multipart/mixed; boundary="===============0976614365028816018=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: Ian Oliver <ian.justin.oliver at gmail.com>
 Subject: Re: [tpm2] tpm2_quote and "safe"
-Date: Thu, 15 Mar 2018 17:57:23 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FEF40F7@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CAAxBZJuw-tw5QxJ2rr7BbH1Y9EDq6s=Kv84XxK8cWjUmRz4imw@mail.gmail.com
+Date: Thu, 15 Mar 2018 22:26:44 +0200
+Message-ID: <CAAxBZJs7hVnc2u83gJCc=G7u5ML_xQpchg1m215VThMmdO=VXA@mail.gmail.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563FEF40F7@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6540890981319447024==
+--===============0976614365028816018==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I don=E2=80=99t see that safe value coming out of quote. The only reference=
- I can find is in the spec is in regards to clock.
+Thanks William,
 
-Can you be more specific?
+We can only find a reference to the clock too which is what has us a little
+confused.
 
+Basically we can takes quotes, within that structure is the TPMS_CLOCK_INFO
+struct which contains field safe: TPMI_YES_NO .  We can take a series of
+quotes, say, a few minutes apart and see that particular value change to 1
+and then back to 0.
 
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Ian Oliver
-Sent: Tuesday, March 13, 2018 6:11 AM
-To: tpm2(a)lists.01.org
-Subject: [tpm2] tpm2_quote and "safe"
+The TPM is not being shutdown during this time, ie: the whole machine is
+powered on and running normally and thus no reason to suspect that the
+clock is in some inconsistent state as according to the spec.
 
-Hi,
-other than various clock errors what causes the safe flag to be set to 1 as=
- written into the output of tpm2_quote ?
-We're seeing some odd behaviour from some machines where safe is always set=
- to 1 (Lenovo laptop) and on other servers occasionally safe is set to 1 an=
-d then returning to 0 on subsequent quotes.
-For example, we might take a number of quotes over time, eg: 5 minutes apar=
-t. One of those quotes will have safe set to 1, the others are all 0.  Duri=
-ng this time the machine will *not* have experienced a reboot/reset nor - a=
-s far as we can tell - any form of powersave or shutdown. We've also notice=
-d that safe gets set to 1 only on some quotes, eg: when quoting sha256:16,1=
-7,18 for the DRTM measurements.
+Is it possible that the TPM is being powered off by the CPU in some power
+saving mode and therefore causing the current clock value not to be saved
+and reread correctly when the TPM is restarted?  We've a script that parses
+the quote and maps this the JSON - we've checked that and it is functioning
+fine (across half a dozen machines and literally 1000s of quotes now), the
+quote value obtained from the TPM isn't being changed in anyway (we check
+the signature against the AK), therefore our hunch is that something very
+low down in the system is causing this.
 
-The machines are all Xeon-E5 based servers, TPM2.0,  tpm2_tools 1.3-rc2 ins=
-talled, Ubuntu 17.04 with 4.13 kernel
-Any information appreciated here,
-thanks
+I can send details of the machines and processors off-list if you want.
+
+t.
+
 Ian
 
---
-Dr. Ian Oliver
+On 15 March 2018 at 19:57, Roberts, William C <william.c.roberts(a)intel.co=
+m>
+wrote:
+
+> I don=E2=80=99t see that safe value coming out of quote. The only referen=
+ce I can
+> find is in the spec is in regards to clock.
+>
+>
+>
+> Can you be more specific?
+>
+>
+>
+>
+>
+> *From:* tpm2 [mailto:tpm2-bounces(a)lists.01.org] *On Behalf Of *Ian Oliv=
+er
+> *Sent:* Tuesday, March 13, 2018 6:11 AM
+> *To:* tpm2(a)lists.01.org
+> *Subject:* [tpm2] tpm2_quote and "safe"
+>
+>
+>
+> Hi,
+>
+> other than various clock errors what causes the safe flag to be set to 1
+> as written into the output of tpm2_quote ?
+>
+> We're seeing some odd behaviour from some machines where safe is always
+> set to 1 (Lenovo laptop) and on other servers occasionally safe is set to=
+ 1
+> and then returning to 0 on subsequent quotes.
+>
+> For example, we might take a number of quotes over time, eg: 5 minutes
+> apart. One of those quotes will have safe set to 1, the others are all 0.
+> During this time the machine will *not* have experienced a reboot/reset n=
+or
+> - as far as we can tell - any form of powersave or shutdown. We've also
+> noticed that safe gets set to 1 only on some quotes, eg: when quoting
+> sha256:16,17,18 for the DRTM measurements.
+>
+>
+>
+> The machines are all Xeon-E5 based servers, TPM2.0,  tpm2_tools 1.3-rc2
+> installed, Ubuntu 17.04 with 4.13 kernel
+>
+> Any information appreciated here,
+>
+> thanks
+>
+> Ian
+>
+>
+> --
+>
+> *Dr. Ian Oliver*
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+>
+> Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
+> * Twitter: @i_j_oliver*
+>
+
+
+
+-- =
+
+*Dr. Ian Oliver*
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D
-Privacy Engineering:  via Amazon<http://www.amazon.co.uk/dp/1497569710>
-Twitter: @i_j_oliver
+Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
+*Twitter: @i_j_oliver*
 
---===============6540890981319447024==
+--===============0976614365028816018==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
-Zm9udC1zaXplOjEyLjBwdDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZjt9
-DQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCglj
-b2xvcjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFu
-Lk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpw
-dXJwbGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpzcGFuLkVtYWlsU3R5bGUxNw0K
-CXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1yZXBseTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIs
-c2Fucy1zZXJpZjsNCgljb2xvcjojMUY0OTdEO30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHls
-ZS10eXBlOmV4cG9ydC1vbmx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30N
-CkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXplOjguNWluIDExLjBpbjsNCgltYXJnaW46MS4waW4g
-MS4waW4gMS4waW4gMS4waW47fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9u
-MTt9DQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0
-cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1b
-aWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRt
-YXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5k
-aWZdLS0+DQo8L2hlYWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIgdmxpbms9InB1
-cnBsZSI+DQo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZx
-dW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPkkgZG9u4oCZdCBzZWUgdGhhdCBzYWZlIHZh
-bHVlIGNvbWluZyBvdXQgb2YgcXVvdGUuIFRoZSBvbmx5IHJlZmVyZW5jZSBJIGNhbiBmaW5kIGlz
-IGluIHRoZSBzcGVjIGlzIGluIHJlZ2FyZHMgdG8gY2xvY2suPG86cD48L286cD48L3NwYW4+PC9w
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPjxv
-OnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0
+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2PjxkaXY+PGRpdj5UaGFua3MgV2lsbGlhbSw8YnI+PGJy
+PjwvZGl2PldlIGNhbiBvbmx5IGZpbmQgYSByZWZlcmVuY2UgdG8gdGhlIGNsb2NrIHRvbyB3aGlj
+aCBpcyB3aGF0IGhhcyB1cyBhIGxpdHRsZSBjb25mdXNlZC48YnI+PGJyPjwvZGl2PkJhc2ljYWxs
+eSB3ZSBjYW4gdGFrZXMgcXVvdGVzLCB3aXRoaW4gdGhhdCBzdHJ1Y3R1cmUgaXMgdGhlIApUUE1T
+X0NMT0NLX0lORk8KCnN0cnVjdCB3aGljaCBjb250YWlucyBmaWVsZCBzYWZlOgpUUE1JX1lFU19O
+TwoKLsKgIFdlIGNhbiB0YWtlIGEgc2VyaWVzIG9mIHF1b3Rlcywgc2F5LCBhIGZldyBtaW51dGVz
+IGFwYXJ0IGFuZCBzZWUgdGhhdCBwYXJ0aWN1bGFyIHZhbHVlIGNoYW5nZSB0byAxIGFuZCB0aGVu
+IGJhY2sgdG8gMC48YnI+PGJyPjwvZGl2PlRoZSBUUE0gaXMgbm90IGJlaW5nIHNodXRkb3duIGR1
+cmluZyB0aGlzIHRpbWUsIGllOiB0aGUgd2hvbGUgbWFjaGluZSBpcyBwb3dlcmVkIG9uIGFuZCBy
+dW5uaW5nIG5vcm1hbGx5IGFuZCB0aHVzIG5vIHJlYXNvbiB0byBzdXNwZWN0IHRoYXQgdGhlIGNs
+b2NrIGlzIGluIHNvbWUgaW5jb25zaXN0ZW50IHN0YXRlIGFzIGFjY29yZGluZyB0byB0aGUgc3Bl
+Yy7CoCA8YnI+PGJyPjwvZGl2PjxkaXY+SXMgaXQgcG9zc2libGUgdGhhdCB0aGUgVFBNIGlzIGJl
+aW5nIHBvd2VyZWQgb2ZmIGJ5IHRoZSBDUFUgaW4gc29tZSBwb3dlciBzYXZpbmcgbW9kZSBhbmQg
+dGhlcmVmb3JlIGNhdXNpbmcgdGhlIGN1cnJlbnQgY2xvY2sgdmFsdWUgbm90IHRvIGJlIHNhdmVk
+IGFuZCByZXJlYWQgY29ycmVjdGx5IHdoZW4gdGhlIFRQTSBpcyByZXN0YXJ0ZWQ/wqAgV2UmIzM5
+O3ZlIGEgc2NyaXB0IHRoYXQgcGFyc2VzIHRoZSBxdW90ZSBhbmQgbWFwcyB0aGlzIHRoZSBKU09O
+IC0gd2UmIzM5O3ZlIGNoZWNrZWQgdGhhdCBhbmQgaXQgaXMgZnVuY3Rpb25pbmcgZmluZSAoYWNy
+b3NzIGhhbGYgYSBkb3plbiBtYWNoaW5lcyBhbmQgbGl0ZXJhbGx5IDEwMDBzIG9mIHF1b3RlcyBu
+b3cpLCB0aGUgcXVvdGUgdmFsdWUgb2J0YWluZWQgZnJvbSB0aGUgVFBNIGlzbiYjMzk7dCBiZWlu
+ZyBjaGFuZ2VkIGluIGFueXdheSAod2UgY2hlY2sgdGhlIHNpZ25hdHVyZSBhZ2FpbnN0IHRoZSBB
+SyksIHRoZXJlZm9yZSBvdXIgaHVuY2ggaXMgdGhhdCBzb21ldGhpbmcgdmVyeSBsb3cgZG93biBp
+biB0aGUgc3lzdGVtIGlzIGNhdXNpbmcgdGhpcy48YnI+PGJyPjwvZGl2PjxkaXY+SSBjYW4gc2Vu
+ZCBkZXRhaWxzIG9mIHRoZSBtYWNoaW5lcyBhbmQgcHJvY2Vzc29ycyBvZmYtbGlzdCBpZiB5b3Ug
+d2FudC48YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj50Ljxicj48YnI+PC9kaXY+PGRpdj5J
+YW48YnI+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZXh0cmEiPjxicj48ZGl2IGNsYXNz
+PSJnbWFpbF9xdW90ZSI+T24gMTUgTWFyY2ggMjAxOCBhdCAxOTo1NywgUm9iZXJ0cywgV2lsbGlh
+bSBDIDxzcGFuIGRpcj0ibHRyIj4mbHQ7PGEgaHJlZj0ibWFpbHRvOndpbGxpYW0uYy5yb2JlcnRz
+QGludGVsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiPndpbGxpYW0uYy5yb2JlcnRzQGludGVsLmNvbTwv
+YT4mZ3Q7PC9zcGFuPiB3cm90ZTo8YnI+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBz
+dHlsZT0ibWFyZ2luOjAgMCAwIC44ZXg7Ym9yZGVyLWxlZnQ6MXB4ICNjY2Mgc29saWQ7cGFkZGlu
+Zy1sZWZ0OjFleCI+CgoKCgoKPGRpdiBsaW5rPSJibHVlIiB2bGluaz0icHVycGxlIiBsYW5nPSJF
+Ti1VUyI+CjxkaXYgY2xhc3M9Im1fLTQ5MTY5Njc2MjE4MTIwMjUxMThXb3JkU2VjdGlvbjEiPgo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZh
+bWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFmNDk3ZCI+SSBkb27i
+gJl0IHNlZSB0aGF0IHNhZmUgdmFsdWUgY29taW5nIG91dCBvZiBxdW90ZS4gVGhlIG9ubHkgcmVm
+ZXJlbmNlIEkgY2FuIGZpbmQgaXMgaW4gdGhlIHNwZWMgaXMgaW4gcmVnYXJkcyB0byBjbG9jay48
+dT48L3U+PHU+PC91Pjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxl
+PSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1z
+ZXJpZjtjb2xvcjojMWY0OTdkIj48dT48L3U+wqA8dT48L3U+PC9zcGFuPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1
+b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxZjQ5N2QiPkNhbiB5b3UgYmUgbW9y
+ZSBzcGVjaWZpYz88dT48L3U+PHU+PC91Pjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
+cXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMWY0OTdkIj48dT48L3U+wqA8dT48L3U+PC9zcGFuPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9u
+dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxZjQ5N2QiPjx1
+PjwvdT7CoDx1PjwvdT48L3NwYW4+PC9wPgo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXIt
+bGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGluIDBpbiAwaW4gNC4wcHQiPgo8ZGl2Pgo8
+ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItdG9wOnNvbGlkICNlMWUxZTEgMS4wcHQ7cGFk
+ZGluZzozLjBwdCAwaW4gMGluIDBpbiI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxiPjxzcGFuIHN0
 eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fu
-cy1zZXJpZjtjb2xvcjojMUY0OTdEIj5DYW4geW91IGJlIG1vcmUgc3BlY2lmaWM/PG86cD48L286
-cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
-ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9y
-OiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGli
-cmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bh
-bj48L3A+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEu
-NXB0O3BhZGRpbmc6MGluIDBpbiAwaW4gNC4wcHQiPg0KPGRpdj4NCjxkaXYgc3R5bGU9ImJvcmRl
-cjpub25lO2JvcmRlci10b3A6c29saWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBpbiAw
-aW4gMGluIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6
-MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+RnJvbTo8
-L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90
-O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+IHRwbTIgW21haWx0bzp0cG0yLWJvdW5jZXNAbGlz
-dHMuMDEub3JnXQ0KPGI+T24gQmVoYWxmIE9mIDwvYj5JYW4gT2xpdmVyPGJyPg0KPGI+U2VudDo8
-L2I+IFR1ZXNkYXksIE1hcmNoIDEzLCAyMDE4IDY6MTEgQU08YnI+DQo8Yj5Ubzo8L2I+IHRwbTJA
-bGlzdHMuMDEub3JnPGJyPg0KPGI+U3ViamVjdDo8L2I+IFt0cG0yXSB0cG0yX3F1b3RlIGFuZCAm
-cXVvdDtzYWZlJnF1b3Q7PG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRpdj4NCjxkaXY+DQo8
-ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbToxMi4wcHQiPkhpLDxvOnA+PC9vOnA+PC9wPg0KPC9k
-aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbToxMi4wcHQiPm90
-aGVyIHRoYW4gdmFyaW91cyBjbG9jayBlcnJvcnMgd2hhdCBjYXVzZXMgdGhlIHNhZmUgZmxhZyB0
-byBiZSBzZXQgdG8gMSBhcyB3cml0dGVuIGludG8gdGhlIG91dHB1dCBvZiB0cG0yX3F1b3RlID88
-bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdp
-bi1ib3R0b206MTIuMHB0Ij5XZSdyZSBzZWVpbmcgc29tZSBvZGQgYmVoYXZpb3VyIGZyb20gc29t
-ZSBtYWNoaW5lcyB3aGVyZSBzYWZlIGlzIGFsd2F5cyBzZXQgdG8gMSAoTGVub3ZvIGxhcHRvcCkg
-YW5kIG9uIG90aGVyIHNlcnZlcnMgb2NjYXNpb25hbGx5IHNhZmUgaXMgc2V0IHRvIDEgYW5kIHRo
-ZW4gcmV0dXJuaW5nIHRvIDAgb24gc3Vic2VxdWVudCBxdW90ZXMuPG86cD48L286cD48L3A+DQo8
-L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkZvciBleGFtcGxlLCB3ZSBtaWdodCB0YWtlIGEg
-bnVtYmVyIG9mIHF1b3RlcyBvdmVyIHRpbWUsIGVnOiA1IG1pbnV0ZXMgYXBhcnQuIE9uZSBvZiB0
-aG9zZSBxdW90ZXMgd2lsbCBoYXZlIHNhZmUgc2V0IHRvIDEsIHRoZSBvdGhlcnMgYXJlIGFsbCAw
-LiZuYnNwOyBEdXJpbmcgdGhpcyB0aW1lIHRoZSBtYWNoaW5lIHdpbGwgKm5vdCogaGF2ZSBleHBl
-cmllbmNlZCBhIHJlYm9vdC9yZXNldCBub3IgLSBhcyBmYXIgYXMgd2UNCiBjYW4gdGVsbCAtIGFu
-eSBmb3JtIG9mIHBvd2Vyc2F2ZSBvciBzaHV0ZG93bi4gV2UndmUgYWxzbyBub3RpY2VkIHRoYXQg
-c2FmZSBnZXRzIHNldCB0byAxIG9ubHkgb24gc29tZSBxdW90ZXMsIGVnOiB3aGVuIHF1b3Rpbmcg
-c2hhMjU2OjE2LDE3LDE4IGZvciB0aGUgRFJUTSBtZWFzdXJlbWVudHMuPG86cD48L286cD48L3A+
-DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwv
-cD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIu
-MHB0Ij5UaGUgbWFjaGluZXMgYXJlIGFsbCBYZW9uLUU1IGJhc2VkIHNlcnZlcnMsIFRQTTIuMCwm
-bmJzcDsgdHBtMl90b29scyAxLjMtcmMyIGluc3RhbGxlZCwgVWJ1bnR1IDE3LjA0IHdpdGggNC4x
-MyBrZXJuZWw8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5
-bGU9Im1hcmdpbi1ib3R0b206MTIuMHB0Ij5BbnkgaW5mb3JtYXRpb24gYXBwcmVjaWF0ZWQgaGVy
-ZSw8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1h
-cmdpbi1ib3R0b206MTIuMHB0Ij50aGFua3M8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+SWFuPGJyIGNsZWFyPSJhbGwiPg0KPG86cD48L286cD48L3A+DQo8ZGl2
-Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+
-DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YnI+DQotLSA8bzpwPjwvbzpwPjwvcD4NCjxkaXY+DQo8
-ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtBcmlh
-bCZxdW90OyxzYW5zLXNlcmlmIj5Eci4gSWFuIE9saXZlcjwvc3Bhbj48L2I+PHNwYW4gc3R5bGU9
-ImZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPjxicj4NCj09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT08bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxk
-aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7
-QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+UHJpdmFjeSBFbmdpbmVlcmluZzombmJzcDsNCjwvc3Bh
-bj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZx
-dW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxMTExMTEiPjxhIGhyZWY9Imh0dHA6Ly93d3cuYW1hem9u
-LmNvLnVrL2RwLzE0OTc1Njk3MTAiIHRhcmdldD0iX2JsYW5rIj52aWEgQW1hem9uPC9hPjwvc3Bh
-bj48Yj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJp
-ZiI+PGJyPg0KVHdpdHRlcjogQGlfal9vbGl2ZXI8L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250
-LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj48bzpwPjwvbzpwPjwvc3Bhbj48
-L3A+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rp
-dj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2
-Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+
-DQo8L2JvZHk+DQo8L2h0bWw+DQo=
+cy1zZXJpZiI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2Zv
+bnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+IHRwbTIgW21haWx0bzo8
+YSBocmVmPSJtYWlsdG86dHBtMi1ib3VuY2VzQGxpc3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsi
+PnRwbTItYm91bmNlc0BsaXN0cy4wMS48d2JyPm9yZzwvYT5dCjxiPk9uIEJlaGFsZiBPZiA8L2I+
+SWFuIE9saXZlcjxicj4KPGI+U2VudDo8L2I+IFR1ZXNkYXksIE1hcmNoIDEzLCAyMDE4IDY6MTEg
+QU08YnI+CjxiPlRvOjwvYj4gPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0YXJn
+ZXQ9Il9ibGFuayI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+PGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3Rw
+bTJdIHRwbTJfcXVvdGUgYW5kICZxdW90O3NhZmUmcXVvdDs8dT48L3U+PHU+PC91Pjwvc3Bhbj48
+L3A+CjwvZGl2Pgo8L2Rpdj48ZGl2PjxkaXYgY2xhc3M9Img1Ij4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+PHU+PC91PsKgPHU+PC91PjwvcD4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRp
+dj4KPGRpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206
+MTIuMHB0Ij5IaSw8dT48L3U+PHU+PC91PjwvcD4KPC9kaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+IHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+b3RoZXIgdGhhbiB2YXJpb3VzIGNsb2NrIGVy
+cm9ycyB3aGF0IGNhdXNlcyB0aGUgc2FmZSBmbGFnIHRvIGJlIHNldCB0byAxIGFzIHdyaXR0ZW4g
+aW50byB0aGUgb3V0cHV0IG9mIHRwbTJfcXVvdGUgPzx1PjwvdT48dT48L3U+PC9wPgo8L2Rpdj4K
+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIuMHB0Ij5XZSYjMzk7
+cmUgc2VlaW5nIHNvbWUgb2RkIGJlaGF2aW91ciBmcm9tIHNvbWUgbWFjaGluZXMgd2hlcmUgc2Fm
+ZSBpcyBhbHdheXMgc2V0IHRvIDEgKExlbm92byBsYXB0b3ApIGFuZCBvbiBvdGhlciBzZXJ2ZXJz
+IG9jY2FzaW9uYWxseSBzYWZlIGlzIHNldCB0byAxIGFuZCB0aGVuIHJldHVybmluZyB0byAwIG9u
+IHN1YnNlcXVlbnQgcXVvdGVzLjx1PjwvdT48dT48L3U+PC9wPgo8L2Rpdj4KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+Rm9yIGV4YW1wbGUsIHdlIG1pZ2h0IHRha2UgYSBudW1iZXIgb2YgcXVvdGVzIG92
+ZXIgdGltZSwgZWc6IDUgbWludXRlcyBhcGFydC4gT25lIG9mIHRob3NlIHF1b3RlcyB3aWxsIGhh
+dmUgc2FmZSBzZXQgdG8gMSwgdGhlIG90aGVycyBhcmUgYWxsIDAuwqAgRHVyaW5nIHRoaXMgdGlt
+ZSB0aGUgbWFjaGluZSB3aWxsICpub3QqIGhhdmUgZXhwZXJpZW5jZWQgYSByZWJvb3QvcmVzZXQg
+bm9yIC0gYXMgZmFyIGFzIHdlCiBjYW4gdGVsbCAtIGFueSBmb3JtIG9mIHBvd2Vyc2F2ZSBvciBz
+aHV0ZG93bi4gV2UmIzM5O3ZlIGFsc28gbm90aWNlZCB0aGF0IHNhZmUgZ2V0cyBzZXQgdG8gMSBv
+bmx5IG9uIHNvbWUgcXVvdGVzLCBlZzogd2hlbiBxdW90aW5nIHNoYTI1NjoxNiwxNywxOCBmb3Ig
+dGhlIERSVE0gbWVhc3VyZW1lbnRzLjx1PjwvdT48dT48L3U+PC9wPgo8L2Rpdj4KPGRpdj4KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+PHU+PC91PsKgPHU+PC91PjwvcD4KPC9kaXY+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+VGhlIG1hY2hpbmVzIGFyZSBh
+bGwgWGVvbi1FNSBiYXNlZCBzZXJ2ZXJzLCBUUE0yLjAswqAgdHBtMl90b29scyAxLjMtcmMyIGlu
+c3RhbGxlZCwgVWJ1bnR1IDE3LjA0IHdpdGggNC4xMyBrZXJuZWw8dT48L3U+PHU+PC91PjwvcD4K
+PC9kaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+
+QW55IGluZm9ybWF0aW9uIGFwcHJlY2lhdGVkIGhlcmUsPHU+PC91Pjx1PjwvdT48L3A+CjwvZGl2
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbToxMi4wcHQiPnRoYW5r
+czx1PjwvdT48dT48L3U+PC9wPgo8L2Rpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SWFuPGJyIGNs
+ZWFyPSJhbGwiPgo8dT48L3U+PHU+PC91PjwvcD4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRp
+dj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGJyPgotLSA8
+dT48L3U+PHU+PC91PjwvcD4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRp
+dj4KPGRpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gc3R5bGU9ImZvbnQt
+ZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPkRyLiBJYW4gT2xpdmVyPC9zcGFu
+PjwvYj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJp
+ZiI+PGJyPgo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT08d2JyPj08dT48L3U+PHU+PC91
+Pjwvc3Bhbj48L3A+CjwvZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHls
+ZT0iZm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+UHJpdmFjeSBFbmdp
+bmVlcmluZzrCoAo8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1p
+bHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMTExMTExIj48YSBocmVmPSJo
+dHRwOi8vd3d3LmFtYXpvbi5jby51ay9kcC8xNDk3NTY5NzEwIiB0YXJnZXQ9Il9ibGFuayI+dmlh
+IEFtYXpvbjwvYT48L3NwYW4+PGI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0FyaWFs
+JnF1b3Q7LHNhbnMtc2VyaWYiPjxicj4KVHdpdHRlcjogQGlfal9vbGl2ZXI8L3NwYW4+PC9iPjxz
+cGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj48dT48
+L3U+PHU+PC91Pjwvc3Bhbj48L3A+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4K
+PC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8
+L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj48L2Rpdj48L2Rp
+dj4KPC9kaXY+CjwvZGl2PgoKPC9ibG9ja3F1b3RlPjwvZGl2Pjxicj48YnIgY2xlYXI9ImFsbCI+
+PGJyPi0tIDxicj48ZGl2IGNsYXNzPSJnbWFpbF9zaWduYXR1cmUiIGRhdGEtc21hcnRtYWlsPSJn
+bWFpbF9zaWduYXR1cmUiPjxkaXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PGRpdj48
+ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXYgZGlyPSJsdHIiPjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5
+OmFyaWFsO2ZvbnQtc2l6ZTpzbWFsbCI+PGI+RHIuIElhbiBPbGl2ZXI8L2I+PGJyPj09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT08YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
+YXJpYWw7Zm9udC1zaXplOnNtYWxsIj5Qcml2YWN5IEVuZ2luZWVyaW5nOsKgIDxiPjwvYj48c3Bh
+biBzdHlsZT0iY29sb3I6cmdiKDE3LDE3LDE3KTtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlm
+O2ZvbnQtc2l6ZToxM3B4O2xpbmUtaGVpZ2h0OjE5cHgiPjxhIGhyZWY9Imh0dHA6Ly93d3cuYW1h
+em9uLmNvLnVrL2RwLzE0OTc1Njk3MTAiIHRhcmdldD0iX2JsYW5rIj52aWEgQW1hem9uPC9hPjwv
+c3Bhbj48Yj48YnI+VHdpdHRlcjogQGlfal9vbGl2ZXI8L2I+PC9kaXY+PC9kaXY+PC9kaXY+PC9k
+aXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+CjwvZGl2Pgo=
 
---===============6540890981319447024==--
+--===============0976614365028816018==--
 
