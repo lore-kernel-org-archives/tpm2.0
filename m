@@ -1,90 +1,147 @@
-Content-Type: multipart/mixed; boundary="===============7162033341689853154=="
+Content-Type: multipart/mixed; boundary="===============8956069589258408824=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] tpm2_quote and "safe"
-Date: Thu, 15 Mar 2018 21:18:40 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FEF43EA@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CAAxBZJs7hVnc2u83gJCc=G7u5ML_xQpchg1m215VThMmdO=VXA@mail.gmail.com
+Subject: Re: [tpm2] tpm2_nvwrite failing
+Date: Thu, 15 Mar 2018 22:03:01 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FEF442A@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAAxBZJtjWDzxwfMTfikPqucRjaAxwZGMaz5Opb7mk=uM5bQQrQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7162033341689853154==
+--===============8956069589258408824==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Ian,
+You're using the owner hierarchy for authorization, where
+as you want to use the nv index for authorization.
+So when you write and read, your -a needs to match your -x value.
 
-I wish I could help you more, but this sounds like an issue with the TPM. I=
-t might be something in the spec I am not aware of. Is this reproducible ac=
-ross different manufacturers of tpms? What about using the ibm tpm simulato=
-r?
+This worked for me:
+#!/bin/sh
 
-Bill
+echo "my nv daat" > /tmp/idfile
 
-From: Ian Oliver [mailto:ian.justin.oliver(a)gmail.com] =
+NVRAM=3D0x1800005
+HIERACHY=3D0x40000001
+PCRS=3Dsha256:0,1,2,3
+PCRVALUE=3D/tmp/pcrvalue
+POLICY=3D/tmp/policy
 
-Sent: Thursday, March 15, 2018 1:27 PM
-To: Roberts, William C <william.c.roberts(a)intel.com>
-Cc: tpm2(a)lists.01.org
-Subject: Re: [tpm2] tpm2_quote and "safe"
+echo "Releasing NVRAM - this might fail, but this is OK"
+tpm2_nvrelease -x $NVRAM -a $HIERACHY
 
-Thanks William,
-We can only find a reference to the clock too which is what has us a little=
- confused.
-Basically we can takes quotes, within that structure is the TPMS_CLOCK_INFO=
- struct which contains field safe: TPMI_YES_NO .=C2=A0 We can take a series=
- of quotes, say, a few minutes apart and see that particular value change t=
-o 1 and then back to 0.
-The TPM is not being shutdown during this time, ie: the whole machine is po=
-wered on and running normally and thus no reason to suspect that the clock =
-is in some inconsistent state as according to the spec.=C2=A0 =
+echo "Constructing policy"
+tpm2_pcrlist -Q -L $PCRS -o $PCRVALUE
+tpm2_createpolicy -P -L $PCRS -F $PCRVALUE -f $POLICY
 
-Is it possible that the TPM is being powered off by the CPU in some power s=
-aving mode and therefore causing the current clock value not to be saved an=
-d reread correctly when the TPM is restarted?=C2=A0 We've a script that par=
-ses the quote and maps this the JSON - we've checked that and it is functio=
-ning fine (across half a dozen machines and literally 1000s of quotes now),=
- the quote value obtained from the TPM isn't being changed in anyway (we ch=
-eck the signature against the AK), therefore our hunch is that something ve=
-ry low down in the system is causing this.
-I can send details of the machines and processors off-list if you want.
+echo "Defining area"
+tpm2_nvdefine -x $NVRAM -a $HIERACHY -s 64  -L $POLICY -t "policywrite|poli=
+cyread"
+#tpm2_nvdefine -x $NVRAM -a $HIERACHY -s 64 -t "policyread|policywrite"
 
+echo "Writing ID"
+cat /tmp/idfile | tpm2_nvwrite -x $NVRAM -a $NVRAM -L $PCRS -F $PCRVALUE
+#cat /tmp/idfile | tpm2_nvwrite -x $NVRAM -a $HIERACHY
+
+echo "Reading ID - first attempt should fail if the policy works"
+tpm2_nvread -x $NVRAM -a $NVRAM
+
+echo "Reading ID - second attempt should work"
+tpm2_nvread -x $NVRAM -a $NVRAM -L $PCRS -F $PCRVALUE
+
+--- EOF ----
+
+
+As far as nv.sh failures, I don't see them on the simulator. So I would nee=
+d more information
+to understand what the issue you might be.
+
+
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Ian Oliver
+Sent: Tuesday, March 13, 2018 6:06 AM
+To: tpm2(a)lists.01.org
+Subject: [tpm2] tpm2_nvwrite failing
+
+Hi
+
+Using 1.3-rc2 of tpm2_tools
+We're seeing tpm2_nvwrite fail with policies, both in the nv.sh test file a=
+nd when run manually
+Here's the script which basically follows nv.sh.=C2=A0 NB: the file /tmp/id=
+file exists and contains data!
+
+
+#!/bin/sh
+
+NVRAM=3D0x1800005
+HIERACHY=3D0x40000001
+PCRS=3Dsha256:0,1,2,3
+PCRVALUE=3D/tmp/pcrvalue
+POLICY=3D/tmp/policy
+
+echo "Releasing NVRAM - this might fail, but this is OK"
+tpm2_nvrelease -x $NVRAM -a $HIERACHY
+
+echo "Constructing policy"
+tpm2_pcrlist -Q -L $PCRS -o $PCRVALUE
+tpm2_createpolicy -P -L $PCRS -F $PCRVALUE -f $POLICY
+
+echo "Defining area"
+tpm2_nvdefine -x $NVRAM -a $HIERACHY -s 64=C2=A0 -L $POLICY -t "policyread|=
+policywrite"
+#tpm2_nvdefine -x $NVRAM -a $HIERACHY -s 64 -t "policyread|policywrite"
+
+echo "Writing ID"
+cat /tmp/idfile | tpm2_nvwrite -x $NVRAM -a $HIERACHY -L $PCRS -F $PCRVALUE
+#cat /tmp/idfile | tpm2_nvwrite -x $NVRAM -a $HIERACHY
+
+echo "Reading ID - first attempt should fail if the policy works"
+tpm2_nvread -x $NVRAM -a $HIERACHY
+tpm2_nvread -x $NVRAM -a $HIERACHY -L $PCRS -F $PCRVALUE
+
+
+Specifically:
+
+15$tpm2_nvrelease -x 0x1800005 -a 0x40000001
+16$tpm2_pcrlist -Q -L sha256:0,1,2,3 -o /tmp/pcrvalue
+17$tpm2_createpolicy -P -L sha256:0,1,2,3 -F /tmp/pcrvalue -f /tmp/policy
+18$tpm2_nvdefine -x 0x1800005 -a 0x40000001 -s 64 -L /tmp/policy -t "policy=
+read|policywrite"
+19$tpm2_nvlist
+
+0x1800005:
+=C2=A0 hash algorithm:
+=C2=A0=C2=A0=C2=A0 friendly: sha256
+=C2=A0=C2=A0=C2=A0 value: 0xB
+=C2=A0 attributes:
+=C2=A0=C2=A0=C2=A0 friendly: policywrite|policyread
+=C2=A0=C2=A0=C2=A0 value: 0x8000800
+=C2=A0 size: 64
+=C2=A0 authorization policy: 60DF98CF0931EE42B5372DBC49E7B1966559A62A159B12=
+C90556240D37E2D938
+
+20$echo -n "test" | tpm2_nvwrite -x 0x1800005 -a 0x40000001 -L sha256:0,1,2=
+,3 -F /tmp/pcrvalue
+ERROR: Failed to write NV area at index 0x1800005 (25165829) offset 0x0. Er=
+ror:0x12f
+21$cat /tmp/idfile | tpm2_nvwrite -x 0x1800005 -a 0x40000001 -L sha256:0,1,=
+2,3 -F /tmp/pcrvalue
+ERROR: Failed to write NV area at index 0x1800005 (25165829) offset 0x0. Er=
+ror:0x12f
+22$tpm2_rc_decode 0x12f
+error layer
+=C2=A0 hex: 0x0
+=C2=A0 identifier: TSS2_TPM_ERROR_LEVEL
+=C2=A0 description: Error produced by the TPM
+format 0 error code
+=C2=A0 hex: 0x2f
+=C2=A0 name: TPM_RC_AUTH_UNAVAILABLE
+=C2=A0 description: authValue or authPolicy is not available for selected e=
+ntity.
 t.
 Ian
 
-On 15 March 2018 at 19:57, Roberts, William C <william.c.roberts(a)intel.co=
-m> wrote:
-I don=E2=80=99t see that safe value coming out of quote. The only reference=
- I can find is in the spec is in regards to clock.
-=C2=A0
-Can you be more specific?
-=C2=A0
-=C2=A0
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Ian Oliver
-Sent: Tuesday, March 13, 2018 6:11 AM
-To: tpm2(a)lists.01.org
-Subject: [tpm2] tpm2_quote and "safe"
-=C2=A0
-Hi,
-other than various clock errors what causes the safe flag to be set to 1 as=
- written into the output of tpm2_quote ?
-We're seeing some odd behaviour from some machines where safe is always set=
- to 1 (Lenovo laptop) and on other servers occasionally safe is set to 1 an=
-d then returning to 0 on subsequent quotes.
-For example, we might take a number of quotes over time, eg: 5 minutes apar=
-t. One of those quotes will have safe set to 1, the others are all 0.=C2=A0=
- During this time the machine will *not* have experienced a reboot/reset no=
-r - as far as we can tell - any form of powersave or shutdown. We've also n=
-oticed that safe gets set to 1 only on some quotes, eg: when quoting sha256=
-:16,17,18 for the DRTM measurements.
-=C2=A0
-The machines are all Xeon-E5 based servers, TPM2.0,=C2=A0 tpm2_tools 1.3-rc=
-2 installed, Ubuntu 17.04 with 4.13 kernel
-Any information appreciated here,
-thanks
-Ian
-
 
 -- =
 
@@ -94,15 +151,5 @@ Dr. Ian Oliver
 Privacy Engineering:=C2=A0 via Amazon
 Twitter: @i_j_oliver
 
-
-
--- =
-
-Dr. Ian Oliver
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-Privacy Engineering:=C2=A0 via Amazon
-Twitter: @i_j_oliver
-
---===============7162033341689853154==--
+--===============8956069589258408824==--
 
