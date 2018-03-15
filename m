@@ -1,83 +1,161 @@
-Content-Type: multipart/mixed; boundary="===============4416676620757814886=="
+Content-Type: multipart/mixed; boundary="===============6540890981319447024=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] TPM 2.0 in embedded systems
-Date: Tue, 13 Mar 2018 13:32:02 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D010EAD9325@exch2010c.sit.fraunhofer.de>
-In-Reply-To: 56BB5165-78EA-4B87-B5EE-665CE0D7AFB6@svenschwermer.de
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] tpm2_quote and "safe"
+Date: Thu, 15 Mar 2018 17:57:23 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FEF40F7@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAAxBZJuw-tw5QxJ2rr7BbH1Y9EDq6s=Kv84XxK8cWjUmRz4imw@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4416676620757814886==
+--===============6540890981319447024==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Sven,
+I don=E2=80=99t see that safe value coming out of quote. The only reference=
+ I can find is in the spec is in regards to clock.
 
-you are asking all the right questions, that people are working on in TCG a=
-nd everywhere else.
+Can you be more specific?
 
-I'd even add the question about CRTMs for Embedded (ARM) Systems to the mix.
 
-What I can point you to is:
-- https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM-v2.0-Provisi=
-oning-Guidance-Published-v1r1.pdf
-- https://trustedcomputinggroup.org/wp-content/uploads/TCG_Guidance_for_Sec=
-uring_NetEq_1_0r29.pdf
-- https://trustedcomputinggroup.org/wp-content/uploads/TCG-Guidance-for-Sec=
-uring-Resource-Constrained-Devices-v1r22.pdf
-
-Maybe you will find some of those answers there.
-
-Otherwise, embedded platforms differ so hugely, that some custom aspects al=
-ways need to be accounted for...
-Thus in the end, its a matter of profiles and some example cases that you w=
-ill need to choose from. The problem with
-this is however that it's a bunch of eggs with no hens...
-I.e. IMHO, I think we may need more real-world deployments that are custom =
-build before being able to further cluster, classify and standardize on dep=
-loyment and other processes in the embedded realm. So anything you may want=
- to share about your project could help in this effort.
-
-I hope I could confuse you enough... ;-)
-
-Cheers,
-Andreas
-________________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Sven Schwermer [sven(=
-a)svenschwermer.de]
-Sent: Tuesday, March 13, 2018 13:52
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Ian Oliver
+Sent: Tuesday, March 13, 2018 6:11 AM
 To: tpm2(a)lists.01.org
-Subject: [tpm2] TPM 2.0 in embedded systems
+Subject: [tpm2] tpm2_quote and "safe"
 
-Hi!
+Hi,
+other than various clock errors what causes the safe flag to be set to 1 as=
+ written into the output of tpm2_quote ?
+We're seeing some odd behaviour from some machines where safe is always set=
+ to 1 (Lenovo laptop) and on other servers occasionally safe is set to 1 an=
+d then returning to 0 on subsequent quotes.
+For example, we might take a number of quotes over time, eg: 5 minutes apar=
+t. One of those quotes will have safe set to 1, the others are all 0.  Duri=
+ng this time the machine will *not* have experienced a reboot/reset nor - a=
+s far as we can tell - any form of powersave or shutdown. We've also notice=
+d that safe gets set to 1 only on some quotes, eg: when quoting sha256:16,1=
+7,18 for the DRTM measurements.
 
-I am looking into using a TPM 2.0 in an embedded Linux system. I am facing =
-a few challenges that I couldn=E2=80=99t really find answers to. Some of th=
-e open questions are:
+The machines are all Xeon-E5 based servers, TPM2.0,  tpm2_tools 1.3-rc2 ins=
+talled, Ubuntu 17.04 with 4.13 kernel
+Any information appreciated here,
+thanks
+Ian
 
-- What are the best practices for what hierarchies to use? Since there is n=
-o =E2=80=9Cend user=E2=80=9D, but only a platform manufacturer, all hierarc=
-hies seem similarly suited.
-- How does authorisation work on an embedded system? All pre-shared secrets=
- (plain text passwords/HMAC) would need to be baked into the firmware, so t=
-here is no real security benefit. Are we stuck with the complex but powerfu=
-l policy-based authorisation (likely PCR based)?
-- How to provision the device? What needs to be done at the factory, what i=
-s done on boot?
-- Best practices for common problems, e.g. how securely authenticate agains=
-t a server.
+--
+Dr. Ian Oliver
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+Privacy Engineering:  via Amazon<http://www.amazon.co.uk/dp/1497569710>
+Twitter: @i_j_oliver
 
-Are there resources out there that answer the above mentioned types of ques=
-tions?
+--===============6540890981319447024==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-Thanks,
-Sven
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org
-https://lists.01.org/mailman/listinfo/tpm2
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
+Zm9udC1zaXplOjEyLjBwdDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZjt9
+DQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCglj
+b2xvcjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFu
+Lk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpw
+dXJwbGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpzcGFuLkVtYWlsU3R5bGUxNw0K
+CXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1yZXBseTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIs
+c2Fucy1zZXJpZjsNCgljb2xvcjojMUY0OTdEO30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHls
+ZS10eXBlOmV4cG9ydC1vbmx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30N
+CkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXplOjguNWluIDExLjBpbjsNCgltYXJnaW46MS4waW4g
+MS4waW4gMS4waW4gMS4waW47fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9u
+MTt9DQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0
+cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1b
+aWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRt
+YXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5k
+aWZdLS0+DQo8L2hlYWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIgdmxpbms9InB1
+cnBsZSI+DQo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZx
+dW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPkkgZG9u4oCZdCBzZWUgdGhhdCBzYWZlIHZh
+bHVlIGNvbWluZyBvdXQgb2YgcXVvdGUuIFRoZSBvbmx5IHJlZmVyZW5jZSBJIGNhbiBmaW5kIGlz
+IGluIHRoZSBzcGVjIGlzIGluIHJlZ2FyZHMgdG8gY2xvY2suPG86cD48L286cD48L3NwYW4+PC9w
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9u
+dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPjxv
+OnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0
+eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fu
+cy1zZXJpZjtjb2xvcjojMUY0OTdEIj5DYW4geW91IGJlIG1vcmUgc3BlY2lmaWM/PG86cD48L286
+cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
+ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9y
+OiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGli
+cmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bh
+bj48L3A+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEu
+NXB0O3BhZGRpbmc6MGluIDBpbiAwaW4gNC4wcHQiPg0KPGRpdj4NCjxkaXYgc3R5bGU9ImJvcmRl
+cjpub25lO2JvcmRlci10b3A6c29saWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBpbiAw
+aW4gMGluIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6
+MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+RnJvbTo8
+L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90
+O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+IHRwbTIgW21haWx0bzp0cG0yLWJvdW5jZXNAbGlz
+dHMuMDEub3JnXQ0KPGI+T24gQmVoYWxmIE9mIDwvYj5JYW4gT2xpdmVyPGJyPg0KPGI+U2VudDo8
+L2I+IFR1ZXNkYXksIE1hcmNoIDEzLCAyMDE4IDY6MTEgQU08YnI+DQo8Yj5Ubzo8L2I+IHRwbTJA
+bGlzdHMuMDEub3JnPGJyPg0KPGI+U3ViamVjdDo8L2I+IFt0cG0yXSB0cG0yX3F1b3RlIGFuZCAm
+cXVvdDtzYWZlJnF1b3Q7PG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRpdj4NCjxkaXY+DQo8
+ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9y
+bWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbToxMi4wcHQiPkhpLDxvOnA+PC9vOnA+PC9wPg0KPC9k
+aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbToxMi4wcHQiPm90
+aGVyIHRoYW4gdmFyaW91cyBjbG9jayBlcnJvcnMgd2hhdCBjYXVzZXMgdGhlIHNhZmUgZmxhZyB0
+byBiZSBzZXQgdG8gMSBhcyB3cml0dGVuIGludG8gdGhlIG91dHB1dCBvZiB0cG0yX3F1b3RlID88
+bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdp
+bi1ib3R0b206MTIuMHB0Ij5XZSdyZSBzZWVpbmcgc29tZSBvZGQgYmVoYXZpb3VyIGZyb20gc29t
+ZSBtYWNoaW5lcyB3aGVyZSBzYWZlIGlzIGFsd2F5cyBzZXQgdG8gMSAoTGVub3ZvIGxhcHRvcCkg
+YW5kIG9uIG90aGVyIHNlcnZlcnMgb2NjYXNpb25hbGx5IHNhZmUgaXMgc2V0IHRvIDEgYW5kIHRo
+ZW4gcmV0dXJuaW5nIHRvIDAgb24gc3Vic2VxdWVudCBxdW90ZXMuPG86cD48L286cD48L3A+DQo8
+L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkZvciBleGFtcGxlLCB3ZSBtaWdodCB0YWtlIGEg
+bnVtYmVyIG9mIHF1b3RlcyBvdmVyIHRpbWUsIGVnOiA1IG1pbnV0ZXMgYXBhcnQuIE9uZSBvZiB0
+aG9zZSBxdW90ZXMgd2lsbCBoYXZlIHNhZmUgc2V0IHRvIDEsIHRoZSBvdGhlcnMgYXJlIGFsbCAw
+LiZuYnNwOyBEdXJpbmcgdGhpcyB0aW1lIHRoZSBtYWNoaW5lIHdpbGwgKm5vdCogaGF2ZSBleHBl
+cmllbmNlZCBhIHJlYm9vdC9yZXNldCBub3IgLSBhcyBmYXIgYXMgd2UNCiBjYW4gdGVsbCAtIGFu
+eSBmb3JtIG9mIHBvd2Vyc2F2ZSBvciBzaHV0ZG93bi4gV2UndmUgYWxzbyBub3RpY2VkIHRoYXQg
+c2FmZSBnZXRzIHNldCB0byAxIG9ubHkgb24gc29tZSBxdW90ZXMsIGVnOiB3aGVuIHF1b3Rpbmcg
+c2hhMjU2OjE2LDE3LDE4IGZvciB0aGUgRFJUTSBtZWFzdXJlbWVudHMuPG86cD48L286cD48L3A+
+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwv
+cD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIu
+MHB0Ij5UaGUgbWFjaGluZXMgYXJlIGFsbCBYZW9uLUU1IGJhc2VkIHNlcnZlcnMsIFRQTTIuMCwm
+bmJzcDsgdHBtMl90b29scyAxLjMtcmMyIGluc3RhbGxlZCwgVWJ1bnR1IDE3LjA0IHdpdGggNC4x
+MyBrZXJuZWw8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5
+bGU9Im1hcmdpbi1ib3R0b206MTIuMHB0Ij5BbnkgaW5mb3JtYXRpb24gYXBwcmVjaWF0ZWQgaGVy
+ZSw8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1h
+cmdpbi1ib3R0b206MTIuMHB0Ij50aGFua3M8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+SWFuPGJyIGNsZWFyPSJhbGwiPg0KPG86cD48L286cD48L3A+DQo8ZGl2
+Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+
+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YnI+DQotLSA8bzpwPjwvbzpwPjwvcD4NCjxkaXY+DQo8
+ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPGRpdj4NCjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtBcmlh
+bCZxdW90OyxzYW5zLXNlcmlmIj5Eci4gSWFuIE9saXZlcjwvc3Bhbj48L2I+PHNwYW4gc3R5bGU9
+ImZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPjxicj4NCj09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT08bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxk
+aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7
+QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+UHJpdmFjeSBFbmdpbmVlcmluZzombmJzcDsNCjwvc3Bh
+bj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZx
+dW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxMTExMTEiPjxhIGhyZWY9Imh0dHA6Ly93d3cuYW1hem9u
+LmNvLnVrL2RwLzE0OTc1Njk3MTAiIHRhcmdldD0iX2JsYW5rIj52aWEgQW1hem9uPC9hPjwvc3Bh
+bj48Yj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJp
+ZiI+PGJyPg0KVHdpdHRlcjogQGlfal9vbGl2ZXI8L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250
+LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj48bzpwPjwvbzpwPjwvc3Bhbj48
+L3A+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rp
+dj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2
+Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+
+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
 
---===============4416676620757814886==--
+--===============6540890981319447024==--
 
