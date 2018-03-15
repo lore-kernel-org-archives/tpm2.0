@@ -1,244 +1,108 @@
-Content-Type: multipart/mixed; boundary="===============0976614365028816018=="
+Content-Type: multipart/mixed; boundary="===============7162033341689853154=="
 MIME-Version: 1.0
-From: Ian Oliver <ian.justin.oliver at gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: Re: [tpm2] tpm2_quote and "safe"
-Date: Thu, 15 Mar 2018 22:26:44 +0200
-Message-ID: <CAAxBZJs7hVnc2u83gJCc=G7u5ML_xQpchg1m215VThMmdO=VXA@mail.gmail.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563FEF40F7@ORSMSX101.amr.corp.intel.com
+Date: Thu, 15 Mar 2018 21:18:40 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FEF43EA@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAAxBZJs7hVnc2u83gJCc=G7u5ML_xQpchg1m215VThMmdO=VXA@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0976614365028816018==
+--===============7162033341689853154==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Ian,
+
+I wish I could help you more, but this sounds like an issue with the TPM. I=
+t might be something in the spec I am not aware of. Is this reproducible ac=
+ross different manufacturers of tpms? What about using the ibm tpm simulato=
+r?
+
+Bill
+
+From: Ian Oliver [mailto:ian.justin.oliver(a)gmail.com] =
+
+Sent: Thursday, March 15, 2018 1:27 PM
+To: Roberts, William C <william.c.roberts(a)intel.com>
+Cc: tpm2(a)lists.01.org
+Subject: Re: [tpm2] tpm2_quote and "safe"
+
 Thanks William,
+We can only find a reference to the clock too which is what has us a little=
+ confused.
+Basically we can takes quotes, within that structure is the TPMS_CLOCK_INFO=
+ struct which contains field safe: TPMI_YES_NO .=C2=A0 We can take a series=
+ of quotes, say, a few minutes apart and see that particular value change t=
+o 1 and then back to 0.
+The TPM is not being shutdown during this time, ie: the whole machine is po=
+wered on and running normally and thus no reason to suspect that the clock =
+is in some inconsistent state as according to the spec.=C2=A0 =
 
-We can only find a reference to the clock too which is what has us a little
-confused.
-
-Basically we can takes quotes, within that structure is the TPMS_CLOCK_INFO
-struct which contains field safe: TPMI_YES_NO .  We can take a series of
-quotes, say, a few minutes apart and see that particular value change to 1
-and then back to 0.
-
-The TPM is not being shutdown during this time, ie: the whole machine is
-powered on and running normally and thus no reason to suspect that the
-clock is in some inconsistent state as according to the spec.
-
-Is it possible that the TPM is being powered off by the CPU in some power
-saving mode and therefore causing the current clock value not to be saved
-and reread correctly when the TPM is restarted?  We've a script that parses
-the quote and maps this the JSON - we've checked that and it is functioning
-fine (across half a dozen machines and literally 1000s of quotes now), the
-quote value obtained from the TPM isn't being changed in anyway (we check
-the signature against the AK), therefore our hunch is that something very
-low down in the system is causing this.
-
+Is it possible that the TPM is being powered off by the CPU in some power s=
+aving mode and therefore causing the current clock value not to be saved an=
+d reread correctly when the TPM is restarted?=C2=A0 We've a script that par=
+ses the quote and maps this the JSON - we've checked that and it is functio=
+ning fine (across half a dozen machines and literally 1000s of quotes now),=
+ the quote value obtained from the TPM isn't being changed in anyway (we ch=
+eck the signature against the AK), therefore our hunch is that something ve=
+ry low down in the system is causing this.
 I can send details of the machines and processors off-list if you want.
 
 t.
-
 Ian
 
 On 15 March 2018 at 19:57, Roberts, William C <william.c.roberts(a)intel.co=
-m>
-wrote:
+m> wrote:
+I don=E2=80=99t see that safe value coming out of quote. The only reference=
+ I can find is in the spec is in regards to clock.
+=C2=A0
+Can you be more specific?
+=C2=A0
+=C2=A0
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Ian Oliver
+Sent: Tuesday, March 13, 2018 6:11 AM
+To: tpm2(a)lists.01.org
+Subject: [tpm2] tpm2_quote and "safe"
+=C2=A0
+Hi,
+other than various clock errors what causes the safe flag to be set to 1 as=
+ written into the output of tpm2_quote ?
+We're seeing some odd behaviour from some machines where safe is always set=
+ to 1 (Lenovo laptop) and on other servers occasionally safe is set to 1 an=
+d then returning to 0 on subsequent quotes.
+For example, we might take a number of quotes over time, eg: 5 minutes apar=
+t. One of those quotes will have safe set to 1, the others are all 0.=C2=A0=
+ During this time the machine will *not* have experienced a reboot/reset no=
+r - as far as we can tell - any form of powersave or shutdown. We've also n=
+oticed that safe gets set to 1 only on some quotes, eg: when quoting sha256=
+:16,17,18 for the DRTM measurements.
+=C2=A0
+The machines are all Xeon-E5 based servers, TPM2.0,=C2=A0 tpm2_tools 1.3-rc=
+2 installed, Ubuntu 17.04 with 4.13 kernel
+Any information appreciated here,
+thanks
+Ian
 
-> I don=E2=80=99t see that safe value coming out of quote. The only referen=
-ce I can
-> find is in the spec is in regards to clock.
->
->
->
-> Can you be more specific?
->
->
->
->
->
-> *From:* tpm2 [mailto:tpm2-bounces(a)lists.01.org] *On Behalf Of *Ian Oliv=
-er
-> *Sent:* Tuesday, March 13, 2018 6:11 AM
-> *To:* tpm2(a)lists.01.org
-> *Subject:* [tpm2] tpm2_quote and "safe"
->
->
->
-> Hi,
->
-> other than various clock errors what causes the safe flag to be set to 1
-> as written into the output of tpm2_quote ?
->
-> We're seeing some odd behaviour from some machines where safe is always
-> set to 1 (Lenovo laptop) and on other servers occasionally safe is set to=
- 1
-> and then returning to 0 on subsequent quotes.
->
-> For example, we might take a number of quotes over time, eg: 5 minutes
-> apart. One of those quotes will have safe set to 1, the others are all 0.
-> During this time the machine will *not* have experienced a reboot/reset n=
-or
-> - as far as we can tell - any form of powersave or shutdown. We've also
-> noticed that safe gets set to 1 only on some quotes, eg: when quoting
-> sha256:16,17,18 for the DRTM measurements.
->
->
->
-> The machines are all Xeon-E5 based servers, TPM2.0,  tpm2_tools 1.3-rc2
-> installed, Ubuntu 17.04 with 4.13 kernel
->
-> Any information appreciated here,
->
-> thanks
->
-> Ian
->
->
-> --
->
-> *Dr. Ian Oliver*
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
->
-> Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
-> * Twitter: @i_j_oliver*
->
+
+-- =
+
+Dr. Ian Oliver
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+Privacy Engineering:=C2=A0 via Amazon
+Twitter: @i_j_oliver
 
 
 
 -- =
 
-*Dr. Ian Oliver*
+Dr. Ian Oliver
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D
-Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
-*Twitter: @i_j_oliver*
+Privacy Engineering:=C2=A0 via Amazon
+Twitter: @i_j_oliver
 
---===============0976614365028816018==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2PjxkaXY+PGRpdj5UaGFua3MgV2lsbGlhbSw8YnI+PGJy
-PjwvZGl2PldlIGNhbiBvbmx5IGZpbmQgYSByZWZlcmVuY2UgdG8gdGhlIGNsb2NrIHRvbyB3aGlj
-aCBpcyB3aGF0IGhhcyB1cyBhIGxpdHRsZSBjb25mdXNlZC48YnI+PGJyPjwvZGl2PkJhc2ljYWxs
-eSB3ZSBjYW4gdGFrZXMgcXVvdGVzLCB3aXRoaW4gdGhhdCBzdHJ1Y3R1cmUgaXMgdGhlIApUUE1T
-X0NMT0NLX0lORk8KCnN0cnVjdCB3aGljaCBjb250YWlucyBmaWVsZCBzYWZlOgpUUE1JX1lFU19O
-TwoKLsKgIFdlIGNhbiB0YWtlIGEgc2VyaWVzIG9mIHF1b3Rlcywgc2F5LCBhIGZldyBtaW51dGVz
-IGFwYXJ0IGFuZCBzZWUgdGhhdCBwYXJ0aWN1bGFyIHZhbHVlIGNoYW5nZSB0byAxIGFuZCB0aGVu
-IGJhY2sgdG8gMC48YnI+PGJyPjwvZGl2PlRoZSBUUE0gaXMgbm90IGJlaW5nIHNodXRkb3duIGR1
-cmluZyB0aGlzIHRpbWUsIGllOiB0aGUgd2hvbGUgbWFjaGluZSBpcyBwb3dlcmVkIG9uIGFuZCBy
-dW5uaW5nIG5vcm1hbGx5IGFuZCB0aHVzIG5vIHJlYXNvbiB0byBzdXNwZWN0IHRoYXQgdGhlIGNs
-b2NrIGlzIGluIHNvbWUgaW5jb25zaXN0ZW50IHN0YXRlIGFzIGFjY29yZGluZyB0byB0aGUgc3Bl
-Yy7CoCA8YnI+PGJyPjwvZGl2PjxkaXY+SXMgaXQgcG9zc2libGUgdGhhdCB0aGUgVFBNIGlzIGJl
-aW5nIHBvd2VyZWQgb2ZmIGJ5IHRoZSBDUFUgaW4gc29tZSBwb3dlciBzYXZpbmcgbW9kZSBhbmQg
-dGhlcmVmb3JlIGNhdXNpbmcgdGhlIGN1cnJlbnQgY2xvY2sgdmFsdWUgbm90IHRvIGJlIHNhdmVk
-IGFuZCByZXJlYWQgY29ycmVjdGx5IHdoZW4gdGhlIFRQTSBpcyByZXN0YXJ0ZWQ/wqAgV2UmIzM5
-O3ZlIGEgc2NyaXB0IHRoYXQgcGFyc2VzIHRoZSBxdW90ZSBhbmQgbWFwcyB0aGlzIHRoZSBKU09O
-IC0gd2UmIzM5O3ZlIGNoZWNrZWQgdGhhdCBhbmQgaXQgaXMgZnVuY3Rpb25pbmcgZmluZSAoYWNy
-b3NzIGhhbGYgYSBkb3plbiBtYWNoaW5lcyBhbmQgbGl0ZXJhbGx5IDEwMDBzIG9mIHF1b3RlcyBu
-b3cpLCB0aGUgcXVvdGUgdmFsdWUgb2J0YWluZWQgZnJvbSB0aGUgVFBNIGlzbiYjMzk7dCBiZWlu
-ZyBjaGFuZ2VkIGluIGFueXdheSAod2UgY2hlY2sgdGhlIHNpZ25hdHVyZSBhZ2FpbnN0IHRoZSBB
-SyksIHRoZXJlZm9yZSBvdXIgaHVuY2ggaXMgdGhhdCBzb21ldGhpbmcgdmVyeSBsb3cgZG93biBp
-biB0aGUgc3lzdGVtIGlzIGNhdXNpbmcgdGhpcy48YnI+PGJyPjwvZGl2PjxkaXY+SSBjYW4gc2Vu
-ZCBkZXRhaWxzIG9mIHRoZSBtYWNoaW5lcyBhbmQgcHJvY2Vzc29ycyBvZmYtbGlzdCBpZiB5b3Ug
-d2FudC48YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj50Ljxicj48YnI+PC9kaXY+PGRpdj5J
-YW48YnI+PC9kaXY+PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZXh0cmEiPjxicj48ZGl2IGNsYXNz
-PSJnbWFpbF9xdW90ZSI+T24gMTUgTWFyY2ggMjAxOCBhdCAxOTo1NywgUm9iZXJ0cywgV2lsbGlh
-bSBDIDxzcGFuIGRpcj0ibHRyIj4mbHQ7PGEgaHJlZj0ibWFpbHRvOndpbGxpYW0uYy5yb2JlcnRz
-QGludGVsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiPndpbGxpYW0uYy5yb2JlcnRzQGludGVsLmNvbTwv
-YT4mZ3Q7PC9zcGFuPiB3cm90ZTo8YnI+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBz
-dHlsZT0ibWFyZ2luOjAgMCAwIC44ZXg7Ym9yZGVyLWxlZnQ6MXB4ICNjY2Mgc29saWQ7cGFkZGlu
-Zy1sZWZ0OjFleCI+CgoKCgoKPGRpdiBsaW5rPSJibHVlIiB2bGluaz0icHVycGxlIiBsYW5nPSJF
-Ti1VUyI+CjxkaXYgY2xhc3M9Im1fLTQ5MTY5Njc2MjE4MTIwMjUxMThXb3JkU2VjdGlvbjEiPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZh
-bWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFmNDk3ZCI+SSBkb27i
-gJl0IHNlZSB0aGF0IHNhZmUgdmFsdWUgY29taW5nIG91dCBvZiBxdW90ZS4gVGhlIG9ubHkgcmVm
-ZXJlbmNlIEkgY2FuIGZpbmQgaXMgaW4gdGhlIHNwZWMgaXMgaW4gcmVnYXJkcyB0byBjbG9jay48
-dT48L3U+PHU+PC91Pjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxl
-PSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1z
-ZXJpZjtjb2xvcjojMWY0OTdkIj48dT48L3U+wqA8dT48L3U+PC9zcGFuPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1
-b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxZjQ5N2QiPkNhbiB5b3UgYmUgbW9y
-ZSBzcGVjaWZpYz88dT48L3U+PHU+PC91Pjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
-cXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMWY0OTdkIj48dT48L3U+wqA8dT48L3U+PC9zcGFuPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxZjQ5N2QiPjx1
-PjwvdT7CoDx1PjwvdT48L3NwYW4+PC9wPgo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXIt
-bGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGluIDBpbiAwaW4gNC4wcHQiPgo8ZGl2Pgo8
-ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItdG9wOnNvbGlkICNlMWUxZTEgMS4wcHQ7cGFk
-ZGluZzozLjBwdCAwaW4gMGluIDBpbiI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxiPjxzcGFuIHN0
-eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fu
-cy1zZXJpZiI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2Zv
-bnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+IHRwbTIgW21haWx0bzo8
-YSBocmVmPSJtYWlsdG86dHBtMi1ib3VuY2VzQGxpc3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsi
-PnRwbTItYm91bmNlc0BsaXN0cy4wMS48d2JyPm9yZzwvYT5dCjxiPk9uIEJlaGFsZiBPZiA8L2I+
-SWFuIE9saXZlcjxicj4KPGI+U2VudDo8L2I+IFR1ZXNkYXksIE1hcmNoIDEzLCAyMDE4IDY6MTEg
-QU08YnI+CjxiPlRvOjwvYj4gPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0YXJn
-ZXQ9Il9ibGFuayI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+PGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3Rw
-bTJdIHRwbTJfcXVvdGUgYW5kICZxdW90O3NhZmUmcXVvdDs8dT48L3U+PHU+PC91Pjwvc3Bhbj48
-L3A+CjwvZGl2Pgo8L2Rpdj48ZGl2PjxkaXYgY2xhc3M9Img1Ij4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PHU+PC91PsKgPHU+PC91PjwvcD4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRp
-dj4KPGRpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206
-MTIuMHB0Ij5IaSw8dT48L3U+PHU+PC91PjwvcD4KPC9kaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-IHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+b3RoZXIgdGhhbiB2YXJpb3VzIGNsb2NrIGVy
-cm9ycyB3aGF0IGNhdXNlcyB0aGUgc2FmZSBmbGFnIHRvIGJlIHNldCB0byAxIGFzIHdyaXR0ZW4g
-aW50byB0aGUgb3V0cHV0IG9mIHRwbTJfcXVvdGUgPzx1PjwvdT48dT48L3U+PC9wPgo8L2Rpdj4K
-PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIuMHB0Ij5XZSYjMzk7
-cmUgc2VlaW5nIHNvbWUgb2RkIGJlaGF2aW91ciBmcm9tIHNvbWUgbWFjaGluZXMgd2hlcmUgc2Fm
-ZSBpcyBhbHdheXMgc2V0IHRvIDEgKExlbm92byBsYXB0b3ApIGFuZCBvbiBvdGhlciBzZXJ2ZXJz
-IG9jY2FzaW9uYWxseSBzYWZlIGlzIHNldCB0byAxIGFuZCB0aGVuIHJldHVybmluZyB0byAwIG9u
-IHN1YnNlcXVlbnQgcXVvdGVzLjx1PjwvdT48dT48L3U+PC9wPgo8L2Rpdj4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+Rm9yIGV4YW1wbGUsIHdlIG1pZ2h0IHRha2UgYSBudW1iZXIgb2YgcXVvdGVzIG92
-ZXIgdGltZSwgZWc6IDUgbWludXRlcyBhcGFydC4gT25lIG9mIHRob3NlIHF1b3RlcyB3aWxsIGhh
-dmUgc2FmZSBzZXQgdG8gMSwgdGhlIG90aGVycyBhcmUgYWxsIDAuwqAgRHVyaW5nIHRoaXMgdGlt
-ZSB0aGUgbWFjaGluZSB3aWxsICpub3QqIGhhdmUgZXhwZXJpZW5jZWQgYSByZWJvb3QvcmVzZXQg
-bm9yIC0gYXMgZmFyIGFzIHdlCiBjYW4gdGVsbCAtIGFueSBmb3JtIG9mIHBvd2Vyc2F2ZSBvciBz
-aHV0ZG93bi4gV2UmIzM5O3ZlIGFsc28gbm90aWNlZCB0aGF0IHNhZmUgZ2V0cyBzZXQgdG8gMSBv
-bmx5IG9uIHNvbWUgcXVvdGVzLCBlZzogd2hlbiBxdW90aW5nIHNoYTI1NjoxNiwxNywxOCBmb3Ig
-dGhlIERSVE0gbWVhc3VyZW1lbnRzLjx1PjwvdT48dT48L3U+PC9wPgo8L2Rpdj4KPGRpdj4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHU+PC91PsKgPHU+PC91PjwvcD4KPC9kaXY+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+VGhlIG1hY2hpbmVzIGFyZSBh
-bGwgWGVvbi1FNSBiYXNlZCBzZXJ2ZXJzLCBUUE0yLjAswqAgdHBtMl90b29scyAxLjMtcmMyIGlu
-c3RhbGxlZCwgVWJ1bnR1IDE3LjA0IHdpdGggNC4xMyBrZXJuZWw8dT48L3U+PHU+PC91PjwvcD4K
-PC9kaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+
-QW55IGluZm9ybWF0aW9uIGFwcHJlY2lhdGVkIGhlcmUsPHU+PC91Pjx1PjwvdT48L3A+CjwvZGl2
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJvdHRvbToxMi4wcHQiPnRoYW5r
-czx1PjwvdT48dT48L3U+PC9wPgo8L2Rpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SWFuPGJyIGNs
-ZWFyPSJhbGwiPgo8dT48L3U+PHU+PC91PjwvcD4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRp
-dj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGJyPgotLSA8
-dT48L3U+PHU+PC91PjwvcD4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRpdj4KPGRp
-dj4KPGRpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gc3R5bGU9ImZvbnQt
-ZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPkRyLiBJYW4gT2xpdmVyPC9zcGFu
-PjwvYj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJp
-ZiI+PGJyPgo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT08d2JyPj08dT48L3U+PHU+PC91
-Pjwvc3Bhbj48L3A+CjwvZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHls
-ZT0iZm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+UHJpdmFjeSBFbmdp
-bmVlcmluZzrCoAo8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1p
-bHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMTExMTExIj48YSBocmVmPSJo
-dHRwOi8vd3d3LmFtYXpvbi5jby51ay9kcC8xNDk3NTY5NzEwIiB0YXJnZXQ9Il9ibGFuayI+dmlh
-IEFtYXpvbjwvYT48L3NwYW4+PGI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0FyaWFs
-JnF1b3Q7LHNhbnMtc2VyaWYiPjxicj4KVHdpdHRlcjogQGlfal9vbGl2ZXI8L3NwYW4+PC9iPjxz
-cGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj48dT48
-L3U+PHU+PC91Pjwvc3Bhbj48L3A+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4K
-PC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8
-L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj48L2Rpdj48L2Rp
-dj4KPC9kaXY+CjwvZGl2PgoKPC9ibG9ja3F1b3RlPjwvZGl2Pjxicj48YnIgY2xlYXI9ImFsbCI+
-PGJyPi0tIDxicj48ZGl2IGNsYXNzPSJnbWFpbF9zaWduYXR1cmUiIGRhdGEtc21hcnRtYWlsPSJn
-bWFpbF9zaWduYXR1cmUiPjxkaXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PGRpdj48
-ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXYgZGlyPSJsdHIiPjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5
-OmFyaWFsO2ZvbnQtc2l6ZTpzbWFsbCI+PGI+RHIuIElhbiBPbGl2ZXI8L2I+PGJyPj09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT08YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
-YXJpYWw7Zm9udC1zaXplOnNtYWxsIj5Qcml2YWN5IEVuZ2luZWVyaW5nOsKgIDxiPjwvYj48c3Bh
-biBzdHlsZT0iY29sb3I6cmdiKDE3LDE3LDE3KTtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlm
-O2ZvbnQtc2l6ZToxM3B4O2xpbmUtaGVpZ2h0OjE5cHgiPjxhIGhyZWY9Imh0dHA6Ly93d3cuYW1h
-em9uLmNvLnVrL2RwLzE0OTc1Njk3MTAiIHRhcmdldD0iX2JsYW5rIj52aWEgQW1hem9uPC9hPjwv
-c3Bhbj48Yj48YnI+VHdpdHRlcjogQGlfal9vbGl2ZXI8L2I+PC9kaXY+PC9kaXY+PC9kaXY+PC9k
-aXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+CjwvZGl2Pgo=
-
---===============0976614365028816018==--
+--===============7162033341689853154==--
 
