@@ -1,52 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============5004460930658043878=="
+Content-Type: multipart/mixed; boundary="===============7415204200214483405=="
 MIME-Version: 1.0
-From: madprops at gmx.net
-Subject: [tpm2] Problem with Infineon Iridium SLB 9670 TPM2.0
-Date: Sun, 18 Mar 2018 14:04:15 +0100
-Message-ID: <trinity-6e000144-63dc-4e2f-b8d1-cd689dbbc4a3-1521378255578@3c-app-gmx-bs78>
+From: Philip Tricca <flihp at twobit.us>
+Subject: Re: [tpm2] [ANNOUNCE] tpm2-abrmd version 1.3.1
+Date: Sun, 18 Mar 2018 16:01:16 -0700
+Message-ID: <b868909e-2164-a04a-e3b5-3553a84a0537@twobit.us>
+In-Reply-To: 20180308190439.GA31257@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5004460930658043878==
+--===============7415204200214483405==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello all,
 
---===============5004460930658043878==
-Content-Type: text/html
+On 03/08/2018 11:04 AM, Philip Tricca wrote:
+> The recent 1.3.0 release of the tpm2-abrmd had a packaging error that
+> slipped through the cracks. Many thanks to Javier for the fix. Now that
+> this is resolved I've created a 1.3.1_rc0 tag in the git repo to mark
+> the beginning of the review process for the 1.3.1 bugfix release:
+
+The 1.3.1 release of tpm2-abrmd has been posted:
+https://github.com/tpm2-software/tpm2-abrmd/releases/tag/1.3.1
+
+Regards,
+Philip
+
+
+--===============7415204200214483405==
+Content-Type: application/pgp-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+Content-Disposition: attachment; filename="signature.asc"
 
-PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBWZXJkYW5h
-O2ZvbnQtc2l6ZTogMTIuMHB4OyI+PGRpdj4KPGRpdiBjbGFzcz0ic2lnbmF0dXJlIj4KPGRpdiBj
-bGFzcz0ic2lnbmF0dXJlIj4KPGRpdj5JJiMzOTttIHRyeWluZyB0byBnZXQgYW4gJnF1b3Q7SW5m
-aW5lb24gSXJpZGl1bSBTTEIgOTY3MCBUUE0gMi4wIFNQSSBCb2FyZCZxdW90OyBydW4gb24gbXkg
-UmFzcGJlcnJ5IFBpIDMuIEkgaGF2ZSBkb3dubG9hZGVkLCBjb21waWxlZCBhbmQgaW5zdGFsbGVk
-IHRoZSBsYXRlc3QgdmVyc2lvbnMgb2YgdHBtMi1hYnJtZCwgdHBtMi10c3MgYW5kIHRwbTItdG9v
-bHMuIEkgc3RhcnRlZCB0cG0yLWFicm1kIGFzIHJvb3QsIGhvcGluZyB0aGF0IEkgY2FuIHRoZW4g
-aW50ZXJhY3Qgd2l0aCB0aGUgSW5maW5lb24gVFBNIHVzaW5nIHRwbTItdG9vbHMuICZxdW90O3Rw
-bTJfcGNybGlzdCZxdW90OyBhbmQgYWxsIG90aGVyIHRwbTJfKiBjb21tYW5kcywgaG93ZXZlciwg
-cmV0dXJuIGVycm9yICZxdW90O0VSUk9SOiBGYWlsZWQgdG8gaW5pdGlhbGl6ZSB0Y3RpIGNvbnRl
-eHQ6IDB4MSZxdW90Oy48L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2PkFueSBpZGVhcz8g
-VGhhbmtzITwvZGl2PgoKPGRpdj4mbmJzcDs8L2Rpdj4KCjxkaXY+cGlAcmFzcGJlcnJ5cGk6fi9U
-UE0vdHBtMi1hYnJtZCAmIzM2OyB1bmFtZSAtYTxici8+CkxpbnV4IHJhc3BiZXJyeXBpIDQuNC41
-MC12NysgIzEgU01QIFdlZCBNYXIgMTQgMTQ6MDE6MDAgUERUIDIwMTggYXJtdjdsIEdOVS9MaW51
-eCAoJmx0Oz09IGluY2x1ZGVzIHBhdGNoIHByb3ZpZGVkIGJ5IEluZmluZW9uKTwvZGl2PgoKPGRp
-dj4mbmJzcDs8L2Rpdj4KCjxkaXY+cGlAcmFzcGJlcnJ5cGk6fi9UUE0vdHBtMi1hYnJtZCAmIzM2
-OyBkbWVzZyAmIzEyNDsgZ3JlcCB0cG08YnIvPgpbJm5ic3A7Jm5ic3A7Jm5ic3A7IDMuNzAwMzg0
-XSB0cG1fc3BpX3RpcyBzcGkwLjE6IDIuMCBUUE0gKGRldmljZS1pZCAweEI2QkMsIHJldi1pZCAx
-Nik8L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2PnBpQHJhc3BiZXJyeXBpOi9ldGMgJiMz
-NjsgY2F0IC9ldGMvb3MtcmVsZWFzZTxici8+ClBSRVRUWV9OQU1FPSZxdW90O1Jhc3BiaWFuIEdO
-VS9MaW51eCA5IChzdHJldGNoKSZxdW90Ozxici8+Ck5BTUU9JnF1b3Q7UmFzcGJpYW4gR05VL0xp
-bnV4JnF1b3Q7PGJyLz4KVkVSU0lPTl9JRD0mcXVvdDs5JnF1b3Q7PGJyLz4KVkVSU0lPTj0mcXVv
-dDs5IChzdHJldGNoKSZxdW90Ozxici8+CklEPXJhc3BiaWFuPGJyLz4KSURfTElLRT1kZWJpYW48
-YnIvPgpIT01FX1VSTD0mcXVvdDtodHRwOi8vd3d3LnJhc3BiaWFuLm9yZy8mcXVvdDs8YnIvPgpT
-VVBQT1JUX1VSTD0mcXVvdDtodHRwOi8vd3d3LnJhc3BiaWFuLm9yZy9SYXNwYmlhbkZvcnVtcyZx
-dW90Ozxici8+CkJVR19SRVBPUlRfVVJMPSZxdW90O2h0dHA6Ly93d3cucmFzcGJpYW4ub3JnL1Jh
-c3BiaWFuQnVncyZxdW90OzwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2PjwvZGl2PjwvYm9keT48
-L2h0bWw+Cg==
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSkVCQUVCQ2dBdUZpRUVPOXJlUmQza1N2
+MUJJQ21BTXZkK2RjTGgwN29GQWxxdTc4UVFIR1pzYVdod1FIUjMKYjJKcGRDNTFjd0FLQ1JBeTkz
+NTF3dUhUdWdHeUVBQ0kwK2lZRG8vc2xnalhEZjJlOUxTU2JFWEw2bmNkN1BQZApiWXVXVEkrQjdJ
+bjlyOExwTEhUQWNHSWhjTlZnNEZDRkEyc005ODIyU1hROVludXpiUDRTcmNIZlMvMjFCNGErCmRZ
+YjNBdHcrZ2ppOXR2U2JTTDBLZEpML1RiQ3Q2MXFoOGJ3YXlSTGFPV3dmNEtZWVRVSkJzUlBTbG9E
+Zy9HR3cKQlhydk1td1g0Z3pCMTk4ZjFNVmVHRFVySVRnT2YzSFR5eGZQdFJCS2FxczFvRW1jMGND
+V3ZLWkFtdTFRRTRJcgpmaTlZcHIvWU4wcWYvQzBNUlVPOEFjY2tFSGhzc1hFcllGMEd4V1V1R1Mr
+emlsUHgvd1hOQWtxMk8xSjd6YUYrCnZtdURKRnp5NlMyZHBmSENVVXkwNmxOZVZtb0FqeVh3byt2
+MnNzdWFRQWtneXF5N0lUeUZuTmhsMlV6WjFyNVEKOFhVaGt5c25uaWdKZUtaQURPTTJaVWN0WVpX
+YnM0UDRTSnZaSnVBckpRZXU2bHRLQkZReUFiSEloOXVhV0RkSwo2blYxc2dQMDVPMmtmM2hiRDh5
+N2J6cWxadE50WjNDYkQwejdKaStZQXZDS05xYi9jZXoxQXJVcDhkUkhoN2R0CnUvZDBaTlE2VU5E
+WGJ2SVZPVWpRU3diQlVoOW5rUVFmbDRhN1VqQk1JemVxN1ZOQVc2UVJXUWQyZGM4Qkd0U24Kd2tQ
+V3RLRFl0MWpEZ25Ja1YyUW9ib1dRN0tNUHE4VDg3Zm9xTjFURk5Hb1l4NjhCMXhJM0NFSk1UUkdW
+LzhJdgpqSys3T1ZpNDFSQVJNVFh4MSswRVJCcE5tUkhFcGdGK2NUb1NxWStnUFVYY0tnN3VQTWc3
+L2ptb0s2bFd6VUF4ClQzV3RSYm8yTVE9PQo9WmhrVAotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0t
+LS0K
 
---===============5004460930658043878==--
+--===============7415204200214483405==--
 
