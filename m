@@ -1,235 +1,342 @@
-Content-Type: multipart/mixed; boundary="===============3604235483766155794=="
+Content-Type: multipart/mixed; boundary="===============2260795995739197658=="
 MIME-Version: 1.0
-From: madprops at gmx.net
+From: Philip Tricca <philip.b.tricca at intel.com>
 Subject: Re: [tpm2] Problem with Infineon Iridium SLB 9670 TPM2.0
-Date: Mon, 19 Mar 2018 21:17:33 +0100
-Message-ID: <trinity-07958541-2b38-44f7-9b7d-3b048705f126-1521490653093@3c-app-gmx-bs31>
-In-Reply-To: 20180319050737.GE8769@intel.com
+Date: Tue, 20 Mar 2018 12:19:40 -0700
+Message-ID: <20180320191940.GB2354@intel.com>
+In-Reply-To: trinity-07958541-2b38-44f7-9b7d-3b048705f126-1521490653093@3c-app-gmx-bs31
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3604235483766155794==
+--===============2260795995739197658==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hey madprops,
 
---===============3604235483766155794==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+Thanks for the additional data.
 
-PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBWZXJkYW5h
-O2ZvbnQtc2l6ZTogMTIuMHB4OyI+PGRpdj4KPGRpdj5UaGFuayB5b3UsIFBoaWxpcCEgSSBtZWFu
-d2hpbGUgbm90aWNlZCB0aGUgdG9vbHMgd29yayB3aGVuIEkgc3RvcCB0cG0yLWFicm1kIGFuZCBj
-b25uZWN0IGRpcmVjdGx5IHRvIHRoZSBUUE06Jm5ic3A7PC9kaXY+Cgo8ZGl2PiZuYnNwOzwvZGl2
-PgoKPGRpdj5waUByYXNwYmVycnlwaTp+ICYjMzY7IHN1ZG8gdHBtMl9wY3JsaXN0IC1UIGRldmlj
-ZTovZGV2L3RwbTA8YnIvPgpzaGExIDo8YnIvPgombmJzcDsgMCZuYnNwOyA6IDAwMDAwMDAwMDAw
-MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA8YnIvPgombmJzcDsgMSZuYnNwOyA6IDAwMDAw
-MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA8YnIvPgpbLi4uXTwvZGl2PgoKPGRp
-dj4mbmJzcDs8L2Rpdj4KCjxkaXY+UGxlYXNlIGZpbmQgYmVsb3cgdGhlIGluZm9ybWF0aW9uIHlv
-dSBhc2tlZCBmb3IuIFdoaWxlIHRwbTItYWJybWQgaXMgcnVubmluZyAoYXMgcm9vdCkgSSBzdGls
-bCBnZXQgdGhpczo8L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2PnBpQHJhc3BiZXJyeXBp
-On4gJiMzNjsgdHBtMl9wY3JsaXN0PGJyLz4KRVJST1I6IEZhaWxlZCB0byBpbml0aWFsaXplIHRj
-dGkgY29udGV4dDogMHgxPC9kaXY+Cgo8ZGl2PiZuYnNwOzwvZGl2PgoKPGRpdj5waUByYXNwYmVy
-cnlwaTp+ICYjMzY7IGV4cG9ydCBUUE0yVE9PTFNfVENUSV9OQU1FPXRhYnJtZDxici8+CnBpQHJh
-c3BiZXJyeXBpOn4gJiMzNjsgdHBtMl9wY3JsaXN0PGJyLz4KRVJST1I6IFVua25vd24gdGN0aSwg
-Z290OiAmcXVvdDt0YWJybWQmcXVvdDs8L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2Pj09
-PT09PT09IFZlcnNpb25zOjwvZGl2PgoKPGRpdj50cG0yLWFicm1kOiAxLjMuMV9yYzA8YnIvPgp0
-cG0yLXRvb2xzOiAzLjAuMzxici8+CnRwbTItdHNzOiAxLjQuMDwvZGl2PgoKPGRpdj4mbmJzcDs8
-L2Rpdj4KCjxkaXY+PT09PT09PT0gL2Rldi90cG0wPC9kaXY+Cgo8ZGl2PnBpQHJhc3BiZXJyeXBp
-On4gJiMzNjsgbHMgLWxhIC9kZXYvdHBtMDxici8+CmNydy0tLS0tLS0gMSByb290IHJvb3QgMTAs
-IDIyNCBNYXIgMTcgMjE6MzUgL2Rldi90cG0wPC9kaXY+Cgo8ZGl2Pj09PT09PT09IHRwbTItYWJy
-bWQgTE9HPC9kaXY+Cgo8ZGl2PnJvb3RAcmFzcGJlcnJ5cGk6L2hvbWUvcGkjIHRwbTItYWJybWQ8
-YnIvPgoqKiBJTkZPOiB0YWJybWQgc3RhcnR1cDxici8+CioqIChwcm9jZXNzOjE4NTIpOiBERUJV
-RzogdGN0aV9mYWN0b3J5X3NldF9wcm9wZXJ0eTxici8+CioqIChwcm9jZXNzOjE4NTIpOiBERUJV
-RzombmJzcDsmbmJzcDsgUFJPUF9UQ1RJX1RZUEU8YnIvPgoqKiAocHJvY2VzczoxODUyKTogREVC
-VUc6Jm5ic3A7Jm5ic3A7IHZhbHVlOiAweDE8YnIvPgoqKiAocHJvY2VzczoxODUyKTogREVCVUc6
-IHRjdGlfZmFjdG9yeV9zZXRfcHJvcGVydHk8YnIvPgoqKiAocHJvY2VzczoxODUyKTogREVCVUc6
-IFRjdGlGYWN0b3J5IHNldCBkZXZpY2VfbmFtZTogL2Rldi90cG0wPGJyLz4KKiogKHByb2Nlc3M6
-MTg1Mik6IERFQlVHOiB0Y3RpX2ZhY3Rvcnlfc2V0X3Byb3BlcnR5PGJyLz4KKiogKHByb2Nlc3M6
-MTg1Mik6IERFQlVHOiBUY3RpRmFjdG9yeSBzZXQgc29ja2V0X2FkZHJlc3M6IDEyNy4wLjAuMTxi
-ci8+CioqIChwcm9jZXNzOjE4NTIpOiBERUJVRzogdGN0aV9mYWN0b3J5X3NldF9wcm9wZXJ0eTxi
-ci8+CioqIChwcm9jZXNzOjE4NTIpOiBERUJVRzogVGN0aUZhY3Rvcnkgc2V0IHNvY2tldF9wb3J0
-OiAyMzIxPGJyLz4KKiogSU5GTzogbG9nZ2luZyB0byBzdGRvdXQ8YnIvPgoqKiAodHBtMi1hYnJt
-ZDoxODUyKTogREVCVUc6IHRjdGlfZmFjdG9yeV9nZXRfdGN0aTxici8+CioqICh0cG0yLWFicm1k
-OjE4NTIpOiBERUJVRzogVGN0aURldmljZSBzZXQgZmlsZW5hbWU6IC9kZXYvdHBtMDxici8+Cioq
-IElORk86IGVudGVyaW5nIGdfbWFpbl9sb29wPGJyLz4KKiogSU5GTzogaW5pdF90aHJlYWRfZnVu
-YyBzdGFydDxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogcmFuZG9tX2NsYXNzX2lu
-aXQ8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6IG9wZW5pbmcgZW50cm9weSBzb3Vy
-Y2U6IC9kZXYvdXJhbmRvbTxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogcmVhZGlu
-ZyBmcm9tIGVudHJvcHkgc291cmNlOiAvZGV2L3VyYW5kb208YnIvPgoqKiAodHBtMi1hYnJtZDox
-ODUyKTogREVCVUc6IHNlZWRpbmcgcmFuZCB3aXRoIC0xMjYzMDQ1Mjk1PGJyLz4KKiogKHRwbTIt
-YWJybWQ6MTg1Mik6IERFQlVHOiBjb25uZWN0aW9uX21hbmFnZXJfc2V0X3Byb3BlcnR5OiAweDE1
-YzVlZjA8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6Jm5ic3A7Jm5ic3A7IG1heF9j
-b25uZWN0aW9uczogMHgxYjxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogQ29ubmVj
-dGlvbk1hbmFnZXI6IDB4MTVjNWVmMDxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzog
-SXBjRnJvbnRlbmREYnVzIHNldCBidXNfbmFtZTogY29tLmludGVsLnRzczIuVGFicm1kPGJyLz4K
-KiogKHRwbTItYWJybWQ6MTg1Mik6IERFQlVHOiBpcGNfZnJvbnRlbmRfY29ubmVjdDogMHg3NWIw
-MWEwODxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogdGN0aV9pbml0aWFsaXplOiAw
-eDE1YzUyMDA8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6IHNhcGlfY29udGV4dF9p
-bml0IHcvIFRjdGk6IDB4MTVjNTIwMDxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzog
-dGN0aV9wZWVrX2NvbnRleHQ6IDB4MTVjNTIwMDxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBE
-RUJVRzogQWxsb2NhdGluZyAweDEwNDAgYnl0ZXMgZm9yIFNBUEkgY29udGV4dDxici8+CioqICh0
-cG0yLWFicm1kOjE4NTIpOiBERUJVRzogYWNjZXNzX2Jyb2tlcl9zZXRfcHJvcGVydHk6IDB4NzVi
-MGI3MjA8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6Jm5ic3A7Jm5ic3A7IHNhcGlf
-Y29udGV4dDogMHg3NWIwYTY5MDxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogYWNj
-ZXNzX2Jyb2tlcl9zZXRfcHJvcGVydHk6IDB4NzViMGI3MjA8YnIvPgoqKiAodHBtMi1hYnJtZDox
-ODUyKTogREVCVUc6Jm5ic3A7Jm5ic3A7IHRjdGk6IDB4MTVjNTIwMDxici8+CioqICh0cG0yLWFi
-cm1kOjE4NTIpOiBERUJVRzogY3JlYXRlZCBBY2Nlc3NCcm9rZXI6IDB4NzViMGI3MjA8YnIvPgoq
-KiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6IGFjY2Vzc19icm9rZXJfaW5pdF90cG06IDB4NzVi
-MGI3MjA8YnIvPgoqKiBJTkZPOiBvbl9idXNfYWNxdWlyZWQ6IGNvbS5pbnRlbC50c3MyLlRhYnJt
-ZDxici8+CioqIElORk86IG9uX25hbWVfYWNxdWlyZWQ6IGNvbS5pbnRlbC50c3MyLlRhYnJtZDxi
-ci8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogR290IHByb3h5IG9iamVjdCBmb3IgREJ1
-cyBkYWVtb24uPGJyLz4KKiogKHRwbTItYWJybWQ6MTg1Mik6IERFQlVHOiBhY2Nlc3NfYnJva2Vy
-X2dldF90cG1fcHJvcGVydGllc19maXhlZDxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJV
-RzogY29tbWFuZF9hdHRyc19jbGFzc19pbml0PGJyLz4KKiogKHRwbTItYWJybWQ6MTg1Mik6IERF
-QlVHOiBjcmVhdGVkIENvbW1hbmRBdHRyczogMHg3NWIwMTI2MDxici8+CioqICh0cG0yLWFicm1k
-OjE4NTIpOiBERUJVRzogR2V0Q2FwYWJpbHR5IGZvciAweDUwMCBjb21tYW5kczxici8+CioqICh0
-cG0yLWFicm1kOjE4NTIpOiBERUJVRzogZ290IGF0dHJpYnV0ZXMgZm9yIDB4NWEgY29tbWFuZHM8
-YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6IGNvbW1hbmRfc291cmNlX2NsYXNzX2lu
-aXQ8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6IGNvbW1hbmRfc291cmNlX3NldF9w
-cm9wZXJ0aWVzOiAweDc1YjAyYzUwPGJyLz4KKiogKHRwbTItYWJybWQ6MTg1Mik6IERFQlVHOiZu
-YnNwOyZuYnNwOyBjb21tYW5kX2F0dHJzOiAweDc1YjAxMjYwPGJyLz4KKiogKHRwbTItYWJybWQ6
-MTg1Mik6IERFQlVHOiBjb21tYW5kX3NvdXJjZV9zZXRfcHJvcGVydGllczogMHg3NWIwMmM1MDxi
-ci8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogY3JlYXRlZCBjb21tYW5kIHNvdXJjZTog
-MHg3NWIwMmM1MDxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogc2Vzc2lvbl9saXN0
-X25ldyB3aXRoIG1heC1wZXItY29ubmVjdGlvbjogMHg0PGJyLz4KKiogKHRwbTItYWJybWQ6MTg1
-Mik6IERFQlVHOiBzZXNzaW9uX2xpc3RfaW5pdDxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBE
-RUJVRzogc2Vzc2lvbl9saXN0X3NldF9wcm9wZXJ0eTogMHgxNWM1ZmIwIG1heC1wZXItY29ubmVj
-dGlvbjogNDxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogcmVzb3VyY2VfbWFuYWdl
-cl9zZXRfcHJvcGVydHk6IDB4NzViMDJjYTA8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVC
-VUc6Jm5ic3A7Jm5ic3A7IGluX3F1ZXVlOiAweDc1YjAwZjkwPGJyLz4KKiogKHRwbTItYWJybWQ6
-MTg1Mik6IERFQlVHOiByZXNvdXJjZV9tYW5hZ2VyX3NldF9wcm9wZXJ0eTogMHg3NWIwMmNhMDxi
-ci8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzombmJzcDsmbmJzcDsgYWNjZXNzX2Jyb2tl
-cjogMHg3NWIwYjcyMDxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogcmVzb3VyY2Vf
-bWFuYWdlcl9zZXRfcHJvcGVydHk6IDB4NzViMDJjYTA8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUy
-KTogREVCVUc6IGNyZWF0ZWQgUmVzb3VyY2VNYW5hZ2VyOiAweDc1YjAyY2EwPGJyLz4KKiogKHRw
-bTItYWJybWQ6MTg1Mik6IERFQlVHOiByZXNwb25zZV9zaW5rX3NldF9wcm9wZXJ0eTxici8+Cioq
-ICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzombmJzcDsmbmJzcDsgc2V0dGluZyBQUk9QX0lOX1FV
-RVVFPGJyLz4KKiogKHRwbTItYWJybWQ6MTg1Mik6IERFQlVHOiBjcmVhdGVkIHJlc3BvbnNlIHNv
-dXJjZTogMHg3NWIwMTJhODxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogc291cmNl
-X2FkZF9zaW5rPGJyLz4KKiogKHRwbTItYWJybWQ6MTg1Mik6IERFQlVHOiBjb21tYW5kX3NvcnVj
-ZV9hZGRfc2luazogQ29tbWFuZFNvdXJjZTogMHg3NWIwMmM1MCAsIFNpbms6IDB4NzViMDJjYTA8
-YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6IGNvbW1hbmRfc291cmNlX3NldF9wcm9w
-ZXJ0aWVzOiAweDc1YjAyYzUwPGJyLz4KKiogKHRwbTItYWJybWQ6MTg1Mik6IERFQlVHOiZuYnNw
-OyZuYnNwOyBzaW5rOiAweDc1YjAyY2EwPGJyLz4KKiogKHRwbTItYWJybWQ6MTg1Mik6IERFQlVH
-OiBzb3VyY2VfYWRkX3Npbms8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6IHJlc291
-cmNlX21hbmFnZXJfYWRkX3Npbms6IFJlc291cmNlTWFuYWdlcjogMHg3NWIwMmNhMCwgU2luazog
-MHg3NWIwMTJhODxici8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogcmVzb3VyY2VfbWFu
-YWdlcl9zZXRfcHJvcGVydHk6IDB4NzViMDJjYTA8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTog
-REVCVUc6Jm5ic3A7Jm5ic3A7IHNpbms6IDB4NzViMDEyYTg8YnIvPgoqKiBJTkZPOiBpbml0X3Ro
-cmVhZF9mdW5jIGRvbmU8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6IHJlc291cmNl
-X21hbmFnZXJfdGhyZWFkIHN0YXJ0PGJyLz4KKiogKHRwbTItYWJybWQ6MTg1Mik6IERFQlVHOiBy
-ZXNwb25zZV9zaW5rX3RocmVhZCBibG9ja2luZyBvbiBpbnB1dCBxdWV1ZTogMHg3NWIwMGU1MDxi
-ci8+CioqICh0cG0yLWFicm1kOjE4NTIpOiBERUJVRzogbWVzc2FnZV9xdWV1ZV9kZXF1ZXVlIDB4
-NzViMDBlNTA8YnIvPgoqKiAodHBtMi1hYnJtZDoxODUyKTogREVCVUc6IG1lc3NhZ2VfcXVldWVf
-ZGVxdWV1ZSAweDc1YjAwZjkwPC9kaXY+Cgo8ZGl2PiZuYnNwOzwvZGl2PgoKPGRpdj49PT09PT09
-PSBNSVNDPC9kaXY+Cgo8ZGl2PnBpQHJhc3BiZXJyeXBpOn4vVFBNL3RwbTItdHNzICYjMzY7IGNh
-dCAvZXRjL2RidXMtMS9zeXN0ZW0uZC90cG0yLWFicm1kLmNvbmY8YnIvPgombHQ7IURPQ1RZUEUg
-YnVzY29uZmlnIFBVQkxJQyAmcXVvdDstLy9mcmVlZGVza3RvcC8vRFREIEQtQlVTIEJ1cyBDb25m
-aWd1cmF0aW9uIDEuMC8vRU4mcXVvdDs8YnIvPgombmJzcDsmcXVvdDtodHRwOi8vd3d3LmZyZWVk
-ZXNrdG9wLm9yZy9zdGFuZGFyZHMvZGJ1cy8xLjAvYnVzY29uZmlnLmR0ZCZxdW90OyZndDs8YnIv
-PgombHQ7YnVzY29uZmlnJmd0Ozxici8+CiZuYnNwOyAmbHQ7IS0tIC4uL3N5c3RlbS5jb25mIGhh
-dmUgZGVuaWVkIGV2ZXJ5dGhpbmcsIHNvIHdlIGp1c3QgcHVuY2ggc29tZSBob2xlcyAtLSZndDs8
-YnIvPgombmJzcDsgJmx0O3BvbGljeSB1c2VyPSZxdW90O3RzcyZxdW90OyZndDs8YnIvPgombmJz
-cDsmbmJzcDsmbmJzcDsgJmx0O2FsbG93IG93bj0mcXVvdDtjb20uaW50ZWwudHNzMi5UYWJybWQm
-cXVvdDsvJmd0Ozxici8+CiZuYnNwOyAmbHQ7L3BvbGljeSZndDs8YnIvPgombmJzcDsgJmx0O3Bv
-bGljeSB1c2VyPSZxdW90O3Jvb3QmcXVvdDsmZ3Q7PGJyLz4KJm5ic3A7Jm5ic3A7Jm5ic3A7ICZs
-dDthbGxvdyBvd249JnF1b3Q7Y29tLmludGVsLnRzczIuVGFicm1kJnF1b3Q7LyZndDs8YnIvPgom
-bmJzcDsgJmx0Oy9wb2xpY3kmZ3Q7PGJyLz4KJm5ic3A7ICZsdDtwb2xpY3kgY29udGV4dD0mcXVv
-dDtkZWZhdWx0JnF1b3Q7Jmd0Ozxici8+CiZuYnNwOyZuYnNwOyZuYnNwOyAmbHQ7YWxsb3cgc2Vu
-ZF9kZXN0aW5hdGlvbj0mcXVvdDtjb20uaW50ZWwudHNzMi5UYWJybWQmcXVvdDsvJmd0Ozxici8+
-CiZuYnNwOyZuYnNwOyZuYnNwOyAmbHQ7YWxsb3cgcmVjZWl2ZV9zZW5kZXI9JnF1b3Q7Y29tLmlu
-dGVsLnRzczIuVGFicm1kJnF1b3Q7LyZndDs8YnIvPgombmJzcDsgJmx0Oy9wb2xpY3kmZ3Q7PGJy
-Lz4KJmx0Oy9idXNjb25maWcmZ3Q7PC9kaXY+Cgo8ZGl2PiZuYnNwOzwvZGl2PgoKPGRpdj4mbmJz
-cDs8L2Rpdj4KCjxkaXY+Jm5ic3A7CjxkaXYgbmFtZT0icXVvdGUiIHN0eWxlPSJtYXJnaW46MTBw
-eCA1cHggNXB4IDEwcHg7IHBhZGRpbmc6IDEwcHggMCAxMHB4IDEwcHg7IGJvcmRlci1sZWZ0OjJw
-eCBzb2xpZCAjQzNEOUU1OyB3b3JkLXdyYXA6IGJyZWFrLXdvcmQ7IC13ZWJraXQtbmJzcC1tb2Rl
-OiBzcGFjZTsgLXdlYmtpdC1saW5lLWJyZWFrOiBhZnRlci13aGl0ZS1zcGFjZTsiPgo8ZGl2IHN0
-eWxlPSJtYXJnaW46MCAwIDEwcHggMDsiPjxiPkdlc2VuZGV0OjwvYj4mbmJzcDtNb250YWcsIDE5
-LiBNJmF1bWw7cnogMjAxOCB1bSAwNjowNyBVaHI8YnIvPgo8Yj5Wb246PC9iPiZuYnNwOyZxdW90
-O1BoaWxpcCBUcmljY2EmcXVvdDsgJmx0O3BoaWxpcC5iLnRyaWNjYUBpbnRlbC5jb20mZ3Q7PGJy
-Lz4KPGI+QW46PC9iPiZuYnNwO21hZHByb3BzQGdteC5uZXQ8YnIvPgo8Yj5DYzo8L2I+Jm5ic3A7
-dHBtMkBsaXN0cy4wMS5vcmc8YnIvPgo8Yj5CZXRyZWZmOjwvYj4mbmJzcDtSZTogW3RwbTJdIFBy
-b2JsZW0gd2l0aCBJbmZpbmVvbiBJcmlkaXVtIFNMQiA5NjcwIFRQTTIuMDwvZGl2PgoKPGRpdiBu
-YW1lPSJxdW90ZWQtY29udGVudCI+SGV5IHRoZXJlIG1hZHByb3BzLDxici8+Cjxici8+Ck9uIFN1
-biwgTWFyIDE4LCAyMDE4IGF0IDAyOjA0OjE1UE0gKzAxMDAsIG1hZHByb3BzQGdteC5uZXQgd3Jv
-dGU6PGJyLz4KJmd0OyAmbHQ7aHRtbCZndDsmbHQ7aGVhZCZndDs8YnIvPgomZ3Q7ICZsdDttZXRh
-IGh0dHAtZXF1aXY9JnF1b3Q7Q29udGVudC1UeXBlJnF1b3Q7IGNvbnRlbnQ9JnF1b3Q7dGV4dC9o
-dG1sOyBjaGFyc2V0PXV0Zi04JnF1b3Q7Jmd0OyZsdDsvaGVhZCZndDsmbHQ7Ym9keSZndDsmbHQ7
-ZGl2IHN0eWxlPSZxdW90O2ZvbnQtZmFtaWx5OiBWZXJkYW5hO2ZvbnQtc2l6ZTogMTIuMHB4OyZx
-dW90OyZndDsmbHQ7ZGl2Jmd0Ozxici8+CiZndDsgJmx0O2RpdiBjbGFzcz0mcXVvdDtzaWduYXR1
-cmUmcXVvdDsmZ3Q7PGJyLz4KJmd0OyAmbHQ7ZGl2IGNsYXNzPSZxdW90O3NpZ25hdHVyZSZxdW90
-OyZndDs8YnIvPgomZ3Q7ICZsdDtkaXYmZ3Q7SSYjMzk7bSB0cnlpbmcgdG8gZ2V0IGFuICZhbXA7
-cXVvdDtJbmZpbmVvbiBJcmlkaXVtIFNMQiA5NjcwIFRQTSAyLjAgU1BJIEJvYXJkJmFtcDtxdW90
-OyBydW4gb24gbXkgUmFzcGJlcnJ5IFBpIDMuIEkgaGF2ZSBkb3dubG9hZGVkLCBjb21waWxlZCBh
-bmQgaW5zdGFsbGVkIHRoZSBsYXRlc3QgdmVyc2lvbnMgb2YgdHBtMi1hYnJtZCwgdHBtMi10c3Mg
-YW5kIHRwbTItdG9vbHMuIEkgc3RhcnRlZCB0cG0yLWFicm1kIGFzIHJvb3QsIGhvcGluZyB0aGF0
-IEkgY2FuIHRoZW4gaW50ZXJhY3Qgd2l0aCB0aGUgSW5maW5lb24gVFBNIHVzaW5nIHRwbTItdG9v
-bHMuICZhbXA7cXVvdDt0cG0yX3Bjcmxpc3QmYW1wO3F1b3Q7IGFuZCBhbGwgb3RoZXIgdHBtMl8q
-IGNvbW1hbmRzLCBob3dldmVyLCByZXR1cm4gZXJyb3IgJmFtcDtxdW90O0VSUk9SOiBGYWlsZWQg
-dG8gaW5pdGlhbGl6ZSB0Y3RpIGNvbnRleHQ6IDB4MSZhbXA7cXVvdDsuJmx0Oy9kaXYmZ3Q7PGJy
-Lz4KJmd0Ozxici8+Cjxici8+CkNhbiB5b3UgcGxlYXNlIHByb3ZpZGUgc29tZSBtb3JlIGluZm8g
-YWJvdXQgeW91ciBjb25maWd1cmF0aW9uPzxici8+ClNwZWNpZmljYWxseTo8YnIvPgotIHRoZSB2
-ZXJzaW9uIG9mIHRoZSBUU1MyIGxpYnJhcmllcyB5b3UmIzM5O3JlIHVzaW5nPGJyLz4KLSB0aGUg
-dmVyc2lvbiBvZiB0aGUgdGFicm1kIHlvdSYjMzk7cmUgdXNpbmc8YnIvPgotIHRoZSBjb25maWd1
-cmF0aW9uIG9wdGlvbnMgeW91JiMzOTtyZSBwYXNzaW5nIHRvIGVhY2g8YnIvPgo8YnIvPgpBIGxv
-ZyBmaWxlIGZyb20gdGhlIHRhYnJtZCB3aXRoIGxvZ2dpbmcgZGlhbGVkIGFsbCB0aGUgd2F5IHVw
-IHdvdWxkIGJlPGJyLz4KaGVscGZ1bC4gU2luY2UgdGFicm1kIHVzZXMgZ2xpYiBhbmQgaXQmIzM5
-O3MgbG9nZ2luZyBpbmZyYXN0cnVjdHVyZSB5b3UgZGlhbDxici8+CnVwIHRoZSBkZWJ1ZyBvdXRw
-dXQgYWxsIHRoZSB3YXkgYnkgc2V0dGluZyAmIzk2O0dfTUVTU0FHRVNfREVCVUc9YWxsJiM5Njsg
-aW4gdGhlPGJyLz4KZGFlbW9uJiMzOTtzIGVudmlyb25tZW50Ljxici8+Cjxici8+CiZndDsgJmx0
-O2RpdiZndDsmYW1wO25ic3A7Jmx0Oy9kaXYmZ3Q7PGJyLz4KJmd0Ozxici8+CiZndDsgJmx0O2Rp
-diZndDtBbnkgaWRlYXM/IFRoYW5rcyEmbHQ7L2RpdiZndDs8YnIvPgo8YnIvPgpUaGUgbW9zdCBj
-b21tb24gaXNzdWUgd2UmIzM5O3ZlIHNlZW4gcGVvcGxlIHJ1biBpbnRvIHdoZW4gaW5zdGFsbGlu
-ZyBmcm9tPGJyLz4Kc291cmNlIGlzIHRoYXQgdGhlIGRlZmF1bHQgdmFsdWUgZm9yIHRoZSAmIzk2
-O3ByZWZpeCYjOTY7IGFuZCBzb21lIG90aGVyPGJyLz4KaW5zdGFsbGF0aW9uIGRpcmVjdG9yaWVz
-IGFyZW4mIzM5O3Qgd2hhdCBtb3N0IGV4cGVjdC48YnIvPgo8YnIvPgpTdGlsbCwgaWYgeW91JiMz
-OTtyZSBydW5uaW5nIHRoZSBkYWVtb24gYXMgcm9vdCB5b3Ugc2hvdWxkbiYjMzk7dCBoYXZlIGFu
-eTxici8+Cmlzc3VlcyB3L3IgdG8gcGVybWlzc2lvbnMgb24gdGhlIC9kZXYvdHBtMCBkZXZpY2Ug
-bm9kZSBzbyBJIHdvbmRlciBpZjxici8+CnRoaXMgbm9kZSBldmVuIGV4aXN0cyBvbiB5b3VyIHBs
-YXRmb3JtLiBZb3UgbWF5IHdhbnQgdG8gY2hlY2sgdG8gc2VlIGlmPGJyLz4KJiM5NjsvZGV2L3Rw
-bTAmIzk2OyBpcyBldmVuIHByZXNlbnQgb24geW91ciBzeXN0ZW0uIFlvdSYjMzk7cmUgb24gYW4g
-QVJNIHBsYXRmb3JtPGJyLz4Kd2hpY2ggbWVhbnMgdGhlIGtlcm5lbCB3aWxsIG9ubHkgYmUgYXdh
-cmUgb2YgdGhlIFRQTTIgZGV2aWNlIHlvdSYjMzk7dmU8YnIvPgphZGRlZCBpZiB5b3UgY29uZmln
-dXJlIHRoZSBkZXZpY2UgdHJlZSBwcm9wZXJseS48YnIvPgo8YnIvPgpSZWdhcmRzLDxici8+ClBo
-aWxpcDxici8+Cjxici8+CiZndDsgJmx0O2RpdiZndDtwaUByYXNwYmVycnlwaTp+L1RQTS90cG0y
-LWFicm1kICYjMzY7IHVuYW1lIC1hJmx0O2JyJmd0Ozxici8+CiZndDsgTGludXggcmFzcGJlcnJ5
-cGkgNC40LjUwLXY3JmFtcDsjNDM7ICMxIFNNUCBXZWQgTWFyIDE0IDE0OjAxOjAwIFBEVCAyMDE4
-IGFybXY3bCBHTlUvTGludXggKCZhbXA7bHQ7PT0gaW5jbHVkZXMgcGF0Y2ggcHJvdmlkZWQgYnkg
-SW5maW5lb24pJmx0Oy9kaXYmZ3Q7PGJyLz4KJmd0Ozxici8+CiZndDsgJmx0O2RpdiZndDsmYW1w
-O25ic3A7Jmx0Oy9kaXYmZ3Q7PGJyLz4KJmd0Ozxici8+CiZndDsgJmx0O2RpdiZndDtwaUByYXNw
-YmVycnlwaTp+L1RQTS90cG0yLWFicm1kICYjMzY7IGRtZXNnICYjMTI0OyBncmVwIHRwbSZsdDti
-ciZndDs8YnIvPgomZ3Q7IFsmYW1wO25ic3A7JmFtcDtuYnNwOyZhbXA7bmJzcDsgMy43MDAzODRd
-IHRwbV9zcGlfdGlzIHNwaTAuMTogMi4wIFRQTSAoZGV2aWNlLWlkIDB4QjZCQywgcmV2LWlkIDE2
-KSZsdDsvZGl2Jmd0Ozxici8+CiZndDs8YnIvPgomZ3Q7ICZsdDtkaXYmZ3Q7JmFtcDtuYnNwOyZs
-dDsvZGl2Jmd0Ozxici8+CiZndDs8YnIvPgomZ3Q7ICZsdDtkaXYmZ3Q7cGlAcmFzcGJlcnJ5cGk6
-L2V0YyAmIzM2OyBjYXQgL2V0Yy9vcy1yZWxlYXNlJmx0O2JyJmd0Ozxici8+CiZndDsgUFJFVFRZ
-X05BTUU9JmFtcDtxdW90O1Jhc3BiaWFuIEdOVS9MaW51eCA5IChzdHJldGNoKSZhbXA7cXVvdDsm
-bHQ7YnImZ3Q7PGJyLz4KJmd0OyBOQU1FPSZhbXA7cXVvdDtSYXNwYmlhbiBHTlUvTGludXgmYW1w
-O3F1b3Q7Jmx0O2JyJmd0Ozxici8+CiZndDsgVkVSU0lPTl9JRD0mYW1wO3F1b3Q7OSZhbXA7cXVv
-dDsmbHQ7YnImZ3Q7PGJyLz4KJmd0OyBWRVJTSU9OPSZhbXA7cXVvdDs5IChzdHJldGNoKSZhbXA7
-cXVvdDsmbHQ7YnImZ3Q7PGJyLz4KJmd0OyBJRD1yYXNwYmlhbiZsdDticiZndDs8YnIvPgomZ3Q7
-IElEX0xJS0U9ZGViaWFuJmx0O2JyJmd0Ozxici8+CiZndDsgSE9NRV9VUkw9JmFtcDtxdW90Ozxh
-IGhyZWY9Imh0dHA6Ly93d3cucmFzcGJpYW4ub3JnLyZhbXA7cXVvdCIgdGFyZ2V0PSJfYmxhbmsi
-Pmh0dHA6Ly93d3cucmFzcGJpYW4ub3JnLyZhbXA7cXVvdDwvYT47Jmx0O2JyJmd0Ozxici8+CiZn
-dDsgU1VQUE9SVF9VUkw9JmFtcDtxdW90OzxhIGhyZWY9Imh0dHA6Ly93d3cucmFzcGJpYW4ub3Jn
-L1Jhc3BiaWFuRm9ydW1zJmFtcDtxdW90IiB0YXJnZXQ9Il9ibGFuayI+aHR0cDovL3d3dy5yYXNw
-Ymlhbi5vcmcvUmFzcGJpYW5Gb3J1bXMmYW1wO3F1b3Q8L2E+OyZsdDticiZndDs8YnIvPgomZ3Q7
-IEJVR19SRVBPUlRfVVJMPSZhbXA7cXVvdDs8YSBocmVmPSJodHRwOi8vd3d3LnJhc3BiaWFuLm9y
-Zy9SYXNwYmlhbkJ1Z3MmYW1wO3F1b3QiIHRhcmdldD0iX2JsYW5rIj5odHRwOi8vd3d3LnJhc3Bi
-aWFuLm9yZy9SYXNwYmlhbkJ1Z3MmYW1wO3F1b3Q8L2E+OyZsdDsvZGl2Jmd0Ozxici8+CiZndDsg
-Jmx0Oy9kaXYmZ3Q7PGJyLz4KJmd0OyAmbHQ7L2RpdiZndDs8YnIvPgomZ3Q7ICZsdDsvZGl2Jmd0
-OyZsdDsvZGl2Jmd0OyZsdDsvYm9keSZndDsmbHQ7L2h0bWwmZ3Q7PGJyLz4KPGJyLz4KJmd0OyBf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXzxici8+CiZndDsg
-dHBtMiBtYWlsaW5nIGxpc3Q8YnIvPgomZ3Q7IHRwbTJAbGlzdHMuMDEub3JnPGJyLz4KJmd0OyA8
-YSBocmVmPSJodHRwczovL2xpc3RzLjAxLm9yZy9tYWlsbWFuL2xpc3RpbmZvL3RwbTIiIHRhcmdl
-dD0iX2JsYW5rIj5odHRwczovL2xpc3RzLjAxLm9yZy9tYWlsbWFuL2xpc3RpbmZvL3RwbTI8L2E+
-PGJyLz4KJm5ic3A7PC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+Cgo8ZGl2PiZuYnNwOzwvZGl2
-PgoKPGRpdiBjbGFzcz0ic2lnbmF0dXJlIj4mbmJzcDs8L2Rpdj48L2Rpdj48L2JvZHk+PC9odG1s
-Pgo=
+On Mon, Mar 19, 2018 at 09:17:33PM +0100, madprops(a)gmx.net wrote:
+> <html><head>
+> <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8">=
+</head><body><div style=3D"font-family: Verdana;font-size: 12.0px;"><div>
+> <div>Thank you, Philip! I meanwhile noticed the tools work when I stop tp=
+m2-abrmd and connect directly to the TPM:&nbsp;</div>
 
---===============3604235483766155794==--
+Well this debunks my theory that your issue was down in the dev tree :)
+
+> <div>&nbsp;</div>
+> =
+
+> <div>pi(a)raspberrypi:~ $ sudo tpm2_pcrlist -T device:/dev/tpm0<br>
+> sha1 :<br>
+> &nbsp; 0&nbsp; : 0000000000000000000000000000000000000000<br>
+> &nbsp; 1&nbsp; : 0000000000000000000000000000000000000000<br>
+> [...]</div>
+> =
+
+> <div>&nbsp;</div>
+> =
+
+> <div>Please find below the information you asked for. While tpm2-abrmd is=
+ running (as root) I still get this:</div>
+> =
+
+> <div>&nbsp;</div>
+> =
+
+> <div>pi(a)raspberrypi:~ $ tpm2_pcrlist<br>
+> ERROR: Failed to initialize tcti context: 0x1</div>
+
+Seeing this error while the tabrmd is running, but having the tools
+execute successfully with it stopped is a big hint. This indicates
+that the tools are probably trying to connect to the /dev/tpm0 device
+node directly instead of using the tabrmd.
+
+I've only see this happen if / when the tools are built in advance of
+building *and* installing the tabrmd. This happens because the tools
+build looks for the installed TCTI library for communicating with the
+daemon. If it doesn't find this library then the tools can't be linked
+against it and the build will fall back to using the device TCTI as
+the default. The `config.log` file in the tools build has the output
+from the `configure` script and this will tell you which TCTI modules
+are enabled / disabled.
+
+Another way to check this theory is to take one of the tools executables
+and use `readelf` to dump information about the libraries that it links
+to. If the tabrmd TCTI library isn't listed then something it up.
+
+Everything else below looks right.
+
+Regards,
+Philip
+
+> <div>&nbsp;</div>
+> =
+
+> <div>pi(a)raspberrypi:~ $ export TPM2TOOLS_TCTI_NAME=3Dtabrmd<br>
+> pi(a)raspberrypi:~ $ tpm2_pcrlist<br>
+> ERROR: Unknown tcti, got: &quot;tabrmd&quot;</div>
+> =
+
+> <div>&nbsp;</div>
+> =
+
+> <div>=3D=3D=3D=3D=3D=3D=3D=3D Versions:</div>
+> =
+
+> <div>tpm2-abrmd: 1.3.1_rc0<br>
+> tpm2-tools: 3.0.3<br>
+> tpm2-tss: 1.4.0</div>
+> =
+
+> <div>&nbsp;</div>
+> =
+
+> <div>=3D=3D=3D=3D=3D=3D=3D=3D /dev/tpm0</div>
+> =
+
+> <div>pi(a)raspberrypi:~ $ ls -la /dev/tpm0<br>
+> crw------- 1 root root 10, 224 Mar 17 21:35 /dev/tpm0</div>
+> =
+
+> <div>=3D=3D=3D=3D=3D=3D=3D=3D tpm2-abrmd LOG</div>
+> =
+
+> <div>root(a)raspberrypi:/home/pi# tpm2-abrmd<br>
+> ** INFO: tabrmd startup<br>
+> ** (process:1852): DEBUG: tcti_factory_set_property<br>
+> ** (process:1852): DEBUG:&nbsp;&nbsp; PROP_TCTI_TYPE<br>
+> ** (process:1852): DEBUG:&nbsp;&nbsp; value: 0x1<br>
+> ** (process:1852): DEBUG: tcti_factory_set_property<br>
+> ** (process:1852): DEBUG: TctiFactory set device_name: /dev/tpm0<br>
+> ** (process:1852): DEBUG: tcti_factory_set_property<br>
+> ** (process:1852): DEBUG: TctiFactory set socket_address: 127.0.0.1<br>
+> ** (process:1852): DEBUG: tcti_factory_set_property<br>
+> ** (process:1852): DEBUG: TctiFactory set socket_port: 2321<br>
+> ** INFO: logging to stdout<br>
+> ** (tpm2-abrmd:1852): DEBUG: tcti_factory_get_tcti<br>
+> ** (tpm2-abrmd:1852): DEBUG: TctiDevice set filename: /dev/tpm0<br>
+> ** INFO: entering g_main_loop<br>
+> ** INFO: init_thread_func start<br>
+> ** (tpm2-abrmd:1852): DEBUG: random_class_init<br>
+> ** (tpm2-abrmd:1852): DEBUG: opening entropy source: /dev/urandom<br>
+> ** (tpm2-abrmd:1852): DEBUG: reading from entropy source: /dev/urandom<br>
+> ** (tpm2-abrmd:1852): DEBUG: seeding rand with -1263045295<br>
+> ** (tpm2-abrmd:1852): DEBUG: connection_manager_set_property: 0x15c5ef0<b=
+r>
+> ** (tpm2-abrmd:1852): DEBUG:&nbsp;&nbsp; max_connections: 0x1b<br>
+> ** (tpm2-abrmd:1852): DEBUG: ConnectionManager: 0x15c5ef0<br>
+> ** (tpm2-abrmd:1852): DEBUG: IpcFrontendDbus set bus_name: com.intel.tss2=
+.Tabrmd<br>
+> ** (tpm2-abrmd:1852): DEBUG: ipc_frontend_connect: 0x75b01a08<br>
+> ** (tpm2-abrmd:1852): DEBUG: tcti_initialize: 0x15c5200<br>
+> ** (tpm2-abrmd:1852): DEBUG: sapi_context_init w/ Tcti: 0x15c5200<br>
+> ** (tpm2-abrmd:1852): DEBUG: tcti_peek_context: 0x15c5200<br>
+> ** (tpm2-abrmd:1852): DEBUG: Allocating 0x1040 bytes for SAPI context<br>
+> ** (tpm2-abrmd:1852): DEBUG: access_broker_set_property: 0x75b0b720<br>
+> ** (tpm2-abrmd:1852): DEBUG:&nbsp;&nbsp; sapi_context: 0x75b0a690<br>
+> ** (tpm2-abrmd:1852): DEBUG: access_broker_set_property: 0x75b0b720<br>
+> ** (tpm2-abrmd:1852): DEBUG:&nbsp;&nbsp; tcti: 0x15c5200<br>
+> ** (tpm2-abrmd:1852): DEBUG: created AccessBroker: 0x75b0b720<br>
+> ** (tpm2-abrmd:1852): DEBUG: access_broker_init_tpm: 0x75b0b720<br>
+> ** INFO: on_bus_acquired: com.intel.tss2.Tabrmd<br>
+> ** INFO: on_name_acquired: com.intel.tss2.Tabrmd<br>
+> ** (tpm2-abrmd:1852): DEBUG: Got proxy object for DBus daemon.<br>
+> ** (tpm2-abrmd:1852): DEBUG: access_broker_get_tpm_properties_fixed<br>
+> ** (tpm2-abrmd:1852): DEBUG: command_attrs_class_init<br>
+> ** (tpm2-abrmd:1852): DEBUG: created CommandAttrs: 0x75b01260<br>
+> ** (tpm2-abrmd:1852): DEBUG: GetCapabilty for 0x500 commands<br>
+> ** (tpm2-abrmd:1852): DEBUG: got attributes for 0x5a commands<br>
+> ** (tpm2-abrmd:1852): DEBUG: command_source_class_init<br>
+> ** (tpm2-abrmd:1852): DEBUG: command_source_set_properties: 0x75b02c50<br>
+> ** (tpm2-abrmd:1852): DEBUG:&nbsp;&nbsp; command_attrs: 0x75b01260<br>
+> ** (tpm2-abrmd:1852): DEBUG: command_source_set_properties: 0x75b02c50<br>
+> ** (tpm2-abrmd:1852): DEBUG: created command source: 0x75b02c50<br>
+> ** (tpm2-abrmd:1852): DEBUG: session_list_new with max-per-connection: 0x=
+4<br>
+> ** (tpm2-abrmd:1852): DEBUG: session_list_init<br>
+> ** (tpm2-abrmd:1852): DEBUG: session_list_set_property: 0x15c5fb0 max-per=
+-connection: 4<br>
+> ** (tpm2-abrmd:1852): DEBUG: resource_manager_set_property: 0x75b02ca0<br>
+> ** (tpm2-abrmd:1852): DEBUG:&nbsp;&nbsp; in_queue: 0x75b00f90<br>
+> ** (tpm2-abrmd:1852): DEBUG: resource_manager_set_property: 0x75b02ca0<br>
+> ** (tpm2-abrmd:1852): DEBUG:&nbsp;&nbsp; access_broker: 0x75b0b720<br>
+> ** (tpm2-abrmd:1852): DEBUG: resource_manager_set_property: 0x75b02ca0<br>
+> ** (tpm2-abrmd:1852): DEBUG: created ResourceManager: 0x75b02ca0<br>
+> ** (tpm2-abrmd:1852): DEBUG: response_sink_set_property<br>
+> ** (tpm2-abrmd:1852): DEBUG:&nbsp;&nbsp; setting PROP_IN_QUEUE<br>
+> ** (tpm2-abrmd:1852): DEBUG: created response source: 0x75b012a8<br>
+> ** (tpm2-abrmd:1852): DEBUG: source_add_sink<br>
+> ** (tpm2-abrmd:1852): DEBUG: command_soruce_add_sink: CommandSource: 0x75=
+b02c50 , Sink: 0x75b02ca0<br>
+> ** (tpm2-abrmd:1852): DEBUG: command_source_set_properties: 0x75b02c50<br>
+> ** (tpm2-abrmd:1852): DEBUG:&nbsp;&nbsp; sink: 0x75b02ca0<br>
+> ** (tpm2-abrmd:1852): DEBUG: source_add_sink<br>
+> ** (tpm2-abrmd:1852): DEBUG: resource_manager_add_sink: ResourceManager: =
+0x75b02ca0, Sink: 0x75b012a8<br>
+> ** (tpm2-abrmd:1852): DEBUG: resource_manager_set_property: 0x75b02ca0<br>
+> ** (tpm2-abrmd:1852): DEBUG:&nbsp;&nbsp; sink: 0x75b012a8<br>
+> ** INFO: init_thread_func done<br>
+> ** (tpm2-abrmd:1852): DEBUG: resource_manager_thread start<br>
+> ** (tpm2-abrmd:1852): DEBUG: response_sink_thread blocking on input queue=
+: 0x75b00e50<br>
+> ** (tpm2-abrmd:1852): DEBUG: message_queue_dequeue 0x75b00e50<br>
+> ** (tpm2-abrmd:1852): DEBUG: message_queue_dequeue 0x75b00f90</div>
+>
+> <div>&nbsp;</div>
+> =
+
+> <div>=3D=3D=3D=3D=3D=3D=3D=3D MISC</div>
+> =
+
+> <div>pi(a)raspberrypi:~/TPM/tpm2-tss $ cat /etc/dbus-1/system.d/tpm2-abrm=
+d.conf<br>
+> &lt;!DOCTYPE busconfig PUBLIC &quot;-//freedesktop//DTD D-BUS Bus Configu=
+ration 1.0//EN&quot;<br>
+> &nbsp;&quot;http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd&q=
+uot;&gt;<br>
+> &lt;busconfig&gt;<br>
+> &nbsp; &lt;!-- ../system.conf have denied everything, so we just punch so=
+me holes --&gt;<br>
+> &nbsp; &lt;policy user=3D&quot;tss&quot;&gt;<br>
+> &nbsp;&nbsp;&nbsp; &lt;allow own=3D&quot;com.intel.tss2.Tabrmd&quot;/&gt;=
+<br>
+> &nbsp; &lt;/policy&gt;<br>
+> &nbsp; &lt;policy user=3D&quot;root&quot;&gt;<br>
+> &nbsp;&nbsp;&nbsp; &lt;allow own=3D&quot;com.intel.tss2.Tabrmd&quot;/&gt;=
+<br>
+> &nbsp; &lt;/policy&gt;<br>
+> &nbsp; &lt;policy context=3D&quot;default&quot;&gt;<br>
+> &nbsp;&nbsp;&nbsp; &lt;allow send_destination=3D&quot;com.intel.tss2.Tabr=
+md&quot;/&gt;<br>
+> &nbsp;&nbsp;&nbsp; &lt;allow receive_sender=3D&quot;com.intel.tss2.Tabrmd=
+&quot;/&gt;<br>
+> &nbsp; &lt;/policy&gt;<br>
+> &lt;/busconfig&gt;</div>
+> =
+
+> <div>&nbsp;</div>
+> =
+
+> <div>&nbsp;</div>
+> =
+
+> <div>&nbsp;
+> <div name=3D"quote" style=3D"margin:10px 5px 5px 10px; padding: 10px 0 10=
+px 10px; border-left:2px solid #C3D9E5; word-wrap: break-word; -webkit-nbsp=
+-mode: space; -webkit-line-break: after-white-space;">
+> <div style=3D"margin:0 0 10px 0;"><b>Gesendet:</b>&nbsp;Montag, 19. M=C3=
+=A4rz 2018 um 06:07 Uhr<br>
+> <b>Von:</b>&nbsp;&quot;Philip Tricca&quot; &lt;philip.b.tricca(a)intel.co=
+m&gt;<br>
+> <b>An:</b>&nbsp;madprops(a)gmx.net<br>
+> <b>Cc:</b>&nbsp;tpm2(a)lists.01.org<br>
+> <b>Betreff:</b>&nbsp;Re: [tpm2] Problem with Infineon Iridium SLB 9670 TP=
+M2.0</div>
+> =
+
+> <div name=3D"quoted-content">Hey there madprops,<br>
+> <br>
+> On Sun, Mar 18, 2018 at 02:04:15PM &#43;0100, madprops(a)gmx.net wrote:<b=
+r>
+> &gt; &lt;html&gt;&lt;head&gt;<br>
+> &gt; &lt;meta http-equiv=3D&quot;Content-Type&quot; content=3D&quot;text/=
+html; charset=3Dutf-8&quot;&gt;&lt;/head&gt;&lt;body&gt;&lt;div style=3D&qu=
+ot;font-family: Verdana;font-size: 12.0px;&quot;&gt;&lt;div&gt;<br>
+> &gt; &lt;div class=3D&quot;signature&quot;&gt;<br>
+> &gt; &lt;div class=3D&quot;signature&quot;&gt;<br>
+> &gt; &lt;div&gt;I'm trying to get an &amp;quot;Infineon Iridium SLB 9670 =
+TPM 2.0 SPI Board&amp;quot; run on my Raspberry Pi 3. I have downloaded, co=
+mpiled and installed the latest versions of tpm2-abrmd, tpm2-tss and tpm2-t=
+ools. I started tpm2-abrmd as root, hoping that I can then interact with th=
+e Infineon TPM using tpm2-tools. &amp;quot;tpm2_pcrlist&amp;quot; and all o=
+ther tpm2_* commands, however, return error &amp;quot;ERROR: Failed to init=
+ialize tcti context: 0x1&amp;quot;.&lt;/div&gt;<br>
+> &gt;<br>
+> <br>
+> Can you please provide some more info about your configuration?<br>
+> Specifically:<br>
+> - the version of the TSS2 libraries you're using<br>
+> - the version of the tabrmd you're using<br>
+> - the configuration options you're passing to each<br>
+> <br>
+> A log file from the tabrmd with logging dialed all the way up would be<br>
+> helpful. Since tabrmd uses glib and it's logging infrastructure you dial<=
+br>
+> up the debug output all the way by setting `G_MESSAGES_DEBUG=3Dall` in th=
+e<br>
+> daemon's environment.<br>
+> <br>
+> &gt; &lt;div&gt;&amp;nbsp;&lt;/div&gt;<br>
+> &gt;<br>
+> &gt; &lt;div&gt;Any ideas? Thanks!&lt;/div&gt;<br>
+> <br>
+> The most common issue we've seen people run into when installing from<br>
+> source is that the default value for the `prefix` and some other<br>
+> installation directories aren't what most expect.<br>
+> <br>
+> Still, if you're running the daemon as root you shouldn't have any<br>
+> issues w/r to permissions on the /dev/tpm0 device node so I wonder if<br>
+> this node even exists on your platform. You may want to check to see if<b=
+r>
+> `/dev/tpm0` is even present on your system. You're on an ARM platform<br>
+> which means the kernel will only be aware of the TPM2 device you've<br>
+> added if you configure the device tree properly.<br>
+> <br>
+> Regards,<br>
+> Philip<br>
+> <br>
+> &gt; &lt;div&gt;pi(a)raspberrypi:~/TPM/tpm2-abrmd $ uname -a&lt;br&gt;<br>
+> &gt; Linux raspberrypi 4.4.50-v7&amp;#43; #1 SMP Wed Mar 14 14:01:00 PDT =
+2018 armv7l GNU/Linux (&amp;lt;=3D=3D includes patch provided by Infineon)&=
+lt;/div&gt;<br>
+> &gt;<br>
+> &gt; &lt;div&gt;&amp;nbsp;&lt;/div&gt;<br>
+> &gt;<br>
+> &gt; &lt;div&gt;pi(a)raspberrypi:~/TPM/tpm2-abrmd $ dmesg | grep tpm&lt;b=
+r&gt;<br>
+> &gt; [&amp;nbsp;&amp;nbsp;&amp;nbsp; 3.700384] tpm_spi_tis spi0.1: 2.0 TP=
+M (device-id 0xB6BC, rev-id 16)&lt;/div&gt;<br>
+> &gt;<br>
+> &gt; &lt;div&gt;&amp;nbsp;&lt;/div&gt;<br>
+> &gt;<br>
+> &gt; &lt;div&gt;pi(a)raspberrypi:/etc $ cat /etc/os-release&lt;br&gt;<br>
+> &gt; PRETTY_NAME=3D&amp;quot;Raspbian GNU/Linux 9 (stretch)&amp;quot;&lt;=
+br&gt;<br>
+> &gt; NAME=3D&amp;quot;Raspbian GNU/Linux&amp;quot;&lt;br&gt;<br>
+> &gt; VERSION_ID=3D&amp;quot;9&amp;quot;&lt;br&gt;<br>
+> &gt; VERSION=3D&amp;quot;9 (stretch)&amp;quot;&lt;br&gt;<br>
+> &gt; ID=3Draspbian&lt;br&gt;<br>
+> &gt; ID_LIKE=3Ddebian&lt;br&gt;<br>
+> &gt; HOME_URL=3D&amp;quot;<a href=3D"http://www.raspbian.org/&amp;quot" t=
+arget=3D"_blank">http://www.raspbian.org/&amp;quot</a>;&lt;br&gt;<br>
+> &gt; SUPPORT_URL=3D&amp;quot;<a href=3D"http://www.raspbian.org/RaspbianF=
+orums&amp;quot" target=3D"_blank">http://www.raspbian.org/RaspbianForums&am=
+p;quot</a>;&lt;br&gt;<br>
+> &gt; BUG_REPORT_URL=3D&amp;quot;<a href=3D"http://www.raspbian.org/Raspbi=
+anBugs&amp;quot" target=3D"_blank">http://www.raspbian.org/RaspbianBugs&amp=
+;quot</a>;&lt;/div&gt;<br>
+> &gt; &lt;/div&gt;<br>
+> &gt; &lt;/div&gt;<br>
+> &gt; &lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;<br>
+> <br>
+> &gt; _______________________________________________<br>
+> &gt; tpm2 mailing list<br>
+> &gt; tpm2(a)lists.01.org<br>
+> &gt; <a href=3D"https://lists.01.org/mailman/listinfo/tpm2" target=3D"_bl=
+ank">https://lists.01.org/mailman/listinfo/tpm2</a><br>
+> &nbsp;</div>
+> </div>
+> </div>
+> </div>
+> =
+
+> <div>&nbsp;</div>
+> =
+
+> <div class=3D"signature">&nbsp;</div></div></body></html>
+
+--===============2260795995739197658==--
 
