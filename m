@@ -1,99 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============8315043632812157747=="
+Content-Type: multipart/mixed; boundary="===============5264555310877347133=="
 MIME-Version: 1.0
-From: Anderson, Daniel <daniel.anderson at intel.com>
-Subject: [tpm2] Patch to the Microsoft/IBM TPM 2.0 Simulator on SourceForge
-Date: Mon, 26 Mar 2018 23:23:52 +0000
-Message-ID: <207C810BE4BA2440832668E0F208BFD3B022D4@ORSMSX108.amr.corp.intel.com>
+From: Tomasz Przybysz <tomaszp at mikronika.pl>
+Subject: [tpm2] How to protect and encrypt communication between host and TPM
+Date: Tue, 27 Mar 2018 08:55:09 +0200
+Message-ID: <57a1de55-a2a2-249d-b70a-a6fbfbf9e7a2@mikronika.pl>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8315043632812157747==
+--===============5264555310877347133==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Here is a patch I wrote to the Microsoft/IBM TPM 2.0 Simulator on SourceFor=
-ge:
-https://gist.github.com/dantpm/a15fa70e94b28dee96a77c9d1bb70387
+Hi, we are working on TPM2.0 integration with our devices.
+We use Infineon TPM 2.0 chip and It works as expect.
 
-It makes the simulator "dual stack"-it listens to both IPv4 and IPv6 connec=
-tion requests and tries to connect to a series of IP addresses (instead of =
-the common method of only trying the first address returned in a hostname l=
-ookup).
+We are using tpm2-tss 1.4.0 library.
+We want to use transient RSA key generated inside device. Key is of
+course protected by its parent password,
+but we want to protect i2c communication between host and tpm chip. We
+want communication be encrypted, we don't want to send
+parent's password or key's password in clear text.
 
-I also submitted this patch as issue #6 to the TPM 2.0 Simulator SourceForg=
-e project:
-https://sourceforge.net/p/ibmswtpm2/tickets/6/
+We have found good example tpmclient.int.cpp, but there is an example
+how to encrypt access to the NV Index. There is no anything about RSA keys.
+How to call Tss2_Sys_Create for creating RSA key and then set password
+to use with session protected by TPM2_SE_HMAC and password.
 
-The patch may look weird because the original source uses a mixture of spac=
-es and 4-character tabs (which may expand to 8 characters, depending on how=
- you view it). The source also has a mixture of coding styles.
+In the example there is StartAuthSessionWithParams and StartAuthSession.
+There is KDFa function called but we need something shared password to
+create session key.
+Which shared keys ? Is this parent's key password or keys password ?
 
-Dan
+Thanks in advance,
+Tom
 
 
 
---===============8315043632812157747==
+--===============5264555310877347133==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
-cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
-Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
-b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
-bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZXJlIGlzIGEgcGF0Y2ggSSB3cm90ZSB0byB0aGUgTWlj
-cm9zb2Z0L0lCTSBUUE0gMi4wIFNpbXVsYXRvciBvbiBTb3VyY2VGb3JnZTo8bzpwPjwvbzpwPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgaHJlZj0iaHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20v
-ZGFudHBtL2ExNWZhNzBlOTRiMjhkZWU5NmE3N2M5ZDFiYjcwMzg3Ij48c3BhbiBzdHlsZT0iZm9u
-dC1zaXplOjEwLjVwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmO2Nv
-bG9yOiMwMDk5Q0M7YmFja2dyb3VuZDp3aGl0ZTt0ZXh0LWRlY29yYXRpb246bm9uZSI+aHR0cHM6
-Ly9naXN0LmdpdGh1Yi5jb20vZGFudHBtL2ExNWZhNzBlOTRiMjhkZWU5NmE3N2M5ZDFiYjcwMzg3
-PC9zcGFuPjwvYT48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJz
-cDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkl0IG1ha2VzIHRoZSBzaW11bGF0b3Ig
-JiM4MjIwO2R1YWwgc3RhY2smIzgyMjE7JiM4MjEyO2l0IGxpc3RlbnMgdG8gYm90aCBJUHY0IGFu
-ZCBJUHY2IGNvbm5lY3Rpb24gcmVxdWVzdHMgYW5kIHRyaWVzIHRvIGNvbm5lY3QgdG8gYSBzZXJp
-ZXMgb2YgSVAgYWRkcmVzc2VzIChpbnN0ZWFkIG9mIHRoZSBjb21tb24gbWV0aG9kIG9mIG9ubHkg
-dHJ5aW5nIHRoZSBmaXJzdCBhZGRyZXNzIHJldHVybmVkIGluIGEgaG9zdG5hbWUgbG9va3VwKS48
-bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkgYWxzbyBzdWJtaXR0ZWQgdGhpcyBwYXRjaCBhcyBpc3N1
-ZSAjNiB0byB0aGUgVFBNIDIuMCBTaW11bGF0b3IgU291cmNlRm9yZ2UgcHJvamVjdDo8bzpwPjwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgaHJlZj0iaHR0cHM6Ly9zb3VyY2Vmb3Jn
-ZS5uZXQvcC9pYm1zd3RwbTIvdGlja2V0cy82LyI+aHR0cHM6Ly9zb3VyY2Vmb3JnZS5uZXQvcC9p
-Ym1zd3RwbTIvdGlja2V0cy82LzwvYT48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoZSBwYXRjaCBt
-YXkgbG9vayB3ZWlyZCBiZWNhdXNlIHRoZSBvcmlnaW5hbCBzb3VyY2UgdXNlcyBhIG1peHR1cmUg
-b2Ygc3BhY2VzIGFuZCA0LWNoYXJhY3RlciB0YWJzICh3aGljaCBtYXkgZXhwYW5kIHRvIDggY2hh
-cmFjdGVycywgZGVwZW5kaW5nIG9uIGhvdyB5b3UgdmlldyBpdCkuIFRoZSBzb3VyY2UgYWxzbyBo
-YXMgYSBtaXh0dXJlIG9mIGNvZGluZyBzdHlsZXMuPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5EYW48
-bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5
-Pgo8L2h0bWw+Cg==
+PGh0bWw+CiAgPGhlYWQ+CgogICAgPG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250
+ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPgogIDwvaGVhZD4KICA8Ym9keSB0ZXh0PSIj
+MDAwMDAwIiBiZ2NvbG9yPSIjRkZGRkZGIj4KICAgIDxkaXYgY2xhc3M9Im1vei10ZXh0LXBsYWlu
+IiB3cmFwPSJ0cnVlIiBzdHlsZT0iZm9udC1mYW1pbHk6CiAgICAgIC1tb3otZml4ZWQ7IGZvbnQt
+c2l6ZTogMTRweDsiIGxhbmc9IngtdW5pY29kZSI+CiAgICAgIDxwcmUgd3JhcD0iIj5IaSwgd2Ug
+YXJlIHdvcmtpbmcgb24gVFBNMi4wIGludGVncmF0aW9uIHdpdGggb3VyIGRldmljZXMuCldlIHVz
+ZSBJbmZpbmVvbiBUUE0gMi4wIGNoaXAgYW5kIEl0IHdvcmtzIGFzIGV4cGVjdC4KCldlIGFyZSB1
+c2luZyB0cG0yLXRzcyAxLjQuMCBsaWJyYXJ5LgpXZSB3YW50IHRvIHVzZSB0cmFuc2llbnQgUlNB
+IGtleSBnZW5lcmF0ZWQgaW5zaWRlIGRldmljZS4gS2V5IGlzIG9mCmNvdXJzZSBwcm90ZWN0ZWQg
+YnkgaXRzIHBhcmVudCBwYXNzd29yZCwKYnV0IHdlIHdhbnQgdG8gcHJvdGVjdCBpMmMgY29tbXVu
+aWNhdGlvbiBiZXR3ZWVuIGhvc3QgYW5kIHRwbSBjaGlwLiBXZQp3YW50IGNvbW11bmljYXRpb24g
+YmUgZW5jcnlwdGVkLCB3ZSBkb24ndCB3YW50IHRvIHNlbmQKcGFyZW50J3MgcGFzc3dvcmQgb3Ig
+a2V5J3MgcGFzc3dvcmQgaW4gY2xlYXIgdGV4dC4KCldlIGhhdmUgZm91bmQgZ29vZCBleGFtcGxl
+IHRwbWNsaWVudC5pbnQuY3BwLCBidXQgdGhlcmUgaXMgYW4gZXhhbXBsZQpob3cgdG8gZW5jcnlw
+dCBhY2Nlc3MgdG8gdGhlIE5WIEluZGV4LiBUaGVyZSBpcyBubyBhbnl0aGluZyBhYm91dCBSU0Eg
+a2V5cy4KSG93IHRvIGNhbGwgVHNzMl9TeXNfQ3JlYXRlIGZvciBjcmVhdGluZyBSU0Ega2V5IGFu
+ZCB0aGVuIHNldCBwYXNzd29yZAp0byB1c2Ugd2l0aCBzZXNzaW9uIHByb3RlY3RlZCBieSBUUE0y
+X1NFX0hNQUMgYW5kIHBhc3N3b3JkLgoKSW4gdGhlIGV4YW1wbGUgdGhlcmUgaXMgU3RhcnRBdXRo
+U2Vzc2lvbldpdGhQYXJhbXMgYW5kIFN0YXJ0QXV0aFNlc3Npb24uClRoZXJlIGlzIEtERmEgZnVu
+Y3Rpb24gY2FsbGVkIGJ1dCB3ZSBuZWVkIHNvbWV0aGluZyBzaGFyZWQgcGFzc3dvcmQgdG8KY3Jl
+YXRlIHNlc3Npb24ga2V5LgpXaGljaCBzaGFyZWQga2V5cyA/IElzIHRoaXMgcGFyZW50J3Mga2V5
+IHBhc3N3b3JkIG9yIGtleXMgcGFzc3dvcmQgPwoKVGhhbmtzIGluIGFkdmFuY2UsClRvbQoKCjwv
+cHJlPgogICAgPC9kaXY+CiAgPC9ib2R5Pgo8L2h0bWw+Cg==
 
---===============8315043632812157747==--
+--===============5264555310877347133==--
 
