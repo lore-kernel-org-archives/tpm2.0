@@ -1,18 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============6039787070496000578=="
+Content-Type: multipart/mixed; boundary="===============7772275114231242764=="
 MIME-Version: 1.0
-From: Tomasz Przybysz <tomaszp at mikronika.pl>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
 Subject: Re: [tpm2] How to protect and encrypt communication between host and
  TPM
-Date: Wed, 28 Mar 2018 09:34:49 +0200
-Message-ID: <5a49d9f7-bfe4-20d0-2f43-c6e4beec6fdd@mikronika.pl>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D010EAFD7E3@exch2010c.sit.fraunhofer.de
+Date: Wed, 28 Mar 2018 08:20:00 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D010EAFD82B@exch2010c.sit.fraunhofer.de>
+In-Reply-To: 5a49d9f7-bfe4-20d0-2f43-c6e4beec6fdd@mikronika.pl
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6039787070496000578==
+--===============7772275114231242764==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+ok, sorry I misread your original email...
+
+Regarding key usage: If you use a session for authorization, then the passw=
+ord is never send in the clear. Instead it is used to calculate an HMAC tha=
+t is used for authentication. This also applies to parent keys during Esys_=
+/TPM2_Create().
+
+Regarding key creation: If you use a session with the attribute TPMA_SESSIO=
+N_DECRYPT set (as I showed before), then the first parameter of the command=
+ (this is the parameter that contains the password for the newly created ke=
+y).
+
+Thus, all passwords will be encrypted.
+
+Further if you use a session with TPMA_SESSION_DECRYPT set for the TPM2_Sig=
+n() command, also the digest that you sign is encrypted.
+
+Hope this is clearer now...
+
+
+________________________________________
+From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Tomasz Przybysz [toma=
+szp(a)mikronika.pl]
+Sent: Wednesday, March 28, 2018 09:34
+To: tpm2(a)lists.01.org
+Subject: Re: [tpm2] How to protect and encrypt communication between host a=
+nd TPM
 
 This is one thing I can't understand.
 I want to use RSA key (not persistent). Why should I use NV ?
@@ -22,7 +50,7 @@ Could you explain ?
 
 
 
-W dniu 2018-03-28 o=C2=A009:25, Fuchs, Andreas pisze:
+W dniu 2018-03-28 o 09:25, Fuchs, Andreas pisze:
 > I'd also recommend using ESAPI for this.
 >
 > Basically, what you do is:
@@ -97,6 +125,10 @@ reate
 >> Tom
 >>
 
+_______________________________________________
+tpm2 mailing list
+tpm2(a)lists.01.org
+https://lists.01.org/mailman/listinfo/tpm2
 
---===============6039787070496000578==--
+--===============7772275114231242764==--
 
