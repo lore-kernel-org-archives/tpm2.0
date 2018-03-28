@@ -1,134 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============7772275114231242764=="
+Content-Type: multipart/mixed; boundary="===============1400407043077845894=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] How to protect and encrypt communication between host and
- TPM
-Date: Wed, 28 Mar 2018 08:20:00 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D010EAFD82B@exch2010c.sit.fraunhofer.de>
-In-Reply-To: 5a49d9f7-bfe4-20d0-2f43-c6e4beec6fdd@mikronika.pl
+From: Trevor Woerner <twoerner at gmail.com>
+Subject: Re: [tpm2] Problem with Infineon Iridium SLB 9670 TPM2.0
+Date: Wed, 28 Mar 2018 11:51:26 -0400
+Message-ID: <CAHUNapQacFucznccuXp5SeKm566wwXCGz91ckvJ-JcupuNqM1A@mail.gmail.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC563FF08D22@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7772275114231242764==
+--===============1400407043077845894==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-ok, sorry I misread your original email...
+Wow, what a great time to come across this thread!
 
-Regarding key usage: If you use a session for authorization, then the passw=
-ord is never send in the clear. Instead it is used to calculate an HMAC tha=
-t is used for authentication. This also applies to parent keys during Esys_=
-/TPM2_Create().
+I also have been trying to use TPM on a RPi3 and was seeing the exact same
+problems. I, however, was using OE and meta-measured to build my images. It
+turns out that meta-measured/recipes-tpm/tpm2-tools wasn't DEPENDing on
+tpm2-abrmd, so all builds as a result were not enabling the tabrmd TCTI.
 
-Regarding key creation: If you use a session with the attribute TPMA_SESSIO=
-N_DECRYPT set (as I showed before), then the first parameter of the command=
- (this is the parameter that contains the password for the newly created ke=
-y).
+Hence: https://github.com/flihp/meta-measured/pull/68
 
-Thus, all passwords will be encrypted.
+By the way, what's the difference between "abrmd" and "tabrmd"? It seems
+rather confusing that the tools list "tabrmd" as a TCTI, but in order to
+use it one specifies "abrmd". Something feels wrong.
 
-Further if you use a session with TPMA_SESSION_DECRYPT set for the TPM2_Sig=
-n() command, also the digest that you sign is encrypted.
+# tpm2_pcrlist -v
+tool=3D"tpm2_pcrlist" version=3D"" tctis=3D"tabrmd,socket,device,"
 
-Hope this is clearer now...
+# tpm2_pcrlist -T tabrmd
+ERROR: Unknown tcti, got: "tabrmd"
 
+# tpm2_pcrlist -T abrmd
+sha1 :
+  0  : 0000000000000000000000000000000000000000
+  1  : 0000000000000000000000000000000000000000
+...
 
-________________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Tomasz Przybysz [toma=
-szp(a)mikronika.pl]
-Sent: Wednesday, March 28, 2018 09:34
-To: tpm2(a)lists.01.org
-Subject: Re: [tpm2] How to protect and encrypt communication between host a=
-nd TPM
+--===============1400407043077845894==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-This is one thing I can't understand.
-I want to use RSA key (not persistent). Why should I use NV ?
-Is this shared password set for NV index used for generate session key
-to read RSA key ?
-Could you explain ?
+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2PjxkaXY+V293LCB3aGF0IGEgZ3JlYXQgdGltZSB0byBj
+b21lIGFjcm9zcyB0aGlzIHRocmVhZCE8YnI+PGJyPjwvZGl2PkkgYWxzbyBoYXZlIGJlZW4gdHJ5
+aW5nIHRvIHVzZSBUUE0gb24gYSBSUGkzIGFuZCB3YXMgc2VlaW5nIHRoZSBleGFjdCBzYW1lIHBy
+b2JsZW1zLiBJLCBob3dldmVyLCB3YXMgdXNpbmcgT0UgYW5kIG1ldGEtbWVhc3VyZWQgdG8gYnVp
+bGQgbXkgaW1hZ2VzLiBJdCB0dXJucyBvdXQgdGhhdCBtZXRhLW1lYXN1cmVkL3JlY2lwZXMtdHBt
+L3RwbTItdG9vbHMgd2FzbiYjMzk7dCBERVBFTkRpbmcgb24gdHBtMi1hYnJtZCwgc28gYWxsIGJ1
+aWxkcyBhcyBhIHJlc3VsdCB3ZXJlIG5vdCBlbmFibGluZyB0aGUgdGFicm1kIFRDVEkuPGJyPjxi
+cj48L2Rpdj5IZW5jZTogPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL2ZsaWhwL21ldGEtbWVh
+c3VyZWQvcHVsbC82OCI+aHR0cHM6Ly9naXRodWIuY29tL2ZsaWhwL21ldGEtbWVhc3VyZWQvcHVs
+bC82ODwvYT48YnI+PGJyPjwvZGl2PkJ5IHRoZSB3YXksIHdoYXQmIzM5O3MgdGhlIGRpZmZlcmVu
+Y2UgYmV0d2VlbiAmcXVvdDthYnJtZCZxdW90OyBhbmQgJnF1b3Q7dGFicm1kJnF1b3Q7PyBJdCBz
+ZWVtcyByYXRoZXIgY29uZnVzaW5nIHRoYXQgdGhlIHRvb2xzIGxpc3QgJnF1b3Q7dGFicm1kJnF1
+b3Q7IGFzIGEgVENUSSwgYnV0IGluIG9yZGVyIHRvIHVzZSBpdCBvbmUgc3BlY2lmaWVzICZxdW90
+O2Ficm1kJnF1b3Q7LiBTb21ldGhpbmcgZmVlbHMgd3JvbmcuPGJyPjxicj4jIHRwbTJfcGNybGlz
+dCAtdjxicj50b29sPSZxdW90O3RwbTJfcGNybGlzdCZxdW90OyB2ZXJzaW9uPSZxdW90OyZxdW90
+OyB0Y3Rpcz0mcXVvdDt0YWJybWQsc29ja2V0LGRldmljZSwmcXVvdDs8YnI+PGJyPiMgdHBtMl9w
+Y3JsaXN0IC1UIHRhYnJtZDxicj5FUlJPUjogVW5rbm93biB0Y3RpLCBnb3Q6ICZxdW90O3RhYnJt
+ZCZxdW90Ozxicj48YnI+IyB0cG0yX3Bjcmxpc3QgLVQgYWJybWQgPGJyPnNoYTEgOjxicj7CoCAw
+wqAgOiAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwPGJyPsKgIDHCoCA6
+IDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA8YnI+Li4uPGJyPjwvZGl2
+Pgo=
 
-
-
-W dniu 2018-03-28 o 09:25, Fuchs, Andreas pisze:
-> I'd also recommend using ESAPI for this.
->
-> Basically, what you do is:
-> - Esys_TR_Deserialize or Esys_Load some well-known key of the target TPM
-> - Esys_StartAuthSession() Use the well-known key as tpmkey here. This pro=
-tects against Man-in-the-middle attacks on the session itself if you're not=
- using an authValue on the NV.
-> - Esys_TRSess_SetAttribute(session, TPMA_SESSION_DECRYPT, TPMA_SESSION_DE=
-CRYPT) This makes the session use encryption. (Flag names are from the pers=
-pective of the TPM)
-> - Esys_NV_Write() using the session will automatically encrypt your first=
- parameter and also authenticate the command.
->
-> Respectively you can also do:
-> - Esys_TRSess_SetAttribute(session, TPMA_SESSION_ENCRYPT, TPMA_SESSION_EN=
-CRYPT)
-> - Esys_NV_Read()
->
->
-> A simple example on talking to NV-Space can be found in
-> https://github.com/tpm2-software/tpm2-tss/blob/master/test/integration/es=
-ys-nv-ram-ordinary-index.int.c
->
-> An example for encrypted sessions here:
-> https://github.com/tpm2-software/tpm2-tss/blob/6209718064c5ad73debf5a6174=
-32172944ec4ac8/test/integration/esys-create-session-auth.int.c
->
->
-> ________________________________________
-> From: Roberts, William C [william.c.roberts(a)intel.com]
-> Sent: Wednesday, March 28, 2018 03:56
-> To: Tomasz Przybysz; tpm2(a)lists.01.org; Fuchs, Andreas
-> Subject: RE: [tpm2] How to protect and encrypt communication between host=
- and TPM
->
->> -----Original Message-----
->> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Tomasz Przy=
-bysz
->> Sent: Monday, March 26, 2018 11:55 PM
->> To: tpm2(a)lists.01.org
->> Subject: [tpm2] How to protect and encrypt communication between host and
->> TPM
->>
->> Hi, we are working on TPM2.0 integration with our devices.
->> We use Infineon TPM 2.0 chip and It works as expect.
->>
->> We are using tpm2-tss 1.4.0 library.
->> We want to use transient RSA key generated inside device. Key is of cour=
-se
->> protected by its parent password, but we want to protect i2c communicati=
-on
->> between host and tpm chip. We want communication be encrypted, we don't
->> want to send parent's password or key's password in clear text.
->>
->> We have found good example tpmclient.int.cpp, but there is an example ho=
-w to
->> encrypt access to the NV Index. There is no anything about RSA keys.
->> How to call Tss2_Sys_Create for creating RSA key and then set password t=
-o use
->> with session protected by TPM2_SE_HMAC and password.
-> If you can work off of master until the next tss release, I think encrypt=
-ed sessions is one of the things
-> that the ESAPI makes easier, Andreas care to elaborate?
->
->> In the example there is StartAuthSessionWithParams and StartAuthSession.
->> There is KDFa function called but we need something shared password to c=
-reate
->> session key.
->> Which shared keys ? Is this parent's key password or keys password ?
->>
->> Thanks in advance,
->> Tom
->>
-
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org
-https://lists.01.org/mailman/listinfo/tpm2
-
---===============7772275114231242764==--
+--===============1400407043077845894==--
 
