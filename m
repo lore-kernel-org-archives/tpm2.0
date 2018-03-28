@@ -1,78 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============2782092370272316895=="
+Content-Type: multipart/mixed; boundary="===============8135600933598753329=="
 MIME-Version: 1.0
 From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] Problem with Infineon Iridium SLB 9670 TPM2.0
-Date: Wed, 28 Mar 2018 10:40:16 -0700
-Message-ID: <20180328174016.GA25666@intel.com>
-In-Reply-To: CAHUNapQacFucznccuXp5SeKm566wwXCGz91ckvJ-JcupuNqM1A@mail.gmail.com
+Subject: Re: [tpm2] Initialization fails with error 0xb000b
+Date: Wed, 28 Mar 2018 10:49:15 -0700
+Message-ID: <20180328174915.GB25666@intel.com>
+In-Reply-To: HE1PR03MB3164B429D84E85C20125579EF6A30@HE1PR03MB3164.eurprd03.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2782092370272316895==
+--===============8135600933598753329==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hey Trevor,
+Hi Moneeb,
 
-On Wed, Mar 28, 2018 at 11:51:26AM -0400, Trevor Woerner wrote:
-> Wow, what a great time to come across this thread!
+On Wed, Mar 28, 2018 at 05:15:10PM +0000, Moneeb Azhar wrote:
+> Hey,
 > =
 
-> I also have been trying to use TPM on a RPi3 and was seeing the exact same
-> problems. I, however, was using OE and meta-measured to build my images. =
-It
-> turns out that meta-measured/recipes-tpm/tpm2-tools wasn't DEPENDing on
-> tpm2-abrmd, so all builds as a result were not enabling the tabrmd TCTI.
+> I am getting the following error on execution:
 > =
 
-> Hence: https://github.com/flihp/meta-measured/pull/68
+> ubuntu:~/Desktop$ sudo tpm2-abrmd --allow-root --tcti=3Dlibtcti-socket.so
+> ** (tpm2-abrmd:36554): WARNING **: failed to dlopen library: libtcti-sock=
+et.so
+> ** (tpm2-abrmd:36554): CRITICAL **: TCTI initialization failed: 0xb000b
 > =
 
-> By the way, what's the difference between "abrmd" and "tabrmd"?
+> Same error if i execute as tss:
+> =
 
-There isn't one really. The daemon was named 'tpm2-abrmd' instead of
-'tabrmd' based on some early user feedback. Having the 'tpm2' in the
-name of the daemon made its purpose more clear according to this user.
-'tabrmd' is the same name just with the 'tpm2' collapsed into the rest
-of the acronym.
+> $ sudo -u tss tpm2-abrmd --tcti=3Dlibtcti-socket.so
+> [sudo] password for wisn:
+> ** (tpm2-abrmd:38290): WARNING **: failed to dlopen library: libtcti-sock=
+et.so
+> ** (tpm2-abrmd:38290): CRITICAL **: TCTI initialization failed: 0xb000b
+> =
 
-I can see where having an additional variation would cause confusion.
+> =
 
-> It seems
-> rather confusing that the tools list "tabrmd" as a TCTI, but in order to
-> use it one specifies "abrmd". Something feels wrong.
+> I did ldconfig after installation with no effect. I created a gist of the=
+ installation steps I took, in case this helps: https://gist.github.com/mon=
+eeb777/ceabfad71462d4ffc3e0c25a9da2b2ff
+> =
 
-Being consistent is important especially w/r/t documentation. Seems like
-a worthy bug for the tools issue tracker.
+> Can someone guide me with this?
 
-Also thanks for giving meta-measured some love. I've been neglecting it
-a bit on account of work on the impending 2.0 release of the core TSS2
-libraries. Once we ship the next major release of all components my plan
-is to work on upstreaming the recipes to whatever OE layer is
-appropriate to get them properly supported.
+Gladly. Running as root vs running as tss user in this case shouldn't
+have an impact. The daemon isn't able to open the shared object based on
+the name you've provided. This library has been renamed in the tpm2-tss
+repo in anticipation of our next major release. It is now called
+"libtss2-tcti-mssim.so".
 
+Dan just updated the man page for the daemon so that we're using the
+right names in the examples:
+https://github.com/tpm2-software/tpm2-abrmd/commit/98dd707fe58d839e2e642e2c=
+9108c77e277b94f2
+
+This of course assumes you're working off of the 'master' branch of the
+repos of course.
+
+Hope this helps,
 Philip
 
-> # tpm2_pcrlist -v
-> tool=3D"tpm2_pcrlist" version=3D"" tctis=3D"tabrmd,socket,device,"
-> =
-
-> # tpm2_pcrlist -T tabrmd
-> ERROR: Unknown tcti, got: "tabrmd"
-> =
-
-> # tpm2_pcrlist -T abrmd
-> sha1 :
->   0  : 0000000000000000000000000000000000000000
->   1  : 0000000000000000000000000000000000000000
-> ...
-
-> _______________________________________________
-> tpm2 mailing list
-> tpm2(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/tpm2
-
-
---===============2782092370272316895==--
+--===============8135600933598753329==--
 
