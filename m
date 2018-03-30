@@ -1,50 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============2551759805388110047=="
+Content-Type: multipart/mixed; boundary="===============0311998432404915622=="
 MIME-Version: 1.0
-From: Anderson, Daniel <daniel.anderson at intel.com>
-Subject: [tpm2] tpm2-abrmd configure syntax error near expected token
- AX_VALGRIND_DFLT
-Date: Wed, 28 Mar 2018 22:02:59 +0000
-Message-ID: <207C810BE4BA2440832668E0F208BFD3B02817@ORSMSX108.amr.corp.intel.com>
+From: Al Munyandy, MunessparanX <munessparanx.al.munyandy at intel.com>
+Subject: [tpm2] noDA
+Date: Fri, 30 Mar 2018 03:32:01 +0000
+Message-ID: <201942FCAB84C34C9D845866BDB9256806D8C50E@PGSMSX101.gar.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2551759805388110047==
+--===============0311998432404915622==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If you get this error building tpm2-abrmd during ./configure:
+Hi,
 
-./configure: line 13634: syntax error near unexpected token sgcheck,' ./con=
-figure: line 13634:AX_VALGRIND_DFLT(sgcheck, off)'
+I'm looking for command to check "noDA" status and also command to set "noD=
+A" to clear.
 
-The problem is your version of Linux does not have the latest and greatest =
-autoconf-archive package.  In my case the current Ubuntu 16.04.4 ("xenial")=
- LTS package autoconf-archive is too old (version 20150925-1).
+May I know where I could get the list of command to use for TPM2 tools.
 
-But the future Ubuntu 17.10 LTS ("artful") has a newer version that works O=
-K: 20170928-2.
+Thanks!
+Regards,
+munes
 
-Here's a workaround until the new Ubuntu LTS version is released (or you ca=
-n switch to Ubuntu development releases). It grabs a newer version of ax_va=
-lgrind_check.m4 with m4 macro AX_VALGRIND_DFLT defined.
+--===============0311998432404915622==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-Details in https://github.com/tpm2-software/tpm2-abrmd/issues/404
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
+ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
+b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
+emU6NjEyLjBwdCA3OTIuMHB0OwoJbWFyZ2luOjcyLjBwdCA3Mi4wcHQgNzIuMHB0IDcyLjBwdDt9
+CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtp
+ZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9
+IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpz
+aGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAv
+Pgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0i
+RU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRpdiBjbGFzcz0iV29yZFNl
+Y3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tTVkiPkhpLDxvOnA+
+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tTVki
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
+bGFuZz0iRU4tTVkiPkkmIzgyMTc7bSBsb29raW5nIGZvciBjb21tYW5kIHRvIGNoZWNrICYjODIy
+MDtub0RBJiM4MjIxOyBzdGF0dXMgYW5kIGFsc28gY29tbWFuZCB0byBzZXQgJiM4MjIwO25vREEm
+IzgyMjE7IHRvIGNsZWFyLgo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxzcGFuIGxhbmc9IkVOLU1ZIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLU1ZIj5NYXkgSSBrbm93IHdoZXJlIEkgY291
+bGQgZ2V0IHRoZSBsaXN0IG9mIGNvbW1hbmQgdG8gdXNlIGZvciBUUE0yIHRvb2xzLjxvOnA+PC9v
+OnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tTVkiPjxv
+OnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFu
+Zz0iRU4tTVkiPlRoYW5rcyE8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxzcGFuIGxhbmc9IkVOLU1ZIj5SZWdhcmRzLDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tTVkiPm11bmVzPG86cD48L286cD48L3Nw
+YW4+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
-Dan
-
-cd /usr/share/aclocal
-cp -p ax_valgrind_check.m4 ax_valgrind_check.m4.ori
-mkdir tmp
-cd tmp
-wget http://mirrors.kernel.org/ubuntu/pool/universe/a/autoconf-archive/auto=
-conf-archive_20170321-1_all.deb =
-
-dpkg-deb -R autoconf-archive_20170321-1_all.deb tmp
-cp tmp/usr/share/aclocal/ax_valgrind_check.m4  ..
-ls -l /usr/share/aclocal/ax_valgrind_check.m4*
-cd ..
-rm -rf tmp
-
---===============2551759805388110047==--
+--===============0311998432404915622==--
 
