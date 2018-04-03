@@ -1,133 +1,106 @@
-Content-Type: multipart/mixed; boundary="===============2718232417436675224=="
+Content-Type: multipart/mixed; boundary="===============4465667561148985412=="
 MIME-Version: 1.0
-From: fixed-term.Jan.Bissinger <fixed-term.Jan.Bissinger at sg.bosch.com>
-Subject: [tpm2] Cannot execute commands on TPM2-Simulator
-Date: Tue, 03 Apr 2018 17:30:21 +0800
-Message-ID: <eaf4625d-be32-6a87-7e07-099389781b54@sg.bosch.com>
+From: Javier Martinez Canillas <javierm at redhat.com>
+Subject: Re: [tpm2] Cannot execute commands on TPM2-Simulator
+Date: Tue, 03 Apr 2018 12:24:11 +0200
+Message-ID: <a98c9636-5cf4-3605-5644-4878ad403d4a@redhat.com>
+In-Reply-To: eaf4625d-be32-6a87-7e07-099389781b54@sg.bosch.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2718232417436675224==
+--===============4465667561148985412==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi everyone,
+Hi,
 
-I just setup the complete stack with the following versions:
+On 04/03/2018 11:30 AM, fixed-term.Jan.Bissinger wrote:
+> Hi everyone,
+> =
 
-    tpm2-tools: master (as of 03/04/2018)
+> I just setup the complete stack with the following versions:
+> =
 
-    tpm2-tss: master (as of 03/04/2018)
+>     tpm2-tools: master (as of 03/04/2018)
+> =
 
-    tpm2-abrmd: 1.3.1
+>     tpm2-tss: master (as of 03/04/2018)
+> =
 
-I am running Ubuntu 14.02 on my machine.
+>     tpm2-abrmd: 1.3.1
+> =
 
-I have two questions:
 
-_1) Executing of tpm2_* commands_
+Did you build in this order? You should instead build:
 
-I was able to compile and install all files. Now, I want to execute e.g. =
+tpm2-tss
+tpm2-abrmd
+tpm2-tools
 
-the command tpm2_getrandom 4, so this is what I am doing:
+Otherwise the tpm2-tools won't be built with tpm2-abrmd support.
 
-    $ sudo ./~/tpm2/tpm2-simulator/src/tpm_server & // starts
-    successfully and also logs when tpm2-abrmd is connected
+> I am running Ubuntu 14.02 on my machine.
+> =
 
-    $ sudo ./~/tpm2/tpm-abrmd/tpm2-abrmd --tcti=3Dsocket // without
-    --tcti=3Dsocket I get the error "TCTI initialization failed: 0xa000a"
+> I have two questions:
+> =
 
-    $ sudo ./~/tpm2/tpm-tools/tools/tpm2_startup // as required in the
-    documentation of the TPM2-simulator
+> _1) Executing of tpm2_* commands_
+> =
 
-    $ sudo ./~/tpm2/tpm-tools/tools/tpm2_getrandom 4
+> I was able to compile and install all files. Now, I want to execute e.g. =
 
-However, there is nothing happening. I can only cancel with CRTL+C. Same =
+> the command tpm2_getrandom 4, so this is what I am doing:
+> =
 
-behavior for e.g. tpm2_pcrlist
+>     $ sudo ./~/tpm2/tpm2-simulator/src/tpm_server & // starts
+>     successfully and also logs when tpm2-abrmd is connected
+> =
 
-_2) Not full range of tpm2_* commands_
+>     $ sudo ./~/tpm2/tpm-abrmd/tpm2-abrmd --tcti=3Dsocket // without
+>     --tcti=3Dsocket I get the error "TCTI initialization failed: 0xa000a"
+>
 
-The executables in my ~/tpm2/tpm-tools/tools/-directory are not =
+I believe the default is to use the device TCTI, can you check the
+permission bits for /dev/tpm* ?
 
-complete. Several commands, like e.g. tpm2_version or tpm2_takeownership
+>     $ sudo ./~/tpm2/tpm-tools/tools/tpm2_startup // as required in the
+>     documentation of the TPM2-simulator
+> =
 
-How is that possible?
+>     $ sudo ./~/tpm2/tpm-tools/tools/tpm2_getrandom 4
+> =
 
-Thanks
+> However, there is nothing happening. I can only cancel with CRTL+C. Same =
 
---===============2718232417436675224==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> behavior for e.g. tpm2_pcrlist
+> =
 
-PGh0bWw+CiAgPGhlYWQ+CgogICAgPG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250
-ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPgogIDwvaGVhZD4KICA8Ym9keSB0ZXh0PSIj
-MDAwMDAwIiBiZ2NvbG9yPSIjRkZGRkZGIj4KICAgIDxwPjxmb250IHNpemU9Ii0xIj48Zm9udCBm
-YWNlPSJCb3NjaCBPZmZpY2UgU2FucyI+SGkgZXZlcnlvbmUsPC9mb250PjwvZm9udD48L3A+CiAg
-ICA8cD48Zm9udCBzaXplPSItMSI+PGZvbnQgZmFjZT0iQm9zY2ggT2ZmaWNlIFNhbnMiPkkganVz
-dCBzZXR1cCB0aGUKICAgICAgICAgIGNvbXBsZXRlIHN0YWNrIHdpdGggdGhlIGZvbGxvd2luZyB2
-ZXJzaW9uczo8L2ZvbnQ+PC9mb250PjwvcD4KICAgIDxibG9ja3F1b3RlPgogICAgICA8cD48Zm9u
-dCBzaXplPSItMSI+PGZvbnQgZmFjZT0iQm9zY2ggT2ZmaWNlIFNhbnMiPnRwbTItdG9vbHM6CiAg
-ICAgICAgICAgIG1hc3RlciAoYXMgb2YgMDMvMDQvMjAxOCk8YnI+CiAgICAgICAgICA8L2ZvbnQ+
-PC9mb250PjwvcD4KICAgICAgPHA+PGZvbnQgc2l6ZT0iLTEiPjxmb250IGZhY2U9IkJvc2NoIE9m
-ZmljZSBTYW5zIj50cG0yLXRzczogPC9mb250PjwvZm9udD48Zm9udAogICAgICAgICAgc2l6ZT0i
-LTEiPjxmb250IGZhY2U9IkJvc2NoIE9mZmljZSBTYW5zIj48Zm9udCBzaXplPSItMSI+PGZvbnQK
-ICAgICAgICAgICAgICAgIGZhY2U9IkJvc2NoIE9mZmljZSBTYW5zIj5tYXN0ZXIgKGFzIG9mIDAz
-LzA0LzIwMTgpPC9mb250PjwvZm9udD48L2ZvbnQ+PC9mb250PjwvcD4KICAgICAgPHA+PGZvbnQg
-c2l6ZT0iLTEiPjxmb250IGZhY2U9IkJvc2NoIE9mZmljZSBTYW5zIj50cG0yLWFicm1kOgogICAg
-ICAgICAgICAxLjMuMTwvZm9udD48L2ZvbnQ+PC9wPgogICAgPC9ibG9ja3F1b3RlPgogICAgPHA+
-PGZvbnQgc2l6ZT0iLTEiPjxmb250IGZhY2U9IkJvc2NoIE9mZmljZSBTYW5zIj5JIGFtIHJ1bm5p
-bmcKICAgICAgICAgIFVidW50dSAxNC4wMiBvbiBteSBtYWNoaW5lLjxicj4KICAgICAgICA8L2Zv
-bnQ+PC9mb250PjwvcD4KICAgIDxwPjxmb250IHNpemU9Ii0xIj48Zm9udCBmYWNlPSJCb3NjaCBP
-ZmZpY2UgU2FucyI+SSBoYXZlIHR3bwogICAgICAgICAgcXVlc3Rpb25zOjwvZm9udD48L2ZvbnQ+
-PC9wPgogICAgPHA+PGZvbnQgc2l6ZT0iLTEiPjxmb250IGZhY2U9IkJvc2NoIE9mZmljZSBTYW5z
-Ij48dT4xKSBFeGVjdXRpbmcgb2YKICAgICAgICAgICAgdHBtMl8qIGNvbW1hbmRzPC91Pjxicj4K
-ICAgICAgICA8L2ZvbnQ+PC9mb250PjwvcD4KICAgIDxwPjxmb250IHNpemU9Ii0xIj48Zm9udCBm
-YWNlPSJCb3NjaCBPZmZpY2UgU2FucyI+SSB3YXMgYWJsZSB0bwogICAgICAgICAgY29tcGlsZSBh
-bmQgaW5zdGFsbCBhbGwgZmlsZXMuIE5vdywgSSB3YW50IHRvIGV4ZWN1dGUgZS5nLiB0aGUKICAg
-ICAgICAgIGNvbW1hbmQgdHBtMl9nZXRyYW5kb20gNCwgc28gdGhpcyBpcyB3aGF0IEkgYW0gZG9p
-bmc6PC9mb250PjwvZm9udD48L3A+CiAgICA8YmxvY2txdW90ZT4KICAgICAgPHA+PGZvbnQgc2l6
-ZT0iLTEiPjxmb250IGZhY2U9IkJvc2NoIE9mZmljZSBTYW5zIj4kIHN1ZG8KICAgICAgICAgICAg
-Li9+L3RwbTIvdHBtMi1zaW11bGF0b3Ivc3JjL3RwbV9zZXJ2ZXIgJmFtcDsgLy8gc3RhcnRzCiAg
-ICAgICAgICAgIHN1Y2Nlc3NmdWxseSBhbmQgYWxzbyBsb2dzIHdoZW4gdHBtMi1hYnJtZCBpcyBj
-b25uZWN0ZWQ8YnI+CiAgICAgICAgICA8L2ZvbnQ+PC9mb250PjwvcD4KICAgICAgPHA+PGZvbnQg
-c2l6ZT0iLTEiPjxmb250IGZhY2U9IkJvc2NoIE9mZmljZSBTYW5zIj4kIHN1ZG8KICAgICAgICAg
-ICAgLi9+L3RwbTIvdHBtLWFicm1kL3RwbTItYWJybWQgLS10Y3RpPXNvY2tldCAvLyB3aXRob3V0
-CiAgICAgICAgICAgIC0tdGN0aT1zb2NrZXQgSSBnZXQgdGhlIGVycm9yICJUQ1RJIGluaXRpYWxp
-emF0aW9uIGZhaWxlZDoKICAgICAgICAgICAgMHhhMDAwYSI8YnI+CiAgICAgICAgICA8L2ZvbnQ+
-PC9mb250PjwvcD4KICAgICAgPHA+PGZvbnQgc2l6ZT0iLTEiPjxmb250IGZhY2U9IkJvc2NoIE9m
-ZmljZSBTYW5zIj48Zm9udCBzaXplPSItMSI+PGZvbnQKICAgICAgICAgICAgICAgIGZhY2U9IkJv
-c2NoIE9mZmljZSBTYW5zIj4kIHN1ZG8KICAgICAgICAgICAgICAgIC4vfi90cG0yL3RwbS10b29s
-cy90b29scy90cG0yX3N0YXJ0dXAgLy8gYXMgcmVxdWlyZWQgaW4KICAgICAgICAgICAgICAgIHRo
-ZSBkb2N1bWVudGF0aW9uIG9mIHRoZSBUUE0yLXNpbXVsYXRvcjxicj4KICAgICAgICAgICAgICA8
-L2ZvbnQ+PC9mb250PjwvZm9udD48L2ZvbnQ+PC9wPgogICAgICA8cD48Zm9udCBzaXplPSItMSI+
-PGZvbnQgZmFjZT0iQm9zY2ggT2ZmaWNlIFNhbnMiPiQgc3VkbwogICAgICAgICAgICAuL34vdHBt
-Mi90cG0tdG9vbHMvdG9vbHMvdHBtMl9nZXRyYW5kb20gNDwvZm9udD48L2ZvbnQ+PC9wPgogICAg
-PC9ibG9ja3F1b3RlPgogICAgPHA+PGZvbnQgc2l6ZT0iLTEiPjxmb250IGZhY2U9IkJvc2NoIE9m
-ZmljZSBTYW5zIj5Ib3dldmVyLCB0aGVyZSBpcwogICAgICAgICAgbm90aGluZyBoYXBwZW5pbmcu
-IEkgY2FuIG9ubHkgY2FuY2VsIHdpdGggQ1JUTCtDLiBTYW1lCiAgICAgICAgICBiZWhhdmlvciBm
-b3IgZS5nLiB0cG0yX3Bjcmxpc3Q8YnI+CiAgICAgICAgPC9mb250PjwvZm9udD48L3A+CiAgICA8
-cD48dT48Zm9udCBzaXplPSItMSI+PGZvbnQgZmFjZT0iQm9zY2ggT2ZmaWNlIFNhbnMiPjIpIE5v
-dCBmdWxsCiAgICAgICAgICAgIHJhbmdlIG9mIHRwbTJfKiBjb21tYW5kczwvZm9udD48L2ZvbnQ+
-PC91PjwvcD4KICAgIDxwPjxmb250IHNpemU9Ii0xIj48Zm9udCBmYWNlPSJCb3NjaCBPZmZpY2Ug
-U2FucyI+VGhlIGV4ZWN1dGFibGVzIGluCiAgICAgICAgICBteSA8L2ZvbnQ+PC9mb250Pjxmb250
-IHNpemU9Ii0xIj48Zm9udCBmYWNlPSJCb3NjaCBPZmZpY2UKICAgICAgICAgIFNhbnMiPjxmb250
-IHNpemU9Ii0xIj48Zm9udCBmYWNlPSJCb3NjaCBPZmZpY2UgU2FucyI+PGZvbnQKICAgICAgICAg
-ICAgICAgIHNpemU9Ii0xIj48Zm9udCBmYWNlPSJCb3NjaCBPZmZpY2UgU2FucyI+fi90cG0yL3Rw
-bS10b29scy90b29scy8tZGlyZWN0b3J5CiAgICAgICAgICAgICAgICAgIGFyZSBub3QgY29tcGxl
-dGUuIFNldmVyYWwgY29tbWFuZHMsIGxpa2UgZS5nLgogICAgICAgICAgICAgICAgICB0cG0yX3Zl
-cnNpb24gb3IgdHBtMl90YWtlb3duZXJzaGlwPC9mb250PjwvZm9udD48L2ZvbnQ+PC9mb250Pjwv
-Zm9udD48L2ZvbnQ+PC9wPgogICAgPHA+PGZvbnQgc2l6ZT0iLTEiPjxmb250IGZhY2U9IkJvc2No
-IE9mZmljZSBTYW5zIj48Zm9udCBzaXplPSItMSI+PGZvbnQKICAgICAgICAgICAgICBmYWNlPSJC
-b3NjaCBPZmZpY2UgU2FucyI+PGZvbnQgc2l6ZT0iLTEiPjxmb250IGZhY2U9IkJvc2NoCiAgICAg
-ICAgICAgICAgICAgIE9mZmljZSBTYW5zIj5Ib3cgaXMgdGhhdCBwb3NzaWJsZT88YnI+CiAgICAg
-ICAgICAgICAgICA8L2ZvbnQ+PC9mb250PjwvZm9udD48L2ZvbnQ+PC9mb250PjwvZm9udD48L3A+
-CiAgICA8ZGl2IGNsYXNzPSJtb3otc2lnbmF0dXJlIj5UaGFua3M8YnI+CiAgICAgIDxmb250IHNp
-emU9IjIiPjxmb250IHNpemU9IjIiPjwvZm9udD48L2ZvbnQ+PC9kaXY+CiAgPC9ib2R5Pgo8L2h0
-bWw+Cg==
+> _2) Not full range of tpm2_* commands_
+> =
 
---===============2718232417436675224==--
+> The executables in my ~/tpm2/tpm-tools/tools/-directory are not =
+
+> complete. Several commands, like e.g. tpm2_version or tpm2_takeownership
+>
+
+I don't think there was ever tpm2_version tool... but tpm2_takeownership
+doesn't exist in master anymore. Now you should use tpm2_changeauth.
+ =
+
+> How is that possible?
+> =
+
+> Thanks
+> =
+
+Best regards,
+-- =
+
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
+
+--===============4465667561148985412==--
 
