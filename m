@@ -1,106 +1,359 @@
-Content-Type: multipart/mixed; boundary="===============4465667561148985412=="
+Content-Type: multipart/mixed; boundary="===============4721138642570965917=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] Cannot execute commands on TPM2-Simulator
-Date: Tue, 03 Apr 2018 12:24:11 +0200
-Message-ID: <a98c9636-5cf4-3605-5644-4878ad403d4a@redhat.com>
-In-Reply-To: eaf4625d-be32-6a87-7e07-099389781b54@sg.bosch.com
+From: Tomasz Przybysz <tomaszp at mikronika.pl>
+Subject: [tpm2] SLB 9670 TPM 2.0 device,
+ How many keys I can store inside TPM as persistent
+Date: Fri, 06 Apr 2018 07:49:49 +0200
+Message-ID: <e6f127d2-576d-274f-817b-fe731304814e@mikronika.pl>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4465667561148985412==
+--===============4721138642570965917==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On 04/03/2018 11:30 AM, fixed-term.Jan.Bissinger wrote:
-> Hi everyone,
-> =
-
-> I just setup the complete stack with the following versions:
-> =
-
->     tpm2-tools: master (as of 03/04/2018)
-> =
-
->     tpm2-tss: master (as of 03/04/2018)
-> =
-
->     tpm2-abrmd: 1.3.1
-> =
+I want to store about 16 RSA 2048 bits keys used to TLS protocol.
+I have Infineon SLB 9670 TPM2.0 chip.
+I wonder if I can store them inside TPM device (as persistant) or I need
+to store keys outside chip and load them to the device when needed ?
+What is the real capacity of this device ?
 
 
-Did you build in this order? You should instead build:
+*SLB 9670 TCG Family 2 Level 00 Rev. 01.16 Data Sheet says:*
 
-tpm2-tss
-tpm2-abrmd
-tpm2-tools
+=E2=80=A2 Up to 3 loaded sessions (TPM_PT_HR_LOADED_MIN)
+=E2=80=A2 Up to 64 active sessions (TPM_PT_ACTIVE_SESSIONS_MAX)
+=E2=80=A2 Up to 3 loaded transient Objects (TPM_PT_HR_TRANSIENT_MIN)
+*=E2=80=A2 Up to 7 loaded persistent Objects (TPM_PT_HR_PERSISTENT_MIN)*
+=E2=80=A2 Up to 8 NV counters
+=E2=80=A2 Up to 1 kByte for command parameters and response parameters
+=E2=80=A2 Up to 768 Byte for NV read or NV write
 
-Otherwise the tpm2-tools won't be built with tpm2-abrmd support.
 
-> I am running Ubuntu 14.02 on my machine.
-> =
+*tpm2-tss-1.4.0\include\sapi\tss2_tpm2_types.h says:*
 
-> I have two questions:
-> =
+#define=C2=A0=C2=A0=C2=A0 TPM_PT_HR_PERSISTENT_MIN=C2=A0=C2=A0=C2=A0 (PT_FI=
+XED + 15 )=C2=A0=C2=A0=C2=A0 =C2=A0/* the
+minimum number of persistent objects that can be held in TPM NV
+memoryNOTE=C2=A0=C2=A0=C2=A0 This minimum shall be no less than the minimum=
+ value
+required by the platformspecific specification to which the TPM is
+built.=C2=A0 */
 
-> _1) Executing of tpm2_* commands_
-> =
+I don't uderstand. So what is max capacity of this device ?
+*
+Up to 7 loaded persistent Objects***for my understandig it's max
+capacity. But why this parameter is called *TPM_PT_HR_PERSISTENT_MIN* ?
+vs
+"the minimum number of persistent objects that can be held in TPM NV memory"
 
-> I was able to compile and install all files. Now, I want to execute e.g. =
+So is it min or max ?
 
-> the command tpm2_getrandom 4, so this is what I am doing:
-> =
+What does 'loaded persistent' mean=C2=A0 ? As I know persistent key is alwa=
+ys
+loaded.
+When I want to use persistent key I don't need load it.
 
->     $ sudo ./~/tpm2/tpm2-simulator/src/tpm_server & // starts
->     successfully and also logs when tpm2-abrmd is connected
-> =
+from my TPM device:
+./tpm2_getcap -c properties-fixed
+WARN: More data to be queried: capability: 0x6, property: 0x100
 
->     $ sudo ./~/tpm2/tpm-abrmd/tpm2-abrmd --tcti=3Dsocket // without
->     --tcti=3Dsocket I get the error "TCTI initialization failed: 0xa000a"
->
+TPM_PT_FAMILY_INDICATOR:
+=C2=A0 as UINT32:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x08322e3000
+=C2=A0 as string:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "2.0"
+TPM_PT_LEVEL:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0
+TPM_PT_REVISION:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 1.16
+TPM_PT_DAY_OF_YEAR:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000=
+00f
+TPM_PT_YEAR:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x000007e0
+TPM_PT_MANUFACTURER:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x49465800
+TPM_PT_VENDOR_STRING_1:
+=C2=A0 as UINT32:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x534c4239
+=C2=A0 as string:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "SLB9"
+TPM_PT_VENDOR_STRING_2:
+=C2=A0 as UINT32:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x36373000
+=C2=A0 as string:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "670"
+TPM_PT_VENDOR_STRING_3:
+=C2=A0 as UINT32:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000000
+=C2=A0 as string:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ""
+TPM_PT_VENDOR_STRING_4:
+=C2=A0 as UINT32:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000000
+=C2=A0 as string:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ""
+TPM_PT_VENDOR_TPM_TYPE:=C2=A0=C2=A0=C2=A0=C2=A0 0x00000000
+TPM_PT_FIRMWARE_VERSION_1:=C2=A0 0x0007003d
+TPM_PT_FIRMWARE_VERSION_2:=C2=A0 0x000ae100
+TPM_PT_INPUT_BUFFER:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000400
+TPM_PT_HR_TRANSIENT_MIN:=C2=A0=C2=A0=C2=A0 0x00000003
+*TPM_PT_HR_PERSISTENT_MIN:=C2=A0=C2=A0 0x00000007*
+TPM_PT_HR_LOADED_MIN:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000003
+TPM_PT_ACTIVE_SESSIONS_MAX: 0x00000040
+TPM_PT_PCR_COUNT:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x00000018
+TPM_PT_PCR_SELECT_MIN:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000003
+TPM_PT_CONTEXT_GAP_MAX:=C2=A0=C2=A0=C2=A0=C2=A0 0x0000ffff
+TPM_PT_NV_COUNTERS_MAX:=C2=A0=C2=A0=C2=A0=C2=A0 0x00000008
+TPM_PT_NV_INDEX_MAX:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000680
+TPM_PT_MEMORY:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 0x00000006
+TPM_PT_CLOCK_UPDATE:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00080000
+TPM_PT_CONTEXT_HASH:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0000000b
+TPM_PT_CONTEXT_SYM:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000=
+006
+TPM_PT_CONTEXT_SYM_SIZE:=C2=A0=C2=A0=C2=A0 0x00000080
+TPM_PT_ORDERLY_COUNT:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x000000ff
+TPM_PT_MAX_COMMAND_SIZE:=C2=A0=C2=A0=C2=A0 0x00000500
+TPM_PT_MAX_RESPONSE_SIZE:=C2=A0=C2=A0 0x00000500
+TPM_PT_MAX_DIGEST:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x=
+00000020
+TPM_PT_MAX_OBJECT_CONTEXT:=C2=A0 0x000003b8
+TPM_PT_MAX_SESSION_CONTEXT: 0x000000eb
+TPM_PT_PS_FAMILY_INDICATOR: 0x00000001
+TPM_PT_PS_LEVEL:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0x00000000
+TPM_PT_PS_REVISION:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000=
+100
+TPM_PT_PS_DAY_OF_YEAR:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000000
+TPM_PT_PS_YEAR:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 0x00000000
+TPM_PT_SPLIT_MAX:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x00000080
+TPM_PT_TOTAL_COMMANDS:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0000005a
+TPM_PT_LIBRARY_COMMANDS:=C2=A0=C2=A0=C2=A0 0x00000059
+TPM_PT_VENDOR_COMMANDS:=C2=A0=C2=A0=C2=A0=C2=A0 0x00000001
+TPM_PT_NV_BUFFER_MAX:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000300
 
-I believe the default is to use the device TCTI, can you check the
-permission bits for /dev/tpm* ?
+At this moment I can store and use 18 RSA keys=C2=A0 inside TPM as persiste=
+nt
+keys and I think I can store more.
 
->     $ sudo ./~/tpm2/tpm-tools/tools/tpm2_startup // as required in the
->     documentation of the TPM2-simulator
-> =
+./tpm2_listpersistent
+persistent-handle[0]:0x81010001 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricte=
+d|decrypt
+persistent-handle[1]:0x81010002 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[2]:0x81010003 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricte=
+d|decrypt
+persistent-handle[3]:0x81010010 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[4]:0x81010011 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[5]:0x81010012 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[6]:0x81010013 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[7]:0x81010014 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[8]:0x81010015 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[9]:0x81010016 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[10]:0x81010017 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[11]:0x81010020 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[12]:0x81010021 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[13]:0x81010022 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[14]:0x81010023 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|s=
+ign
+persistent-handle[15]:0x81010030 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricte=
+d|decrypt
+persistent-handle[16]:0x81010031 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricte=
+d|decrypt
+persistent-handle[17]:0x81010032 key-alg:rsa hash-alg:sha256
+object-attr:fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricte=
+d|decrypt
 
->     $ sudo ./~/tpm2/tpm-tools/tools/tpm2_getrandom 4
-> =
+I want to know the limits. Documented limits.
 
-> However, there is nothing happening. I can only cancel with CRTL+C. Same =
+Thanks,
+Tom
 
-> behavior for e.g. tpm2_pcrlist
-> =
 
-> _2) Not full range of tpm2_* commands_
-> =
+--===============4721138642570965917==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-> The executables in my ~/tpm2/tpm-tools/tools/-directory are not =
+PGh0bWw+CiAgPGhlYWQ+CgogICAgPG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250
+ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPgogIDwvaGVhZD4KICA8Ym9keSB0ZXh0PSIj
+MDAwMDAwIiBiZ2NvbG9yPSIjRkZGRkZGIj4KICAgIEhpLDxicj4KICAgIDxicj4KICAgIEkgd2Fu
+dCB0byBzdG9yZSBhYm91dCAxNiBSU0EgMjA0OCBiaXRzIGtleXMgdXNlZCB0byBUTFMgcHJvdG9j
+b2wuPGJyPgogICAgSSBoYXZlIEluZmluZW9uIFNMQiA5NjcwIFRQTTIuMCBjaGlwLjxicj4KICAg
+IEkgd29uZGVyIGlmIEkgY2FuIHN0b3JlIHRoZW0gaW5zaWRlIFRQTSBkZXZpY2UgKGFzIHBlcnNp
+c3RhbnQpIG9yIEkKICAgIG5lZWQgdG8gc3RvcmUga2V5cyBvdXRzaWRlIGNoaXAgYW5kIGxvYWQg
+dGhlbSB0byB0aGUgZGV2aWNlIHdoZW4KICAgIG5lZWRlZCA/PGJyPgogICAgV2hhdCBpcyB0aGUg
+cmVhbCBjYXBhY2l0eSBvZiB0aGlzIGRldmljZSA/PGJyPgogICAgPGJyPgogICAgPGJyPgogICAg
+PGI+U0xCIDk2NzAgVENHIEZhbWlseSAyIExldmVsIDAwIFJldi4gMDEuMTYgRGF0YSBTaGVldCBz
+YXlzOjwvYj48YnI+CiAgICA8YnI+CiAgICDigKIgVXAgdG8gMyBsb2FkZWQgc2Vzc2lvbnMgKFRQ
+TV9QVF9IUl9MT0FERURfTUlOKTxicj4KICAgIOKAoiBVcCB0byA2NCBhY3RpdmUgc2Vzc2lvbnMg
+KFRQTV9QVF9BQ1RJVkVfU0VTU0lPTlNfTUFYKTxicj4KICAgIOKAoiBVcCB0byAzIGxvYWRlZCB0
+cmFuc2llbnQgT2JqZWN0cyAoVFBNX1BUX0hSX1RSQU5TSUVOVF9NSU4pPGJyPgogICAgPGI+4oCi
+IFVwIHRvIDcgbG9hZGVkIHBlcnNpc3RlbnQgT2JqZWN0cyAoVFBNX1BUX0hSX1BFUlNJU1RFTlRf
+TUlOKTwvYj48YnI+CiAgICDigKIgVXAgdG8gOCBOViBjb3VudGVyczxicj4KICAgIOKAoiBVcCB0
+byAxIGtCeXRlIGZvciBjb21tYW5kIHBhcmFtZXRlcnMgYW5kIHJlc3BvbnNlIHBhcmFtZXRlcnM8
+YnI+CiAgICDigKIgVXAgdG8gNzY4IEJ5dGUgZm9yIE5WIHJlYWQgb3IgTlYgd3JpdGU8YnI+CiAg
+ICA8YnI+CiAgICA8YnI+CiAgICA8Yj50cG0yLXRzcy0xLjQuMFxpbmNsdWRlXHNhcGlcdHNzMl90
+cG0yX3R5cGVzLmggc2F5czo8L2I+PGJyPgogICAgPGJyPgogICAgI2RlZmluZcKgwqDCoCBUUE1f
+UFRfSFJfUEVSU0lTVEVOVF9NSU7CoMKgwqAgKFBUX0ZJWEVEICsgMTUgKcKgwqDCoCDCoC8qIHRo
+ZQogICAgbWluaW11bSBudW1iZXIgb2YgcGVyc2lzdGVudCBvYmplY3RzIHRoYXQgY2FuIGJlIGhl
+bGQgaW4gVFBNIE5WCiAgICBtZW1vcnlOT1RFwqDCoMKgIFRoaXMgbWluaW11bSBzaGFsbCBiZSBu
+byBsZXNzIHRoYW4gdGhlIG1pbmltdW0gdmFsdWUKICAgIHJlcXVpcmVkIGJ5IHRoZSBwbGF0Zm9y
+bXNwZWNpZmljIHNwZWNpZmljYXRpb24gdG8gd2hpY2ggdGhlIFRQTSBpcwogICAgYnVpbHQuwqAg
+Ki88YnI+CiAgICA8YnI+CiAgICBJIGRvbid0IHVkZXJzdGFuZC4gU28gd2hhdCBpcyBtYXggY2Fw
+YWNpdHkgb2YgdGhpcyBkZXZpY2UgPzxicj4KICAgIDxkaXYgY2xhc3M9Im1vei1zaWduYXR1cmUi
+PjxiPjxicj4KICAgICAgICBVcCB0byA3IGxvYWRlZCBwZXJzaXN0ZW50IE9iamVjdHM8L2I+PGI+
+IDwvYj5mb3IgbXkKICAgICAgdW5kZXJzdGFuZGlnIGl0J3MgbWF4IGNhcGFjaXR5LiBCdXQgd2h5
+IHRoaXMgcGFyYW1ldGVyIGlzIGNhbGxlZCA8Yj5UUE1fUFRfSFJfUEVSU0lTVEVOVF9NSU48L2I+
+CiAgICAgID88YnI+CiAgICAgIHZzIDxicj4KICAgICAgInRoZSBtaW5pbXVtIG51bWJlciBvZiBw
+ZXJzaXN0ZW50IG9iamVjdHMgdGhhdCBjYW4gYmUgaGVsZCBpbiBUUE0KICAgICAgTlYgbWVtb3J5
+Ijxicj4KICAgICAgPGJyPgogICAgICBTbyBpcyBpdCBtaW4gb3IgbWF4ID88YnI+CiAgICAgIDxi
+cj4KICAgICAgV2hhdCBkb2VzICdsb2FkZWQgcGVyc2lzdGVudCcgbWVhbsKgID8gQXMgSSBrbm93
+IHBlcnNpc3RlbnQga2V5IGlzCiAgICAgIGFsd2F5cyBsb2FkZWQuPGJyPgogICAgICBXaGVuIEkg
+d2FudCB0byB1c2UgcGVyc2lzdGVudCBrZXkgSSBkb24ndCBuZWVkIGxvYWQgaXQuPGJyPgogICAg
+ICA8YnI+CiAgICAgIGZyb20gbXkgVFBNIGRldmljZTo8YnI+CiAgICAgIC4vdHBtMl9nZXRjYXAg
+LWMgcHJvcGVydGllcy1maXhlZDxicj4KICAgICAgV0FSTjogTW9yZSBkYXRhIHRvIGJlIHF1ZXJp
+ZWQ6IGNhcGFiaWxpdHk6IDB4NiwgcHJvcGVydHk6IDB4MTAwPGJyPgogICAgICA8YnI+CiAgICAg
+IFRQTV9QVF9GQU1JTFlfSU5ESUNBVE9SOjxicj4KICAgICAgwqAgYXMgVUlOVDMyOsKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDA4MzIyZTMwMDA8YnI+CiAgICAgIMKgIGFzIHN0cmlu
+ZzrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIjIuMCI8YnI+CiAgICAgIFRQTV9QVF9M
+RVZFTDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDA8YnI+CiAgICAgIFRQTV9QVF9SRVZJ
+U0lPTjrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDEuMTY8YnI+CiAgICAgIFRQTV9QVF9EQVlfT0Zf
+WUVBUjrCoMKgwqDCoMKgwqDCoMKgIDB4MDAwMDAwMGY8YnI+CiAgICAgIFRQTV9QVF9ZRUFSOsKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDAwMDAwN2UwPGJyPgogICAgICBUUE1fUFRf
+TUFOVUZBQ1RVUkVSOsKgwqDCoMKgwqDCoMKgIDB4NDk0NjU4MDA8YnI+CiAgICAgIFRQTV9QVF9W
+RU5ET1JfU1RSSU5HXzE6PGJyPgogICAgICDCoCBhcyBVSU5UMzI6wqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIDB4NTM0YzQyMzk8YnI+CiAgICAgIMKgIGFzIHN0cmluZzrCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgIlNMQjkiPGJyPgogICAgICBUUE1fUFRfVkVORE9SX1NUUklO
+R18yOjxicj4KICAgICAgwqAgYXMgVUlOVDMyOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCAweDM2MzczMDAwPGJyPgogICAgICDCoCBhcyBzdHJpbmc6wqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgICI2NzAiPGJyPgogICAgICBUUE1fUFRfVkVORE9SX1NUUklOR18zOjxicj4KICAg
+ICAgwqAgYXMgVUlOVDMyOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDAwMDAwMDAw
+PGJyPgogICAgICDCoCBhcyBzdHJpbmc6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICIi
+PGJyPgogICAgICBUUE1fUFRfVkVORE9SX1NUUklOR180Ojxicj4KICAgICAgwqAgYXMgVUlOVDMy
+OsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDAwMDAwMDAwPGJyPgogICAgICDCoCBh
+cyBzdHJpbmc6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICIiPGJyPgogICAgICBUUE1f
+UFRfVkVORE9SX1RQTV9UWVBFOsKgwqDCoMKgIDB4MDAwMDAwMDA8YnI+CiAgICAgIFRQTV9QVF9G
+SVJNV0FSRV9WRVJTSU9OXzE6wqAgMHgwMDA3MDAzZDxicj4KICAgICAgVFBNX1BUX0ZJUk1XQVJF
+X1ZFUlNJT05fMjrCoCAweDAwMGFlMTAwPGJyPgogICAgICBUUE1fUFRfSU5QVVRfQlVGRkVSOsKg
+wqDCoMKgwqDCoMKgIDB4MDAwMDA0MDA8YnI+CiAgICAgIFRQTV9QVF9IUl9UUkFOU0lFTlRfTUlO
+OsKgwqDCoCAweDAwMDAwMDAzPGJyPgogICAgICA8Yj5UUE1fUFRfSFJfUEVSU0lTVEVOVF9NSU46
+wqDCoCAweDAwMDAwMDA3PC9iPjxicj4KICAgICAgVFBNX1BUX0hSX0xPQURFRF9NSU46wqDCoMKg
+wqDCoMKgIDB4MDAwMDAwMDM8YnI+CiAgICAgIFRQTV9QVF9BQ1RJVkVfU0VTU0lPTlNfTUFYOiAw
+eDAwMDAwMDQwPGJyPgogICAgICBUUE1fUFRfUENSX0NPVU5UOsKgwqDCoMKgwqDCoMKgwqDCoMKg
+IDB4MDAwMDAwMTg8YnI+CiAgICAgIFRQTV9QVF9QQ1JfU0VMRUNUX01JTjrCoMKgwqDCoMKgIDB4
+MDAwMDAwMDM8YnI+CiAgICAgIFRQTV9QVF9DT05URVhUX0dBUF9NQVg6wqDCoMKgwqAgMHgwMDAw
+ZmZmZjxicj4KICAgICAgVFBNX1BUX05WX0NPVU5URVJTX01BWDrCoMKgwqDCoCAweDAwMDAwMDA4
+PGJyPgogICAgICBUUE1fUFRfTlZfSU5ERVhfTUFYOsKgwqDCoMKgwqDCoMKgIDB4MDAwMDA2ODA8
+YnI+CiAgICAgIFRQTV9QVF9NRU1PUlk6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHgwMDAw
+MDAwNjxicj4KICAgICAgVFBNX1BUX0NMT0NLX1VQREFURTrCoMKgwqDCoMKgwqDCoCAweDAwMDgw
+MDAwPGJyPgogICAgICBUUE1fUFRfQ09OVEVYVF9IQVNIOsKgwqDCoMKgwqDCoMKgIDB4MDAwMDAw
+MGI8YnI+CiAgICAgIFRQTV9QVF9DT05URVhUX1NZTTrCoMKgwqDCoMKgwqDCoMKgIDB4MDAwMDAw
+MDY8YnI+CiAgICAgIFRQTV9QVF9DT05URVhUX1NZTV9TSVpFOsKgwqDCoCAweDAwMDAwMDgwPGJy
+PgogICAgICBUUE1fUFRfT1JERVJMWV9DT1VOVDrCoMKgwqDCoMKgwqAgMHgwMDAwMDBmZjxicj4K
+ICAgICAgVFBNX1BUX01BWF9DT01NQU5EX1NJWkU6wqDCoMKgIDB4MDAwMDA1MDA8YnI+CiAgICAg
+IFRQTV9QVF9NQVhfUkVTUE9OU0VfU0laRTrCoMKgIDB4MDAwMDA1MDA8YnI+CiAgICAgIFRQTV9Q
+VF9NQVhfRElHRVNUOsKgwqDCoMKgwqDCoMKgwqDCoCAweDAwMDAwMDIwPGJyPgogICAgICBUUE1f
+UFRfTUFYX09CSkVDVF9DT05URVhUOsKgIDB4MDAwMDAzYjg8YnI+CiAgICAgIFRQTV9QVF9NQVhf
+U0VTU0lPTl9DT05URVhUOiAweDAwMDAwMGViPGJyPgogICAgICBUUE1fUFRfUFNfRkFNSUxZX0lO
+RElDQVRPUjogMHgwMDAwMDAwMTxicj4KICAgICAgVFBNX1BUX1BTX0xFVkVMOsKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgMHgwMDAwMDAwMDxicj4KICAgICAgVFBNX1BUX1BTX1JFVklTSU9OOsKgwqDC
+oMKgwqDCoMKgwqAgMHgwMDAwMDEwMDxicj4KICAgICAgVFBNX1BUX1BTX0RBWV9PRl9ZRUFSOsKg
+wqDCoMKgwqAgMHgwMDAwMDAwMDxicj4KICAgICAgVFBNX1BUX1BTX1lFQVI6wqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIDB4MDAwMDAwMDA8YnI+CiAgICAgIFRQTV9QVF9TUExJVF9NQVg6wqDCoMKg
+wqDCoMKgwqDCoMKgwqAgMHgwMDAwMDA4MDxicj4KICAgICAgVFBNX1BUX1RPVEFMX0NPTU1BTkRT
+OsKgwqDCoMKgwqAgMHgwMDAwMDA1YTxicj4KICAgICAgVFBNX1BUX0xJQlJBUllfQ09NTUFORFM6
+wqDCoMKgIDB4MDAwMDAwNTk8YnI+CiAgICAgIFRQTV9QVF9WRU5ET1JfQ09NTUFORFM6wqDCoMKg
+wqAgMHgwMDAwMDAwMTxicj4KICAgICAgVFBNX1BUX05WX0JVRkZFUl9NQVg6wqDCoMKgwqDCoMKg
+IDB4MDAwMDAzMDA8YnI+CiAgICAgIDxicj4KICAgICAgQXQgdGhpcyBtb21lbnQgSSBjYW4gc3Rv
+cmUgYW5kIHVzZSAxOCBSU0Ega2V5c8KgIGluc2lkZSBUUE0gYXMKICAgICAgcGVyc2lzdGVudCBr
+ZXlzIGFuZCBJIHRoaW5rIEkgY2FuIHN0b3JlIG1vcmUuPGJyPgogICAgICA8YnI+CiAgICAgIC4v
+dHBtMl9saXN0cGVyc2lzdGVudDxicj4KICAgICAgcGVyc2lzdGVudC1oYW5kbGVbMF06MHg4MTAx
+MDAwMSBrZXktYWxnOnJzYSBoYXNoLWFsZzpzaGEyNTYKb2JqZWN0LWF0dHI6Zml4ZWR0cG18Zml4
+ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8cmVzdHJpY3RlZHxkZWNy
+eXB0PGJyPgogICAgICBwZXJzaXN0ZW50LWhhbmRsZVsxXToweDgxMDEwMDAyIGtleS1hbGc6cnNh
+IGhhc2gtYWxnOnNoYTI1NgpvYmplY3QtYXR0cjpmaXhlZHRwbXxmaXhlZHBhcmVudHxzZW5zaXRp
+dmVkYXRhb3JpZ2lufHVzZXJ3aXRoYXV0aHxkZWNyeXB0fHNpZ248YnI+CiAgICAgIHBlcnNpc3Rl
+bnQtaGFuZGxlWzJdOjB4ODEwMTAwMDMga2V5LWFsZzpyc2EgaGFzaC1hbGc6c2hhMjU2Cm9iamVj
+dC1hdHRyOmZpeGVkdHBtfGZpeGVkcGFyZW50fHNlbnNpdGl2ZWRhdGFvcmlnaW58dXNlcndpdGhh
+dXRofHJlc3RyaWN0ZWR8ZGVjcnlwdDxicj4KICAgICAgcGVyc2lzdGVudC1oYW5kbGVbM106MHg4
+MTAxMDAxMCBrZXktYWxnOnJzYSBoYXNoLWFsZzpzaGEyNTYKb2JqZWN0LWF0dHI6Zml4ZWR0cG18
+Zml4ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8ZGVjcnlwdHxzaWdu
+PGJyPgogICAgICBwZXJzaXN0ZW50LWhhbmRsZVs0XToweDgxMDEwMDExIGtleS1hbGc6cnNhIGhh
+c2gtYWxnOnNoYTI1NgpvYmplY3QtYXR0cjpmaXhlZHRwbXxmaXhlZHBhcmVudHxzZW5zaXRpdmVk
+YXRhb3JpZ2lufHVzZXJ3aXRoYXV0aHxkZWNyeXB0fHNpZ248YnI+CiAgICAgIHBlcnNpc3RlbnQt
+aGFuZGxlWzVdOjB4ODEwMTAwMTIga2V5LWFsZzpyc2EgaGFzaC1hbGc6c2hhMjU2Cm9iamVjdC1h
+dHRyOmZpeGVkdHBtfGZpeGVkcGFyZW50fHNlbnNpdGl2ZWRhdGFvcmlnaW58dXNlcndpdGhhdXRo
+fGRlY3J5cHR8c2lnbjxicj4KICAgICAgcGVyc2lzdGVudC1oYW5kbGVbNl06MHg4MTAxMDAxMyBr
+ZXktYWxnOnJzYSBoYXNoLWFsZzpzaGEyNTYKb2JqZWN0LWF0dHI6Zml4ZWR0cG18Zml4ZWRwYXJl
+bnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8ZGVjcnlwdHxzaWduPGJyPgogICAg
+ICBwZXJzaXN0ZW50LWhhbmRsZVs3XToweDgxMDEwMDE0IGtleS1hbGc6cnNhIGhhc2gtYWxnOnNo
+YTI1NgpvYmplY3QtYXR0cjpmaXhlZHRwbXxmaXhlZHBhcmVudHxzZW5zaXRpdmVkYXRhb3JpZ2lu
+fHVzZXJ3aXRoYXV0aHxkZWNyeXB0fHNpZ248YnI+CiAgICAgIHBlcnNpc3RlbnQtaGFuZGxlWzhd
+OjB4ODEwMTAwMTUga2V5LWFsZzpyc2EgaGFzaC1hbGc6c2hhMjU2Cm9iamVjdC1hdHRyOmZpeGVk
+dHBtfGZpeGVkcGFyZW50fHNlbnNpdGl2ZWRhdGFvcmlnaW58dXNlcndpdGhhdXRofGRlY3J5cHR8
+c2lnbjxicj4KICAgICAgcGVyc2lzdGVudC1oYW5kbGVbOV06MHg4MTAxMDAxNiBrZXktYWxnOnJz
+YSBoYXNoLWFsZzpzaGEyNTYKb2JqZWN0LWF0dHI6Zml4ZWR0cG18Zml4ZWRwYXJlbnR8c2Vuc2l0
+aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8ZGVjcnlwdHxzaWduPGJyPgogICAgICBwZXJzaXN0
+ZW50LWhhbmRsZVsxMF06MHg4MTAxMDAxNyBrZXktYWxnOnJzYSBoYXNoLWFsZzpzaGEyNTYKb2Jq
+ZWN0LWF0dHI6Zml4ZWR0cG18Zml4ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0
+aGF1dGh8ZGVjcnlwdHxzaWduPGJyPgogICAgICBwZXJzaXN0ZW50LWhhbmRsZVsxMV06MHg4MTAx
+MDAyMCBrZXktYWxnOnJzYSBoYXNoLWFsZzpzaGEyNTYKb2JqZWN0LWF0dHI6Zml4ZWR0cG18Zml4
+ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8ZGVjcnlwdHxzaWduPGJy
+PgogICAgICBwZXJzaXN0ZW50LWhhbmRsZVsxMl06MHg4MTAxMDAyMSBrZXktYWxnOnJzYSBoYXNo
+LWFsZzpzaGEyNTYKb2JqZWN0LWF0dHI6Zml4ZWR0cG18Zml4ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0
+YW9yaWdpbnx1c2Vyd2l0aGF1dGh8ZGVjcnlwdHxzaWduPGJyPgogICAgICBwZXJzaXN0ZW50LWhh
+bmRsZVsxM106MHg4MTAxMDAyMiBrZXktYWxnOnJzYSBoYXNoLWFsZzpzaGEyNTYKb2JqZWN0LWF0
+dHI6Zml4ZWR0cG18Zml4ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8
+ZGVjcnlwdHxzaWduPGJyPgogICAgICBwZXJzaXN0ZW50LWhhbmRsZVsxNF06MHg4MTAxMDAyMyBr
+ZXktYWxnOnJzYSBoYXNoLWFsZzpzaGEyNTYKb2JqZWN0LWF0dHI6Zml4ZWR0cG18Zml4ZWRwYXJl
+bnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8ZGVjcnlwdHxzaWduPGJyPgogICAg
+ICBwZXJzaXN0ZW50LWhhbmRsZVsxNV06MHg4MTAxMDAzMCBrZXktYWxnOnJzYSBoYXNoLWFsZzpz
+aGEyNTYKb2JqZWN0LWF0dHI6Zml4ZWR0cG18Zml4ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdp
+bnx1c2Vyd2l0aGF1dGh8cmVzdHJpY3RlZHxkZWNyeXB0PGJyPgogICAgICBwZXJzaXN0ZW50LWhh
+bmRsZVsxNl06MHg4MTAxMDAzMSBrZXktYWxnOnJzYSBoYXNoLWFsZzpzaGEyNTYKb2JqZWN0LWF0
+dHI6Zml4ZWR0cG18Zml4ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8
+cmVzdHJpY3RlZHxkZWNyeXB0PGJyPgogICAgICBwZXJzaXN0ZW50LWhhbmRsZVsxN106MHg4MTAx
+MDAzMiBrZXktYWxnOnJzYSBoYXNoLWFsZzpzaGEyNTYKb2JqZWN0LWF0dHI6Zml4ZWR0cG18Zml4
+ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8cmVzdHJpY3RlZHxkZWNy
+eXB0PGJyPgogICAgICA8YnI+CiAgICAgIEkgd2FudCB0byBrbm93IHRoZSBsaW1pdHMuIERvY3Vt
+ZW50ZWQgbGltaXRzLjxicj4KICAgICAgPGJyPgogICAgICBUaGFua3MsPGJyPgogICAgICBUb208
+YnI+CiAgICAgIDxicj4KICAgIDwvZGl2PgogIDwvYm9keT4KPC9odG1sPgo=
 
-> complete. Several commands, like e.g. tpm2_version or tpm2_takeownership
->
-
-I don't think there was ever tpm2_version tool... but tpm2_takeownership
-doesn't exist in master anymore. Now you should use tpm2_changeauth.
- =
-
-> How is that possible?
-> =
-
-> Thanks
-> =
-
-Best regards,
--- =
-
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
-
---===============4465667561148985412==--
+--===============4721138642570965917==--
 
