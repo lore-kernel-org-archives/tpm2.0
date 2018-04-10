@@ -1,67 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============5566434955401290663=="
+Content-Type: multipart/mixed; boundary="===============6769055404682407773=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: Re: [tpm2] SLB 9670 TPM 2.0 device,
- How many keys I can store inside TPM as persistent
-Date: Fri, 06 Apr 2018 12:11:37 -0700
-Message-ID: <feadfac9-bb65-964e-2584-46ccee79c241@intel.com>
-In-Reply-To: e6f127d2-576d-274f-817b-fe731304814e@mikronika.pl
+From: Peter Magnusson <blaufish.public.email at gmail.com>
+Subject: [tpm2] Failed to create connection with service: Timeout was reached
+Date: Tue, 10 Apr 2018 09:53:15 +0200
+Message-ID: <CANtcRX7+2W-0mnizq3yh7Dd1MJ0rDvnbuZwaybPDefdZ77_VDA@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5566434955401290663==
+--===============6769055404682407773==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 04/05/2018 10:49 PM, Tomasz Przybysz wrote:
-> #define=C2=A0=C2=A0=C2=A0 TPM_PT_HR_PERSISTENT_MIN=C2=A0=C2=A0=C2=A0 (PT_=
-FIXED + 15 )=C2=A0=C2=A0=C2=A0 =C2=A0/* the minimum number of persistent ob=
-jects that can be held in TPM NV memoryNOTE=C2=A0=C2=A0=C2=A0 This minimum =
-shall be no less than the minimum value required by the platformspecific sp=
-ecification to which the TPM is built.=C2=A0 */
-> =
+Hi,
 
-> I don't uderstand. So what is max capacity of this device ?
+Error when running e.g. tpm2_pcrlist
+** (process:8120): WARNING **: Failed to create connection with
+service: Timeout was reached
+ERROR: tcti init allocation routine failed for library: "tabrmd"
+options: "(null)"
+ERROR: Could not load tcti, got: "tabrmd"
 
-The maximum capacity of the device is limited only by the amount of the NV =
-memory in the chip, which for this chip is 7KB as far as I can see.
+Target system is Ubuntu Linux latest stable (4.13.0-38-generic
+#43~16.04.1-Ubuntu) running under VMWare Fusion (very old version of
+tpm2-tools from ubuntu apt install tested OK previously.) Source code
+revision is head of tpm2-tss, tpm2-abrmd, tpm2-tools as of now.
 
-> *
-> Up to 7 loaded persistent Objects***for my understandig it's max capacity=
-. But why this parameter is called *TPM_PT_HR_PERSISTENT_MIN* ?
-> vs
-> "the minimum number of persistent objects that can be held in TPM NV memo=
-ry"
-> =
+Problem occurs both if tpm2-armbd is running from systemd or is
+executed from command line.
 
-> So is it min or max ?
+When running from command line with debug, tpm2-abrmd emits the following:
+sudo -u tss G_MESSAGES_DEBUG=3Dall tpm2-abrmd
+** INFO: tabrmd startup
+** INFO: logging to stdout
+** (tpm2-abrmd:2060): DEBUG: tcti_conf_parse
+** (tpm2-abrmd:2060): DEBUG: tcti_conf_parse: combined conf is null
+** (tpm2-abrmd:2060): DEBUG: tcti_dynamic_set_property: TctiDynamic
+0xc8d800 set filename: libtss2-tcti-device.so
+** (tpm2-abrmd:2060): DEBUG: tcti_dynamic_set_property: TctiDynamic
+0xc8d800 PROP_CONF_STR set to: (null)
+** INFO: entering g_main_loop
+** INFO: init_thread_func start
+** (tpm2-abrmd:2060): DEBUG: random_class_init
+** (tpm2-abrmd:2060): DEBUG: opening entropy source: /dev/urandom
+** (tpm2-abrmd:2060): DEBUG: reading from entropy source: /dev/urandom
+** (tpm2-abrmd:2060): DEBUG: seeding rand with -2303404397750689299
+** (tpm2-abrmd:2060): DEBUG: connection_manager_set_property: 0xc80700
+** (tpm2-abrmd:2060): DEBUG:   max_connections: 0x1b
+** (tpm2-abrmd:2060): DEBUG: ConnectionManager: 0xc80700
+** (tpm2-abrmd:2060): DEBUG: IpcFrontendDbus set bus_name: com.intel.tss2.T=
+abrmd
+** (tpm2-abrmd:2060): DEBUG: ipc_frontend_connect: 0x7f8744002060
+** (tpm2-abrmd:2060): DEBUG: tcti_initialize: 0xc8d800
+** (tpm2-abrmd:2060): DEBUG: tcti_dynamic_initialize: TctiDynamic 0xc8d800
+** (tpm2-abrmd:2060): DEBUG: tcti_util_discover_info
+** (tpm2-abrmd:2060): DEBUG: tcti_util_dynamic_init
+** (tpm2-abrmd:2060): DEBUG: sapi_context_init w/ Tcti: 0xc8d800
+** (tpm2-abrmd:2060): DEBUG: tcti_peek_context: 0xc8d800
+** (tpm2-abrmd:2060): DEBUG: Allocating 0x1048 bytes for SAPI context
+** (tpm2-abrmd:2060): DEBUG: access_broker_set_property: 0x7f874400f030
+** (tpm2-abrmd:2060): DEBUG:   sapi_context: 0x7f874400dec0
+** (tpm2-abrmd:2060): DEBUG: access_broker_set_property: 0x7f874400f030
+** (tpm2-abrmd:2060): DEBUG:   tcti: 0xc8d800
+** (tpm2-abrmd:2060): DEBUG: created AccessBroker: 0x7f874400f030
+** (tpm2-abrmd:2060): DEBUG: access_broker_init_tpm: 0x7f874400f030
+** (tpm2-abrmd:2060): DEBUG: access_broker_get_tpm_properties_fixed
+** INFO: on_bus_acquired: com.intel.tss2.Tabrmd
+** INFO: on_name_acquired: com.intel.tss2.Tabrmd
+** (tpm2-abrmd:2060): DEBUG: Got proxy object for DBus daemon.
 
-It's min. The spec defines some minimums in order to ensure proper operatio=
-n.
-See section 41. "Minimums" in https://trustedcomputinggroup.org/wp-content/=
-uploads/TPM-Rev-2.0-Part-1-Architecture-01.16.pdf
-The chip vendor can define other minimums, not less than the minimums speci=
-fied by the spec.
-Put in other words. This tells you what is the minimum number of persistent=
- objects a TPM needs to support to be able to support all TPM command imple=
-mented by the given TPM chip.
+The following build, install and post-install steps has been executed,
 
-> =
+cd tpm2-abrmd
+sudo useradd --system --user-group tss
+./bootstrap
+./configure --with-dbuspolicydir=3D/etc/dbus-1/system.d
+--with-udevrulesdir=3D/etc/udev/rules.d/
+--with-systemdsystemunitdir=3D/lib/systemd/system/
+--with-systemdpresetdir=3D/lib/systemd/system-preset/
+make
+sudo make install
+sudo mv /usr/local/share/dbus-1/system-services/com.intel.tss2.Tabrmd.servi=
+ce
+/usr/share/dbus-1/system-services/
+cd dist
+sudo udevadm control --reload-rules && sudo udevadm trigger
+sudo mkdir -p /var/lib/tpm
+sudo userdel tss
+sudo groupadd tss && sudo useradd -M -d /var/lib/tpm -s /bin/false -g tss t=
+ss
+sudo pkill -HUP dbus-daemon
+sudo chown tss:tss /dev/tpm0
+cd ../..
 
-> What does 'loaded persistent' mean=C2=A0 ? As I know persistent key is al=
-ways loaded.
-> When I want to use persistent key I don't need load it.
+Also filed under https://github.com/tpm2-software/tpm2-abrmd/issues/422
 
-Right, you don't need to load a persistent key, assuming it wasn't evicted =
-by tpm2_evictcontrol tool.
-For more info see section 37.3 "Owner and Platform Evict Objects" from the =
-spec above.
+Best Regards
+//Peter
 
-Hope that helps.
--- =
-
-Tadeusz
-
---===============5566434955401290663==--
+--===============6769055404682407773==--
 
