@@ -1,224 +1,177 @@
-Content-Type: multipart/mixed; boundary="===============5663676081786969919=="
+Content-Type: multipart/mixed; boundary="===============6240950666744484253=="
 MIME-Version: 1.0
-From: Peter Magnusson <blaufish.public.email at gmail.com>
-Subject: Re: [tpm2] Failed to create connection with service: Timeout was
- reached
-Date: Wed, 11 Apr 2018 12:47:59 +0200
-Message-ID: <CANtcRX5sYR9wDVwZwWhFz05vjq6xce_faPWoTWhJyb0Ok5wjnQ@mail.gmail.com>
-In-Reply-To: 1d97e031-3a7f-d8f8-9215-5c8189beefc3@twobit.us
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: Re: [tpm2] tpm2-tss question
+Date: Wed, 11 Apr 2018 11:18:39 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D010EB03680@exch2010c.sit.fraunhofer.de>
+In-Reply-To: 5c54e6ce-28cf-88bd-0349-cc56832d8f97@ntt-el.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5663676081786969919==
+--===============6240950666744484253==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+Yes, sessions (no matter if policy or hmac or trial) are not virtualized.
 
-I updated the GitHub issue tracker in
-https://github.com/tpm2-software/tpm2-abrmd/issues/422#issuecomment-3804058=
-63
+I assume tpm2-abrmd to be conforming to the spec.
+If you find any deviation, they'll most happily fix them
 
-After the fix (and paranoia updated tpm2-abrmd and tpm2-tools due to
-these issues),
-I now have two different issues,
-* tpm2_pcrlist error sys:Response is malformed when running tpm2-abrmd
-from command line
-* tpm2_pcrlist error/warning Failed to get client PID when running
-tpm2-abrmd from systemd.
+________________________________
+From: Yasuhiro Hosoda [hosoda-yasuhiro(a)ntt-el.com]
+Sent: Wednesday, April 11, 2018 10:38
+To: Fuchs, Andreas; tpm2(a)lists.01.org
+Subject: Re: [tpm2] tpm2-tss question
 
-Let me know if you prefer a separate issue filed on any of the issues above.
+Thank you very much for your answer.
 
-$ tpm2_pcrlist
-WARNING:marshal:src/tss2-mu/tpml-types.c:197:Tss2_MU_TPML_PCR_SELECTION_Unm=
-arshal()
-count too big
-ERROR: Tss2_Sys_GetCapability(0x80011) - sys:Response is malformed
-ERROR: Unable to run tpm2_pcrlist
+I understand that the spec. is that the handles of policy session are
+not virtualized
 
-$ tpm2_pcrlist
+I check the source programs of the resource managers.
+(TPM2,0-TSS-1.0 and tpm2-abrmd-1.2.0)
+It seems that HMAC sessions and Policy sessions are handled
+in the same way. Do you have any comment comment about
+implementations?
 
-** (process:1837): WARNING **: Failed to create connection with
-service: GDBus.Error:com.intel.tss2.Tabrmd.Error.Internal: Failed to
-get client PID
-ERROR: tcti init allocation routine failed for library: "tabrmd"
-options: "(null)"
-ERROR: Could not load tcti, got: "tabrmd"
+According to the spec, only key and sequence handles are virtualized.
 
-When running tpm2-abrmd in console with debug, I get a lot of
-interesting output, seemingly indicating that some cross component
-functionality works,
-e.g.
+Thus for PolicySecret, the virtual and TPM handles for policySession shall =
+be the same.
 
-** (tpm2-abrmd:1962): DEBUG: reading 10 bytes socket 0x7f26b50515a0,
-to 0x7f268c001300
-** (tpm2-abrmd:1962): DEBUG: successfully read 10 bytes
-** (tpm2-abrmd:1962): DEBUG:     80 01 00 00 00 16 00 00 01 7a
-** (tpm2-abrmd:1962): DEBUG: reading 12 bytes socket 0x7f26b50515a0,
-to 0x7f268c00130a
-** (tpm2-abrmd:1962): DEBUG: successfully read 12 bytes
-** (tpm2-abrmd:1962): DEBUG:     00 00 00 05 00 00 00 00 00 00 00 01
-** (tpm2-abrmd:1962): DEBUG: read_tpm_buffer_alloc: read TPM buffer to
-0x7f268c001300 of size: 22
-** (tpm2-abrmd:1962): DEBUG:     80 01 00 00 00 16 00 00 01 7a 00 00 00 05 =
-00 00
-** (tpm2-abrmd:1962): DEBUG:     00 00 00 00 00 01
+For keys and sequences (such as authHandle in PolicySecret) the virtual and=
+ TPM handles differ.
+But instead of the handle the key's / sequence's public name is used within=
+ the hmac calculation.
 
-** (tpm2-abrmd:1962): DEBUG: Tpm2Command: 0x7f26ac006a80
-** (tpm2-abrmd:1962): DEBUG:     80 01 00 00 00 16 00 00 01 7a 00 00 00 05 =
-00 00
-** (tpm2-abrmd:1962): DEBUG:     00 00 00 00 00 01
-** (tpm2-abrmd:1962): DEBUG: TPMA_CC: 0x0000017a
-** (tpm2-abrmd:1962): DEBUG:   commandIndex: 0x17a
-** (tpm2-abrmd:1962): DEBUG:   reserved1:    0x0
-** (tpm2-abrmd:1962): DEBUG:   nv:           clear
-** (tpm2-abrmd:1962): DEBUG:   extensive:    clear
-** (tpm2-abrmd:1962): DEBUG:   flushed:      clear
-** (tpm2-abrmd:1962): DEBUG:   cHandles:     0x0
-** (tpm2-abrmd:1962): DEBUG:   rHandle:      clear
-** (tpm2-abrmd:1962): DEBUG:   V:            clear
-** (tpm2-abrmd:1962): DEBUG:   Res:          0x0
-** (tpm2-abrmd:1962): DEBUG: tpm2_command_get_handle_count
+Hope this helps...
 
-** (tpm2-abrmd:1962): DEBUG: Tpm2Response: 0x7f26ac006440
-** (tpm2-abrmd:1962): DEBUG:     80 01 00 00 00 2b 00 00 00 00 00 00 00 00 =
-05 00
-** (tpm2-abrmd:1962): DEBUG:     00 00 04 00 04 03 ff ff ff 00 0b 03 ff ff =
-ff 00
-** (tpm2-abrmd:1962): DEBUG:     0c 03 ff ff ff 00 0d 03 ff ff ff
-** (tpm2-abrmd:1962): DEBUG: TPMA_CC: 0x0000017a
-** (tpm2-abrmd:1962): DEBUG:   commandIndex: 0x17a
-** (tpm2-abrmd:1962): DEBUG:   reserved1:    0x0
-** (tpm2-abrmd:1962): DEBUG:   nv:           clear
-** (tpm2-abrmd:1962): DEBUG:   extensive:    clear
-** (tpm2-abrmd:1962): DEBUG:   flushed:      clear
-** (tpm2-abrmd:1962): DEBUG:   cHandles:     0x0
-** (tpm2-abrmd:1962): DEBUG:   rHandle:      clear
-** (tpm2-abrmd:1962): DEBUG:   V:            clear
-** (tpm2-abrmd:1962): DEBUG:   Res:          0x0
-** (tpm2-abrmd:1962): DEBUG: resource_manager_create_context_mapping
+________________________________
+From: tpm2 [tpm2-bounces(a)lists.01.org<mailto:tpm2-bounces(a)lists.01.org>=
+] on behalf of Yasuhiro Hosoda [hosoda-yasuhiro(a)ntt-el.com<mailto:hosoda-=
+yasuhiro(a)ntt-el.com>]
+Sent: Wednesday, April 11, 2018 08:11
+To: william.c.roberts(a)intel.com<mailto:william.c.roberts(a)intel.com>; tp=
+m2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
+Subject: Re: [tpm2] tpm2-tss question
 
-** (tpm2-abrmd:1962): DEBUG:   writing 0x2b bytes
-** (tpm2-abrmd:1962): DEBUG:     80 01 00 00 00 2b 00 00 00 00 00 00 00 00 =
-05 00
-** (tpm2-abrmd:1962): DEBUG:     00 00 04 00 04 03 ff ff ff 00 0b 03 ff ff =
-ff 00
-** (tpm2-abrmd:1962): DEBUG:     0c 03 ff ff ff 00 0d 03 ff ff ff
+I have one finding about the RM and PolicySecret command,
+
+It says in page 10 of the following document
+"TCG TSS 2.0 TAB and Resource Manager specification"
+https://trustedcomputinggroup.org/wp-content/uploads/TSS-2.0-TAB-Resource-M=
+anager-SpecVer1.0-Rev18_review_END030918.pdf
+that
+"
+The RM performs a mapping from the (unchanging) virtual handle to the (curr=
+ently assigned) TPM
+handle. It replaces the virtual handle with the TPM handle in the TPM comma=
+nd packet.
+
+NOTE: The TPM 2.0 library specification excludes the handle from command st=
+ream HMAC calculations to enable this
+substitution."
+This means that if the virtual handle and the (currently assigned) TPM diff=
+ers,
+the HMAC calculations for most of the commands go well.
+
+But, the PolicySecret command takes the policy handle to extend as a parame=
+ter for HMAC.
+If, the virtual handle and the (currently assigned) TPM differs, the HMAC c=
+alculations
+for this command doesn't go well and produces the error code 0x98e.
+Is my understanding right?
+If so, is there any workaround?
+
+Thank you in advance.
 
 
+--===============6240950666744484253==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-On Tue, Apr 10, 2018 at 5:35 PM, Philip Tricca <flihp(a)twobit.us> wrote:
-> Hi Peter,
->
-> On 04/10/2018 12:53 AM, Peter Magnusson wrote:
->> Hi,
->>
->> Error when running e.g. tpm2_pcrlist
->> ** (process:8120): WARNING **: Failed to create connection with
->> service: Timeout was reached
->> ERROR: tcti init allocation routine failed for library: "tabrmd"
->> options: "(null)"
->> ERROR: Could not load tcti, got: "tabrmd"
->>
->> Target system is Ubuntu Linux latest stable (4.13.0-38-generic
->> #43~16.04.1-Ubuntu) running under VMWare Fusion (very old version of
->> tpm2-tools from ubuntu apt install tested OK previously.) Source code
->> revision is head of tpm2-tss, tpm2-abrmd, tpm2-tools as of now.
->>
->> Problem occurs both if tpm2-armbd is running from systemd or is
->> executed from command line.
->>
->> When running from command line with debug, tpm2-abrmd emits the followin=
-g:
->> sudo -u tss G_MESSAGES_DEBUG=3Dall tpm2-abrmd
->> ** INFO: tabrmd startup
->> ** INFO: logging to stdout
->> ** (tpm2-abrmd:2060): DEBUG: tcti_conf_parse
->> ** (tpm2-abrmd:2060): DEBUG: tcti_conf_parse: combined conf is null
->> ** (tpm2-abrmd:2060): DEBUG: tcti_dynamic_set_property: TctiDynamic
->> 0xc8d800 set filename: libtss2-tcti-device.so
->> ** (tpm2-abrmd:2060): DEBUG: tcti_dynamic_set_property: TctiDynamic
->> 0xc8d800 PROP_CONF_STR set to: (null)
->> ** INFO: entering g_main_loop
->> ** INFO: init_thread_func start
->> ** (tpm2-abrmd:2060): DEBUG: random_class_init
->> ** (tpm2-abrmd:2060): DEBUG: opening entropy source: /dev/urandom
->> ** (tpm2-abrmd:2060): DEBUG: reading from entropy source: /dev/urandom
->> ** (tpm2-abrmd:2060): DEBUG: seeding rand with -2303404397750689299
->> ** (tpm2-abrmd:2060): DEBUG: connection_manager_set_property: 0xc80700
->> ** (tpm2-abrmd:2060): DEBUG:   max_connections: 0x1b
->> ** (tpm2-abrmd:2060): DEBUG: ConnectionManager: 0xc80700
->> ** (tpm2-abrmd:2060): DEBUG: IpcFrontendDbus set bus_name: com.intel.tss=
-2.Tabrmd
->> ** (tpm2-abrmd:2060): DEBUG: ipc_frontend_connect: 0x7f8744002060
->> ** (tpm2-abrmd:2060): DEBUG: tcti_initialize: 0xc8d800
->> ** (tpm2-abrmd:2060): DEBUG: tcti_dynamic_initialize: TctiDynamic 0xc8d8=
-00
->> ** (tpm2-abrmd:2060): DEBUG: tcti_util_discover_info
->> ** (tpm2-abrmd:2060): DEBUG: tcti_util_dynamic_init
->> ** (tpm2-abrmd:2060): DEBUG: sapi_context_init w/ Tcti: 0xc8d800
->> ** (tpm2-abrmd:2060): DEBUG: tcti_peek_context: 0xc8d800
->> ** (tpm2-abrmd:2060): DEBUG: Allocating 0x1048 bytes for SAPI context
->> ** (tpm2-abrmd:2060): DEBUG: access_broker_set_property: 0x7f874400f030
->> ** (tpm2-abrmd:2060): DEBUG:   sapi_context: 0x7f874400dec0
->> ** (tpm2-abrmd:2060): DEBUG: access_broker_set_property: 0x7f874400f030
->> ** (tpm2-abrmd:2060): DEBUG:   tcti: 0xc8d800
->> ** (tpm2-abrmd:2060): DEBUG: created AccessBroker: 0x7f874400f030
->> ** (tpm2-abrmd:2060): DEBUG: access_broker_init_tpm: 0x7f874400f030
->> ** (tpm2-abrmd:2060): DEBUG: access_broker_get_tpm_properties_fixed
->> ** INFO: on_bus_acquired: com.intel.tss2.Tabrmd
->> ** INFO: on_name_acquired: com.intel.tss2.Tabrmd
->> ** (tpm2-abrmd:2060): DEBUG: Got proxy object for DBus daemon.
->
-> This behavior is indicative of a bug we squashed in the core tpm2-tss
-> libraries (really the device TCTI library) the other day:
-> https://github.com/tpm2-software/tpm2-tss/pull/949
->
-> What's happening above is the tpm2-abrmd is trying to make a call to the
-> TPM2 device to query for some capabilities and it's getting stuck. So
-> when you try to execute one of the tools the tpm2-abrmd isn't responding.
->
-> Try pulling down the latest from tpm2-tss master branch and run the
-> tpm2-abrmd again. You shouldn't need to recompile the daemon, just the
-> tpm2-tss libraries.
->
-> Philip
->
->> The following build, install and post-install steps has been executed,
->>
->> cd tpm2-abrmd
->> sudo useradd --system --user-group tss
->> ./bootstrap
->> ./configure --with-dbuspolicydir=3D/etc/dbus-1/system.d
->> --with-udevrulesdir=3D/etc/udev/rules.d/
->> --with-systemdsystemunitdir=3D/lib/systemd/system/
->> --with-systemdpresetdir=3D/lib/systemd/system-preset/
->> make
->> sudo make install
->> sudo mv /usr/local/share/dbus-1/system-services/com.intel.tss2.Tabrmd.se=
-rvice
->> /usr/share/dbus-1/system-services/
->> cd dist
->> sudo udevadm control --reload-rules && sudo udevadm trigger
->> sudo mkdir -p /var/lib/tpm
->> sudo userdel tss
->> sudo groupadd tss && sudo useradd -M -d /var/lib/tpm -s /bin/false -g ts=
-s tss
->> sudo pkill -HUP dbus-daemon
->> sudo chown tss:tss /dev/tpm0
->> cd ../..
->>
->> Also filed under https://github.com/tpm2-software/tpm2-abrmd/issues/422
->>
->> Best Regards
->> //Peter
->> _______________________________________________
->> tpm2 mailing list
->> tpm2(a)lists.01.org
->> https://lists.01.org/mailman/listinfo/tpm2
->>
->
+PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
+b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjwvaGVhZD4KPGJvZHkgZnBz
+dHlsZT0iMSIgb2NzaT0iMCIgYmdjb2xvcj0iI0ZGRkZGRiI+CjxkaXYgc3R5bGU9ImRpcmVjdGlv
+bjogbHRyO2ZvbnQtZmFtaWx5OiBUYWhvbWE7Y29sb3I6ICMwMDAwMDA7Zm9udC1zaXplOiAxMHB0
+OyI+WWVzLCBzZXNzaW9ucyAobm8gbWF0dGVyIGlmIHBvbGljeSBvciBobWFjIG9yIHRyaWFsKSBh
+cmUgbm90IHZpcnR1YWxpemVkLjxicj4KPGJyPgpJIGFzc3VtZSB0cG0yLWFicm1kIHRvIGJlIGNv
+bmZvcm1pbmcgdG8gdGhlIHNwZWMuPGJyPgpJZiB5b3UgZmluZCBhbnkgZGV2aWF0aW9uLCB0aGV5
+J2xsIG1vc3QgaGFwcGlseSBmaXggdGhlbTxicj4KPGJyPgo8ZGl2IHN0eWxlPSJmb250LWZhbWls
+eTogVGltZXMgTmV3IFJvbWFuOyBjb2xvcjogIzAwMDAwMDsgZm9udC1zaXplOiAxNnB4Ij4KPGhy
+IHRhYmluZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwRjU1MjA4MSIgc3R5bGU9ImRpcmVjdGlvbjog
+bHRyOyI+PGZvbnQgc2l6ZT0iMiIgZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJv
+bTo8L2I+IFlhc3VoaXJvIEhvc29kYSBbaG9zb2RhLXlhc3VoaXJvQG50dC1lbC5jb21dPGJyPgo8
+Yj5TZW50OjwvYj4gV2VkbmVzZGF5LCBBcHJpbCAxMSwgMjAxOCAxMDozODxicj4KPGI+VG86PC9i
+PiBGdWNocywgQW5kcmVhczsgdHBtMkBsaXN0cy4wMS5vcmc8YnI+CjxiPlN1YmplY3Q6PC9iPiBS
+ZTogW3RwbTJdIHRwbTItdHNzIHF1ZXN0aW9uPGJyPgo8L2ZvbnQ+PGJyPgo8L2Rpdj4KPGRpdj48
+L2Rpdj4KPGRpdj4KPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5UaGFuayB5b3UgdmVyeSBt
+dWNoIGZvciB5b3VyIGFuc3dlci48YnI+Cjxicj4KSSB1bmRlcnN0YW5kIHRoYXQgdGhlIHNwZWMu
+IGlzIHRoYXQgdGhlIGhhbmRsZXMgb2YgcG9saWN5IHNlc3Npb24gYXJlIDxicj4Kbm90IHZpcnR1
+YWxpemVkIDxicj4KPGJyPgpJIGNoZWNrIHRoZSBzb3VyY2UgcHJvZ3JhbXMgb2YgdGhlIHJlc291
+cmNlIG1hbmFnZXJzLjxicj4KKFRQTTIsMC1UU1MtMS4wIGFuZCB0cG0yLWFicm1kLTEuMi4wKTxi
+cj4KSXQgc2VlbXMgdGhhdCBITUFDIHNlc3Npb25zIGFuZCBQb2xpY3kgc2Vzc2lvbnMgYXJlIGhh
+bmRsZWQ8YnI+CmluIHRoZSBzYW1lIHdheS4gRG8geW91IGhhdmUgYW55IGNvbW1lbnQgY29tbWVu
+dCBhYm91dDxicj4KaW1wbGVtZW50YXRpb25zPzxicj4KPGJyPgo8L2Rpdj4KPGJsb2NrcXVvdGUg
+dHlwZT0iY2l0ZSI+PHN0eWxlIHR5cGU9InRleHQvY3NzIiBpZD0ib3dhUGFyYVN0eWxlIj4KPCEt
+LQpwCgl7bWFyZ2luLXRvcDowOwoJbWFyZ2luLWJvdHRvbTowfQotLT4KQk9EWSB7ZGlyZWN0aW9u
+OiBsdHI7Zm9udC1mYW1pbHk6IFRhaG9tYTtjb2xvcjogIzAwMDAwMDtmb250LXNpemU6IDEwcHQ7
+fVAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fTwvc3R5bGU+CjxkaXYgc3R5bGU9ImRp
+cmVjdGlvbjpsdHI7IGZvbnQtZmFtaWx5OlRhaG9tYTsgY29sb3I6IzAwMDAwMDsgZm9udC1zaXpl
+OjEwcHQiPkFjY29yZGluZyB0byB0aGUgc3BlYywgb25seSBrZXkgYW5kIHNlcXVlbmNlIGhhbmRs
+ZXMgYXJlIHZpcnR1YWxpemVkLjxicj4KPGJyPgpUaHVzIGZvciBQb2xpY3lTZWNyZXQsIHRoZSB2
+aXJ0dWFsIGFuZCBUUE0gaGFuZGxlcyBmb3IgcG9saWN5U2Vzc2lvbiBzaGFsbCBiZSB0aGUgc2Ft
+ZS48YnI+Cjxicj4KRm9yIGtleXMgYW5kIHNlcXVlbmNlcyAoc3VjaCBhcyBhdXRoSGFuZGxlIGlu
+IFBvbGljeVNlY3JldCkgdGhlIHZpcnR1YWwgYW5kIFRQTSBoYW5kbGVzIGRpZmZlci48YnI+CkJ1
+dCBpbnN0ZWFkIG9mIHRoZSBoYW5kbGUgdGhlIGtleSdzIC8gc2VxdWVuY2UncyBwdWJsaWMgbmFt
+ZSBpcyB1c2VkIHdpdGhpbiB0aGUgaG1hYyBjYWxjdWxhdGlvbi48YnI+Cjxicj4KSG9wZSB0aGlz
+IGhlbHBzLi4uPGJyPgo8YnI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OlRpbWVzIE5ldyBSb21h
+bjsgY29sb3I6IzAwMDAwMDsgZm9udC1zaXplOjE2cHgiPgo8aHIgdGFiaW5kZXg9Ii0xIj4KPGRp
+diBpZD0iZGl2UnBGODUxOTQ5IiBzdHlsZT0iZGlyZWN0aW9uOmx0ciI+PGZvbnQgc2l6ZT0iMiIg
+ZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IHRwbTIgWzxhIGNsYXNz
+PSJtb3otdHh0LWxpbmstYWJicmV2aWF0ZWQiIGhyZWY9Im1haWx0bzp0cG0yLWJvdW5jZXNAbGlz
+dHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIj50cG0y
+LWJvdW5jZXNAbGlzdHMuMDEub3JnPC9hPl0KIG9uIGJlaGFsZiBvZiBZYXN1aGlybyBIb3NvZGEg
+WzxhIGNsYXNzPSJtb3otdHh0LWxpbmstYWJicmV2aWF0ZWQiIGhyZWY9Im1haWx0bzpob3NvZGEt
+eWFzdWhpcm9AbnR0LWVsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9vcGVuZXIgbm9yZWZl
+cnJlciI+aG9zb2RhLXlhc3VoaXJvQG50dC1lbC5jb208L2E+XTxicj4KPGI+U2VudDo8L2I+IFdl
+ZG5lc2RheSwgQXByaWwgMTEsIDIwMTggMDg6MTE8YnI+CjxiPlRvOjwvYj4gPGEgY2xhc3M9Im1v
+ei10eHQtbGluay1hYmJyZXZpYXRlZCIgaHJlZj0ibWFpbHRvOndpbGxpYW0uYy5yb2JlcnRzQGlu
+dGVsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciI+CndpbGxp
+YW0uYy5yb2JlcnRzQGludGVsLmNvbTwvYT47IDxhIGNsYXNzPSJtb3otdHh0LWxpbmstYWJicmV2
+aWF0ZWQiIGhyZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiIHJl
+bD0ibm9vcGVuZXIgbm9yZWZlcnJlciI+CnRwbTJAbGlzdHMuMDEub3JnPC9hPjxicj4KPGI+U3Vi
+amVjdDo8L2I+IFJlOiBbdHBtMl0gdHBtMi10c3MgcXVlc3Rpb248YnI+CjwvZm9udD48YnI+Cjwv
+ZGl2Pgo8ZGl2Pgo8ZGl2IGNsYXNzPSJtb3otY2l0ZS1wcmVmaXgiPkkgaGF2ZSBvbmUgZmluZGlu
+ZyBhYm91dCB0aGUgUk0gYW5kIFBvbGljeVNlY3JldCBjb21tYW5kLDxicj4KPGJyPgpJdCBzYXlz
+IGluIHBhZ2UgMTAgb2YgdGhlIGZvbGxvd2luZyBkb2N1bWVudDxicj4KJnF1b3Q7VENHIFRTUyAy
+LjAgVEFCIGFuZCBSZXNvdXJjZSBNYW5hZ2VyIHNwZWNpZmljYXRpb24mcXVvdDs8YnI+CjxhIGNs
+YXNzPSJtb3otdHh0LWxpbmstZnJlZXRleHQiIGhyZWY9Imh0dHBzOi8vdHJ1c3RlZGNvbXB1dGlu
+Z2dyb3VwLm9yZy93cC1jb250ZW50L3VwbG9hZHMvVFNTLTIuMC1UQUItUmVzb3VyY2UtTWFuYWdl
+ci1TcGVjVmVyMS4wLVJldjE4X3Jldmlld19FTkQwMzA5MTgucGRmIiByZWw9Im5vb3BlbmVyIG5v
+cmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL3RydXN0ZWRjb21wdXRpbmdncm91cC5v
+cmcvd3AtY29udGVudC91cGxvYWRzL1RTUy0yLjAtVEFCLVJlc291cmNlLU1hbmFnZXItU3BlY1Zl
+cjEuMC1SZXYxOF9yZXZpZXdfRU5EMDMwOTE4LnBkZjwvYT48YnI+CnRoYXQgPGJyPgomcXVvdDs8
+YnI+ClRoZSBSTSBwZXJmb3JtcyBhIG1hcHBpbmcgZnJvbSB0aGUgKHVuY2hhbmdpbmcpIHZpcnR1
+YWwgaGFuZGxlIHRvIHRoZSAoY3VycmVudGx5IGFzc2lnbmVkKSBUUE08YnI+CmhhbmRsZS4gSXQg
+cmVwbGFjZXMgdGhlIHZpcnR1YWwgaGFuZGxlIHdpdGggdGhlIFRQTSBoYW5kbGUgaW4gdGhlIFRQ
+TSBjb21tYW5kIHBhY2tldC48YnI+Cjxicj4KTk9URTogVGhlIFRQTSAyLjAgbGlicmFyeSBzcGVj
+aWZpY2F0aW9uIGV4Y2x1ZGVzIHRoZSBoYW5kbGUgZnJvbSBjb21tYW5kIHN0cmVhbSBITUFDIGNh
+bGN1bGF0aW9ucyB0byBlbmFibGUgdGhpczxicj4Kc3Vic3RpdHV0aW9uLiZxdW90Ozxicj4KVGhp
+cyBtZWFucyB0aGF0IGlmIHRoZSB2aXJ0dWFsIGhhbmRsZSBhbmQgdGhlIChjdXJyZW50bHkgYXNz
+aWduZWQpIFRQTSBkaWZmZXJzLDxicj4KdGhlIEhNQUMgY2FsY3VsYXRpb25zIGZvciBtb3N0IG9m
+IHRoZSBjb21tYW5kcyBnbyB3ZWxsLjxicj4KPGJyPgpCdXQsIHRoZSBQb2xpY3lTZWNyZXQgY29t
+bWFuZCB0YWtlcyB0aGUgcG9saWN5IGhhbmRsZSB0byBleHRlbmQgYXMgYSBwYXJhbWV0ZXIgZm9y
+IEhNQUMuPGJyPgpJZiwgdGhlIHZpcnR1YWwgaGFuZGxlIGFuZCB0aGUgKGN1cnJlbnRseSBhc3Np
+Z25lZCkgVFBNIGRpZmZlcnMsIHRoZSBITUFDIGNhbGN1bGF0aW9uczxicj4KZm9yIHRoaXMgY29t
+bWFuZCBkb2Vzbid0IGdvIHdlbGwgYW5kIHByb2R1Y2VzIHRoZSBlcnJvciBjb2RlIDB4OThlLjxi
+cj4KSXMgbXkgdW5kZXJzdGFuZGluZyByaWdodD88YnI+CklmIHNvLCBpcyB0aGVyZSBhbnkgd29y
+a2Fyb3VuZD88YnI+Cjxicj4KVGhhbmsgeW91IGluIGFkdmFuY2UuPGJyPgo8L2Rpdj4KPC9kaXY+
+CjwvZGl2Pgo8L2Rpdj4KPC9ibG9ja3F1b3RlPgo8YnI+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+Cjwv
+Ym9keT4KPC9odG1sPgo=
 
---===============5663676081786969919==--
+--===============6240950666744484253==--
 
