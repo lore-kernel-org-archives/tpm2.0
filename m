@@ -1,73 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============6792950004066191256=="
+Content-Type: multipart/mixed; boundary="===============1490564216604718852=="
 MIME-Version: 1.0
-From: Al Munyandy, MunessparanX <munessparanx.al.munyandy at intel.com>
-Subject: [tpm2] tpmtest
-Date: Thu, 12 Apr 2018 07:24:52 +0000
-Message-ID: <201942FCAB84C34C9D845866BDB9256806D9498D@PGSMSX101.gar.corp.intel.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] tpmtest
+Date: Fri, 13 Apr 2018 17:01:04 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FF20B9E@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 201942FCAB84C34C9D845866BDB9256806D9498D@PGSMSX101.gar.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6792950004066191256==
+--===============1490564216604718852==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
 
-I'm installed tpm2-tools-3.0.2 and looking for tpmtest file to run selftest=
-. But I couldn't find it. I would like to know if this function been remove=
-d or replaced with other method. Please advise me.
 
-Thanks!
-Regards,
-Munes
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Al Munyandy,
+> MunessparanX
+> Sent: Thursday, April 12, 2018 12:25 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] tpmtest
+> =
 
---===============6792950004066191256==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> Hi,
+> =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6NjEyLjBwdCA3OTIuMHB0OwoJbWFyZ2luOjcyLjBwdCA3Mi4wcHQgNzIuMHB0IDcyLjBwdDt9
-CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtp
-ZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9
-IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpz
-aGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAv
-Pgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0i
-RU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRpdiBjbGFzcz0iV29yZFNl
-Y3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tTVkiPkhpLDxvOnA+
-PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tTVki
-PjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
-bGFuZz0iRU4tTVkiPkkmIzgyMTc7bSBpbnN0YWxsZWQgdHBtMi10b29scy0zLjAuMiBhbmQgbG9v
-a2luZyBmb3IgdHBtdGVzdCBmaWxlIHRvIHJ1biBzZWxmdGVzdC4gQnV0IEkgY291bGRuJiM4MjE3
-O3QgZmluZCBpdC4gSSB3b3VsZCBsaWtlIHRvIGtub3cgaWYgdGhpcyBmdW5jdGlvbiBiZWVuIHJl
-bW92ZWQgb3IgcmVwbGFjZWQgd2l0aCBvdGhlciBtZXRob2QuIFBsZWFzZSBhZHZpc2UgbWUuPG86
-cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1N
-WSI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBsYW5nPSJFTi1NWSI+VGhhbmtzITxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tTVkiPlJlZ2FyZHMsPG86cD48L286cD48L3NwYW4+PC9w
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1NWSI+TXVuZXM8bzpwPjwvbzpw
-Pjwvc3Bhbj48L3A+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
+> =
 
---===============6792950004066191256==--
+> =
+
+> I'm installed tpm2-tools-3.0.2 and looking for tpmtest file to run selfte=
+st. But I
+> couldn't find it. I would like to know if this function been removed or r=
+eplaced
+> with other method. Please advise me.
+
+It's under test/system and is called test.sh
+
+cd test/system
+./test.sh
+
+It assumes that:
+1. You have tpm2-abrmd running
+2. abrmd is connected to a software simulator
+
+> =
+
+> =
+
+> =
+
+> Thanks!
+> =
+
+> Regards,
+> =
+
+> Munes
+
+
+--===============1490564216604718852==--
 
