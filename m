@@ -1,64 +1,211 @@
-Content-Type: multipart/mixed; boundary="===============1490564216604718852=="
+Content-Type: multipart/mixed; boundary="===============8039224580016290972=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] tpmtest
-Date: Fri, 13 Apr 2018 17:01:04 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FF20B9E@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 201942FCAB84C34C9D845866BDB9256806D9498D@PGSMSX101.gar.corp.intel.com
+From: Ian Oliver <ian.justin.oliver at gmail.com>
+Subject: [tpm2] NVRAM_write, BUFFER_SIZE is 0
+Date: Tue, 17 Apr 2018 14:10:16 +0300
+Message-ID: <CAAxBZJtK+WTgBtJkK2BuC9i_Tzby0n3nN-Of8h+EdVd0V1D3cw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1490564216604718852==
+--===============8039224580016290972==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi,
+
+we're having problems writing to NV_RAM with tpm2_nvwrite. We can define
+areas but not write
 
 
-> -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Al Munyandy,
-> MunessparanX
-> Sent: Thursday, April 12, 2018 12:25 AM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] tpmtest
-> =
-
-> Hi,
-> =
-
-> =
-
-> =
-
-> I'm installed tpm2-tools-3.0.2 and looking for tpmtest file to run selfte=
-st. But I
-> couldn't find it. I would like to know if this function been removed or r=
-eplaced
-> with other method. Please advise me.
-
-It's under test/system and is called test.sh
-
-cd test/system
-./test.sh
-
-It assumes that:
-1. You have tpm2-abrmd running
-2. abrmd is connected to a software simulator
-
-> =
-
-> =
-
-> =
-
-> Thanks!
-> =
-
-> Regards,
-> =
-
-> Munes
+*$ tpm2_nvlist*
+0x1800005:
+  hash algorithm:
+    friendly: sha256
+    value: 0xB
+  attributes:
+    friendly: ownerwrite|policywrite|ownerread|written
+    value: 0xA000220
+  size: 32
 
 
---===============1490564216604718852==--
+
+
+*$ echo -n "hello" | tpm2_nvwrite -x 0x1800005 -a 0x40000001 -V*
+INFO on line: "135" in file: "tools/tpm2_nvwrite.c": The data(size=3D0) to =
+be
+written:
+INFO on line: "149" in file: "tools/tpm2_nvwrite.c": Success to write NV
+area at index 0x1800005 (25165829) offset 0x0.
+INFO on line: "135" in file: "tools/tpm2_nvwrite.c": The data(size=3D0) to =
+be
+written:
+INFO on line: "149" in file: "tools/tpm2_nvwrite.c": Success to write NV
+area at index 0x1800005 (25165829) offset 0x0.
+INFO on line: "135" in file: "tools/tpm2_nvwrite.c": The data(size=3D0) to =
+be
+written:
+INFO on line: "149" in file: "tools/tpm2_nvwrite.c": Success to write NV
+area at index 0x1800005 (25165829) offset 0x0.
+INFO on line: "135" in file: "tools/tpm2_nvwrite.c": The data(size=3D0) to =
+be
+written:
+INFO on line: "149" in file: "tools/tpm2_nvwrite.c": Success to write NV
+area at index 0x1800005 (25165829) offset 0x0.
+INFO on line: "135" in file: "tools/tpm2_nvwrite.c": The data(size=3D0) to =
+be
+written:
+INFO on line: "149" in file: "tools/tpm2_nvwrite.c": Success to write NV
+area at index 0x1800005 (25165829) offset 0x0.
+=E2=80=A6
+Which loops infinitely
+
+
+Relevant parts of the tpm2-tools and tpm2-tss code:
+*file: tpm2_nvwrite.c*
+113     res =3D tpm2_util_nv_max_buffer_size(sapi_context, &max_data_size);
+The call to tpm2_nv_read_public should get the *TPM_PT_NV_BUFFER_MAX
+*capability
+but and store it to *max_data_size*.
+In that part of the code max_data_size gets set to 0 and that causes the
+loop above.
+
+
+The TPM_PT_NV_BUFFER_MAX seems not to be defined in the capabilities for
+this device: Infineon TPM 2.0 9665  as reported by tpm2_cap.
+
+t.
+
+Ian
+
+
+-- =
+
+*Dr. Ian Oliver*
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
+*Twitter: @i_j_oliver*
+
+--===============8039224580016290972==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+PGZvbnQgc2l6ZT0iMyIgY29sb3I9ImJsYWNrIiBmYWNlPSJDYWxpYnJp
+LEhlbHZldGljYSxzYW5zLXNlcmlmIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEycHQiIGlkPSJn
+bWFpbC1kaXZ0YWdkZWZhdWx0d3JhcHBlciI+PGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFy
+Z2luLWJvdHRvbTowcHgiPkhpLDwvZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJn
+aW4tYm90dG9tOjBweCI+PGJyPgoKPC9kaXY+CjxkaXYgc3R5bGU9Im1hcmdpbi10b3A6MHB4O21h
+cmdpbi1ib3R0b206MHB4Ij53ZSYjMzk7cmUgaGF2aW5nIHByb2JsZW1zIHdyaXRpbmcgdG8gTlZf
+UkFNIHdpdGggdHBtMl9udndyaXRlLiBXZSBjYW4gZGVmaW5lIGFyZWFzIGJ1dCBub3Qgd3JpdGU8
+L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxicj4K
+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBweCI+wqA8
+L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxzcGFu
+IGxhbmc9ImVuLVVTIj48Yj4kIHRwbTJfbnZsaXN0PC9iPjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHls
+ZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxzcGFuIGxhbmc9ImVuLVVTIj4w
+eDE4MDAwMDU6PC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4t
+Ym90dG9tOjBweCI+PHNwYW4gbGFuZz0iZW4tVVMiPsKgIGhhc2ggYWxnb3JpdGhtOjwvc3Bhbj48
+L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxzcGFu
+IGxhbmc9ImVuLVVTIj7CoMKgwqAgZnJpZW5kbHk6IHNoYTI1Njwvc3Bhbj48L2Rpdj4KPGRpdiBz
+dHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxzcGFuIGxhbmc9ImVuLVVT
+Ij7CoMKgwqAgdmFsdWU6IDB4Qjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luLXRvcDow
+cHg7bWFyZ2luLWJvdHRvbTowcHgiPjxzcGFuIGxhbmc9ImVuLVVTIj7CoCBhdHRyaWJ1dGVzOjwv
+c3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgi
+PjxzcGFuIGxhbmc9ImVuLVVTIj7CoMKgwqAgZnJpZW5kbHk6IG93bmVyd3JpdGV8cG9saWN5d3Jp
+dGV8b3duZXJyZWFkfHdyaXR0ZW48L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9Im1hcmdpbi10b3A6
+MHB4O21hcmdpbi1ib3R0b206MHB4Ij48c3BhbiBsYW5nPSJlbi1VUyI+wqDCoMKgIHZhbHVlOiAw
+eEEwMDAyMjA8L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9Im1hcmdpbi10b3A6MHB4O21hcmdpbi1i
+b3R0b206MHB4Ij48c3BhbiBsYW5nPSJlbi1VUyI+wqAgc2l6ZTogMzI8L3NwYW4+PC9kaXY+Cjxi
+cj4KCjxkaXYgc3R5bGU9Im1hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MHB4Ij7CoDwvZGl2
+Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBweCI+PGJyPgoKPC9k
+aXY+CjxkaXYgc3R5bGU9Im1hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MHB4Ij7CoDwvZGl2
+Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBweCI+PHNwYW4gbGFu
+Zz0iZW4tVVMiPjxiPiQgZWNobyAtbiAmcXVvdDtoZWxsbyZxdW90OyB8IHRwbTJfbnZ3cml0ZSAt
+eCAweDE4MDAwMDUgLWEgMHg0MDAwMDAwMSAtVjwvYj48L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9
+Im1hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MHB4Ij48c3BhbiBsYW5nPSJlbi1VUyI+SU5G
+TyBvbiBsaW5lOiAmcXVvdDsxMzUmcXVvdDsgaW4gZmlsZTogJnF1b3Q7dG9vbHMvdHBtMl9udndy
+aXRlLmMmcXVvdDs6IFRoZSBkYXRhKHNpemU9MCkgdG8gYmUgd3JpdHRlbjo8L3NwYW4+PC9kaXY+
+CjxkaXYgc3R5bGU9Im1hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MHB4Ij48c3BhbiBsYW5n
+PSJlbi1VUyI+SU5GTyBvbiBsaW5lOiAmcXVvdDsxNDkmcXVvdDsgaW4gZmlsZTogJnF1b3Q7dG9v
+bHMvdHBtMl9udndyaXRlLmMmcXVvdDs6IFN1Y2Nlc3MgdG8gd3JpdGUgTlYgYXJlYSBhdCBpbmRl
+eCAweDE4MDAwMDUgKDI1MTY1ODI5KSBvZmZzZXQgMHgwLjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHls
+ZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxzcGFuIGxhbmc9ImVuLVVTIj5J
+TkZPIG9uIGxpbmU6ICZxdW90OzEzNSZxdW90OyBpbiBmaWxlOiAmcXVvdDt0b29scy90cG0yX252
+d3JpdGUuYyZxdW90OzogVGhlIGRhdGEoc2l6ZT0wKSB0byBiZSB3cml0dGVuOjwvc3Bhbj48L2Rp
+dj4KPGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxzcGFuIGxh
+bmc9ImVuLVVTIj5JTkZPIG9uIGxpbmU6ICZxdW90OzE0OSZxdW90OyBpbiBmaWxlOiAmcXVvdDt0
+b29scy90cG0yX252d3JpdGUuYyZxdW90OzogU3VjY2VzcyB0byB3cml0ZSBOViBhcmVhIGF0IGlu
+ZGV4IDB4MTgwMDAwNSAoMjUxNjU4MjkpIG9mZnNldCAweDAuPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0
+eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBweCI+PHNwYW4gbGFuZz0iZW4tVVMi
+PklORk8gb24gbGluZTogJnF1b3Q7MTM1JnF1b3Q7IGluIGZpbGU6ICZxdW90O3Rvb2xzL3RwbTJf
+bnZ3cml0ZS5jJnF1b3Q7OiBUaGUgZGF0YShzaXplPTApIHRvIGJlIHdyaXR0ZW46PC9zcGFuPjwv
+ZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBweCI+PHNwYW4g
+bGFuZz0iZW4tVVMiPklORk8gb24gbGluZTogJnF1b3Q7MTQ5JnF1b3Q7IGluIGZpbGU6ICZxdW90
+O3Rvb2xzL3RwbTJfbnZ3cml0ZS5jJnF1b3Q7OiBTdWNjZXNzIHRvIHdyaXRlIE5WIGFyZWEgYXQg
+aW5kZXggMHgxODAwMDA1ICgyNTE2NTgyOSkgb2Zmc2V0IDB4MC48L3NwYW4+PC9kaXY+CjxkaXYg
+c3R5bGU9Im1hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MHB4Ij48c3BhbiBsYW5nPSJlbi1V
+UyI+SU5GTyBvbiBsaW5lOiAmcXVvdDsxMzUmcXVvdDsgaW4gZmlsZTogJnF1b3Q7dG9vbHMvdHBt
+Ml9udndyaXRlLmMmcXVvdDs6IFRoZSBkYXRhKHNpemU9MCkgdG8gYmUgd3JpdHRlbjo8L3NwYW4+
+PC9kaXY+CjxkaXYgc3R5bGU9Im1hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MHB4Ij48c3Bh
+biBsYW5nPSJlbi1VUyI+SU5GTyBvbiBsaW5lOiAmcXVvdDsxNDkmcXVvdDsgaW4gZmlsZTogJnF1
+b3Q7dG9vbHMvdHBtMl9udndyaXRlLmMmcXVvdDs6IFN1Y2Nlc3MgdG8gd3JpdGUgTlYgYXJlYSBh
+dCBpbmRleCAweDE4MDAwMDUgKDI1MTY1ODI5KSBvZmZzZXQgMHgwLjwvc3Bhbj48L2Rpdj4KPGRp
+diBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxzcGFuIGxhbmc9ImVu
+LVVTIj5JTkZPIG9uIGxpbmU6ICZxdW90OzEzNSZxdW90OyBpbiBmaWxlOiAmcXVvdDt0b29scy90
+cG0yX252d3JpdGUuYyZxdW90OzogVGhlIGRhdGEoc2l6ZT0wKSB0byBiZSB3cml0dGVuOjwvc3Bh
+bj48L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxz
+cGFuIGxhbmc9ImVuLVVTIj5JTkZPIG9uIGxpbmU6ICZxdW90OzE0OSZxdW90OyBpbiBmaWxlOiAm
+cXVvdDt0b29scy90cG0yX252d3JpdGUuYyZxdW90OzogU3VjY2VzcyB0byB3cml0ZSBOViBhcmVh
+IGF0IGluZGV4IDB4MTgwMDAwNSAoMjUxNjU4MjkpIG9mZnNldCAweDAuPC9zcGFuPjwvZGl2Pgo8
+ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBweCI+PHNwYW4gbGFuZz0i
+ZW4tVVMiPuKApjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2lu
+LWJvdHRvbTowcHgiPjxzcGFuIGxhbmc9ImVuLVVTIj5XaGljaCBsb29wcyBpbmZpbml0ZWx5PC9z
+cGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBweCI+
+PHNwYW4gbGFuZz0iZW4tVVMiPsKgPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9w
+OjBweDttYXJnaW4tYm90dG9tOjBweCI+PHNwYW4gbGFuZz0iZW4tVVMiPsKgPC9zcGFuPjwvZGl2
+Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBweCI+PHNwYW4gbGFu
+Zz0iZW4tVVMiPlJlbGV2YW50IHBhcnRzIG9mIHRoZSB0cG0yLXRvb2xzIGFuZCB0cG0yLXRzcyBj
+b2RlOjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRv
+bTowcHgiPjxzcGFuIGxhbmc9ImVuLVVTIj48Yj5maWxlOiB0cG0yX252d3JpdGUuYzwvYj48L3Nw
+YW4+PC9kaXY+CjxkaXYgc3R5bGU9Im1hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MHB4Ij48
+c3BhbiBsYW5nPSJlbi1VUyI+MTEzwqDCoMKgwqAgcmVzID0gdHBtMl91dGlsX252X21heF9idWZm
+ZXJfc2l6ZShzYXBpX2NvbnRleHQsICZhbXA7bWF4X2RhdGFfc2l6ZSk7IDwvc3Bhbj48L2Rpdj4K
+PGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxzcGFuIGxhbmc9
+ImVuLVVTIj5UaGUgY2FsbCB0byB0cG0yX252X3JlYWRfcHVibGljIHNob3VsZCBnZXQgdGhlIDwv
+c3Bhbj48c3BhbiBsYW5nPSJlbi1VUyI+PGI+VFBNX1BUX05WX0JVRkZFUl9NQVggPC9iPjwvc3Bh
+bj48c3BhbiBsYW5nPSJlbi1VUyI+Y2FwYWJpbGl0eSBidXQgYW5kIHN0b3JlIGl0IHRvIDwvc3Bh
+bj48c3BhbiBsYW5nPSJlbi1VUyI+PGI+bWF4X2RhdGFfc2l6ZTwvYj48L3NwYW4+PHNwYW4gbGFu
+Zz0iZW4tVVMiPi4KPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJn
+aW4tYm90dG9tOjBweCI+PHNwYW4gbGFuZz0iZW4tVVMiPkluIHRoYXQgcGFydCBvZiB0aGUgY29k
+ZSBtYXhfZGF0YV9zaXplIGdldHMgc2V0IHRvIDAgYW5kIHRoYXQgY2F1c2VzIHRoZSBsb29wIGFi
+b3ZlLjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRv
+bTowcHgiPjxzcGFuIGxhbmc9ImVuLVVTIj48YnI+Cgo8L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9
+Im1hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MHB4Ij48c3BhbiBsYW5nPSJlbi1VUyI+PGJy
+PgoKPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9t
+OjBweCI+PHNwYW4gbGFuZz0iZW4tVVMiPlRoZSAKVFBNX1BUX05WX0JVRkZFUl9NQVggc2VlbXMg
+bm90IHRvIGJlIGRlZmluZWQgaW4gdGhlIGNhcGFiaWxpdGllcyBmb3IgCnRoaXMgZGV2aWNlOiBJ
+bmZpbmVvbiBUUE0gMi4wIDk2NjXCoCBhcyByZXBvcnRlZCBieSB0cG0yX2NhcC7CoCA8L3NwYW4+
+PHNwYW4gbGFuZz0iZW4tVVMiPjxicj4KCjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2lu
+LXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHgiPjxzcGFuIGxhbmc9ImVuLVVTIj48YnI+Cgo8L3Nw
+YW4+PC9kaXY+CjxkaXYgc3R5bGU9Im1hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MHB4Ij48
+c3BhbiBsYW5nPSJlbi1VUyI+dC48L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9Im1hcmdpbi10b3A6
+MHB4O21hcmdpbi1ib3R0b206MHB4Ij48c3BhbiBsYW5nPSJlbi1VUyI+PGJyPgoKPC9zcGFuPjwv
+ZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjBweCI+PHNwYW4g
+bGFuZz0iZW4tVVMiPklhbjwvc3Bhbj48c3BhbiBsYW5nPSJlbi1VUyI+PGJyPgoKPC9zcGFuPjwv
+ZGl2Pjwvc3Bhbj48L2ZvbnQ+PGJyIGNsZWFyPSJhbGwiPjxicj4tLSA8YnI+PGRpdiBjbGFzcz0i
+Z21haWxfc2lnbmF0dXJlIiBkYXRhLXNtYXJ0bWFpbD0iZ21haWxfc2lnbmF0dXJlIj48ZGl2IGRp
+cj0ibHRyIj48ZGl2PjxkaXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2
+IGRpcj0ibHRyIj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTphcmlhbDtmb250LXNpemU6c21hbGwi
+PjxiPkRyLiBJYW4gT2xpdmVyPC9iPjxicj49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OmFyaWFsO2ZvbnQtc2l6ZTpzbWFsbCI+
+UHJpdmFjeSBFbmdpbmVlcmluZzrCoCA8Yj48L2I+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigxNywx
+NywxNyk7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXNpemU6MTNweDtsaW5lLWhl
+aWdodDoxOXB4Ij48YSBocmVmPSJodHRwOi8vd3d3LmFtYXpvbi5jby51ay9kcC8xNDk3NTY5NzEw
+IiB0YXJnZXQ9Il9ibGFuayI+dmlhIEFtYXpvbjwvYT48L3NwYW4+PGI+PGJyPlR3aXR0ZXI6IEBp
+X2pfb2xpdmVyPC9iPjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2Pjwv
+ZGl2PjwvZGl2Pgo8L2Rpdj4K
+
+--===============8039224580016290972==--
 
