@@ -1,88 +1,29 @@
-Content-Type: multipart/mixed; boundary="===============6409977222342602371=="
+Content-Type: multipart/mixed; boundary="===============0516124106369244357=="
 MIME-Version: 1.0
-From: Tricca, Philip B <philip.b.tricca at intel.com>
-Subject: [tpm2] uriparser dependency
-Date: Tue, 17 Apr 2018 14:20:02 +0000
-Message-ID: <DB638850A6A2434A93ECADDA0BC838907CE5C247@ORSMSX103.amr.corp.intel.com>
+From: Anderson, Daniel <daniel.anderson at intel.com>
+Subject: Re: [tpm2] uriparser dependency
+Date: Tue, 17 Apr 2018 19:21:08 +0000
+Message-ID: <207C810BE4BA2440832668E0F208BFD3B11E10@ORSMSX108.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6409977222342602371==
+--===============0516124106369244357==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hey all,
+Please don't try and parse the host part or restrict the host to IPv4 addre=
+sses. This will allow hostnames and IPv6.
+In other words, just pass everything after the host=3D part.  Also consider=
+ making port optional with a default (12345?).
 
-I've had a few people ask me about the liburiparser dependency that's been =
-added to the mssim TCTI recently. Turns out this new dependency is less tha=
-n convenient as some distros don't have multi arch packages for it. This li=
-brary is only used to parse the configuration string at initialization time=
- and replacing it with a simple key / value pair that we parse manually wou=
-ld be a trivial way to break the dependency. We are however very close to m=
-aking a major release and making "significant" changes this close to the re=
-lease is generally bad form. So if no one objects I'd like to hack up a pat=
-ch that will replace our use of this library with a bit of code to parse ke=
-y / value pairs and change the format of the configuration string for the m=
-ssim TCTI to something like "host=3DXX.YY.ZZ.AA,port=3D12345".
+This would allow things such as:
+host=3D10.11.12.13
+host=3Dfoo.bar.com,port=3D12345
+host=3D2001:470:7b:5e7::2,port=3D12345
 
-Let me know what you all think,
-Philip
+Dan
 
---===============6409977222342602371==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
-cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
-Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
-b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
-bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZXkgYWxsLDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSYj
-ODIxNzt2ZSBoYWQgYSBmZXcgcGVvcGxlIGFzayBtZSBhYm91dCB0aGUgbGlidXJpcGFyc2VyIGRl
-cGVuZGVuY3kgdGhhdCYjODIxNztzIGJlZW4gYWRkZWQgdG8gdGhlIG1zc2ltIFRDVEkgcmVjZW50
-bHkuIFR1cm5zIG91dCB0aGlzIG5ldyBkZXBlbmRlbmN5IGlzIGxlc3MgdGhhbiBjb252ZW5pZW50
-IGFzIHNvbWUgZGlzdHJvcyBkb24mIzgyMTc7dCBoYXZlIG11bHRpIGFyY2ggcGFja2FnZXMgZm9y
-IGl0LiBUaGlzIGxpYnJhcnkgaXMgb25seQogdXNlZCB0byBwYXJzZSB0aGUgY29uZmlndXJhdGlv
-biBzdHJpbmcgYXQgaW5pdGlhbGl6YXRpb24gdGltZSBhbmQgcmVwbGFjaW5nIGl0IHdpdGggYSBz
-aW1wbGUga2V5IC8gdmFsdWUgcGFpciB0aGF0IHdlIHBhcnNlIG1hbnVhbGx5IHdvdWxkIGJlIGEg
-dHJpdmlhbCB3YXkgdG8gYnJlYWsgdGhlIGRlcGVuZGVuY3kuIFdlIGFyZSBob3dldmVyIHZlcnkg
-Y2xvc2UgdG8gbWFraW5nIGEgbWFqb3IgcmVsZWFzZSBhbmQgbWFraW5nICYjODIyMDtzaWduaWZp
-Y2FudCYjODIyMTsKIGNoYW5nZXMgdGhpcyBjbG9zZSB0byB0aGUgcmVsZWFzZSBpcyBnZW5lcmFs
-bHkgYmFkIGZvcm0uIFNvIGlmIG5vIG9uZSBvYmplY3RzIEkmIzgyMTc7ZCBsaWtlIHRvIGhhY2sg
-dXAgYSBwYXRjaCB0aGF0IHdpbGwgcmVwbGFjZSBvdXIgdXNlIG9mIHRoaXMgbGlicmFyeSB3aXRo
-IGEgYml0IG9mIGNvZGUgdG8gcGFyc2Uga2V5IC8gdmFsdWUgcGFpcnMgYW5kIGNoYW5nZSB0aGUg
-Zm9ybWF0IG9mIHRoZSBjb25maWd1cmF0aW9uIHN0cmluZyBmb3IgdGhlIG1zc2ltCiBUQ1RJIHRv
-IHNvbWV0aGluZyBsaWtlICYjODIyMDtob3N0PVhYLllZLlpaLkFBLHBvcnQ9MTIzNDUmIzgyMjE7
-LjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+TGV0IG1lIGtub3cgd2hhdCB5b3UgYWxsIHRoaW5rLDxv
-OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5QaGlsaXA8bzpwPjwvbzpwPjwvcD4K
-PC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
-
---===============6409977222342602371==--
+--===============0516124106369244357==--
 
