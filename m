@@ -1,81 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============4989623182910812652=="
+Content-Type: multipart/mixed; boundary="===============6549465868831554951=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] Question on TPM 2.0 in Embedded Devices
-Date: Thu, 19 Apr 2018 18:21:57 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D010EB1A3EF@exch2010c.sit.fraunhofer.de>
-In-Reply-To: trinity-d4d635ba-1ad3-4bb6-a9c8-55bf04043251-1524150581714@3c-app-gmx-bs54
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
+Subject: [tpm2] tpm2_pcrlist fails: Failed to intialize tcti context: 0x1
+Date: Thu, 19 Apr 2018 20:43:41 +0000
+Message-ID: <5fdc4164cca248988ae189701101eb01@AZDC-MMB02.GD-MS.US>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4989623182910812652==
+--===============6549465868831554951==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Madprops,
-
-The TSS can also run on RTOSes. We've used SAPI on uCs before.
-
-What you need to do is implement a TCTI-driver for your RTOS and Wiring and=
- then the SAPI or even ESAPI work out of the box.
-
-Cheers,
-Andreas
-________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of madprops(a)gmx.net [m=
-adprops(a)gmx.net]
-Sent: Thursday, April 19, 2018 17:09
-To: tpm2(a)lists.01.org
-Subject: [tpm2] Question on TPM 2.0 in Embedded Devices
-
-Hello all -
-
-I'm not sure if this is the right forum to ask this question, but maybe som=
-e of you have an idea:
-
-Is there any TPM 2.0 library, driver or similar available for Real Time Ope=
-rating Systems such as ThreadX? I'm thinking or embedded devices where the =
-TPM connects to a SoC via SPI, and where the application on the SoC wants t=
-o interact with the TPM.
+When I run tpm2_pcrlist, I get "ERROR: Failed to initialize tcti context: 0=
+x1".  tpm2-abrmd is running (which is necessary, right?).  This is with an =
+actual tpm, not the simulator.  Measured boot via tboot.gz is working succe=
+ssfully.  What am I missing or doing wrong?
 
 Thanks.
 
---===============4989623182910812652==
+Peter
+
+--===============6549465868831554951==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjxzdHlsZSB0eXBlPSJ0ZXh0
-L2NzcyIgaWQ9Im93YVBhcmFTdHlsZSI+UCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9
-PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBmcHN0eWxlPSIxIiBvY3NpPSIwIj4KPGRpdiBzdHlsZT0i
-ZGlyZWN0aW9uOiBsdHI7Zm9udC1mYW1pbHk6IFRhaG9tYTtjb2xvcjogIzAwMDAwMDtmb250LXNp
-emU6IDEwcHQ7Ij5IaSBNYWRwcm9wcyw8YnI+Cjxicj4KVGhlIFRTUyBjYW4gYWxzbyBydW4gb24g
-UlRPU2VzLiBXZSd2ZSB1c2VkIFNBUEkgb24gdUNzIGJlZm9yZS48YnI+Cjxicj4KV2hhdCB5b3Ug
-bmVlZCB0byBkbyBpcyBpbXBsZW1lbnQgYSBUQ1RJLWRyaXZlciBmb3IgeW91ciBSVE9TIGFuZCBX
-aXJpbmcgYW5kIHRoZW4gdGhlIFNBUEkgb3IgZXZlbiBFU0FQSSB3b3JrIG91dCBvZiB0aGUgYm94
-Ljxicj4KPGJyPgpDaGVlcnMsPGJyPgpBbmRyZWFzPGJyPgo8ZGl2IHN0eWxlPSJmb250LWZhbWls
-eTogVGltZXMgTmV3IFJvbWFuOyBjb2xvcjogIzAwMDAwMDsgZm9udC1zaXplOiAxNnB4Ij4KPGhy
-IHRhYmluZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwRjk2MTciIHN0eWxlPSJkaXJlY3Rpb246IGx0
-cjsiPjxmb250IHNpemU9IjIiIGZhY2U9IlRhaG9tYSIgY29sb3I9IiMwMDAwMDAiPjxiPkZyb206
-PC9iPiB0cG0yIFt0cG0yLWJvdW5jZXNAbGlzdHMuMDEub3JnXSBvbiBiZWhhbGYgb2YgbWFkcHJv
-cHNAZ214Lm5ldCBbbWFkcHJvcHNAZ214Lm5ldF08YnI+CjxiPlNlbnQ6PC9iPiBUaHVyc2RheSwg
-QXByaWwgMTksIDIwMTggMTc6MDk8YnI+CjxiPlRvOjwvYj4gdHBtMkBsaXN0cy4wMS5vcmc8YnI+
-CjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gUXVlc3Rpb24gb24gVFBNIDIuMCBpbiBFbWJlZGRlZCBE
-ZXZpY2VzPGJyPgo8L2ZvbnQ+PGJyPgo8L2Rpdj4KPGRpdj48L2Rpdj4KPGRpdj4KPGRpdiBzdHls
-ZT0iZm9udC1mYW1pbHk6VmVyZGFuYTsgZm9udC1zaXplOjEyLjBweCI+CjxkaXYgY2xhc3M9InNp
-Z25hdHVyZSI+CjxkaXY+SGVsbG8gYWxsIC08L2Rpdj4KPGRpdj4mbmJzcDs8L2Rpdj4KPGRpdj5J
-J20gbm90IHN1cmUgaWYgdGhpcyBpcyB0aGUgcmlnaHQgZm9ydW0gdG8gYXNrIHRoaXMgcXVlc3Rp
-b24sIGJ1dCBtYXliZSBzb21lIG9mIHlvdSBoYXZlIGFuIGlkZWE6PC9kaXY+CjxkaXY+Jm5ic3A7
-PC9kaXY+CjxkaXY+SXMgdGhlcmUgYW55IFRQTSAyLjAgbGlicmFyeSwgZHJpdmVyIG9yIHNpbWls
-YXIgYXZhaWxhYmxlIGZvciBSZWFsIFRpbWUgT3BlcmF0aW5nIFN5c3RlbXMgc3VjaCBhcyBUaHJl
-YWRYPyBJJ20gdGhpbmtpbmcgb3IgZW1iZWRkZWQgZGV2aWNlcyB3aGVyZSB0aGUgVFBNIGNvbm5l
-Y3RzIHRvIGEgU29DIHZpYSBTUEksIGFuZCB3aGVyZSB0aGUgYXBwbGljYXRpb24gb24gdGhlIFNv
-QyB3YW50cyB0byBpbnRlcmFjdCB3aXRoIHRoZSBUUE0uPC9kaXY+CjxkaXY+Jm5ic3A7PC9kaXY+
-CjxkaXY+VGhhbmtzLjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+Cjwv
-Ym9keT4KPC9odG1sPgo=
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDYWxp
+YnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9u
+cyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBp
+bjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWls
+eToiQ2FsaWJyaSIsInNhbnMtc2VyaWYiO30KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluawoJe21z
+by1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOmJsdWU7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJs
+aW5lO30KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkCgl7bXNvLXN0eWxlLXBy
+aW9yaXR5Ojk5OwoJY29sb3I6cHVycGxlOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnNw
+YW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsKCWZvbnQt
+ZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0No
+cERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxp
+YnJpIiwic2Fucy1zZXJpZiI7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBp
+bjsKCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtw
+YWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+Cjxv
+OnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2Vu
+ZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRp
+dCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94
+bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJsdWUiIHZs
+aW5rPSJwdXJwbGUiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5XaGVuIEkgcnVuIHRwbTJfcGNybGlzdCwgSSBnZXQgJiM4MjIwO0VSUk9SOiBGYWlsZWQg
+dG8gaW5pdGlhbGl6ZSB0Y3RpIGNvbnRleHQ6IDB4MSYjODIyMTsuJm5ic3A7IHRwbTItYWJybWQg
+aXMgcnVubmluZyAod2hpY2ggaXMgbmVjZXNzYXJ5LCByaWdodD8pLiZuYnNwOyBUaGlzIGlzIHdp
+dGggYW4gYWN0dWFsIHRwbSwgbm90IHRoZSBzaW11bGF0b3IuJm5ic3A7IE1lYXN1cmVkIGJvb3Qg
+dmlhIHRib290Lmd6IGlzIHdvcmtpbmcgc3VjY2Vzc2Z1bGx5LiZuYnNwOyBXaGF0CiBhbSBJIG1p
+c3Npbmcgb3IgZG9pbmcgd3Jvbmc/PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGFua3MuPG86cD48
+L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj5QZXRlcjxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0
+bWw+Cg==
 
---===============4989623182910812652==--
+--===============6549465868831554951==--
 
