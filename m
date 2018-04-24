@@ -1,68 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============6549465868831554951=="
+Content-Type: multipart/mixed; boundary="===============2816304005192184487=="
 MIME-Version: 1.0
-From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
-Subject: [tpm2] tpm2_pcrlist fails: Failed to intialize tcti context: 0x1
-Date: Thu, 19 Apr 2018 20:43:41 +0000
-Message-ID: <5fdc4164cca248988ae189701101eb01@AZDC-MMB02.GD-MS.US>
+From: Duncan.Palmer at data61.csiro.au
+Subject: Re: [tpm2] NVRAM_write, BUFFER_SIZE is 0
+Date: Tue, 24 Apr 2018 12:51:49 +0000
+Message-ID: <1524574309106.7317@data61.csiro.au>
+In-Reply-To: 6594cb44-a95c-f40d-6d20-8e784f9c13c1@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6549465868831554951==
+--===============2816304005192184487==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When I run tpm2_pcrlist, I get "ERROR: Failed to initialize tcti context: 0=
-x1".  tpm2-abrmd is running (which is necessary, right?).  This is with an =
-actual tpm, not the simulator.  Measured boot via tboot.gz is working succe=
-ssfully.  What am I missing or doing wrong?
+Done. I hadn't submitted a pull request before as I was unsure whether this=
+ issue was related to the TPM I'm using (which doesn't seem commonly used),=
+ or more generally applicable.
 
-Thanks.
+Duncan Palmer
+Senior Software Engineer | Autonomous Systems
+Data61 | CSIRO
+E duncan.palmer(a)csiro.au
+Queensland Centre for Advanced Technologies (QCAT),
+1 Technology Court, Pullenvale QLD, 4069
+www.data61.csiro.au
 
-Peter
+CSIRO=E2=80=99s Digital Productivity business unit and NICTA have joined fo=
+rces to create digital powerhouse Data61
 
---===============6549465868831554951==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+________________________________________
+From: Tadeusz Struk <tadeusz.struk(a)intel.com>
+Sent: 19 April 2018 04:17
+To: Palmer, Duncan (Data61, Pullenvale); ian.justin.oliver(a)gmail.com; tpm=
+2(a)lists.01.org
+Subject: Re: [tpm2] NVRAM_write, BUFFER_SIZE is 0
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDYWxp
-YnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9u
-cyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBp
-bjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWls
-eToiQ2FsaWJyaSIsInNhbnMtc2VyaWYiO30KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluawoJe21z
-by1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOmJsdWU7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJs
-aW5lO30KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkCgl7bXNvLXN0eWxlLXBy
-aW9yaXR5Ojk5OwoJY29sb3I6cHVycGxlOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnNw
-YW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsKCWZvbnQt
-ZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0No
-cERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxp
-YnJpIiwic2Fucy1zZXJpZiI7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBp
-bjsKCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtw
-YWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+Cjxv
-OnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2Vu
-ZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRp
-dCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94
-bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJsdWUiIHZs
-aW5rPSJwdXJwbGUiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj5XaGVuIEkgcnVuIHRwbTJfcGNybGlzdCwgSSBnZXQgJiM4MjIwO0VSUk9SOiBGYWlsZWQg
-dG8gaW5pdGlhbGl6ZSB0Y3RpIGNvbnRleHQ6IDB4MSYjODIyMTsuJm5ic3A7IHRwbTItYWJybWQg
-aXMgcnVubmluZyAod2hpY2ggaXMgbmVjZXNzYXJ5LCByaWdodD8pLiZuYnNwOyBUaGlzIGlzIHdp
-dGggYW4gYWN0dWFsIHRwbSwgbm90IHRoZSBzaW11bGF0b3IuJm5ic3A7IE1lYXN1cmVkIGJvb3Qg
-dmlhIHRib290Lmd6IGlzIHdvcmtpbmcgc3VjY2Vzc2Z1bGx5LiZuYnNwOyBXaGF0CiBhbSBJIG1p
-c3Npbmcgb3IgZG9pbmcgd3Jvbmc/PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGFua3MuPG86cD48
-L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj5QZXRlcjxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0
-bWw+Cg==
+On 04/17/2018 03:24 PM, Duncan.Palmer(a)data61.csiro.au wrote:
+> We see the same behaviour on an Intel NUC5i7. I haven't looked at the cap=
+abilities reported by the TPM device on that platform. The attached patch (=
+setting max_data_size =3D MAX_NV_BUFFER_SIZE when max_data_size is reported=
+ as 0), sorts the problem out.
+>
 
---===============6549465868831554951==--
+Hi Duncan,
+Could you please send a Pull Request with your fix to the tools repo.
+
+Thanks,
+--
+Tadeusz
+
+
+--===============2816304005192184487==--
 
