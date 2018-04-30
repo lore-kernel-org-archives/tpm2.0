@@ -1,251 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============1519405739537293709=="
+Content-Type: multipart/mixed; boundary="===============0369859101790596223=="
 MIME-Version: 1.0
-From: Duncan.Palmer at data61.csiro.au
-Subject: Re: [tpm2] tpm support on Intel NUCs
-Date: Sun, 29 Apr 2018 23:23:39 +0000
-Message-ID: <1525044219744.78324@data61.csiro.au>
-In-Reply-To: CAAxBZJs5gnVuqwqndRAuOveRvy0anazDcuqDE0d-M4TvC4_X7g@mail.gmail.com
+From: Javier Martinez Canillas <javierm at redhat.com>
+Subject: [tpm2] [RELEASE] tpm2-tools 3.0.4 available
+Date: Mon, 30 Apr 2018 12:10:13 +0200
+Message-ID: <9a30b0f2-b9d0-4e55-a957-b0838ae640c0@redhat.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1519405739537293709==
+--===============0369859101790596223==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks Ian,
+Release 3.0.4 of tpm2-tools is now available at:
+https://github.com/tpm2-software/tpm2-tools/releases/tag/3.0.4
 
+Changelog:
 
-Sounds like we need to test some newer kernels..
+3.0.4 - 2018-04-30
+  * Fix save and load for TPM2B_PRIVATE object.
+  * Use a default buffer size for tpm2_nv{read,write} if the TPM reports a =
+0 size.
+  * Fix --verbose and --version options crossover.
+  * Generate man pages from markdown and include them in the distribution t=
+arball.
+  * Print usage summary if tools are executed with no options or man page c=
+an't be displayed.
 
-
-Dunk
-
-
-Duncan Palmer
-Senior Software Engineer | Autonomous Systems
-Data61 | CSIRO
-
-E duncan.palmer(a)csiro.au
-
-Queensland Centre for Advanced Technologies (QCAT),
-
-1 Technology Court, Pullenvale QLD, 4069
-
-www.data61.csiro.au<http://my.csiro.au/Business-Units/Operations/Communicat=
-ion/CSIRO-Branding/Data61-Branding/www.data61.csiro.au>
-
-
-CSIRO's Digital Productivity business unit and NICTA have joined forces to =
-create digital powerhouse Data61
-
-________________________________
-From: Ian Oliver <ian.justin.oliver(a)gmail.com>
-Sent: 27 April 2018 14:59
-To: Palmer, Duncan (Data61, Pullenvale)
-Cc: tpm2(a)lists.01.org
-Subject: Re: tpm support on Intel NUCs
-
-Hello Duncan,
-
-we've three NUC7i5DNKE<https://ark.intel.com/products/122486/Intel-NUC-Kit-=
-NUC7i5DNKE> - two running Fedora (latest) and one with Ubuntu 17.04.  Worke=
-d for us out of the box: had to enable TXT in the BIOS but that set everyth=
-ing else necessary automatically.  SRTM measures work, DRTM with tboot does=
- not - tboot just hangs - still debugging this one - the ACM module seems t=
-o be correct.
-
-Fedora requires a kernel recompile to get SELinux and IMA/EMA running;  Ubu=
-ntu does not support IMA policies an AppArmor kernel panics.
-
-tss/abrmd/tpm2-tools all compile with the latest releases, "master" does no=
-t without some hacking - old libraries etc (CentOS was nigh on impossible i=
-n this respect)
-
-I'll check the kernel versions and tpm drivers when I get into the office, =
-but 4.13 (at least) for the kernal has worked for us on more or less everyt=
-hing (NUC, Nokia AirFrame, Lenovo laptops).
-
-t.
-
-Ian
-
-On 27 April 2018 at 01:20, <Duncan.Palmer(a)data61.csiro.au<mailto:Duncan.P=
-almer(a)data61.csiro.au>> wrote:
-
-Apologies if this is slightly OT for this list...
-
-
-We're running the tpm2 tools in Intel NUCs (a NUC5i7RYH to be exact), using=
- Linux kernel 4.4.59 (shipped by Ubuntu as 4.4.0-77). The tpm drivers on th=
-is kernel don't work out of the box, and I had to put in a fairly nasty hac=
-k to make them work. The same driver now does not work on a newer NUC7i7 mo=
-del. Are other people using NUCs, and if so, are you having similar issues?
-
-
-Cheers,
-
-Dunk
-
-
-Duncan Palmer
-Senior Software Engineer | Autonomous Systems
-Data61 | CSIRO
-
-E duncan.palmer(a)csiro.au
-
-Queensland Centre for Advanced Technologies (QCAT),
-
-1 Technology Court, Pullenvale QLD, 4069<https://maps.google.com/?q=3D1+Tec=
-hnology+Court,+Pullenvale+QLD,+4069&entry=3Dgmail&source=3Dg>
-
-www.data61.csiro.au<http://my.csiro.au/Business-Units/Operations/Communicat=
-ion/CSIRO-Branding/Data61-Branding/www.data61.csiro.au>
-
-
-CSIRO's Digital Productivity business unit and NICTA have joined forces to =
-create digital powerhouse Data61
-
-
-
---
-Dr. Ian Oliver
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-Privacy Engineering:  via Amazon<http://www.amazon.co.uk/dp/1497569710>
-Twitter: @i_j_oliver
-
---===============1519405739537293709==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
-ZT0iZGlzcGxheTpub25lIj48IS0tUHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gLS0+
-PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciIgc3R5bGU9ImZvbnQtc2l6ZToxMnB0O2Nv
-bG9yOiMwMDAwMDA7YmFja2dyb3VuZC1jb2xvcjojRkZGRkZGO2ZvbnQtZmFtaWx5OkNhbGlicmks
-QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7Ij4KPHA+VGhhbmtzIElhbiw8L3A+CjxwPjxicj4K
-PC9wPgo8cD5Tb3VuZHMgbGlrZSB3ZSBuZWVkIHRvIHRlc3Qgc29tZSBuZXdlciBrZXJuZWxzLi48
-L3A+CjxwPjxicj4KPC9wPgo8cD5EdW5rPGJyPgo8L3A+CjxwPjxicj4KPC9wPgo8ZGl2IGlkPSJT
-aWduYXR1cmUiPgo8ZGl2IG5hbWU9ImRpdnRhZ2RlZmF1bHR3cmFwcGVyIiBzdHlsZT0iZm9udC1m
-YW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsgZm9udC1zaXplOjsgbWFy
-Z2luOjAiPgo8cD48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExcHQ7IGZvbnQtZmFtaWx5OmNhbGli
-cmk7IGNvbG9yOiMyZmI3ODciPjxzdHJvbmc+RHVuY2FuIFBhbG1lcjwvc3Ryb25nPjwvc3Bhbj48
-YnI+CjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyBmb250LWZhbWlseTpjYWxpYnJpIj5TZW5p
-b3IgU29mdHdhcmUgRW5naW5lZXIgfCBBdXRvbm9tb3VzIFN5c3RlbXM8YnI+CjxzdHJvbmc+RGF0
-YTYxIHwgQ1NJUk88L3N0cm9uZz48YnI+Cjwvc3Bhbj48L3A+CjxwIHN0eWxlPSJmb250LXNpemU6
-OXB0OyBmb250LWZhbWlseTpjYWxpYnJpIj48c3Ryb25nPjxzcGFuIHN0eWxlPSJmb250LXNpemU6
-OXB0OyBmb250LWZhbWlseTpjYWxpYnJpOyBjb2xvcjojMmZiNzg3Ij5FPC9zcGFuPjwvc3Ryb25n
-PiBkdW5jYW4ucGFsbWVyPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7IGZvbnQtZmFtaWx5OmNh
-bGlicmkiPkBjc2lyby5hdTwvc3Bhbj48L3A+CjxwIHN0eWxlPSJmb250LXNpemU6OXB0OyBmb250
-LWZhbWlseTpjYWxpYnJpIj48c3BhbiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjp3aGl0ZSIgbGFu
-Zz0iZW4tVVMiPjxmb250IHNpemU9IjIiIGZhY2U9IkNhbGlicmkiPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6MTFwdCI+PGZvbnQgc2l6ZT0iMiIgY29sb3I9ImJsYWNrIj48c3BhbiBzdHlsZT0iZm9u
-dC1zaXplOjlwdCI+UXVlZW5zbGFuZCBDZW50cmUgZm9yIEFkdmFuY2VkIFRlY2hub2xvZ2llcyAo
-UUNBVCksPC9zcGFuPjwvZm9udD48L3NwYW4+PC9mb250Pjwvc3Bhbj48L3A+CjxwIHN0eWxlPSJm
-b250LXNpemU6OXB0OyBmb250LWZhbWlseTpjYWxpYnJpIj48c3BhbiBzdHlsZT0iZm9udC1zaXpl
-OjlwdDsgZm9udC1mYW1pbHk6Y2FsaWJyaSI+MSBUZWNobm9sb2d5IENvdXJ0LCBQdWxsZW52YWxl
-IFFMRCwgNDA2OTxicj4KPC9zcGFuPjwvcD4KPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7IGZv
-bnQtZmFtaWx5OmNhbGlicmkiPjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjlwdDsgZm9u
-dC1mYW1pbHk6Y2FsaWJyaSI+PGEgaHJlZj0iaHR0cDovL215LmNzaXJvLmF1L0J1c2luZXNzLVVu
-aXRzL09wZXJhdGlvbnMvQ29tbXVuaWNhdGlvbi9DU0lSTy1CcmFuZGluZy9EYXRhNjEtQnJhbmRp
-bmcvd3d3LmRhdGE2MS5jc2lyby5hdSIgc3R5bGU9ImNvbG9yOiMyZmI3ODciIGlkPSJOb0xQIj53
-d3cuZGF0YTYxLmNzaXJvLmF1PC9hPjwvc3Bhbj48YnI+CjxwIHN0eWxlPSJmb250LXNpemU6OXB0
-OyBmb250LWZhbWlseTpjYWxpYnJpIj48YnI+CjwvcD4KPHAgc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7
-IGZvbnQtZmFtaWx5OmNhbGlicmkiPjxiPkNTSVJPJiM4MjE3O3MgRGlnaXRhbCBQcm9kdWN0aXZp
-dHkgYnVzaW5lc3MgdW5pdCBhbmQgTklDVEEgaGF2ZSBqb2luZWQgZm9yY2VzIHRvIGNyZWF0ZSBk
-aWdpdGFsIHBvd2VyaG91c2UgRGF0YTYxPC9iPjwvcD4KPGI+PC9iPjwvZGl2Pgo8L2Rpdj4KPGRp
-diBzdHlsZT0iY29sb3I6IHJnYigzMywgMzMsIDMzKTsiPgo8aHIgdGFiaW5kZXg9Ii0xIiBzdHls
-ZT0iZGlzcGxheTppbmxpbmUtYmxvY2s7IHdpZHRoOjk4JSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RN
-c2ciIGRpcj0ibHRyIj48Zm9udCBzdHlsZT0iZm9udC1zaXplOjExcHQiIGNvbG9yPSIjMDAwMDAw
-IiBmYWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIj48Yj5Gcm9tOjwvYj4gSWFuIE9saXZlciAmbHQ7
-aWFuLmp1c3Rpbi5vbGl2ZXJAZ21haWwuY29tJmd0Ozxicj4KPGI+U2VudDo8L2I+IDI3IEFwcmls
-IDIwMTggMTQ6NTk8YnI+CjxiPlRvOjwvYj4gUGFsbWVyLCBEdW5jYW4gKERhdGE2MSwgUHVsbGVu
-dmFsZSk8YnI+CjxiPkNjOjwvYj4gdHBtMkBsaXN0cy4wMS5vcmc8YnI+CjxiPlN1YmplY3Q6PC9i
-PiBSZTogdHBtIHN1cHBvcnQgb24gSW50ZWwgTlVDczwvZm9udD4KPGRpdj4mbmJzcDs8L2Rpdj4K
-PC9kaXY+CjxkaXY+CjxkaXYgZGlyPSJsdHIiPgo8ZGl2Pgo8ZGl2Pgo8ZGl2PkhlbGxvIER1bmNh
-biw8YnI+Cjxicj4KPC9kaXY+CndlJ3ZlIHRocmVlIDxhIGhyZWY9Imh0dHBzOi8vYXJrLmludGVs
-LmNvbS9wcm9kdWN0cy8xMjI0ODYvSW50ZWwtTlVDLUtpdC1OVUM3aTVETktFIiB0YXJnZXQ9Il9i
-bGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIj4KPHNwYW4gY2xhc3M9ImdtYWlsLWhpZ2hs
-aWdodCIgaWQ9ImdtYWlsLTAuMTE1NjgxMDk5MzQxMTM0NDYiIG5hbWU9InNlYXJjaEhpdEluUmVh
-ZGluZ1BhbmUiPk5VQzwvc3Bhbj43aTVETktFPC9hPiAtIHR3byBydW5uaW5nIEZlZG9yYSAobGF0
-ZXN0KSBhbmQgb25lIHdpdGggVWJ1bnR1IDE3LjA0LiZuYnNwOyBXb3JrZWQgZm9yIHVzIG91dCBv
-ZiB0aGUgYm94OiBoYWQgdG8gZW5hYmxlIFRYVCBpbiB0aGUgQklPUyBidXQgdGhhdCBzZXQgZXZl
-cnl0aGluZyBlbHNlCiBuZWNlc3NhcnkgYXV0b21hdGljYWxseS4mbmJzcDsgU1JUTSBtZWFzdXJl
-cyB3b3JrLCBEUlRNIHdpdGggdGJvb3QgZG9lcyBub3QgLSB0Ym9vdCBqdXN0IGhhbmdzIC0gc3Rp
-bGwgZGVidWdnaW5nIHRoaXMgb25lIC0gdGhlIEFDTSBtb2R1bGUgc2VlbXMgdG8gYmUgY29ycmVj
-dC48YnI+Cjxicj4KRmVkb3JhIHJlcXVpcmVzIGEga2VybmVsIHJlY29tcGlsZSB0byBnZXQgU0VM
-aW51eCBhbmQgSU1BL0VNQSBydW5uaW5nOyZuYnNwOyBVYnVudHUgZG9lcyBub3Qgc3VwcG9ydCBJ
-TUEgcG9saWNpZXMgYW4gQXBwQXJtb3Iga2VybmVsIHBhbmljcy48YnI+Cjxicj4KdHNzL2Ficm1k
-L3RwbTItdG9vbHMgYWxsIGNvbXBpbGUgd2l0aCB0aGUgbGF0ZXN0IHJlbGVhc2VzLCAmcXVvdDtt
-YXN0ZXImcXVvdDsgZG9lcyBub3Qgd2l0aG91dCBzb21lIGhhY2tpbmcgLSBvbGQgbGlicmFyaWVz
-IGV0YyAoQ2VudE9TIHdhcyBuaWdoIG9uIGltcG9zc2libGUgaW4gdGhpcyByZXNwZWN0KQo8YnI+
-Cjxicj4KPC9kaXY+CkknbGwgY2hlY2sgdGhlIGtlcm5lbCB2ZXJzaW9ucyBhbmQgdHBtIGRyaXZl
-cnMgd2hlbiBJIGdldCBpbnRvIHRoZSBvZmZpY2UsIGJ1dCA0LjEzIChhdCBsZWFzdCkgZm9yIHRo
-ZSBrZXJuYWwgaGFzIHdvcmtlZCBmb3IgdXMgb24gbW9yZSBvciBsZXNzIGV2ZXJ5dGhpbmcgKE5V
-QywgTm9raWEgQWlyRnJhbWUsIExlbm92byBsYXB0b3BzKS48YnI+Cjxicj4KPC9kaXY+CjxkaXY+
-dC48YnI+CjwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+Cklhbjxicj4KPC9kaXY+CjxkaXYgY2xhc3M9
-ImdtYWlsX2V4dHJhIj48YnI+CjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj5PbiAyNyBBcHJpbCAy
-MDE4IGF0IDAxOjIwLCA8c3BhbiBkaXI9Imx0ciI+Jmx0OzxhIGhyZWY9Im1haWx0bzpEdW5jYW4u
-UGFsbWVyQGRhdGE2MS5jc2lyby5hdSIgdGFyZ2V0PSJfYmxhbmsiPkR1bmNhbi5QYWxtZXJAZGF0
-YTYxLmNzaXJvLmF1PC9hPiZndDs8L3NwYW4+IHdyb3RlOjxicj4KPGJsb2NrcXVvdGUgY2xhc3M9
-ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjAgMCAwIC44ZXg7IGJvcmRlci1sZWZ0OjFweCAj
-Y2NjIHNvbGlkOyBwYWRkaW5nLWxlZnQ6MWV4Ij4KPGRpdiBkaXI9Imx0ciIgc3R5bGU9ImZvbnQt
-c2l6ZToxMnB0OyBjb2xvcjojMDAwMDAwOyBiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmY7IGZvbnQt
-ZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYiPgo8cD5BcG9sb2dpZXMg
-aWYgdGhpcyBpcyBzbGlnaHRseSBPVCBmb3IgdGhpcyBsaXN0Li4uPC9wPgo8cD48YnI+CjwvcD4K
-PHA+V2UncmUgcnVubmluZyB0aGUgdHBtMiB0b29scyBpbiBJbnRlbCBOVUNzIChhIE5VQzVpN1JZ
-SCB0byBiZSBleGFjdCksIHVzaW5nIExpbnV4IGtlcm5lbCA0LjQuNTkgKHNoaXBwZWQgYnkgVWJ1
-bnR1IGFzIDQuNC4wLTc3KS4gVGhlIHRwbSBkcml2ZXJzIG9uIHRoaXMga2VybmVsIGRvbid0IHdv
-cmsgb3V0IG9mIHRoZSBib3gsIGFuZCBJIGhhZCB0byBwdXQgaW4gYSBmYWlybHkgbmFzdHkgaGFj
-ayB0byBtYWtlIHRoZW0gd29yay4gVGhlIHNhbWUKIGRyaXZlciBub3cgZG9lcyBub3Qgd29yayBv
-biBhIG5ld2VyIE5VQzdpNyBtb2RlbC4gQXJlIG90aGVyIHBlb3BsZSB1c2luZyBOVUNzLCBhbmQg
-aWYgc28sIGFyZSB5b3UgaGF2aW5nIHNpbWlsYXIgaXNzdWVzPzwvcD4KPHA+PGJyPgo8L3A+Cjxw
-PkNoZWVycyw8L3A+CjxwPkR1bms8YnI+CjwvcD4KPHA+PGJyPgo8L3A+CjxkaXYgaWQ9Im1fLTI5
-ODc0NzY3MzQ4NDYyODUzNjVTaWduYXR1cmUiPgo8ZGl2IG5hbWU9ImRpdnRhZ2RlZmF1bHR3cmFw
-cGVyIj4KPHA+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMXB0OyBmb250LWZhbWlseTpjYWxpYnJp
-OyBjb2xvcjojMmZiNzg3Ij48c3Ryb25nPkR1bmNhbiBQYWxtZXI8L3N0cm9uZz48L3NwYW4+PGJy
-Pgo8c3BhbiBzdHlsZT0iZm9udC1zaXplOjlwdDsgZm9udC1mYW1pbHk6Y2FsaWJyaSI+U2VuaW9y
-IFNvZnR3YXJlIEVuZ2luZWVyIHwgQXV0b25vbW91cyBTeXN0ZW1zPGJyPgo8c3Ryb25nPkRhdGE2
-MSB8IENTSVJPPC9zdHJvbmc+PGJyPgo8L3NwYW4+PC9wPgo8cCBzdHlsZT0iZm9udC1zaXplOjlw
-dDsgZm9udC1mYW1pbHk6Y2FsaWJyaSI+PHN0cm9uZz48c3BhbiBzdHlsZT0iZm9udC1zaXplOjlw
-dDsgZm9udC1mYW1pbHk6Y2FsaWJyaTsgY29sb3I6IzJmYjc4NyI+RTwvc3Bhbj48L3N0cm9uZz4g
-ZHVuY2FuLnBhbG1lcjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyBmb250LWZhbWlseTpjYWxp
-YnJpIj5AY3Npcm8uYXU8L3NwYW4+PC9wPgo8cCBzdHlsZT0iZm9udC1zaXplOjlwdDsgZm9udC1m
-YW1pbHk6Y2FsaWJyaSI+PHNwYW4gc3R5bGU9ImJhY2tncm91bmQtY29sb3I6d2hpdGUiIGxhbmc9
-ImVuLVVTIj48Zm9udCBzaXplPSIyIiBmYWNlPSJDYWxpYnJpIj48c3BhbiBzdHlsZT0iZm9udC1z
-aXplOjExcHQiPjxmb250IHNpemU9IjIiIGNvbG9yPSJibGFjayI+PHNwYW4gc3R5bGU9ImZvbnQt
-c2l6ZTo5cHQiPlF1ZWVuc2xhbmQgQ2VudHJlIGZvciBBZHZhbmNlZCBUZWNobm9sb2dpZXMgKFFD
-QVQpLDwvc3Bhbj48L2ZvbnQ+PC9zcGFuPjwvZm9udD48L3NwYW4+PC9wPgo8cCBzdHlsZT0iZm9u
-dC1zaXplOjlwdDsgZm9udC1mYW1pbHk6Y2FsaWJyaSI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5
-cHQ7IGZvbnQtZmFtaWx5OmNhbGlicmkiPjxhIGhyZWY9Imh0dHBzOi8vbWFwcy5nb29nbGUuY29t
-Lz9xPTEmIzQzO1RlY2hub2xvZ3kmIzQzO0NvdXJ0LCYjNDM7UHVsbGVudmFsZSYjNDM7UUxELCYj
-NDM7NDA2OSZhbXA7ZW50cnk9Z21haWwmYW1wO3NvdXJjZT1nIj4xIFRlY2hub2xvZ3kgQ291cnQs
-IFB1bGxlbnZhbGUgUUxELCA0MDY5PC9hPjxicj4KPC9zcGFuPjwvcD4KPHNwYW4gc3R5bGU9ImZv
-bnQtc2l6ZTo5cHQ7IGZvbnQtZmFtaWx5OmNhbGlicmkiPjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9u
-dC1zaXplOjlwdDsgZm9udC1mYW1pbHk6Y2FsaWJyaSI+PGEgaHJlZj0iaHR0cDovL215LmNzaXJv
-LmF1L0J1c2luZXNzLVVuaXRzL09wZXJhdGlvbnMvQ29tbXVuaWNhdGlvbi9DU0lSTy1CcmFuZGlu
-Zy9EYXRhNjEtQnJhbmRpbmcvd3d3LmRhdGE2MS5jc2lyby5hdSIgaWQ9Im1fLTI5ODc0NzY3MzQ4
-NDYyODUzNjVOb0xQIiB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiMyZmI3ODciPnd3dy5k
-YXRhNjEuY3Npcm8uYXU8L2E+PC9zcGFuPjxicj4KPHAgc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7IGZv
-bnQtZmFtaWx5OmNhbGlicmkiPjxicj4KPC9wPgo8cCBzdHlsZT0iZm9udC1zaXplOjlwdDsgZm9u
-dC1mYW1pbHk6Y2FsaWJyaSI+PGI+Q1NJUk8mIzgyMTc7cyBEaWdpdGFsIFByb2R1Y3Rpdml0eSBi
-dXNpbmVzcyB1bml0IGFuZCBOSUNUQSBoYXZlIGpvaW5lZCBmb3JjZXMgdG8gY3JlYXRlIGRpZ2l0
-YWwgcG93ZXJob3VzZSBEYXRhNjE8L2I+PC9wPgo8Yj48L2I+PC9kaXY+CjwvZGl2Pgo8L2Rpdj4K
-PC9ibG9ja3F1b3RlPgo8L2Rpdj4KPGJyPgo8YnIgY2xlYXI9ImFsbCI+Cjxicj4KLS0gPGJyPgo8
-ZGl2IGNsYXNzPSJnbWFpbF9zaWduYXR1cmUiPgo8ZGl2IGRpcj0ibHRyIj4KPGRpdj4KPGRpdiBk
-aXI9Imx0ciI+CjxkaXY+CjxkaXYgZGlyPSJsdHIiPgo8ZGl2Pgo8ZGl2IGRpcj0ibHRyIj4KPGRp
-diBzdHlsZT0iZm9udC1mYW1pbHk6YXJpYWw7IGZvbnQtc2l6ZTpzbWFsbCI+PGI+RHIuIElhbiBP
-bGl2ZXI8L2I+PGJyPgo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PGJyPgo8L2Rpdj4K
-PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6YXJpYWw7IGZvbnQtc2l6ZTpzbWFsbCI+UHJpdmFjeSBF
-bmdpbmVlcmluZzombmJzcDsgPGI+PC9iPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMTcsMTcsMTcp
-OyBmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmOyBmb250LXNpemU6MTNweDsgbGluZS1oZWln
-aHQ6MTlweCI+PGEgaHJlZj0iaHR0cDovL3d3dy5hbWF6b24uY28udWsvZHAvMTQ5NzU2OTcxMCIg
-dGFyZ2V0PSJfYmxhbmsiPnZpYSBBbWF6b248L2E+PC9zcGFuPjxiPjxicj4KVHdpdHRlcjogQGlf
-al9vbGl2ZXI8L2I+PC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9k
-aXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
-
---===============1519405739537293709==--
+--===============0369859101790596223==--
 
