@@ -1,267 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============4921443434724265681=="
+Content-Type: multipart/mixed; boundary="===============7267046815852338023=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] NVRAM_write, BUFFER_SIZE is 0
-Date: Mon, 30 Apr 2018 18:12:46 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC563FF40381@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 1524780942850.60358@data61.csiro.au
+From: Davide Rutigliano <davide.ruti at gmail.com>
+Subject: [tpm2] ESAPI StartAuthSession
+Date: Mon, 30 Apr 2018 22:16:02 +0200
+Message-ID: <CAOysEaeeMgv0m0vCnE_mnKDKVVqE3QcMaNMxmAvCkr3TkFhhvA@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4921443434724265681==
+--===============7267046815852338023==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Theirs really two values when dealing with NV space that are of concern:
+Hello everyone,
 
-The maximum size of an nv area, given by fixed-property capability:
-TPM_PT_NV_INDEX_MAX
+I'm in trouble with Esys_StartAuthSession because I receive continuously
+this error and I cannot understand why:
 
-The maximum amount of data that can be transferred at a time:
-TPM2_PT_NV_BUFFER_MAX
+"""
+ERROR:esys_iutil:esapi/esapi_util/esys_iutil.c:879:esys_GetResourceObject()
+Error: Esys handle does not exist (70018).
+ERROR:esys:esapi/esapi/Esys_StartAuthSession.c:124:Esys_StartAuthSession()
+Error in async function ErrorCode (0x00070018)
+TPM2_StartAuthSession failed with 0x70018
+"""
 
-The maximum transfer size (TPM2_PT_NV_BUFFER_MAX) is also bounded by
-TPM2_MAX_NV_BUFFER_SIZE which is 2048.
+I suppose I'm doing something wrong with session handles but I don't know
+what.
 
-TO clarify, if a TPM reports 0 for TPM2_PT_NV_BUFFER_MAX (ie transfer size)
-we should assume some value, however TPM2_MAX_NV_BUFFER_SIZE
-might not be the best option. Something smaller, like 512, is probably a
-safer bet, and this 512 on 0 logic has been merged into 3.X (on 3.0.4 relea=
-se) and on
-current master.
+Could someone help me please?
 
+Thanks in advance,
 
-> -----Original Message-----
-> From: Duncan.Palmer(a)data61.csiro.au [mailto:Duncan.Palmer(a)data61.csir=
-o.au]
-> Sent: Thursday, April 26, 2018 3:16 PM
-> To: ian.justin.oliver(a)gmail.com; Roberts, William C
-> <william.c.roberts(a)intel.com>
-> Cc: tpm2(a)lists.01.org
-> Subject: Re: [tpm2] NVRAM_write, BUFFER_SIZE is 0
-> =
+Davide Rutigliano.
 
-> Thanks for updating the patch with a default size William. Sorry, I hadn'=
-t the time
-> to do it yet...
-> =
+--===============7267046815852338023==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-> =
+PGRpdiBkaXI9Imx0ciI+SGVsbG8gZXZlcnlvbmUsPGRpdj48YnI+PC9kaXY+PGRpdj48ZGl2IHN0
+eWxlPSJmb250LXNpemU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPkkmIzM5O20gaW4gdHJvdWJsZSB3
+aXRoIEVzeXNfU3RhcnRBdXRoU2Vzc2lvbiBiZWNhdXNlIEkgcmVjZWl2ZSBjb250aW51b3VzbHkg
+dGhpcyBlcnJvciBhbmQgSSBjYW5ub3QgdW5kZXJzdGFuZCB3aHk6PC9kaXY+PGRpdiBzdHlsZT0i
+Zm9udC1zaXplOjEyLjgwMDAwMDE5MDczNDg2M3B4Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9u
+dC1zaXplOjEyLjgwMDAwMDE5MDczNDg2M3B4Ij4mcXVvdDsmcXVvdDsmcXVvdDs8L2Rpdj48ZGl2
+IHN0eWxlPSJmb250LXNpemU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPjxkaXY+RVJST1I6ZXN5c19p
+dXRpbDplc2FwaS9lc2FwaV88d2JyPnV0aWwvZXN5c19pdXRpbC5jOjg3OTplc3lzXzx3YnI+R2V0
+UmVzb3VyY2VPYmplY3QoKSBFcnJvcjogRXN5cyBoYW5kbGUgZG9lcyBub3QgZXhpc3QgKDcwMDE4
+KS7CoDwvZGl2PjxkaXY+RVJST1I6ZXN5czplc2FwaS9lc2FwaS9Fc3lzXzx3YnI+U3RhcnRBdXRo
+U2Vzc2lvbi5jOjEyNDpFc3lzXzx3YnI+U3RhcnRBdXRoU2Vzc2lvbigpIEVycm9yIGluIGFzeW5j
+IGZ1bmN0aW9uIEVycm9yQ29kZSAoMHgwMDA3MDAxOCnCoDwvZGl2PjxkaXY+VFBNMl9TdGFydEF1
+dGhTZXNzaW9uIGZhaWxlZCB3aXRoIDB4NzAwMTg8L2Rpdj48L2Rpdj48ZGl2IHN0eWxlPSJmb250
+LXNpemU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPiZxdW90OyZxdW90OyZxdW90OzwvZGl2PjxkaXYg
+c3R5bGU9ImZvbnQtc2l6ZToxMi44MDAwMDAxOTA3MzQ4NjNweCI+PGJyPjwvZGl2PjxkaXYgc3R5
+bGU9ImZvbnQtc2l6ZToxMi44MDAwMDAxOTA3MzQ4NjNweCI+SSBzdXBwb3NlIEkmIzM5O20gZG9p
+bmcgc29tZXRoaW5nIHdyb25nIHdpdGggc2Vzc2lvbiBoYW5kbGVzIGJ1dCBJIGRvbiYjMzk7dCBr
+bm93IHdoYXQuPC9kaXY+PGRpdiBzdHlsZT0iZm9udC1zaXplOjEyLjgwMDAwMDE5MDczNDg2M3B4
+Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1zaXplOjEyLjgwMDAwMDE5MDczNDg2M3B4Ij5D
+b3VsZCBzb21lb25lIGhlbHAgbWUgcGxlYXNlPzwvZGl2PjwvZGl2PjxkaXY+PGJyPjwvZGl2Pjxk
+aXY+VGhhbmtzIGluIGFkdmFuY2UsPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5EYXZpZGUgUnV0
+aWdsaWFuby48L2Rpdj48L2Rpdj4K
 
-> =
-
-> =
-
-> Duncan Palmer
-> Senior Software Engineer | Autonomous Systems
-> Data61 | CSIRO
-> =
-
-> =
-
-> E duncan.palmer(a)csiro.au
-> =
-
-> Queensland Centre for Advanced Technologies (QCAT),
-> =
-
-> 1 Technology Court, Pullenvale QLD, 4069
-> =
-
-> =
-
-> www.data61.csiro.au <http://my.csiro.au/Business-
-> Units/Operations/Communication/CSIRO-Branding/Data61-
-> Branding/www.data61.csiro.au>
-> =
-
-> =
-
-> =
-
-> =
-
-> =
-
-> CSIRO's Digital Productivity business unit and NICTA have joined forces t=
-o create
-> digital powerhouse Data61
-> =
-
-> ________________________________
-> =
-
-> From: Ian Oliver <ian.justin.oliver(a)gmail.com>
-> Sent: 26 April 2018 03:02
-> To: Roberts, William C
-> Cc: Palmer, Duncan (Data61, Pullenvale); tpm2(a)lists.01.org
-> Subject: Re: [tpm2] NVRAM_write, BUFFER_SIZE is 0
-> =
-
-> Actually some TPMs aren't reporting this value as part of the properties
-> (tpm2_getcap -c properties-fixed IIRC) so it gets interpreted as 0.
-> =
-
-> =
-
-> Can you also confirm the maximum size of an NV_RAM area, or is it always
-> bounded by MAX_NV_BUFFER_SIZE  ?
-> =
-
-> =
-
-> t.
-> =
-
-> =
-
-> Ian
-> =
-
-> =
-
-> On 25 April 2018 at 19:29, Roberts, William C <william.c.roberts(a)intel.=
-com
-> <mailto:william.c.roberts(a)intel.com> > wrote:
-> =
-
-> =
-
-> 	I have heard of this bug before but never encountered it. I looked at the
-> PR:
-> 	https://github.com/tpm2-software/tpm2-tools/pull/1002
-> <https://github.com/tpm2-software/tpm2-tools/pull/1002>
-> =
-
-> 	I heard as well that setting the buffer to something smaller than MAX si=
-ze
-> and that 512 bytes is recommended.
-> 	Someone actually polled the vendors to find out what buffer size is
-> always a safe bet, and 512 was it.
-> =
-
-> 	> -----Original Message-----
-> 	> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org <mailto:tpm2-
-> bounces(a)lists.01.org> ] On Behalf Of Ian Oliver
-> 	> Sent: Tuesday, April 24, 2018 7:48 AM
-> 	> To: Duncan.Palmer(a)data61.csiro.au
-> <mailto:Duncan.Palmer(a)data61.csiro.au>
-> 	> Cc: tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
-> 	> Subject: Re: [tpm2] NVRAM_write, BUFFER_SIZE is 0
-> 	>
-> 	> Thanks,
-> 	>
-> 	>
-> 	> We are seeing the same issue on the TPMs in our Intel NUCs .. Infineon
-> 9655s ?
-> 	> Need to check tomorrow
-> 	>
-> 	>
-> 	> t.
-> 	>
-> 	>
-> 	> Ian
-> 	>
-> 	>
-> 	> On 24 April 2018 at 15:51, <Duncan.Palmer(a)data61.csiro.au
-> <mailto:Duncan.Palmer(a)data61.csiro.au>
-> 	> <mailto:Duncan.Palmer(a)data61.csiro.au
-> <mailto:Duncan.Palmer(a)data61.csiro.au> > > wrote:
-> 	>
-> 	>
-> 	>       Done. I hadn't submitted a pull request before as I was unsure
-> whether
-> 	> this issue was related to the TPM I'm using (which doesn't seem
-> commonly
-> 	> used), or more generally applicable.
-> 	>
-> 	>       Duncan Palmer
-> 	>       Senior Software Engineer | Autonomous Systems
-> 	>       Data61 | CSIRO
-> 	>       E duncan.palmer(a)csiro.au
-> 	>       Queensland Centre for Advanced Technologies (QCAT),
-> 	>       1 Technology Court, Pullenvale QLD, 4069
-> 	>       www.data61.csiro.au <http://www.data61.csiro.au>
-> <http://www.data61.csiro.au>
-> 	>
-> 	>       CSIRO's Digital Productivity business unit and NICTA have joined
-> forces to
-> 	> create digital powerhouse Data61
-> 	>
-> 	>       ________________________________________
-> 	>       From: Tadeusz Struk <tadeusz.struk(a)intel.com
-> <mailto:tadeusz.struk(a)intel.com>
-> 	> <mailto:tadeusz.struk(a)intel.com <mailto:tadeusz.struk(a)intel.com> >
-> >
-> 	>       Sent: 19 April 2018 04:17
-> 	>       To: Palmer, Duncan (Data61, Pullenvale); ian.justin.oliver(a)gma=
-il.com
-> <mailto:ian.justin.oliver(a)gmail.com>
-> 	> <mailto:ian.justin.oliver(a)gmail.com
-> <mailto:ian.justin.oliver(a)gmail.com> > ; tpm2(a)lists.01.org
-> <mailto:tpm2(a)lists.01.org>
-> 	> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> >
-> 	>       Subject: Re: [tpm2] NVRAM_write, BUFFER_SIZE is 0
-> 	>
-> 	>
-> 	>       On 04/17/2018 03:24 PM, Duncan.Palmer(a)data61.csiro.au
-> <mailto:Duncan.Palmer(a)data61.csiro.au>
-> 	> <mailto:Duncan.Palmer(a)data61.csiro.au
-> <mailto:Duncan.Palmer(a)data61.csiro.au> >  wrote:
-> 	>       > We see the same behaviour on an Intel NUC5i7. I haven't looked=
- at
-> the
-> 	> capabilities reported by the TPM device on that platform. The attached
-> patch
-> 	> (setting max_data_size =3D MAX_NV_BUFFER_SIZE when max_data_size
-> is
-> 	> reported as 0), sorts the problem out.
-> 	>       >
-> 	>
-> 	>       Hi Duncan,
-> 	>       Could you please send a Pull Request with your fix to the tools =
-repo.
-> 	>
-> 	>       Thanks,
-> 	>       --
-> 	>       Tadeusz
-> 	>
-> 	>
-> 	>
-> 	>
-> 	>
-> 	>
-> 	> --
-> 	>
-> 	> Dr. Ian Oliver
-> 	> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-> 	>
-> 	> Privacy Engineering:  via Amazon
-> <http://www.amazon.co.uk/dp/1497569710
-> <http://www.amazon.co.uk/dp/1497569710> >
-> 	> Twitter: @i_j_oliver
-> =
-
-> =
-
-> =
-
-> =
-
-> =
-
-> --
-> =
-
-> Dr. Ian Oliver
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> =
-
-> Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
-> Twitter: @i_j_oliver
-
---===============4921443434724265681==--
+--===============7267046815852338023==--
 
