@@ -1,67 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============7267046815852338023=="
+Content-Type: multipart/mixed; boundary="===============4923786486573695295=="
 MIME-Version: 1.0
-From: Davide Rutigliano <davide.ruti at gmail.com>
-Subject: [tpm2] ESAPI StartAuthSession
-Date: Mon, 30 Apr 2018 22:16:02 +0200
-Message-ID: <CAOysEaeeMgv0m0vCnE_mnKDKVVqE3QcMaNMxmAvCkr3TkFhhvA@mail.gmail.com>
+From: Philip Tricca <philip.b.tricca at intel.com>
+Subject: Re: [tpm2] [ANNOUNCE] Brace yourself: API & ABI incompatible changes
+ in coming!
+Date: Mon, 30 Apr 2018 18:38:02 -0700
+Message-ID: <20180501013802.GA18635@intel.com>
+In-Reply-To: 20180319040514.GC8769@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7267046815852338023==
+--===============4923786486573695295==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
+On Sun, Mar 18, 2018 at 09:05:14PM -0700, Philip Tricca wrote:
+> Hello all,
+> =
 
-I'm in trouble with Esys_StartAuthSession because I receive continuously
-this error and I cannot understand why:
+> On Mon, Feb 26, 2018 at 03:39:42PM -0800, Philip Tricca wrote:
+> > We're getting pretty close to an RC0 for the next major release of the
+> > TSS2 libraries. Before we can make RCo though there are a number of
+> > changes that still need to be made to the header files to bring them
+> > in line with the latest TPM2 and TSS2 specifications. We've just
+> > started rolling these out and during this time, due to the nature of
+> > the changes, we'll be breaking backward compatibility (API and ABI
+> > both).
+> > =
 
-"""
-ERROR:esys_iutil:esapi/esapi_util/esys_iutil.c:879:esys_GetResourceObject()
-Error: Esys handle does not exist (70018).
-ERROR:esys:esapi/esapi/Esys_StartAuthSession.c:124:Esys_StartAuthSession()
-Error in async function ErrorCode (0x00070018)
-TPM2_StartAuthSession failed with 0x70018
-"""
+> > If you're following along at home you've probably seen changes to the
+> > TCTI headers and implemnetation happening in rapid succession over the
+> > last few days (when our CI isn't down). Expect similar changes to
+> > happen in the rest of the public headers over the course of this week.
+> > These changes will likely cause some issues for downstream projects but
+> > feel free to get on the list and we'll help sort things out.
+> =
 
-I suppose I'm doing something wrong with session handles but I don't know
-what.
+> ~3 weeks and ~100 commits later and we're just about ready to start the
+> 2.0 RCs. Thanks to everyone using the libraries for their patience
+> during this process. Our implementation is now (baring bugs :D) in line
+> with the latest draft specs on the TCG website.
+> =
 
-Could someone help me please?
+> The only issue blocking the RCs from rolling at this point is some TCG
+> process stuff. We're still waiting for a new version of the TCTI
+> specification to be released for public review. Once this is done we'll
+> have one small change to make in the TCTI headers and then we'll kick
+> off the release process.
+> =
 
-Thanks in advance,
+> In the meantime those packaging and / or using the TSS2 libraries don't
+> need to wait for the RCs to start before providing any feedback you may
+> have in advance of the release. Similarly we'll be getting the tools and
+> tabrmd ready for releases that will make use of the 2.0 version of the
+> TSS2 libraries.
 
-Davide Rutigliano.
+Turns out that "TCG process stuff" takes a while. Lesson learned :)
 
---===============7267046815852338023==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+Good news though: the draft TCTI spec we were waiting for was posted to
+the TCG website for public review a few days ago:
+https://trustedcomputinggroup.org/wp-content/uploads/TSS_TCTI_v1.0_r12_PUBL=
+IC_REVIEW.pdf
+Since this went public we've made the updates that were previously
+blocked and we're getting ready to roll with the RCs! While we're
+cleaning out the PR queue and preparing to tag RC0 we'd greatly
+appreciate any cycles you can spare for feedback and / or testing.
 
-PGRpdiBkaXI9Imx0ciI+SGVsbG8gZXZlcnlvbmUsPGRpdj48YnI+PC9kaXY+PGRpdj48ZGl2IHN0
-eWxlPSJmb250LXNpemU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPkkmIzM5O20gaW4gdHJvdWJsZSB3
-aXRoIEVzeXNfU3RhcnRBdXRoU2Vzc2lvbiBiZWNhdXNlIEkgcmVjZWl2ZSBjb250aW51b3VzbHkg
-dGhpcyBlcnJvciBhbmQgSSBjYW5ub3QgdW5kZXJzdGFuZCB3aHk6PC9kaXY+PGRpdiBzdHlsZT0i
-Zm9udC1zaXplOjEyLjgwMDAwMDE5MDczNDg2M3B4Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9u
-dC1zaXplOjEyLjgwMDAwMDE5MDczNDg2M3B4Ij4mcXVvdDsmcXVvdDsmcXVvdDs8L2Rpdj48ZGl2
-IHN0eWxlPSJmb250LXNpemU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPjxkaXY+RVJST1I6ZXN5c19p
-dXRpbDplc2FwaS9lc2FwaV88d2JyPnV0aWwvZXN5c19pdXRpbC5jOjg3OTplc3lzXzx3YnI+R2V0
-UmVzb3VyY2VPYmplY3QoKSBFcnJvcjogRXN5cyBoYW5kbGUgZG9lcyBub3QgZXhpc3QgKDcwMDE4
-KS7CoDwvZGl2PjxkaXY+RVJST1I6ZXN5czplc2FwaS9lc2FwaS9Fc3lzXzx3YnI+U3RhcnRBdXRo
-U2Vzc2lvbi5jOjEyNDpFc3lzXzx3YnI+U3RhcnRBdXRoU2Vzc2lvbigpIEVycm9yIGluIGFzeW5j
-IGZ1bmN0aW9uIEVycm9yQ29kZSAoMHgwMDA3MDAxOCnCoDwvZGl2PjxkaXY+VFBNMl9TdGFydEF1
-dGhTZXNzaW9uIGZhaWxlZCB3aXRoIDB4NzAwMTg8L2Rpdj48L2Rpdj48ZGl2IHN0eWxlPSJmb250
-LXNpemU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPiZxdW90OyZxdW90OyZxdW90OzwvZGl2PjxkaXYg
-c3R5bGU9ImZvbnQtc2l6ZToxMi44MDAwMDAxOTA3MzQ4NjNweCI+PGJyPjwvZGl2PjxkaXYgc3R5
-bGU9ImZvbnQtc2l6ZToxMi44MDAwMDAxOTA3MzQ4NjNweCI+SSBzdXBwb3NlIEkmIzM5O20gZG9p
-bmcgc29tZXRoaW5nIHdyb25nIHdpdGggc2Vzc2lvbiBoYW5kbGVzIGJ1dCBJIGRvbiYjMzk7dCBr
-bm93IHdoYXQuPC9kaXY+PGRpdiBzdHlsZT0iZm9udC1zaXplOjEyLjgwMDAwMDE5MDczNDg2M3B4
-Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1zaXplOjEyLjgwMDAwMDE5MDczNDg2M3B4Ij5D
-b3VsZCBzb21lb25lIGhlbHAgbWUgcGxlYXNlPzwvZGl2PjwvZGl2PjxkaXY+PGJyPjwvZGl2Pjxk
-aXY+VGhhbmtzIGluIGFkdmFuY2UsPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5EYXZpZGUgUnV0
-aWdsaWFuby48L2Rpdj48L2Rpdj4K
+Releases of the tools and tabrmd that are compatible with the 2.0 API
+are not yet available. For the short term only the master branches of
+the tabrmd and tools will work with this upcoming release on account
+of the API changes. Historically we've tried to time releases of the
+tabrmd and tools with compatible releases of the TSS2 libraries to
+minimize confusion. Since we've delayed the 2.0 release for nearly 2
+months however we've opted to ship this release ahead of the other TSS2
+components.
 
---===============7267046815852338023==--
+This may cause some confusion but we've weighed this against further
+delays to the 2.0 release and feel that further delays aren't an option.
+The code is ready, so we're going to ship it. Updates to the tabrmd and
+tools are already well underway and will be available shortly. Till then
+we'd advise packagers to hold off on shipping the 2.0 release of the
+TSS2 Libraries till compatible releases of the tools and tabrmd are
+ready.
+
+Regards,
+Philip
+
+--===============4923786486573695295==--
 
