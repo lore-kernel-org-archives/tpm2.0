@@ -1,136 +1,192 @@
-Content-Type: multipart/mixed; boundary="===============7702139835624296018=="
+Content-Type: multipart/mixed; boundary="===============3696336839021988200=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] ESAPI StartAuthSession
-Date: Wed, 02 May 2018 07:39:49 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D010EB20A0E@exch2010c.sit.fraunhofer.de>
-In-Reply-To: CAOysEaeeMgv0m0vCnE_mnKDKVVqE3QcMaNMxmAvCkr3TkFhhvA@mail.gmail.com
+From: Peter Magnusson <blaufish.public.email at gmail.com>
+Subject: [tpm2] clevis with tpm-tools 2.1.0 (tpm2_create proper use for
+ tpm2_unseal compatibility)
+Date: Thu, 03 May 2018 12:44:05 +0200
+Message-ID: <CANtcRX5LHqtU4gN5yv7CRUf=AdjzYvfL1uWBO189XksCLxFA2A@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7702139835624296018==
+--===============3696336839021988200==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
+Hi,
 
-you are correct, you are somewhere referencing a (ESYS_TR handle) that does=
- not exist.
-I guess code would be good, so we can help you...
+I'm trying to get clevis 9 working with Ubuntu18 tpm-tools 2.1.0, but
+clevis decrypt (tpm2_unseal) fail. l suspect the obj_attr values feed
+to tpm2_create in clevis-encrypt-tpm2 might be root cause, but I
+haven't succeeded in making sense of it.
 
-A typical usage looks like this:
-ESYS_TR sessiontr;
-TPMT_SYM_DEF symmetric =3D { .algorithm =3D TPM2_ALG_NULL };
-r =3D Esys_StartAuthSession(ectx, ESYS_TR_NONE, ESYS_TR_NONE, /* tpmKey, bi=
-nd */
-                                            ESYS_TR_NONE, ESYS_TR_NONE, ESY=
-S_TR_NONE, /* shandle 1-3 */
-                                            NULL, /*nonceCaller */, TPM2_SE=
-_HMAC, &symmetric, TPM2_ALG_SHA1,
-                                            &sessiontr, NULL /* tpmNonce */=
-);
+A diff on clevis-encrypt-tpm2 is included in the end of this mail.
 
-If this does not work, please send us your code...
+ Any helpful pointers on what  appropriate change of clevis-encrypt
+would be appreciated.
 
-Cheers,
-Andreas
+echo hi | clevis encrypt tpm2 '{}'  | clevis decrypt
 
-________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Davide Rutigliano [da=
-vide.ruti(a)gmail.com]
-Sent: Monday, April 30, 2018 22:16
-To: tpm2(a)lists.01.org
-Subject: [tpm2] ESAPI StartAuthSession
+tpm2_createprimary -A o --halg 0xB --kalg 0x23 -C ...primary.context
+-T device -d /dev/tpmrm0
+nameAlg =3D 0x000b
+type =3D 0x0023
+contextFile =3D ...primary.context
 
-Hello everyone,
+CreatePrimary Succeed ! Handle: 0x80ffffff
 
-I'm in trouble with Esys_StartAuthSession because I receive continuously th=
-is error and I cannot understand why:
 
-"""
-ERROR:esys_iutil:esapi/esapi_util/esys_iutil.c:879:esys_GetResourceObject()=
- Error: Esys handle does not exist (70018).
-ERROR:esys:esapi/esapi/Esys_StartAuthSession.c:124:Esys_StartAuthSession() =
-Error in async function ErrorCode (0x00070018)
-TPM2_StartAuthSession failed with 0x70018
-"""
+tpm2_load -T device -d /dev/tpmrm0 -c ...primary.context -u ...jwk.pub
+-r ...jwk.priv -C ...load.context -n ...name.structure
 
-I suppose I'm doing something wrong with session handles but I don't know w=
-hat.
+contextParentFile =3D ...primary.context
+contextFile =3D ...load.context
 
-Could someone help me please?
+Load succ.
+LoadedHandle: 0x80fffffe
 
-Thanks in advance,
+tpm2_unseal -T device -d /dev/tpmrm0 -c ...load.context -o -
+ERROR: Sys_Unseal failed. Error Code: 0x12f
+Unsealing jwk from TPM failed!
 
-Davide Rutigliano.
 
---===============7702139835624296018==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjxzdHlsZSB0eXBlPSJ0ZXh0
-L2NzcyIgaWQ9Im93YVBhcmFTdHlsZSI+UCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9
-PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBmcHN0eWxlPSIxIiBvY3NpPSIwIj4KPGRpdiBzdHlsZT0i
-ZGlyZWN0aW9uOiBsdHI7Zm9udC1mYW1pbHk6IFRhaG9tYTtjb2xvcjogIzAwMDAwMDtmb250LXNp
-emU6IDEwcHQ7Ij5IaSBEYXZpZGUsPGJyPgo8YnI+CnlvdSBhcmUgY29ycmVjdCwgeW91IGFyZSBz
-b21ld2hlcmUgcmVmZXJlbmNpbmcgYSAoRVNZU19UUiBoYW5kbGUpIHRoYXQgZG9lcyBub3QgZXhp
-c3QuPGJyPgpJIGd1ZXNzIGNvZGUgd291bGQgYmUgZ29vZCwgc28gd2UgY2FuIGhlbHAgeW91Li4u
-PGJyPgo8YnI+CkEgdHlwaWNhbCB1c2FnZSBsb29rcyBsaWtlIHRoaXM6PGJyPgpFU1lTX1RSIHNl
-c3Npb250cjs8YnI+ClRQTVRfU1lNX0RFRiBzeW1tZXRyaWMgPSB7IC5hbGdvcml0aG0gPSBUUE0y
-X0FMR19OVUxMIH07PGJyPgpyID0gRXN5c19TdGFydEF1dGhTZXNzaW9uKGVjdHgsIEVTWVNfVFJf
-Tk9ORSwgRVNZU19UUl9OT05FLCAvKiB0cG1LZXksIGJpbmQgKi88YnI+CiZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyBFU1lTX1RSX05PTkUsIEVTWVNfVFJfTk9ORSwgRVNZU19UUl9OT05F
-LCAvKiBzaGFuZGxlIDEtMyAqLzxicj4KJm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyZuYnNwOyZu
-YnNwOyAmbmJzcDsmbmJzcDsmbmJzcDsgJm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyZuYnNwOyZu
-YnNwOyAmbmJzcDsmbmJzcDsmbmJzcDsgJm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyZuYnNwOyZu
-YnNwOyAmbmJzcDsmbmJzcDsmbmJzcDsgJm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyZuYnNwOyZu
-YnNwOyBOVUxMLCAvKm5vbmNlQ2FsbGVyICovLCBUUE0yX1NFX0hNQUMsICZhbXA7c3ltbWV0cmlj
-LCBUUE0yX0FMR19TSEExLDxicj4KJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZhbXA7
-c2Vzc2lvbnRyLCBOVUxMIC8qIHRwbU5vbmNlICovKTs8YnI+Cjxicj4KSWYgdGhpcyBkb2VzIG5v
-dCB3b3JrLCBwbGVhc2Ugc2VuZCB1cyB5b3VyIGNvZGUuLi4gPGJyPgo8YnI+CkNoZWVycyw8YnI+
-CkFuZHJlYXM8YnI+Cjxicj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IFRpbWVzIE5ldyBSb21h
-bjsgY29sb3I6ICMwMDAwMDA7IGZvbnQtc2l6ZTogMTZweCI+CjxociB0YWJpbmRleD0iLTEiPgo8
-ZGl2IGlkPSJkaXZScEY4MTQ1NCIgc3R5bGU9ImRpcmVjdGlvbjogbHRyOyI+PGZvbnQgc2l6ZT0i
-MiIgZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IHRwbTIgW3RwbTIt
-Ym91bmNlc0BsaXN0cy4wMS5vcmddIG9uIGJlaGFsZiBvZiBEYXZpZGUgUnV0aWdsaWFubyBbZGF2
-aWRlLnJ1dGlAZ21haWwuY29tXTxicj4KPGI+U2VudDo8L2I+IE1vbmRheSwgQXByaWwgMzAsIDIw
-MTggMjI6MTY8YnI+CjxiPlRvOjwvYj4gdHBtMkBsaXN0cy4wMS5vcmc8YnI+CjxiPlN1YmplY3Q6
-PC9iPiBbdHBtMl0gRVNBUEkgU3RhcnRBdXRoU2Vzc2lvbjxicj4KPC9mb250Pjxicj4KPC9kaXY+
-CjxkaXY+PC9kaXY+CjxkaXY+CjxkaXYgZGlyPSJsdHIiPkhlbGxvIGV2ZXJ5b25lLAo8ZGl2Pjxi
-cj4KPC9kaXY+CjxkaXY+CjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMi44MDAwMDAxOTA3MzQ4NjNw
-eCI+SSdtIGluIHRyb3VibGUgd2l0aCBFc3lzX1N0YXJ0QXV0aFNlc3Npb24gYmVjYXVzZSBJIHJl
-Y2VpdmUgY29udGludW91c2x5IHRoaXMgZXJyb3IgYW5kIEkgY2Fubm90IHVuZGVyc3RhbmQgd2h5
-OjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LXNpemU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPjxicj4K
-PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMi44MDAwMDAxOTA3MzQ4NjNweCI+JnF1b3Q7
-JnF1b3Q7JnF1b3Q7PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMi44MDAwMDAxOTA3MzQ4
-NjNweCI+CjxkaXY+RVJST1I6ZXN5c19pdXRpbDplc2FwaS9lc2FwaV88d2JyPnV0aWwvZXN5c19p
-dXRpbC5jOjg3OTplc3lzXzx3YnI+R2V0UmVzb3VyY2VPYmplY3QoKSBFcnJvcjogRXN5cyBoYW5k
-bGUgZG9lcyBub3QgZXhpc3QgKDcwMDE4KS4mbmJzcDs8L2Rpdj4KPGRpdj5FUlJPUjplc3lzOmVz
-YXBpL2VzYXBpL0VzeXNfPHdicj5TdGFydEF1dGhTZXNzaW9uLmM6MTI0OkVzeXNfPHdicj5TdGFy
-dEF1dGhTZXNzaW9uKCkgRXJyb3IgaW4gYXN5bmMgZnVuY3Rpb24gRXJyb3JDb2RlICgweDAwMDcw
-MDE4KSZuYnNwOzwvZGl2Pgo8ZGl2PlRQTTJfU3RhcnRBdXRoU2Vzc2lvbiBmYWlsZWQgd2l0aCAw
-eDcwMDE4PC9kaXY+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LXNpemU6MTIuODAwMDAwMTkwNzM0
-ODYzcHgiPiZxdW90OyZxdW90OyZxdW90OzwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LXNpemU6MTIu
-ODAwMDAwMTkwNzM0ODYzcHgiPjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMi44
-MDAwMDAxOTA3MzQ4NjNweCI+SSBzdXBwb3NlIEknbSBkb2luZyBzb21ldGhpbmcgd3Jvbmcgd2l0
-aCBzZXNzaW9uIGhhbmRsZXMgYnV0IEkgZG9uJ3Qga25vdyB3aGF0LjwvZGl2Pgo8ZGl2IHN0eWxl
-PSJmb250LXNpemU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9
-ImZvbnQtc2l6ZToxMi44MDAwMDAxOTA3MzQ4NjNweCI+Q291bGQgc29tZW9uZSBoZWxwIG1lIHBs
-ZWFzZT88L2Rpdj4KPC9kaXY+CjxkaXY+PGJyPgo8L2Rpdj4KPGRpdj5UaGFua3MgaW4gYWR2YW5j
-ZSw8L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2PkRhdmlkZSBSdXRpZ2xpYW5vLjwvZGl2Pgo8
-L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
---===============7702139835624296018==--
+
+diff ~/gits/clevis/src/clevis-encrypt-tpm2 /usr/local/bin/clevis-encrypt-tp=
+m2
+25c25,30
+< alg_create_key=3D"keyedhash"
+---
+>
+> #*****************************************************
+> #alg_create_key=3D"keyedhash"
+> alg_create_key=3D0x8
+> #*****************************************************
+>
+27c32,56
+< obj_attr=3D"fixedtpm|fixedparent|sensitivedataorigin|noda|adminwithpolicy"
+---
+>
+> #*****************************************************
+> #obj_attr=3D"fixedtpm|fixedparent|sensitivedataorigin|noda|adminwithpolic=
+y"
+> #obj_attr=3D0x4B2 #0x00000002 + 0x00000010 + 0x00000020 + 0x00000400 + 0x=
+00000080  -- error 0x2d2: incompatible scheme
+> #obj_attr=3D0x4A2 #0x00000002 + 0x00000020 + 0x00000400 + 0x00000080     =
+          -- error 0x2c2: inconsistent attributes
+> #obj_attr=3D0x492 #0x00000002 + 0x00000010 + 0x00000020 + 0x00000400 + 0x=
+00000080  -- error 0x1c2: inconsistent attributes
+> #obj_attr=3D0x432 #0x00000002 + 0x00000010 + 0x00000020 + 0x00000400     =
+           -- error 0x2d2
+> obj_attr=3D0x404B2
+> #define TPMA_OBJECT_RESERVED1_MASK       0x00000001 /* shall be zero */
+> #define TPMA_OBJECT_FIXEDTPM             0x00000002 /* SET 1 The hierarch=
+y of the object as indicated by its Qualified Name may not change. CLEAR 0 =
+The hierarchy of the object may change as a result of this object or an anc=
+estor key being duplicated for use in another hierarchy. */
+> #define TPMA_OBJECT_STCLEAR              0x00000004 /* SET 1 Previously s=
+aved contexts of this object may not be loaded after StartupCLEAR. CLEAR 0 =
+Saved contexts of this object may be used after a ShutdownSTATE and subsequ=
+ent Startup. */
+> #define TPMA_OBJECT_RESERVED2_MASK       0x00000008 /* shall be zero */
+> #define TPMA_OBJECT_FIXEDPARENT          0x00000010 /* SET 1 The parent o=
+f the object may not change. CLEAR 0 The parent of the object may change as=
+ the result of a TPM2_Duplicate of the object. */
+> #define TPMA_OBJECT_SENSITIVEDATAORIGIN  0x00000020 /* SET 1 Indicates th=
+at when the object was created with TPM2_Create or TPM2_CreatePrimary the T=
+PM generated all of the sensitive data other than the authValue. CLEAR 0 A =
+portion of the sensitive data other than the authValue was provided by the =
+caller. */
+> #define TPMA_OBJECT_USERWITHAUTH         0x00000040 /* SET 1 Approval of =
+USER role actions with this object may be with an HMAC session or with a pa=
+ssword using the authValue of the object or a policy session. CLEAR 0 Appro=
+val of USER role actions with this object may only be done with a policy se=
+ssion. */
+> #define TPMA_OBJECT_ADMINWITHPOLICY      0x00000080 /* SET 1 Approval of =
+ADMIN role actions with this object may only be done with a policy session.=
+ CLEAR 0 Approval of ADMIN role actions with this object may be with an HMA=
+C session or with a password using the authValue of the object or a policy =
+session. */
+> #define TPMA_OBJECT_RESERVED3_MASK       0x00000300 /* shall be zero */
+> #define TPMA_OBJECT_NODA                 0x00000400 /* SET 1 The object i=
+s not subject to dictionary attack protections. CLEAR 0 The object is subje=
+ct to dictionary attack protections. */
+> #define TPMA_OBJECT_ENCRYPTEDDUPLICATION 0x00000800 /* SET 1 If the objec=
+t is duplicated then symmetricAlg shall not be TPM2_ALG_NULL and newParentH=
+andle shall not be TPM2_RH_NULL. CLEAR 0 The object may be duplicated witho=
+ut an inner wrapper on the private portion of the object and the new parent=
+ may be TPM2_RH_NULL. */
+> #define TPMA_OBJECT_RESERVED4_MASK       0x0000F000 /* shall be zero */
+> #define TPMA_OBJECT_RESTRICTED           0x00010000 /* SET 1 Key usage is=
+ restricted to manipulate structures of known format the parent of this key=
+ shall have restricted SET. CLEAR 0 Key usage is not restricted to use on s=
+pecial formats. */
+> #define TPMA_OBJECT_DECRYPT              0x00020000 /* SET 1 The private =
+portion of the key may be used to decrypt. CLEAR 0 The private portion of t=
+he key may not be used to decrypt. */
+> #define TPMA_OBJECT_SIGN_ENCRYPT         0x00040000 /* SET 1 For a symmet=
+ric cipher object the private portion of the key may be used to encrypt.  F=
+or other objects the private portion of the key may be used to sign. CLEAR =
+0 The private portion of the key may not be used to sign or encrypt. */
+> #define TPMA_OBJECT_RESERVED5_MASK       0xFFF80000 /* shall be zero */
+> #*****************************************************
+102c131,161
+< if ! tpm2_createprimary -Q -H "$auth" -g "$hash" -G "$key" -C
+$TMP/primary.context; then
+---
+> #if ! tpm2_createprimary -Q -H "$auth" -g "$hash" -G "$key" -C $TMP/prima=
+ry.context; then
+> #************************************************************
+> case $hash in
+>  sha1)
+>   __hash=3D'0x4'
+>   ;;
+>  sha256)
+>   __hash=3D'0xB'
+>   ;;
+>  sha384)
+>   __hash=3D'0xC'
+>   ;;
+>  *)
+>   echo "*** hash converter failed...****" >&2
+>   exit 1;
+> esac
+> case $key in
+>  rsa)
+>   __key=3D'0x1'
+>   ;;
+>  ecc)
+>   __key=3D'0x23'
+>   ;;
+>  *)
+>   echo "*** key converter failed...****" >&2
+>   exit 1;
+> esac
+>
+> #echo tpm2_createprimary -A "$auth" --halg "$__hash" --kalg "$__key" -C $=
+TMP/primary.context -T $TPM2TOOLS_TCTI_NAME -d $TPM2TOOLS_DEVICE_FILE
+> if ! tpm2_createprimary -A "$auth" --halg "$__hash" --kalg "$__key" -C $T=
+MP/primary.context -T $TPM2TOOLS_TCTI_NAME -d $TPM2TOOLS_DEVICE_FILE >/dev/=
+null; then
+> #************************************************************
+128,129c187,191
+< if ! tpm2_create -Q -g "$hash" -G "$alg_create_key" -c
+$TMP/primary.context -u $TMP/jwk.pub \
+<      -r $TMP/jwk.priv -A "$obj_attr" $policy_options -I- <<< "$jwk"; then
+---
+> #if ! tpm2_create -Q -g "$hash" -G "$alg_create_key" -c $TMP/primary.cont=
+ext -u $TMP/jwk.pub \
+> #     -r $TMP/jwk.priv -A "$obj_attr" $policy_options -I- <<< "$jwk"; then
+> #echo tpm2_create -A "$obj_attr" -g "$__hash" -G "$alg_create_key" -c $TM=
+P/primary.context --opu $TMP/jwk.pub --opr $TMP/jwk.priv $policy_options -T=
+ $TPM2TOOLS_TCTI_NAME -d $TPM2TOOLS_DEVICE_FILE >&2
+> if ! tpm2_create -A "$obj_attr" -g "$__hash" -G "$alg_create_key" -c $TMP=
+/primary.context --opu $TMP/jwk.pub --opr $TMP/jwk.priv $policy_options -T =
+$TPM2TOOLS_TCTI_NAME -d $TPM2TOOLS_DEVICE_FILE <<< "$jwk" >/dev/null; then
+> #if ! tpm2_create -A "$obj_attr" -g "$__hash" -G "$alg_create_key" -c $TM=
+P/primary.context --opu $TMP/jwk.pub --opr $TMP/jwk.priv $policy_options -T=
+ $TPM2TOOLS_TCTI_NAME -d $TPM2TOOLS_DEVICE_FILE <<< "$jwk"; then
+
+--===============3696336839021988200==--
 
