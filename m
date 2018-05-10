@@ -1,93 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============1400057678869898495=="
+Content-Type: multipart/mixed; boundary="===============4428859620182111272=="
 MIME-Version: 1.0
-From: Anderson, Daniel <daniel.anderson at intel.com>
-Subject: [tpm2] PCR missing SHA-512 support
-Date: Thu, 10 May 2018 17:09:25 +0000
-Message-ID: <207C810BE4BA2440832668E0F208BFD3BCAB46@ORSMSX108.amr.corp.intel.com>
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: Re: [tpm2] PCR missing SHA-512 support
+Date: Thu, 10 May 2018 12:17:33 -0700
+Message-ID: <c32408b9-4458-d9bc-e5de-05572f4a94bb@intel.com>
+In-Reply-To: 207C810BE4BA2440832668E0F208BFD3BCAB46@ORSMSX108.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1400057678869898495==
+--===============4428859620182111272==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I was playing around with tpm2_pcrlist and noticed it supports SHA-1, SHA-2=
-56, SHA-384, but SHA-512 is missing:
+On 05/10/2018 10:09 AM, Anderson, Daniel wrote:
+> I was playing around with tpm2_pcrlist and noticed it supports SHA-1, SHA=
+-256, SHA-384, but SHA-512 is missing:
+> =
+
+> =C2=A0
+> =
+
+> =C2=A0
+> =
+
+> tumalo ~/tpm/bin$ tpm2_pcrlist -L sha512:22
+> =
+
+> WARN: Ignore unsupported bank/algorithm: sha512(0x000d)
+> =
+
+> ERROR: Unable to run tpm2_pcrlist
+> =
+
+> tumalo ~/tpm/bin$ tpm2_pcrlist -L sha384:22
+> =
+
+> sha384:
+> =
+
+> =C2=A0 22: 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF=
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+> =
+
+> =C2=A0
+> =
+
+> Then I look in the man page and see SHA-512 is supported.
+> =
+
+> =C2=A0
+> =
+
+> Is this a bug or a feature?
+> =
 
 
-tumalo ~/tpm/bin$ tpm2_pcrlist -L sha512:22
-WARN: Ignore unsupported bank/algorithm: sha512(0x000d)
-ERROR: Unable to run tpm2_pcrlist
-tumalo ~/tpm/bin$ tpm2_pcrlist -L sha384:22
-sha384:
-  22: 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF=
-FFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+It is supported, but it looks like the TPM simulator doesn't support SHA512=
+ by default:
 
-Then I look in the man page and see SHA-512 is supported.
+Implementation.h:
+#define  ALG_SHA256            ALG_YES
+#define  ALG_SHA384            ALG_YES
+#define  ALG_SHA512            ALG_NO
+...
 
-Is this a bug or a feature?
-
-There's also bugs in the man page example, but I will fix that separately.
-
-Dan
-
---===============1400057678869898495==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
-cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
-Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
-b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
-bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JIHdhcyBwbGF5aW5nIGFyb3VuZCB3aXRoIHRwbTJfcGNy
-bGlzdCBhbmQgbm90aWNlZCBpdCBzdXBwb3J0cyBTSEEtMSwgU0hBLTI1NiwgU0hBLTM4NCwgYnV0
-IFNIQS01MTIgaXMgbWlzc2luZzo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9v
-OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj50dW1hbG8gfi90cG0vYmluJCB0cG0yX3Bjcmxp
-c3QgLUwgc2hhNTEyOjIyPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPldBUk46
-IElnbm9yZSB1bnN1cHBvcnRlZCBiYW5rL2FsZ29yaXRobTogc2hhNTEyKDB4MDAwZCk8bzpwPjwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RVJST1I6IFVuYWJsZSB0byBydW4gdHBtMl9w
-Y3JsaXN0PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPnR1bWFsbyB+L3RwbS9i
-aW4kIHRwbTJfcGNybGlzdCAtTCBzaGEzODQ6MjI8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+c2hhMzg0OjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJz
-cDsgMjI6IDB4RkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZG
-RkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGPG86cD48L286
-cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj5UaGVuIEkgbG9vayBpbiB0aGUgbWFuIHBhZ2UgYW5kIHNlZSBTSEEtNTEy
-IGlzIHN1cHBvcnRlZC48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4m
-bmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPklzIHRoaXMgYSBidWcgb3IgYSBm
-ZWF0dXJlPzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhlcmUmIzgyMTc7cyBhbHNvIGJ1Z3MgaW4g
-dGhlIG1hbiBwYWdlIGV4YW1wbGUsIGJ1dCBJIHdpbGwgZml4IHRoYXQgc2VwYXJhdGVseS48bzpw
-PjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+Cjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPkRhbjxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0
-bWw+Cg==
-
---===============1400057678869898495==--
+--===============4428859620182111272==--
 
