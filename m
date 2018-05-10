@@ -1,192 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============0506569289645685201=="
+Content-Type: multipart/mixed; boundary="===============1400057678869898495=="
 MIME-Version: 1.0
-From: Peter Magnusson <blaufish.public.email at gmail.com>
-Subject: Re: [tpm2] tpm support on Intel NUCs
-Date: Wed, 09 May 2018 15:08:36 +0000
-Message-ID: <CANtcRX5Gy5EeH8ORJzvT9TNSEG=AHubnOXseoLbq_q40YijcBQ@mail.gmail.com>
-In-Reply-To: CANtcRX4-=h0jtZR2gn+BGNZd8yXyi_0guftjAWRQyMOGMjGWuw@mail.gmail.com
+From: Anderson, Daniel <daniel.anderson at intel.com>
+Subject: [tpm2] PCR missing SHA-512 support
+Date: Thu, 10 May 2018 17:09:25 +0000
+Message-ID: <207C810BE4BA2440832668E0F208BFD3BCAB46@ORSMSX108.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0506569289645685201==
+--===============1400057678869898495==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-For the record, with all SINIT files installed into /boot and update-grub2
-performed, Ubuntu tboot works with EFI boot and I can no longer reproduce
-the hang.
-
-tboot built from source also works nicely without any problems.
-
-A tad annoying that EFI hangs leaves no log so you have no indication of
-what the problem was.
-Will work on the system next week and see if the tboot hangs returns ;)
-On Wed, May 9, 2018 at 3:26 PM Peter Magnusson <
-blaufish.public.email(a)gmail.com> wrote:
-
-> thanks, tboot started working on legacy boot without any tpm2_tools action
-> necessary.
-
-> is tboot hanging in EFI boot a known issue? (the ubuntu tboot scripts
-seems
-> to be written with EFI in mind, so I presumed it was supported)
-> On Tue, May 8, 2018 at 6:24 PM Ian Oliver <ian.justin.oliver(a)gmail.com>
-> wrote:
-
-> > Fedora 27, Ubuntu 18.04  both with 4.15 kernels work on the NUCs with
-the
-> current release version of TPM tools.  Legacy boot is enabled, otherwise
-> tboot hands during the DRTM measurement.   We have SELinux+IMA/EMA working
-> on Fedora and correctly writing to the TPM only with Fedora - Ubuntu has
-> AppArmor unfortunately.
-
-> > The patch for the TPM BUFFER size is required otherwise nv_write/read do
-> not work (this has now been pushed into the tools code base as I
-> understand).
-
-> > Ian
+I was playing around with tpm2_pcrlist and noticed it supports SHA-1, SHA-2=
+56, SHA-384, but SHA-512 is missing:
 
 
+tumalo ~/tpm/bin$ tpm2_pcrlist -L sha512:22
+WARN: Ignore unsupported bank/algorithm: sha512(0x000d)
+ERROR: Unable to run tpm2_pcrlist
+tumalo ~/tpm/bin$ tpm2_pcrlist -L sha384:22
+sha384:
+  22: 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF=
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 
-> > On 8 May 2018 at 18:56, Peter Magnusson <blaufish.public.email(a)gmail.=
-com
+Then I look in the man page and see SHA-512 is supported.
 
-> wrote:
+Is this a bug or a feature?
 
-> >> 1/
-> >> For the record, the combo of tpm2-tools 3.0.4, tpm2-tss 1.4.0,
-tpm2-abrmd
-> >> 1.3.1 works excellently on NUC.
+There's also bugs in the man page example, but I will fix that separately.
 
-> >> 2/
-> >> Regarding Boot hang on Ubuntu, I see this on Ubuntu 18 as well. I'm
-> >> planning to install in BIOS legacy mode to get tboot logs on screen
-> unless
-> >> this is resolved otherwise (ubuntu grub scripts disables VGA log for
-efi
-> >> tboot).
+Dan
 
-> >> The following blog posts suggests that tboot should not be working on
-> Intel
-> >> NUC out of the box, but the commands are tpm_tools based.
-> >> https://blog.twobit.us/2015/01/02/txt-and-tboot-on-the-ivb-nuc/
-> >> I tried to follow the advice on the blog but get error 0x9a2
-> >> TPM_RC_BAD_AUTH... do I need to take ownership before executing
-command?
+--===============1400057678869898495==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-> >> tpm2_nvdefine -T device:/dev/tpmrm0 --index=3D0xffffffff --size=3D0
-> >> WARN: Defining an index with size 0
-> >> ERROR: Failed to define NV area at index 0xffffffff (-1).Error:0x9a2
-> >> tpm2_rc_decode 0x9a2
-> >> error layer
-> >>     hex: 0x0
-> >>     identifier: TSS2_TPM_ERROR_LEVEL
-> >>     description: Error produced by the TPM
-> >> format 1 error code
-> >>     hex: 0x22
-> >>     identifier: TPM_RC_BAD_AUTH
-> >>     description: authorization failure without DA implications
-> >> session
-> >>     hex: 0x100
-> >>     identifier: TPM_RC_1
-> >>     description:  (null)
-> >> On Fri, Apr 27, 2018 at 6:59 AM Ian Oliver <ian.justin.oliver(a)gmail.=
-com
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
+ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
+b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
+emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
+cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
+c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
+Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
+b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
+aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
+bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JIHdhcyBwbGF5aW5nIGFyb3VuZCB3aXRoIHRwbTJfcGNy
+bGlzdCBhbmQgbm90aWNlZCBpdCBzdXBwb3J0cyBTSEEtMSwgU0hBLTI1NiwgU0hBLTM4NCwgYnV0
+IFNIQS01MTIgaXMgbWlzc2luZzo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9v
+OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj50dW1hbG8gfi90cG0vYmluJCB0cG0yX3Bjcmxp
+c3QgLUwgc2hhNTEyOjIyPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPldBUk46
+IElnbm9yZSB1bnN1cHBvcnRlZCBiYW5rL2FsZ29yaXRobTogc2hhNTEyKDB4MDAwZCk8bzpwPjwv
+bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RVJST1I6IFVuYWJsZSB0byBydW4gdHBtMl9w
+Y3JsaXN0PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPnR1bWFsbyB+L3RwbS9i
+aW4kIHRwbTJfcGNybGlzdCAtTCBzaGEzODQ6MjI8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+c2hhMzg0OjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJz
+cDsgMjI6IDB4RkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZG
+RkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGPG86cD48L286
+cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj5UaGVuIEkgbG9vayBpbiB0aGUgbWFuIHBhZ2UgYW5kIHNlZSBTSEEtNTEy
+IGlzIHN1cHBvcnRlZC48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4m
+bmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPklzIHRoaXMgYSBidWcgb3IgYSBm
+ZWF0dXJlPzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwv
+bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhlcmUmIzgyMTc7cyBhbHNvIGJ1Z3MgaW4g
+dGhlIG1hbiBwYWdlIGV4YW1wbGUsIGJ1dCBJIHdpbGwgZml4IHRoYXQgc2VwYXJhdGVseS48bzpw
+PjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPkRhbjxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0
+bWw+Cg==
 
-> >> wrote:
-
-> >> > Hello Duncan,
-
-> >> > we've three NUC7i5DNKE - two running Fedora (latest) and one with
-> Ubuntu
-> >> 17.04.  Worked for us out of the box: had to enable TXT in the BIOS but
-> >> that set everything else necessary automatically.  SRTM measures work,
-> DRTM
-> >> with tboot does not - tboot just hangs - still debugging this one - the
-> ACM
-> >> module seems to be correct.
-
-> >> > Fedora requires a kernel recompile to get SELinux and IMA/EMA
-running;
-> >>    Ubuntu does not support IMA policies an AppArmor kernel panics.
-
-> >> > tss/abrmd/tpm2-tools all compile with the latest releases, "master"
-> does
-> >> not without some hacking - old libraries etc (CentOS was nigh on
-> impossible
-> >> in this respect)
-
-> >> > I'll check the kernel versions and tpm drivers when I get into the
-> >> office, but 4.13 (at least) for the kernal has worked for us on more or
-> >> less everything (NUC, Nokia AirFrame, Lenovo laptops).
-
-> >> > t.
-
-> >> > Ian
-
-> >> > On 27 April 2018 at 01:20, <Duncan.Palmer(a)data61.csiro.au> wrote:
-
-> >> >> Apologies if this is slightly OT for this list...
-
-
-> >> >> We're running the tpm2 tools in Intel NUCs (a NUC5i7RYH to be
-exact),
-> >> using Linux kernel 4.4.59 (shipped by Ubuntu as 4.4.0-77). The tpm
-> drivers
-> >> on this kernel don't work out of the box, and I had to put in a fairly
-> >> nasty hack to make them work. The same driver now does not work on a
-> newer
-> >> NUC7i7 model. Are other people using NUCs, and if so, are you having
-> >> similar issues?
-
-
-> >> >> Cheers,
-
-> >> >> Dunk
-
-
-> >> >> Duncan Palmer
-> >> >> Senior Software Engineer | Autonomous Systems
-> >> >> Data61 | CSIRO
-
-> >> >> E duncan.palmer(a)csiro.au
-
-> >> >> Queensland Centre for Advanced Technologies (QCAT),
-
-> >> >> 1 Technology Court, Pullenvale QLD, 4069
-
-> >> >> www.data61.csiro.au
-
-
-> >> >> CSIRO=E2=80=99s Digital Productivity business unit and NICTA have j=
-oined
-> forces
-> >> to create digital powerhouse Data61
-
-
-
-
-> >> > --
-> >> > Dr. Ian Oliver
-> >> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> > Privacy Engineering:  via Amazon
-> >> > Twitter: @i_j_oliver
-> >> > _______________________________________________
-> >> > tpm2 mailing list
-> >> > tpm2(a)lists.01.org
-> >> > https://lists.01.org/mailman/listinfo/tpm2
-
-
-
-
-> > --
-> > Dr. Ian Oliver
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-> > Privacy Engineering:  via Amazon
-> > Twitter: @i_j_oliver
-
---===============0506569289645685201==--
+--===============1400057678869898495==--
 
