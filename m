@@ -1,16 +1,64 @@
-Content-Type: multipart/mixed; boundary="===============3342790682788841087=="
+Content-Type: multipart/mixed; boundary="===============0314290109533963842=="
 MIME-Version: 1.0
-From: Anderson, Daniel <daniel.anderson at intel.com>
+From: Tony Yip <Juan.Yip at panasonic.aero>
 Subject: Re: [tpm2] Documentation for configure
-Date: Fri, 18 May 2018 20:24:24 +0000
-Message-ID: <207C810BE4BA2440832668E0F208BFD3D40BCB@ORSMSX108.amr.corp.intel.com>
+Date: Fri, 18 May 2018 20:49:30 +0000
+Message-ID: <AE617DA1151F25478215F3E5790FBCFB15CB9CA3@MAIL-SNA04.mascorp.com>
+In-Reply-To: 207C810BE4BA2440832668E0F208BFD3D40BCB@ORSMSX108.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3342790682788841087==
+--===============0314290109533963842==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+Thanks for your reply. I'm trying to configure the default for simulator us=
+e.
+
+-----
+
+I had to wrap the tctidefaultmodule value in quotes so I did the same for t=
+ctidefaultconfig. However, I ran into some errors:
+./configure --with-tctidefaultmodule=3D\"libtss2-tcti-mssim.so\" --enable-u=
+nit --with-tctidefaultconfig=3D\"host=3D10.139.90.53,port=3D2321\"
+
+The check against the string "host" fails due to the extra " (i.e. "\"host")
+ERROR:tcti:src/util/key-value-parse.c:102:parse_key_value_string() parsing =
+key/value: "host=3D10.139.90.53 =
+
+
+https://github.com/tpm2-software/tpm2-tss/blob/373d4e4f1678401ac0f5e999be63=
+fc1b63c950b3/src/tss2-tcti/tcti-mssim.c#L471
+
+-----
+
+Changing the configure command to use no quotes results in a compilation er=
+ror:
+./configure --with-tctidefaultmodule=3D\"libtss2-tcti-mssim.so\" --enable-u=
+nit --with-tctidefaultconfig=3Dhost=3D10.139.90.53,port=3D2321
+
+src/tss2-esys/esys_tcti_default.c: In function =E2=80=98get_tcti_default=E2=
+=80=99:
+src/tss2-esys/esys_tcti_default.c:186:56: error: macro "_STR" passed 2 argu=
+ments, but takes just 1
+     const char *config =3D _XSTR(ESYS_TCTI_DEFAULT_CONFIG);
+
+https://github.com/tpm2-software/tpm2-tss/blob/373d4e4f1678401ac0f5e999be63=
+fc1b63c950b3/src/tss2-esys/esys_tcti_default.c#L181
+
+-----
+
+Anyway, after looking at it some more, I believe I need to use Tss2_Tcti_Ms=
+sim_Init instead of relying on a default configuration. I still haven't bee=
+n able to get the debug/trace logs to output however.
+
+________________________________________
+From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Anderson, Daniel [dan=
+iel.anderson(a)intel.com]
+Sent: Friday, May 18, 2018 1:24 PM
+To: tpm2(a)lists.01.org
+Subject: Re: [tpm2] Documentation for configure
 
 I suggested some documentation on this, but it was pointed out to me that t=
 hese are rarely-used options and that the documentation is available from h=
@@ -106,6 +154,13 @@ Some influential environment variables:
 . . .
 
 
+_______________________________________________
+tpm2 mailing list
+tpm2(a)lists.01.org
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.01.org_mailman=
+_listinfo_tpm2&d=3DDwICAg&c=3DlaiMAACGcvAxeLF9-K5nZ1uCTN9kBzTH8fWOxFTVLgs&r=
+=3DGVrlcb0t_QREzpaQn_xsFgE-o00NN5nuTSi4_Sd9gHI&m=3DHQhsQuNedhU2-zRlvGxzibWy=
+AeNnmstvACWgTm1oboA&s=3DrXnlMmDWmljIyD0CXgg7UcVd9iI9-hSri0xkPC6vSuY&e=3D
 
---===============3342790682788841087==--
+--===============0314290109533963842==--
 
