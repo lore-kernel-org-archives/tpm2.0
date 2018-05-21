@@ -1,64 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============7369425689309191545=="
+Content-Type: multipart/mixed; boundary="===============5344338427021867796=="
 MIME-Version: 1.0
 From: Tony Yip <Juan.Yip at panasonic.aero>
 Subject: Re: [tpm2] Documentation for configure
-Date: Mon, 21 May 2018 16:57:24 +0000
-Message-ID: <AE617DA1151F25478215F3E5790FBCFB15CB9E73@MAIL-SNA04.mascorp.com>
-In-Reply-To: 207C810BE4BA2440832668E0F208BFD3D40C22@ORSMSX108.amr.corp.intel.com
+Date: Mon, 21 May 2018 17:09:12 +0000
+Message-ID: <AE617DA1151F25478215F3E5790FBCFB15CB9E9D@MAIL-SNA04.mascorp.com>
+In-Reply-To: 91741b4a-d8ea-7464-faae-871fcc7a8e9a@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7369425689309191545==
+--===============5344338427021867796==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Daniel,
-
-I ran the configure command you suggested though it ends up with the same e=
-rror as before.
-
-ERROR:tcti:src/util/key-value-parse.c:94:parse_key_value_string() kv_str: "=
-"host=3D10.139.90.53,port=3D2321"", callback: 0x7fafe555a590, user_data: 0x=
-7ffdcc9928c0 =
-
-ERROR:tcti:src/util/key-value-parse.c:102:parse_key_value_string() parsing =
-key/value: "host=3D10.139.90.53 =
-
-ERROR:tcti:src/util/key-value-parse.c:53:parse_key_value() key_value_str: "=
-"host=3D10.139.90.53" and key_value_t: 0x7ffdcc992870 =
-
-
-Anyway, I was able to communicate with the simulator using Tss2_Tcti_Mssim_=
-Init. I've included the code snippet below for posterity:
-
-size_t size =3D 0;
-TSS2_TCTI_CONTEXT* tcti_context =3D NULL;
-Tss2_Tcti_Mssim_Init(NULL, &size, NULL);
-tcti_context =3D (TSS2_TCTI_CONTEXT*) calloc(1, size);
-Tss2_Tcti_Mssim_Init(tcti_context, &size, "host=3Dlocalhost,port=3D2321");
-
+Thanks Tadeusz. That was what I needed.
 ________________________________________
-From: Anderson, Daniel [daniel.anderson(a)intel.com]
-Sent: Friday, May 18, 2018 3:57 PM
-To: Tony Yip; tpm2(a)lists.01.org
-Subject: RE: Documentation for configure
+From: Tadeusz Struk [tadeusz.struk(a)intel.com]
+Sent: Monday, May 21, 2018 9:49 AM
+To: Tony Yip; Anderson, Daniel; tpm2(a)lists.01.org
+Subject: Re: [tpm2] Documentation for configure
 
-> I had to wrap the tctidefaultmodule value in quotes so I did the same for=
- > tctidefaultconfig. However, I ran into some errors:
->./configure --with-tctidefaultmodule=3D\"libtss2-tcti-mssim.so\" --enable-=
-unit --with-> tctidefaultconfig=3D\"host=3D10.139.90.53,port=3D2321\"
+On 05/18/2018 01:49 PM, Tony Yip wrote:
+> Anyway, after looking at it some more, I believe I need to use Tss2_Tcti_=
+Mssim_Init instead of relying on a default configuration. I still haven't b=
+een able to get the debug/trace logs to output however.
 
+Hi Tony,
+To enable tracing in runtime you need to set a TSS2_LOG variable.
+See https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__github.com_tpm2-=
+2Dsoftware_tpm2-2Dtss_blob_master_doc_logging.md&d=3DDwIC-g&c=3DlaiMAACGcvA=
+xeLF9-K5nZ1uCTN9kBzTH8fWOxFTVLgs&r=3DGVrlcb0t_QREzpaQn_xsFgE-o00NN5nuTSi4_S=
+d9gHI&m=3Dq4mSNfsoij2EgXU8TPoH60MhI8zFTlFRzS66Ov2ltCc&s=3Dg6eUy8ub9yn1gupzM=
+j8vzLjmQLYjblnJdCGHlft3S3c&e=3D for more details.
+--
+Tadeusz
 
-Tony,
-This might work (among other possibilities):
-
-./configure --with-tctidefaultmodule=3D'"libtss2-tcti-mssim.so"' --enable-u=
-nit --with-tctidefaultconfig=3D'"host=3D10.139.90.53,port=3D2321"'
-
-That is try enclosing the double quotes "" in single quotes ''
-
-
-
---===============7369425689309191545==--
+--===============5344338427021867796==--
 
