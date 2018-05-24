@@ -1,43 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============9132698433934838848=="
+Content-Type: multipart/mixed; boundary="===============1856258471602550592=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] tpm2-tss 2.0.0 release candidate
-Date: Mon, 21 May 2018 19:12:11 -0700
-Message-ID: <20180522021211.GE26060@intel.com>
-In-Reply-To: 20180521230413.GD26060@intel.com
+From: =?utf-8?q?Ricardo_Ara=C3=BAjo_=3Cricardo_at_lsd=2Eufcg=2Eedu=2Ebr=3E?=
+Subject: Re: [tpm2] PCR missing SHA-512 support
+Date: Thu, 24 May 2018 16:04:11 -0300
+Message-ID: <379172588.411141.1527188651057.JavaMail.zimbra@lsd.ufcg.edu.br>
+In-Reply-To: 207C810BE4BA2440832668E0F208BFD3BCABF5@ORSMSX108.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9132698433934838848==
+--===============1856258471602550592==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 21, 2018 at 04:04:13PM -0700, Philip Tricca wrote:
-> On Fri, May 11, 2018 at 04:18:41PM -0700, Philip Tricca wrote:
-> > Hello again,
-> > =
+Hey, =
 
-> > On Fri, May 04, 2018 at 03:44:15PM -0700, Philip Tricca wrote:
-> > > The first release candidate for version 2.0.0 was just tagged. Please
-> > > take whatever time you can spare to give it some testing.
-> > > https://github.com/tpm2-software/tpm2-tss/releases/tag/2.0.0_rc0
-> > =
 
-> > A few minor fixes during the RC0 window: specifically two fixes for iss=
-ues
-> > identified by static analysis / coverity. These were merged yesterday
-> > and RC1 tagged today.
-> =
+Not sure it is the same simulator, but I'm using https://github.com/stefanb=
+erger/libtpms/tree/tpm2-preview.rev146.v2 and after SHA-512 was enabled (ye=
+sterday) tpm2_pcrlist is crashing with this error:
 
-> During the RC1 window Tadeusz identified a number of issues one of which
-> affected the public API. As a result RC2 was just tagged and we're
-> kicking off another review window for the next week.
+WARNING:marshal:src/tss2-mu/tpml-types.c:197:Tss2_MU_TPML_PCR_SELECTION_Unm=
+arshal() count too big
+ERROR: Tss2_Sys_GetCapability(0x80011) - sys:Response is malformed
+ERROR: Unable to run tpm2_pcrlist
 
-Forgot the link:
-https://github.com/tpm2-software/tpm2-tss/releases/tag/2.0.0_rc2
+Anyone has seen this happening too?
 
-Philip
+Ricardo
 
---===============9132698433934838848==--
+Ricardo Ara=C3=BAjo Santos - =
+
+www.lsd.ufcg.edu.br/~ricardo =
+
+
+M.Sc in Computer Science at UFCG - www.ufcg.edu.br =
+
+Researcher and Developer at Distributed Systems Laboratory - www.lsd.ufcg.e=
+du.br =
+
+Para=C3=ADba - Brasil
+
+----- Mensagem original -----
+De: "Anderson, Daniel" <daniel.anderson(a)intel.com>
+Para: tpm2(a)lists.01.org
+Enviadas: Quinta-feira, 10 de maio de 2018 17:34:16
+Assunto: Re: [tpm2] PCR missing SHA-512 support
+
+OK Thanks!--not a big deal if it's just a simulator issue.
+
+I could see the simulator not supporting SHA-3, since it is relatively new =
+and perhaps unknown, but it's funny that SHA-384 is supported but not SHA-5=
+12, since they are very similar.
+
+Dan
+
+...
+_______________________________________________
+tpm2 mailing list
+tpm2(a)lists.01.org
+https://lists.01.org/mailman/listinfo/tpm2
+
+--===============1856258471602550592==--
 
