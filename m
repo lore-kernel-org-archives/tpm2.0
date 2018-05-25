@@ -1,262 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============1545143048478714678=="
+Content-Type: multipart/mixed; boundary="===============5610705497055594347=="
 MIME-Version: 1.0
-From: Briggs, Kevin 1 <kevin.1.briggs at lmco.com>
-Subject: [tpm2] signed kernel auth policy
-Date: Fri, 25 May 2018 11:28:37 +0000
-Message-ID: <3C9A79F5AB08AD4DB8F7C28463538D4321D1C4FF@HVXDSP22.us.lmco.com>
+From: =?utf-8?q?Ricardo_Ara=C3=BAjo_=3Cricardo_at_lsd=2Eufcg=2Eedu=2Ebr=3E?=
+Subject: [tpm2] RES:  PCR missing SHA-512 support
+Date: Fri, 25 May 2018 11:04:29 -0300
+Message-ID: <1224568147.415356.1527257069951.JavaMail.zimbra@lsd.ufcg.edu.br>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1545143048478714678==
+--===============5610705497055594347==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I've got more of a spec/capability question than a tool specific question. =
-With TPM2.0 and the new Extended Authorization (EA) stuff, I've been readin=
-g things like: "Policy authorization, also known as Extended Authorization =
-(EA), is the Swiss army knife of TPM authorizations.  With the right expert=
-ise, you can do just about any kind of authorization with it." - A Practica=
-l Guide to TPM2.0, pg. 207.
+Hi Dan,
 
-So this got me wondering if it would be possible to create an authorization=
- that relies on some external data being signed, and that signature being v=
-erified by the TPM with a loaded public key.  More specifically, is it poss=
-ible to tie some TPM protected secret to this signature verification result=
-?  The example I'm thinking is:
+I've been using [1] with [2] as simulator for playing around with TPM 2.0 f=
+eatures, because I can wire it to QEMU and launch a VM with EDK2 UEFI. No p=
+recompiled packages for any of these.
 
-Let's say I want the TPM to only allow reading of an NV secret if a system =
-booted a signed kernel, and I want the secret to be releasable on any kerne=
-l signed by the correct key.  I have seen Microsoft's TrEE EFI protocol and=
- according to mjg59's blog post on the subject maybe this is exactly what I=
-'m after, and I understand that booting signed kernels is already within th=
-e realm of Secure Boot but hey, this still seems like a useful exercise to =
-think about with regards to TPM and maybe could be used on systems that don=
-'t have UEFI or don't boot with Secure Boot, but can use the TPM2.0.
+So I was testing master version from both tpm2-tools and abrmd with the rel=
+ease candidates for tss and I noticed this error on tpm2_pcrlist after this=
+ commit [3] enabling SHA512 and I related to this thread...
 
-I guess a simple way to do this might be to verify the signature with softw=
-are prior to GRUB loading the kernel, and just ensure that GRUB module, con=
-figuration, and public key get hashed and tie a secret to those.  Maybe tha=
-t's what I should be pursuing, but I'm just wondering if the TPM itself can=
- do the verification.
+I'm not sure yet if this is a simulator problem or something on tools/abrmd=
+/tss side... for now I'll test with another version and hopefully come back=
+ with more info. From a noob perspective, the error seems to be the same at=
+ [4], maybe I should try the same trick and see what happens.
 
-So this seems like it would need:
+Ricardo
 
-  *   TPM support for a signature verification command that ultimately modi=
-fies a policy digest based only on whether the signature verified correctly=
- or not.
-  *   A grub module to do this verification prior to loading the kernel
-  *   The grub module and configuration itself probably needs to be measure=
-d if it isn't already (PCR 5?), and the measurement needs to be included in=
- the policy so that someone can't just replace the module and verify the si=
-gnature but boot a different kernel...
-
-According to the specs, we have TPM2_VerifySignature.  It's not a policy co=
-mmand, so I don't think I can use it in a policy, but it does return a TPMT=
-_TK_VERIFIED ticket.  The TPMT_TK_VERIFIED is only consumed by TPM2_PolicyA=
-uthorize, but I'm not trying to authorize a new policy here.
-
-And then there is TPM2_PolicyTicket, which looks like it updates the policy=
- digest based on whether a ticket checks out, but looking closer at the com=
-mand definition, it takes in a TPMT_TK_AUTH ticket, not a TPMT_TK_VERIFIED =
-ticket, and it looks like that kind of ticket is only produced by TPM2_Poli=
-cySigned and TPM2_PolicySecret, which seem to be for authorizing specific c=
-ommands and their parameters by signing them.
-
-So maybe I'm misunderstanding or skipping over something, but am I correct =
-in thinking the TPM commands defined in the spec may not be able to do this=
-, even with EA? And if so, is there any roadblock or flaw in doing the veri=
-fication with software by GRUB prior to loading the kernel?
+[1] - https://github.com/stefanberger/swtpm/tree/tpm2-preview.v2
+[2] - https://github.com/stefanberger/libtpms/tree/tpm2-preview.rev146.v2
+[3] - https://github.com/stefanberger/libtpms/commit/37f24d5c7b3513045abcc4=
+a0d283b9f25b75d039
+[4] - https://github.com/tpm2-software/tpm2-tools/issues/1021
 
 
+-----Mensagem original-----
+De: Anderson, Daniel [mailto:daniel.anderson(a)intel.com]
+Enviada em: quinta-feira, 24 de maio de 2018 18:02
+Para: Ricardo Ara=C3=BAjo <ricardo(a)lsd.ufcg.edu.br>
+Cc: tpm2(a)lists.01.org
+Assunto: RE: [tpm2] PCR missing SHA-512 support
 
+Ricardo,
 
+No I have not seen that before.
 
---===============1545143048478714678==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+This is just a hunch. =C2=A0But I suspect that the code needs to be recompi=
+led =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpXaW5n
-ZGluZ3M7CglwYW5vc2UtMTo1IDAgMCAwIDAgMCAwIDAgMCAwO30KQGZvbnQtZmFjZQoJe2ZvbnQt
-ZmFtaWx5OiJDYW1icmlhIE1hdGgiOwoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9CkBm
-b250LWZhY2UKCXtmb250LWZhbWlseTpDYWxpYnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQg
-MyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFs
-LCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBpbjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZv
-bnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CmE6bGlu
-aywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojMDU2
-M0MxOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBl
-cmxpbmtGb2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOiM5NTRGNzI7Cgl0
-ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30KcC5Nc29MaXN0UGFyYWdyYXBoLCBsaS5Nc29MaXN0
-UGFyYWdyYXBoLCBkaXYuTXNvTGlzdFBhcmFncmFwaAoJe21zby1zdHlsZS1wcmlvcml0eTozNDsK
-CW1hcmdpbi10b3A6MGluOwoJbWFyZ2luLXJpZ2h0OjBpbjsKCW1hcmdpbi1ib3R0b206MGluOwoJ
-bWFyZ2luLWxlZnQ6LjVpbjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZvbnQtc2l6ZToxMS4w
-cHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CnAubXNvbm9ybWFsMCwgbGku
-bXNvbm9ybWFsMCwgZGl2Lm1zb25vcm1hbDAKCXttc28tc3R5bGUtbmFtZTptc29ub3JtYWw7Cglt
-c28tbWFyZ2luLXRvcC1hbHQ6YXV0bzsKCW1hcmdpbi1yaWdodDowaW47Cgltc28tbWFyZ2luLWJv
-dHRvbS1hbHQ6YXV0bzsKCW1hcmdpbi1sZWZ0OjBpbjsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250
-LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CnNwYW4uRW1haWxTdHlsZTE5Cgl7bXNvLXN0
-eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNl
-cmlmOwoJY29sb3I6d2luZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6
-ZXhwb3J0LW9ubHk7Cglmb250LXNpemU6MTAuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNh
-bnMtc2VyaWY7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsKCW1hcmdp
-bjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRT
-ZWN0aW9uMTt9Ci8qIExpc3QgRGVmaW5pdGlvbnMgKi8KQGxpc3QgbDAKCXttc28tbGlzdC1pZDox
-MTcwMTc1ODU1OwoJbXNvLWxpc3QtdGVtcGxhdGUtaWRzOjE5NTk0NTM0ODI7fQpAbGlzdCBsMDps
-ZXZlbDEKCXttc28tbGV2ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpc
-RjBCNzsKCW1zby1sZXZlbC10YWItc3RvcDouNWluOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlv
-bjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJbXNvLWFuc2ktZm9udC1zaXplOjEwLjBwdDsK
-CWZvbnQtZmFtaWx5OlN5bWJvbDt9CkBsaXN0IGwwOmxldmVsMgoJe21zby1sZXZlbC1udW1iZXIt
-Zm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJbXNvLWxldmVsLXRhYi1zdG9w
-OjEuMGluOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4y
-NWluOwoJbXNvLWFuc2ktZm9udC1zaXplOjEwLjBwdDsKCWZvbnQtZmFtaWx5OlN5bWJvbDt9CkBs
-aXN0IGwwOmxldmVsMwoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZl
-bC10ZXh0OlxGMEI3OwoJbXNvLWxldmVsLXRhYi1zdG9wOjEuNWluOwoJbXNvLWxldmVsLW51bWJl
-ci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJbXNvLWFuc2ktZm9udC1zaXpl
-OjEwLjBwdDsKCWZvbnQtZmFtaWx5OlN5bWJvbDt9CkBsaXN0IGwwOmxldmVsNAoJe21zby1sZXZl
-bC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJbXNvLWxldmVs
-LXRhYi1zdG9wOjIuMGluOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1p
-bmRlbnQ6LS4yNWluOwoJbXNvLWFuc2ktZm9udC1zaXplOjEwLjBwdDsKCWZvbnQtZmFtaWx5OlN5
-bWJvbDt9CkBsaXN0IGwwOmxldmVsNQoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsK
-CW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJbXNvLWxldmVsLXRhYi1zdG9wOjIuNWluOwoJbXNvLWxl
-dmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJbXNvLWFuc2kt
-Zm9udC1zaXplOjEwLjBwdDsKCWZvbnQtZmFtaWx5OlN5bWJvbDt9CkBsaXN0IGwwOmxldmVsNgoJ
-e21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJ
-bXNvLWxldmVsLXRhYi1zdG9wOjMuMGluOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0
-OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJbXNvLWFuc2ktZm9udC1zaXplOjEwLjBwdDsKCWZvbnQt
-ZmFtaWx5OlN5bWJvbDt9CkBsaXN0IGwwOmxldmVsNwoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0
-OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJbXNvLWxldmVsLXRhYi1zdG9wOjMuNWlu
-OwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJ
-bXNvLWFuc2ktZm9udC1zaXplOjEwLjBwdDsKCWZvbnQtZmFtaWx5OlN5bWJvbDt9CkBsaXN0IGww
-OmxldmVsOAoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0
-OlxGMEI3OwoJbXNvLWxldmVsLXRhYi1zdG9wOjQuMGluOwoJbXNvLWxldmVsLW51bWJlci1wb3Np
-dGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJbXNvLWFuc2ktZm9udC1zaXplOjEwLjBw
-dDsKCWZvbnQtZmFtaWx5OlN5bWJvbDt9CkBsaXN0IGwwOmxldmVsOQoJe21zby1sZXZlbC1udW1i
-ZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJbXNvLWxldmVsLXRhYi1z
-dG9wOjQuNWluOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6
-LS4yNWluOwoJbXNvLWFuc2ktZm9udC1zaXplOjEwLjBwdDsKCWZvbnQtZmFtaWx5OlN5bWJvbDt9
-CkBsaXN0IGwxCgl7bXNvLWxpc3QtaWQ6MTI5MDA4NjIyMDsKCW1zby1saXN0LXR5cGU6aHlicmlk
-OwoJbXNvLWxpc3QtdGVtcGxhdGUtaWRzOjE4NjA4NTM3NTAgNjc2OTg2ODkgNjc2OTg2OTEgNjc2
-OTg2OTMgNjc2OTg2ODkgNjc2OTg2OTEgNjc2OTg2OTMgNjc2OTg2ODkgNjc2OTg2OTEgNjc2OTg2
-OTM7fQpAbGlzdCBsMTpsZXZlbDEKCXttc28tbGV2ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cglt
-c28tbGV2ZWwtdGV4dDpcRjBCNzsKCW1zby1sZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVs
-LW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6
-U3ltYm9sO30KQGxpc3QgbDE6bGV2ZWwyCgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0
-OwoJbXNvLWxldmVsLXRleHQ6bzsKCW1zby1sZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVs
-LW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6
-IkNvdXJpZXIgTmV3Ijt9CkBsaXN0IGwxOmxldmVsMwoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0
-OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEE3OwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7
-Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglm
-b250LWZhbWlseTpXaW5nZGluZ3M7fQpAbGlzdCBsMTpsZXZlbDQKCXttc28tbGV2ZWwtbnVtYmVy
-LWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpcRjBCNzsKCW1zby1sZXZlbC10YWItc3Rv
-cDpub25lOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4y
-NWluOwoJZm9udC1mYW1pbHk6U3ltYm9sO30KQGxpc3QgbDE6bGV2ZWw1Cgl7bXNvLWxldmVsLW51
-bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6bzsKCW1zby1sZXZlbC10YWItc3Rv
-cDpub25lOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4y
-NWluOwoJZm9udC1mYW1pbHk6IkNvdXJpZXIgTmV3Ijt9CkBsaXN0IGwxOmxldmVsNgoJe21zby1s
-ZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEE3OwoJbXNvLWxl
-dmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0
-LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseTpXaW5nZGluZ3M7fQpAbGlzdCBsMTpsZXZlbDcK
-CXttc28tbGV2ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpcRjBCNzsK
-CW1zby1sZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0
-OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6U3ltYm9sO30KQGxpc3QgbDE6bGV2
-ZWw4Cgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6bzsK
-CW1zby1sZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0
-OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6IkNvdXJpZXIgTmV3Ijt9CkBsaXN0
-IGwxOmxldmVsOQoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10
-ZXh0OlxGMEE3OwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBv
-c2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseTpXaW5nZGluZ3M7
-fQpvbAoJe21hcmdpbi1ib3R0b206MGluO30KdWwKCXttYXJnaW4tYm90dG9tOjBpbjt9Ci0tPjwv
-c3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVk
-aXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5
-XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0
-IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4K
-PGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRpdiBj
-bGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSYjODIxNzt2ZSBnb3Qg
-bW9yZSBvZiBhIHNwZWMvY2FwYWJpbGl0eSBxdWVzdGlvbiB0aGFuIGEgdG9vbCBzcGVjaWZpYyBx
-dWVzdGlvbi4gV2l0aCBUUE0yLjAgYW5kIHRoZSBuZXcgRXh0ZW5kZWQgQXV0aG9yaXphdGlvbiAo
-RUEpIHN0dWZmLCBJJiM4MjE3O3ZlIGJlZW4gcmVhZGluZyB0aGluZ3MgbGlrZTogJiM4MjIwOzxp
-PlBvbGljeSBhdXRob3JpemF0aW9uLCBhbHNvIGtub3duIGFzIEV4dGVuZGVkIEF1dGhvcml6YXRp
-b24gKEVBKSwgaXMKIHRoZSBTd2lzcyBhcm15IGtuaWZlIG9mIFRQTSBhdXRob3JpemF0aW9ucy4m
-bmJzcDsgV2l0aCB0aGUgcmlnaHQgZXhwZXJ0aXNlLCB5b3UgY2FuIGRvIGp1c3QgYWJvdXQgYW55
-IGtpbmQgb2YgYXV0aG9yaXphdGlvbiB3aXRoIGl0PC9pPi4mIzgyMjE7ICYjODIxMTsgQSBQcmFj
-dGljYWwgR3VpZGUgdG8gVFBNMi4wLCBwZy4gMjA3LjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+U28g
-dGhpcyBnb3QgbWUgd29uZGVyaW5nIGlmIGl0IHdvdWxkIGJlIHBvc3NpYmxlIHRvIGNyZWF0ZSBh
-biBhdXRob3JpemF0aW9uIHRoYXQgcmVsaWVzIG9uIHNvbWUgZXh0ZXJuYWwgZGF0YSBiZWluZyBz
-aWduZWQsIGFuZCB0aGF0IHNpZ25hdHVyZSBiZWluZyB2ZXJpZmllZCBieSB0aGUgVFBNIHdpdGgg
-YSBsb2FkZWQgcHVibGljIGtleS4mbmJzcDsgTW9yZSBzcGVjaWZpY2FsbHksIGlzIGl0IHBvc3Np
-YmxlIHRvIHRpZQogc29tZSBUUE0gcHJvdGVjdGVkIHNlY3JldCB0byB0aGlzIHNpZ25hdHVyZSB2
-ZXJpZmljYXRpb24gcmVzdWx0PyZuYnNwOyBUaGUgZXhhbXBsZSBJJiM4MjE3O20gdGhpbmtpbmcg
-aXM6PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5MZXQmIzgyMTc7cyBzYXkgSSB3YW50IHRoZSBUUE0g
-dG8gb25seSBhbGxvdyByZWFkaW5nIG9mIGFuIE5WIHNlY3JldCBpZiBhIHN5c3RlbSBib290ZWQg
-YSBzaWduZWQga2VybmVsLCBhbmQgSSB3YW50IHRoZSBzZWNyZXQgdG8gYmUgcmVsZWFzYWJsZSBv
-biBhbnkga2VybmVsIHNpZ25lZCBieSB0aGUgY29ycmVjdCBrZXkuJm5ic3A7IEkgaGF2ZSBzZWVu
-IE1pY3Jvc29mdCYjODIxNztzIFRyRUUgRUZJIHByb3RvY29sIGFuZCBhY2NvcmRpbmcKIHRvIG1q
-ZzU5JiM4MjE3O3MgYmxvZyBwb3N0IG9uIHRoZSBzdWJqZWN0IG1heWJlIHRoaXMgaXMgZXhhY3Rs
-eSB3aGF0IEkmIzgyMTc7bSBhZnRlciwgYW5kIEkgdW5kZXJzdGFuZCB0aGF0IGJvb3Rpbmcgc2ln
-bmVkIGtlcm5lbHMgaXMgYWxyZWFkeSB3aXRoaW4gdGhlIHJlYWxtIG9mIFNlY3VyZSBCb290IGJ1
-dCBoZXksIHRoaXMgc3RpbGwgc2VlbXMgbGlrZSBhIHVzZWZ1bCBleGVyY2lzZSB0byB0aGluayBh
-Ym91dCB3aXRoIHJlZ2FyZHMgdG8gVFBNIGFuZCBtYXliZQogY291bGQgYmUgdXNlZCBvbiBzeXN0
-ZW1zIHRoYXQgZG9uJiM4MjE3O3QgaGF2ZSBVRUZJIG9yIGRvbiYjODIxNzt0IGJvb3Qgd2l0aCBT
-ZWN1cmUgQm9vdCwgYnV0IGNhbiB1c2UgdGhlIFRQTTIuMC48bzpwPjwvbzpwPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PkkgZ3Vlc3MgYSBzaW1wbGUgd2F5IHRvIGRvIHRoaXMgbWlnaHQgYmUgdG8gdmVyaWZ5IHRoZSBz
-aWduYXR1cmUgd2l0aCBzb2Z0d2FyZSBwcmlvciB0byBHUlVCIGxvYWRpbmcgdGhlIGtlcm5lbCwg
-YW5kIGp1c3QgZW5zdXJlIHRoYXQgR1JVQiBtb2R1bGUsIGNvbmZpZ3VyYXRpb24sIGFuZCBwdWJs
-aWMga2V5IGdldCBoYXNoZWQgYW5kIHRpZSBhIHNlY3JldCB0byB0aG9zZS4mbmJzcDsgTWF5YmUg
-dGhhdCYjODIxNztzIHdoYXQgSQogc2hvdWxkIGJlIHB1cnN1aW5nLCBidXQgSSYjODIxNzttIGp1
-c3Qgd29uZGVyaW5nIGlmIHRoZSBUUE0gaXRzZWxmIGNhbiBkbyB0aGUgdmVyaWZpY2F0aW9uLjxv
-OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+U28gdGhpcyBzZWVtcyBsaWtlIGl0IHdvdWxkIG5lZWQ6PG86
-cD48L286cD48L3A+Cjx1bCBzdHlsZT0ibWFyZ2luLXRvcDowaW4iIHR5cGU9ImRpc2MiPgo8bGkg
-Y2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1saXN0OmwxIGxldmVsMSBsZm8zIj5UUE0gc3Vw
-cG9ydCBmb3IgYSBzaWduYXR1cmUgdmVyaWZpY2F0aW9uIGNvbW1hbmQgdGhhdCB1bHRpbWF0ZWx5
-IG1vZGlmaWVzIGEgcG9saWN5IGRpZ2VzdCBiYXNlZCBvbmx5IG9uIHdoZXRoZXIgdGhlIHNpZ25h
-dHVyZSB2ZXJpZmllZCBjb3JyZWN0bHkgb3Igbm90LjxvOnA+PC9vOnA+PC9saT48bGkgY2xhc3M9
-Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1saXN0OmwxIGxldmVsMSBsZm8zIj5BIGdydWIgbW9kdWxl
-IHRvIGRvIHRoaXMgdmVyaWZpY2F0aW9uIHByaW9yIHRvIGxvYWRpbmcgdGhlIGtlcm5lbDxvOnA+
-PC9vOnA+PC9saT48bGkgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1saXN0OmwxIGxldmVs
-MSBsZm8zIj5UaGUgZ3J1YiBtb2R1bGUgYW5kIGNvbmZpZ3VyYXRpb24gaXRzZWxmIHByb2JhYmx5
-IG5lZWRzIHRvIGJlIG1lYXN1cmVkIGlmIGl0IGlzbiYjODIxNzt0IGFscmVhZHkgKFBDUiA1Pyks
-IGFuZCB0aGUgbWVhc3VyZW1lbnQgbmVlZHMgdG8gYmUgaW5jbHVkZWQgaW4gdGhlIHBvbGljeSBz
-byB0aGF0IHNvbWVvbmUgY2FuJiM4MjE3O3QganVzdCByZXBsYWNlIHRoZSBtb2R1bGUgYW5kCiB2
-ZXJpZnkgdGhlIHNpZ25hdHVyZSBidXQgYm9vdCBhIGRpZmZlcmVudCBrZXJuZWwmIzgyMzA7PG86
-cD48L286cD48L2xpPjwvdWw+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5BY2NvcmRpbmcgdG8gdGhlIHNwZWNzLCB3ZSBoYXZl
-IFRQTTJfVmVyaWZ5U2lnbmF0dXJlLiZuYnNwOyBJdCYjODIxNztzIG5vdCBhIHBvbGljeSBjb21t
-YW5kLCBzbyBJIGRvbiYjODIxNzt0IHRoaW5rIEkgY2FuIHVzZSBpdCBpbiBhIHBvbGljeSwgYnV0
-IGl0IGRvZXMgcmV0dXJuIGEgVFBNVF9US19WRVJJRklFRCB0aWNrZXQuJm5ic3A7IFRoZSBUUE1U
-X1RLX1ZFUklGSUVEIGlzIG9ubHkgY29uc3VtZWQgYnkgVFBNMl9Qb2xpY3lBdXRob3JpemUsIGJ1
-dAogSSYjODIxNzttIG5vdCB0cnlpbmcgdG8gYXV0aG9yaXplIGEgbmV3IHBvbGljeSBoZXJlLjxv
-OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+QW5kIHRoZW4gdGhlcmUgaXMgVFBNMl9Qb2xpY3lUaWNrZXQs
-IHdoaWNoIGxvb2tzIGxpa2UgaXQgdXBkYXRlcyB0aGUgcG9saWN5IGRpZ2VzdCBiYXNlZCBvbiB3
-aGV0aGVyIGEgdGlja2V0IGNoZWNrcyBvdXQsIGJ1dCBsb29raW5nIGNsb3NlciBhdCB0aGUgY29t
-bWFuZCBkZWZpbml0aW9uLCBpdCB0YWtlcyBpbiBhIFRQTVRfVEtfQVVUSCB0aWNrZXQsIG5vdCBh
-IFRQTVRfVEtfVkVSSUZJRUQgdGlja2V0LCBhbmQKIGl0IGxvb2tzIGxpa2UgdGhhdCBraW5kIG9m
-IHRpY2tldCBpcyBvbmx5IHByb2R1Y2VkIGJ5IFRQTTJfUG9saWN5U2lnbmVkIGFuZCBUUE0yX1Bv
-bGljeVNlY3JldCwgd2hpY2ggc2VlbSB0byBiZSBmb3IgYXV0aG9yaXppbmcgc3BlY2lmaWMgY29t
-bWFuZHMgYW5kIHRoZWlyIHBhcmFtZXRlcnMgYnkgc2lnbmluZyB0aGVtLjxvOnA+PC9vOnA+PC9w
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+U28gbWF5YmUgSSYjODIxNzttIG1pc3VuZGVyc3RhbmRpbmcgb3Igc2tpcHBpbmcg
-b3ZlciBzb21ldGhpbmcsIGJ1dCBhbSBJIGNvcnJlY3QgaW4gdGhpbmtpbmcgdGhlIFRQTSBjb21t
-YW5kcyBkZWZpbmVkIGluIHRoZSBzcGVjIG1heSBub3QgYmUgYWJsZSB0byBkbyB0aGlzLCBldmVu
-IHdpdGggRUE/IEFuZCBpZiBzbywgaXMgdGhlcmUgYW55IHJvYWRibG9jayBvciBmbGF3IGluIGRv
-aW5nIHRoZSB2ZXJpZmljYXRpb24gd2l0aAogc29mdHdhcmUgYnkgR1JVQiBwcmlvciB0byBsb2Fk
-aW5nIHRoZSBrZXJuZWw/PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+
-Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+with your simulator (or real TPM).
 
---===============1545143048478714678==--
+Some more information would be useful--does your TPM (real or virtual or =
+
+simulated) have a SHA-512 PCR bank?
+
+Did you compile it on the same machine? =C2=A0Or did you compile elsewhere =
+or use =
+
+a precompiled package or something like that?
+
+Dan
+
+From: Ricardo Ara=C3=BAjo [mailto:ricardo(a)lsd.ufcg.edu.br]
+> Not sure it is the same simulator, but I'm using
+> https://github.com/stefanberger/libtpms/tree/tpm2-preview.rev146.v2 and =
+
+> after SHA-512 was enabled (yesterday) tpm2_pcrlist is crashing with this =
+
+> error:
+> WARNING:marshal:src/tss2-mu/tpml-types.c:197:Tss2_MU_TPML_PCR_SELECTION_U=
+nmarshal() =
+
+> count too big
+> ERROR: Tss2_Sys_GetCapability(0x80011) - sys:Response is malformed
+
+--===============5610705497055594347==--
 
