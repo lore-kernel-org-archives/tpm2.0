@@ -1,33 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============2917055040091803614=="
+Content-Type: multipart/mixed; boundary="===============6091971323385343589=="
 MIME-Version: 1.0
-From: Anderson, Daniel <daniel.anderson at intel.com>
-Subject: Re: [tpm2] PCR missing SHA-512 support
-Date: Fri, 25 May 2018 15:03:19 +0000
-Message-ID: <207C810BE4BA2440832668E0F208BFD3D49287@ORSMSX108.amr.corp.intel.com>
-In-Reply-To: 1224568147.415356.1527257069951.JavaMail.zimbra@lsd.ufcg.edu.br
+From: Trevor Woerner <twoerner at gmail.com>
+Subject: [tpm2] meta-measured updates
+Date: Wed, 30 May 2018 17:13:04 -0400
+Message-ID: <20180530211304.GA11797@linux-uys3>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2917055040091803614==
+--===============6091971323385343589==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Ricardo,
+Hi Philip,
 
-My guess is it is a tpm2-tss  or tpm2-tools bug, not a simulator issue.
+My hope is that one day the OE community will have one security layer to
+choose, rather than the three that we have currently.
 
-That is especially true since we tend to use the Microsoft/IBM tpm2 simulat=
-or, which, by default, has the SHA-512 PCR bank disabled.
+I've looked at the three different layers and feel that meta-secure-core mi=
+ght
+be a better one to target. With respect to its TPM2 recipes, however,
+meta-secure-core (and the other, meta-security) lag behind meta-measured. As
+such I've been working on some updates for meta-secure-core.
 
-Yes, it looks like this:
-https://github.com/tpm2-software/tpm2-tools/issues/1021
+Are you still keen to fold meta-measured into something else? If not I could
+prepare a set of patches for meta-measured as well.
 
-Could you add your information to issue #1021 or file a new issue if it is =
-different?
+Looking at the master commit of tpm2-tss, specifically, I've noticed a numb=
+er
+of changes and was hoping for your feedback.
 
-Dan
+With the tss 1.x stuff we had:
+	- libtcti-device
+	- libtcti-socket
+	- libsapi
 
+The new tss 2.x stuff has:
+	- libtss2-esys
+	- libtss2-mu
+	- libtss2-sys
+	- libtss2-tcti-device
+	- libtss2-tcti-mssim
 
---===============2917055040091803614==--
+I'm guessing libtss2-tcti-device is the new name for the old libtcti-device.
+But are there any mappings from the new stuff to the older libtcti-socket a=
+nd
+libsapi?
+
+It looks like things are going to get messy. It looks like, going forward,
+we're going to need to keep tpm2-tss_1.x.bb around as well as create
+tpm2-tss_2.x.bb recipes with differently named PACKAGES so existing recipes
+that use tss (and expect the old 1.x behaviour/API) can continue to work wh=
+ile
+allowing new code (or updates to the old) to use the new API (?).
+
+Best regards,
+	Trevor
+
+--===============6091971323385343589==--
 
