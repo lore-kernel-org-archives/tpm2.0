@@ -1,14 +1,14 @@
-Content-Type: multipart/mixed; boundary="===============3923582246696621719=="
+Content-Type: multipart/mixed; boundary="===============3421690647066938661=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] dlopen()'ing raw .so files considered bad
-Date: Thu, 31 May 2018 21:12:45 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649BD5769@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CAHUNapS5qnzisT4Li6=fS26w0=ydtBX48_16+6aRL20ASE95zQ@mail.gmail.com
+Subject: Re: [tpm2] meta-measured updates
+Date: Thu, 31 May 2018 21:14:49 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649BD577E@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAHUNapSA-Etb1L3hkRwm6UkH4__LuWf9=ejLZ8mXetfirEniLA@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3923582246696621719==
+--===============3421690647066938661==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -18,73 +18,82 @@ Content-Transfer-Encoding: quoted-printable
 > -----Original Message-----
 > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Trevor Woern=
 er
-> Sent: Thursday, May 31, 2018 1:47 PM
+> Sent: Wednesday, May 30, 2018 4:49 PM
 > To: tpm2(a)lists.01.org
-> Subject: [tpm2] dlopen()'ing raw .so files considered bad
+> Subject: Re: [tpm2] meta-measured updates
 > =
 
-> Hey everyone,
-> =
-
-> I was playing around with the latest tpm2 tools (i.e. the git master) and=
- I noticed
-> that this code is now dlopen()'ing the libraries at runtime.
-> =
-
-> That's a very nice feature, but the way it's been implemented is not enti=
-rely
-> correct.
-> =
-
-> The filename parameter to dlopen() should be a library's SONAME, not the =
-raw
-> .so file. The raw .so file is considered a -dev or -devel package compone=
-nt, not a
-> component of the library package itself. The raw .so exists as a develop =
-crutch,
-> but shouldn't be used in production.
-> =
-
-> The raw .so will always point to the latest shared library object. But in=
- an ideal
-> world, the shared library's API should be denoted by the first number aft=
-er ".so.".
-> It would be extremely unlikely that the programs linking to today's TSS (=
-with its
-> current API) would continue to work should an API-breaking change occur i=
-n the
-> future (thus requiring the first number after ".so." to be incremented).
-
-Per the spec we work on, we can't break it.
-
-> =
-
-> In other words, programs should dlopen() a specific API (e.g. ".so.0") an=
-d not just
-> "the latest" (i.e. ".so").
-
-Good to know, well make this change in the tools:
-https://github.com/tpm2-software/tpm2-tools/pull/1052
-
-> =
-
-> Please see https://lists.debian.org/debian-policy/2002/12/msg00041.html, =
-for
-> example.
-> =
-
-> As is, this is going to mess up people packaging this software for variou=
-s distros,
-> and users trying to use this software (since they'll have to install the =
--dev
-> packages for it to work, which can get messy for non-developer users).
+> On Wed, May 30, 2018 at 5:13 PM, Trevor Woerner <twoerner(a)gmail.com
+> <mailto:twoerner(a)gmail.com> > wrote:
 > =
 
 > =
 
-> Thanks and best regards,
->     Trevor
+> 	Are you still keen to fold meta-measured into something else? If not I
+> could
+> 	prepare a set of patches for meta-measured as well.
+> =
+
+> 	Looking at the master commit of tpm2-tss, specifically, I've noticed a
+> number
+> 	of changes and was hoping for your feedback.
+> =
+
+> 	With the tss 1.x stuff we had:
+> 	        - libtcti-device
+> 	        - libtcti-socket
+> 	        - libsapi
+> =
+
+> 	The new tss 2.x stuff has:
+> 	        - libtss2-esys
+
+This is the new enhanced (I think its enhanced) system api =
 
 
---===============3923582246696621719==--
+> 	        - libtss2-mu
+
+This is the new marshaling library
+
+> 	        - libtss2-sys
+
+This is the old libsapi
+
+> 	        - libtss2-tcti-device
+
+This is the old device tcti
+
+> 	        - libtss2-tcti-mssim
+
+This is the old socket tcti
+
+> =
+
+> 	I'm guessing libtss2-tcti-device is the new name for the old libtcti-dev=
+ice.
+> 	But are there any mappings from the new stuff to the older libtcti-socket
+> and
+> 	libsapi?
+
+See above inline comments.
+
+> =
+
+> =
+
+> =
+
+> In any case, here's a WIP of my changes:
+> https://github.com/twoerner/meta-secure-core/tree/contrib/twoerner/tpm2-
+> recipe-updates/meta-tpm2/recipes-tpm
+> =
+
+> Specifically, please take a look at the _git recipes, which currently bui=
+ld off the
+> master branch of all tpm2-software's components.
+> What do you think of tpm2-tss/tpm2-tss_git.bb <http://tpm2-tss_git.bb> 's
+> PACKAGES?
+
+
+--===============3421690647066938661==--
 
