@@ -1,55 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============1209089797229692541=="
+Content-Type: multipart/mixed; boundary="===============8566756188018273879=="
 MIME-Version: 1.0
-From: aymen project <aymenuniproject at gmail.com>
-Subject: [tpm2] Concerning TPM2 & TSS2 Software
-Date: Mon, 04 Jun 2018 17:35:21 +0100
-Message-ID: <CAChVmn4g55eJwwW7NtQ2SGH--ftaR6+JHF8kJ67yfdFLmaJ3gw@mail.gmail.com>
+From: Andersen, John <john.s.andersen at intel.com>
+Subject: Re: [tpm2] Concerning TPM2 & TSS2 Software
+Date: Mon, 04 Jun 2018 11:43:21 -0700
+Message-ID: <20180604184321.66fwbo7y3qmywoc2@johnsa1>
+In-Reply-To: CAChVmn4g55eJwwW7NtQ2SGH--ftaR6+JHF8kJ67yfdFLmaJ3gw@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1209089797229692541==
+--===============8566756188018273879==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
- Hi
-I have just downloaded TPM2 & TSS2 Software and i find issues to install it
-is there any step by step guide to do so (linux or windows in preference?
+Which repos did you clone? We have a Dockerfile for tss to ease dependency
+installation issues, its a bit broken at the moment I think but I'll try fi=
+x it
+soon.
 
-I appreciate your reply thanks :)
+What issues are you running into?
 
---===============1209089797229692541==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+On Mon, Jun 04, 2018 at 05:35:21PM +0100, aymen project wrote:
+>    Hi
+>    I have just downloaded TPM2 & TSS2 Software and i find issues to
+>    install it is there any step by step guide to do so (linux or windows
+>    in preference?
+>    I appreciate your reply thanks :)
 
-PGRpdiBkaXI9Imx0ciI+Cgo8ZGl2IHN0eWxlPSJjb2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtZmFt
-aWx5OmFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweDtmb250LXN0eWxlOm5vcm1hbDtm
-b250LXZhcmlhbnQtbGlnYXR1cmVzOm5vcm1hbDtmb250LXZhcmlhbnQtY2Fwczpub3JtYWw7Zm9u
-dC13ZWlnaHQ6NDAwO2xldHRlci1zcGFjaW5nOm5vcm1hbDt0ZXh0LWFsaWduOnN0YXJ0O3RleHQt
-aW5kZW50OjBweDt0ZXh0LXRyYW5zZm9ybTpub25lO3doaXRlLXNwYWNlOm5vcm1hbDt3b3JkLXNw
-YWNpbmc6MHB4O2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KTt0ZXh0LWRlY29yYXRp
-b24tc3R5bGU6aW5pdGlhbDt0ZXh0LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbCI+PGRpdj5IaTxi
-cj5JIGhhdmUganVzdCBkb3dubG9hZGVkIFRQTTIgJmFtcDsgVFNTMiBTb2Z0d2FyZSBhbmQgaSBm
-aW5kIGlzc3VlcyB0byBpbnN0YWxsIGl0IGlzIHRoZXJlIGFueSBzdGVwIGJ5IHN0ZXAgZ3VpZGUg
-dG8gZG8gc28gKGxpbnV4IG9yIHdpbmRvd3MgaW4gcHJlZmVyZW5jZT88YnI+PC9kaXY+PGJyPjwv
-ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtZmFtaWx5OmFyaWFsLHNh
-bnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweDtmb250LXN0eWxlOm5vcm1hbDtmb250LXZhcmlhbnQt
-bGlnYXR1cmVzOm5vcm1hbDtmb250LXZhcmlhbnQtY2Fwczpub3JtYWw7Zm9udC13ZWlnaHQ6NDAw
-O2xldHRlci1zcGFjaW5nOm5vcm1hbDt0ZXh0LWFsaWduOnN0YXJ0O3RleHQtaW5kZW50OjBweDt0
-ZXh0LXRyYW5zZm9ybTpub25lO3doaXRlLXNwYWNlOm5vcm1hbDt3b3JkLXNwYWNpbmc6MHB4O2Jh
-Y2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KTt0ZXh0LWRlY29yYXRpb24tc3R5bGU6aW5p
-dGlhbDt0ZXh0LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbDtmbG9hdDpub25lO2Rpc3BsYXk6aW5s
-aW5lIj5JIGFwcHJlY2lhdGUgeW91ciByZXBseSB0aGFua3MgOik8L3NwYW4+PGRpdiBjbGFzcz0i
-Z21haWwteWo2cW8iIHN0eWxlPSJjb2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtZmFtaWx5OmFyaWFs
-LHNhbnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweDtmb250LXN0eWxlOm5vcm1hbDtmb250LXZhcmlh
-bnQtbGlnYXR1cmVzOm5vcm1hbDtmb250LXZhcmlhbnQtY2Fwczpub3JtYWw7Zm9udC13ZWlnaHQ6
-NDAwO2xldHRlci1zcGFjaW5nOm5vcm1hbDt0ZXh0LWFsaWduOnN0YXJ0O3RleHQtaW5kZW50OjBw
-eDt0ZXh0LXRyYW5zZm9ybTpub25lO3doaXRlLXNwYWNlOm5vcm1hbDt3b3JkLXNwYWNpbmc6MHB4
-O2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KTt0ZXh0LWRlY29yYXRpb24tc3R5bGU6
-aW5pdGlhbDt0ZXh0LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbCI+PC9kaXY+PGJyIGNsYXNzPSJn
-bWFpbC1BcHBsZS1pbnRlcmNoYW5nZS1uZXdsaW5lIj4KCjxicj48L2Rpdj4K
+> _______________________________________________
+> tpm2 mailing list
+> tpm2(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/tpm2
 
---===============1209089797229692541==--
+
+--===============8566756188018273879==--
 
