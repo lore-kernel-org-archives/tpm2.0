@@ -1,72 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============3910175678221214228=="
+Content-Type: multipart/mixed; boundary="===============1209089797229692541=="
 MIME-Version: 1.0
-From: M D <dsmm4444 at gmail.com>
-Subject: [tpm2] keyctl add trusted fails with Invalid argument
-Date: Mon, 04 Jun 2018 09:30:08 -0700
-Message-ID: <CACUY3eqTvc_-b42j_fdtGgEfBpk1guov=b0tVzYMJdb689LyvA@mail.gmail.com>
+From: aymen project <aymenuniproject at gmail.com>
+Subject: [tpm2] Concerning TPM2 & TSS2 Software
+Date: Mon, 04 Jun 2018 17:35:21 +0100
+Message-ID: <CAChVmn4g55eJwwW7NtQ2SGH--ftaR6+JHF8kJ67yfdFLmaJ3gw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3910175678221214228==
+--===============1209089797229692541==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-I am trying to create a trusted key as per instructions from the following =
-page
-https://sourceforge.net/p/linux-ima/wiki/Home/
+ Hi
+I have just downloaded TPM2 & TSS2 Software and i find issues to install it
+is there any step by step guide to do so (linux or windows in preference?
 
-I have a machine with TPM
+I appreciate your reply thanks :)
 
-root(a)proj:/data/tpm# dmesg | grep -i tpm
-[    0.000000] ACPI: TPM2 0x000000008CD0D0C0 000034 (v03
-Tpm2Tabl 00000001 AMI  00000000)
-[    1.397424] tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1A, rev-id 16)
+--===============1209089797229692541==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-The kernel also has the required options enabled as listed by the wiki.
+PGRpdiBkaXI9Imx0ciI+Cgo8ZGl2IHN0eWxlPSJjb2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtZmFt
+aWx5OmFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweDtmb250LXN0eWxlOm5vcm1hbDtm
+b250LXZhcmlhbnQtbGlnYXR1cmVzOm5vcm1hbDtmb250LXZhcmlhbnQtY2Fwczpub3JtYWw7Zm9u
+dC13ZWlnaHQ6NDAwO2xldHRlci1zcGFjaW5nOm5vcm1hbDt0ZXh0LWFsaWduOnN0YXJ0O3RleHQt
+aW5kZW50OjBweDt0ZXh0LXRyYW5zZm9ybTpub25lO3doaXRlLXNwYWNlOm5vcm1hbDt3b3JkLXNw
+YWNpbmc6MHB4O2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KTt0ZXh0LWRlY29yYXRp
+b24tc3R5bGU6aW5pdGlhbDt0ZXh0LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbCI+PGRpdj5IaTxi
+cj5JIGhhdmUganVzdCBkb3dubG9hZGVkIFRQTTIgJmFtcDsgVFNTMiBTb2Z0d2FyZSBhbmQgaSBm
+aW5kIGlzc3VlcyB0byBpbnN0YWxsIGl0IGlzIHRoZXJlIGFueSBzdGVwIGJ5IHN0ZXAgZ3VpZGUg
+dG8gZG8gc28gKGxpbnV4IG9yIHdpbmRvd3MgaW4gcHJlZmVyZW5jZT88YnI+PC9kaXY+PGJyPjwv
+ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtZmFtaWx5OmFyaWFsLHNh
+bnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweDtmb250LXN0eWxlOm5vcm1hbDtmb250LXZhcmlhbnQt
+bGlnYXR1cmVzOm5vcm1hbDtmb250LXZhcmlhbnQtY2Fwczpub3JtYWw7Zm9udC13ZWlnaHQ6NDAw
+O2xldHRlci1zcGFjaW5nOm5vcm1hbDt0ZXh0LWFsaWduOnN0YXJ0O3RleHQtaW5kZW50OjBweDt0
+ZXh0LXRyYW5zZm9ybTpub25lO3doaXRlLXNwYWNlOm5vcm1hbDt3b3JkLXNwYWNpbmc6MHB4O2Jh
+Y2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KTt0ZXh0LWRlY29yYXRpb24tc3R5bGU6aW5p
+dGlhbDt0ZXh0LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbDtmbG9hdDpub25lO2Rpc3BsYXk6aW5s
+aW5lIj5JIGFwcHJlY2lhdGUgeW91ciByZXBseSB0aGFua3MgOik8L3NwYW4+PGRpdiBjbGFzcz0i
+Z21haWwteWo2cW8iIHN0eWxlPSJjb2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtZmFtaWx5OmFyaWFs
+LHNhbnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweDtmb250LXN0eWxlOm5vcm1hbDtmb250LXZhcmlh
+bnQtbGlnYXR1cmVzOm5vcm1hbDtmb250LXZhcmlhbnQtY2Fwczpub3JtYWw7Zm9udC13ZWlnaHQ6
+NDAwO2xldHRlci1zcGFjaW5nOm5vcm1hbDt0ZXh0LWFsaWduOnN0YXJ0O3RleHQtaW5kZW50OjBw
+eDt0ZXh0LXRyYW5zZm9ybTpub25lO3doaXRlLXNwYWNlOm5vcm1hbDt3b3JkLXNwYWNpbmc6MHB4
+O2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KTt0ZXh0LWRlY29yYXRpb24tc3R5bGU6
+aW5pdGlhbDt0ZXh0LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbCI+PC9kaXY+PGJyIGNsYXNzPSJn
+bWFpbC1BcHBsZS1pbnRlcmNoYW5nZS1uZXdsaW5lIj4KCjxicj48L2Rpdj4K
 
-I have
-CONFIG_TRUSTED_KEYS=3Dy
-CONFIG_ENCRYPTED_KEYS=3Dy
-
-When I try to execute the command,
-
-keyctl add trusted kmk-trusted "new 32" @u
-
-I observe the error, "add_key: Invalid argument"
-
-I am able to create user keys with the command
-
-root(a)proj:/data/tpm# keyctl add user mykey "new 32" @u
-410756505
-
-I did try searching for answers on the web but was unable to
-understand why the error occurs. I also have successfully taken
-ownership of the tpm using the following instructions
-
-root(a)proj:~# tpm2_takeownership -o 1234 -e 1234 -l 1234
-root(a)proj:~# echo $?
-0
-root(a)proj:~#
-
-The wiki also mentions that the following instruction needs to be
-executed prior to creating the trusted key
-
-# To create and save the kernel master key (trusted type):
-$ su -c 'modprobe trusted encrypted'
-$ su -c 'keyctl add trusted kmk-trusted "new 32" @u'
-
-
-As I have the TRUSTED_KEYS and ENCRYPTED_KEYS as part of the kernel
-and not as modules, I have not executed the command, modprobe trusted
-encrypted
-
-
-Could someone please help me understand what I am missing?
-
-Regards,
-Max
-
---===============3910175678221214228==--
+--===============1209089797229692541==--
 
