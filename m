@@ -1,276 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============4207380006581989883=="
+Content-Type: multipart/mixed; boundary="===============3910175678221214228=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] dlopen()'ing raw .so files considered bad
-Date: Sat, 02 Jun 2018 07:39:11 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D010EB3CC0F@EXCH2010B.sit.fraunhofer.de>
-In-Reply-To: CAHUNapQ38tcZRFn5qfzjyZExS2XLTqNARWCtWR=9Tv1+TKbWrw@mail.gmail.com
+From: M D <dsmm4444 at gmail.com>
+Subject: [tpm2] keyctl add trusted fails with Invalid argument
+Date: Mon, 04 Jun 2018 09:30:08 -0700
+Message-ID: <CACUY3eqTvc_-b42j_fdtGgEfBpk1guov=b0tVzYMJdb689LyvA@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4207380006581989883==
+--===============3910175678221214228==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Sorry I guess I was not clear enough. I understand and totally agree with e=
-verything you say here. And we want this for all of our "regular" libraries.
+Hi,
+I am trying to create a trusted key as per instructions from the following =
+page
+https://sourceforge.net/p/linux-ima/wiki/Home/
 
-It's just the tcti at the time was considered its own (special) beast. That=
-'s why we only have 1 symbol exported and why the data-type is versioned. T=
-he thought was that we want to have interchangable IPC/RPC layer and that t=
-cti-implementations could be provided at any later time independently of th=
-e rest of the tss. Similar to OpenSSL engines or PKCS11 .so files. So we ca=
-n consider tcti libraries to actually never change.
+I have a machine with TPM
 
-Given this, what would you consider the best approach ? Version them anyway=
- is was I understand from this ?
+root(a)proj:/data/tpm# dmesg | grep -i tpm
+[    0.000000] ACPI: TPM2 0x000000008CD0D0C0 000034 (v03
+Tpm2Tabl 00000001 AMI  00000000)
+[    1.397424] tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1A, rev-id 16)
 
-________________________________
-From: Trevor Woerner [twoerner(a)gmail.com]
-Sent: Saturday, June 02, 2018 04:19
-To: Fuchs, Andreas
-Cc: Philip Tricca; tpm2(a)lists.01.org
-Subject: Re: [tpm2] dlopen()'ing raw .so files considered bad
+The kernel also has the required options enabled as listed by the wiki.
 
-It seems odd for this project would say "we don't want to have to deal with=
- versioning". Aren't we now, as we speak, witnessing a non-backwards-compat=
-ible API version break with TSS? How are users supposed to deal with this? =
-There are existing apps that expect the old TSS and they will never be upda=
-ted. Now the TSS is changing in such a way that all those programs will bre=
-ak if they try to link to and run with the new shared libraries. If those l=
-ibraries aren't versioned, how are they, or the runtime linker supposed to =
-know what to do?
+I have
+CONFIG_TRUSTED_KEYS=3Dy
+CONFIG_ENCRYPTED_KEYS=3Dy
 
-If everyone followed convention, the old apps would look for and runtime-li=
-nk against, say, libtss.so.0. Now that the API has changed, the new library=
- should be called libtss.so.1. New apps can link against this new library, =
-and everything will work. Distributions are welcome to provide the old TSS =
-library, or the new one, or both, or neither. Applications that aren't upda=
-ted and expect the old API will continue to runtime-link against libtss.so.=
-0, and new apps or old apps that are updated will runtime-link against libt=
-ss.so.1. No conflicts, no issues.
+When I try to execute the command,
 
-The "shared library hell" occurs when all versioning is removed and everyon=
-e assumes there's just one, unversioned library against which to link: libt=
-ss.so. How will distros provide support for old and new apps? How will deve=
-lopers ever know which one is installed?
+keyctl add trusted kmk-trusted "new 32" @u
 
-Versioned libraries are not a new idea. Unversioned shared-object files wil=
-l make it difficult for distributions to package these libraries, to the po=
-int where they might decide to not bother trying to package them at all. Un=
-versioned shared-objects will always be a continual source of instability f=
-or anything that tries to use them. With unversioned shared libraries, the =
-only way old and new apps can exist on the same system is if these librarie=
-s are installed to different locations and the ELF headers are manually har=
-d-coded to look in one place and not the other for the correct library agai=
-nst which to link. What about configuring and compiling apps that want to u=
-se this library? The ./configure step will succeed (because it would look f=
-or libtss.so and find it) but the actual compile-time linking would fail be=
-cause, inevitably, symbols won't be found or resolved. Never mind what will=
- happen at runtime :-)
+I observe the error, "add_key: Invalid argument"
 
-These conventions (that library.so.N is what should be provided and linked =
-against and that library.so is just a developer crutch for development time=
- only) are very old and ingrained in the way all Linux distributions packag=
-e libraries.
+I am able to create user keys with the command
 
-Unless, of course, you want to take on the task of finding and updating eve=
-ry single application that ever links to your library every time there is a=
-n API change, for the rest of eternity ;-)
+root(a)proj:/data/tpm# keyctl add user mykey "new 32" @u
+410756505
 
-On Fri, Jun 1, 2018 at 12:51 PM, Fuchs, Andreas <andreas.fuchs(a)sit.fraunh=
-ofer.de<mailto:andreas.fuchs(a)sit.fraunhofer.de>> wrote:
-P.S. or should we just install everything as .so.0 and merely never imagine=
- to have a .so.1 file for
-any tcti ever ?
+I did try searching for answers on the web but was unable to
+understand why the error occurs. I also have successfully taken
+ownership of the tpm using the following instructions
 
-I'm not that familiar with conventions here.
-________________________________
-From: Fuchs, Andreas
-Sent: Friday, June 01, 2018 18:49
-To: Trevor Woerner; Philip Tricca
-Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Subject: RE: [tpm2] dlopen()'ing raw .so files considered bad
+root(a)proj:~# tpm2_takeownership -o 1234 -e 1234 -l 1234
+root(a)proj:~# echo $?
+0
+root(a)proj:~#
 
-I just wanted to make sure we're not doing the same work twice.
+The wiki also mentions that the following instruction needs to be
+executed prior to creating the trusted key
 
-The (one) symbol Tss2_Tcti_GetInfo() exported by TCTI-so-files is fixed. Th=
-e data structures
-returned by this (the info itself and the function lookup table) are versio=
-ned in their first field.
-
-The purpose of this was to not require so-file versioning.
-
-Given this background, would you agree that we should not even start introd=
-ucing versioned
-so-file (e.g. tss2_tcti_socket.so.0) but only ever deploy unversioned so-fi=
-les (tss2_tcti_socket.so).
+# To create and save the kernel master key (trusted type):
+$ su -c 'modprobe trusted encrypted'
+$ su -c 'keyctl add trusted kmk-trusted "new 32" @u'
 
 
-________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org<mailto:tpm2-bounces(a)lists.01.org>=
-] on behalf of Trevor Woerner [twoerner(a)gmail.com<mailto:twoerner(a)gmail=
-.com>]
-Sent: Friday, June 01, 2018 02:15
-To: Philip Tricca
-Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Subject: Re: [tpm2] dlopen()'ing raw .so files considered bad
-
-Thank you. I had been working on this for part of the afternoon and wasn't =
-successful, but I wanted to raise the flag sooner rather than later.
-
-I had tried William's patch in isolation, but found more was needed. I was =
-going to dive into it harder tomorrow.
+As I have the TRUSTED_KEYS and ENCRYPTED_KEYS as part of the kernel
+and not as modules, I have not executed the command, modprobe trusted
+encrypted
 
 
---===============4207380006581989883==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+Could someone please help me understand what I am missing?
 
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjxzdHlsZSB0eXBlPSJ0ZXh0
-L2NzcyIgaWQ9Im93YVBhcmFTdHlsZSI+UCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9
-PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBmcHN0eWxlPSIxIiBvY3NpPSIwIj4KPGRpdiBzdHlsZT0i
-ZGlyZWN0aW9uOiBsdHI7Zm9udC1mYW1pbHk6IFRhaG9tYTtjb2xvcjogIzAwMDAwMDtmb250LXNp
-emU6IDEwcHQ7Ij4KPGRpdj5Tb3JyeSBJIGd1ZXNzIEkgd2FzIG5vdCBjbGVhciBlbm91Z2guIEkg
-dW5kZXJzdGFuZCBhbmQgdG90YWxseSBhZ3JlZSB3aXRoIGV2ZXJ5dGhpbmcgeW91IHNheSBoZXJl
-LiBBbmQgd2Ugd2FudCB0aGlzIGZvciBhbGwgb2Ygb3VyICZxdW90O3JlZ3VsYXImcXVvdDsgbGli
-cmFyaWVzLjwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+SXQncyBqdXN0IHRoZSB0Y3RpIGF0
-IHRoZSB0aW1lIHdhcyBjb25zaWRlcmVkIGl0cyBvd24gKHNwZWNpYWwpIGJlYXN0LiBUaGF0J3Mg
-d2h5IHdlIG9ubHkgaGF2ZSAxIHN5bWJvbCBleHBvcnRlZCBhbmQgd2h5IHRoZSBkYXRhLXR5cGUg
-aXMgdmVyc2lvbmVkLiBUaGUgdGhvdWdodCB3YXMgdGhhdCB3ZSB3YW50IHRvIGhhdmUgaW50ZXJj
-aGFuZ2FibGUgSVBDL1JQQyBsYXllciBhbmQgdGhhdCB0Y3RpLWltcGxlbWVudGF0aW9ucyBjb3Vs
-ZCBiZQogcHJvdmlkZWQgYXQgYW55IGxhdGVyIHRpbWUgaW5kZXBlbmRlbnRseSBvZiB0aGUgcmVz
-dCBvZiB0aGUgdHNzLiBTaW1pbGFyIHRvIE9wZW5TU0wgZW5naW5lcyBvciBQS0NTMTEgLnNvIGZp
-bGVzLiBTbyB3ZSBjYW4gY29uc2lkZXIgdGN0aSBsaWJyYXJpZXMgdG8gYWN0dWFsbHkgbmV2ZXIg
-Y2hhbmdlLjwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+R2l2ZW4gdGhpcywgd2hhdCB3b3Vs
-ZCB5b3UgY29uc2lkZXIgdGhlIGJlc3QgYXBwcm9hY2ggPyBWZXJzaW9uIHRoZW0gYW55d2F5IGlz
-IHdhcyBJIHVuZGVyc3RhbmQgZnJvbSB0aGlzID88L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2
-IHN0eWxlPSJmb250LWZhbWlseTogVGltZXMgTmV3IFJvbWFuOyBjb2xvcjogIzAwMDAwMDsgZm9u
-dC1zaXplOiAxNnB4Ij4KPGhyIHRhYmluZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwRjkyNDc0OCIg
-c3R5bGU9ImRpcmVjdGlvbjogbHRyOyI+PGZvbnQgc2l6ZT0iMiIgZmFjZT0iVGFob21hIiBjb2xv
-cj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IFRyZXZvciBXb2VybmVyIFt0d29lcm5lckBnbWFpbC5j
-b21dPGJyPgo8Yj5TZW50OjwvYj4gU2F0dXJkYXksIEp1bmUgMDIsIDIwMTggMDQ6MTk8YnI+Cjxi
-PlRvOjwvYj4gRnVjaHMsIEFuZHJlYXM8YnI+CjxiPkNjOjwvYj4gUGhpbGlwIFRyaWNjYTsgdHBt
-MkBsaXN0cy4wMS5vcmc8YnI+CjxiPlN1YmplY3Q6PC9iPiBSZTogW3RwbTJdIGRsb3BlbigpJ2lu
-ZyByYXcgLnNvIGZpbGVzIGNvbnNpZGVyZWQgYmFkPGJyPgo8L2ZvbnQ+PGJyPgo8L2Rpdj4KPGRp
-dj48L2Rpdj4KPGRpdj4KPGRpdiBkaXI9Imx0ciI+CjxkaXYgY2xhc3M9ImdtYWlsX2V4dHJhIj4K
-PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPkl0IHNlZW1zIG9kZCBmb3IgdGhpcyBwcm9qZWN0IHdv
-dWxkIHNheSAmcXVvdDt3ZSBkb24ndCB3YW50IHRvIGhhdmUgdG8gZGVhbCB3aXRoIHZlcnNpb25p
-bmcmcXVvdDsuIEFyZW4ndCB3ZSBub3csIGFzIHdlIHNwZWFrLCB3aXRuZXNzaW5nIGEgbm9uLWJh
-Y2t3YXJkcy1jb21wYXRpYmxlIEFQSSB2ZXJzaW9uIGJyZWFrIHdpdGggVFNTPyBIb3cgYXJlIHVz
-ZXJzIHN1cHBvc2VkIHRvIGRlYWwgd2l0aCB0aGlzPyBUaGVyZSBhcmUKIGV4aXN0aW5nIGFwcHMg
-dGhhdCBleHBlY3QgdGhlIG9sZCBUU1MgYW5kIHRoZXkgd2lsbCBuZXZlciBiZSB1cGRhdGVkLiBO
-b3cgdGhlIFRTUyBpcyBjaGFuZ2luZyBpbiBzdWNoIGEgd2F5IHRoYXQgYWxsIHRob3NlIHByb2dy
-YW1zIHdpbGwgYnJlYWsgaWYgdGhleSB0cnkgdG8gbGluayB0byBhbmQgcnVuIHdpdGggdGhlIG5l
-dyBzaGFyZWQgbGlicmFyaWVzLiBJZiB0aG9zZSBsaWJyYXJpZXMgYXJlbid0IHZlcnNpb25lZCwg
-aG93IGFyZSB0aGV5LAogb3IgdGhlIHJ1bnRpbWUgbGlua2VyIHN1cHBvc2VkIHRvIGtub3cgd2hh
-dCB0byBkbz88L2Rpdj4KPGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxicj4KPC9kaXY+CjxkaXYg
-Y2xhc3M9ImdtYWlsX3F1b3RlIj5JZiBldmVyeW9uZSBmb2xsb3dlZCBjb252ZW50aW9uLCB0aGUg
-b2xkIGFwcHMgd291bGQgbG9vayBmb3IgYW5kIHJ1bnRpbWUtbGluayBhZ2FpbnN0LCBzYXksIGxp
-YnRzcy5zby4wLiBOb3cgdGhhdCB0aGUgQVBJIGhhcyBjaGFuZ2VkLCB0aGUgbmV3IGxpYnJhcnkg
-c2hvdWxkIGJlIGNhbGxlZCBsaWJ0c3Muc28uMS4gTmV3IGFwcHMgY2FuIGxpbmsgYWdhaW5zdCB0
-aGlzIG5ldyBsaWJyYXJ5LCBhbmQgZXZlcnl0aGluZwogd2lsbCB3b3JrLiBEaXN0cmlidXRpb25z
-IGFyZSB3ZWxjb21lIHRvIHByb3ZpZGUgdGhlIG9sZCBUU1MgbGlicmFyeSwgb3IgdGhlIG5ldyBv
-bmUsIG9yIGJvdGgsIG9yIG5laXRoZXIuIEFwcGxpY2F0aW9ucyB0aGF0IGFyZW4ndCB1cGRhdGVk
-IGFuZCBleHBlY3QgdGhlIG9sZCBBUEkgd2lsbCBjb250aW51ZSB0byBydW50aW1lLWxpbmsgYWdh
-aW5zdCBsaWJ0c3Muc28uMCwgYW5kIG5ldyBhcHBzIG9yIG9sZCBhcHBzIHRoYXQgYXJlIHVwZGF0
-ZWQgd2lsbAogcnVudGltZS1saW5rIGFnYWluc3QgbGlidHNzLnNvLjEuIE5vIGNvbmZsaWN0cywg
-bm8gaXNzdWVzLjwvZGl2Pgo8ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGJyPgo8L2Rpdj4KPGRp
-diBjbGFzcz0iZ21haWxfcXVvdGUiPlRoZSAmcXVvdDtzaGFyZWQgbGlicmFyeSBoZWxsJnF1b3Q7
-IG9jY3VycyB3aGVuIGFsbCB2ZXJzaW9uaW5nIGlzIHJlbW92ZWQgYW5kIGV2ZXJ5b25lIGFzc3Vt
-ZXMgdGhlcmUncyBqdXN0IG9uZSwgdW52ZXJzaW9uZWQgbGlicmFyeSBhZ2FpbnN0IHdoaWNoIHRv
-IGxpbms6IGxpYnRzcy5zby4gSG93IHdpbGwgZGlzdHJvcyBwcm92aWRlIHN1cHBvcnQgZm9yIG9s
-ZCBhbmQgbmV3IGFwcHM/IEhvdyB3aWxsIGRldmVsb3BlcnMKIGV2ZXIga25vdyB3aGljaCBvbmUg
-aXMgaW5zdGFsbGVkPzwvZGl2Pgo8ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGJyPgo8L2Rpdj4K
-PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPlZlcnNpb25lZCBsaWJyYXJpZXMgYXJlIG5vdCBhIG5l
-dyBpZGVhLiBVbnZlcnNpb25lZCBzaGFyZWQtb2JqZWN0IGZpbGVzIHdpbGwgbWFrZSBpdCBkaWZm
-aWN1bHQgZm9yIGRpc3RyaWJ1dGlvbnMgdG8gcGFja2FnZSB0aGVzZSBsaWJyYXJpZXMsIHRvIHRo
-ZSBwb2ludCB3aGVyZSB0aGV5IG1pZ2h0IGRlY2lkZSB0byBub3QgYm90aGVyIHRyeWluZyB0byBw
-YWNrYWdlIHRoZW0gYXQgYWxsLiBVbnZlcnNpb25lZAogc2hhcmVkLW9iamVjdHMgd2lsbCBhbHdh
-eXMgYmUgYSBjb250aW51YWwgc291cmNlIG9mIGluc3RhYmlsaXR5IGZvciBhbnl0aGluZyB0aGF0
-IHRyaWVzIHRvIHVzZSB0aGVtLiBXaXRoIHVudmVyc2lvbmVkIHNoYXJlZCBsaWJyYXJpZXMsIHRo
-ZSBvbmx5IHdheSBvbGQgYW5kIG5ldyBhcHBzIGNhbiBleGlzdCBvbiB0aGUgc2FtZSBzeXN0ZW0g
-aXMgaWYgdGhlc2UgbGlicmFyaWVzIGFyZSBpbnN0YWxsZWQgdG8gZGlmZmVyZW50IGxvY2F0aW9u
-cyBhbmQKIHRoZSBFTEYgaGVhZGVycyBhcmUgbWFudWFsbHkgaGFyZC1jb2RlZCB0byBsb29rIGlu
-IG9uZSBwbGFjZSBhbmQgbm90IHRoZSBvdGhlciBmb3IgdGhlIGNvcnJlY3QgbGlicmFyeSBhZ2Fp
-bnN0IHdoaWNoIHRvIGxpbmsuIFdoYXQgYWJvdXQgY29uZmlndXJpbmcgYW5kIGNvbXBpbGluZyBh
-cHBzIHRoYXQgd2FudCB0byB1c2UgdGhpcyBsaWJyYXJ5PyBUaGUgLi9jb25maWd1cmUgc3RlcCB3
-aWxsIHN1Y2NlZWQgKGJlY2F1c2UgaXQgd291bGQgbG9vawogZm9yIGxpYnRzcy5zbyBhbmQgZmlu
-ZCBpdCkgYnV0IHRoZSBhY3R1YWwgY29tcGlsZS10aW1lIGxpbmtpbmcgd291bGQgZmFpbCBiZWNh
-dXNlLCBpbmV2aXRhYmx5LCBzeW1ib2xzIHdvbid0IGJlIGZvdW5kIG9yIHJlc29sdmVkLiBOZXZl
-ciBtaW5kIHdoYXQgd2lsbCBoYXBwZW4gYXQgcnVudGltZSA6LSk8L2Rpdj4KPGRpdiBjbGFzcz0i
-Z21haWxfcXVvdGUiPjxicj4KPC9kaXY+CjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj5UaGVzZSBj
-b252ZW50aW9ucyAodGhhdCBsaWJyYXJ5LnNvLk4gaXMgd2hhdCBzaG91bGQgYmUgcHJvdmlkZWQg
-YW5kIGxpbmtlZCBhZ2FpbnN0IGFuZCB0aGF0IGxpYnJhcnkuc28gaXMganVzdCBhIGRldmVsb3Bl
-ciBjcnV0Y2ggZm9yIGRldmVsb3BtZW50IHRpbWUgb25seSkgYXJlIHZlcnkgb2xkIGFuZCBpbmdy
-YWluZWQgaW4gdGhlIHdheSBhbGwgTGludXggZGlzdHJpYnV0aW9ucyBwYWNrYWdlIGxpYnJhcmll
-cy48L2Rpdj4KPGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxicj4KPC9kaXY+CjxkaXYgY2xhc3M9
-ImdtYWlsX3F1b3RlIj5Vbmxlc3MsIG9mIGNvdXJzZSwgeW91IHdhbnQgdG8gdGFrZSBvbiB0aGUg
-dGFzayBvZiBmaW5kaW5nIGFuZCB1cGRhdGluZyBldmVyeSBzaW5nbGUgYXBwbGljYXRpb24gdGhh
-dCBldmVyIGxpbmtzIHRvIHlvdXIgbGlicmFyeSBldmVyeSB0aW1lIHRoZXJlIGlzIGFuIEFQSSBj
-aGFuZ2UsIGZvciB0aGUgcmVzdCBvZiBldGVybml0eSA7LSk8L2Rpdj4KPGRpdiBjbGFzcz0iZ21h
-aWxfcXVvdGUiPjxicj4KPC9kaXY+CjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj5PbiBGcmksIEp1
-biAxLCAyMDE4IGF0IDEyOjUxIFBNLCBGdWNocywgQW5kcmVhcyA8c3BhbiBkaXI9Imx0ciI+CiZs
-dDs8YSBocmVmPSJtYWlsdG86YW5kcmVhcy5mdWNoc0BzaXQuZnJhdW5ob2Zlci5kZSIgdGFyZ2V0
-PSJfYmxhbmsiIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciI+YW5kcmVhcy5mdWNoc0BzaXQuZnJh
-dW5ob2Zlci5kZTwvYT4mZ3Q7PC9zcGFuPiB3cm90ZTo8YnI+CjxibG9ja3F1b3RlIGNsYXNzPSJn
-bWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowIDAgMCAuOGV4OyBib3JkZXItbGVmdDoxcHggI2Nj
-YyBzb2xpZDsgcGFkZGluZy1sZWZ0OjFleCI+CjxkaXY+CjxkaXYgc3R5bGU9ImRpcmVjdGlvbjps
-dHI7IGZvbnQtZmFtaWx5OlRhaG9tYTsgY29sb3I6IzAwMDAwMDsgZm9udC1zaXplOjEwcHQiPgo8
-ZGl2PlAuUy4gb3Igc2hvdWxkIHdlIGp1c3QgaW5zdGFsbCBldmVyeXRoaW5nIGFzIC5zby4wIGFu
-ZCBtZXJlbHkgbmV2ZXIgaW1hZ2luZSB0byBoYXZlIGEgLnNvLjEgZmlsZSBmb3I8L2Rpdj4KPGRp
-dj5hbnkgdGN0aSBldmVyID88L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2PkknbSBub3QgdGhh
-dCBmYW1pbGlhciB3aXRoIGNvbnZlbnRpb25zIGhlcmUuPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0i
-Zm9udC1mYW1pbHk6VGltZXMgTmV3IFJvbWFuOyBjb2xvcjojMDAwMDAwOyBmb250LXNpemU6MTZw
-eCI+Cjxocj4KPGRpdiBpZD0ibV81NzE4NjEwMDA1NjYzMjM5ODg3ZGl2UnBGMTEwNzQ5IiBzdHls
-ZT0iZGlyZWN0aW9uOmx0ciI+PGZvbnQgc2l6ZT0iMiIgZmFjZT0iVGFob21hIiBjb2xvcj0iIzAw
-MDAwMCI+PGI+RnJvbTo8L2I+IEZ1Y2hzLCBBbmRyZWFzPGJyPgo8Yj5TZW50OjwvYj4gRnJpZGF5
-LCBKdW5lIDAxLCAyMDE4IDE4OjQ5PGJyPgo8Yj5Ubzo8L2I+IFRyZXZvciBXb2VybmVyOyBQaGls
-aXAgVHJpY2NhPGJyPgo8Yj5DYzo8L2I+IDxhIGhyZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9y
-ZyIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciI+CnRwbTJAbGlzdHMu
-MDEub3JnPC9hPjxicj4KPGI+U3ViamVjdDo8L2I+IFJFOiBbdHBtMl0gZGxvcGVuKCknaW5nIHJh
-dyAuc28gZmlsZXMgY29uc2lkZXJlZCBiYWQ8YnI+CjwvZm9udD48YnI+CjwvZGl2Pgo8ZGl2Pgo8
-ZGl2IGNsYXNzPSJoNSI+CjxkaXY+PC9kaXY+CjxkaXY+CjxkaXYgc3R5bGU9ImRpcmVjdGlvbjps
-dHI7IGZvbnQtZmFtaWx5OlRhaG9tYTsgY29sb3I6IzAwMDAwMDsgZm9udC1zaXplOjEwcHQiPgo8
-ZGl2PkkganVzdCB3YW50ZWQgdG8gbWFrZSBzdXJlIHdlJ3JlIG5vdCBkb2luZyB0aGUgc2FtZSB3
-b3JrIHR3aWNlLjwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+VGhlIChvbmUpIHN5bWJvbCBU
-c3MyX1RjdGlfR2V0SW5mbygpIGV4cG9ydGVkIGJ5IFRDVEktc28tZmlsZXMgaXMgZml4ZWQuIFRo
-ZSBkYXRhIHN0cnVjdHVyZXM8L2Rpdj4KPGRpdj5yZXR1cm5lZCBieSB0aGlzICh0aGUgaW5mbyBp
-dHNlbGYgYW5kIHRoZSBmdW5jdGlvbiBsb29rdXAgdGFibGUpIGFyZSB2ZXJzaW9uZWQgaW4gdGhl
-aXIgZmlyc3QgZmllbGQuPC9kaXY+CjxkaXY+PGJyPgo8L2Rpdj4KPGRpdj5UaGUgcHVycG9zZSBv
-ZiB0aGlzIHdhcyB0byBub3QgcmVxdWlyZSBzby1maWxlIHZlcnNpb25pbmcuPC9kaXY+CjxkaXY+
-PGJyPgo8L2Rpdj4KPGRpdj5HaXZlbiB0aGlzIGJhY2tncm91bmQsIHdvdWxkIHlvdSBhZ3JlZSB0
-aGF0IHdlIHNob3VsZCBub3QgZXZlbiBzdGFydCBpbnRyb2R1Y2luZyB2ZXJzaW9uZWQ8L2Rpdj4K
-PGRpdj5zby1maWxlIChlLmcuIHRzczJfdGN0aV9zb2NrZXQuc28uMCkgYnV0IG9ubHkgZXZlciBk
-ZXBsb3kgdW52ZXJzaW9uZWQgc28tZmlsZXMgKHRzczJfdGN0aV9zb2NrZXQuc28pLjwvZGl2Pgo8
-ZGl2Pjxicj4KPC9kaXY+CjxkaXY+PGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
-VGltZXMgTmV3IFJvbWFuOyBjb2xvcjojMDAwMDAwOyBmb250LXNpemU6MTZweCI+Cjxocj4KPGRp
-diBpZD0ibV81NzE4NjEwMDA1NjYzMjM5ODg3ZGl2UnBGNTU3OTg2IiBzdHlsZT0iZGlyZWN0aW9u
-Omx0ciI+PGZvbnQgc2l6ZT0iMiIgZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJv
-bTo8L2I+IHRwbTIgWzxhIGhyZWY9Im1haWx0bzp0cG0yLWJvdW5jZXNAbGlzdHMuMDEub3JnIiB0
-YXJnZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIj50cG0yLWJvdW5jZXNAbGlz
-dHMuMDEub3JnPC9hPl0gb24gYmVoYWxmIG9mCiBUcmV2b3IgV29lcm5lciBbPGEgaHJlZj0ibWFp
-bHRvOnR3b2VybmVyQGdtYWlsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9vcGVuZXIgbm9y
-ZWZlcnJlciI+dHdvZXJuZXJAZ21haWwuY29tPC9hPl08YnI+CjxiPlNlbnQ6PC9iPiBGcmlkYXks
-IEp1bmUgMDEsIDIwMTggMDI6MTU8YnI+CjxiPlRvOjwvYj4gUGhpbGlwIFRyaWNjYTxicj4KPGI+
-Q2M6PC9iPiA8YSBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciIHRhcmdldD0iX2JsYW5r
-IiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiPgp0cG0yQGxpc3RzLjAxLm9yZzwvYT48YnI+Cjxi
-PlN1YmplY3Q6PC9iPiBSZTogW3RwbTJdIGRsb3BlbigpJ2luZyByYXcgLnNvIGZpbGVzIGNvbnNp
-ZGVyZWQgYmFkPGJyPgo8L2ZvbnQ+PGJyPgo8L2Rpdj4KPGRpdj48L2Rpdj4KPGRpdj4KPGRpdiBk
-aXI9Imx0ciI+CjxkaXYgY2xhc3M9ImdtYWlsX2V4dHJhIj5UaGFuayB5b3UuIEkgaGFkIGJlZW4g
-d29ya2luZyBvbiB0aGlzIGZvciBwYXJ0IG9mIHRoZSBhZnRlcm5vb24gYW5kIHdhc24ndCBzdWNj
-ZXNzZnVsLCBidXQgSSB3YW50ZWQgdG8gcmFpc2UgdGhlIGZsYWcgc29vbmVyIHJhdGhlciB0aGFu
-IGxhdGVyLjwvZGl2Pgo8ZGl2IGNsYXNzPSJnbWFpbF9leHRyYSI+PGJyPgo8L2Rpdj4KPGRpdiBj
-bGFzcz0iZ21haWxfZXh0cmEiPkkgaGFkIHRyaWVkIFdpbGxpYW0ncyBwYXRjaCBpbiBpc29sYXRp
-b24sIGJ1dCBmb3VuZCBtb3JlIHdhcyBuZWVkZWQuIEkgd2FzIGdvaW5nIHRvIGRpdmUgaW50byBp
-dCBoYXJkZXIgdG9tb3Jyb3cuPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rp
-dj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Jsb2NrcXVvdGU+CjwvZGl2
-Pgo8YnI+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+
-Cg==
+Regards,
+Max
 
---===============4207380006581989883==--
+--===============3910175678221214228==--
 
