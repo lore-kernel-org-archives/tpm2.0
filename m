@@ -1,31 +1,30 @@
-Content-Type: multipart/mixed; boundary="===============8572220867282003424=="
+Content-Type: multipart/mixed; boundary="===============0758824453905795884=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: [tpm2] tpm2-abrmd 2.0 RCs
-Date: Wed, 06 Jun 2018 17:41:24 -0700
-Message-ID: <20180607004124.GE2727@intel.com>
+From: Joshua Lock <joshua.g.lock at linux.intel.com>
+Subject: [tpm2] tpm2-tools 3.1.0 release candidate
+Date: Mon, 11 Jun 2018 14:24:57 +0100
+Message-ID: <56383db7-121b-cce1-7713-b1ff2ca94cb6@linux.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8572220867282003424==
+--===============0758824453905795884==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello all,
 
-I've just taged and signed RC0 for tabrmd version 2.0.0. This release is
-compatible with the future version 2.0.0 of the tpm2-tss libraries and
-will be released soon after. The release process currently on going for
-tpm2-tss has been a bit protracted and so for the sake of time we're
-overlapping the RCs.
+I've just tagged and signed rc0 for tpm2-tools 3.1.0. The main feature =
 
-As always, feedback is very much appreciated.
+of this version of the tools is to port to tpm2-tss 2.0.
 
-https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.0.0_rc0
+Full details are in the CHANGELOG and available on the GitHub release page:
+https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.0-rc0
+
+Feedback on this rc is very much appreciated.
 
 Regards,
-Philip
+Joshua
 
---===============8572220867282003424==--
+--===============0758824453905795884==--
 
