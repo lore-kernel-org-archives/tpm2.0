@@ -1,144 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============9026864191214577446=="
+Content-Type: multipart/mixed; boundary="===============8368288781201435860=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] ESAPI StartAuthSession
-Date: Thu, 14 Jun 2018 07:52:18 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D010EB44E1A@EXCH2010B.sit.fraunhofer.de>
-In-Reply-To: CAOysEae4pJqcrr_M6rR7QtsmkAWuhA16vRsqUCJkhGeaaB4rAg@mail.gmail.com
+From: Petko Manolov <sti at nucleusys.com>
+Subject: [tpm2] seal and unseal data based on a PCR value
+Date: Wed, 20 Jun 2018 13:42:24 -0700
+Message-ID: <20180620204223.GA2642@carbon>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9026864191214577446==
+--===============8368288781201435860==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The engine will use ESYS's auto-config of a tpm. Thus is searches in the fo=
-llowing order:
-- TABRMD via DBUS
-- /dev/tpmrm0
-- /dev/tpm0
-- Simulator at localhost:2321
+	Hello guys,
 
-If non of those are found, it errors.
-So if you do not have 1-3 available it will connect to the simulator.
+I know this one has been asked many times, but i could not find a definitiv=
+e =
 
-After the 2.0 release of tpm2-tss, a feature will be added to choose the TP=
-M via environment variable:
-see https://github.com/tpm2-software/tpm2-tss/pull/1049
+howto, exact steps, etc.
 
-Cheers,
-Andreas
-________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Davide Rutigliano [da=
-vide.ruti(a)gmail.com]
-Sent: Thursday, June 14, 2018 09:43
-To: tpm2(a)lists.01.org
-Subject: Re: [tpm2] ESAPI StartAuthSession
+This project requires that a piece of data is being sealed to a TPM2 based =
+on a =
 
-And another question, is it possible to use the engine with tpm simulator o=
-r it is implemented only with devices configuration?
+PCR value and then unsealed from TBoot.  I've harvested some bits an pieces=
+ from =
 
-If so, do you think could be a good enhancement to work with the software t=
-pm also?
+various discussions and still can't build a coherent picture in my mind.
 
-I think it's not a long work so maybe I can do that.
+What would be the best place to start reading up on this?
 
-Regards, Davide
 
-Il lun 30 apr 2018, 22:16 Davide Rutigliano <davide.ruti(a)gmail.com<mailto=
-:davide.ruti(a)gmail.com>> ha scritto:
-Hello everyone,
+cheers,
+Petko
 
-I'm in trouble with Esys_StartAuthSession because I receive continuously th=
-is error and I cannot understand why:
-
-"""
-ERROR:esys_iutil:esapi/esapi_util/esys_iutil.c:879:esys_GetResourceObject()=
- Error: Esys handle does not exist (70018).
-ERROR:esys:esapi/esapi/Esys_StartAuthSession.c:124:Esys_StartAuthSession() =
-Error in async function ErrorCode (0x00070018)
-TPM2_StartAuthSession failed with 0x70018
-"""
-
-I suppose I'm doing something wrong with session handles but I don't know w=
-hat.
-
-Could someone help me please?
-
-Thanks in advance,
-
-Davide Rutigliano.
-
---===============9026864191214577446==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjxzdHlsZSB0eXBlPSJ0ZXh0
-L2NzcyIgaWQ9Im93YVBhcmFTdHlsZSI+UCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9
-PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBmcHN0eWxlPSIxIiBvY3NpPSIwIj4KPGRpdiBzdHlsZT0i
-ZGlyZWN0aW9uOiBsdHI7Zm9udC1mYW1pbHk6IFRhaG9tYTtjb2xvcjogIzAwMDAwMDtmb250LXNp
-emU6IDEwcHQ7Ij4KPGRpdj5UaGUgZW5naW5lIHdpbGwgdXNlIEVTWVMncyBhdXRvLWNvbmZpZyBv
-ZiBhIHRwbS4gVGh1cyBpcyBzZWFyY2hlcyBpbiB0aGUgZm9sbG93aW5nIG9yZGVyOjwvZGl2Pgo8
-ZGl2Pi0gVEFCUk1EIHZpYSBEQlVTPC9kaXY+CjxkaXY+LSAvZGV2L3RwbXJtMDwvZGl2Pgo8ZGl2
-Pi0gL2Rldi90cG0wPC9kaXY+CjxkaXY+LSBTaW11bGF0b3IgYXQgbG9jYWxob3N0OjIzMjE8L2Rp
-dj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2PklmIG5vbiBvZiB0aG9zZSBhcmUgZm91bmQsIGl0IGVy
-cm9ycy48L2Rpdj4KPGRpdj5TbyBpZiB5b3UgZG8gbm90IGhhdmUgMS0zIGF2YWlsYWJsZSBpdCB3
-aWxsIGNvbm5lY3QgdG8gdGhlIHNpbXVsYXRvci48L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2
-PkFmdGVyIHRoZSAyLjAgcmVsZWFzZSBvZiB0cG0yLXRzcywgYSBmZWF0dXJlIHdpbGwgYmUgYWRk
-ZWQgdG8gY2hvb3NlIHRoZSBUUE0gdmlhIGVudmlyb25tZW50IHZhcmlhYmxlOjwvZGl2Pgo8ZGl2
-PnNlZSA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9w
-dWxsLzEwNDkiIHRhcmdldD0iX2JsYW5rIj4KaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdh
-cmUvdHBtMi10c3MvcHVsbC8xMDQ5PC9hPjwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+Q2hl
-ZXJzLDwvZGl2Pgo8ZGl2PkFuZHJlYXM8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWls
-eTogVGltZXMgTmV3IFJvbWFuOyBjb2xvcjogIzAwMDAwMDsgZm9udC1zaXplOiAxNnB4Ij4KPGhy
-IHRhYmluZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwRjMwMjcwMiIgc3R5bGU9ImRpcmVjdGlvbjog
-bHRyOyI+PGZvbnQgc2l6ZT0iMiIgZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJv
-bTo8L2I+IHRwbTIgW3RwbTItYm91bmNlc0BsaXN0cy4wMS5vcmddIG9uIGJlaGFsZiBvZiBEYXZp
-ZGUgUnV0aWdsaWFubyBbZGF2aWRlLnJ1dGlAZ21haWwuY29tXTxicj4KPGI+U2VudDo8L2I+IFRo
-dXJzZGF5LCBKdW5lIDE0LCAyMDE4IDA5OjQzPGJyPgo8Yj5Ubzo8L2I+IHRwbTJAbGlzdHMuMDEu
-b3JnPGJyPgo8Yj5TdWJqZWN0OjwvYj4gUmU6IFt0cG0yXSBFU0FQSSBTdGFydEF1dGhTZXNzaW9u
-PGJyPgo8L2ZvbnQ+PGJyPgo8L2Rpdj4KPGRpdj48L2Rpdj4KPGRpdj4KPGRpdiBkaXI9ImF1dG8i
-PkFuZCBhbm90aGVyIHF1ZXN0aW9uLCBpcyBpdCBwb3NzaWJsZSB0byB1c2UgdGhlIGVuZ2luZSB3
-aXRoIHRwbSBzaW11bGF0b3Igb3IgaXQgaXMgaW1wbGVtZW50ZWQgb25seSB3aXRoIGRldmljZXMg
-Y29uZmlndXJhdGlvbj8KPGRpdiBkaXI9ImF1dG8iPjxicj4KPC9kaXY+CjxkaXYgZGlyPSJhdXRv
-Ij5JZiBzbywgZG8geW91IHRoaW5rIGNvdWxkIGJlIGEgZ29vZCBlbmhhbmNlbWVudCB0byB3b3Jr
-IHdpdGggdGhlIHNvZnR3YXJlIHRwbSBhbHNvPyZuYnNwOzwvZGl2Pgo8ZGl2IGRpcj0iYXV0byI+
-PGJyPgo8L2Rpdj4KPGRpdiBkaXI9ImF1dG8iPkkgdGhpbmsgaXQncyBub3QgYSBsb25nIHdvcmsg
-c28gbWF5YmUgSSBjYW4gZG8gdGhhdC4mbmJzcDs8L2Rpdj4KPGRpdiBkaXI9ImF1dG8iPjxicj4K
-PC9kaXY+CjxkaXYgZGlyPSJhdXRvIj5SZWdhcmRzLCBEYXZpZGUmbmJzcDs8L2Rpdj4KPC9kaXY+
-Cjxicj4KPGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPgo8ZGl2IGRpcj0ibHRyIj5JbCBsdW4gMzAg
-YXByIDIwMTgsIDIyOjE2IERhdmlkZSBSdXRpZ2xpYW5vICZsdDs8YSBocmVmPSJtYWlsdG86ZGF2
-aWRlLnJ1dGlAZ21haWwuY29tIiB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVy
-cmVyIj5kYXZpZGUucnV0aUBnbWFpbC5jb208L2E+Jmd0OyBoYSBzY3JpdHRvOjxicj4KPC9kaXY+
-CjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowIDAgMCAuOGV4
-OyBib3JkZXItbGVmdDoxcHggI2NjYyBzb2xpZDsgcGFkZGluZy1sZWZ0OjFleCI+CjxkaXYgZGly
-PSJsdHIiPkhlbGxvIGV2ZXJ5b25lLAo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+CjxkaXYgc3R5bGU9
-ImZvbnQtc2l6ZToxMi44MDAwMDAxOTA3MzQ4NjNweCI+SSdtIGluIHRyb3VibGUgd2l0aCBFc3lz
-X1N0YXJ0QXV0aFNlc3Npb24gYmVjYXVzZSBJIHJlY2VpdmUgY29udGludW91c2x5IHRoaXMgZXJy
-b3IgYW5kIEkgY2Fubm90IHVuZGVyc3RhbmQgd2h5OjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LXNp
-emU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtc2l6
-ZToxMi44MDAwMDAxOTA3MzQ4NjNweCI+JnF1b3Q7JnF1b3Q7JnF1b3Q7PC9kaXY+CjxkaXYgc3R5
-bGU9ImZvbnQtc2l6ZToxMi44MDAwMDAxOTA3MzQ4NjNweCI+CjxkaXY+RVJST1I6ZXN5c19pdXRp
-bDplc2FwaS9lc2FwaV91dGlsL2VzeXNfaXV0aWwuYzo4Nzk6ZXN5c19HZXRSZXNvdXJjZU9iamVj
-dCgpIEVycm9yOiBFc3lzIGhhbmRsZSBkb2VzIG5vdCBleGlzdCAoNzAwMTgpLiZuYnNwOzwvZGl2
-Pgo8ZGl2PkVSUk9SOmVzeXM6ZXNhcGkvZXNhcGkvRXN5c19TdGFydEF1dGhTZXNzaW9uLmM6MTI0
-OkVzeXNfU3RhcnRBdXRoU2Vzc2lvbigpIEVycm9yIGluIGFzeW5jIGZ1bmN0aW9uIEVycm9yQ29k
-ZSAoMHgwMDA3MDAxOCkmbmJzcDs8L2Rpdj4KPGRpdj5UUE0yX1N0YXJ0QXV0aFNlc3Npb24gZmFp
-bGVkIHdpdGggMHg3MDAxODwvZGl2Pgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1zaXplOjEyLjgw
-MDAwMDE5MDczNDg2M3B4Ij4mcXVvdDsmcXVvdDsmcXVvdDs8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
-dC1zaXplOjEyLjgwMDAwMDE5MDczNDg2M3B4Ij48YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250
-LXNpemU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPkkgc3VwcG9zZSBJJ20gZG9pbmcgc29tZXRoaW5n
-IHdyb25nIHdpdGggc2Vzc2lvbiBoYW5kbGVzIGJ1dCBJIGRvbid0IGtub3cgd2hhdC48L2Rpdj4K
-PGRpdiBzdHlsZT0iZm9udC1zaXplOjEyLjgwMDAwMDE5MDczNDg2M3B4Ij48YnI+CjwvZGl2Pgo8
-ZGl2IHN0eWxlPSJmb250LXNpemU6MTIuODAwMDAwMTkwNzM0ODYzcHgiPkNvdWxkIHNvbWVvbmUg
-aGVscCBtZSBwbGVhc2U/PC9kaXY+CjwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+VGhhbmtz
-IGluIGFkdmFuY2UsPC9kaXY+CjxkaXY+PGJyPgo8L2Rpdj4KPGRpdj5EYXZpZGUgUnV0aWdsaWFu
-by48L2Rpdj4KPC9kaXY+CjwvYmxvY2txdW90ZT4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+
-CjwvYm9keT4KPC9odG1sPgo=
-
---===============9026864191214577446==--
+--===============8368288781201435860==--
 
