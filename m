@@ -1,81 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============8824705875191274747=="
+Content-Type: multipart/mixed; boundary="===============3564286620921464548=="
 MIME-Version: 1.0
-From: Petko Manolov <sti at nucleusys.com>
-Subject: Re: [tpm2] seal and unseal data based on a PCR value
-Date: Thu, 21 Jun 2018 10:38:41 -0700
-Message-ID: <20180621173840.GA5970@carbon>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649BD9E1E@ORSMSX101.amr.corp.intel.com
+From: Joshua Lock <joshua.g.lock at linux.intel.com>
+Subject: Re: [tpm2] tpm2-tools 3.1.0 release candidate
+Date: Thu, 21 Jun 2018 22:09:50 +0100
+Message-ID: <999d2b37-5230-60d0-a992-71c3b5d69835@linux.intel.com>
+In-Reply-To: 56383db7-121b-cce1-7713-b1ff2ca94cb6@linux.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8824705875191274747==
+--===============3564286620921464548==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 18-06-20 23:11:05, Roberts, William C wrote:
-> I just uploaded a wiki that has the bits on seal/unseal =
+On 11/06/2018 14:24, Joshua Lock wrote:
+> Hello all,
+> =
 
-> https://github.com/tpm2-software/tpm2-tools/wiki/Creating-Objects
+> I've just tagged and signed rc0 for tpm2-tools 3.1.0. The main feature =
 
-Thanks for this pointer.  It's very usefull.
+> of this version of the tools is to port to tpm2-tss 2.0.
+> =
 
-> You need PCR policy support on top of what that wiki discusses, which we =
-have =
+> Full details are in the CHANGELOG and available on the GitHub release pag=
+e:
+> https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.0-rc0
+> =
 
-> a script test for here: test/integration/tests/unseal.sh
+> Feedback on this rc is very much appreciated.
 
-Yeah, i finally managed to get it to work with the latest stable tpm2-tools.
+The RC window was very quiet, with no feedback received on the tools.
 
-> If you need to implement natively, the tools will serve as reference code=
- on =
+Now that the 2.0.0 release of the TSS has been made I've tagged, signed =
 
-> how to piece it all together.
+and released the 3.0.1 version of the tools for use with them.
 
-So far i only need to use the tools.  Using the API is not on the roadmap y=
-et.
+https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.0
 
+Regards,
+Joshua
 
-cheers,
-Petko
-
-
-> > -----Original Message-----
-> > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Petko Mano=
-lov
-> > Sent: Wednesday, June 20, 2018 1:42 PM
-> > To: tpm2(a)lists.01.org
-> > Subject: [tpm2] seal and unseal data based on a PCR value
-> > =
-
-> > 	Hello guys,
-> > =
-
-> > I know this one has been asked many times, but i could not find a defin=
-itive
-> > howto, exact steps, etc.
-> > =
-
-> > This project requires that a piece of data is being sealed to a TPM2 ba=
-sed on a
-> > PCR value and then unsealed from TBoot.  I've harvested some bits an pi=
-eces
-> > from various discussions and still can't build a coherent picture in my=
- mind.
-> > =
-
-> > What would be the best place to start reading up on this?
-> > =
-
-> > =
-
-> > cheers,
-> > Petko
-> > _______________________________________________
-> > tpm2 mailing list
-> > tpm2(a)lists.01.org
-> > https://lists.01.org/mailman/listinfo/tpm2
->=20
-
---===============8824705875191274747==--
+--===============3564286620921464548==--
 
