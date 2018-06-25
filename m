@@ -1,119 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============6978227524710879688=="
+Content-Type: multipart/mixed; boundary="===============3114714982689437422=="
 MIME-Version: 1.0
-From: Stefan Berger <stefanb at linux.vnet.ibm.com>
-Subject: Re: [tpm2] [Qemu-devel] Choosing PCR banks for swtpm's TPM 2
-Date: Mon, 25 Jun 2018 12:23:17 -0400
-Message-ID: <8e7b0363-28ec-b2fa-19bf-c1820c8a75c7@linux.vnet.ibm.com>
-In-Reply-To: 20180625161147.GH2390@work-vm
+From: Tianyu Qi <tqi100 at syr.edu>
+Subject: [tpm2] What is the exact meaning of "parameters" in cpHash?
+Date: Mon, 25 Jun 2018 17:06:30 +0000
+Message-ID: <BLUPR01MB227607224352A2C8DCC23DE854A0@BLUPR01MB227.prod.exchangelabs.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6978227524710879688==
+--===============3114714982689437422==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 06/25/2018 12:11 PM, Dr. David Alan Gilbert wrote:
-> * Stefan Berger (stefanb(a)linux.vnet.ibm.com) wrote:
->> On 06/25/2018 11:29 AM, Dr. David Alan Gilbert wrote:
->>> * Stefan Berger (stefanb(a)linux.vnet.ibm.com) wrote:
->>>> On 06/25/2018 11:18 AM, Dr. David Alan Gilbert wrote:
->>>>> * Stefan Berger (stefanb(a)linux.vnet.ibm.com) wrote:
->>>>>> Hi!
->>>>>>
->>>>>>    =C2=A0I am sending this email to solicit input on the choice of t=
-he PCR banks to
->>>>>> enable for swtpm's TPM 2. I have currently enabled 4 PCR banks for
->>>>>> SHA{1,256,384,512}. The downside of this is that running the TPM 2 w=
-ith so
->>>>>> many PCR banks has a performance impact when the Linux integrity mea=
-surement
->>>>>> architecture is used and has to extend measurements into all PCR ban=
-ks,
->>>>>> which Linux does already.
->>>>>>
->>>>>> TPM 2 has the PCR_Allocate() command for a user to select the PCR ba=
-nks to
->>>>>> use. This command allows to make some PCR banks invisible. The chang=
-e has to
->>>>>> be done through the firmware and has the downside that the TPM2 does=
- not
->>>>>> support TPM2_Shutdown(SU_STATE) after this command was used. This pr=
-events
->>>>>> suspend/resume from working properly. So, it seems that one shouldn'=
-t have
->>>>>> to use this command, which in turn means the number of PCR banks sho=
-uld be
->>>>>> small.
->>>>>>
->>>>>> Another complication with the swtpm is the upgrade path. Suspended V=
-Ms will
->>>>>> expect that the PCR banks that were available before the suspend wil=
-l be
->>>>>> available after the resume and a possible swtpm upgrade. This in tur=
-n means
->>>>>> that the PCR banks should be chosen now and we'll have to stick with=
- them.
->>>>>>
->>>>>> That said, my suggestion would be to enable only PCR banks for SHA25=
-6 for
->>>>>> 'now' and SHA512 for the future. Having two PCR banks should enable =
-decent
->>>>>> performance. If someone wants to have better performance he will hav=
-e to go
->>>>>> through the firmware to select the PCR banks at the expense of loosi=
-ng
->>>>>> suspend/resume support.
->>>>>>
->>>>>> The change of PCR banks for the current 4 PCR banks will break the s=
-tate of
->>>>>> all swtpms.
->>>>>>
->>>>>> If you have suggestions, please let me know.
->>>>> Is this something that has to be set at compile time or could it be
->>>>> something chosen at run time (as options to the swtpm command line?)
->>>> It is a compile-time option...
->>> Hmm, that's a shame - I was hoping you'd be able to switch them at
->>> runtime (or at least hide them?) then you can solve the upgrade problem
->>> by running the new swtpm with a flag telling it to hide the new banks.
->>> I hope the ondisk formats for suspend/resume/migration are descriptive
->>> enough to be able to spot an error if you try and load one configured
->>> differently.4
->> The disk format does detect it and refuses to take the state if either t=
-here
->> are too many PCR banks or not enough.
-> What happens if there are the right number just the wrong type?
-
-The state would be rejected since they are incompatible.
-
->
->> For the initial version of swtpm we would need to define a default set of
->> PCR banks since the TPM 2 code uses compile time options to build in that
->> set of PCR banks.
-> You talk of PCR_Allocate() above as a spec-defined command to hide PCRs
-> but with the downside of breaking TPM2_Shutdown - could you implement
-> something from the commandline without that downside (I don't know how
-> PCR banks work).
-
-Like I said, during swtpm_setup TPM 2 manufacturing the set of PCR banks =
-
-would be chosen and that set would be used by that TPM 2 from then on. =
-
-Though this flexibility is not supported by the code today.
+Hi,
 
 
->
->> A future version of swtpm could expose command line options for selecting
->> the PCR banks an instance of swtpm is to run with. libtpms would be comp=
-iled
->> with support for all of them and only the chosen subset would be active
->> starting with the initial creation of a particular instance of swtpm.
-> Right, that would solve the upgrade half of the problem.
-
-For now I think an initial set of banks to go with would be appropriate.
-
- =C2=A0=C2=A0 Stefan
+I am writing implementation of TPM2_Load. When writing cpHash in computing =
+HMAC, I saw cpHash description in TPM-Rev-2.0-Part-1-Architecture-01.38 men=
+tioned there is a "parameters" parameter at last, which represents remainin=
+g command parameters. Since the cpHash will use commandCode as the first pa=
+rameter, does this "parameters" means every parameter in the command? For e=
+xample, in TPM2_Load, I need to add tag, commandSize, parentHandle, inPubli=
+c and inPrivate? If so, should I add the authorization structure after pare=
+ntHandle?
 
 
---===============6978227524710879688==--
+Regards and thanks,
+
+
+Tianyu Qi
+
+(+1) 315 278-2725
+
+EECS Department, Syracuse University
+
+--===============3114714982689437422==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+PCEtLSBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30g
+LS0+PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgaWQ9ImRpdnRhZ2RlZmF1
+bHR3cmFwcGVyIiBzdHlsZT0iZm9udC1zaXplOjEycHQ7Y29sb3I6IzAwMDAwMDtmb250LWZhbWls
+eTpDYWxpYnJpLEhlbHZldGljYSxzYW5zLXNlcmlmOyIgZGlyPSJsdHIiPgo8cCBzdHlsZT0ibWFy
+Z2luLXRvcDowO21hcmdpbi1ib3R0b206MCI+SGksJm5ic3A7PC9wPgo8cCBzdHlsZT0ibWFyZ2lu
+LXRvcDowO21hcmdpbi1ib3R0b206MCI+PGJyPgo8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7
+bWFyZ2luLWJvdHRvbTowIj5JIGFtIHdyaXRpbmcgaW1wbGVtZW50YXRpb24gb2YgVFBNMl9Mb2Fk
+LiZuYnNwO1doZW4gd3JpdGluZyBjcEhhc2gmbmJzcDtpbiBjb21wdXRpbmcgSE1BQywmbmJzcDtJ
+IHNhdyBjcEhhc2ggZGVzY3JpcHRpb24gaW4mbmJzcDs8c3Bhbj5UUE0tUmV2LTIuMC1QYXJ0LTEt
+QXJjaGl0ZWN0dXJlLTAxLjM4IG1lbnRpb25lZCZuYnNwO3RoZXJlIGlzIGEgJnF1b3Q7cGFyYW1l
+dGVycyZxdW90OyBwYXJhbWV0ZXIgYXQgbGFzdCwgd2hpY2ggcmVwcmVzZW50cwogcmVtYWluaW5n
+IGNvbW1hbmQgcGFyYW1ldGVycy4gU2luY2UgdGhlIGNwSGFzaCB3aWxsIHVzZSBjb21tYW5kQ29k
+ZSBhcyB0aGUgZmlyc3QgcGFyYW1ldGVyLCBkb2VzIHRoaXMgJnF1b3Q7cGFyYW1ldGVycyZxdW90
+OyBtZWFucyBldmVyeSBwYXJhbWV0ZXIgaW4gdGhlIGNvbW1hbmQ/IEZvciBleGFtcGxlLCBpbiBU
+UE0yX0xvYWQsIEkgbmVlZCB0byBhZGQgdGFnLCBjb21tYW5kU2l6ZSwgcGFyZW50SGFuZGxlLCBp
+blB1YmxpYyZuYnNwO2FuZCBpblByaXZhdGU/IElmIHNvLAogc2hvdWxkIEkgYWRkIHRoZSBhdXRo
+b3JpemF0aW9uIHN0cnVjdHVyZSBhZnRlciBwYXJlbnRIYW5kbGU/PC9zcGFuPjwvcD4KPHAgc3R5
+bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjAiPjxzcGFuPjxicj4KPC9zcGFuPjwvcD4K
+PHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjAiPjxzcGFuPlJlZ2FyZHMgYW5k
+IHRoYW5rcywmbmJzcDs8L3NwYW4+PC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1i
+b3R0b206MCI+PGJyPgo8L3A+CjxkaXYgaWQ9IlNpZ25hdHVyZSI+CjxkaXYgaWQ9ImRpdnRhZ2Rl
+ZmF1bHR3cmFwcGVyIiBkaXI9Imx0ciIgc3R5bGU9ImZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJn
+YigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IENhbGlicmksIEhlbHZldGljYSwgc2Fucy1zZXJpZiwg
+RW1vamlGb250LCAmcXVvdDtBcHBsZSBDb2xvciBFbW9qaSZxdW90OywgJnF1b3Q7U2Vnb2UgVUkg
+RW1vamkmcXVvdDssIE5vdG9Db2xvckVtb2ppLCAmcXVvdDtTZWdvZSBVSSBTeW1ib2wmcXVvdDss
+ICZxdW90O0FuZHJvaWQgRW1vamkmcXVvdDssIEVtb2ppU3ltYm9sczsiPgo8cD5UaWFueXUgUWk8
+L3A+CjxwPigmIzQzOzEpIDMxNSAyNzgtMjcyNTwvcD4KPHA+RUVDUyBEZXBhcnRtZW50LCBTeXJh
+Y3VzZSBVbml2ZXJzaXR5PC9wPgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
+
+--===============3114714982689437422==--
 
