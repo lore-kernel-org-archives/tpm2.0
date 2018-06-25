@@ -1,34 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============6680610808490379125=="
+Content-Type: multipart/mixed; boundary="===============7250011556141345869=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
+From: Tianyu Qi <tqi100 at syr.edu>
 Subject: Re: [tpm2] What is the exact meaning of "parameters" in cpHash?
-Date: Mon, 25 Jun 2018 10:25:18 -0700
-Message-ID: <190b50ad-e593-f2a8-af6f-6cc24e494ee3@intel.com>
-In-Reply-To: BLUPR01MB227607224352A2C8DCC23DE854A0@BLUPR01MB227.prod.exchangelabs.com
+Date: Mon, 25 Jun 2018 17:54:11 +0000
+Message-ID: <BLUPR01MB227B20D20C194E23861B53B854A0@BLUPR01MB227.prod.exchangelabs.com>
+In-Reply-To: 190b50ad-e593-f2a8-af6f-6cc24e494ee3@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6680610808490379125==
+--===============7250011556141345869==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Tadeusz,
+
+
+Thank you very much for your timely reply!
+
+
+According to first sentence in section 18.4, The commandCode indicates the =
+structure of the optional handle and parameter areas. does this mean the "p=
+arameters" in cpHash consists of the parameters after handle, but not inclu=
+de commandSize and tag? In TPM2_Load it should be inPublic and inPrivate?
+
+
+Regards and thanks,
+
+
+Tianyu Qi
+
+(+1) 315 278-2725
+
+EECS Department, Syracuse University
+
+________________________________
+From: Tadeusz Struk <tadeusz.struk(a)intel.com>
+Sent: Monday, June 25, 2018 1:25:18 PM
+To: Tianyu Qi; tpm2(a)lists.01.org
+Subject: Re: [tpm2] What is the exact meaning of "parameters" in cpHash?
+
 On 06/25/2018 10:06 AM, Tianyu Qi wrote:
-> Hi,=C2=A0
-> =
-
-> =
-
-> I am writing implementation of TPM2_Load.=C2=A0When writing cpHash=C2=A0i=
-n computing HMAC,=C2=A0I saw cpHash description in=C2=A0TPM-Rev-2.0-Part-1-=
-Architecture-01.38 mentioned=C2=A0there is a "parameters" parameter at last=
-, which represents remaining command parameters. Since the cpHash will use =
-commandCode as the first parameter, does this "parameters" means every para=
-meter in the command? For example, in TPM2_Load, I need to add tag, command=
-Size, parentHandle, inPublic=C2=A0and inPrivate? If so, should I add the au=
-thorization structure after parentHandle?
-> =
-
+> Hi,
+>
+>
+> I am writing implementation of TPM2_Load. When writing cpHash in computin=
+g HMAC, I saw cpHash description in TPM-Rev-2.0-Part-1-Architecture-01.38 m=
+entioned there is a "parameters" parameter at last, which represents remain=
+ing command parameters. Since the cpHash will use commandCode as the first =
+parameter, does this "parameters" means every parameter in the command? For=
+ example, in TPM2_Load, I need to add tag, commandSize, parentHandle, inPub=
+lic and inPrivate? If so, should I add the authorization structure after pa=
+rentHandle?
+>
 
 Hi Tianyu,
 What the spec [1] refers to as parameters is all that comes after the Autho=
@@ -40,9 +64,75 @@ ers.
 [1] https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-1=
 -Architecture-01.16.pdf
 
--- =
-
+--
 Tadeusz
 
---===============6680610808490379125==--
+--===============7250011556141345869==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
+ImRpc3BsYXk6bm9uZTsiPjwhLS0gUCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9IC0t
+Pjwvc3R5bGU+CjwvaGVhZD4KPGJvZHkgZGlyPSJsdHIiPgo8ZGl2IGlkPSJkaXZ0YWdkZWZhdWx0
+d3JhcHBlciIgc3R5bGU9ImZvbnQtc2l6ZToxMnB0O2NvbG9yOiMwMDAwMDA7Zm9udC1mYW1pbHk6
+Q2FsaWJyaSxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsiIGRpcj0ibHRyIj4KPHAgc3R5bGU9Im1hcmdp
+bi10b3A6MDttYXJnaW4tYm90dG9tOjAiPkhpIFRhZGV1c3osJm5ic3A7PC9wPgo8cCBzdHlsZT0i
+bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MCI+PGJyPgo8L3A+CjxwIHN0eWxlPSJtYXJnaW4t
+dG9wOjA7bWFyZ2luLWJvdHRvbTowIj5UaGFuayB5b3UgdmVyeSBtdWNoIGZvciB5b3VyIHRpbWVs
+eSByZXBseSE8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowIj48YnI+
+CjwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjAiPkFjY29yZGluZyB0
+byBmaXJzdCBzZW50ZW5jZSBpbiZuYnNwO3NlY3Rpb24gMTguNCwmbmJzcDs8c3Bhbj5UaGUgY29t
+bWFuZENvZGUgaW5kaWNhdGVzIHRoZSBzdHJ1Y3R1cmUgb2YgdGhlIG9wdGlvbmFsIGhhbmRsZSBh
+bmQgcGFyYW1ldGVyIGFyZWFzLiBkb2VzIHRoaXMgbWVhbiB0aGUgJnF1b3Q7cGFyYW1ldGVycyZx
+dW90OyBpbiBjcEhhc2ggY29uc2lzdHMgb2YgdGhlIHBhcmFtZXRlcnMgYWZ0ZXImbmJzcDtoYW5k
+bGUsCiBidXQgbm90IGluY2x1ZGUgY29tbWFuZFNpemUgYW5kIHRhZz8gSW4gVFBNMl9Mb2FkIGl0
+IHNob3VsZCBiZSBpblB1YmxpYyBhbmQgaW5Qcml2YXRlPzwvc3Bhbj48L3A+CjxwIHN0eWxlPSJt
+YXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowIj48c3Bhbj48L3NwYW4+PC9wPgo8cCBzdHlsZT0i
+bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MCI+PHNwYW4+PGJyPgo8L3NwYW4+PC9wPgo8cCBz
+dHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MCI+PHNwYW4+UmVnYXJkcyBhbmQgdGhh
+bmtzLCZuYnNwOzwvc3Bhbj48L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRv
+bTowIj48YnI+CjwvcD4KPGRpdiBpZD0iU2lnbmF0dXJlIj4KPGRpdiBpZD0iZGl2dGFnZGVmYXVs
+dHdyYXBwZXIiIGRpcj0ibHRyIiBzdHlsZT0iZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAs
+IDAsIDApOyBmb250LWZhbWlseTogQ2FsaWJyaSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmLCBFbW9q
+aUZvbnQsICZxdW90O0FwcGxlIENvbG9yIEVtb2ppJnF1b3Q7LCAmcXVvdDtTZWdvZSBVSSBFbW9q
+aSZxdW90OywgTm90b0NvbG9yRW1vamksICZxdW90O1NlZ29lIFVJIFN5bWJvbCZxdW90OywgJnF1
+b3Q7QW5kcm9pZCBFbW9qaSZxdW90OywgRW1vamlTeW1ib2xzOyI+CjxwPlRpYW55dSBRaTwvcD4K
+PHA+KCYjNDM7MSkgMzE1IDI3OC0yNzI1PC9wPgo8cD5FRUNTIERlcGFydG1lbnQsIFN5cmFjdXNl
+IFVuaXZlcnNpdHk8L3A+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjxociBzdHlsZT0iZGlzcGxheTpp
+bmxpbmUtYmxvY2s7d2lkdGg6OTglIiB0YWJpbmRleD0iLTEiPgo8ZGl2IGlkPSJkaXZScGx5Rndk
+TXNnIiBkaXI9Imx0ciI+PGZvbnQgZmFjZT0iQ2FsaWJyaSwgc2Fucy1zZXJpZiIgc3R5bGU9ImZv
+bnQtc2l6ZToxMXB0IiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IFRhZGV1c3ogU3RydWsg
+Jmx0O3RhZGV1c3ouc3RydWtAaW50ZWwuY29tJmd0Ozxicj4KPGI+U2VudDo8L2I+IE1vbmRheSwg
+SnVuZSAyNSwgMjAxOCAxOjI1OjE4IFBNPGJyPgo8Yj5Ubzo8L2I+IFRpYW55dSBRaTsgdHBtMkBs
+aXN0cy4wMS5vcmc8YnI+CjxiPlN1YmplY3Q6PC9iPiBSZTogW3RwbTJdIFdoYXQgaXMgdGhlIGV4
+YWN0IG1lYW5pbmcgb2YgJnF1b3Q7cGFyYW1ldGVycyZxdW90OyBpbiBjcEhhc2g/PC9mb250Pgo8
+ZGl2PiZuYnNwOzwvZGl2Pgo8L2Rpdj4KPGRpdiBjbGFzcz0iQm9keUZyYWdtZW50Ij48Zm9udCBz
+aXplPSIyIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExcHQ7Ij4KPGRpdiBjbGFzcz0iUGxhaW5U
+ZXh0Ij5PbiAwNi8yNS8yMDE4IDEwOjA2IEFNLCBUaWFueXUgUWkgd3JvdGU6PGJyPgomZ3Q7IEhp
+LCZuYnNwOzxicj4KJmd0OyA8YnI+CiZndDsgPGJyPgomZ3Q7IEkgYW0gd3JpdGluZyBpbXBsZW1l
+bnRhdGlvbiBvZiBUUE0yX0xvYWQuJm5ic3A7V2hlbiB3cml0aW5nIGNwSGFzaCZuYnNwO2luIGNv
+bXB1dGluZyBITUFDLCZuYnNwO0kgc2F3IGNwSGFzaCBkZXNjcmlwdGlvbiBpbiZuYnNwO1RQTS1S
+ZXYtMi4wLVBhcnQtMS1BcmNoaXRlY3R1cmUtMDEuMzggbWVudGlvbmVkJm5ic3A7dGhlcmUgaXMg
+YSAmcXVvdDtwYXJhbWV0ZXJzJnF1b3Q7IHBhcmFtZXRlciBhdCBsYXN0LCB3aGljaCByZXByZXNl
+bnRzIHJlbWFpbmluZyBjb21tYW5kIHBhcmFtZXRlcnMuIFNpbmNlIHRoZQogY3BIYXNoIHdpbGwg
+dXNlIGNvbW1hbmRDb2RlIGFzIHRoZSBmaXJzdCBwYXJhbWV0ZXIsIGRvZXMgdGhpcyAmcXVvdDtw
+YXJhbWV0ZXJzJnF1b3Q7IG1lYW5zIGV2ZXJ5IHBhcmFtZXRlciBpbiB0aGUgY29tbWFuZD8gRm9y
+IGV4YW1wbGUsIGluIFRQTTJfTG9hZCwgSSBuZWVkIHRvIGFkZCB0YWcsIGNvbW1hbmRTaXplLCBw
+YXJlbnRIYW5kbGUsIGluUHVibGljJm5ic3A7YW5kIGluUHJpdmF0ZT8gSWYgc28sIHNob3VsZCBJ
+IGFkZCB0aGUgYXV0aG9yaXphdGlvbiBzdHJ1Y3R1cmUKIGFmdGVyIHBhcmVudEhhbmRsZT88YnI+
+CiZndDsgPGJyPgo8YnI+CkhpIFRpYW55dSw8YnI+CldoYXQgdGhlIHNwZWMgWzFdIHJlZmVycyB0
+byBhcyBwYXJhbWV0ZXJzIGlzIGFsbCB0aGF0IGNvbWVzIGFmdGVyIHRoZSBBdXRob3JpemF0aW9u
+IGFyZWEuPGJyPgpTZWUgdGhlIHNlY3Rpb24gMTggb2YgWzFdLjxicj4KWWVzLCB0aGUgYXV0aG9y
+aXphdGlvbiBhcmVhIGNvbWVzIGFmdGVyIHRoZSBoYW5kbGVycyBhbmQgYmVmb3JlIHRoZSBwYXJh
+bWV0ZXJzLjxicj4KPGJyPgpbMV0gPGEgaHJlZj0iaHR0cHM6Ly90cnVzdGVkY29tcHV0aW5nZ3Jv
+dXAub3JnL3dwLWNvbnRlbnQvdXBsb2Fkcy9UUE0tUmV2LTIuMC1QYXJ0LTEtQXJjaGl0ZWN0dXJl
+LTAxLjE2LnBkZiI+Cmh0dHBzOi8vdHJ1c3RlZGNvbXB1dGluZ2dyb3VwLm9yZy93cC1jb250ZW50
+L3VwbG9hZHMvVFBNLVJldi0yLjAtUGFydC0xLUFyY2hpdGVjdHVyZS0wMS4xNi5wZGY8L2E+PGJy
+Pgo8YnI+Ci0tIDxicj4KVGFkZXVzejxicj4KPC9kaXY+Cjwvc3Bhbj48L2ZvbnQ+PC9kaXY+Cjwv
+Ym9keT4KPC9odG1sPgo=
+
+--===============7250011556141345869==--
 
