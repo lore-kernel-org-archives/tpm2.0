@@ -1,24 +1,24 @@
-Content-Type: multipart/mixed; boundary="===============3732438083205958862=="
+Content-Type: multipart/mixed; boundary="===============6978227524710879688=="
 MIME-Version: 1.0
 From: Stefan Berger <stefanb at linux.vnet.ibm.com>
 Subject: Re: [tpm2] [Qemu-devel] Choosing PCR banks for swtpm's TPM 2
-Date: Mon, 25 Jun 2018 12:15:28 -0400
-Message-ID: <1b6a568c-f7d7-8b71-d36b-11395680ce1a@linux.vnet.ibm.com>
-In-Reply-To: 20180625161044.GL18580@redhat.com
+Date: Mon, 25 Jun 2018 12:23:17 -0400
+Message-ID: <8e7b0363-28ec-b2fa-19bf-c1820c8a75c7@linux.vnet.ibm.com>
+In-Reply-To: 20180625161147.GH2390@work-vm
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3732438083205958862==
+--===============6978227524710879688==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 06/25/2018 12:10 PM, Daniel P. Berrang=C3=A9 wrote:
-> On Mon, Jun 25, 2018 at 12:08:34PM -0400, Stefan Berger wrote:
->> On 06/25/2018 11:59 AM, Daniel P. Berrang=C3=A9 wrote:
->>> On Mon, Jun 25, 2018 at 11:56:24AM -0400, Stefan Berger wrote:
->>>> On 06/25/2018 11:25 AM, Daniel P. Berrang=C3=A9 wrote:
->>>>> On Mon, Jun 25, 2018 at 11:05:55AM -0400, Stefan Berger wrote:
+On 06/25/2018 12:11 PM, Dr. David Alan Gilbert wrote:
+> * Stefan Berger (stefanb(a)linux.vnet.ibm.com) wrote:
+>> On 06/25/2018 11:29 AM, Dr. David Alan Gilbert wrote:
+>>> * Stefan Berger (stefanb(a)linux.vnet.ibm.com) wrote:
+>>>> On 06/25/2018 11:18 AM, Dr. David Alan Gilbert wrote:
+>>>>> * Stefan Berger (stefanb(a)linux.vnet.ibm.com) wrote:
 >>>>>> Hi!
 >>>>>>
 >>>>>>    =C2=A0I am sending this email to solicit input on the choice of t=
@@ -54,57 +54,66 @@ l be
 n means
 >>>>>> that the PCR banks should be chosen now and we'll have to stick with=
  them.
->>>>> Anything that has a risk of needing to change between versions would =
-need
->>>>> to be tied into the machine type in some way.
->>>> You mean a machine type like q35? I am not sure how it would be tied i=
-nto
->>>> QEMU since the swtpm command line options are chosen more or less
->>>> independently of the ones from QEMU.
->>> Yes, each QEMU release introduces a new versioned machine type eg
->>>     q35-2.10,  q35-2.11, q35-2.12, q35-3.0
->>>
->>> If anything in QEMU changes which impacts live migraiton/save/restore/e=
-tc
->>> then we tie it to the versioned machine type. so q35-3.0 would get the
->>> new default value, and all previous machine types keep the old default
->>> value.
->>>
->>> For this to be possible with externally launched swtpm though, would
->>> require some way for QEMU to talk to swtpm to tell it what default
->>> to use for this. I don't know enough about swtpm to have an idea how
->>> practical this is or not.
->> The set of PCR banks a future TPM 2 would be 'manufactured with' would be
->> determined by parameters to swtpm_setup. That's when the TPM2 is
->> 'manufactured' and the certificates are created and written into its NVR=
-AM
->> locations. QEMU is not talking to the TPM 2 at this point. So it would be
->> parameters passed from libvirt to swtpm_setup that determine the set of =
-PCR
->> banks. swtpm itself would get those supplied via command line options wh=
-en
->> invoked by swtpm_setup. If one was to skip over the swtpm_setup step, th=
-en
->> why not use the swtpm command line options that need to be there for
->> swtpm_setup support. Though I think few people will use it like that. I
->> would not extend the protocol for this purpose.
-> Ah so in that case, we would merely require ability to record the desired
-> PCR setup in the XML, and libvirt would then pass the right args to
-> swtpm_setup when required.
+>>>>>>
+>>>>>> That said, my suggestion would be to enable only PCR banks for SHA25=
+6 for
+>>>>>> 'now' and SHA512 for the future. Having two PCR banks should enable =
+decent
+>>>>>> performance. If someone wants to have better performance he will hav=
+e to go
+>>>>>> through the firmware to select the PCR banks at the expense of loosi=
+ng
+>>>>>> suspend/resume support.
+>>>>>>
+>>>>>> The change of PCR banks for the current 4 PCR banks will break the s=
+tate of
+>>>>>> all swtpms.
+>>>>>>
+>>>>>> If you have suggestions, please let me know.
+>>>>> Is this something that has to be set at compile time or could it be
+>>>>> something chosen at run time (as options to the swtpm command line?)
+>>>> It is a compile-time option...
+>>> Hmm, that's a shame - I was hoping you'd be able to switch them at
+>>> runtime (or at least hide them?) then you can solve the upgrade problem
+>>> by running the new swtpm with a flag telling it to hide the new banks.
+>>> I hope the ondisk formats for suspend/resume/migration are descriptive
+>>> enough to be able to spot an error if you try and load one configured
+>>> differently.4
+>> The disk format does detect it and refuses to take the state if either t=
+here
+>> are too many PCR banks or not enough.
+> What happens if there are the right number just the wrong type?
 
-Yes, the user would choose PCR banks or libvirt probes swtpm_setup =
+The state would be rejected since they are incompatible.
 
-version/command line options and selects a reasonable set for the hash =
+>
+>> For the initial version of swtpm we would need to define a default set of
+>> PCR banks since the TPM 2 code uses compile time options to build in that
+>> set of PCR banks.
+> You talk of PCR_Allocate() above as a spec-defined command to hide PCRs
+> but with the downside of breaking TPM2_Shutdown - could you implement
+> something from the commandline without that downside (I don't know how
+> PCR banks work).
 
-algorithms recommended at that time.
+Like I said, during swtpm_setup TPM 2 manufacturing the set of PCR banks =
+
+would be chosen and that set would be used by that TPM 2 from then on. =
+
+Though this flexibility is not supported by the code today.
+
+
+>
+>> A future version of swtpm could expose command line options for selecting
+>> the PCR banks an instance of swtpm is to run with. libtpms would be comp=
+iled
+>> with support for all of them and only the chosen subset would be active
+>> starting with the initial creation of a particular instance of swtpm.
+> Right, that would solve the upgrade half of the problem.
+
+For now I think an initial set of banks to go with would be appropriate.
 
  =C2=A0=C2=A0 Stefan
 
->
-> Regards,
-> Daniel
 
-
-
---===============3732438083205958862==--
+--===============6978227524710879688==--
 
