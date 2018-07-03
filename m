@@ -1,63 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============0904782712572397125=="
+Content-Type: multipart/mixed; boundary="===============8683381106168396919=="
 MIME-Version: 1.0
-From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
-Subject: [tpm2] tpm2-tools man pages not installing?
-Date: Tue, 03 Jul 2018 13:46:14 +0000
-Message-ID: <3acb402299484e99a21524f88031fb51@AZDC-MMB02.GD-MS.US>
+From: Matthias Gerstner <mgerstner at suse.de>
+Subject: Re: [tpm2] tpm2-tools man pages not installing?
+Date: Tue, 03 Jul 2018 16:53:23 +0200
+Message-ID: <20180703145323.GA16483@f195.suse.de>
+In-Reply-To: 3acb402299484e99a21524f88031fb51@AZDC-MMB02.GD-MS.US
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0904782712572397125==
+--===============8683381106168396919==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When I build & install tpm2-tools, the man pages don't seem to get installe=
-d.  I'm just using the default './configure; make; sudo make install' routi=
-ne, so everything is going into /usr/local/; therefore, I'd expect the man =
-pages to end up in /usr/local/share/man, but they don't.  Do I need add an =
-argument to configure to make that happen?
+Hello,
 
---===============0904782712572397125==
-Content-Type: text/html
+On Tue, Jul 03, 2018 at 01:46:14PM +0000, Scheie, Peter M wrote:
+> When I build & install tpm2-tools, the man pages don't seem to get
+> installed.  I'm just using the default './configure; make; sudo make
+> install' routine, so everything is going into /usr/local/; therefore,
+> I'd expect the man pages to end up in /usr/local/share/man, but they
+> don't.  Do I need add an argument to configure to make that happen?
+
+that is actually a bug and I addressed it via commit
+72a28f36151db9bfa59a460ae0114dcece218862, however that commit didn't
+make it into the current release.
+
+So you either have to install them manually or, as a workaround, if you
+have pandoc installed on the system, then the build system tries to
+generate the man pages and alongside that also installs them.
+
+Regards
+
+Matthias
+
+-- =
+
+Matthias Gerstner <matthias.gerstner(a)suse.de>
+Dipl.-Wirtsch.-Inf. (FH), Security Engineer
+https://www.suse.com/security
+Telefon: +49 911 740 53 290
+GPG Key ID: 0x14C405C971923553
+
+SUSE Linux GmbH
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nuernberg)
+
+--===============8683381106168396919==
+Content-Type: application/pgp-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+Content-Disposition: attachment; filename="signature.asc"
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDYWxp
-YnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9u
-cyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBp
-bjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWls
-eToiQ2FsaWJyaSIsInNhbnMtc2VyaWYiO30KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluawoJe21z
-by1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOmJsdWU7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJs
-aW5lO30KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkCgl7bXNvLXN0eWxlLXBy
-aW9yaXR5Ojk5OwoJY29sb3I6cHVycGxlOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnNw
-YW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsKCWZvbnQt
-ZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0No
-cERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxp
-YnJpIiwic2Fucy1zZXJpZiI7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBp
-bjsKCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtw
-YWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+Cjxv
-OnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2Vu
-ZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRp
-dCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94
-bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJsdWUiIHZs
-aW5rPSJwdXJwbGUiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj5XaGVuIEkgYnVpbGQgJmFtcDsgaW5zdGFsbCB0cG0yLXRvb2xzLCB0aGUgbWFuIHBhZ2Vz
-IGRvbiYjODIxNzt0IHNlZW0gdG8gZ2V0IGluc3RhbGxlZC4mbmJzcDsgSSYjODIxNzttIGp1c3Qg
-dXNpbmcgdGhlIGRlZmF1bHQgJiM4MjE2Oy4vY29uZmlndXJlOyBtYWtlOyBzdWRvIG1ha2UgaW5z
-dGFsbCYjODIxNzsgcm91dGluZSwgc28gZXZlcnl0aGluZyBpcyBnb2luZyBpbnRvIC91c3IvbG9j
-YWwvOyB0aGVyZWZvcmUsIEkmIzgyMTc7ZCBleHBlY3QgdGhlIG1hbiBwYWdlcyB0byBlbmQKIHVw
-IGluIC91c3IvbG9jYWwvc2hhcmUvbWFuLCBidXQgdGhleSBkb24mIzgyMTc7dC4mbmJzcDsgRG8g
-SSBuZWVkIGFkZCBhbiBhcmd1bWVudCB0byBjb25maWd1cmUgdG8gbWFrZSB0aGF0IGhhcHBlbj88
-bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSXpCQUFCQ0FBZEZpRUU4Mm9HMUE4YWIx
+ZUVTWmRqRk1RRnlYR1NOVk1GQWxzN2pkOEFDZ2tRRk1RRnlYR1MKTlZQNEJBLzhDVTVNdHZDcE5H
+MmtNU05YbDVjWjYrdGtrRGFKNXVXUnhLZTBjaEhHWmJZWTIwYnE3OEo1WG84KwphTU1keG91UXBy
+WW9tTzh0eXdGeWhzRm1BUm1TcjZJUmFVYmwzbEJhZUFOQWJER1lQNU1GUmgyNlJ2akVDZEJKCm5T
+TFZMSkNUMEI4R1VNbkE0N1VBRTBHM3Z3OXd4MDZNajFJWUFuTW1VdHRMZElPbUc1R0U2UGFvTWxk
+aHU3dkUKWmFLV1cwTGphVHhVU1I2Wld6ZldheENIWERQUXc2NzJmb3hIYzExeVBjanpWQUdJR2dJ
+clFPUHZFWVBtUlBzZwp1V0NGMUhTUTBrQTMyUlVyMnNsa25mZHN0WG1zc25jYi9BcXhUcjJMV1hO
+NDdTSG41K0s5ZXZCOE5lOGNKVEpQCnJLNGpxWlRMZlh0VXBSNWpwd0MzYXo2bU43b0lUZmRFdVdw
+OGR5cnRBa0s4ZWo2T3JlOEFrNkZua3daYkxpeWoKd3hmM2hDSWRYV2V4NENiRmw1R2hVUWw0bDgv
+QU5TY1Jlci9RWUw3czkwZGREWG5EOC9GRXVaWXF6RFlZUWNKQQorZ2pFeXZkV1pGVjZqaUxndEY1
+MEtJTmhxa0Y3U3IycnkyZlA5clYrdmNzVXZQRExTdGM2WTNDaUhzakVYcHVwCkV5QWFLd0RIMjNu
+aXhaZnNQeHhlMGFVVHFhRWpBdks4bTNodzVNNXVVaWRpM2I2Qk95NUIrQk9tenI5aG1xSlgKU3FW
+VzZvdFRHTUlYV3R6UjVWK0VMZUQ2WGsrSWJIc1BSSkhsaiswNGlMVXpMN0NOL1dvMjFHMzBBYklw
+cGZBagprbW1oQkFRR2JwMVhMTUhrYWlxemF6ZGNGbmN5NEJ0UkNqUG9oL2tOVm9IWG9SNzd3L3c9
+Cj0zYmdECi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
 
---===============0904782712572397125==--
+--===============8683381106168396919==--
 
