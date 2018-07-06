@@ -1,17 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============2438593006594719016=="
+Content-Type: multipart/mixed; boundary="===============3024939486832121147=="
 MIME-Version: 1.0
 From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
 Subject: Re: [tpm2] tpm2-tools man pages not installing?
-Date: Fri, 06 Jul 2018 14:10:18 +0000
-Message-ID: <faafe8d5b1fc48aaaa69b6a9b3c59ec8@AZDC-MMB02.GD-MS.US>
+Date: Fri, 06 Jul 2018 15:19:02 +0000
+Message-ID: <9f29431b89314dbf8995da498c272846@AZDC-MMB02.GD-MS.US>
 In-Reply-To: f22d1663-c1af-f20e-b4d8-4985074bf2f2@linux.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2438593006594719016==
+--===============3024939486832121147==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+I don't think I have permission to push my branch to github, do I?  When I =
+do a 'git push origin update-tpm2-unseal-man-page' I get a 'remote: Permiss=
+ion to tpm2-software/tpm2-tools.git denied to pscheie" error, which isn't s=
+urprising as you wouldn't want every Tom, Dick, and Harry pushing branches =
+up.  But I think I have to have my branch pushed before I can create a pull=
+ request, right?  (Otherwise, people can't see the changes I made.)
+
+Peter
+
+-----Original Message-----
+From: Scheie, Peter M =
+
+Sent: Friday, July 06, 2018 9:10 AM
+To: 'Joshua Lock'
+Cc: tpm2(a)lists.01.org
+Subject: RE: [tpm2] tpm2-tools man pages not installing?
 
 Heh, when your message arrived, I was just reading through your pull reques=
 t for "object auth short form unification" and discovered why I'm having so=
@@ -89,5 +106,5 @@ On 05/07/2018 21:44, Scheie, Peter M wrote:
 > Joshua
 >=20
 
---===============2438593006594719016==--
+--===============3024939486832121147==--
 
