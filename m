@@ -1,17 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============8257635816474388584=="
+Content-Type: multipart/mixed; boundary="===============2624596312483644538=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
 Subject: Re: [tpm2] tpm2-tools man pages not installing?
-Date: Fri, 06 Jul 2018 17:12:46 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649BEECF3@ORSMSX106.amr.corp.intel.com>
-In-Reply-To: 9f29431b89314dbf8995da498c272846@AZDC-MMB02.GD-MS.US
+Date: Fri, 06 Jul 2018 17:30:27 +0000
+Message-ID: <7c2c4cf04dcc40f78856f2b7c3eee57e@AZDC-MMB02.GD-MS.US>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649BEECF3@ORSMSX106.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8257635816474388584==
+--===============2624596312483644538==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+Matthias sent me the message below; it was the git fork step I was missing =
+(I was just cloning & branching).  Okay, now we're in business...well, almo=
+st.   It appears the company firewall is blocking me from pushing my change=
+s up to my fork, which other devs have confirmed.  (Bringing info from the =
+outside in is okay, but going the other way is often blocked.  Yum gets bro=
+ken regularly, too.)  I've put in a request to get access to push to github=
+.  That will probably take a few days, so I'll probably just push the chang=
+es from home tonight.  =
+
+
+Matthias, thanks for the steps in your other message; they were very helpfu=
+l.
+
+(I hope top-posting is okay.)
+
+Peter
+
+--
+Hi Peter,
+
+what you need to do is:
+
+1) have a personal accounton Github
+2) fork the tpm2 repository via the Github web interface (it's a button fou=
+nd on the repository page once you're logged in)
+3) now you can clone your personal fork of the tpm2 repository that lives u=
+nder your personal Github namespace
+4) once you're done with your work you can push to your personal, forked re=
+pository and it becomes visible to the public on Github
+5) now you can create a pull-request from your fork to the origin repositor=
+y via the Github web interface.
+
+Hope that helps :-)
+
+Cheers
+
+Matthias
+
+--
+Matthias Gerstner <matthias.gerstner(a)suse.de> Dipl.-Wirtsch.-Inf. (FH), S=
+ecurity Engineer https://www.suse.com/security
+Telefon: +49 911 740 53 290
+GPG Key ID: 0x14C405C971923553
+
+SUSE Linux GmbH
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton HRB 21284 (AG Nuer=
+nberg)
+
+-----Original Message-----
+From: Roberts, William C [mailto:william.c.roberts(a)intel.com] =
+
+Sent: Friday, July 06, 2018 12:13 PM
+To: Scheie, Peter M; Joshua Lock
+Cc: tpm2(a)lists.01.org
+Subject: RE: [tpm2] tpm2-tools man pages not installing?
 
 So you don't push to the origin remote. You need to fork, push to your fork=
  and then
@@ -135,5 +191,5 @@ uality
 > tpm2(a)lists.01.org
 > https://lists.01.org/mailman/listinfo/tpm2
 
---===============8257635816474388584==--
+--===============2624596312483644538==--
 
