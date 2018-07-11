@@ -1,35 +1,167 @@
-Content-Type: multipart/mixed; boundary="===============3128129825043352549=="
+Content-Type: multipart/mixed; boundary="===============3246521116668184035=="
 MIME-Version: 1.0
-From: Joshua Lock <joshua.g.lock at linux.intel.com>
-Subject: Re: [tpm2] tpm2-tools 3.1.1 release candidate
-Date: Mon, 09 Jul 2018 21:58:44 +0100
-Message-ID: <34a4ee13-eb1c-277d-12c0-66f01b8fb067@linux.intel.com>
-In-Reply-To: 893b311e-5775-8c62-aaed-39143d5bf465@linux.intel.com
+From: John Brown <jb20141125 at gmail.com>
+Subject: [tpm2] TPM2.0 chip access restriction
+Date: Wed, 11 Jul 2018 14:24:39 +0200
+Message-ID: <CAMCukfUS=uxEoponKvJ==ngEvHbjpZvtgQenBr-sFD9GXzg0pw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3128129825043352549==
+--===============3246521116668184035==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 04/07/2018 12:13, Joshua Lock wrote:
-> Hello all,
-> =
+Hello all,
 
-> I've just tagged and signed rc0 for tpm2-tools 3.1.1. The only change =
 
-> since 3.1.0 is to fix installing man pages when pandoc isn't available.
-> =
+I do not know how to approach the issue of access restriction to the tpm2.0
+chip.
 
-> https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.1-rc0
 
-We didn't receive any feedback, so I've gone ahead and released 3.1.1:
+I would like to use tpm chip to store private keys and would like to be
+sure that the key can be only used by apps that I allow to do it and I
+think that this would increase the security level of the whole system. In
+TPM2.0 chip the private key is hidden, but if every application is allowed
+to perform operations on this key and (for example) the attacker would be
+able to run some malicious application as normal user, he can use it to
+receive from remote device some data, perform operations on the private
+key, and send the result back. In the result the remote device would behave
+as it would have the private key. And many other scenarios are possible. So
+what is the correct way to restrict the access to the TPM chip?
 
-https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.1
 
-Thanks,
-Joshua
+- I know that every key can have a password to protect it but in that case
+there is a problem where to store this password in a secure way that only
+allowed apps can read it.
 
---===============3128129825043352549==--
+
+- if an app use tss it talks to abrmd via d-bus and some pipes (am i
+right?). Can the d-bus be used somehow to restrict access to tpm2.0 chip?
+Can this pipes be used in a malicious way?
+
+
+- I also know that PCRs can be used during boot to allow private key access
+when the system is not corrupted. But this does not prevent the malicous
+private key usage when the attacker put the application to already booted
+device with key unlocked.
+
+
+I am already lost in the dark with this. Can somebody put some light on
+this issue?
+
+
+Best regards,
+
+John
+
+--===============3246521116668184035==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+CgoKCQoJPHNwYW4+PC9zcGFuPgoJCgkKCgo8cCBzdHlsZT0ibWFyZ2lu
+LWJvdHRvbTowY207bGluZS1oZWlnaHQ6MTAwJTt0ZXh0LWRlY29yYXRpb246bm9uZSIgYWxpZ249
+ImxlZnQiPgo8c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+PGZv
+bnQgY29sb3I9IiMwMDAwMDAiPjxmb250IHN0eWxlPSJmb250LXNpemU6MTJwdCIgc2l6ZT0iMyI+
+SGVsbG8KYWxsLCA8L2ZvbnQ+PC9mb250Pgo8L3NwYW4+PC9wPjxzcGFuIHN0eWxlPSJmb250LWZh
+bWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj4KPC9zcGFuPjxwIHN0eWxlPSJtYXJnaW4tYm90dG9t
+OjBjbTtsaW5lLWhlaWdodDoxMDAlO3RleHQtZGVjb3JhdGlvbjpub25lIiBhbGlnbj0ibGVmdCI+
+CjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48YnI+PC9zcGFu
+PgoKPC9wPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj4KPC9z
+cGFuPjxwIHN0eWxlPSJtYXJnaW4tYm90dG9tOjBjbTtsaW5lLWhlaWdodDoxMDAlO3RleHQtZGVj
+b3JhdGlvbjpub25lIiBhbGlnbj0ibGVmdCI+CjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTptb25v
+c3BhY2UsbW9ub3NwYWNlIj48Zm9udCBjb2xvcj0iIzAwMDAwMCI+PGZvbnQgc3R5bGU9ImZvbnQt
+c2l6ZToxMnB0IiBzaXplPSIzIj5JIGRvIG5vdCBrbm93IGhvdyB0byBhcHByb2FjaCB0aGUgaXNz
+dWUKb2YgYWNjZXNzIHJlc3RyaWN0aW9uIHRvIHRoZSB0cG0yLjAgY2hpcC4gIDwvZm9udD48L2Zv
+bnQ+PC9zcGFuPgo8L3A+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3Bh
+Y2UiPgo8L3NwYW4+PHAgc3R5bGU9Im1hcmdpbi1ib3R0b206MGNtO2xpbmUtaGVpZ2h0OjEwMCU7
+dGV4dC1kZWNvcmF0aW9uOm5vbmUiIGFsaWduPSJsZWZ0Ij4KPHNwYW4gc3R5bGU9ImZvbnQtZmFt
+aWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPjxicj48L3NwYW4+Cgo8L3A+PHNwYW4gc3R5bGU9ImZv
+bnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPgo8L3NwYW4+PHAgc3R5bGU9Im1hcmdpbi1i
+b3R0b206MGNtO2xpbmUtaGVpZ2h0OjEwMCU7dGV4dC1kZWNvcmF0aW9uOm5vbmUiIGFsaWduPSJs
+ZWZ0Ij4KPHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPjxmb250
+IGNvbG9yPSIjMDAwMDAwIj48Zm9udCBzdHlsZT0iZm9udC1zaXplOjEycHQiIHNpemU9IjMiPkkK
+d291bGQgbGlrZSB0byB1c2UgdHBtIGNoaXAgdG8gc3RvcmUgcHJpdmF0ZSBrZXlzIGFuZCB3b3Vs
+ZCBsaWtlIHRvIGJlCnN1cmUgdGhhdCB0aGUga2V5IGNhbiBiZSBvbmx5IHVzZWQgYnkgYXBwcyB0
+aGF0IEkgYWxsb3cgdG8gZG8gaXQgYW5kCkkgdGhpbmsgdGhhdCB0aGlzIHdvdWxkIGluY3JlYXNl
+IHRoZSBzZWN1cml0eSBsZXZlbCBvZiB0aGUgd2hvbGUKc3lzdGVtLiBJbiBUUE0yLjAgY2hpcCB0
+aGUgcHJpdmF0ZSBrZXkgaXMgaGlkZGVuLCBidXQgaWYgZXZlcnkKYXBwbGljYXRpb24gaXMgYWxs
+b3dlZCB0byBwZXJmb3JtIG9wZXJhdGlvbnMgb24gdGhpcyBrZXkgYW5kIChmb3IKZXhhbXBsZSkg
+dGhlIGF0dGFja2VyIHdvdWxkIGJlIGFibGUgdG8gcnVuIHNvbWUgbWFsaWNpb3VzIGFwcGxpY2F0
+aW9uCmFzIG5vcm1hbCB1c2VyLCBoZSBjYW4gdXNlIGl0IHRvIHJlY2VpdmUgZnJvbSByZW1vdGUg
+ZGV2aWNlIHNvbWUKZGF0YSwgcGVyZm9ybSBvcGVyYXRpb25zIG9uIHRoZSBwcml2YXRlIGtleSwg
+YW5kIHNlbmQgdGhlIHJlc3VsdApiYWNrLiBJbiB0aGUgcmVzdWx0IHRoZSByZW1vdGUgZGV2aWNl
+IHdvdWxkIGJlaGF2ZSBhcyBpdCB3b3VsZCBoYXZlCnRoZSBwcml2YXRlIGtleS4gQW5kIG1hbnkg
+b3RoZXIgc2NlbmFyaW9zIGFyZSBwb3NzaWJsZS4gU28gd2hhdCBpcwp0aGUgY29ycmVjdCB3YXkg
+dG8gcmVzdHJpY3QgdGhlIGFjY2VzcyB0byB0aGUgVFBNIGNoaXA/IDwvZm9udD48L2ZvbnQ+PC9z
+cGFuPgo8L3A+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPgo8
+L3NwYW4+PHAgc3R5bGU9Im1hcmdpbi1ib3R0b206MGNtO2xpbmUtaGVpZ2h0OjEwMCU7dGV4dC1k
+ZWNvcmF0aW9uOm5vbmUiIGFsaWduPSJsZWZ0Ij4KPHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5Om1v
+bm9zcGFjZSxtb25vc3BhY2UiPjxicj48L3NwYW4+Cgo8L3A+PHNwYW4gc3R5bGU9ImZvbnQtZmFt
+aWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPgo8L3NwYW4+PHAgc3R5bGU9Im1hcmdpbi1ib3R0b206
+MGNtO2xpbmUtaGVpZ2h0OjEwMCU7dGV4dC1kZWNvcmF0aW9uOm5vbmUiIGFsaWduPSJsZWZ0Ij4K
+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPjxmb250IGNvbG9y
+PSIjMDAwMDAwIj48Zm9udCBzdHlsZT0iZm9udC1zaXplOjEycHQiIHNpemU9IjMiPi0KSSBrbm93
+IHRoYXQgZXZlcnkga2V5IGNhbiBoYXZlIGEgcGFzc3dvcmQgdG8gcHJvdGVjdCBpdCAgYnV0IGlu
+IHRoYXQKY2FzZSB0aGVyZSBpcyBhIHByb2JsZW0gd2hlcmUgdG8gc3RvcmUgdGhpcyBwYXNzd29y
+ZCBpbiBhIHNlY3VyZSB3YXkKdGhhdCBvbmx5IGFsbG93ZWQgYXBwcyBjYW4gcmVhZCBpdC48L2Zv
+bnQ+PC9mb250Pjwvc3Bhbj48L3A+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxt
+b25vc3BhY2UiPgo8L3NwYW4+PHAgc3R5bGU9Im1hcmdpbi1ib3R0b206MGNtO2xpbmUtaGVpZ2h0
+OjEwMCU7dGV4dC1kZWNvcmF0aW9uOm5vbmUiIGFsaWduPSJsZWZ0Ij4KPHNwYW4gc3R5bGU9ImZv
+bnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPjxicj48L3NwYW4+Cgo8L3A+PHNwYW4gc3R5
+bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPgo8L3NwYW4+PHAgc3R5bGU9Im1h
+cmdpbi1ib3R0b206MGNtO2xpbmUtaGVpZ2h0OjEwMCU7dGV4dC1kZWNvcmF0aW9uOm5vbmUiIGFs
+aWduPSJsZWZ0Ij4KPHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2Ui
+Pjxmb250IGNvbG9yPSIjMDAwMDAwIj48Zm9udCBzdHlsZT0iZm9udC1zaXplOjEycHQiIHNpemU9
+IjMiPi0KaWYgYW4gYXBwIHVzZSB0c3MgaXQgdGFsa3MgdG8gYWJybWQgdmlhIGQtYnVzIGFuZCBz
+b21lIHBpcGVzIChhbSBpCnJpZ2h0PykuIENhbiB0aGUgZC1idXMgYmUgdXNlZCBzb21laG93CnRv
+IHJlc3RyaWN0IGFjY2VzcyB0byB0cG0yLjAgY2hpcD8gQ2FuIHRoaXMgcGlwZXMgYmUgdXNlZCBp
+biBhCm1hbGljaW91cyB3YXk/PC9mb250PjwvZm9udD48L3NwYW4+PC9wPjxzcGFuIHN0eWxlPSJm
+b250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj4KPC9zcGFuPjxwIHN0eWxlPSJtYXJnaW4t
+Ym90dG9tOjBjbTtsaW5lLWhlaWdodDoxMDAlO3RleHQtZGVjb3JhdGlvbjpub25lIiBhbGlnbj0i
+bGVmdCI+CjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48YnI+
+PC9zcGFuPgoKPC9wPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNl
+Ij4KPC9zcGFuPjxwIHN0eWxlPSJtYXJnaW4tYm90dG9tOjBjbTtsaW5lLWhlaWdodDoxMDAlO3Rl
+eHQtZGVjb3JhdGlvbjpub25lIiBhbGlnbj0ibGVmdCI+CjxzcGFuIHN0eWxlPSJmb250LWZhbWls
+eTptb25vc3BhY2UsbW9ub3NwYWNlIj48Zm9udCBjb2xvcj0iIzAwMDAwMCI+PGZvbnQgc3R5bGU9
+ImZvbnQtc2l6ZToxMnB0IiBzaXplPSIzIj4tCkkgYWxzbyBrbm93IHRoYXQgUENScyBjYW4gYmUg
+dXNlZCBkdXJpbmcgYm9vdCB0byBhbGxvdyBwcml2YXRlIGtleQphY2Nlc3Mgd2hlbiB0aGUgc3lz
+dGVtIGlzIG5vdCBjb3JydXB0ZWQuIEJ1dCB0aGlzIGRvZXMgbm90IHByZXZlbnQKdGhlIG1hbGlj
+b3VzIHByaXZhdGUga2V5IHVzYWdlIHdoZW4gdGhlIGF0dGFja2VyIHB1dCB0aGUgYXBwbGljYXRp
+b24KdG8gYWxyZWFkeSBib290ZWQgZGV2aWNlIHdpdGgga2V5IHVubG9ja2VkLiA8L2ZvbnQ+PC9m
+b250Pjwvc3Bhbj4KPC9wPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3Nw
+YWNlIj4KPC9zcGFuPjxwIHN0eWxlPSJtYXJnaW4tYm90dG9tOjBjbTtsaW5lLWhlaWdodDoxMDAl
+O3RleHQtZGVjb3JhdGlvbjpub25lIiBhbGlnbj0ibGVmdCI+CjxzcGFuIHN0eWxlPSJmb250LWZh
+bWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48YnI+PC9zcGFuPgoKPC9wPjxzcGFuIHN0eWxlPSJm
+b250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj4KPC9zcGFuPjxwIHN0eWxlPSJtYXJnaW4t
+Ym90dG9tOjBjbTtsaW5lLWhlaWdodDoxMDAlO3RleHQtZGVjb3JhdGlvbjpub25lIiBhbGlnbj0i
+bGVmdCI+CjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48Zm9u
+dCBjb2xvcj0iIzAwMDAwMCI+PGZvbnQgc3R5bGU9ImZvbnQtc2l6ZToxMnB0IiBzaXplPSIzIj5J
+CmFtIGFscmVhZHkgbG9zdCBpbiB0aGUgZGFyayB3aXRoIHRoaXMuIENhbiBzb21lYm9keSBwdXQg
+c29tZSBsaWdodCBvbgp0aGlzIGlzc3VlPyA8L2ZvbnQ+PC9mb250Pjwvc3Bhbj4KPC9wPjxzcGFu
+IHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj4KPC9zcGFuPjxwIHN0eWxl
+PSJtYXJnaW4tYm90dG9tOjBjbTtsaW5lLWhlaWdodDoxMDAlO3RleHQtZGVjb3JhdGlvbjpub25l
+IiBhbGlnbj0ibGVmdCI+CjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3Nw
+YWNlIj48YnI+PC9zcGFuPgoKPC9wPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2Us
+bW9ub3NwYWNlIj4KPC9zcGFuPjxwIHN0eWxlPSJtYXJnaW4tYm90dG9tOjBjbTtsaW5lLWhlaWdo
+dDoxMDAlO3RleHQtZGVjb3JhdGlvbjpub25lIiBhbGlnbj0ibGVmdCI+CjxzcGFuIHN0eWxlPSJm
+b250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48Zm9udCBjb2xvcj0iIzAwMDAwMCI+PGZv
+bnQgc3R5bGU9ImZvbnQtc2l6ZToxMnB0IiBzaXplPSIzIj5CZXN0CnJlZ2FyZHMsIDwvZm9udD48
+L2ZvbnQ+PC9zcGFuPgo8L3A+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25v
+c3BhY2UiPgo8L3NwYW4+PHAgc3R5bGU9Im1hcmdpbi1ib3R0b206MGNtO2xpbmUtaGVpZ2h0OjEw
+MCU7dGV4dC1kZWNvcmF0aW9uOm5vbmUiIGFsaWduPSJsZWZ0Ij4KPHNwYW4gc3R5bGU9ImZvbnQt
+ZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPjxmb250IGNvbG9yPSIjMDAwMDAwIj48Zm9udCBz
+dHlsZT0iZm9udC1zaXplOjEycHQiIHNpemU9IjMiPkpvaG4KPC9mb250PjwvZm9udD48L3NwYW4+
+CjwvcD48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+Cjwvc3Bh
+bj48cCBzdHlsZT0ibWFyZ2luLWJvdHRvbTowY207bGluZS1oZWlnaHQ6MTAwJTt0ZXh0LWRlY29y
+YXRpb246bm9uZSIgYWxpZ249ImxlZnQiPgo8c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3Nw
+YWNlLG1vbm9zcGFjZSI+PGJyPjwvc3Bhbj4KCjwvcD48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6
+bW9ub3NwYWNlLG1vbm9zcGFjZSI+Cjwvc3Bhbj48cCBzdHlsZT0ibWFyZ2luLWJvdHRvbTowY207
+bGluZS1oZWlnaHQ6MTAwJTt0ZXh0LWRlY29yYXRpb246bm9uZSIgYWxpZ249ImxlZnQiPjxzcGFu
+IHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj4KPC9zcGFuPjxicj4KCjwv
+cD4KCjxicj48L2Rpdj4K
+
+--===============3246521116668184035==--
 
