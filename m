@@ -1,51 +1,157 @@
-Content-Type: multipart/mixed; boundary="===============8259985903299098998=="
+Content-Type: multipart/mixed; boundary="===============3835884337814266156=="
 MIME-Version: 1.0
-From: Trevor Woerner <twoerner at gmail.com>
-Subject: Re: [tpm2] OE recipe for tpm2-tss works with 1.4.0 but not 2.0.0
-Date: Thu, 12 Jul 2018 20:47:28 -0400
-Message-ID: <20180713004728.GB16423@linux-uys3>
-In-Reply-To: 93090e1902e944318241dd75e934b01a@AZDC-MMB02.GD-MS.US
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] TPM2.0 chip access restriction
+Date: Fri, 13 Jul 2018 13:12:27 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649C056B6@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAMCukfUS=uxEoponKvJ==ngEvHbjpZvtgQenBr-sFD9GXzg0pw@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8259985903299098998==
+--===============3835884337814266156==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu 2018-07-12 @ 09:33:45 PM, Scheie, Peter M wrote:
-> I'm puzzled as to why the two Makefiles are different, as I'd expect them=
- to
-> be the same.
 
-I wouldn't expect them to be anywhere near the same at all. In the case whe=
-re
-you're running ./configure by hand, you're probably setting up a build for
-native compilation. In the case where you're using OE, OE would be getting =
-the
-build ready for, most likely, a very different, cross-development target.
 
-OE does a lot of work to make sure that its builds are not "contaminated" by
-the host on which the builds take place. Your host probably has an older
-version of glibc (2.24) whereas (if you're using master) OE will want to use
-its glibc-2.27. Your host probably has an older version of gcc (4.8 maybe?)
-whereas OE will want to use the gcc-8.1 cross-compiler that it just built f=
-or
-you to target your specific device.
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of John Brown
+> Sent: Wednesday, July 11, 2018 5:25 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] TPM2.0 chip access restriction
+> =
 
-Being able to produce your own cross-binutils, cross-glibc, and cross-compi=
-ler
-then using those to cross-compile your source without the build accidentally
-being corrupted by the native things on your host takes quite a bit of effo=
-rt.
-Which is why the results differ between a native ./configure and the
-./configure that OE does to guard against these problems and cross-compile
-correctly.
+> Hello all,
+> =
 
-Even if your native machine is x86-64 and the thing OE is targetting is also
-x86-64, I would expect quite a difference because the OE build still doesn't
-want to be corrupted by the host; it wants to use the tools it has created,
-even if it's "cross-compiling" back to the same architecture.
+> =
 
---===============8259985903299098998==--
+> =
+
+> =
+
+> I do not know how to approach the issue of access restriction to the tpm2=
+.0 chip.
+> =
+
+> =
+
+> =
+
+> =
+
+> I would like to use tpm chip to store private keys and would like to be s=
+ure that
+> the key can be only used by apps that I allow to do it and I think that t=
+his would
+> increase the security level of the whole system. In TPM2.0 chip the priva=
+te key is
+> hidden, but if every application is allowed to perform operations on this=
+ key and
+> (for example) the attacker would be able to run some malicious applicatio=
+n as
+> normal user, he can use it to receive from remote device some data, perfo=
+rm
+> operations on the private key, and send the result back. In the result th=
+e remote
+> device would behave as it would have the private key. And many other scen=
+arios
+> are possible. So what is the correct way to restrict the access to the TP=
+M chip?
+> =
+
+> =
+
+> =
+
+> =
+
+> - I know that every key can have a password to protect it but in that cas=
+e there is
+> a problem where to store this password in a secure way that only allowed =
+apps
+> can read it.
+
+Why would you store the password? You could also derive it from some secret=
+. The pub
+And priv files used for access, if you don't use a password, access to thos=
+e files means
+Access to the key itself.
+
+> =
+
+> =
+
+> =
+
+> =
+
+> - if an app use tss it talks to abrmd via d-bus and some pipes (am i righ=
+t?). Can the
+> d-bus be used somehow to restrict access to tpm2.0 chip? Can this pipes b=
+e used
+> in a malicious way?
+
+I think SE Linux has dbus integration. Additionally, the dbus interface has=
+ access controls,
+but I am not fluent in them.
+
+> =
+
+> =
+
+> =
+
+> =
+
+> - I also know that PCRs can be used during boot to allow private key acce=
+ss when
+> the system is not corrupted. But this does not prevent the malicous priva=
+te key
+> usage when the attacker put the application to already booted device with=
+ key
+> unlocked.
+
+Parsing error.
+
+> =
+
+> =
+
+> =
+
+> =
+
+> I am already lost in the dark with this. Can somebody put some light on t=
+his issue?
+> =
+
+> =
+
+> =
+
+> =
+
+> Best regards,
+> =
+
+> John
+> =
+
+> =
+
+> =
+
+> =
+
+> =
+
+> =
+
+> =
+
+
+
+--===============3835884337814266156==--
 
