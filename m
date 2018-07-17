@@ -1,38 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============7357670637054866133=="
+Content-Type: multipart/mixed; boundary="===============0813039084756326699=="
 MIME-Version: 1.0
-From: Joshua Lock <joshua.g.lock at linux.intel.com>
-Subject: [tpm2] tpm2-tools 3.1.2 release candidate
-Date: Mon, 16 Jul 2018 21:22:42 +0100
-Message-ID: <848870f6-a846-4de4-5c27-3c206f134f56@linux.intel.com>
+From: Arvind Kumar <arvind.kumar at iotium.io>
+Subject: [tpm2] Seal/Unseal NV Index to PCRs
+Date: Tue, 17 Jul 2018 15:02:41 -0700
+Message-ID: <CAHa3UP4-r6Gtk=Fkpj25ApbihDJevCwD6SKMnS5_ZNoYeLLRtg@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7357670637054866133==
+--===============0813039084756326699==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello all,
+Hi,
 
-I've just tagged and signed rc0 for tpm2-tools 3.1.2:
-https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.2-rc0
+I'm a beginner who needs to securely store disk partition encryption key
+(luks key) in TPM 2.0. I have been looking around for examples but most of
+them only cover theory. I need to figure out following - How to seal an NV
+index to set of PCRs where these PCRs will be updated on system upgrade
+later.
+
+I need to understand the process with examples, any help is appreciated !
 
 
-Javier noticed that we had a behavioural change in 3.1 (compared to 3.0) =
+Thanks,
+Arvind
 
-that was inappropriate for a minor version bump, that is we were using =
+--===============0813039084756326699==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-user supplied object attributes exclusively (instead of ORing them with =
+PGRpdiBkaXI9Imx0ciI+SGksPGRpdj48YnI+PC9kaXY+PGRpdj5JJiMzOTttIGEgYmVnaW5uZXIg
+d2hvIG5lZWRzIHRvIHNlY3VyZWx5IHN0b3JlIGRpc2sgcGFydGl0aW9uIGVuY3J5cHRpb24ga2V5
+IChsdWtzIGtleSkgaW4gVFBNIDIuMC4gSSBoYXZlIGJlZW4gbG9va2luZyBhcm91bmQgZm9yIGV4
+YW1wbGVzIGJ1dCBtb3N0IG9mIHRoZW0gb25seSBjb3ZlciB0aGVvcnkuIEkgbmVlZCB0byBmaWd1
+cmUgb3V0IGZvbGxvd2luZyAtIEhvdyB0byBzZWFsIGFuIE5WIGluZGV4IHRvIHNldCBvZiBQQ1Jz
+IHdoZXJlIHRoZXNlIFBDUnMgd2lsbCBiZSB1cGRhdGVkIG9uIHN5c3RlbSB1cGdyYWRlIGxhdGVy
+LjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+SSBuZWVkIHRvIHVuZGVyc3RhbmQgdGhlIHByb2Nl
+c3Mgd2l0aCBleGFtcGxlcywgYW55IGhlbHAgaXMgYXBwcmVjaWF0ZWQgITwvZGl2PjxkaXY+PGJy
+PjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhhbmtzLDwvZGl2PjxkaXY+QXJ2aW5kPC9kaXY+
+PC9kaXY+Cg==
 
-the defaults). 3.1.2 reverts the change:
-
-https://github.com/tpm2-software/tpm2-tools/commit/352908f7470338aba858a9ac=
-20c1c5ec608b661c
-
-Feedback on this release candidate would be very welcome.
-
-Regards,
-Joshua
-
---===============7357670637054866133==--
+--===============0813039084756326699==--
 
