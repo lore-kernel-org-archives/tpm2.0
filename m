@@ -1,269 +1,85 @@
-Content-Type: multipart/mixed; boundary="===============0926870591306612965=="
+Content-Type: multipart/mixed; boundary="===============2538388343031782996=="
 MIME-Version: 1.0
-From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
-Subject: [tpm2] getting segfaults with tss-2.0.0, abrmd-2.0.0, tools-3.1.0
-Date: Wed, 18 Jul 2018 21:17:53 +0000
-Message-ID: <b8a792c20cf64e448d1a3e8f4252f0b3@AZDC-MMB02.GD-MS.US>
+From: Joshua Lock <joshua.g.lock at linux.intel.com>
+Subject: Re: [tpm2] getting segfaults with tss-2.0.0, abrmd-2.0.0, tools-3.1.0
+Date: Thu, 19 Jul 2018 11:24:23 +0100
+Message-ID: <eac55281-2b3f-1d1f-132c-65c99883fde3@linux.intel.com>
+In-Reply-To: b8a792c20cf64e448d1a3e8f4252f0b3@AZDC-MMB02.GD-MS.US
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0926870591306612965==
+--===============2538388343031782996==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The good news is that with help from Wind River, I've been able to get tpm2=
--tss 2.0.0, tpm2-abrmd 2.0.0, and tpm2-tools 3.1.0 to build in our WR Linux=
- 8 environment.  We had been on versions 1.4.0, 1.2.0, and 3.0.3 respective=
-ly, which are working fine, but I wanted to get onto current releases.  Had=
- to add a couple patches and a bunch of package declarations into our bbapp=
-end files (we're using @flihp's OE recipes which were written for the earli=
-er versions), but now they all build without error.
 
-The bad news is that now on the target I'm getting segfaults with the tools=
- and I can't really use the TPM.  As the system boots up, I see some abrmd =
-errors in the log, but I think that's just abrmd trying to talk to the TPM =
-before the TPM is ready; eventually systemd restarts abrmd and it does star=
-t without errors.  Here's the log in case it's helpful:
 
-Jun 27 22:27:14 localhost kernel: ACPI: TPM2 0x000000009CBF9000 000034 (v03=
- INSYDE HSW-LPT  00000000 ACPI 00040000)
-Jun 27 22:27:15 localhost systemd[1]: Starting TPM2 Access Broker and Resou=
-rce Management Daemon...
-Jun 27 22:27:15 localhost systemd[1]: tpm2-abrmd.service: Main process exit=
-ed, code=3Dexited, status=3D1/FAILURE
-Jun 27 22:27:15 localhost systemd[1]: Failed to start TPM2 Access Broker an=
-d Resource Management Daemon.
-Jun 27 22:27:15 localhost systemd[1]: tpm2-abrmd.service: Unit entered fail=
-ed state.
-Jun 27 22:27:15 localhost systemd[1]: tpm2-abrmd.service: Failed with resul=
-t 'exit-code'.
-Jun 27 22:27:15 localhost kernel[363]: ACPI: TPM2 0x000000009CBF9000 000034=
- (v03 INSYDE HSW-LPT  00000000 ACPI 00040000)
-Jun 27 22:27:15 localhost tpm2-abrmd[366]: ERROR:tcti:/localhome/pscheie/wo=
-rkspace-mdsu-scheie/projects/mdsu/bitbake_build/tmp/work/broadwell-64-wrs-l=
-inux/tpm2-tss/2.0.0-r0/tpm2-tss-2.0.0/src/tss2-tcti/tcti-device.c:281:Tss2_=
-Tcti_Device_Init() Failed to open device file /dev/tpm0: No such file or di=
-rectory
-Jun 27 22:27:15 localhost tpm2-abrmd[366]: ** (tpm2-abrmd:366): WARNING **:=
- failed to initialize device TCTI context: 0xa000a
-Jun 27 22:27:15 localhost tpm2-abrmd[366]: ** (tpm2-abrmd:366): CRITICAL **=
-: TCTI initialization failed: 0xa000a
-Jun 27 22:27:20 localhost systemd[1]: tpm2-abrmd.service: Service hold-off =
-time over, scheduling restart.
-Jun 27 22:27:20 localhost systemd[1]: Stopped TPM2 Access Broker and Resour=
-ce Management Daemon.
-Jun 27 22:27:20 localhost systemd[1]: Starting TPM2 Access Broker and Resou=
-rce Management Daemon...
-Jun 27 22:27:20 localhost systemd[1]: Started TPM2 Access Broker and Resour=
-ce Management Daemon.
+On 18/07/2018 22:17, Scheie, Peter M wrote:
+> By the way, does abrmd default to trying to connect to /dev/tpm0?=C2=A0 W=
+hen =
 
-By the way, does abrmd default to trying to connect to /dev/tpm0?  When wor=
-king with the emulator on my laptop, I have to start abrmd with '--tcti=3Dl=
-ibtss2-tcti-mssim.so' but I assume that's just for when there is no TPM dev=
-ice, right?
+> working with the emulator on my laptop, I have to start abrmd with =
 
-So, with tpm2-abrmd running, if I call, say, tpm2_pcrlist or tpm2_nvlist, t=
-o just query the TPM, it will display the PCRs or the NV indexes but then f=
-ollow that with a "Segmentation fault", and syslog shows things like this:
+> '--tcti=3Dlibtss2-tcti-mssim.so' but I assume that's just for when there =
 
-Jun 27 22:32:42 localhost audit[1432]: ANOM_ABEND auid=3D1000 uid=3D1000 gi=
-d=3D1000 ses=3D1 pid=3D1432 comm=3D"gdbus" exe=3D"/usr/bin/tpm2_pcrlist" si=
-g=3D11
-Jun 27 22:32:42 localhost kernel: gdbus[1432]: segfault at 7f8327acc750 ip =
-00007f8327acc750 sp 00007f8326ab2c38 error 14 in libtss2-mu.so.0.0.0[7f8328=
-284000+3f000]
-Jun 27 22:32:42 localhost kernel[363]: gdbus[1432]: segfault at 7f8327acc75=
-0 ip 00007f8327acc750 sp 00007f8326ab2c38 error 14 in libtss2-mu.so.0.0.0[7=
-f8328284000+3f000]
+> is no TPM device, right?
 
-Trying to write to the TPM, e.g., take ownership, doesn't work at all:
+Correct, if no --tcti value is passed abrmd defaults to using the device =
 
-localhost:~$ tpm2_takeownership -o ownerpass -e endorsepass -l lockpass
-ERROR: Could not change hierarchy for Owner. TPM Error:0x9a2
-ERROR: Unable to run tpm2_takeownership
-Segmentation fault
-and syslog shows
+tcti:
+https://github.com/tpm2-software/tpm2-abrmd/blob/2296d48a1004aff5f93d6ec23a=
+50819f2a5c5584/src/tcti-dynamic.c#L138
 
-Jun 27 23:08:03 localhost audit[1539]: ANOM_ABEND auid=3D1000 uid=3D1000 gi=
-d=3D1000 ses=3D1 pid=3D1539 comm=3D"gdbus" exe=3D"/usr/bin/tpm2_takeownersh=
-ip" sig=3D11
-Jun 27 23:08:03 localhost kernel: gdbus[1539]: segfault at 7ff2fe95c750 ip =
-00007ff2fe95c750 sp 00007ff2fd942c38 error 14 in libtss2-mu.so.0.0.0[7ff2ff=
-114000+3f000]
-Jun 27 23:08:03 localhost kernel[363]: gdbus[1539]: segfault at 7ff2fe95c75=
-0 ip 00007ff2fe95c750 sp 00007ff2fd942c38 error 14 in libtss2-mu.so.0.0.0[7=
-ff2ff114000+3f000]
+At line 142 you can see where the default value of the TCTI library file =
 
-Any suggestions?
+property is set to "libtss2-tcti-device.so".
 
---===============0926870591306612965==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> So, with tpm2-abrmd running, if I call, say, tpm2_pcrlist or =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDYWxp
-YnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9u
-cyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBp
-bjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWls
-eToiQ2FsaWJyaSIsInNhbnMtc2VyaWYiO30KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluawoJe21z
-by1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOmJsdWU7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJs
-aW5lO30KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkCgl7bXNvLXN0eWxlLXBy
-aW9yaXR5Ojk5OwoJY29sb3I6cHVycGxlOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnNw
-YW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsKCWZvbnQt
-ZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0No
-cERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxp
-YnJpIiwic2Fucy1zZXJpZiI7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBp
-bjsKCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtw
-YWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+Cjxv
-OnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2Vu
-ZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRp
-dCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94
-bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJsdWUiIHZs
-aW5rPSJwdXJwbGUiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj5UaGUgZ29vZCBuZXdzIGlzIHRoYXQgd2l0aCBoZWxwIGZyb20gV2luZCBSaXZlciwgSSd2
-ZSBiZWVuIGFibGUgdG8gZ2V0IHRwbTItdHNzIDIuMC4wLCB0cG0yLWFicm1kIDIuMC4wLCBhbmQg
-dHBtMi10b29scyAzLjEuMCB0byBidWlsZCBpbiBvdXIgV1IgTGludXggOCBlbnZpcm9ubWVudC4m
-bmJzcDsgV2UgaGFkIGJlZW4gb24gdmVyc2lvbnMgMS40LjAsIDEuMi4wLCBhbmQgMy4wLjMgcmVz
-cGVjdGl2ZWx5LCB3aGljaCBhcmUKIHdvcmtpbmcgZmluZSwgYnV0IEkgd2FudGVkIHRvIGdldCBv
-bnRvIGN1cnJlbnQgcmVsZWFzZXMuJm5ic3A7IEhhZCB0byBhZGQgYSBjb3VwbGUgcGF0Y2hlcyBh
-bmQgYSBidW5jaCBvZiBwYWNrYWdlIGRlY2xhcmF0aW9ucyBpbnRvIG91ciBiYmFwcGVuZCBmaWxl
-cyAod2UmIzgyMTc7cmUgdXNpbmcgQGZsaWhwJiM4MjE3O3MgT0UgcmVjaXBlcyB3aGljaCB3ZXJl
-IHdyaXR0ZW4gZm9yIHRoZSBlYXJsaWVyIHZlcnNpb25zKSwgYnV0IG5vdyB0aGV5IGFsbCBidWls
-ZCB3aXRob3V0CiBlcnJvci4gJm5ic3A7PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGUgYmFkIG5l
-d3MgaXMgdGhhdCBub3cgb24gdGhlIHRhcmdldCBJJ20gZ2V0dGluZyBzZWdmYXVsdHMgd2l0aCB0
-aGUgdG9vbHMgYW5kIEkgY2FuJ3QgcmVhbGx5IHVzZSB0aGUgVFBNLiZuYnNwOyBBcyB0aGUgc3lz
-dGVtIGJvb3RzIHVwLCBJIHNlZSBzb21lIGFicm1kIGVycm9ycyBpbiB0aGUgbG9nLCBidXQgSSB0
-aGluayB0aGF0J3MganVzdCBhYnJtZCB0cnlpbmcgdG8gdGFsayB0byB0aGUgVFBNIGJlZm9yZSB0
-aGUKIFRQTSBpcyByZWFkeTsgZXZlbnR1YWxseSBzeXN0ZW1kIHJlc3RhcnRzIGFicm1kIGFuZCBp
-dCBkb2VzIHN0YXJ0IHdpdGhvdXQgZXJyb3JzLiZuYnNwOyBIZXJlJ3MgdGhlIGxvZyBpbiBjYXNl
-IGl0J3MgaGVscGZ1bDo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4m
-bmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNp
-emU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5KdW4gMjcgMjI6
-Mjc6MTQgbG9jYWxob3N0IGtlcm5lbDogQUNQSTogVFBNMiAweDAwMDAwMDAwOUNCRjkwMDAgMDAw
-MDM0ICh2MDMgSU5TWURFIEhTVy1MUFQmbmJzcDsgMDAwMDAwMDAgQUNQSSAwMDA0MDAwMCk8bzpw
-PjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5KdW4gMjcg
-MjI6Mjc6MTUgbG9jYWxob3N0IHN5c3RlbWRbMV06IFN0YXJ0aW5nIFRQTTIgQWNjZXNzIEJyb2tl
-ciBhbmQgUmVzb3VyY2UgTWFuYWdlbWVudCBEYWVtb24uLi48bzpwPjwvbzpwPjwvc3Bhbj48L3A+
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQt
-ZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5KdW4gMjcgMjI6Mjc6MTUgbG9jYWxob3N0
-IHN5c3RlbWRbMV06IHRwbTItYWJybWQuc2VydmljZTogTWFpbiBwcm9jZXNzIGV4aXRlZCwgY29k
-ZT1leGl0ZWQsIHN0YXR1cz0xL0ZBSUxVUkU8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNz
-PSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZx
-dW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5KdW4gMjcgMjI6Mjc6MTUgbG9jYWxob3N0IHN5c3RlbWRb
-MV06IEZhaWxlZCB0byBzdGFydCBUUE0yIEFjY2VzcyBCcm9rZXIgYW5kIFJlc291cmNlIE1hbmFn
-ZW1lbnQgRGFlbW9uLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBO
-ZXcmcXVvdDsiPkp1biAyNyAyMjoyNzoxNSBsb2NhbGhvc3Qgc3lzdGVtZFsxXTogdHBtMi1hYnJt
-ZC5zZXJ2aWNlOiBVbml0IGVudGVyZWQgZmFpbGVkIHN0YXRlLjxvOnA+PC9vOnA+PC9zcGFuPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPkp1biAyNyAyMjoyNzoxNSBsb2NhbGhv
-c3Qgc3lzdGVtZFsxXTogdHBtMi1hYnJtZC5zZXJ2aWNlOiBGYWlsZWQgd2l0aCByZXN1bHQgJ2V4
-aXQtY29kZScuPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZx
-dW90OyI+SnVuIDI3IDIyOjI3OjE1IGxvY2FsaG9zdCBrZXJuZWxbMzYzXTogQUNQSTogVFBNMiAw
-eDAwMDAwMDAwOUNCRjkwMDAgMDAwMDM0ICh2MDMgSU5TWURFIEhTVy1MUFQmbmJzcDsgMDAwMDAw
-MDAgQUNQSSAwMDA0MDAwMCk8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJp
-ZXIgTmV3JnF1b3Q7Ij5KdW4gMjcgMjI6Mjc6MTUgbG9jYWxob3N0IHRwbTItYWJybWRbMzY2XTog
-RVJST1I6dGN0aTovbG9jYWxob21lL3BzY2hlaWUvd29ya3NwYWNlLW1kc3Utc2NoZWllL3Byb2pl
-Y3RzL21kc3UvYml0YmFrZV9idWlsZC90bXAvd29yay9icm9hZHdlbGwtNjQtd3JzLWxpbnV4L3Rw
-bTItdHNzLzIuMC4wLXIwL3RwbTItdHNzLTIuMC4wL3NyYy90c3MyLXRjdGkvdGN0aS1kZXZpY2Uu
-YzoyODE6VHNzMl9UY3RpX0RldmljZV9Jbml0KCkKIEZhaWxlZCB0byBvcGVuIGRldmljZSBmaWxl
-IC9kZXYvdHBtMDogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeTxvOnA+PC9vOnA+PC9zcGFuPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPkp1biAyNyAyMjoyNzoxNSBsb2NhbGhv
-c3QgdHBtMi1hYnJtZFszNjZdOiAqKiAodHBtMi1hYnJtZDozNjYpOiBXQVJOSU5HICoqOiBmYWls
-ZWQgdG8gaW5pdGlhbGl6ZSBkZXZpY2UgVENUSSBjb250ZXh0OiAweGEwMDBhPG86cD48L286cD48
-L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEw
-LjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+SnVuIDI3IDIyOjI3OjE1
-IGxvY2FsaG9zdCB0cG0yLWFicm1kWzM2Nl06ICoqICh0cG0yLWFicm1kOjM2Nik6IENSSVRJQ0FM
-ICoqOiBUQ1RJIGluaXRpYWxpemF0aW9uIGZhaWxlZDogMHhhMDAwYTxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7
-Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPkp1biAyNyAyMjoyNzoyMCBsb2Nh
-bGhvc3Qgc3lzdGVtZFsxXTogdHBtMi1hYnJtZC5zZXJ2aWNlOiBTZXJ2aWNlIGhvbGQtb2ZmIHRp
-bWUgb3Zlciwgc2NoZWR1bGluZyByZXN0YXJ0LjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6
-JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPkp1biAyNyAyMjoyNzoyMCBsb2NhbGhvc3Qgc3lzdGVt
-ZFsxXTogU3RvcHBlZCBUUE0yIEFjY2VzcyBCcm9rZXIgYW5kIFJlc291cmNlIE1hbmFnZW1lbnQg
-RGFlbW9uLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
-c3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVv
-dDsiPkp1biAyNyAyMjoyNzoyMCBsb2NhbGhvc3Qgc3lzdGVtZFsxXTogU3RhcnRpbmcgVFBNMiBB
-Y2Nlc3MgQnJva2VyIGFuZCBSZXNvdXJjZSBNYW5hZ2VtZW50IERhZW1vbi4uLjxvOnA+PC9vOnA+
-PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTox
-MC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPkp1biAyNyAyMjoyNzoy
-MCBsb2NhbGhvc3Qgc3lzdGVtZFsxXTogU3RhcnRlZCBUUE0yIEFjY2VzcyBCcm9rZXIgYW5kIFJl
-c291cmNlIE1hbmFnZW1lbnQgRGFlbW9uLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkJ5
-IHRoZSB3YXksIGRvZXMgYWJybWQgZGVmYXVsdCB0byB0cnlpbmcgdG8gY29ubmVjdCB0byAvZGV2
-L3RwbTA/Jm5ic3A7IFdoZW4gd29ya2luZyB3aXRoIHRoZSBlbXVsYXRvciBvbiBteSBsYXB0b3As
-IEkgaGF2ZSB0byBzdGFydCBhYnJtZCB3aXRoICctLXRjdGk9bGlidHNzMi10Y3RpLW1zc2ltLnNv
-JyBidXQgSSBhc3N1bWUgdGhhdCdzIGp1c3QgZm9yIHdoZW4gdGhlcmUgaXMgbm8gVFBNIGRldmlj
-ZSwgcmlnaHQ/PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7
-PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5Tbywgd2l0aCB0cG0yLWFicm1kIHJ1bm5p
-bmcsIGlmIEkgY2FsbCwgc2F5LCB0cG0yX3Bjcmxpc3Qgb3IgdHBtMl9udmxpc3QsIHRvIGp1c3Qg
-cXVlcnkgdGhlIFRQTSwgaXQgd2lsbCBkaXNwbGF5IHRoZSBQQ1JzIG9yIHRoZSBOViBpbmRleGVz
-IGJ1dCB0aGVuIGZvbGxvdyB0aGF0IHdpdGggYSAmcXVvdDtTZWdtZW50YXRpb24gZmF1bHQmcXVv
-dDssIGFuZCBzeXNsb2cgc2hvd3MgdGhpbmdzIGxpa2UgdGhpczo8bzpwPjwvbzpwPjwvcD4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJp
-ZXIgTmV3JnF1b3Q7Ij5KdW4gMjcgMjI6MzI6NDIgbG9jYWxob3N0IGF1ZGl0WzE0MzJdOiBBTk9N
-X0FCRU5EIGF1aWQ9MTAwMCB1aWQ9MTAwMCBnaWQ9MTAwMCBzZXM9MSBwaWQ9MTQzMiBjb21tPSZx
-dW90O2dkYnVzJnF1b3Q7IGV4ZT0mcXVvdDsvdXNyL2Jpbi90cG0yX3Bjcmxpc3QmcXVvdDsgc2ln
-PTExPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHls
-ZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+
-SnVuIDI3IDIyOjMyOjQyIGxvY2FsaG9zdCBrZXJuZWw6IGdkYnVzWzE0MzJdOiBzZWdmYXVsdCBh
-dCA3ZjgzMjdhY2M3NTAgaXAgMDAwMDdmODMyN2FjYzc1MCBzcCAwMDAwN2Y4MzI2YWIyYzM4IGVy
-cm9yIDE0IGluIGxpYnRzczItbXUuc28uMC4wLjBbN2Y4MzI4Mjg0MDAwJiM0MzszZjAwMF08bzpw
-PjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5KdW4gMjcg
-MjI6MzI6NDIgbG9jYWxob3N0IGtlcm5lbFszNjNdOiBnZGJ1c1sxNDMyXTogc2VnZmF1bHQgYXQg
-N2Y4MzI3YWNjNzUwIGlwIDAwMDA3ZjgzMjdhY2M3NTAgc3AgMDAwMDdmODMyNmFiMmMzOCBlcnJv
-ciAxNCBpbiBsaWJ0c3MyLW11LnNvLjAuMC4wWzdmODMyODI4NDAwMCYjNDM7M2YwMDBdPG86cD48
-L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VHJ5aW5nIHRvIHdyaXRlIHRvIHRoZSBUUE0sIGUuZy4s
-IHRha2Ugb3duZXJzaGlwLCBkb2Vzbid0IHdvcmsgYXQgYWxsOjxvOnA+PC9vOnA+PC9wPgo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5sb2Nh
-bGhvc3Q6fiQgdHBtMl90YWtlb3duZXJzaGlwIC1vIG93bmVycGFzcyAtZSBlbmRvcnNlcGFzcyAt
-bCBsb2NrcGFzczxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
-YW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5FUlJPUjogQ291
-bGQgbm90IGNoYW5nZSBoaWVyYXJjaHkgZm9yIE93bmVyLiBUUE0gRXJyb3I6MHg5YTI8bzpwPjwv
-bzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZh
-bWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+RVJST1I6IFVuYWJsZSB0byBydW4gdHBtMl90
-YWtlb3duZXJzaGlwPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPlNlZ21lbnRh
-dGlvbiBmYXVsdDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86
-cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPmFuZCBzeXNsb2cgc2hvd3M8bzpwPjwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5
-OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5KdW4gMjcgMjM6MDg6MDMgbG9jYWxob3N0IGF1ZGl0
-WzE1MzldOiBBTk9NX0FCRU5EIGF1aWQ9MTAwMCB1aWQ9MTAwMCBnaWQ9MTAwMCBzZXM9MSBwaWQ9
-MTUzOSBjb21tPSZxdW90O2dkYnVzJnF1b3Q7IGV4ZT0mcXVvdDsvdXNyL2Jpbi90cG0yX3Rha2Vv
-d25lcnNoaXAmcXVvdDsgc2lnPTExPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtD
-b3VyaWVyIE5ldyZxdW90OyI+SnVuIDI3IDIzOjA4OjAzIGxvY2FsaG9zdCBrZXJuZWw6IGdkYnVz
-WzE1MzldOiBzZWdmYXVsdCBhdCA3ZmYyZmU5NWM3NTAgaXAgMDAwMDdmZjJmZTk1Yzc1MCBzcCAw
-MDAwN2ZmMmZkOTQyYzM4IGVycm9yIDE0IGluIGxpYnRzczItbXUuc28uMC4wLjBbN2ZmMmZmMTE0
-MDAwJiM0MzszZjAwMF08bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIg
-TmV3JnF1b3Q7Ij5KdW4gMjcgMjM6MDg6MDMgbG9jYWxob3N0IGtlcm5lbFszNjNdOiBnZGJ1c1sx
-NTM5XTogc2VnZmF1bHQgYXQgN2ZmMmZlOTVjNzUwIGlwIDAwMDA3ZmYyZmU5NWM3NTAgc3AgMDAw
-MDdmZjJmZDk0MmMzOCBlcnJvciAxNCBpbiBsaWJ0c3MyLW11LnNvLjAuMC4wWzdmZjJmZjExNDAw
-MCYjNDM7M2YwMDBdPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5l
-dyZxdW90OyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij5Bbnkgc3VnZ2VzdGlvbnM/PG86cD48L286cD48L3A+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
+> tpm2_nvlist, to just query the TPM, it will display the PCRs or the NV =
 
---===============0926870591306612965==--
+> indexes but then follow that with a "Segmentation fault", and syslog =
+
+> shows things like this:
+> =
+
+> Jun 27 22:32:42 localhost audit[1432]: ANOM_ABEND auid=3D1000 uid=3D1000 =
+
+> gid=3D1000 ses=3D1 pid=3D1432 comm=3D"gdbus" exe=3D"/usr/bin/tpm2_pcrlist=
+" sig=3D11
+> =
+
+> Jun 27 22:32:42 localhost kernel: gdbus[1432]: segfault at 7f8327acc750 =
+
+> ip 00007f8327acc750 sp 00007f8326ab2c38 error 14 in =
+
+> libtss2-mu.so.0.0.0[7f8328284000+3f000]
+> =
+
+> Jun 27 22:32:42 localhost kernel[363]: gdbus[1432]: segfault at =
+
+> 7f8327acc750 ip 00007f8327acc750 sp 00007f8326ab2c38 error 14 in =
+
+> libtss2-mu.so.0.0.0[7f8328284000+3f000]
+> =
+
+> Trying to write to the TPM, e.g., take ownership, doesn't work at all:
+> =
+
+> localhost:~$ tpm2_takeownership -o ownerpass -e endorsepass -l lockpass
+> =
+
+> ERROR: Could not change hierarchy for Owner. TPM Error:0x9a2
+
+I just recently learned about tpm2_rc_decode[1], it tells me:
+
+$ ./tools/aux/tpm2_rc_decode 0x9a2
+tpm:session(1):authorization failure without DA implications
+
+Is this TPM already configured? Have you replicated on more than one system?
+
+Joshua
+
+--===============2538388343031782996==--
 
