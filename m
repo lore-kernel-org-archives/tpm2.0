@@ -1,17 +1,25 @@
-Content-Type: multipart/mixed; boundary="===============2827057286299926353=="
+Content-Type: multipart/mixed; boundary="===============8060779427592993614=="
 MIME-Version: 1.0
-From: Joshua Lock <joshua.g.lock at linux.intel.com>
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
 Subject: Re: [tpm2] getting segfaults with tss-2.0.0, abrmd-2.0.0, tools-3.1.0
-Date: Fri, 20 Jul 2018 12:00:26 +0100
-Message-ID: <5be06eb3-583c-9218-4abf-4ea8d8e1b3a0@linux.intel.com>
-In-Reply-To: 5301b30ef7e94877ad562d44b140a21e@AZDC-MMB02.GD-MS.US
+Date: Fri, 20 Jul 2018 13:33:48 +0000
+Message-ID: <13c845abdf2e4e0f80e8d9714130e27d@AZDC-MMB02.GD-MS.US>
+In-Reply-To: 5be06eb3-583c-9218-4abf-4ea8d8e1b3a0@linux.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2827057286299926353==
+--===============8060779427592993614==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+-----Original Message-----
+From: Joshua Lock [mailto:joshua.g.lock(a)linux.intel.com] =
+
+Sent: Friday, July 20, 2018 6:00 AM
+To: Scheie, Peter M; tpm2(a)lists.01.org
+Subject: Re: [tpm2] getting segfaults with tss-2.0.0, abrmd-2.0.0, tools-3.=
+1.0
 
 On 19/07/2018 17:08, Scheie, Peter M wrote:
 > =
@@ -99,5 +107,12 @@ packages and find out more about the segfault?
 Thanks,
 Joshua
 
---===============2827057286299926353==--
+************************************************************
+Wind River has suggested that since it appears the segfaults are appearing =
+on the "gdbus" process, it may be dbus related.  One possibility is that th=
+e dbus version in WRL8 is not in sync with the newer tpm2 utilities.
+
+Peter
+
+--===============8060779427592993614==--
 
