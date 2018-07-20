@@ -1,118 +1,130 @@
-Content-Type: multipart/mixed; boundary="===============8060779427592993614=="
+Content-Type: multipart/mixed; boundary="===============1467509703197613155=="
 MIME-Version: 1.0
-From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
-Subject: Re: [tpm2] getting segfaults with tss-2.0.0, abrmd-2.0.0, tools-3.1.0
-Date: Fri, 20 Jul 2018 13:33:48 +0000
-Message-ID: <13c845abdf2e4e0f80e8d9714130e27d@AZDC-MMB02.GD-MS.US>
-In-Reply-To: 5be06eb3-583c-9218-4abf-4ea8d8e1b3a0@linux.intel.com
+From: Agerstam, Mats G <mats.g.agerstam at intel.com>
+Subject: [tpm2] tpm2-tools tpm2_takeownership w/ Intel NUC
+Date: Fri, 20 Jul 2018 22:01:26 +0000
+Message-ID: <15CA292A0CD93849BA2105D0F0B2D8A1EB96EA53@ORSMSX105.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8060779427592993614==
+--===============1467509703197613155==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
------Original Message-----
-From: Joshua Lock [mailto:joshua.g.lock(a)linux.intel.com] =
+Hi,
 
-Sent: Friday, July 20, 2018 6:00 AM
-To: Scheie, Peter M; tpm2(a)lists.01.org
-Subject: Re: [tpm2] getting segfaults with tss-2.0.0, abrmd-2.0.0, tools-3.=
-1.0
+I'm pretty new to the TPM toolset, but have been struggling a bit getting s=
+ome of the fundamental pieces working. The issue I'm running into is when t=
+rying to take ownership of the TPM which results in an error:
+ERROR: Could not change hierarchy for Owner. TPM Error:0x9a2
 
-On 19/07/2018 17:08, Scheie, Peter M wrote:
-> =
+Even though I have not been successful in previously trying to take ownersh=
+ip, tried to run with the -c option, which resulted in
+ERROR: Clearing Failed! TPM error code: 0x921. Looking at the meaning of th=
+e result code it indicated TPM_RC_LOCKOUT.
 
-> -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Joshua Lock
-> Sent: Thursday, July 19, 2018 5:24 AM
-> To: tpm2(a)lists.01.org
-> Subject: Re: [tpm2] getting segfaults with tss-2.0.0, abrmd-2.0.0, tools-=
-3.1.0
-> =
+Other basic commands, like getting random numbers through tpm_getrandom [x]=
+ works fine.
 
-> =
+I have a NUC 7i7BNH, BIOS version 56 (from Oct 2017), Ubuntu 16.04 Kernel v=
+ersion 4.13.0-45. I'm currently running tpm2-tools 2.1.0, tpm2-tss-2.0.0 an=
+d tpm2-abrmd 1.1.1.
 
-> =
-
-> On 18/07/2018 22:17, Scheie, Peter M wrote:
->> By the way, does abrmd default to trying to connect to /dev/tpm0?=C2=A0 =
-When
->> working with the emulator on my laptop, I have to start abrmd with
->> '--tcti=3Dlibtss2-tcti-mssim.so' but I assume that's just for when there
->> is no TPM device, right?
-> =
-
-> Correct, if no --tcti value is passed abrmd defaults to using the device
-> tcti:
-> https://github.com/tpm2-software/tpm2-abrmd/blob/2296d48a1004aff5f93d6ec2=
-3a50819f2a5c5584/src/tcti-dynamic.c#L138
-> =
-
-> At line 142 you can see where the default value of the TCTI library file
-> property is set to "libtss2-tcti-device.so".
-> =
-
->> So, with tpm2-abrmd running, if I call, say, tpm2_pcrlist or
->> tpm2_nvlist, to just query the TPM, it will display the PCRs or the NV
->> indexes but then follow that with a "Segmentation fault", and syslog
->> shows things like this:
->>
->> Jun 27 22:32:42 localhost audit[1432]: ANOM_ABEND auid=3D1000 uid=3D1000
->> gid=3D1000 ses=3D1 pid=3D1432 comm=3D"gdbus" exe=3D"/usr/bin/tpm2_pcrlis=
-t" sig=3D11
->>
->> Jun 27 22:32:42 localhost kernel: gdbus[1432]: segfault at 7f8327acc750
->> ip 00007f8327acc750 sp 00007f8326ab2c38 error 14 in
->> libtss2-mu.so.0.0.0[7f8328284000+3f000]
->>
->> Jun 27 22:32:42 localhost kernel[363]: gdbus[1432]: segfault at
->> 7f8327acc750 ip 00007f8327acc750 sp 00007f8326ab2c38 error 14 in
->> libtss2-mu.so.0.0.0[7f8328284000+3f000]
->>
->> Trying to write to the TPM, e.g., take ownership, doesn't work at all:
->>
->> localhost:~$ tpm2_takeownership -o ownerpass -e endorsepass -l lockpass
->>
->> ERROR: Could not change hierarchy for Owner. TPM Error:0x9a2
-> =
-
-> I just recently learned about tpm2_rc_decode[1], it tells me:
-> =
-
-> $ ./tools/aux/tpm2_rc_decode 0x9a2
-> tpm:session(1):authorization failure without DA implications
-> =
-
-> Is this TPM already configured? Have you replicated on more than one syst=
-em?
-> =
-
-> Joshua
-> =
-
-> ***********************************************************
-> Oops, you are correct: I had already taken ownership of the TPM previousl=
-y, but was not supplying the owner password when trying to write to it.   W=
-ith that in mind, I can write/configure the TPM as expected.  However, I'm =
-still getting a segfault message after each operation.
-> =
-
-
-Glad to hear, though the segfault is worrying. Could you install debug =
-
-packages and find out more about the segfault?
+I have additionally tried to take out the BIOS security jumper, resetting/c=
+learing the TPM and retrying, without any success. Any guidance or tips on =
+what could be causing this?
 
 Thanks,
-Joshua
+   Mats
 
-************************************************************
-Wind River has suggested that since it appears the segfaults are appearing =
-on the "gdbus" process, it may be dbus related.  One possibility is that th=
-e dbus version in WRL8 is not in sync with the newer tpm2 utilities.
 
-Peter
+--===============1467509703197613155==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
---===============8060779427592993614==--
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6IkNhbGlicmkgTGlnaHQiOwoJcGFub3NlLTE6MiAxNSAzIDIgMiAyIDQgMyAy
+IDQ7fQpAZm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAy
+IDIgMiA0IDMgMiA0O30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1z
+b05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAx
+cHQ7Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7
+fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29s
+b3I6IzA1NjNDMTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4u
+TXNvSHlwZXJsaW5rRm9sbG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0
+RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNv
+LXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIExpZ2h0
+IixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0
+eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9
+CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3NpemU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEu
+MGluIDEuMGluIDEuMGluO30KZGl2LldvcmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30K
+LS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4
+dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUg
+bXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9
+ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9o
+ZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8
+ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHls
+ZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSBMaWdodCZxdW90OyxzYW5zLXNlcmlmIj5IaSw8
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
+b250LWZhbWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2VyaWYiPjxvOnA+Jm5i
+c3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZv
+bnQtZmFtaWx5OiZxdW90O0NhbGlicmkgTGlnaHQmcXVvdDssc2Fucy1zZXJpZiI+SSYjODIxNztt
+IHByZXR0eSBuZXcgdG8gdGhlIFRQTSB0b29sc2V0LCBidXQgaGF2ZSBiZWVuIHN0cnVnZ2xpbmcg
+YSBiaXQgZ2V0dGluZyBzb21lIG9mIHRoZSBmdW5kYW1lbnRhbCBwaWVjZXMgd29ya2luZy4gVGhl
+IGlzc3VlIEkmIzgyMTc7bSBydW5uaW5nIGludG8gaXMgd2hlbiB0cnlpbmcgdG8gdGFrZSBvd25l
+cnNoaXAgb2YgdGhlIFRQTQogd2hpY2ggcmVzdWx0cyBpbiBhbiBlcnJvcjo8bzpwPjwvbzpwPjwv
+c3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTom
+cXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2VyaWYiPkVSUk9SOiBDb3VsZCBub3QgY2hh
+bmdlIGhpZXJhcmNoeSBmb3IgT3duZXIuIFRQTSBFcnJvcjoweDlhMjxvOnA+PC9vOnA+PC9zcGFu
+PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90
+O0NhbGlicmkgTGlnaHQmcXVvdDssc2Fucy1zZXJpZiI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7
+Q2FsaWJyaSBMaWdodCZxdW90OyxzYW5zLXNlcmlmIj5FdmVuIHRob3VnaCBJIGhhdmUgbm90IGJl
+ZW4gc3VjY2Vzc2Z1bCBpbiBwcmV2aW91c2x5IHRyeWluZyB0byB0YWtlIG93bmVyc2hpcCwgdHJp
+ZWQgdG8gcnVuIHdpdGggdGhlICYjODIxMTtjIG9wdGlvbiwgd2hpY2ggcmVzdWx0ZWQgaW4KPG86
+cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9u
+dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSBMaWdodCZxdW90OyxzYW5zLXNlcmlmIj5FUlJPUjogQ2xl
+YXJpbmcgRmFpbGVkISBUUE0gZXJyb3IgY29kZTogMHg5MjEuIExvb2tpbmcgYXQgdGhlIG1lYW5p
+bmcgb2YgdGhlIHJlc3VsdCBjb2RlIGl0IGluZGljYXRlZCBUUE1fUkNfTE9DS09VVC48bzpwPjwv
+bzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZh
+bWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2VyaWYiPjxvOnA+Jm5ic3A7PC9v
+OnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFt
+aWx5OiZxdW90O0NhbGlicmkgTGlnaHQmcXVvdDssc2Fucy1zZXJpZiI+T3RoZXIgYmFzaWMgY29t
+bWFuZHMsIGxpa2UgZ2V0dGluZyByYW5kb20gbnVtYmVycyB0aHJvdWdoIHRwbV9nZXRyYW5kb20g
+W3hdIHdvcmtzIGZpbmUuPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSBMaWdodCZxdW90OyxzYW5z
+LXNlcmlmIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMt
+c2VyaWYiPkkgaGF2ZSBhIE5VQyA3aTdCTkgsIEJJT1MgdmVyc2lvbiA1NiAoZnJvbSBPY3QgMjAx
+NyksIFVidW50dSAxNi4wNCBLZXJuZWwgdmVyc2lvbiA0LjEzLjAtNDUuIEkmIzgyMTc7bSBjdXJy
+ZW50bHkgcnVubmluZyB0cG0yLXRvb2xzIDIuMS4wLCB0cG0yLXRzcy0yLjAuMCBhbmQgdHBtMi1h
+YnJtZCAxLjEuMS48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxz
+cGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2Vy
+aWYiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
+YW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkgTGlnaHQmcXVvdDssc2Fucy1zZXJp
+ZiI+SSBoYXZlIGFkZGl0aW9uYWxseSB0cmllZCB0byB0YWtlIG91dCB0aGUgQklPUyBzZWN1cml0
+eSBqdW1wZXIsIHJlc2V0dGluZy9jbGVhcmluZyB0aGUgVFBNIGFuZCByZXRyeWluZywgd2l0aG91
+dCBhbnkgc3VjY2Vzcy4gQW55IGd1aWRhbmNlIG9yIHRpcHMgb24gd2hhdCBjb3VsZCBiZSBjYXVz
+aW5nIHRoaXM/PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
+biBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSBMaWdodCZxdW90OyxzYW5zLXNlcmlm
+Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
+IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2VyaWYi
+PlRoYW5rcyw8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
+IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2VyaWYi
+PiZuYnNwOyZuYnNwOyBNYXRzPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSBMaWdodCZxdW90Oyxz
+YW5zLXNlcmlmIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjwvZGl2Pgo8L2JvZHk+Cjwv
+aHRtbD4K
+
+--===============1467509703197613155==--
 
