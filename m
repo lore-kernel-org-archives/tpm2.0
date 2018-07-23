@@ -1,130 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============1467509703197613155=="
+Content-Type: multipart/mixed; boundary="===============0904612922079639374=="
 MIME-Version: 1.0
-From: Agerstam, Mats G <mats.g.agerstam at intel.com>
-Subject: [tpm2] tpm2-tools tpm2_takeownership w/ Intel NUC
-Date: Fri, 20 Jul 2018 22:01:26 +0000
-Message-ID: <15CA292A0CD93849BA2105D0F0B2D8A1EB96EA53@ORSMSX105.amr.corp.intel.com>
+From: Yasuhiro Hosoda <hosoda-yasuhiro at ntt-el.com>
+Subject: [tpm2] tpm2-tss question
+Date: Mon, 23 Jul 2018 13:44:43 +0900
+Message-ID: <51a65cc4-ae2f-a776-66af-2486c4491ad8@ntt-el.com>
+In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D010EB03568@exch2010c.sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1467509703197613155==
+--===============0904612922079639374==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-I'm pretty new to the TPM toolset, but have been struggling a bit getting s=
-ome of the fundamental pieces working. The issue I'm running into is when t=
-rying to take ownership of the TPM which results in an error:
-ERROR: Could not change hierarchy for Owner. TPM Error:0x9a2
+I found one problem about the TPM Dictionary Attack Lock mechanism.
 
-Even though I have not been successful in previously trying to take ownersh=
-ip, tried to run with the -c option, which resulted in
-ERROR: Clearing Failed! TPM error code: 0x921. Looking at the meaning of th=
-e result code it indicated TPM_RC_LOCKOUT.
+I executed the following command sequence to check the functionality of =
 
-Other basic commands, like getting random numbers through tpm_getrandom [x]=
- works fine.
+DictionaryAttackLockReset.
 
-I have a NUC 7i7BNH, BIOS version 56 (from Oct 2017), Ubuntu 16.04 Kernel v=
-ersion 4.13.0-45. I'm currently running tpm2-tools 2.1.0, tpm2-tss-2.0.0 an=
-d tpm2-abrmd 1.1.1.
+(1) DictionaryAttackLockReset (right authValue) , rval=3D0
 
-I have additionally tried to take out the BIOS security jumper, resetting/c=
-learing the TPM and retrying, without any success. Any guidance or tips on =
-what could be causing this?
+(2) DictionaryAttackParameters=C2=A0 (wrong authValue), rval=3D98e
 
-Thanks,
-   Mats
+(3) DictionaryAttackParameters=C2=A0 (right authValue), rval=3D921
 
+<StartAuthSession(Policy)>
 
---===============1467509703197613155==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+<Compute Policy>
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6IkNhbGlicmkgTGlnaHQiOwoJcGFub3NlLTE6MiAxNSAzIDIgMiAyIDQgMyAy
-IDQ7fQpAZm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAy
-IDIgMiA0IDMgMiA0O30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1z
-b05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAx
-cHQ7Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7
-fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29s
-b3I6IzA1NjNDMTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4u
-TXNvSHlwZXJsaW5rRm9sbG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0
-RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNv
-LXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIExpZ2h0
-IixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0
-eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9
-CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3NpemU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEu
-MGluIDEuMGluIDEuMGluO30KZGl2LldvcmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30K
-LS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4
-dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUg
-bXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9
-ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9o
-ZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8
-ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHls
-ZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSBMaWdodCZxdW90OyxzYW5zLXNlcmlmIj5IaSw8
-bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
-b250LWZhbWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2VyaWYiPjxvOnA+Jm5i
-c3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZv
-bnQtZmFtaWx5OiZxdW90O0NhbGlicmkgTGlnaHQmcXVvdDssc2Fucy1zZXJpZiI+SSYjODIxNztt
-IHByZXR0eSBuZXcgdG8gdGhlIFRQTSB0b29sc2V0LCBidXQgaGF2ZSBiZWVuIHN0cnVnZ2xpbmcg
-YSBiaXQgZ2V0dGluZyBzb21lIG9mIHRoZSBmdW5kYW1lbnRhbCBwaWVjZXMgd29ya2luZy4gVGhl
-IGlzc3VlIEkmIzgyMTc7bSBydW5uaW5nIGludG8gaXMgd2hlbiB0cnlpbmcgdG8gdGFrZSBvd25l
-cnNoaXAgb2YgdGhlIFRQTQogd2hpY2ggcmVzdWx0cyBpbiBhbiBlcnJvcjo8bzpwPjwvbzpwPjwv
-c3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTom
-cXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2VyaWYiPkVSUk9SOiBDb3VsZCBub3QgY2hh
-bmdlIGhpZXJhcmNoeSBmb3IgT3duZXIuIFRQTSBFcnJvcjoweDlhMjxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90
-O0NhbGlicmkgTGlnaHQmcXVvdDssc2Fucy1zZXJpZiI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+
-PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7
-Q2FsaWJyaSBMaWdodCZxdW90OyxzYW5zLXNlcmlmIj5FdmVuIHRob3VnaCBJIGhhdmUgbm90IGJl
-ZW4gc3VjY2Vzc2Z1bCBpbiBwcmV2aW91c2x5IHRyeWluZyB0byB0YWtlIG93bmVyc2hpcCwgdHJp
-ZWQgdG8gcnVuIHdpdGggdGhlICYjODIxMTtjIG9wdGlvbiwgd2hpY2ggcmVzdWx0ZWQgaW4KPG86
-cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9u
-dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSBMaWdodCZxdW90OyxzYW5zLXNlcmlmIj5FUlJPUjogQ2xl
-YXJpbmcgRmFpbGVkISBUUE0gZXJyb3IgY29kZTogMHg5MjEuIExvb2tpbmcgYXQgdGhlIG1lYW5p
-bmcgb2YgdGhlIHJlc3VsdCBjb2RlIGl0IGluZGljYXRlZCBUUE1fUkNfTE9DS09VVC48bzpwPjwv
-bzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZh
-bWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2VyaWYiPjxvOnA+Jm5ic3A7PC9v
-OnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFt
-aWx5OiZxdW90O0NhbGlicmkgTGlnaHQmcXVvdDssc2Fucy1zZXJpZiI+T3RoZXIgYmFzaWMgY29t
-bWFuZHMsIGxpa2UgZ2V0dGluZyByYW5kb20gbnVtYmVycyB0aHJvdWdoIHRwbV9nZXRyYW5kb20g
-W3hdIHdvcmtzIGZpbmUuPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSBMaWdodCZxdW90OyxzYW5z
-LXNlcmlmIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMt
-c2VyaWYiPkkgaGF2ZSBhIE5VQyA3aTdCTkgsIEJJT1MgdmVyc2lvbiA1NiAoZnJvbSBPY3QgMjAx
-NyksIFVidW50dSAxNi4wNCBLZXJuZWwgdmVyc2lvbiA0LjEzLjAtNDUuIEkmIzgyMTc7bSBjdXJy
-ZW50bHkgcnVubmluZyB0cG0yLXRvb2xzIDIuMS4wLCB0cG0yLXRzcy0yLjAuMCBhbmQgdHBtMi1h
-YnJtZCAxLjEuMS48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxz
-cGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2Vy
-aWYiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
-YW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkgTGlnaHQmcXVvdDssc2Fucy1zZXJp
-ZiI+SSBoYXZlIGFkZGl0aW9uYWxseSB0cmllZCB0byB0YWtlIG91dCB0aGUgQklPUyBzZWN1cml0
-eSBqdW1wZXIsIHJlc2V0dGluZy9jbGVhcmluZyB0aGUgVFBNIGFuZCByZXRyeWluZywgd2l0aG91
-dCBhbnkgc3VjY2Vzcy4gQW55IGd1aWRhbmNlIG9yIHRpcHMgb24gd2hhdCBjb3VsZCBiZSBjYXVz
-aW5nIHRoaXM/PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSBMaWdodCZxdW90OyxzYW5zLXNlcmlm
-Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2VyaWYi
-PlRoYW5rcyw8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDYWxpYnJpIExpZ2h0JnF1b3Q7LHNhbnMtc2VyaWYi
-PiZuYnNwOyZuYnNwOyBNYXRzPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSBMaWdodCZxdW90Oyxz
-YW5zLXNlcmlmIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjwvZGl2Pgo8L2JvZHk+Cjwv
-aHRtbD4K
+(4) DictionaryAttackLockReset=C2=A0 (lockoutPolicy), rval=3D0
 
---===============1467509703197613155==--
+(5) DictionaryAttackLockReset=C2=A0 (right authValue), rval=3D921
+
+ From the following document
+
+"TCG Library Specification 1.38 Part1 19.8.5 Authorization Failures =
+
+Involving lockoutAuth"
+
+ >>When in this special lockout state, the TPM will not allow use of =
+
+lockoutAuth. The TPM will exit this state when =
+
+TPM2_DictionaryAttackLockReset() is used with a successful lockoutPolicy =
+
+or after the TPM is powered for a configurable time period =
+
+(lockoutRecovery).
+
+I assume that in (1) and (5), the result will be the same.
+However, different return codes is produced
+
+I would like to know why they are different..
+
+-----
+ =C2=A0Yasuhiro Hosoda
+
+NTT Electronics Corporation =EF=BC=88NEL)
+
+--===============0904612922079639374==--
 
