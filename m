@@ -1,17 +1,26 @@
-Content-Type: multipart/mixed; boundary="===============1966943815898213144=="
+Content-Type: multipart/mixed; boundary="===============3706443255863798724=="
 MIME-Version: 1.0
-From: Philip Tricca <flihp at twobit.org>
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
 Subject: Re: [tpm2] getting segfaults with tss-2.0.0, abrmd-2.0.0, tools-3.1.0
-Date: Mon, 23 Jul 2018 08:23:37 -0700
-Message-ID: <55e7a77d-2de2-06ae-e4e8-9f57ebdf76f2@twobit.org>
-In-Reply-To: 13c845abdf2e4e0f80e8d9714130e27d@AZDC-MMB02.GD-MS.US
+Date: Mon, 23 Jul 2018 15:28:07 +0000
+Message-ID: <f80fa8ee5dbd43299b779b7e0ab2c084@AZDC-MMB02.GD-MS.US>
+In-Reply-To: 55e7a77d-2de2-06ae-e4e8-9f57ebdf76f2@twobit.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1966943815898213144==
+--===============3706443255863798724==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+-----Original Message-----
+From: Philip Tricca [mailto:flihp(a)twobit.org] =
+
+Sent: Monday, July 23, 2018 10:24 AM
+To: Scheie, Peter M
+Cc: Joshua Lock; tpm2(a)lists.01.org
+Subject: Re: [tpm2] getting segfaults with tss-2.0.0, abrmd-2.0.0, tools-3.=
+1.0
 
 On 07/20/2018 06:33 AM, Scheie, Peter M wrote:
 > -----Original Message-----
@@ -108,5 +117,10 @@ Does WRL9 ship with SELinux or some other security policy enforced?
 
 Philip
 
---===============1966943815898213144==--
+*************************************************************
+No, or at least we're not using SELinux in this case.
+
+Peter
+
+--===============3706443255863798724==--
 
