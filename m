@@ -1,17 +1,30 @@
-Content-Type: multipart/mixed; boundary="===============8174338559509378479=="
+Content-Type: multipart/mixed; boundary="===============8480556506840706157=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
 Subject: Re: [tpm2] tpm2-tools tpm2_takeownership w/ Intel NUC
-Date: Tue, 24 Jul 2018 18:28:12 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649C07E14@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 15CA292A0CD93849BA2105D0F0B2D8A1EB96EA53@ORSMSX105.amr.corp.intel.com
+Date: Tue, 24 Jul 2018 20:30:31 +0000
+Message-ID: <87d2ace1e2a04195b71279939145cdd9@AZDC-MMB02.GD-MS.US>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649C07E14@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8174338559509378479==
+--===============8480556506840706157==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+I'm confused: I'm running tools 3.1.0 and I still have tpm2_takeownership a=
+nd I do not have tpm2_clear nor tpm2_changeauth.  I built from the release =
+tar files, not from git clone.
+
+Peter
+
+-----Original Message-----
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Roberts, Willi=
+am C
+Sent: Tuesday, July 24, 2018 1:28 PM
+To: Agerstam, Mats G; tpm2(a)lists.01.org
+Subject: Re: [tpm2] tpm2-tools tpm2_takeownership w/ Intel NUC
 
 Decoding that error provides:
 tpm2_rc_decode 0x9a2tpm:session(1):authorization failure without DA implica=
@@ -108,6 +121,10 @@ ould be
 > =
 
 
+_______________________________________________
+tpm2 mailing list
+tpm2(a)lists.01.org
+https://lists.01.org/mailman/listinfo/tpm2
 
---===============8174338559509378479==--
+--===============8480556506840706157==--
 
