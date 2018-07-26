@@ -1,33 +1,42 @@
-Content-Type: multipart/mixed; boundary="===============4904711773912334639=="
+Content-Type: multipart/mixed; boundary="===============5554763183042896829=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] tpm2-abrmd 2.0.1-rc0
-Date: Wed, 25 Jul 2018 17:17:44 -0700
-Message-ID: <20180726001744.GF19516@intel.com>
-In-Reply-To: 20180719160002.GE19516@intel.com
+From: Joshua Muscara <joshua.muscara1 at gmail.com>
+Subject: [tpm2] Question
+Date: Wed, 25 Jul 2018 20:01:33 -0500
+Message-ID: <CAJoYW0+mqTOADfuZoX_KMiKRYzNLXnooOFOOk3f2ZrNNmaco8Q@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4904711773912334639==
+--===============5554763183042896829==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
- Thu, Jul 19, 2018 at 09:00:02AM -0700, Philip Tricca wrote:
-> Good morning,
-> =
+I dont know where to post a question. About the tpm2 software posted on
+github it directed to to this list I was wondering how to set it up with my
+opensuse linux pc it has an Intel tpm 2.0 tpm and I  keep getting an error
+saying "** (proccess:5542): warning **: failed to create connection with
+service GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: the name
+com.intel.tss2.Tabrmd was not provided by any .Service files Error failed
+to initialize  TABRMD TCTI context: 0xa0008" whenever I try to take
+ownership of my tpm.
 
-> We've just tagged the first release candidate for 2.0.1. This is a
-> bugfix release and all issues addressed are in the CHAGNELOG.md. The RC
-> window for this release will likely be short given the nature of the
-> bugs fixed (one is a pretty nasty resource leak) and the fact that we
-> already have some features in the queue for 2.1.0. Expect the release
-> to happen early next week.
+--===============5554763183042896829==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-The 2.0.1 release is now available here:
-https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.0.1
+PGRpdiBkaXI9ImF1dG8iPkkgZG9udCBrbm93IHdoZXJlIHRvIHBvc3QgYSBxdWVzdGlvbi4gQWJv
+dXQgdGhlIHRwbTIgc29mdHdhcmUgcG9zdGVkIG9uIGdpdGh1YiBpdCBkaXJlY3RlZCB0byB0byB0
+aGlzIGxpc3QgSSB3YXMgd29uZGVyaW5nIGhvdyB0byBzZXQgaXQgdXAgd2l0aCBteSBvcGVuc3Vz
+ZSBsaW51eCBwYyBpdCBoYXMgYW4gSW50ZWwgdHBtIDIuMCB0cG0gYW5kIEnCoCBrZWVwIGdldHRp
+bmcgYW4gZXJyb3Igc2F5aW5nICZxdW90OyoqIChwcm9jY2Vzczo1NTQyKTogd2FybmluZyAqKjog
+ZmFpbGVkIHRvIGNyZWF0ZSBjb25uZWN0aW9uIHdpdGggc2VydmljZSBHREJ1cy5FcnJvcjpvcmcu
+ZnJlZWRlc2t0b3AuREJ1cy5FcnJvci5TZXJ2aWNlVW5rbm93bjogdGhlIG5hbWUgY29tLmludGVs
+LnRzczIuVGFicm1kIHdhcyBub3QgcHJvdmlkZWQgYnkgYW55IC5TZXJ2aWNlIGZpbGVzIEVycm9y
+IGZhaWxlZCB0byBpbml0aWFsaXplwqAgVEFCUk1EIFRDVEkgY29udGV4dDogMHhhMDAwOCZxdW90
+OyB3aGVuZXZlciBJIHRyeSB0byB0YWtlIG93bmVyc2hpcCBvZiBteSB0cG0uwqA8L2Rpdj4K
 
-Philip
-
---===============4904711773912334639==--
+--===============5554763183042896829==--
 
