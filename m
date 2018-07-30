@@ -1,112 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============1421010964085917042=="
+Content-Type: multipart/mixed; boundary="===============7134465501813481410=="
 MIME-Version: 1.0
-From: Abbaraju Manojsai <abbarajumanojsai at gmail.com>
-Subject: [tpm2] Regarding storing simple data into nv memory of slb9670(tpm
- 2.0)
-Date: Fri, 27 Jul 2018 18:30:15 +0530
-Message-ID: <CAM8JkLKguQtLmuTSGX1U7ejMLTbo937jWZfDpisCgg8RK5Np=A@mail.gmail.com>
+From: Peter Magnusson <blaufish.public.email at gmail.com>
+Subject: [tpm2] tpm2_getpubek EvictControl fails with 0x1c4 (TPM_RC_VALUE)
+Date: Mon, 30 Jul 2018 15:28:13 +0200
+Message-ID: <CANtcRX5FY+Ou+5143U6_m+tifxKGWkH=i0BFEd9P0SLuJ_YGxA@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1421010964085917042==
+--===============7134465501813481410==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
- We interfaced  slb 9670   (TPM 2.0) with Msp430 16 bit controller through
-spi which does not support Linux Kernel.
+Hi,
 
-Our Main Task , is store a few bytes of data in NV memory as simple way
-into SLB 9670  (TPM 2.0)
+I've run into tpm2_getpubek (3.0.4;
+https://github.com/tpm2-software/tpm2-tools/blob/3.0.4/tools/tpm2_getpubek.=
+c)
+failing unexpectedly with Tss2_Sys_EvictControl emitting TPM_RC_VALUE.
+Target system is an Intel NUC with a discrete infineon TPM.
 
-Now we able to access the spi communication of slb 9670 with controller,
+Does the error make sense to anyone?
 
-we tested the reading sample  registers of slb 9670   like DIDVID register
-, version id of slb 9670, status register  and  writing a values  into
-registers through spi communication.
 
-so spi  read and spi write communication is working  with chip  by
-accessing this registers.
 
-Our Main Task , is store a few bytes of data into Nv memory of SLB
-9670.please help me.
+sudo -u tss TSS2_LOG=3Dall+TRACE tpm2_getpubek -V --tcti
+device:/dev/tpmrm0 -H 0x80000000 -g 0x0023  -f ek_ecc.pub
 
-i am not able to properly understand the tcg stack documents of tpm 2.0
+INFO on line: "217" in file: "tools/tpm2_getpubek.c": EK create
+success. Got handle: 0x80ffffff
 
-so kindly help me at what are required steps , should i follow ?
+ERROR on line: "225" in file: "tools/tpm2_getpubek.c": EvictControl
+failed. Could not make EK persistent.TPM Error:0x1c4
 
-Regards,
+Makefile:8: recipe for target 'ek_ecc.bin' failed
 
-Manoj ,
-+91-9063249308.
 
---===============1421010964085917042==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+Cgo8ZGl2IHN0eWxlPSJmb250LXNpemU6MTIuOHB4O3RleHQtZGVjb3Jh
-dGlvbi1zdHlsZTppbml0aWFsO3RleHQtZGVjb3JhdGlvbi1jb2xvcjppbml0aWFsIj48c3BhbiBz
-dHlsZT0iZm9udC1zaXplOjEyLjhweCI+V2UgaW50ZXJmYWNlZMKgIHNsYiA5NjcwPHNwYW4+wqA8
-L3NwYW4+PHNwYW4gc3R5bGU9InRleHQtZGVjb3JhdGlvbi1zdHlsZTppbml0aWFsO3RleHQtZGVj
-b3JhdGlvbi1jb2xvcjppbml0aWFsO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KTtm
-bG9hdDpub25lO2Rpc3BsYXk6aW5saW5lIj48c3Bhbj7CoDwvc3Bhbj48L3NwYW4+PHNwYW4gc3R5
-bGU9ImJhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KTt0ZXh0LWRlY29yYXRpb24tc3R5
-bGU6aW5pdGlhbDt0ZXh0LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbDtmbG9hdDpub25lO2Rpc3Bs
-YXk6aW5saW5lIj7CoChUUE0gMi4wKTwvc3Bhbj48c3Bhbj7CoDwvc3Bhbj53aXRoIE1zcDQzMCAx
-NiBiaXQgY29udHJvbGxlciB0aHJvdWdoIHNwaSB3aGljaCBkb2VzIG5vdCBzdXBwb3J0IExpbnV4
-IEtlcm5lbC48L3NwYW4+PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMi44cHg7dGV4
-dC1kZWNvcmF0aW9uLXN0eWxlOmluaXRpYWw7dGV4dC1kZWNvcmF0aW9uLWNvbG9yOmluaXRpYWwi
-Pjxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LXNpemU6MTIuOHB4O3RleHQtZGVjb3JhdGlvbi1z
-dHlsZTppbml0aWFsO3RleHQtZGVjb3JhdGlvbi1jb2xvcjppbml0aWFsIj48c3BhbiBzdHlsZT0i
-YmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpO3RleHQtZGVjb3JhdGlvbi1zdHlsZTpp
-bml0aWFsO3RleHQtZGVjb3JhdGlvbi1jb2xvcjppbml0aWFsO2Zsb2F0Om5vbmU7ZGlzcGxheTpp
-bmxpbmUiPk91ciBNYWluIFRhc2sgLCBpcyBzdG9yZSBhIGZldyBieXRlcyBvZiBkYXRhIGluIE5W
-IG1lbW9yeSBhcyBzaW1wbGUgd2F5IGludG8gU0xCIDk2NzA8c3Bhbj7CoDwvc3Bhbj48L3NwYW4+
-wqAoVFBNIDIuMCk8YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1zaXplOjEyLjhweDt0ZXh0LWRl
-Y29yYXRpb24tc3R5bGU6aW5pdGlhbDt0ZXh0LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbCI+PGJy
-PjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMi44cHg7dGV4dC1kZWNvcmF0aW9uLXN0eWxl
-OmluaXRpYWw7dGV4dC1kZWNvcmF0aW9uLWNvbG9yOmluaXRpYWwiPk5vdyB3ZSBhYmxlIHRvIGFj
-Y2VzcyB0aGUgc3BpIGNvbW11bmljYXRpb24gb2Ygc2xiIDk2NzAgd2l0aCBjb250cm9sbGVyLDxi
-cj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LXNpemU6MTIuOHB4O3RleHQtZGVjb3JhdGlvbi1zdHls
-ZTppbml0aWFsO3RleHQtZGVjb3JhdGlvbi1jb2xvcjppbml0aWFsIj48YnI+PC9kaXY+PGRpdiBz
-dHlsZT0iZm9udC1zaXplOjEyLjhweDt0ZXh0LWRlY29yYXRpb24tc3R5bGU6aW5pdGlhbDt0ZXh0
-LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbCI+d2UgdGVzdGVkIHRoZSByZWFkaW5nIHNhbXBsZcKg
-IHJlZ2lzdGVycyBvZiBzbGIgOTY3MMKgIMKgbGlrZSBESURWSUQgcmVnaXN0ZXIgLCB2ZXJzaW9u
-IGlkIG9mIHNsYiA5NjcwLCBzdGF0dXMgcmVnaXN0ZXLCoCBhbmTCoCB3cml0aW5nIGEgdmFsdWVz
-wqAgaW50byByZWdpc3RlcnMgdGhyb3VnaCBzcGkgY29tbXVuaWNhdGlvbi48L2Rpdj48ZGl2IHN0
-eWxlPSJmb250LXNpemU6MTIuOHB4O3RleHQtZGVjb3JhdGlvbi1zdHlsZTppbml0aWFsO3RleHQt
-ZGVjb3JhdGlvbi1jb2xvcjppbml0aWFsIj48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1zaXpl
-OjEyLjhweDt0ZXh0LWRlY29yYXRpb24tc3R5bGU6aW5pdGlhbDt0ZXh0LWRlY29yYXRpb24tY29s
-b3I6aW5pdGlhbCI+c28gc3BpwqAgcmVhZCBhbmQgc3BpIHdyaXRlIGNvbW11bmljYXRpb24gaXMg
-d29ya2luZ8KgIHdpdGggY2hpcMKgIGJ5IGFjY2Vzc2luZyB0aGlzIHJlZ2lzdGVycy48L2Rpdj48
-ZGl2IHN0eWxlPSJmb250LXNpemU6MTIuOHB4O3RleHQtZGVjb3JhdGlvbi1zdHlsZTppbml0aWFs
-O3RleHQtZGVjb3JhdGlvbi1jb2xvcjppbml0aWFsIj48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9u
-dC1zaXplOjEyLjhweDt0ZXh0LWRlY29yYXRpb24tc3R5bGU6aW5pdGlhbDt0ZXh0LWRlY29yYXRp
-b24tY29sb3I6aW5pdGlhbCI+T3VyIE1haW4gVGFzayAsIGlzIHN0b3JlIGEgZmV3IGJ5dGVzIG9m
-IGRhdGEgaW50byBOdiBtZW1vcnkgb2YgU0xCIDk2NzAucGxlYXNlIGhlbHAgbWUuPC9kaXY+PGRp
-diBzdHlsZT0iZm9udC1zaXplOjEyLjhweDt0ZXh0LWRlY29yYXRpb24tc3R5bGU6aW5pdGlhbDt0
-ZXh0LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbCI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQt
-c2l6ZToxMi44cHg7dGV4dC1kZWNvcmF0aW9uLXN0eWxlOmluaXRpYWw7dGV4dC1kZWNvcmF0aW9u
-LWNvbG9yOmluaXRpYWwiPmkgYW0gbm90IGFibGUgdG8gcHJvcGVybHkgdW5kZXJzdGFuZCB0aGUg
-dGNnIHN0YWNrIGRvY3VtZW50cyBvZiB0cG0gMi4wPC9kaXY+PGRpdiBzdHlsZT0iZm9udC1zaXpl
-OjEyLjhweDt0ZXh0LWRlY29yYXRpb24tc3R5bGU6aW5pdGlhbDt0ZXh0LWRlY29yYXRpb24tY29s
-b3I6aW5pdGlhbCI+PGJyPjwvZGl2PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTIuOHB4O3RleHQt
-ZGVjb3JhdGlvbi1zdHlsZTppbml0aWFsO3RleHQtZGVjb3JhdGlvbi1jb2xvcjppbml0aWFsO2Zs
-b2F0Om5vbmU7ZGlzcGxheTppbmxpbmUiPnNvIGtpbmRseSBoZWxwIG1lIGF0IHdoYXQgYXJlIHJl
-cXVpcmVkIHN0ZXBzICwgc2hvdWxkIGkgZm9sbG93ID88L3NwYW4+PGJyIHN0eWxlPSJmb250LXNp
-emU6MTIuOHB4O3RleHQtZGVjb3JhdGlvbi1zdHlsZTppbml0aWFsO3RleHQtZGVjb3JhdGlvbi1j
-b2xvcjppbml0aWFsIj48ZGl2IHN0eWxlPSJmb250LXNpemU6MTIuOHB4O3RleHQtZGVjb3JhdGlv
-bi1zdHlsZTppbml0aWFsO3RleHQtZGVjb3JhdGlvbi1jb2xvcjppbml0aWFsIj48YnI+PC9kaXY+
-PGRpdiBzdHlsZT0iZm9udC1zaXplOjEyLjhweDt0ZXh0LWRlY29yYXRpb24tc3R5bGU6aW5pdGlh
-bDt0ZXh0LWRlY29yYXRpb24tY29sb3I6aW5pdGlhbCI+UmVnYXJkcyw8L2Rpdj48ZGl2IHN0eWxl
-PSJmb250LXNpemU6MTIuOHB4O3RleHQtZGVjb3JhdGlvbi1zdHlsZTppbml0aWFsO3RleHQtZGVj
-b3JhdGlvbi1jb2xvcjppbml0aWFsIj48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1zaXplOjEy
-LjhweDt0ZXh0LWRlY29yYXRpb24tc3R5bGU6aW5pdGlhbDt0ZXh0LWRlY29yYXRpb24tY29sb3I6
-aW5pdGlhbCI+TWFub2ogLDwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMi44cHg7dGV4dC1k
-ZWNvcmF0aW9uLXN0eWxlOmluaXRpYWw7dGV4dC1kZWNvcmF0aW9uLWNvbG9yOmluaXRpYWwiPis5
-MS05MDYzMjQ5MzA4LjwvZGl2PgoKPGJyPjwvZGl2Pgo=
 
---===============1421010964085917042==--
+tpm2_rc_decode 0x1c4
+
+error layer
+
+  hex: 0x0
+
+  identifier: TSS2_TPM_ERROR_LEVEL
+
+  description: Error produced by the TPM
+
+format 1 error code
+
+  hex: 0x04
+
+  identifier: TPM_RC_VALUE
+
+  description: value is out of range or is not correct for the context
+
+parameter
+
+  hex: 0x100
+
+  identifier:  TPM_RC_1
+
+  description:  (null)
+
+--===============7134465501813481410==--
 
