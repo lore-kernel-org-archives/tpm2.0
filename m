@@ -1,18 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============6093382616029452612=="
+Content-Type: multipart/mixed; boundary="===============6288974885779814245=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: Agerstam, Mats G <mats.g.agerstam at intel.com>
 Subject: Re: [tpm2] AIK Enrollment Process implementations using tpm2-tools or
  similar
-Date: Wed, 01 Aug 2018 16:28:52 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649C0AAED@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CANtcRX5ei6dWhgx=ETWy0TS013MN89v64ynhbLxn6PY3qg-cfw@mail.gmail.com
+Date: Wed, 01 Aug 2018 16:38:33 +0000
+Message-ID: <15CA292A0CD93849BA2105D0F0B2D8A1EB980A80@ORSMSX105.amr.corp.intel.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649C0AAED@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6093382616029452612==
+--===============6288974885779814245==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+I think Open CIT (Cloud Integrity Technology) supersedes OpenAttestation. M=
+ore details on that can be found here: =
+
+https://github.com/opencit/opencit/wiki/Open-CIT-3.2-Product-Guide
+
+-----Original Message-----
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Roberts, Willi=
+am C
+Sent: Wednesday, August 1, 2018 9:29 AM
+To: Peter Magnusson <blaufish.public.email(a)gmail.com>; tpm2(a)lists.01.org
+Subject: Re: [tpm2] AIK Enrollment Process implementations using tpm2-tools=
+ or similar
 
 I dug around and someone pointed me to this:
 https://github.com/OpenAttestation/OpenAttestation
@@ -73,6 +86,10 @@ ertificate
 > tpm2 mailing list
 > tpm2(a)lists.01.org
 > https://lists.01.org/mailman/listinfo/tpm2
+_______________________________________________
+tpm2 mailing list
+tpm2(a)lists.01.org
+https://lists.01.org/mailman/listinfo/tpm2
 
---===============6093382616029452612==--
+--===============6288974885779814245==--
 
