@@ -1,61 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============3573951177988990254=="
+Content-Type: multipart/mixed; boundary="===============1728981642957912766=="
 MIME-Version: 1.0
-From: Peter Magnusson <blaufish.public.email at gmail.com>
-Subject: Re: [tpm2] Regarding storing simple data into nv memory of
- slb9670(tpm 2.0)
-Date: Wed, 01 Aug 2018 11:21:35 +0200
-Message-ID: <CANtcRX6xUcVqmRU16APKBFXzT5uPtj6wdN33jRmRCCVhwAzLyA@mail.gmail.com>
-In-Reply-To: CAM8JkLKguQtLmuTSGX1U7ejMLTbo937jWZfDpisCgg8RK5Np=A@mail.gmail.com
+From: Joshua Lock <joshua.g.lock at linux.intel.com>
+Subject: Re: [tpm2] tpm2-tools 3.1.2 release candidate
+Date: Wed, 01 Aug 2018 11:09:30 +0100
+Message-ID: <fb797dbc-15cb-34d0-e812-e69440319656@linux.intel.com>
+In-Reply-To: 848870f6-a846-4de4-5c27-3c206f134f56@linux.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3573951177988990254==
+--===============1728981642957912766==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I would suggest you perform the things you want to do first on a high
-level operating system (e.g. Linux) using tpm2_nvwrite / tpm2_nvread
-and using TSS2_LOG=3Dall+TRACE to get traces of what actually is
-communicated with the TPM.
+On 16/07/2018 21:22, Joshua Lock wrote:
+> Hello all,
+> =
 
-Then you replicate your success again on the MCU / SPI, feeding it
-similar SPI commands as shown in the traces.
+> I've just tagged and signed rc0 for tpm2-tools 3.1.2:
+> https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.2-rc0
+> =
 
-On Fri, Jul 27, 2018 at 3:00 PM Abbaraju Manojsai
-<abbarajumanojsai(a)gmail.com> wrote:
->
-> We interfaced  slb 9670   (TPM 2.0) with Msp430 16 bit controller through=
- spi which does not support Linux Kernel.
->
-> Our Main Task , is store a few bytes of data in NV memory as simple way i=
-nto SLB 9670  (TPM 2.0)
->
-> Now we able to access the spi communication of slb 9670 with controller,
->
-> we tested the reading sample  registers of slb 9670   like DIDVID registe=
-r , version id of slb 9670, status register  and  writing a values  into re=
-gisters through spi communication.
->
-> so spi  read and spi write communication is working  with chip  by access=
-ing this registers.
->
-> Our Main Task , is store a few bytes of data into Nv memory of SLB 9670.p=
-lease help me.
->
-> i am not able to properly understand the tcg stack documents of tpm 2.0
->
-> so kindly help me at what are required steps , should i follow ?
->
-> Regards,
->
-> Manoj ,
-> +91-9063249308.
->
-> _______________________________________________
-> tpm2 mailing list
-> tpm2(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/tpm2
+> =
 
---===============3573951177988990254==--
+> Javier noticed that we had a behavioural change in 3.1 (compared to 3.0) =
+
+> that was inappropriate for a minor version bump, that is we were using =
+
+> user supplied object attributes exclusively (instead of ORing them with =
+
+> the defaults). 3.1.2 reverts the change:
+> =
+
+> https://github.com/tpm2-software/tpm2-tools/commit/352908f7470338aba858a9=
+ac20c1c5ec608b661c =
+
+
+I just tagged 3.1.2-rc1 to include an additional fix from Javier to use =
+
+better object attribute defaults in tpm2_create:
+
+https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.2-rc1
+
+Thanks,
+Joshua
+
+--===============1728981642957912766==--
 
