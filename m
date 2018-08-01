@@ -1,49 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============1728981642957912766=="
+Content-Type: multipart/mixed; boundary="===============6813381525350337196=="
 MIME-Version: 1.0
-From: Joshua Lock <joshua.g.lock at linux.intel.com>
-Subject: Re: [tpm2] tpm2-tools 3.1.2 release candidate
-Date: Wed, 01 Aug 2018 11:09:30 +0100
-Message-ID: <fb797dbc-15cb-34d0-e812-e69440319656@linux.intel.com>
-In-Reply-To: 848870f6-a846-4de4-5c27-3c206f134f56@linux.intel.com
+From: Peter Magnusson <blaufish.public.email at gmail.com>
+Subject: [tpm2] AIK Enrollment Process implementations using tpm2-tools or
+ similar
+Date: Wed, 01 Aug 2018 12:55:18 +0200
+Message-ID: <CANtcRX5ei6dWhgx=ETWy0TS013MN89v64ynhbLxn6PY3qg-cfw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1728981642957912766==
+--===============6813381525350337196==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 16/07/2018 21:22, Joshua Lock wrote:
-> Hello all,
-> =
+Hello,
 
-> I've just tagged and signed rc0 for tpm2-tools 3.1.2:
-> https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.2-rc0
-> =
+TL;DR:
+Is there any AIK Enrollment / POP examples available using tpm2-tools
+(or other open source tools, code bases)?
 
-> =
+Long version:
 
-> Javier noticed that we had a behavioural change in 3.1 (compared to 3.0) =
+I had some success with tpm2-tools based attestation, e.g. generating
+AIK, extracting EKpub and EKCert from TPM, performing the tpm2
+quotation, etc.
 
-> that was inappropriate for a minor version bump, that is we were using =
+However, my understanding of the relevant spec's is that for TPM2 User
+Devices (and many other devices), the EK is limited to performing the
+Enrolment Processes (Proof of Possession). So to complete a meaningful
+Remote Attestation flow, there is a need to get AIKCert externally
+using AIK Enrollment Process[1] against an Attestation CA (formerly
+known as Privacy CA).
 
-> user supplied object attributes exclusively (instead of ORing them with =
+I fail to find public examples (tools, example code, etc) of the
+enrolment step. Most of what I find when googling, for example
+strongswan's TPM pages, appears to skip the AIK Enrollment Process /
+POP and just issue the the certificate without any proof of
+possession.
 
-> the defaults). 3.1.2 reverts the change:
-> =
-
-> https://github.com/tpm2-software/tpm2-tools/commit/352908f7470338aba858a9=
-ac20c1c5ec608b661c =
+Any links or insights would be appreciated =3D)
 
 
-I just tagged 3.1.2-rc1 to include an additional fix from Javier to use =
+[1]. Section 2.3.
+https://trustedcomputinggroup.org/wp-content/uploads/IWG_CMC_Profile_Cert_E=
+nrollment_v1_r7.pdf
 
-better object attribute defaults in tpm2_create:
-
-https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.2-rc1
-
-Thanks,
-Joshua
-
---===============1728981642957912766==--
+--===============6813381525350337196==--
 
