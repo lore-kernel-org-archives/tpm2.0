@@ -1,214 +1,125 @@
-Content-Type: multipart/mixed; boundary="===============8497564498351449940=="
+Content-Type: multipart/mixed; boundary="===============4191342680864337268=="
 MIME-Version: 1.0
-From: Zhu, Bing <bing.zhu at intel.com>
-Subject: Re: [tpm2] Initializing & Programming PCRs
-Date: Fri, 03 Aug 2018 02:30:18 +0000
-Message-ID: <A3DEEEBB19900C48B49572CB9C2891C97C095AC6@SHSMSX101.ccr.corp.intel.com>
-In-Reply-To: CAHa3UP6NWamtD0iSjBB05msiGon4FrukwtfsgzobRx7WCrPK-w@mail.gmail.com
+From: Peter Magnusson <blaufish.public.email at gmail.com>
+Subject: Re: [tpm2] AIK Enrollment Process implementations using tpm2-tools or
+ similar
+Date: Fri, 03 Aug 2018 13:02:53 +0200
+Message-ID: <CANtcRX5B9dJG_tHS+dkjG6cLD8pw+dJyy-SGg4pW78VOtYAi2w@mail.gmail.com>
+In-Reply-To: 15CA292A0CD93849BA2105D0F0B2D8A1EB980A80@ORSMSX105.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8497564498351449940==
+--===============4191342680864337268==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-a.    I think yes. (as you can see in c.). also there should have a =E2=80=
-=9Ctpm on/off=E2=80=9D setup in bios configuration, you can check what=E2=
-=80=99s the impact.
+Thanks!
 
-b.    No. did you test that?
+Does it seem like a correct understanding of that the proof of
+possession process is something like follows;
 
-c.    It should be correct (if your uefi bios is tcg compliant)
+1. Client -> CA.identityRequestGetChallenge( AIK, EKCert )
 
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Arvind Kumar
-Sent: Friday, August 3, 2018 3:00 AM
-To: tpm2(a)lists.01.org
-Subject: Re: [tpm2] Initializing & Programming PCRs
+2. Client receives challenge [RSA encrypted AES key, AES encrypted data]
 
-Any update on this please ?
+3. Client uses endorsement key and tool/command
+tpm2_activatecredential to decrypt RSA blob (the AES key)
 
-On Wed, Aug 1, 2018 at 7:06 PM, Arvind Kumar <arvind.kumar(a)iotium.io<mail=
-to:arvind.kumar(a)iotium.io>> wrote:
-Hi All,
+4. Client decrypt the AES block using the AES key, yielding the proper
+response (proof of possession)
 
-I have a hardware with TPM 2.0 on which I have installed ubuntu in UEFI mod=
-e. I need to trigger UEFI  to measure the boot components (uefi/shim/boot l=
-oader, kernel, initrd) into respective PCRs. For which, I have following qu=
-estions.
+5. Client -> CA.identityRequestSubmitResponse ( response )
 
-a. As soon as the  TPM 2.0  is enabled from BIOS and device is booted, does=
- UEFI start the measurements and record them into PCRS by default or there =
-is some config to tell UEFI to start measurements ?
+6. Client receive the AIKCert
 
-b. Should secure boot be enabled in order to trigger the UEFI to start abov=
-e measurements ?
+(Based my understanding on HisPrivacyCAWebService2Impl.java and
+various threads about tpm2_activetecredential being involved in how to
+proving ownership.)
 
-c. I enabled TPM 2.0 and installed ubuntu in UEFI mode, and I can see that =
-PCR 0 to 7 are populated with some values and all other PCRs are zeros. Are=
- these boot measurements correct, how can I verify ?
+https://github.com/OpenAttestation/OpenAttestation/blob/e34fa3be4a4ce199d34=
+8f12e62265ec853b4d5fa/trust-agent/HisPrivacyCAWebServices2/src/main/java/go=
+v/niarl/his/webservices/hisPrivacyCAWebService2/server/HisPrivacyCAWebServi=
+ce2Impl.java
 
-d. Is there any logs on TPM 2.0 or UEFI that I can refer to ?
+Presumably the AES operations in Open Attestation are very
+implementation specific and could be replaced with more modern modes
+of operations.
 
-Any help is appreciated.
+//P
+On Wed, Aug 1, 2018 at 6:38 PM Agerstam, Mats G
+<mats.g.agerstam(a)intel.com> wrote:
+>
+> I think Open CIT (Cloud Integrity Technology) supersedes OpenAttestation.=
+ More details on that can be found here:
+> https://github.com/opencit/opencit/wiki/Open-CIT-3.2-Product-Guide
+>
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Roberts, Wil=
+liam C
+> Sent: Wednesday, August 1, 2018 9:29 AM
+> To: Peter Magnusson <blaufish.public.email(a)gmail.com>; tpm2(a)lists.01.=
+org
+> Subject: Re: [tpm2] AIK Enrollment Process implementations using tpm2-too=
+ls or similar
+>
+> I dug around and someone pointed me to this:
+> https://github.com/OpenAttestation/OpenAttestation
+>
+> Unfortunately, I know nothing beyond that (typical problem for me).
+>
+> > -----Original Message-----
+> > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Peter Magn=
+usson
+> > Sent: Wednesday, August 1, 2018 3:55 AM
+> > To: tpm2(a)lists.01.org
+> > Subject: [tpm2] AIK Enrollment Process implementations using tpm2-tools=
+ or
+> > similar
+> >
+> > Hello,
+> >
+> > TL;DR:
+> > Is there any AIK Enrollment / POP examples available using tpm2-tools (=
+or other
+> > open source tools, code bases)?
+> >
+> > Long version:
+> >
+> > I had some success with tpm2-tools based attestation, e.g. generating A=
+IK,
+> > extracting EKpub and EKCert from TPM, performing the tpm2 quotation, et=
+c.
+> >
+> > However, my understanding of the relevant spec's is that for TPM2 User =
+Devices
+> > (and many other devices), the EK is limited to performing the Enrolment
+> > Processes (Proof of Possession). So to complete a meaningful Remote
+> > Attestation flow, there is a need to get AIKCert externally using AIK E=
+nrollment
+> > Process[1] against an Attestation CA (formerly known as Privacy CA).
+> >
+> > I fail to find public examples (tools, example code, etc) of the enrolm=
+ent step.
+> > Most of what I find when googling, for example strongswan's TPM pages,
+> > appears to skip the AIK Enrollment Process / POP and just issue the the=
+ certificate
+> > without any proof of possession.
+> >
+> > Any links or insights would be appreciated =3D)
+> >
+> >
+> > [1]. Section 2.3.
+> > https://trustedcomputinggroup.org/wp-
+> > content/uploads/IWG_CMC_Profile_Cert_Enrollment_v1_r7.pdf
+> > _______________________________________________
+> > tpm2 mailing list
+> > tpm2(a)lists.01.org
+> > https://lists.01.org/mailman/listinfo/tpm2
+> _______________________________________________
+> tpm2 mailing list
+> tpm2(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/tpm2
 
-Thanks,
-Arvind
-
-
-
---===============8497564498351449940==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-5a6L5L2TOw0KCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQ0KQGZvbnQtZmFjZQ0KCXtm
-b250LWZhbWlseToiQ2FtYnJpYSBNYXRoIjsNCglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMgMiA0
-O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsNCglwYW5vc2UtMToyIDE1IDUg
-MiAyIDIgNCAzIDIgNDt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OiJUcmVidWNoZXQgTVMi
-Ow0KCXBhbm9zZS0xOjIgMTEgNiAzIDIgMiAyIDIgMiA0O30NCkBmb250LWZhY2UNCgl7Zm9udC1m
-YW1pbHk6IlxA5a6L5L2TIjsNCglwYW5vc2UtMToyIDEgNiAwIDMgMSAxIDEgMSAxO30NCi8qIFN0
-eWxlIERlZmluaXRpb25zICovDQpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9y
-bWFsDQoJe21hcmdpbjowaW47DQoJbWFyZ2luLWJvdHRvbTouMDAwMXB0Ow0KCWZvbnQtc2l6ZTox
-Mi4wcHQ7DQoJZm9udC1mYW1pbHk6IlRpbWVzIE5ldyBSb21hbiIsc2VyaWY7fQ0KYTpsaW5rLCBz
-cGFuLk1zb0h5cGVybGluaw0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6Ymx1ZTsN
-Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30NCmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBlcmxp
-bmtGb2xsb3dlZA0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6cHVycGxlOw0KCXRl
-eHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KcC5Nc29MaXN0UGFyYWdyYXBoLCBsaS5Nc29MaXN0
-UGFyYWdyYXBoLCBkaXYuTXNvTGlzdFBhcmFncmFwaA0KCXttc28tc3R5bGUtcHJpb3JpdHk6MzQ7
-DQoJbWFyZ2luLXRvcDowaW47DQoJbWFyZ2luLXJpZ2h0OjBpbjsNCgltYXJnaW4tYm90dG9tOjBp
-bjsNCgltYXJnaW4tbGVmdDouNWluOw0KCW1hcmdpbi1ib3R0b206LjAwMDFwdDsNCglmb250LXNp
-emU6MTIuMHB0Ow0KCWZvbnQtZmFtaWx5OiJUaW1lcyBOZXcgUm9tYW4iLHNlcmlmO30NCnNwYW4u
-RW1haWxTdHlsZTE3DQoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFt
-aWx5OiJUcmVidWNoZXQgTVMiLHNhbnMtc2VyaWY7DQoJY29sb3I6Ymx1ZTt9DQouTXNvQ2hwRGVm
-YXVsdA0KCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsNCglmb250LWZhbWlseToiQ2FsaWJy
-aSIsc2Fucy1zZXJpZjt9DQpAcGFnZSBXb3JkU2VjdGlvbjENCgl7c2l6ZTo4LjVpbiAxMS4waW47
-DQoJbWFyZ2luOjEuMGluIDEuMjVpbiAxLjBpbiAxLjI1aW47fQ0KZGl2LldvcmRTZWN0aW9uMQ0K
-CXtwYWdlOldvcmRTZWN0aW9uMTt9DQovKiBMaXN0IERlZmluaXRpb25zICovDQpAbGlzdCBsMA0K
-CXttc28tbGlzdC1pZDo4OTg2MzkwMDI7DQoJbXNvLWxpc3QtdHlwZTpoeWJyaWQ7DQoJbXNvLWxp
-c3QtdGVtcGxhdGUtaWRzOjEzNTI0NjU2NDAgNjc2OTg3MTMgNjc2OTg3MTMgNjc2OTg3MTUgNjc2
-OTg3MDMgNjc2OTg3MTMgNjc2OTg3MTUgNjc2OTg3MDMgNjc2OTg3MTMgNjc2OTg3MTU7fQ0KQGxp
-c3QgbDA6bGV2ZWwxDQoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmFscGhhLWxvd2VyOw0KCW1z
-by1sZXZlbC10YWItc3RvcDpub25lOw0KCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsN
-Cgl0ZXh0LWluZGVudDotLjI1aW47fQ0KQGxpc3QgbDA6bGV2ZWwyDQoJe21zby1sZXZlbC1udW1i
-ZXItZm9ybWF0OmFscGhhLWxvd2VyOw0KCW1zby1sZXZlbC10YWItc3RvcDpub25lOw0KCW1zby1s
-ZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsNCgl0ZXh0LWluZGVudDotLjI1aW47fQ0KQGxpc3Qg
-bDA6bGV2ZWwzDQoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OnJvbWFuLWxvd2VyOw0KCW1zby1s
-ZXZlbC10YWItc3RvcDpub25lOw0KCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246cmlnaHQ7DQoJ
-dGV4dC1pbmRlbnQ6LTkuMHB0O30NCkBsaXN0IGwwOmxldmVsNA0KCXttc28tbGV2ZWwtdGFiLXN0
-b3A6bm9uZTsNCgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7DQoJdGV4dC1pbmRlbnQ6
-LS4yNWluO30NCkBsaXN0IGwwOmxldmVsNQ0KCXttc28tbGV2ZWwtbnVtYmVyLWZvcm1hdDphbHBo
-YS1sb3dlcjsNCgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsNCgltc28tbGV2ZWwtbnVtYmVyLXBv
-c2l0aW9uOmxlZnQ7DQoJdGV4dC1pbmRlbnQ6LS4yNWluO30NCkBsaXN0IGwwOmxldmVsNg0KCXtt
-c28tbGV2ZWwtbnVtYmVyLWZvcm1hdDpyb21hbi1sb3dlcjsNCgltc28tbGV2ZWwtdGFiLXN0b3A6
-bm9uZTsNCgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOnJpZ2h0Ow0KCXRleHQtaW5kZW50Oi05
-LjBwdDt9DQpAbGlzdCBsMDpsZXZlbDcNCgl7bXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7DQoJbXNv
-LWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0Ow0KCXRleHQtaW5kZW50Oi0uMjVpbjt9DQpAbGlz
-dCBsMDpsZXZlbDgNCgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YWxwaGEtbG93ZXI7DQoJbXNv
-LWxldmVsLXRhYi1zdG9wOm5vbmU7DQoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0Ow0K
-CXRleHQtaW5kZW50Oi0uMjVpbjt9DQpAbGlzdCBsMDpsZXZlbDkNCgl7bXNvLWxldmVsLW51bWJl
-ci1mb3JtYXQ6cm9tYW4tbG93ZXI7DQoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7DQoJbXNvLWxl
-dmVsLW51bWJlci1wb3NpdGlvbjpyaWdodDsNCgl0ZXh0LWluZGVudDotOS4wcHQ7fQ0Kb2wNCgl7
-bWFyZ2luLWJvdHRvbTowaW47fQ0KdWwNCgl7bWFyZ2luLWJvdHRvbTowaW47fQ0KLS0+PC9zdHls
-ZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQi
-IHNwaWRtYXg9IjEwMjYiIC8+DQo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+
-PHhtbD4NCjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4NCjxvOmlkbWFwIHY6ZXh0PSJlZGl0
-IiBkYXRhPSIxIiAvPg0KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPg0KPC9oZWFk
-Pg0KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJsdWUiIHZsaW5rPSJwdXJwbGUiPg0KPGRpdiBj
-bGFzcz0iV29yZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29MaXN0UGFyYWdyYXBoIiBzdHlsZT0i
-dGV4dC1pbmRlbnQ6LS4yNWluO21zby1saXN0OmwwIGxldmVsMSBsZm8xIj48IVtpZiAhc3VwcG9y
-dExpc3RzXT48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtU
-cmVidWNoZXQgTVMmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibHVlIj48c3BhbiBzdHlsZT0ibXNv
-LWxpc3Q6SWdub3JlIj5hLjxzcGFuIHN0eWxlPSJmb250OjcuMHB0ICZxdW90O1RpbWVzIE5ldyBS
-b21hbiZxdW90OyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7DQo8L3NwYW4+PC9zcGFuPjwvc3Bhbj48IVtl
-bmRpZl0+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7VHJl
-YnVjaGV0IE1TJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Ymx1ZSI+SSB0aGluayB5ZXMuIChhcyB5
-b3UgY2FuIHNlZSBpbiBjLikuIGFsc28gdGhlcmUgc2hvdWxkIGhhdmUgYSDigJx0cG0gb24vb2Zm
-4oCdIHNldHVwIGluIGJpb3MgY29uZmlndXJhdGlvbiwgeW91IGNhbiBjaGVjayB3aGF04oCZcyB0
-aGUgaW1wYWN0LjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29MaXN0UGFyYWdy
-YXBoIiBzdHlsZT0idGV4dC1pbmRlbnQ6LS4yNWluO21zby1saXN0OmwwIGxldmVsMSBsZm8xIj48
-IVtpZiAhc3VwcG9ydExpc3RzXT48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZh
-bWlseTomcXVvdDtUcmVidWNoZXQgTVMmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibHVlIj48c3Bh
-biBzdHlsZT0ibXNvLWxpc3Q6SWdub3JlIj5iLjxzcGFuIHN0eWxlPSJmb250OjcuMHB0ICZxdW90
-O1RpbWVzIE5ldyBSb21hbiZxdW90OyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7DQo8L3NwYW4+PC9zcGFu
-Pjwvc3Bhbj48IVtlbmRpZl0+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1p
-bHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Ymx1ZSI+Tm8uIGRp
-ZCB5b3UgdGVzdCB0aGF0PzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29MaXN0
-UGFyYWdyYXBoIiBzdHlsZT0idGV4dC1pbmRlbnQ6LS4yNWluO21zby1saXN0OmwwIGxldmVsMSBs
-Zm8xIj48IVtpZiAhc3VwcG9ydExpc3RzXT48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtm
-b250LWZhbWlseTomcXVvdDtUcmVidWNoZXQgTVMmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibHVl
-Ij48c3BhbiBzdHlsZT0ibXNvLWxpc3Q6SWdub3JlIj5jLjxzcGFuIHN0eWxlPSJmb250OjcuMHB0
-ICZxdW90O1RpbWVzIE5ldyBSb21hbiZxdW90OyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7DQo8L3NwYW4+
-PC9zcGFuPjwvc3Bhbj48IVtlbmRpZl0+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Ymx1ZSI+
-SXQgc2hvdWxkIGJlIGNvcnJlY3QgKGlmIHlvdXIgdWVmaSBiaW9zIGlzIHRjZyBjb21wbGlhbnQp
-PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgbmFtZT0iX01h
-aWxFbmRDb21wb3NlIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTom
-cXVvdDtUcmVidWNoZXQgTVMmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibHVlIj48bzpwPiZuYnNw
-OzwvbzpwPjwvc3Bhbj48L2E+PC9wPg0KPGRpdiBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLWxl
-ZnQ6c29saWQgYmx1ZSAxLjVwdDtwYWRkaW5nOjBpbiAwaW4gMGluIDQuMHB0Ij4NCjxkaXY+DQo8
-ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItdG9wOnNvbGlkICNFMUUxRTEgMS4wcHQ7cGFk
-ZGluZzozLjBwdCAwaW4gMGluIDBpbiI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBuYW1lPSJf
-X19fX3JlcGx5c2VwYXJhdG9yIj48L2E+PGI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7
-Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj5Gcm9tOjwvc3Bhbj48
-L2I+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJy
-aSZxdW90OyxzYW5zLXNlcmlmIj4gdHBtMiBbbWFpbHRvOnRwbTItYm91bmNlc0BsaXN0cy4wMS5v
-cmddDQo8Yj5PbiBCZWhhbGYgT2YgPC9iPkFydmluZCBLdW1hcjxicj4NCjxiPlNlbnQ6PC9iPiBG
-cmlkYXksIEF1Z3VzdCAzLCAyMDE4IDM6MDAgQU08YnI+DQo8Yj5Ubzo8L2I+IHRwbTJAbGlzdHMu
-MDEub3JnPGJyPg0KPGI+U3ViamVjdDo8L2I+IFJlOiBbdHBtMl0gSW5pdGlhbGl6aW5nICZhbXA7
-IFByb2dyYW1taW5nIFBDUnM8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjwvZGl2Pg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2Pg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+QW55IHVwZGF0ZSBvbiB0aGlzIHBsZWFzZSA/PG86cD48L286cD48L3A+
-DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwv
-cD4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5PbiBXZWQsIEF1ZyAxLCAyMDE4IGF0IDc6
-MDYgUE0sIEFydmluZCBLdW1hciAmbHQ7PGEgaHJlZj0ibWFpbHRvOmFydmluZC5rdW1hckBpb3Rp
-dW0uaW8iIHRhcmdldD0iX2JsYW5rIj5hcnZpbmQua3VtYXJAaW90aXVtLmlvPC9hPiZndDsgd3Jv
-dGU6PG86cD48L286cD48L3A+DQo8YmxvY2txdW90ZSBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVy
-LWxlZnQ6c29saWQgI0NDQ0NDQyAxLjBwdDtwYWRkaW5nOjBpbiAwaW4gMGluIDYuMHB0O21hcmdp
-bi1sZWZ0OjQuOHB0O21hcmdpbi1yaWdodDowaW4iPg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj5IaSBBbGwsPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPkkgaGF2ZSBhIGhhcmR3YXJlIHdpdGggVFBNIDIuMCBvbiB3aGljaCBJ
-IGhhdmUgaW5zdGFsbGVkIHVidW50dSBpbiBVRUZJIG1vZGUuIEkgbmVlZCB0byB0cmlnZ2VyIFVF
-RkkmbmJzcDsgdG8gbWVhc3VyZSB0aGUgYm9vdCBjb21wb25lbnRzICh1ZWZpL3NoaW0vYm9vdCBs
-b2FkZXIsIGtlcm5lbCwgaW5pdHJkKSBpbnRvIHJlc3BlY3RpdmUgUENScy4gRm9yIHdoaWNoLCBJ
-IGhhdmUgZm9sbG93aW5nIHF1ZXN0aW9ucy48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+YS4gQXMgc29vbiBhcyB0aGUmbmJzcDsgVFBNIDIuMCZu
-YnNwOyBpcyBlbmFibGVkIGZyb20gQklPUyBhbmQgZGV2aWNlIGlzIGJvb3RlZCwgZG9lcyBVRUZJ
-IHN0YXJ0IHRoZSBtZWFzdXJlbWVudHMgYW5kIHJlY29yZCB0aGVtIGludG8gUENSUyBieSBkZWZh
-dWx0IG9yIHRoZXJlIGlzIHNvbWUgY29uZmlnIHRvIHRlbGwgVUVGSSB0byBzdGFydCBtZWFzdXJl
-bWVudHMgPzxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj5iLiBTaG91bGQgc2VjdXJlIGJvb3QgYmUgZW5hYmxlZCBpbiBvcmRlciB0byB0cmlnZ2Vy
-IHRoZSBVRUZJIHRvIHN0YXJ0IGFib3ZlIG1lYXN1cmVtZW50cyA/PG86cD48L286cD48L3A+DQo8
-L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4N
-CjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPmMuIEkgZW5hYmxlZCBUUE0gMi4w
-IGFuZCBpbnN0YWxsZWQgdWJ1bnR1IGluIFVFRkkgbW9kZSwgYW5kIEkgY2FuIHNlZSB0aGF0IFBD
-UiAwIHRvIDcgYXJlIHBvcHVsYXRlZCB3aXRoIHNvbWUgdmFsdWVzIGFuZCBhbGwgb3RoZXIgUENS
-cyBhcmUgemVyb3MuIEFyZSB0aGVzZSBib290IG1lYXN1cmVtZW50cyBjb3JyZWN0LCBob3cgY2Fu
-IEkgdmVyaWZ5ID88bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+ZC4gSXMgdGhlcmUgYW55IGxvZ3Mgb24gVFBNIDIuMCBvciBVRUZJIHRoYXQgSSBj
-YW4gcmVmZXIgdG8gPzxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj5BbnkgaGVscCBpcyBhcHByZWNpYXRlZC48bzpwPjwvbzpwPjwvcD4NCjwvZGl2
-Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9k
-aXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhhbmtzLDxvOnA+PC9vOnA+PC9wPg0K
-PC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+QXJ2aW5kPG86cD48L286cD48L3A+
-DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDs8bzpwPjwvbzpwPjwv
-cD4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Jsb2NrcXVvdGU+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9i
-b2R5Pg0KPC9odG1sPg0K
-
---===============8497564498351449940==--
+--===============4191342680864337268==--
 
