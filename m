@@ -1,142 +1,190 @@
-Content-Type: multipart/mixed; boundary="===============7698599899553364137=="
+Content-Type: multipart/mixed; boundary="===============4823929177765905089=="
 MIME-Version: 1.0
-From: Zhu, Bing <bing.zhu at intel.com>
-Subject: Re: [tpm2] Tpm2 NV read public
-Date: Mon, 06 Aug 2018 23:58:56 +0000
-Message-ID: <A3DEEEBB19900C48B49572CB9C2891C97C0A74F5@SHSMSX101.ccr.corp.intel.com>
-In-Reply-To: CAOysEad6=vv4UkMy4JJWMQ=yTDbFESHDj7wetAjfovFoq+e8qA@mail.gmail.com
+From: martin doc <db1280 at hotmail.com>
+Subject: [tpm2] Cannot get tabrmd to run
+Date: Wed, 08 Aug 2018 07:28:11 +0000
+Message-ID: <SL2P216MB0266B495F6A0F43DCB568AD0C2260@SL2P216MB0266.KORP216.PROD.OUTLOOK.COM>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7698599899553364137==
+--===============4823929177765905089==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Is your nvHandle here for ReadPublic just your hardcode or assigned nvIndex=
- value?
+Hi,
+I'm bring up TPM on a system for the first time and have run into a bit of =
+a problem - tabrmd won't start.
+=E2=80=A8
+Part of this appears to be due to it not being present in dbus, e.g.:
+=E2=80=A8
+# dbus-send --system --dest=3Dcom.intel.tss2.Tabrmd --type=3Dmethod_call --=
+print-reply /com/intel/tss2/Tabrmd/Tcti org.freedesktop.DBus.Introspectable=
+.Introspect
+Error org.freedesktop.DBus.Error.ServiceUnknown: The name com.intel.tss2.Ta=
+brmd was not provided by any .service files
 
-Bing
 
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Davide Rutigli=
-ano
-Sent: Tuesday, August 7, 2018 3:18 AM
-To: tpm2(a)lists.01.org
-Subject: [tpm2] Tpm2 NV read public
+I don't know how to fix this. The service has been enabled in systemd:
 
-Hello,
+# systemctl status tpm2-abrmd
+=E2=97=8F tpm2-abrmd.service - TPM2 Access Broker and Resource Management D=
+aemon
+   Loaded: loaded (/usr/lib/systemd/system/tpm2-abrmd.service; enabled; ven=
+dor preset: disabled)
+   Active: activating (auto-restart) (Result: exit-code) since Wed 2018-08-=
+08 17:19:54 AEST; 4s ago
+  Process: 6350 ExecStart=3D/usr/sbin/tpm2-abrmd (code=3Dexited, status=3D1=
+/FAILURE)
+ Main PID: 6350 (code=3Dexited, status=3D1/FAILURE)
 
-I'm in trouble with tpm2 NV read public command.
+Aug 08 17:19:54 dhcp-1-252 systemd[1]: Failed to start TPM2 Access Broker a=
+nd Resource Management Daemon.
+Aug 08 17:19:54 dhcp-1-252 systemd[1]: Unit tpm2-abrmd.service entered fail=
+ed state.
+Aug 08 17:19:54 dhcp-1-252 systemd[1]: tpm2-abrmd.service failed.
 
-What I mean is that everything goes fine if I run first DefineSpace and the=
-n ReadPublic, passing as an argument to the latter the nvHandle obtained fr=
-om the NV_DefineSpace.
+I've tried pkill -HUP dbus-daemon and systemctl daemon-reload. No change.
 
-The problem arises when I run for the second time the program and the NV In=
-dex is already defined and I would not create another one, but simply run R=
-eadPublic on the already existent nvIndex.
-The problem is I don't know how to obtain the nvHandle to properly run the =
-TPM command (I receive error code: 0x00000184 -> ESYS_TR not correct).
+Aug 08 17:23:43 dhcp-1-252 systemd[1]: Reloading.
+Aug 08 17:23:43 dhcp-1-252 polkitd[1217]: Unregistered Authentication Agent=
+ for unix-process:6658:671434 (system bus name :1.93, object path /org/free=
+desktop/PolicyKit1/AuthenticationAgent, locale en_AU.UTF-8) (disconnected f=
+rom bus)
+Aug 08 17:23:54 dhcp-1-252 polkitd[1217]: Registered Authentication Agent f=
+or unix-process:6676:672475 (system bus name :1.94 [/usr/bin/pkttyagent --n=
+otify-fd 5 --fallback], object path /org/freedesktop/PolicyKit1/Authenticat=
+ionAgent, locale en_AU.UTF-8)
+Aug 08 17:23:54 dhcp-1-252 systemd[1]: Starting TPM2 Access Broker and Reso=
+urce Management Daemon...
+-- Subject: Unit tpm2-abrmd.service has begun start-up
+-- Defined-By: systemd
+-- Support: http://lists.freedesktop.org/mailman/listinfo/systemd-devel
+--
+-- Unit tpm2-abrmd.service has begun starting up.
+Aug 08 17:23:54 dhcp-1-252 tpm2-abrmd[6682]: failed to initialize device TC=
+TI context: 0xa000a
+Aug 08 17:23:54 dhcp-1-252 tpm2-abrmd[6682]: TCTI initialization failed: 0x=
+a000a
+Aug 08 17:23:54 dhcp-1-252 systemd[1]: tpm2-abrmd.service: main process exi=
+ted, code=3Dexited, status=3D1/FAILURE
+Aug 08 17:23:54 dhcp-1-252 systemd[1]: Failed to start TPM2 Access Broker a=
+nd Resource Management Daemon.
+-- Subject: Unit tpm2-abrmd.service has failed
+-- Defined-By: systemd
+-- Support: http://lists.freedesktop.org/mailman/listinfo/systemd-devel
+--
+-- Unit tpm2-abrmd.service has failed.
+--
+-- The result is failed.
+Aug 08 17:23:54 dhcp-1-252 systemd[1]: Unit tpm2-abrmd.service entered fail=
+ed state.
+Aug 08 17:23:54 dhcp-1-252 systemd[1]: tpm2-abrmd.service failed.
+Aug 08 17:23:54 dhcp-1-252 polkitd[1217]: Unregistered Authentication Agent=
+ for unix-process:6676:672475 (system bus name :1.94, object path /org/free=
+desktop/PolicyKit1/AuthenticationAgent, locale en_AU.UTF-8) (disconnected f=
+rom bus)
+[root(a)dhcp-1-252 ~]# !dbus
+dbus-send --system --dest=3Dcom.intel.tss2.Tabrmd --type=3Dmethod_call --pr=
+int-reply /com/intel/tss2/Tabrmd/Tcti org.freedesktop.DBus.Introspectable.I=
+ntrospect
+Error org.freedesktop.DBus.Error.ServiceUnknown: The name com.intel.tss2.Ta=
+brmd was not provided by any .service files
+[root(a)dhcp-1-252 ~]#  rpm -q -a | grep tpm2
+tpm2-tss-devel-1.3.0-2.el7.x86_64
+tpm2-tss-1.3.0-2.el7.x86_64
+tpm2-abrmd-1.1.0-8.el7.x86_64
 
-Can you help me?
 
-Hope my question is clear,
-thanks in advance.
-
-Regards,
-Davide.
-
---===============7698599899553364137==
+--===============4823929177765905089==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6ZHQ9InV1aWQ6QzJGNDEwMTAtNjVC
-My0xMWQxLUEyOUYtMDBBQTAwQzE0ODgyIiB4bWxuczptPSJodHRwOi8vc2NoZW1hcy5taWNyb3Nv
-ZnQuY29tL29mZmljZS8yMDA0LzEyL29tbWwiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy9UUi9S
-RUMtaHRtbDQwIj4NCjxoZWFkPg0KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250
-ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPg0KPG1ldGEgbmFtZT0iR2VuZXJhdG9yIiBj
-b250ZW50PSJNaWNyb3NvZnQgV29yZCAxNSAoZmlsdGVyZWQgbWVkaXVtKSI+DQo8c3R5bGU+PCEt
-LQ0KLyogRm9udCBEZWZpbml0aW9ucyAqLw0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTrlrovk
-vZM7DQoJcGFub3NlLTE6MiAxIDYgMCAzIDEgMSAxIDEgMTt9DQpAZm9udC1mYWNlDQoJe2ZvbnQt
-ZmFtaWx5OiJDYW1icmlhIE1hdGgiOw0KCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQ0K
-QGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpDYWxpYnJpOw0KCXBhbm9zZS0xOjIgMTUgNSAyIDIg
-MiA0IDMgMiA0O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6IlRyZWJ1Y2hldCBNUyI7DQoJ
-cGFub3NlLTE6MiAxMSA2IDMgMiAyIDIgMiAyIDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWls
-eToiXEDlrovkvZMiOw0KCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQ0KLyogU3R5bGUg
-RGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWwsIGRpdi5Nc29Ob3JtYWwN
-Cgl7bWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJZm9udC1zaXplOjEyLjBw
-dDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZjt9DQphOmxpbmssIHNwYW4u
-TXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjojMDU2M0MxOw0K
-CXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlu
-a0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjojOTU0RjcyOw0KCXRl
-eHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0Kc3Bhbi5FbWFpbFN0eWxlMTcNCgl7bXNvLXN0eWxl
-LXR5cGU6cGVyc29uYWwtcmVwbHk7DQoJZm9udC1mYW1pbHk6IlRyZWJ1Y2hldCBNUyIsc2Fucy1z
-ZXJpZjsNCgljb2xvcjpibHVlO30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4
-cG9ydC1vbmx5O30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXplOjguNWluIDExLjBpbjsNCglt
-YXJnaW46MS4waW4gMS4yNWluIDEuMGluIDEuMjVpbjt9DQpkaXYuV29yZFNlY3Rpb24xDQoJe3Bh
-Z2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8
-bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPg0KPC94bWw+PCFb
-ZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWxheW91dCB2OmV4dD0i
-ZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4NCjwvbzpzaGFwZWxheW91
-dD48L3htbD48IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5IGxhbmc9IkVOLVVTIiBsaW5rPSIj
-MDU2M0MxIiB2bGluaz0iIzk1NEY3MiI+DQo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1p
-bHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Ymx1ZSI+SXMgeW91
-ciBudkhhbmRsZSBoZXJlIGZvciBSZWFkUHVibGljIGp1c3QgeW91ciBoYXJkY29kZSBvciBhc3Np
-Z25lZCBudkluZGV4IHZhbHVlPzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1Ry
-ZWJ1Y2hldCBNUyZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsdWUiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6
-MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1Y2hldCBNUyZxdW90OyxzYW5zLXNlcmlmO2Nv
-bG9yOmJsdWUiPkJpbmc8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48YSBuYW1lPSJfTWFpbEVuZENvbXBvc2UiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0
-O2ZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1Y2hldCBNUyZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJs
-dWUiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvYT48L3A+DQo8ZGl2IHN0eWxlPSJib3JkZXI6
-bm9uZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGluIDBpbiAwaW4gNC4w
-cHQiPg0KPGRpdj4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci10b3A6c29saWQgI0Ux
-RTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBpbiAwaW4gMGluIj4NCjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxhIG5hbWU9Il9fX19fcmVwbHlzZXBhcmF0b3IiPjwvYT48Yj48c3BhbiBzdHlsZT0iZm9u
-dC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWYi
-PkZyb206PC9zcGFuPjwvYj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWls
-eTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWYiPiB0cG0yIFttYWlsdG86dHBtMi1ib3Vu
-Y2VzQGxpc3RzLjAxLm9yZ10NCjxiPk9uIEJlaGFsZiBPZiA8L2I+RGF2aWRlIFJ1dGlnbGlhbm88
-YnI+DQo8Yj5TZW50OjwvYj4gVHVlc2RheSwgQXVndXN0IDcsIDIwMTggMzoxOCBBTTxicj4NCjxi
-PlRvOjwvYj4gdHBtMkBsaXN0cy4wMS5vcmc8YnI+DQo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIFRw
-bTIgTlYgcmVhZCBwdWJsaWM8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjwvZGl2Pg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2Pg0KPGRpdj4N
-CjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbyw8bzpwPjwvbzpwPjwvcD4NCjwvZGl2
-Pg0KPGRpdj4NCjxkaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8
-L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JJ20gaW4gdHJv
-dWJsZSB3aXRoIHRwbTIgTlYgcmVhZCBwdWJsaWMgY29tbWFuZC48bzpwPjwvbzpwPjwvcD4NCjwv
-ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0K
-PC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+V2hhdCBJIG1lYW4gaXMgdGhhdCBl
-dmVyeXRoaW5nIGdvZXMgZmluZSBpZiBJIHJ1biBmaXJzdCBEZWZpbmVTcGFjZSBhbmQgdGhlbiBS
-ZWFkUHVibGljLCBwYXNzaW5nIGFzIGFuIGFyZ3VtZW50IHRvIHRoZSBsYXR0ZXIgdGhlIG52SGFu
-ZGxlIG9idGFpbmVkIGZyb20gdGhlIE5WX0RlZmluZVNwYWNlLjxvOnA+PC9vOnA+PC9wPg0KPC9k
-aXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8
-L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGUgcHJvYmxlbSBhcmlzZXMgd2hl
-biBJIHJ1biBmb3IgdGhlIHNlY29uZCB0aW1lIHRoZSBwcm9ncmFtIGFuZCB0aGUgTlYgSW5kZXgg
-aXMgYWxyZWFkeSBkZWZpbmVkIGFuZCBJIHdvdWxkIG5vdCBjcmVhdGUgYW5vdGhlciBvbmUsIGJ1
-dCBzaW1wbHkgcnVuIFJlYWRQdWJsaWMgb24gdGhlIGFscmVhZHkgZXhpc3RlbnQgbnZJbmRleC48
-bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoZSBw
-cm9ibGVtIGlzIEkgZG9uJ3Qga25vdyBob3cgdG8gb2J0YWluIHRoZSBudkhhbmRsZSB0byBwcm9w
-ZXJseSBydW4gdGhlIFRQTSBjb21tYW5kIChJIHJlY2VpdmUgZXJyb3IgY29kZTogMHgwMDAwMDE4
-NCAtJmd0OyBFU1lTX1RSIG5vdCBjb3JyZWN0KS48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRp
-dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8
-ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Q2FuIHlvdSBoZWxwIG1lPzxvOnA+PC9vOnA+PC9w
-Pg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48
-L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5Ib3BlIG15IHF1ZXN0aW9u
-IGlzIGNsZWFyLDxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+dGhhbmtzIGluIGFkdmFuY2UuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlJlZ2FyZHMsPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxk
-aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5EYXZpZGUuPG86cD48L286cD48L3A+DQo8L2Rpdj4N
-CjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvYm9keT4N
-CjwvaHRtbD4NCg==
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
+ImRpc3BsYXk6bm9uZTsiPjwhLS0gUCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9IC0t
+Pjwvc3R5bGU+DQo8L2hlYWQ+DQo8Ym9keSBkaXI9Imx0ciI+DQo8ZGl2IGlkPSJkaXZ0YWdkZWZh
+dWx0d3JhcHBlciIgc3R5bGU9ImZvbnQtc2l6ZToxMnB0O2NvbG9yOiMwMDAwMDA7Zm9udC1mYW1p
+bHk6Q2FsaWJyaSxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsiIGRpcj0ibHRyIj4NCjxwIHN0eWxlPSJt
+YXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowIj48L3A+DQo8ZGl2PkhpLDwvZGl2Pg0KPGRpdj5J
+J20gYnJpbmcgdXAgVFBNIG9uIGEgc3lzdGVtIGZvciB0aGUgZmlyc3QgdGltZSBhbmQgaGF2ZSBy
+dW4gaW50byBhIGJpdCBvZiBhIHByb2JsZW0gLSB0YWJybWQgd29uJ3Qgc3RhcnQuPC9kaXY+DQo8
+ZGl2PuKAqDwvZGl2Pg0KPGRpdj5QYXJ0IG9mIHRoaXMgYXBwZWFycyB0byBiZSBkdWUgdG8gaXQg
+bm90IGJlaW5nIHByZXNlbnQgaW4gZGJ1cywgZS5nLjo8L2Rpdj4NCjxkaXY+4oCoPC9kaXY+DQo8
+ZGl2PiMgZGJ1cy1zZW5kIC0tc3lzdGVtIC0tZGVzdD1jb20uaW50ZWwudHNzMi5UYWJybWQgLS10
+eXBlPW1ldGhvZF9jYWxsIC0tcHJpbnQtcmVwbHkgL2NvbS9pbnRlbC90c3MyL1RhYnJtZC9UY3Rp
+IG9yZy5mcmVlZGVza3RvcC5EQnVzLkludHJvc3BlY3RhYmxlLkludHJvc3BlY3Q8L2Rpdj4NCjxk
+aXY+RXJyb3Igb3JnLmZyZWVkZXNrdG9wLkRCdXMuRXJyb3IuU2VydmljZVVua25vd246IFRoZSBu
+YW1lIGNvbS5pbnRlbC50c3MyLlRhYnJtZCB3YXMgbm90IHByb3ZpZGVkIGJ5IGFueSAuc2Vydmlj
+ZSBmaWxlczwvZGl2Pg0KPGRpdj48YnI+DQo8L2Rpdj4NCjxkaXY+PGJyPg0KPC9kaXY+DQo8ZGl2
+PkkgZG9uJ3Qga25vdyBob3cgdG8gZml4IHRoaXMuIFRoZSBzZXJ2aWNlIGhhcyBiZWVuIGVuYWJs
+ZWQgaW4gc3lzdGVtZDo8L2Rpdj4NCjxkaXY+PGJyPg0KPC9kaXY+DQo8ZGl2PiMgc3lzdGVtY3Rs
+IHN0YXR1cyB0cG0yLWFicm1kPC9kaXY+DQo8ZGl2PuKXjyB0cG0yLWFicm1kLnNlcnZpY2UgLSBU
+UE0yIEFjY2VzcyBCcm9rZXIgYW5kIFJlc291cmNlIE1hbmFnZW1lbnQgRGFlbW9uPC9kaXY+DQo8
+ZGl2PiZuYnNwOyAmbmJzcDtMb2FkZWQ6IGxvYWRlZCAoL3Vzci9saWIvc3lzdGVtZC9zeXN0ZW0v
+dHBtMi1hYnJtZC5zZXJ2aWNlOyBlbmFibGVkOyB2ZW5kb3IgcHJlc2V0OiBkaXNhYmxlZCk8L2Rp
+dj4NCjxkaXY+Jm5ic3A7ICZuYnNwO0FjdGl2ZTogYWN0aXZhdGluZyAoYXV0by1yZXN0YXJ0KSAo
+UmVzdWx0OiBleGl0LWNvZGUpIHNpbmNlIFdlZCAyMDE4LTA4LTA4IDE3OjE5OjU0IEFFU1Q7IDRz
+IGFnbzwvZGl2Pg0KPGRpdj4mbmJzcDsgUHJvY2VzczogNjM1MCBFeGVjU3RhcnQ9L3Vzci9zYmlu
+L3RwbTItYWJybWQgKGNvZGU9ZXhpdGVkLCBzdGF0dXM9MS9GQUlMVVJFKTwvZGl2Pg0KPGRpdj4m
+bmJzcDtNYWluIFBJRDogNjM1MCAoY29kZT1leGl0ZWQsIHN0YXR1cz0xL0ZBSUxVUkUpPC9kaXY+
+DQo8ZGl2Pjxicj4NCjwvZGl2Pg0KPGRpdj5BdWcgMDggMTc6MTk6NTQgZGhjcC0xLTI1MiBzeXN0
+ZW1kWzFdOiBGYWlsZWQgdG8gc3RhcnQgVFBNMiBBY2Nlc3MgQnJva2VyIGFuZCBSZXNvdXJjZSBN
+YW5hZ2VtZW50IERhZW1vbi48L2Rpdj4NCjxkaXY+QXVnIDA4IDE3OjE5OjU0IGRoY3AtMS0yNTIg
+c3lzdGVtZFsxXTogVW5pdCB0cG0yLWFicm1kLnNlcnZpY2UgZW50ZXJlZCBmYWlsZWQgc3RhdGUu
+PC9kaXY+DQo8ZGl2PkF1ZyAwOCAxNzoxOTo1NCBkaGNwLTEtMjUyIHN5c3RlbWRbMV06IHRwbTIt
+YWJybWQuc2VydmljZSBmYWlsZWQuPC9kaXY+DQo8ZGl2Pjxicj4NCjwvZGl2Pg0KPGRpdj5JJ3Zl
+IHRyaWVkIHBraWxsIC1IVVAgZGJ1cy1kYWVtb24gYW5kIHN5c3RlbWN0bCBkYWVtb24tcmVsb2Fk
+LiBObyBjaGFuZ2UuPC9kaXY+DQo8ZGl2Pjxicj4NCjwvZGl2Pg0KPGRpdj5BdWcgMDggMTc6MjM6
+NDMgZGhjcC0xLTI1MiBzeXN0ZW1kWzFdOiBSZWxvYWRpbmcuPC9kaXY+DQo8ZGl2PkF1ZyAwOCAx
+NzoyMzo0MyBkaGNwLTEtMjUyIHBvbGtpdGRbMTIxN106IFVucmVnaXN0ZXJlZCBBdXRoZW50aWNh
+dGlvbiBBZ2VudCBmb3IgdW5peC1wcm9jZXNzOjY2NTg6NjcxNDM0IChzeXN0ZW0gYnVzIG5hbWUg
+OjEuOTMsIG9iamVjdCBwYXRoIC9vcmcvZnJlZWRlc2t0b3AvUG9saWN5S2l0MS9BdXRoZW50aWNh
+dGlvbkFnZW50LCBsb2NhbGUgZW5fQVUuVVRGLTgpIChkaXNjb25uZWN0ZWQgZnJvbSBidXMpPC9k
+aXY+DQo8ZGl2PkF1ZyAwOCAxNzoyMzo1NCBkaGNwLTEtMjUyIHBvbGtpdGRbMTIxN106IFJlZ2lz
+dGVyZWQgQXV0aGVudGljYXRpb24gQWdlbnQgZm9yIHVuaXgtcHJvY2Vzczo2Njc2OjY3MjQ3NSAo
+c3lzdGVtIGJ1cyBuYW1lIDoxLjk0IFsvdXNyL2Jpbi9wa3R0eWFnZW50IC0tbm90aWZ5LWZkIDUg
+LS1mYWxsYmFja10sIG9iamVjdCBwYXRoIC9vcmcvZnJlZWRlc2t0b3AvUG9saWN5S2l0MS9BdXRo
+ZW50aWNhdGlvbkFnZW50LCBsb2NhbGUgZW5fQVUuVVRGLTgpPC9kaXY+DQo8ZGl2PkF1ZyAwOCAx
+NzoyMzo1NCBkaGNwLTEtMjUyIHN5c3RlbWRbMV06IFN0YXJ0aW5nIFRQTTIgQWNjZXNzIEJyb2tl
+ciBhbmQgUmVzb3VyY2UgTWFuYWdlbWVudCBEYWVtb24uLi48L2Rpdj4NCjxkaXY+LS0gU3ViamVj
+dDogVW5pdCB0cG0yLWFicm1kLnNlcnZpY2UgaGFzIGJlZ3VuIHN0YXJ0LXVwPC9kaXY+DQo8ZGl2
+Pi0tIERlZmluZWQtQnk6IHN5c3RlbWQ8L2Rpdj4NCjxkaXY+LS0gU3VwcG9ydDogaHR0cDovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL3N5c3RlbWQtZGV2ZWw8L2Rpdj4N
+CjxkaXY+LS08L2Rpdj4NCjxkaXY+LS0gVW5pdCB0cG0yLWFicm1kLnNlcnZpY2UgaGFzIGJlZ3Vu
+IHN0YXJ0aW5nIHVwLjwvZGl2Pg0KPGRpdj5BdWcgMDggMTc6MjM6NTQgZGhjcC0xLTI1MiB0cG0y
+LWFicm1kWzY2ODJdOiBmYWlsZWQgdG8gaW5pdGlhbGl6ZSBkZXZpY2UgVENUSSBjb250ZXh0OiAw
+eGEwMDBhPC9kaXY+DQo8ZGl2PkF1ZyAwOCAxNzoyMzo1NCBkaGNwLTEtMjUyIHRwbTItYWJybWRb
+NjY4Ml06IFRDVEkgaW5pdGlhbGl6YXRpb24gZmFpbGVkOiAweGEwMDBhPC9kaXY+DQo8ZGl2PkF1
+ZyAwOCAxNzoyMzo1NCBkaGNwLTEtMjUyIHN5c3RlbWRbMV06IHRwbTItYWJybWQuc2VydmljZTog
+bWFpbiBwcm9jZXNzIGV4aXRlZCwgY29kZT1leGl0ZWQsIHN0YXR1cz0xL0ZBSUxVUkU8L2Rpdj4N
+CjxkaXY+QXVnIDA4IDE3OjIzOjU0IGRoY3AtMS0yNTIgc3lzdGVtZFsxXTogRmFpbGVkIHRvIHN0
+YXJ0IFRQTTIgQWNjZXNzIEJyb2tlciBhbmQgUmVzb3VyY2UgTWFuYWdlbWVudCBEYWVtb24uPC9k
+aXY+DQo8ZGl2Pi0tIFN1YmplY3Q6IFVuaXQgdHBtMi1hYnJtZC5zZXJ2aWNlIGhhcyBmYWlsZWQ8
+L2Rpdj4NCjxkaXY+LS0gRGVmaW5lZC1CeTogc3lzdGVtZDwvZGl2Pg0KPGRpdj4tLSBTdXBwb3J0
+OiBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vc3lzdGVtZC1k
+ZXZlbDwvZGl2Pg0KPGRpdj4tLTwvZGl2Pg0KPGRpdj4tLSBVbml0IHRwbTItYWJybWQuc2Vydmlj
+ZSBoYXMgZmFpbGVkLjwvZGl2Pg0KPGRpdj4tLTwvZGl2Pg0KPGRpdj4tLSBUaGUgcmVzdWx0IGlz
+IGZhaWxlZC48L2Rpdj4NCjxkaXY+QXVnIDA4IDE3OjIzOjU0IGRoY3AtMS0yNTIgc3lzdGVtZFsx
+XTogVW5pdCB0cG0yLWFicm1kLnNlcnZpY2UgZW50ZXJlZCBmYWlsZWQgc3RhdGUuPC9kaXY+DQo8
+ZGl2PkF1ZyAwOCAxNzoyMzo1NCBkaGNwLTEtMjUyIHN5c3RlbWRbMV06IHRwbTItYWJybWQuc2Vy
+dmljZSBmYWlsZWQuPC9kaXY+DQo8ZGl2PkF1ZyAwOCAxNzoyMzo1NCBkaGNwLTEtMjUyIHBvbGtp
+dGRbMTIxN106IFVucmVnaXN0ZXJlZCBBdXRoZW50aWNhdGlvbiBBZ2VudCBmb3IgdW5peC1wcm9j
+ZXNzOjY2NzY6NjcyNDc1IChzeXN0ZW0gYnVzIG5hbWUgOjEuOTQsIG9iamVjdCBwYXRoIC9vcmcv
+ZnJlZWRlc2t0b3AvUG9saWN5S2l0MS9BdXRoZW50aWNhdGlvbkFnZW50LCBsb2NhbGUgZW5fQVUu
+VVRGLTgpIChkaXNjb25uZWN0ZWQgZnJvbSBidXMpPC9kaXY+DQo8ZGl2Pltyb290QGRoY3AtMS0y
+NTIgfl0jICFkYnVzPC9kaXY+DQo8ZGl2PmRidXMtc2VuZCAtLXN5c3RlbSAtLWRlc3Q9Y29tLmlu
+dGVsLnRzczIuVGFicm1kIC0tdHlwZT1tZXRob2RfY2FsbCAtLXByaW50LXJlcGx5IC9jb20vaW50
+ZWwvdHNzMi9UYWJybWQvVGN0aSBvcmcuZnJlZWRlc2t0b3AuREJ1cy5JbnRyb3NwZWN0YWJsZS5J
+bnRyb3NwZWN0PC9kaXY+DQo8ZGl2PkVycm9yIG9yZy5mcmVlZGVza3RvcC5EQnVzLkVycm9yLlNl
+cnZpY2VVbmtub3duOiBUaGUgbmFtZSBjb20uaW50ZWwudHNzMi5UYWJybWQgd2FzIG5vdCBwcm92
+aWRlZCBieSBhbnkgLnNlcnZpY2UgZmlsZXM8L2Rpdj4NCjxkaXY+W3Jvb3RAZGhjcC0xLTI1MiB+
+XSMmbmJzcDsgcnBtIC1xIC1hIHwgZ3JlcCB0cG0yPC9kaXY+DQo8ZGl2PnRwbTItdHNzLWRldmVs
+LTEuMy4wLTIuZWw3Lng4Nl82NDwvZGl2Pg0KPGRpdj50cG0yLXRzcy0xLjMuMC0yLmVsNy54ODZf
+NjQ8L2Rpdj4NCjxkaXY+dHBtMi1hYnJtZC0xLjEuMC04LmVsNy54ODZfNjQ8L2Rpdj4NCjxicj4N
+CjxwPjwvcD4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
 
---===============7698599899553364137==--
+--===============4823929177765905089==--
 
