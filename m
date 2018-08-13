@@ -1,77 +1,61 @@
-Content-Type: multipart/mixed; boundary="===============9184804917118007970=="
+Content-Type: multipart/mixed; boundary="===============7645555009276038404=="
 MIME-Version: 1.0
-From: Davide Rutigliano <davide.ruti at gmail.com>
-Subject: [tpm2] Tpm2 NV read public
-Date: Sun, 12 Aug 2018 14:49:12 +0200
-Message-ID: <CAOysEadPje6YNsL6tKB7nHUSBZB_yRgqUKRSuf8zON=cz0YuBg@mail.gmail.com>
+From: Javier Martinez Canillas <javierm at redhat.com>
+Subject: Re: [tpm2] tpm2-tools 3.1.2 release candidate
+Date: Mon, 13 Aug 2018 13:20:28 +0200
+Message-ID: <773b2ba7-4b6e-b1d7-8d17-ffa955aacaa4@redhat.com>
+In-Reply-To: fb797dbc-15cb-34d0-e812-e69440319656@linux.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9184804917118007970==
+--===============7645555009276038404==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi Joshua,
 
-I'm in trouble with tpm2 NV read public command.
+On 08/01/2018 12:09 PM, Joshua Lock wrote:
+> On 16/07/2018 21:22, Joshua Lock wrote:
+>> Hello all,
+>>
+>> I've just tagged and signed rc0 for tpm2-tools 3.1.2:
+>> https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.2-rc0
+>>
+>>
+>> Javier noticed that we had a behavioural change in 3.1 (compared to 3.0) =
 
-What I mean is that everything goes fine if I run first DefineSpace and
-then ReadPublic, passing as an argument to the latter the nvHandle obtained
-from the NV_DefineSpace.
+>> that was inappropriate for a minor version bump, that is we were using =
 
-The problem arises when I run for the second time the program and the NV
-Index is already defined and I would not create another one, but simply run
-ReadPublic on the already existent nvIndex.
+>> user supplied object attributes exclusively (instead of ORing them with =
 
-The problem is I don't know how to obtain the nvHandle to properly run the
-TPM command (I receive error code: 0x00000184 -> ESYS_TR not correct).
+>> the defaults). 3.1.2 reverts the change:
+>>
+>> https://github.com/tpm2-software/tpm2-tools/commit/352908f7470338aba858a=
+9ac20c1c5ec608b661c =
 
-Can someone help me?
+> =
 
-Hope my question is clear,
-thanks in advance.
+> I just tagged 3.1.2-rc1 to include an additional fix from Javier to use =
 
-Regards,
-Davide.
+> better object attribute defaults in tpm2_create:
+> =
 
---===============9184804917118007970==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.2-rc1
+>
 
-PGRpdiBkaXI9ImF1dG8iPjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1z
-aXplOjEyLjhweCIgZGlyPSJhdXRvIj48ZGl2IHN0eWxlPSJtYXJnaW46MTZweCAwcHgiPjxkaXY+
-PGRpdiBkaXI9ImF1dG8iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTIuOHB4Ij5IaSBhbGwsPC9z
-cGFuPjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1zaXplOjEyLjhweCI+PGJyPjwvZGl2Pjxk
-aXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1zaXplOjEyLjhweCI+SSYjMzk7bSBpbiB0cm91Ymxl
-IHdpdGggdHBtMiBOViByZWFkIHB1YmxpYyBjb21tYW5kLjwvZGl2PjxkaXYgZGlyPSJhdXRvIiBz
-dHlsZT0iZm9udC1zaXplOjEyLjhweCI+PGJyPjwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0i
-Zm9udC1zaXplOjEyLjhweCI+V2hhdCBJIG1lYW4gaXMgdGhhdCBldmVyeXRoaW5nIGdvZXMgZmlu
-ZSBpZiBJIHJ1biBmaXJzdCBEZWZpbmVTcGFjZSBhbmQgdGhlbiBSZWFkUHVibGljLCBwYXNzaW5n
-IGFzIGFuIGFyZ3VtZW50IHRvIHRoZSBsYXR0ZXIgdGhlIG52SGFuZGxlIG9idGFpbmVkIGZyb20g
-dGhlIE5WX0RlZmluZVNwYWNlLjwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1zaXpl
-OjEyLjhweCI+PGJyPjwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1zaXplOjEyLjhw
-eCI+VGhlIHByb2JsZW0gYXJpc2VzIHdoZW4gSSBydW4gZm9yIHRoZSBzZWNvbmQgdGltZSB0aGUg
-cHJvZ3JhbSBhbmQgdGhlIE5WIEluZGV4IGlzIGFscmVhZHkgZGVmaW5lZCBhbmQgSSB3b3VsZCBu
-b3QgY3JlYXRlIGFub3RoZXIgb25lLCBidXQgc2ltcGx5IHJ1biBSZWFkUHVibGljIG9uIHRoZSBh
-bHJlYWR5IGV4aXN0ZW50IG52SW5kZXguPC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250
-LXNpemU6MTIuOHB4Ij48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LXNpemU6
-MTIuOHB4Ij5UaGUgcHJvYmxlbSBpcyBJIGRvbiYjMzk7dCBrbm93IGhvdyB0byBvYnRhaW4gdGhl
-IG52SGFuZGxlIHRvIHByb3Blcmx5IHJ1biB0aGUgVFBNIGNvbW1hbmQgKEkgcmVjZWl2ZSBlcnJv
-ciBjb2RlOiAweDAwMDAwMTg0IC0mZ3Q7IEVTWVNfVFIgbm90IGNvcnJlY3QpLjwvZGl2PjxkaXYg
-ZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1zaXplOjEyLjhweCI+PGJyPjwvZGl2PjxkaXYgZGlyPSJh
-dXRvIiBzdHlsZT0iZm9udC1zaXplOjEyLjhweCI+Q2FuIHNvbWVvbmUgaGVscCBtZT88L2Rpdj48
-ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtc2l6ZToxMi44cHgiPjxicj48L2Rpdj48ZGl2IGRp
-cj0iYXV0byIgc3R5bGU9ImZvbnQtc2l6ZToxMi44cHgiPkhvcGUgbXkgcXVlc3Rpb24gaXMgY2xl
-YXIsPC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LXNpemU6MTIuOHB4Ij50aGFua3Mg
-aW4gYWR2YW5jZS48L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtc2l6ZToxMi44cHgi
-Pjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtc2l6ZToxMi44cHgiPlJlZ2Fy
-ZHMsPC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LXNpemU6MTIuOHB4Ij5EYXZpZGUu
-PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PGRpdiBzdHlsZT0iaGVpZ2h0OjBweCI+PC9kaXY+PC9k
-aXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4IiBk
-aXI9ImF1dG8iPjxicj48L2Rpdj48L2Rpdj4K
+I think is time to cut a final 3.1.2 release?
+ =
 
---===============9184804917118007970==--
+> Thanks,
+> Joshua
+
+Best regards,
+-- =
+
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
+
+--===============7645555009276038404==--
 
