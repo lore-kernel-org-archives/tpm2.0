@@ -1,36 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============0310673529903232323=="
+Content-Type: multipart/mixed; boundary="===============7804530183614154926=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] TSS2_DRIVER_RC_LAYER not in common spec
-Date: Fri, 17 Aug 2018 13:00:03 -0700
-Message-ID: <20180817200003.GA29847@intel.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649C2BD88@ORSMSX101.amr.corp.intel.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] tpm2_loadexternal - enhancements
+Date: Thu, 23 Aug 2018 17:08:51 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649C2D2FA@ORSMSX101.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0310673529903232323==
+--===============7804530183614154926==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 17, 2018 at 09:19:51AM -0700, Roberts, William C wrote:
-> TSS2_DRIVER_RC_LAYER is not in common spec, but defined in common.h
+Previously, tpm2_loadexternal was quite limited. It could only load a publi=
+c/private file in the TSS format (aka generated via readpublic or create).
+Recently, on master, I have been working on a series that allows loading bo=
+th the public and private portions of an object from PEM files.
+This way, folks can seamlessly use openssl objects in the TPM. The man page=
+s have been updated, to show full examples, as well as
+tests for this.
 
-Those layer definitions are leftover from before my time. We cleaned a
-lot of them out but this one must have slipped through or removed from a
-later draft of the spec.
+Tpm2_loadexternal supports:
+1. AES keys (raw key byte files)
+2. RSA keys
+3. ECC keys
 
-> Spec:
-> https://trustedcomputinggroup.org/wp-content/uploads/TSS_Overview_Common_=
-Structures_Version-0.9_Revision-03_Review_030918.pdf
-> =
+We still need support for XOR and HMAC, but that should follow the AES key =
+code closely. We dropped support for tpm2_loadexternal for TSS format priva=
+te objects,
+as no command response returns such a structure from the TPM.
 
-> Is it defined somewhere else? Should we drop this from the header?
+Remember, that loadexternal loaded objects have restrictions on their use, =
+since they are *NOT* tpm managed objects. This is the major
+Difference between tpm2_loadexternal and tpm2_import. ECC support has not b=
+een added to tpm2_import at this time.
 
-Grep says it's not used by anything but old test code. Could be used
-downstream but it shouldn't be.
 
-Philip
-
---===============0310673529903232323==--
+--===============7804530183614154926==--
 
