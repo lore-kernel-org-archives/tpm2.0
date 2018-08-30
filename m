@@ -1,82 +1,174 @@
-Content-Type: multipart/mixed; boundary="===============1486108578406122301=="
+Content-Type: multipart/mixed; boundary="===============0671538342155129731=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] TPM2TSS engine for OpenSSL
-Date: Thu, 30 Aug 2018 08:16:50 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D014263B5CB@exch2010c.sit.fraunhofer.de>
-In-Reply-To: abd61557-ac3b-cbd7-24d5-f48731bf017e@twobit.org
+From: Litjes, Christian <christian.litjes at philips.com>
+Subject: [tpm2] TPM2 changing the DictionaryAttackParamaters
+Date: Thu, 30 Aug 2018 08:18:08 +0000
+Message-ID: <AM0P122MB0099DF527C97B556303949BA90080@AM0P122MB0099.EURP122.PROD.OUTLOOK.COM>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1486108578406122301==
+--===============0671538342155129731==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Now that's interesting....
+Hi everyone,
 
-The default OpenSSL-Engines for 1.0.0 are all prefixed with a lib*
-I have to admit that I never used the OPENSSL_ENGINES env but rather the LD=
-_LIBRARY_PATH.
 
-I wonder what the correct behavior is ?
-Is this a weirdness of openSSL ?
 
-Does anyone around here know OpenSSL enough to give an answer or advice ?
+I'm trying to setup a system with the cryptfs2 and tpm2-tooling which is cu=
+rrently working but I'd like to change the DictionaryAttackParamater recove=
+ry time.
 
-________________________________________
-From: Philip Tricca [flihp(a)twobit.org]
-Sent: Thursday, August 30, 2018 03:19
-To: Joshua Lock
-Cc: Fuchs, Andreas; tpm2(a)lists.01.org
-Subject: Re: [tpm2] TPM2TSS engine for OpenSSL
 
-Hi Joshua,
 
-On 08/28/2018 08:30 AM, Joshua Lock wrote:
-> On Tue, 2018-08-28 at 14:58 +0000, Fuchs, Andreas wrote:
->> Hi Joshua,
->>
->> the engine is tested against openssl 1.0.2 and 1.1.0 using travis ci,
->> see
->> https://github.com/tpm2-software/tpm2-tss-engine/blob/master/.travis.yml
->>
->> The fedora-info looks strange, since is says "No such file or
->> directory".
->> Could you check that  /usr/local/lib/openssl/engines/tpm2tss.so
->> actually exists ?
->
-> It doesn't, I do have libtpm2tss.so (same on my Ubuntu 16.04.5 VM
-> though).
-> However, if I link the libtpm2tss.so -> tpm2tss.so the engine is picked
-> up:
-> $ sudo ln -s /usr/local/lib/openssl/engines/libtpm2tss.so
-> /usr/local/lib/openssl/engines/tpm2tss.so
-> $ OPENSSL_ENGINES=3D/usr/local/lib/openssl/engines openssl engine -t -c
-> tpm2tss
-> (tpm2tss) TPM2-TSS engine for OpenSSL
->  [RSA, RAND]
->      [ available ]
->
-> or indeed if I use libtpm2tss as the engine name:
->
-> $ OPENSSL_ENGINES=3D/usr/local/lib/openssl/engines openssl engine -t -c
-> libtpm2tss
-> (libtpm2tss) TPM2-TSS engine for OpenSSL
-> Loaded: (tpm2tss) TPM2-TSS engine for OpenSSL
->  [RSA, RAND]
->      [ available ]
+I've tried the following (scenario 1)
 
-I had to reverse engineer this behavior as part of doing my LSS talk. I
-found `strace` was the most useful tool in debugging it. Try adding
-'/usr/local/lib/openssl/engines' to your library load path
-(LD_LIBRARY_PATH).
+Reset TPM from the bios
 
-That said I have no idea if this is the right way to achieve this goal
-but I can say it will allow you to omit the 'lib' prefix from the engine
-name w/o having to rename the installed so.
+Tmp2_takeownership -T "device" -L "1234567890"
 
-Philip
+Tpm2_dictionarylockout -s -n 32 -l 86400 -t 5 -p "1234567890"
 
---===============1486108578406122301==--
+I get a warning: the command may require writing of NV and NV is not curren=
+t accessible.
+
+If I check the settings with:
+
+Tpm2_getcap -c properties-variable
+
+I notice they are not changed
+
+
+
+Reset TPM from the bios
+
+Tpm2_dictionarylockout -s -n 32 -l 86400 -t 5 -p "1234567890"
+
+Tpm2_getcap -c properties-variable
+
+Values are written
+
+Tmp2_takeownership -T "device" -L "1234567890"
+
+Tpm2_getcap -c properties-variable
+
+Settings are reset to default
+
+
+
+What would I need to do to get the first scenario to work? I know I'm combi=
+ning tools from 2.x with master. But that's because the cryptfs tooling is =
+dependent on 2.x.
+
+How can I unlock the NV, I've found tpm2_release but I've got no clue what =
+to release.
+
+
+
+Kind Regards,
+
+Christian Litjes
+
+________________________________
+The information contained in this message may be confidential and legally p=
+rotected under applicable law. The message is intended solely for the addre=
+ssee(s). If you are not the intended recipient, you are hereby notified tha=
+t any use, forwarding, dissemination, or reproduction of this message is st=
+rictly prohibited and may be unlawful. If you are not the intended recipien=
+t, please contact the sender by return e-mail and destroy all copies of the=
+ original message.
+
+--===============0671538342155129731==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnAuTXNvUGxhaW5UZXh0LCBsaS5Nc29QbGFpblRleHQsIGRpdi5Nc29Q
+bGFpblRleHQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgltc28tc3R5bGUtbGluazoiUGxhaW4g
+VGV4dCBDaGFyIjsKCW1hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNp
+emU6MTAuMHB0OwoJZm9udC1mYW1pbHk6IkFyaWFsIixzYW5zLXNlcmlmOwoJY29sb3I6IzQ2NEI2
+OTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsK
+CWZvbnQtZmFtaWx5OiJBcmlhbCIsc2Fucy1zZXJpZjsKCWNvbG9yOiM0NjRCNjk7Cglmb250LXdl
+aWdodDpub3JtYWw7Cglmb250LXN0eWxlOm5vcm1hbDt9CnNwYW4uUGxhaW5UZXh0Q2hhcgoJe21z
+by1zdHlsZS1uYW1lOiJQbGFpbiBUZXh0IENoYXIiOwoJbXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJ
+bXNvLXN0eWxlLWxpbms6IlBsYWluIFRleHQiOwoJZm9udC1mYW1pbHk6IkFyaWFsIixzYW5zLXNl
+cmlmOwoJY29sb3I6IzQ2NEI2OTt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhw
+b3J0LW9ubHk7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRT
+ZWN0aW9uMQoJe3NpemU6NjEyLjBwdCA3OTIuMHB0OwoJbWFyZ2luOjcwLjg1cHQgNzAuODVwdCA3
+MC44NXB0IDcwLjg1cHQ7fQpkaXYuV29yZFNlY3Rpb24xCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQot
+LT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0
+PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPgo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBt
+c28gOV0+PHhtbD4KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPgo8bzppZG1hcCB2OmV4dD0i
+ZWRpdCIgZGF0YT0iMSIgLz4KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPgo8L2hl
+YWQ+Cjxib2R5IGxhbmc9IkVOLVVTIiBsaW5rPSIjMDU2M0MxIiB2bGluaz0iIzk1NEY3MiI+Cjxk
+aXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiPkhpIGV2ZXJ5
+b25lLDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij48bzpwPiZuYnNwOzwv
+bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+SSdtIHRyeWluZyB0byBzZXR1cCBhIHN5
+c3RlbSB3aXRoIHRoZSBjcnlwdGZzMiBhbmQgdHBtMi10b29saW5nIHdoaWNoIGlzIGN1cnJlbnRs
+eSB3b3JraW5nIGJ1dCBJJ2QgbGlrZSB0byBjaGFuZ2UgdGhlIERpY3Rpb25hcnlBdHRhY2tQYXJh
+bWF0ZXIgcmVjb3ZlcnkgdGltZS48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4
+dCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiPkkndmUgdHJp
+ZWQgdGhlIGZvbGxvd2luZyAoc2NlbmFyaW8gMSk8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
+b1BsYWluVGV4dCI+UmVzZXQgVFBNIGZyb20gdGhlIGJpb3M8bzpwPjwvbzpwPjwvcD4KPHAgY2xh
+c3M9Ik1zb1BsYWluVGV4dCI+VG1wMl90YWtlb3duZXJzaGlwIC1UICZxdW90O2RldmljZSZxdW90
+OyAtTCAmcXVvdDsxMjM0NTY3ODkwJnF1b3Q7PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Q
+bGFpblRleHQiPlRwbTJfZGljdGlvbmFyeWxvY2tvdXQgLXMgLW4gMzIgLWwgODY0MDAgLXQgNSAt
+cCAmcXVvdDsxMjM0NTY3ODkwJnF1b3Q7PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29QbGFp
+blRleHQiPkkgZ2V0IGEgd2FybmluZzogdGhlIGNvbW1hbmQgbWF5IHJlcXVpcmUgd3JpdGluZyBv
+ZiBOViBhbmQgTlYgaXMgbm90IGN1cnJlbnQgYWNjZXNzaWJsZS48bzpwPjwvbzpwPjwvcD4KPHAg
+Y2xhc3M9Ik1zb1BsYWluVGV4dCI+SWYgSSBjaGVjayB0aGUgc2V0dGluZ3Mgd2l0aDo8bzpwPjwv
+bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+VHBtMl9nZXRjYXAgLWMgcHJvcGVydGll
+cy12YXJpYWJsZTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0Ij5JIG5vdGlj
+ZSB0aGV5IGFyZSBub3QgY2hhbmdlZDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5U
+ZXh0Ij48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+UmVzZXQg
+VFBNIGZyb20gdGhlIGJpb3M8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+
+VHBtMl9kaWN0aW9uYXJ5bG9ja291dCAtcyAtbiAzMiAtbCA4NjQwMCAtdCA1IC1wICZxdW90OzEy
+MzQ1Njc4OTAmcXVvdDs8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+VHBt
+Ml9nZXRjYXAgLWMgcHJvcGVydGllcy12YXJpYWJsZTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0i
+TXNvUGxhaW5UZXh0Ij5WYWx1ZXMgYXJlIHdyaXR0ZW48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb1BsYWluVGV4dCI+VG1wMl90YWtlb3duZXJzaGlwIC1UICZxdW90O2RldmljZSZxdW90OyAt
+TCAmcXVvdDsxMjM0NTY3ODkwJnF1b3Q7PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29QbGFp
+blRleHQiPlRwbTJfZ2V0Y2FwIC1jIHByb3BlcnRpZXMtdmFyaWFibGU8bzpwPjwvbzpwPjwvcD4K
+PHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+U2V0dGluZ3MgYXJlIHJlc2V0IHRvIGRlZmF1bHQ8bzpw
+PjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PG86cD4mbmJzcDs8L286cD48L3A+
+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiPldoYXQgd291bGQgSSBuZWVkIHRvIGRvIHRvIGdldCB0
+aGUgZmlyc3Qgc2NlbmFyaW8gdG8gd29yaz8gSSBrbm93IEknbSBjb21iaW5pbmcgdG9vbHMgZnJv
+bSAyLnggd2l0aCBtYXN0ZXIuIEJ1dCB0aGF0J3MgYmVjYXVzZSB0aGUgY3J5cHRmcyB0b29saW5n
+IGlzIGRlcGVuZGVudCBvbiAyLnguPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRl
+eHQiPkhvdyBjYW4gSSB1bmxvY2sgdGhlIE5WLCBJJ3ZlIGZvdW5kIHRwbTJfcmVsZWFzZSBidXQg
+SSd2ZSBnb3Qgbm8gY2x1ZSB3aGF0IHRvIHJlbGVhc2UuPG86cD48L286cD48L3A+CjxwIGNsYXNz
+PSJNc29QbGFpblRleHQiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5U
+ZXh0Ij48c3BhbiBsYW5nPSJOTCI+S2luZCBSZWdhcmRzLDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4K
+PHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PHNwYW4gbGFuZz0iTkwiPkNocmlzdGlhbiBMaXRqZXM8
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjwvZGl2Pgo8YnI+Cjxocj4KPGZvbnQgZmFjZT0iQXJpYWwi
+IGNvbG9yPSJHcmF5IiBzaXplPSIxIj5UaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMg
+bWVzc2FnZSBtYXkgYmUgY29uZmlkZW50aWFsIGFuZCBsZWdhbGx5IHByb3RlY3RlZCB1bmRlciBh
+cHBsaWNhYmxlIGxhdy4gVGhlIG1lc3NhZ2UgaXMgaW50ZW5kZWQgc29sZWx5IGZvciB0aGUgYWRk
+cmVzc2VlKHMpLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCB5b3UgYXJl
+IGhlcmVieSBub3RpZmllZAogdGhhdCBhbnkgdXNlLCBmb3J3YXJkaW5nLCBkaXNzZW1pbmF0aW9u
+LCBvciByZXByb2R1Y3Rpb24gb2YgdGhpcyBtZXNzYWdlIGlzIHN0cmljdGx5IHByb2hpYml0ZWQg
+YW5kIG1heSBiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVu
+dCwgcGxlYXNlIGNvbnRhY3QgdGhlIHNlbmRlciBieSByZXR1cm4gZS1tYWlsIGFuZCBkZXN0cm95
+IGFsbCBjb3BpZXMgb2YgdGhlIG9yaWdpbmFsIG1lc3NhZ2UuPGJyPgo8L2ZvbnQ+CjwvYm9keT4K
+PC9odG1sPgo=
+
+--===============0671538342155129731==--
 
