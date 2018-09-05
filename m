@@ -1,123 +1,142 @@
-Content-Type: multipart/mixed; boundary="===============0306330367427198720=="
+Content-Type: multipart/mixed; boundary="===============3553315205198318318=="
 MIME-Version: 1.0
-From: Zhu, Bing <bing.zhu at intel.com>
-Subject: Re: [tpm2] In emulator, why do PCRs 17-22 default to ff?
-Date: Sat, 01 Sep 2018 03:47:43 +0000
-Message-ID: <A3DEEEBB19900C48B49572CB9C2891C97C0F2728@SHSMSX101.ccr.corp.intel.com>
-In-Reply-To: c507c2dd86b3447d854675fbd5b4c940@AZDC-MMB02.GD-MS.US
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] TPM2 changing the DictionaryAttackParamaters
+Date: Wed, 05 Sep 2018 19:53:31 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649C2FCBB@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: AM0P122MB0099DF527C97B556303949BA90080@AM0P122MB0099.EURP122.PROD.OUTLOOK.COM
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0306330367427198720==
+--===============3553315205198318318==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Peter,
+Ah you're going to device directly, maybe you need to issue a tpm_startup.
 
-That is defined behavior in TCG PC Client Platform PM Profile (PTP) Specifi=
-cation
-https://www.trustedcomputinggroup.org/wp-content/uploads/PC-Client-Specific=
--Platform-TPM-Profile-for-TPM-2-0-v43-150126.pdf
+Can you replicate this with the simulator and step debug the simulator, oft=
+en times
+that's how I solve these things.
 
-in Table 5 - PCR Initial and Reset Values
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Litjes, Chri=
+stian
+> Sent: Thursday, August 30, 2018 1:18 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] TPM2 changing the DictionaryAttackParamaters
+> =
 
-PCR0: 0000.....03, the ending "3" indicates locality.
+> Hi everyone,
+> =
 
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Scheie, Peter M
-Sent: Friday, August 31, 2018 9:29 PM
-To: tpm2(a)lists.01.org
-Subject: [tpm2] In emulator, why do PCRs 17-22 default to ff?
+> =
 
-In the emulator, PCRs 0-16 and 23 default to 00 when the emulator is starte=
-d.  But PCRs 17-22 default to ff.  Why is that?  Why not have them all be 0=
-0 or all be ff?  (Actually, I notice PCR0 is 03 upon startup; why is that?)
+> =
 
-Peter
+> I'm trying to setup a system with the cryptfs2 and tpm2-tooling which is =
+currently
+> working but I'd like to change the DictionaryAttackParamater recovery tim=
+e.
+> =
 
---===============0306330367427198720==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6ZHQ9InV1aWQ6QzJGNDEwMTAtNjVC
-My0xMWQxLUEyOUYtMDBBQTAwQzE0ODgyIiB4bWxuczptPSJodHRwOi8vc2NoZW1hcy5taWNyb3Nv
-ZnQuY29tL29mZmljZS8yMDA0LzEyL29tbWwiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy9UUi9S
-RUMtaHRtbDQwIj4KPGhlYWQ+CjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVu
-dD0idGV4dC9odG1sOyBjaGFyc2V0PXVzLWFzY2lpIj4KPG1ldGEgbmFtZT0iR2VuZXJhdG9yIiBj
-b250ZW50PSJNaWNyb3NvZnQgV29yZCAxNSAoZmlsdGVyZWQgbWVkaXVtKSI+CjxzdHlsZT48IS0t
-Ci8qIEZvbnQgRGVmaW5pdGlvbnMgKi8KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OlNpbVN1bjsK
-CXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQpAZm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7CglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMgMiA0O30KQGZvbnQtZmFj
-ZQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7CglwYW5vc2UtMToyIDE1IDUgMiAyIDIgNCAzIDIgNDt9
-CkBmb250LWZhY2UKCXtmb250LWZhbWlseToiVHJlYnVjaGV0IE1TIjsKCXBhbm9zZS0xOjIgMTEg
-NiAzIDIgMiAyIDIgMiA0O30KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OlNpbVN1bjsKCXBhbm9z
-ZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLwpwLk1zb05v
-cm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBpbjsKCW1hcmdpbi1i
-b3R0b206LjAwMDFwdDsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIs
-c2Fucy1zZXJpZjt9CmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3Jp
-dHk6OTk7Cgljb2xvcjpibHVlOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlzaXRl
-ZCwgc3Bhbi5Nc29IeXBlcmxpbmtGb2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsKCWNv
-bG9yOnB1cnBsZTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQpzcGFuLkVtYWlsU3R5bGUx
-NwoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsOwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMt
-c2VyaWY7Cgljb2xvcjp3aW5kb3d0ZXh0O30Kc3Bhbi5FbWFpbFN0eWxlMTgKCXttc28tc3R5bGUt
-dHlwZTpwZXJzb25hbC1yZXBseTsKCWZvbnQtZmFtaWx5OiJUcmVidWNoZXQgTVMiLHNhbnMtc2Vy
-aWY7Cgljb2xvcjpibHVlO30KLk1zb0NocERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQt
-b25seTsKCWZvbnQtc2l6ZToxMC4wcHQ7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWlu
-IDExLjBpbjsKCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlv
-bjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4
-bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1s
-PjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4
-dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlv
-dXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJs
-dWUiIHZsaW5rPSJwdXJwbGUiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1
-b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Ymx1ZSI+UGV0ZXIsPG86cD48L286cD48L3NwYW4+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VHJlYnVj
-aGV0IE1TJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Ymx1ZSI+PG86cD4mbmJzcDs8L286cD48L3Nw
-YW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1
-b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Ymx1ZSI+VGhhdCBpcyBkZWZp
-bmVkIGJlaGF2aW9yIGluIFRDRyBQQyBDbGllbnQgUGxhdGZvcm0gUE0gUHJvZmlsZSAoUFRQKSBT
-cGVjaWZpY2F0aW9uPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNhbnMtc2Vy
-aWY7Y29sb3I6Ymx1ZSI+PGEgaHJlZj0iaHR0cHM6Ly93d3cudHJ1c3RlZGNvbXB1dGluZ2dyb3Vw
-Lm9yZy93cC1jb250ZW50L3VwbG9hZHMvUEMtQ2xpZW50LVNwZWNpZmljLVBsYXRmb3JtLVRQTS1Q
-cm9maWxlLWZvci1UUE0tMi0wLXY0My0xNTAxMjYucGRmIj5odHRwczovL3d3dy50cnVzdGVkY29t
-cHV0aW5nZ3JvdXAub3JnL3dwLWNvbnRlbnQvdXBsb2Fkcy9QQy1DbGllbnQtU3BlY2lmaWMtUGxh
-dGZvcm0tVFBNLVByb2ZpbGUtZm9yLVRQTS0yLTAtdjQzLTE1MDEyNi5wZGY8L2E+PG86cD48L286
-cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1p
-bHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Ymx1ZSI+PG86cD4m
-bmJzcDs8L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0i
-Zm9udC1mYW1pbHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6Ymx1
-ZSI+aW4KPC9zcGFuPlRhYmxlIDUgJiM4MjEyOyBQQ1IgSW5pdGlhbCBhbmQgUmVzZXQgVmFsdWVz
-PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1Y2hldCBNUyZxdW90OyxzYW5zLXNl
-cmlmO2NvbG9yOmJsdWUiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1Y2hldCBNUyZxdW90OyxzYW5z
-LXNlcmlmO2NvbG9yOmJsdWUiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1Y2hldCBNUyZx
-dW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsdWUiPlBDUjA6IDAwMDAmIzgyMzA7Li4wMywgdGhlIGVu
-ZGluZyAmIzgyMjA7MyYjODIyMTsgaW5kaWNhdGVzIGxvY2FsaXR5Lgo8bzpwPjwvbzpwPjwvc3Bh
-bj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxhIG5hbWU9Il9NYWlsRW5kQ29tcG9zZSI+PHNw
-YW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1Y2hldCBNUyZxdW90OyxzYW5zLXNlcmlm
-O2NvbG9yOmJsdWUiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvYT48L3A+CjxkaXY+CjxkaXYg
-c3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci10b3A6c29saWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5n
-OjMuMHB0IDBpbiAwaW4gMGluIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgbmFtZT0iX19fX19y
-ZXBseXNlcGFyYXRvciI+PC9hPjxiPkZyb206PC9iPiB0cG0yIFttYWlsdG86dHBtMi1ib3VuY2Vz
-QGxpc3RzLjAxLm9yZ10KPGI+T24gQmVoYWxmIE9mIDwvYj5TY2hlaWUsIFBldGVyIE08YnI+Cjxi
-PlNlbnQ6PC9iPiBGcmlkYXksIEF1Z3VzdCAzMSwgMjAxOCA5OjI5IFBNPGJyPgo8Yj5Ubzo8L2I+
-IHRwbTJAbGlzdHMuMDEub3JnPGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIEluIGVtdWxhdG9y
-LCB3aHkgZG8gUENScyAxNy0yMiBkZWZhdWx0IHRvIGZmPzxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4K
-PC9kaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj5JbiB0aGUgZW11bGF0b3IsIFBDUnMgMC0xNiBhbmQgMjMgZGVmYXVsdCB0
-byAwMCB3aGVuIHRoZSBlbXVsYXRvciBpcyBzdGFydGVkLiZuYnNwOyBCdXQgUENScyAxNy0yMiBk
-ZWZhdWx0IHRvIGZmLiZuYnNwOyBXaHkgaXMgdGhhdD8mbmJzcDsgV2h5IG5vdCBoYXZlIHRoZW0g
-YWxsIGJlIDAwIG9yIGFsbCBiZSBmZj8mbmJzcDsgKEFjdHVhbGx5LCBJIG5vdGljZSBQQ1IwIGlz
-IDAzIHVwb24gc3RhcnR1cDsgd2h5IGlzIHRoYXQ/KTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+UGV0
-ZXI8bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+> =
 
---===============0306330367427198720==--
+> I've tried the following (scenario 1)
+> =
+
+> Reset TPM from the bios
+> =
+
+> Tmp2_takeownership -T "device" -L "1234567890"
+> =
+
+> Tpm2_dictionarylockout -s -n 32 -l 86400 -t 5 -p "1234567890"
+> =
+
+> I get a warning: the command may require writing of NV and NV is not curr=
+ent
+> accessible.
+> =
+
+> If I check the settings with:
+> =
+
+> Tpm2_getcap -c properties-variable
+> =
+
+> I notice they are not changed
+> =
+
+> =
+
+> =
+
+> Reset TPM from the bios
+> =
+
+> Tpm2_dictionarylockout -s -n 32 -l 86400 -t 5 -p "1234567890"
+> =
+
+> Tpm2_getcap -c properties-variable
+> =
+
+> Values are written
+> =
+
+> Tmp2_takeownership -T "device" -L "1234567890"
+> =
+
+> Tpm2_getcap -c properties-variable
+> =
+
+> Settings are reset to default
+> =
+
+> =
+
+> =
+
+> What would I need to do to get the first scenario to work? I know I'm com=
+bining
+> tools from 2.x with master. But that's because the cryptfs tooling is dep=
+endent on
+> 2.x.
+> =
+
+> How can I unlock the NV, I've found tpm2_release but I've got no clue wha=
+t to
+> release.
+> =
+
+> =
+
+> =
+
+> Kind Regards,
+> =
+
+> Christian Litjes
+> =
+
+> =
+
+> ________________________________
+> =
+
+> The information contained in this message may be confidential and legally
+> protected under applicable law. The message is intended solely for the
+> addressee(s). If you are not the intended recipient, you are hereby notif=
+ied that
+> any use, forwarding, dissemination, or reproduction of this message is st=
+rictly
+> prohibited and may be unlawful. If you are not the intended recipient, pl=
+ease
+> contact the sender by return e-mail and destroy all copies of the original
+> message.
+
+
+--===============3553315205198318318==--
 
