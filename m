@@ -1,32 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============8103123992263820133=="
+Content-Type: multipart/mixed; boundary="===============7243819825833898837=="
 MIME-Version: 1.0
-From: Trevor Woerner <twoerner at gmail.com>
-Subject: [tpm2] in-browser TPM2 simulator
-Date: Tue, 18 Sep 2018 21:48:54 -0400
-Message-ID: <CAHUNapR7KouJag4q_vJU09gX52_-wAvdDx-PH-ECRUUE1YsUUQ@mail.gmail.com>
+From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
+Subject: [tpm2] Any way to change NVRAM index password?
+Date: Wed, 19 Sep 2018 12:47:52 +0000
+Message-ID: <d4e8010b6f3e4edc9054f0a96a3efd58@AZDC-MMB02.GD-MS.US>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8103123992263820133==
+--===============7243819825833898837==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From google, I assume?
-https://google.github.io/tpm-js/
+When I define an NVRAM index using tpm2_nvdefine, one thing I set is the in=
+dex password with the -I option.  I'm also setting the attribute ownerwrite=
+ for the index so the index can be written only if one knows the index pass=
+word.  Is there any way to change this password after I've set it, or do I =
+have to remove the whole index (tpm2_nvrelease) and recreate it with the ne=
+w password?
 
-I'm not sure if this is new or old.
+Peter
 
---===============8103123992263820133==
+--===============7243819825833898837==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+RnJvbSBnb29nbGUsIEkgYXNzdW1lPzxkaXY+
-PGEgaHJlZj0iaHR0cHM6Ly9nb29nbGUuZ2l0aHViLmlvL3RwbS1qcy8iPmh0dHBzOi8vZ29vZ2xl
-LmdpdGh1Yi5pby90cG0tanMvPC9hPjxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkkmIzM5
-O20gbm90IHN1cmUgaWYgdGhpcyBpcyBuZXcgb3Igb2xkLjwvZGl2PjwvZGl2PjwvZGl2Pgo=
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTQgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDYWxp
+YnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9u
+cyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBp
+bjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWls
+eToiQ2FsaWJyaSIsInNhbnMtc2VyaWYiO30KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluawoJe21z
+by1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOmJsdWU7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJs
+aW5lO30KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkCgl7bXNvLXN0eWxlLXBy
+aW9yaXR5Ojk5OwoJY29sb3I6cHVycGxlOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnNw
+YW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsKCWZvbnQt
+ZmFtaWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0No
+cERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxp
+YnJpIiwic2Fucy1zZXJpZiI7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBp
+bjsKCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtw
+YWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+Cjxv
+OnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2Vu
+ZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRp
+dCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94
+bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJsdWUiIHZs
+aW5rPSJwdXJwbGUiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5XaGVuIEkgZGVmaW5lIGFuIE5WUkFNIGluZGV4IHVzaW5nIHRwbTJfbnZkZWZpbmUsIG9u
+ZSB0aGluZyBJIHNldCBpcyB0aGUgaW5kZXggcGFzc3dvcmQgd2l0aCB0aGUgJiM4MjExO0kgb3B0
+aW9uLiZuYnNwOyBJJiM4MjE3O20gYWxzbyBzZXR0aW5nIHRoZSBhdHRyaWJ1dGUgb3duZXJ3cml0
+ZSBmb3IgdGhlIGluZGV4IHNvIHRoZSBpbmRleCBjYW4gYmUgd3JpdHRlbiBvbmx5IGlmIG9uZSBr
+bm93cyB0aGUgaW5kZXggcGFzc3dvcmQuJm5ic3A7IElzIHRoZXJlCiBhbnkgd2F5IHRvIGNoYW5n
+ZSB0aGlzIHBhc3N3b3JkIGFmdGVyIEkmIzgyMTc7dmUgc2V0IGl0LCBvciBkbyBJIGhhdmUgdG8g
+cmVtb3ZlIHRoZSB3aG9sZSBpbmRleCAodHBtMl9udnJlbGVhc2UpIGFuZCByZWNyZWF0ZSBpdCB3
+aXRoIHRoZSBuZXcgcGFzc3dvcmQ/PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5QZXRlcjxvOnA+PC9v
+OnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
---===============8103123992263820133==--
+--===============7243819825833898837==--
 
