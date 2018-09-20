@@ -1,222 +1,129 @@
-Content-Type: multipart/mixed; boundary="===============4028532643905772846=="
+Content-Type: multipart/mixed; boundary="===============4184183814411610722=="
 MIME-Version: 1.0
-From: Zhu, Bing <bing.zhu at intel.com>
-Subject: Re: [tpm2] Any way to change NVRAM index password?
-Date: Thu, 20 Sep 2018 04:49:37 +0000
-Message-ID: <A3DEEEBB19900C48B49572CB9C2891C97C12E962@SHSMSX101.ccr.corp.intel.com>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0142646272@exch2010c.sit.fraunhofer.de
+From: Litjes, Christian <christian.litjes at philips.com>
+Subject: Re: [tpm2] TPM2 changing the DictionaryAttackParamaters
+Date: Thu, 20 Sep 2018 07:05:40 +0000
+Message-ID: <AM0P122MB00990B5BDEFC3AC020AEA15F90130@AM0P122MB0099.EURP122.PROD.OUTLOOK.COM>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649C2FCBB@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4028532643905772846==
+--===============4184183814411610722==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Peter,
-What does "the -I option" mean? https://github.com/tpm2-software/tpm2-tools=
-/commit/e105149f07c9b944f69599ab67cd8b018ad880d2
+Hi Robert,
 
-I believe you created an index with both ownerwrite/authwrite set, right?
+We figured out what was wrong. Without the simulator though ^^.
+tpm2_takeownership -T "device" -L "pass" was used instead of what it should=
+ have been: tpm2_takeownership -T "device" -l "pass"
 
-This below is incorrect, if you're setting ownerwrite attribute, then you d=
-on't need to provide index auth/password. You can directly write it if you =
-have owner auth value.
->> .  I'm also setting the attribute ownerwrite for the index so the index =
-can be written only if one knows the index password
+After this change we could use:
+tpm2_dictionarylockout -s -n 32 -l 86400 -t 5 -p "pass"
+
+And saw the values change and the stuck.
+
+Kind Regards,
+Christian Litjes
 
 
-Andreas answer is correct, TPM2_NV_ChangeAuth() is used to change index aut=
-h/password.
+-----Original Message-----
+From: Roberts, William C <william.c.roberts(a)intel.com>
+Sent: woensdag 5 september 2018 21:54
+To: Litjes, Christian <christian.litjes(a)philips.com>; tpm2(a)lists.01.org
+Subject: RE: TPM2 changing the DictionaryAttackParamaters
 
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Fuchs, Andreas
-Sent: Wednesday, September 19, 2018 10:37 PM
-To: Scheie, Peter M <Petre.Scheie(a)gd-ms.com>; tpm2(a)lists.01.org
-Subject: Re: [tpm2] Any way to change NVRAM index password?
+Ah you're going to device directly, maybe you need to issue a tpm_startup.
 
-The normal anser:
-It's complicated and requires quite some thought, so release+define is prob=
-ably easier.
+Can you replicate this with the simulator and step debug the simulator, oft=
+en times that's how I solve these things.
 
-The TPM-nerd answer:
-The TPM-function for this is TPM2_NV_ChangeAuth, but it requires a policy-s=
-ession and you must have defined a policy with PolicyCommandCode(TPM2_CC_NV=
-_CHANGEAUTH), since it's an admin auth.
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Litjes,
+> Christian
+> Sent: Thursday, August 30, 2018 1:18 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] TPM2 changing the DictionaryAttackParamaters
+>
+> Hi everyone,
+>
+>
+>
+> I'm trying to setup a system with the cryptfs2 and tpm2-tooling which
+> is currently working but I'd like to change the DictionaryAttackParamater=
+ recovery time.
+>
+>
+>
+> I've tried the following (scenario 1)
+>
+> Reset TPM from the bios
+>
+> Tmp2_takeownership -T "device" -L "1234567890"
+>
+> Tpm2_dictionarylockout -s -n 32 -l 86400 -t 5 -p "1234567890"
+>
+> I get a warning: the command may require writing of NV and NV is not
+> current accessible.
+>
+> If I check the settings with:
+>
+> Tpm2_getcap -c properties-variable
+>
+> I notice they are not changed
+>
+>
+>
+> Reset TPM from the bios
+>
+> Tpm2_dictionarylockout -s -n 32 -l 86400 -t 5 -p "1234567890"
+>
+> Tpm2_getcap -c properties-variable
+>
+> Values are written
+>
+> Tmp2_takeownership -T "device" -L "1234567890"
+>
+> Tpm2_getcap -c properties-variable
+>
+> Settings are reset to default
+>
+>
+>
+> What would I need to do to get the first scenario to work? I know I'm
+> combining tools from 2.x with master. But that's because the cryptfs
+> tooling is dependent on 2.x.
+>
+> How can I unlock the NV, I've found tpm2_release but I've got no clue
+> what to release.
+>
+>
+>
+> Kind Regards,
+>
+> Christian Litjes
+>
+>
+> ________________________________
+>
+> The information contained in this message may be confidential and
+> legally protected under applicable law. The message is intended solely
+> for the addressee(s). If you are not the intended recipient, you are
+> hereby notified that any use, forwarding, dissemination, or
+> reproduction of this message is strictly prohibited and may be
+> unlawful. If you are not the intended recipient, please contact the
+> sender by return e-mail and destroy all copies of the original message.
 
-Cheers,
-Andreas
 
 ________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Scheie, Peter M [Petr=
-e.Scheie(a)gd-ms.com]
-Sent: Wednesday, September 19, 2018 14:47
-To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Subject: [tpm2] Any way to change NVRAM index password?
-When I define an NVRAM index using tpm2_nvdefine, one thing I set is the in=
-dex password with the -I option.  I'm also setting the attribute ownerwrite=
- for the index so the index can be written only if one knows the index pass=
-word.  Is there any way to change this password after I've set it, or do I =
-have to remove the whole index (tpm2_nvrelease) and recreate it with the ne=
-w password?
+The information contained in this message may be confidential and legally p=
+rotected under applicable law. The message is intended solely for the addre=
+ssee(s). If you are not the intended recipient, you are hereby notified tha=
+t any use, forwarding, dissemination, or reproduction of this message is st=
+rictly prohibited and may be unlawful. If you are not the intended recipien=
+t, please contact the sender by return e-mail and destroy all copies of the=
+ original message.
 
-Peter
-
---===============4028532643905772846==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8IS0tW2lm
-ICFtc29dPjxzdHlsZT52XDoqIHtiZWhhdmlvcjp1cmwoI2RlZmF1bHQjVk1MKTt9Cm9cOioge2Jl
-aGF2aW9yOnVybCgjZGVmYXVsdCNWTUwpO30Kd1w6KiB7YmVoYXZpb3I6dXJsKCNkZWZhdWx0I1ZN
-TCk7fQouc2hhcGUge2JlaGF2aW9yOnVybCgjZGVmYXVsdCNWTUwpO30KPC9zdHlsZT48IVtlbmRp
-Zl0tLT48c3R5bGU+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250
-LWZhbWlseTpTaW1TdW47CglwYW5vc2UtMToyIDEgNiAwIDMgMSAxIDEgMSAxO30KQGZvbnQtZmFj
-ZQoJe2ZvbnQtZmFtaWx5OiJDYW1icmlhIE1hdGgiOwoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAz
-IDIgNDt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDYWxpYnJpOwoJcGFub3NlLTE6MiAxNSA1
-IDIgMiAyIDQgMyAyIDQ7fQpAZm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6U2ltU3VuOwoJcGFub3Nl
-LTE6MiAxIDYgMCAzIDEgMSAxIDEgMTt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpUYWhvbWE7
-CglwYW5vc2UtMToyIDExIDYgNCAzIDUgNCA0IDIgNDt9CkBmb250LWZhY2UKCXtmb250LWZhbWls
-eToiVHJlYnVjaGV0IE1TIjsKCXBhbm9zZS0xOjIgMTEgNiAzIDIgMiAyIDIgMiA0O30KLyogU3R5
-bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1h
-bAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEuMHB0
-OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNvSHlw
-ZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6Ymx1ZTsKCXRleHQtZGVjb3Jh
-dGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQKCXtt
-c28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjpwdXJwbGU7Cgl0ZXh0LWRlY29yYXRpb246dW5k
-ZXJsaW5lO30KcAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsKCW1hcmdpbjowaW47CgltYXJnaW4t
-Ym90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTIuMHB0OwoJZm9udC1mYW1pbHk6IlRpbWVzIE5l
-dyBSb21hbiIsc2VyaWY7fQpwLm1zb2NocGRlZmF1bHQsIGxpLm1zb2NocGRlZmF1bHQsIGRpdi5t
-c29jaHBkZWZhdWx0Cgl7bXNvLXN0eWxlLW5hbWU6bXNvY2hwZGVmYXVsdDsKCW1hcmdpbjowaW47
-CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTIuMHB0OwoJZm9udC1mYW1pbHk6
-IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpzcGFuLmVtYWlsc3R5bGUxNwoJe21zby1zdHlsZS1uYW1l
-OmVtYWlsc3R5bGUxNzsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6
-d2luZG93dGV4dDt9CnNwYW4uRW1haWxTdHlsZTIwCgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwt
-cmVwbHk7Cglmb250LWZhbWlseToiVHJlYnVjaGV0IE1TIixzYW5zLXNlcmlmOwoJY29sb3I6Ymx1
-ZTt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250LXNp
-emU6MTAuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpAcGFnZSBXb3Jk
-U2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsKCW1hcmdpbjoxLjBpbiAxLjI1aW4gMS4waW4g
-MS4yNWluO30KZGl2LldvcmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHls
-ZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIg
-c3BpZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4
-bWw+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRh
-dGE9IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9k
-eSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIgdmxpbms9InB1cnBsZSI+CjxkaXYgY2xhc3M9Ildv
-cmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWls
-eTomcXVvdDtUcmVidWNoZXQgTVMmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibHVlIj5QZXRlciw8
-bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
-b250LWZhbWlseTomcXVvdDtUcmVidWNoZXQgTVMmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibHVl
-Ij5XaGF0IGRvZXMgJiM4MjIwOzwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6YmxhY2siPnRoZSAm
-IzgyMTE7SSBvcHRpb248L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1
-Y2hldCBNUyZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsdWUiPiYjODIyMTsgbWVhbj8KPGEgaHJl
-Zj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10b29scy9jb21taXQvZTEw
-NTE0OWYwN2M5Yjk0NGY2OTU5OWFiNjdjZDhiMDE4YWQ4ODBkMiI+Cmh0dHBzOi8vZ2l0aHViLmNv
-bS90cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvY29tbWl0L2UxMDUxNDlmMDdjOWI5NDRmNjk1OTlh
-YjY3Y2Q4YjAxOGFkODgwZDI8L2E+CjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1Y2hldCBNUyZxdW90
-OyxzYW5zLXNlcmlmO2NvbG9yOmJsdWUiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1Y2hl
-dCBNUyZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsdWUiPkkgYmVsaWV2ZSB5b3UgY3JlYXRlZCBh
-biBpbmRleCB3aXRoIGJvdGggb3duZXJ3cml0ZS9hdXRod3JpdGUgc2V0LCByaWdodD88bzpwPjwv
-bzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZh
-bWlseTomcXVvdDtUcmVidWNoZXQgTVMmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibHVlIj48bzpw
-PiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxl
-PSJmb250LWZhbWlseTomcXVvdDtUcmVidWNoZXQgTVMmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpi
-bHVlIj5UaGlzIGJlbG93IGlzIGluY29ycmVjdCwgaWYgeW91JiM4MjE3O3JlIHNldHRpbmcgb3du
-ZXJ3cml0ZSBhdHRyaWJ1dGUsIHRoZW4geW91IGRvbiYjODIxNzt0IG5lZWQgdG8gcHJvdmlkZSBp
-bmRleCBhdXRoL3Bhc3N3b3JkLiBZb3UgY2FuIGRpcmVjdGx5IHdyaXRlIGl0IGlmIHlvdSBoYXZl
-IG93bmVyIGF1dGggdmFsdWUuPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNh
-bnMtc2VyaWY7Y29sb3I6Ymx1ZSI+Jmd0OyZndDsKPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpi
-bGFjayI+LiZuYnNwOyBJJiM4MjE3O20gYWxzbyBzZXR0aW5nIHRoZSBhdHRyaWJ1dGUgb3duZXJ3
-cml0ZSBmb3IgdGhlIGluZGV4IHNvIHRoZSBpbmRleCBjYW4gYmUgd3JpdHRlbiBvbmx5IGlmIG9u
-ZSBrbm93cyB0aGUgaW5kZXggcGFzc3dvcmQ8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5
-OiZxdW90O1RyZWJ1Y2hldCBNUyZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsdWUiPjxvOnA+PC9v
-OnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgbmFtZT0iX01haWxFbmRDb21w
-b3NlIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNh
-bnMtc2VyaWY7Y29sb3I6Ymx1ZSI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9hPjwvcD4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1Y2hl
-dCBNUyZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsdWUiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFu
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90
-O1RyZWJ1Y2hldCBNUyZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsdWUiPkFuZHJlYXMgYW5zd2Vy
-IGlzIGNvcnJlY3QsIFRQTTJfTlZfQ2hhbmdlQXV0aCgpIGlzIHVzZWQgdG8gY2hhbmdlIGluZGV4
-IGF1dGgvcGFzc3dvcmQuPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNhbnMt
-c2VyaWY7Y29sb3I6Ymx1ZSI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8ZGl2IHN0eWxl
-PSJib3JkZXI6bm9uZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGluIDBp
-biAwaW4gNC4wcHQiPgo8ZGl2Pgo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItdG9wOnNv
-bGlkICNFMUUxRTEgMS4wcHQ7cGFkZGluZzozLjBwdCAwaW4gMGluIDBpbiI+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxhIG5hbWU9Il9fX19fcmVwbHlzZXBhcmF0b3IiPjwvYT48Yj5Gcm9tOjwvYj4g
-dHBtMiBbbWFpbHRvOnRwbTItYm91bmNlc0BsaXN0cy4wMS5vcmddCjxiPk9uIEJlaGFsZiBPZiA8
-L2I+RnVjaHMsIEFuZHJlYXM8YnI+CjxiPlNlbnQ6PC9iPiBXZWRuZXNkYXksIFNlcHRlbWJlciAx
-OSwgMjAxOCAxMDozNyBQTTxicj4KPGI+VG86PC9iPiBTY2hlaWUsIFBldGVyIE0gJmx0O1BldHJl
-LlNjaGVpZUBnZC1tcy5jb20mZ3Q7OyB0cG0yQGxpc3RzLjAxLm9yZzxicj4KPGI+U3ViamVjdDo8
-L2I+IFJlOiBbdHBtMl0gQW55IHdheSB0byBjaGFuZ2UgTlZSQU0gaW5kZXggcGFzc3dvcmQ/PG86
-cD48L286cD48L3A+CjwvZGl2Pgo8L2Rpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJz
-cDs8L286cD48L3A+CjxkaXY+CjxkaXY+CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90Oyxz
-YW5zLXNlcmlmO2NvbG9yOmJsYWNrIj5UaGUgbm9ybWFsIGFuc2VyOjxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4KPC9kaXY+CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmO2Nv
-bG9yOmJsYWNrIj5JdCdzIGNvbXBsaWNhdGVkIGFuZCByZXF1aXJlcyBxdWl0ZSBzb21lIHRob3Vn
-aHQsIHNvIHJlbGVhc2UmIzQzO2RlZmluZSBpcyBwcm9iYWJseSBlYXNpZXIuPG86cD48L286cD48
-L3NwYW4+PC9wPgo8L2Rpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9
-ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNhbnMtc2Vy
-aWY7Y29sb3I6YmxhY2siPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPC9kaXY+CjwvZGl2
-Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBw
-dDtmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibGFjayI+
-VGhlIFRQTS1uZXJkIGFuc3dlcjo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjwvZGl2Pgo8ZGl2Pgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZh
-bWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibGFjayI+VGhlIFRQTS1m
-dW5jdGlvbiBmb3IgdGhpcyBpcyBUUE0yX05WX0NoYW5nZUF1dGgsIGJ1dCBpdCByZXF1aXJlcyBh
-IHBvbGljeS1zZXNzaW9uIGFuZCB5b3UgbXVzdCBoYXZlIGRlZmluZWQgYSBwb2xpY3kgd2l0aCBQ
-b2xpY3lDb21tYW5kQ29kZShUUE0yX0NDX05WX0NIQU5HRUFVVEgpLAogc2luY2UgaXQncyBhbiBh
-ZG1pbiBhdXRoLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPC9kaXY+CjxkaXY+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90
-O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsYWNrIj48bzpwPiZuYnNwOzwvbzpwPjwv
-c3Bhbj48L3A+CjwvZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0i
-Zm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJp
-Zjtjb2xvcjpibGFjayI+Q2hlZXJzLDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPC9kaXY+CjxkaXY+
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQt
-ZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsYWNrIj5BbmRyZWFz
-PG86cD48L286cD48L3NwYW4+PC9wPgo8L2Rpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
-c3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1b3Q7LHNh
-bnMtc2VyaWY7Y29sb3I6YmxhY2siPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPGRpdj4K
-PGRpdiBjbGFzcz0iTXNvTm9ybWFsIiBhbGlnbj0iY2VudGVyIiBzdHlsZT0idGV4dC1hbGlnbjpj
-ZW50ZXIiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTIuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1Rp
-bWVzIE5ldyBSb21hbiZxdW90OyxzZXJpZjtjb2xvcjpibGFjayI+CjxociBzaXplPSIzIiB3aWR0
-aD0iMTAwJSIgYWxpZ249ImNlbnRlciI+Cjwvc3Bhbj48L2Rpdj4KPGRpdiBpZD0iZGl2UnBGNzYw
-MDY2Ij4KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIuMHB0Ij48
-Yj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtUYWhvbWEm
-cXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibGFjayI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0eWxl
-PSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNl
-cmlmO2NvbG9yOmJsYWNrIj4gdHBtMiBbdHBtMi1ib3VuY2VzQGxpc3RzLjAxLm9yZ10gb24gYmVo
-YWxmCiBvZiBTY2hlaWUsIFBldGVyIE0gW1BldHJlLlNjaGVpZUBnZC1tcy5jb21dPGJyPgo8Yj5T
-ZW50OjwvYj4gV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTksIDIwMTggMTQ6NDc8YnI+CjxiPlRvOjwv
-Yj4gPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIj50cG0yQGxpc3RzLjAxLm9yZzwv
-YT48YnI+CjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gQW55IHdheSB0byBjaGFuZ2UgTlZSQU0gaW5k
-ZXggcGFzc3dvcmQ/PC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTIuMHB0O2ZvbnQtZmFt
-aWx5OiZxdW90O1RpbWVzIE5ldyBSb21hbiZxdW90OyxzZXJpZjtjb2xvcjpibGFjayI+PG86cD48
-L286cD48L3NwYW4+PC9wPgo8L2Rpdj4KPGRpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHNwYW4gc3R5bGU9ImNvbG9yOmJsYWNrIj5XaGVuIEkgZGVmaW5lIGFuIE5WUkFNIGluZGV4IHVz
-aW5nIHRwbTJfbnZkZWZpbmUsIG9uZSB0aGluZyBJIHNldCBpcyB0aGUgaW5kZXggcGFzc3dvcmQg
-d2l0aCB0aGUgJiM4MjExO0kgb3B0aW9uLiZuYnNwOyBJJiM4MjE3O20gYWxzbyBzZXR0aW5nIHRo
-ZSBhdHRyaWJ1dGUgb3duZXJ3cml0ZSBmb3IgdGhlIGluZGV4IHNvIHRoZSBpbmRleCBjYW4gYmUg
-d3JpdHRlbiBvbmx5IGlmIG9uZSBrbm93cwogdGhlIGluZGV4IHBhc3N3b3JkLiZuYnNwOyBJcyB0
-aGVyZSBhbnkgd2F5IHRvIGNoYW5nZSB0aGlzIHBhc3N3b3JkIGFmdGVyIEkmIzgyMTc7dmUgc2V0
-IGl0LCBvciBkbyBJIGhhdmUgdG8gcmVtb3ZlIHRoZSB3aG9sZSBpbmRleCAodHBtMl9udnJlbGVh
-c2UpIGFuZCByZWNyZWF0ZSBpdCB3aXRoIHRoZSBuZXcgcGFzc3dvcmQ/PG86cD48L286cD48L3Nw
-YW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iY29sb3I6YmxhY2siPiZu
-YnNwOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5
-bGU9ImNvbG9yOmJsYWNrIj5QZXRlcjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPC9kaXY+CjwvZGl2
-Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
-
---===============4028532643905772846==--
+--===============4184183814411610722==--
 
