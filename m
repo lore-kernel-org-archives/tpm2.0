@@ -1,36 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============3437885123082228581=="
+Content-Type: multipart/mixed; boundary="===============1794148887011947903=="
 MIME-Version: 1.0
-From: Joshua Lock <joshua.g.lock at linux.intel.com>
-Subject: [tpm2] tpm2-tools 3.1.3 release candidate 0
-Date: Thu, 20 Sep 2018 21:45:11 +0100
-Message-ID: <de01827e2f7b2c78afda598020df993801f72603.camel@linux.intel.com>
+From: Philip Tricca <philip.b.tricca at intel.com>
+Subject: Re: [tpm2] tabrmd 1.3.2 and 2.0.2 RCs
+Date: Thu, 20 Sep 2018 14:24:03 -0700
+Message-ID: <20180920212403.hgmauovs4dz53aae@jake>
+In-Reply-To: 20180901011017.GC14342@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3437885123082228581==
+--===============1794148887011947903==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I've just tagged and signed an rc0 for tpm2-tools 3.1.3. The folks at
-Red Hat found a couple of unintended behavioural changes which violate
-the semantic versioning policy. This release addresses those changes
-and should be updated to in order to preserve expected behaviour for
-users.
+ Fri, Aug 31, 2018 at 06:10:17PM -0700, Philip Tricca wrote:
+> On Fri, Aug 31, 2018 at 06:06:37PM -0700, Philip Tricca wrote:
+> > Hello all,
+> > =
 
-* Restore support for the TPM2TOOLS_* env vars for TCTI configuration,
-in addition to supporting the new unified TPM2TOOLS_ENV_TCTI (#1171)
-* Fix tpm2_getcap to print properties with the TPM_PT prefix, rather
-than TPM2_PT (1175)
+> > I just tagged RC0 for a bugfix release for both the 1.3.2 and 2.0.2
+> > releases. RCs for both releases will happen in parallel. Any testing
+> > you can do would be appreciated.
+> =
 
-https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.3-rc0
+> https://github.com/tpm2-software/tpm2-abrmd/releases/tag/1.3.2_rc0
+> https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.0.2_rc0
 
-Please do test this release. If there aren't any reported issues I'll
-do a final release in a week.
+Apologies folks but I tagged these releases after the RC0 window closed
+and never sent out an update with links to the release pages:
 
-Regards,
-Joshua
+https://github.com/tpm2-software/tpm2-abrmd/releases/tag/1.3.2
+https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.0.2
 
+Philip
 
---===============3437885123082228581==--
+--===============1794148887011947903==--
 
