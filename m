@@ -1,130 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============5290019223505923252=="
+Content-Type: multipart/mixed; boundary="===============4888662813984223732=="
 MIME-Version: 1.0
-From: Scheie, Peter M <Petre.Scheie at gd-ms.com>
-Subject: [tpm2] best way to verify tpm is alive
-Date: Thu, 27 Sep 2018 20:24:39 +0000
-Message-ID: <3ca4069b2e3846fdba7e1d5d201b7e55@AZDC-MMB02.GD-MS.US>
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: Re: [tpm2] best way to verify tpm is alive
+Date: Mon, 01 Oct 2018 09:52:35 -0700
+Message-ID: <16c13855-0fc7-a2e3-e9ed-8adbf42963af@intel.com>
+In-Reply-To: 3ca4069b2e3846fdba7e1d5d201b7e55@AZDC-MMB02.GD-MS.US
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5290019223505923252==
+--===============4888662813984223732==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-What is the best way to verify the TPM is available, that is, that it hasn'=
-t died?  I have a requirement to send an alert if the TPM stops working.  W=
-e have snmp processes that run every five seconds, so I figure I can, say, =
-check for something in /sys/class/tpm/tpm0 and as long as I get an expected=
- response, I'll report that everything is fine.  But what exactly should I =
-look for?  Is the simple presence of /sys/class/tpm/tpm0 sufficient, becaus=
-e it means the kernel thinks the TPM is there?  If I cat /sys/class/tpm/tpm=
-0/dev I get the major and minor numbers; I could look at those, or just tes=
-t for the presence of the dev file on the premise that if the TPM failed th=
-at file would disappear.  Is that a good test?  Suggestions?
+On 9/27/18 1:24 PM, Scheie, Peter M wrote:
+> What is the best way to verify the TPM is available, that is, that it has=
+n=E2=80=99t died?=C2=A0 I have a requirement to send an alert if the TPM st=
+ops working.=C2=A0 We have snmp processes that run every five seconds, so I=
+ figure I can, say, check for something in /sys/class/tpm/tpm0 and as long =
+as I get an expected response, I=E2=80=99ll report that everything is fine.=
+=C2=A0 But what exactly should I look for?=C2=A0 Is the simple presence of =
+/sys/class/tpm/tpm0 sufficient, because it means the kernel thinks the TPM =
+is there?=C2=A0 If I cat /sys/class/tpm/tpm0/dev I get the major and minor =
+numbers; I could look at those, or just test for the presence of the dev fi=
+le on the premise that if the TPM failed that file would disappear.=C2=A0 I=
+s that a good test?=C2=A0 Suggestions?
 
-Peter
+I would say that the best test would be to send an actual command.
+tpm2_get_random would be a good candidate. If the TPM responds
+with a valid response it means that it is alive, if not it is dead.
+The presence of the /sys/class/tpm/tpm0 file doesn't guarantee that
+the TPM is still healthy.
+Thanks,
+-- =
 
---===============5290019223505923252==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+Tadeusz
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6eD0idXJuOnNjaGVtYXMtbWljcm9z
-b2Z0LWNvbTpvZmZpY2U6ZXhjZWwiIHhtbG5zOnA9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206
-b2ZmaWNlOnBvd2VycG9pbnQiIHhtbG5zOmE9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2Zm
-aWNlOmFjY2VzcyIgeG1sbnM6ZHQ9InV1aWQ6QzJGNDEwMTAtNjVCMy0xMWQxLUEyOUYtMDBBQTAw
-QzE0ODgyIiB4bWxuczpzPSJ1dWlkOkJEQzZFM0YwLTZEQTMtMTFkMS1BMkEzLTAwQUEwMEMxNDg4
-MiIgeG1sbnM6cnM9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206cm93c2V0IiB4bWxuczp6PSIj
-Um93c2V0U2NoZW1hIiB4bWxuczpiPSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTpw
-dWJsaXNoZXIiIHhtbG5zOnNzPSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTpzcHJl
-YWRzaGVldCIgeG1sbnM6Yz0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6Y29tcG9u
-ZW50OnNwcmVhZHNoZWV0IiB4bWxuczpvZGM9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2Zm
-aWNlOm9kYyIgeG1sbnM6b2E9InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOmFjdGl2
-YXRpb24iIHhtbG5zOmh0bWw9Imh0dHA6Ly93d3cudzMub3JnL1RSL1JFQy1odG1sNDAiIHhtbG5z
-OnE9Imh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3NvYXAvZW52ZWxvcGUvIiB4bWxuczpydGM9
-Imh0dHA6Ly9taWNyb3NvZnQuY29tL29mZmljZW5ldC9jb25mZXJlbmNpbmciIHhtbG5zOkQ9IkRB
-VjoiIHhtbG5zOlJlcGw9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vcmVwbC8iIHhtbG5z
-Om10PSJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3NoYXJlcG9pbnQvc29hcC9tZWV0aW5n
-cy8iIHhtbG5zOngyPSJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL29mZmljZS9leGNlbC8y
-MDAzL3htbCIgeG1sbnM6cHBkYT0iaHR0cDovL3d3dy5wYXNzcG9ydC5jb20vTmFtZVNwYWNlLnhz
-ZCIgeG1sbnM6b2lzPSJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3NoYXJlcG9pbnQvc29h
-cC9vaXMvIiB4bWxuczpkaXI9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vc2hhcmVwb2lu
-dC9zb2FwL2RpcmVjdG9yeS8iIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3ht
-bGRzaWcjIiB4bWxuczpkc3A9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vc2hhcmVwb2lu
-dC9kc3AiIHhtbG5zOnVkYz0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9kYXRhL3VkYyIg
-eG1sbnM6eHNkPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIgeG1sbnM6c3ViPSJo
-dHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3NoYXJlcG9pbnQvc29hcC8yMDAyLzEvYWxlcnRz
-LyIgeG1sbnM6ZWM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZW5jIyIgeG1sbnM6c3A9
-Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vc2hhcmVwb2ludC8iIHhtbG5zOnNwcz0iaHR0
-cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9zaGFyZXBvaW50L3NvYXAvIiB4bWxuczp4c2k9Imh0
-dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4bWxuczp1ZGNzPSJodHRw
-Oi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL2RhdGEvdWRjL3NvYXAiIHhtbG5zOnVkY3hmPSJodHRw
-Oi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL2RhdGEvdWRjL3htbGZpbGUiIHhtbG5zOnVkY3AycD0i
-aHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9kYXRhL3VkYy9wYXJ0dG9wYXJ0IiB4bWxuczp3
-Zj0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9zaGFyZXBvaW50L3NvYXAvd29ya2Zsb3cv
-IiB4bWxuczpkc3NzPSJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL29mZmljZS8yMDA2L2Rp
-Z3NpZy1zZXR1cCIgeG1sbnM6ZHNzaT0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9vZmZp
-Y2UvMjAwNi9kaWdzaWciIHhtbG5zOm1kc3NpPSJodHRwOi8vc2NoZW1hcy5vcGVueG1sZm9ybWF0
-cy5vcmcvcGFja2FnZS8yMDA2L2RpZ2l0YWwtc2lnbmF0dXJlIiB4bWxuczptdmVyPSJodHRwOi8v
-c2NoZW1hcy5vcGVueG1sZm9ybWF0cy5vcmcvbWFya3VwLWNvbXBhdGliaWxpdHkvMjAwNiIgeG1s
-bnM6bT0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4
-bWxuczptcmVscz0iaHR0cDovL3NjaGVtYXMub3BlbnhtbGZvcm1hdHMub3JnL3BhY2thZ2UvMjAw
-Ni9yZWxhdGlvbnNoaXBzIiB4bWxuczpzcHdwPSJodHRwOi8vbWljcm9zb2Z0LmNvbS9zaGFyZXBv
-aW50L3dlYnBhcnRwYWdlcyIgeG1sbnM6ZXgxMnQ9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5j
-b20vZXhjaGFuZ2Uvc2VydmljZXMvMjAwNi90eXBlcyIgeG1sbnM6ZXgxMm09Imh0dHA6Ly9zY2hl
-bWFzLm1pY3Jvc29mdC5jb20vZXhjaGFuZ2Uvc2VydmljZXMvMjAwNi9tZXNzYWdlcyIgeG1sbnM6
-cHB0c2w9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vc2hhcmVwb2ludC9zb2FwL1NsaWRl
-TGlicmFyeS8iIHhtbG5zOnNwc2w9Imh0dHA6Ly9taWNyb3NvZnQuY29tL3dlYnNlcnZpY2VzL1No
-YXJlUG9pbnRQb3J0YWxTZXJ2ZXIvUHVibGlzaGVkTGlua3NTZXJ2aWNlIiB4bWxuczpaPSJ1cm46
-c2NoZW1hcy1taWNyb3NvZnQtY29tOiIgeG1sbnM6dGF4PSJodHRwOi8vc2NoZW1hcy5taWNyb3Nv
-ZnQuY29tL3NoYXJlcG9pbnQvdGF4b25vbXkvc29hcC8iIHhtbG5zOnRucz0iaHR0cDovL3NjaGVt
-YXMubWljcm9zb2Z0LmNvbS9zaGFyZXBvaW50L3NvYXAvcmVjb3Jkc3JlcG9zaXRvcnkvIiB4bWxu
-czpzcHN1cD0iaHR0cDovL21pY3Jvc29mdC5jb20vd2Vic2VydmljZXMvU2hhcmVQb2ludFBvcnRh
-bFNlcnZlci9Vc2VyUHJvZmlsZVNlcnZpY2UiIHhtbG5zOm1tbD0iaHR0cDovL3d3dy53My5vcmcv
-MTk5OC9NYXRoL01hdGhNTCIgeG1sbnM6c3Q9IiYjMTsiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9y
-Zy9UUi9SRUMtaHRtbDQwIj4KPGhlYWQ+CjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXVzLWFzY2lpIj4KPG1ldGEgbmFtZT0iR2VuZXJh
-dG9yIiBjb250ZW50PSJNaWNyb3NvZnQgV29yZCAxNCAoZmlsdGVyZWQgbWVkaXVtKSI+CjxzdHls
-ZT48IS0tCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNh
-bGlicmk7CglwYW5vc2UtMToyIDE1IDUgMiAyIDIgNCAzIDIgNDt9Ci8qIFN0eWxlIERlZmluaXRp
-b25zICovCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWwsIGRpdi5Nc29Ob3JtYWwKCXttYXJnaW46
-MGluOwoJbWFyZ2luLWJvdHRvbTouMDAwMXB0OwoJZm9udC1zaXplOjExLjBwdDsKCWZvbnQtZmFt
-aWx5OiJDYWxpYnJpIiwic2Fucy1zZXJpZiI7fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7
-bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6Ymx1ZTsKCXRleHQtZGVjb3JhdGlvbjp1bmRl
-cmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQKCXttc28tc3R5bGUt
-cHJpb3JpdHk6OTk7Cgljb2xvcjpwdXJwbGU7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30K
-c3Bhbi5FbWFpbFN0eWxlMTcKCXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1jb21wb3NlOwoJZm9u
-dC1mYW1pbHk6IkNhbGlicmkiLCJzYW5zLXNlcmlmIjsKCWNvbG9yOndpbmRvd3RleHQ7fQouTXNv
-Q2hwRGVmYXVsdAoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5OwoJZm9udC1mYW1pbHk6IkNh
-bGlicmkiLCJzYW5zLXNlcmlmIjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3NpemU6OC41aW4gMTEu
-MGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2LldvcmRTZWN0aW9uMQoJ
-e3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4K
-PG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4KPC94bWw+PCFb
-ZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJl
-ZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFwZWxheW91dD48
-L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIg
-dmxpbms9InB1cnBsZSI+CjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPldoYXQgaXMgdGhlIGJlc3Qgd2F5IHRvIHZlcmlmeSB0aGUgVFBNIGlzIGF2YWlsYWJs
-ZSwgdGhhdCBpcywgdGhhdCBpdCBoYXNuJiM4MjE3O3QgZGllZD8mbmJzcDsgSSBoYXZlIGEgcmVx
-dWlyZW1lbnQgdG8gc2VuZCBhbiBhbGVydCBpZiB0aGUgVFBNIHN0b3BzIHdvcmtpbmcuJm5ic3A7
-IFdlIGhhdmUgc25tcCBwcm9jZXNzZXMgdGhhdCBydW4gZXZlcnkgZml2ZSBzZWNvbmRzLCBzbyBJ
-IGZpZ3VyZSBJIGNhbiwgc2F5LCBjaGVjayBmb3Igc29tZXRoaW5nCiBpbiAvc3lzL2NsYXNzL3Rw
-bS90cG0wIGFuZCBhcyBsb25nIGFzIEkgZ2V0IGFuIGV4cGVjdGVkIHJlc3BvbnNlLCBJJiM4MjE3
-O2xsIHJlcG9ydCB0aGF0IGV2ZXJ5dGhpbmcgaXMgZmluZS4mbmJzcDsgQnV0IHdoYXQgZXhhY3Rs
-eSBzaG91bGQgSSBsb29rIGZvcj8mbmJzcDsgSXMgdGhlIHNpbXBsZSBwcmVzZW5jZSBvZiAvc3lz
-L2NsYXNzL3RwbS90cG0wIHN1ZmZpY2llbnQsIGJlY2F1c2UgaXQgbWVhbnMgdGhlIGtlcm5lbCB0
-aGlua3MgdGhlIFRQTSBpcyB0aGVyZT8mbmJzcDsgSWYKIEkgY2F0IC9zeXMvY2xhc3MvdHBtL3Rw
-bTAvZGV2IEkgZ2V0IHRoZSBtYWpvciBhbmQgbWlub3IgbnVtYmVyczsgSSBjb3VsZCBsb29rIGF0
-IHRob3NlLCBvciBqdXN0IHRlc3QgZm9yIHRoZSBwcmVzZW5jZSBvZiB0aGUgZGV2IGZpbGUgb24g
-dGhlIHByZW1pc2UgdGhhdCBpZiB0aGUgVFBNIGZhaWxlZCB0aGF0IGZpbGUgd291bGQgZGlzYXBw
-ZWFyLiZuYnNwOyBJcyB0aGF0IGEgZ29vZCB0ZXN0PyZuYnNwOyBTdWdnZXN0aW9ucz88bzpwPjwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPlBldGVyPG86cD48L286cD48L3A+CjwvZGl2Pgo8L2JvZHk+CjwvaHRt
-bD4K
-
---===============5290019223505923252==--
+--===============4888662813984223732==--
 
