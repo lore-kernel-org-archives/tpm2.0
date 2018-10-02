@@ -1,114 +1,240 @@
-Content-Type: multipart/mixed; boundary="===============2062005827325386102=="
+Content-Type: multipart/mixed; boundary="===============6768106867173769201=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Tue, 02 Oct 2018 17:21:16 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0142675FE1@EXCH2010B.sit.fraunhofer.de>
-In-Reply-To: 1538498826.14607.10.camel@HansenPartnership.com
+Date: Tue, 02 Oct 2018 19:58:11 +0100
+Message-ID: <d338f832ccf2452e1b26d6fcb6b44c42b9ccc880.camel@infradead.org>
+In-Reply-To: 1538502026.14607.12.camel@HansenPartnership.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2062005827325386102==
+--===============6768106867173769201==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi James,
-
-thanks for joining it.
-
-What do you put into the octet strings for public and private key ?
-The marshalled TPM2Bs according to TPM spec or a different encoding ?
-
-What's the template for the primary key ?
-
-What's the content of the CommandPolicy octet string ?
-
-Thanks,
-Andreas
-________________________________________
-From: James Bottomley [James.Bottomley(a)hansenpartnership.com]
-Sent: Tuesday, October 02, 2018 18:47
-To: David Woodhouse; Fuchs, Andreas; tpm2(a)lists.01.org; Nikos Mavrogianno=
-poulos
-Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-
-On Tue, 2018-10-02 at 17:38 +0100, David Woodhouse wrote:
-> On Tue, 2018-10-02 at 16:20 +0000, Fuchs, Andreas wrote:
-> > Hi David,
-> >
-> > unfortuantely, the engines are diferent as much as their license
-> > and underlying TSSes.
-> > tpm2-tss (which is TCG spec conformant) and IBM's proprietary
-> > OpenSource TSS.
-> >
-> > The tpm2-tss-engine is newer and BSD-license, whilst James's is
-> > (L?)GPL.
-> > Thus, we could not just take his and add a second underlying TSS
-> > but had to
-> > implement a completely new one to get rid of the license terms.
-> > So we had to come up with our own storage format.
-> > I also cannot look at James's codebase to not become tainted with
-> > GPL copyleft.
-> >
-> > That's why we chose a different engine name and made sure to label
-> > PEM differently,
-> > so we don't get compatibility messes.
-> >
-> > If you'd like to propose a different storage format for tpm2-tss-
-> > engine, please
-> > provide me with a format. Maybe we can fit it into the first 0.1
-> > release.
-> > (but that would have to happen VERY quickly, i.e. the next 2
-> > weeks).
->
-> Ultimately, our aim should be for people to be able to use the same
-> PEM
-> file regardless of which software stack they're using. I'll be fixing
-> up GnuTLS client code to use the same files, much as I did for TPMv1
-> PEM files a while ago.
->
-> https://mta.openssl.org/pipermail/openssl-dev/2016-December/008936.ht
-> ml
->  covers the format that James implemented.
-
-Actually, there's been an extension for policy since then (and a
-removal of one of the superfluous optionals) so this is the current
-ASN.1 format:
-
-TPMKey ::=3D SEQUENCE {
-        type            OBJECT IDENTIFIER
-        emptyAuth       [0] EXPLICIT BOOLEAN OPTIONAL
-        parent          [1] EXPLICIT INTEGER OPTIONAL
-        pubkey
-        [2] EXPLICIT OCTET STRING OPTIONAL
-        policy          [3] EXPLICIT SEQUENCE OF TPMPolicy OPTIONAL
-        privkey         OCTET STRING
-}
-
-TPMPolicy ::=3D SEQUENCE {
-        CommandCode             [0] EXPLICIT INTEGER
-        CommandPolicy           [1] EXPLICIT OCTET STRING
-}
-
-> I think we also need to agree on which key is used as the parent by
-> default. I'm guessing that's the reason I couldn't get my manual PEM
-> file conversion to work in Github issue #11.
-
-The idea of using an RSA parent at 81000001 is documented in the PC
-provisioning guide issued by the TCG.  That's the one I've used in the
-past.  However, most modern TPMs aren't provisioned this way yet, so:
-
-> I believe openssl_tpm2_engine generates a P-256 primary key and uses
-> that as the parent.
-
-If you don't specify a parent in create_tpm2_key then we assume the
-storage primary (which we deposit in the key file as TPM_RH_OWNER
-[40000001]) and derive the P-256 EC key from it with TPM2_CreatePrimary
-every time its used.
-
-James
+OK.. I think this makes a difference:
 
 
---===============2062005827325386102==--
+--- a/src/tpm2-tss-engine-common.h
++++ b/src/tpm2-tss-engine-common.h
+@@ -55,8 +55,7 @@ TSS2_RC init_tpm_key(ESYS_CONTEXT **ctx, ESYS_TR *keyHand=
+le,
+         .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH | \
+                              TPMA_OBJECT_RESTRICTED | \
+                              TPMA_OBJECT_DECRYPT | \
+-                             TPMA_OBJECT_FIXEDTPM | \
+-                             TPMA_OBJECT_FIXEDPARENT | \
++                             TPMA_OBJECT_NODA | \
+                              TPMA_OBJECT_SENSITIVEDATAORIGIN), \
+         .authPolicy =3D { \
+              .size =3D 0, \
+
+
+Now, I have two PEM files, one 'machine.tss' created with James's tpm2
+engine, and a second 'tpm2-engine.tss' which is converted manually as
+described in issue #11 to be used with the tpm2tss engine.
+
+
+$ openssl rsautl -sign -engine tpm2tss -inkey tpm2-engine.tss -keyform engi=
+ne < testfile > testsig.tpm2tss
+$ openssl rsautl -sign -engine tpm2 -inkey machine.tss -keyform engine < te=
+stfile > testsig.tpm2
+$ sha1sum testsig.tpm*
+fb9e8c1f4a1872f4144fd760af1740af75a9a8b2  testsig.tpm2
+fb9e8c1f4a1872f4144fd760af1740af75a9a8b2  testsig.tpm2tss
+
+So... that now *is* working for signing. However, while the
+corresponding 'rsautl -verify' works fine with James's tpm2 engine, it
+fails with tpm2tss:
+
+$ openssl rsautl -verify -engine tpm2tss -inkey ../openssl_tpm2_engine/tpm2=
+-engine.tss -keyform engine -in testsig.tpm2tss
+Initializing
+engine "tpm2tss" set.
+Loading private key ../openssl_tpm2_engine/tpm2-engine.tss
+get_auth called for object user key with ui_method 0x55ced253fdc0
+Enter password for user key:
+password is =
+
+Loaded key uses alg-id 1
+Creating RSA key object.
+Created RSA key object.
+TPM2 Key loaded
+RSA operation error
+140407559393728:error:0407006A:rsa routines:RSA_padding_check_PKCS1_type_1:=
+block type is not 01:../crypto/rsa/rsa_pk1.c:75:
+140407559393728:error:04067072:rsa routines:rsa_ossl_public_decrypt:padding=
+ check failed:../crypto/rsa/rsa_ossl.c:586:
+
+
+So... is it the public key that I've misconverted somehow?
+
+ $ openssl asn1parse -in machine.tss =
+
+    0:d=3D0  hl=3D4 l=3D 503 cons: SEQUENCE          =
+
+    4:d=3D1  hl=3D2 l=3D   5 prim: OBJECT            :2.23.133.10.2
+   11:d=3D1  hl=3D2 l=3D   3 cons: cont [ 0 ]        =
+
+   13:d=3D2  hl=3D2 l=3D   1 prim: BOOLEAN           :1
+   16:d=3D1  hl=3D2 l=3D   6 cons: cont [ 1 ]        =
+
+   18:d=3D2  hl=3D2 l=3D   4 prim: INTEGER           :40000001
+   24:d=3D1  hl=3D4 l=3D 284 cons: cont [ 2 ]        =
+
+   28:d=3D2  hl=3D4 l=3D 280 prim: OCTET STRING      [HEX DUMP]:01160001000=
+B000204400000001000100800000000000100C696B23A22C1516E22352CD1309A48BD7E6F05=
+4EE10BB7265BFC3BC85B622E75B658A03E15BB74CD9C542C4CEA22337467913058B3711E6EF=
+6CB4C8DA9B496E5888346B058426D645398613BF9BCE907947E63B5B4CD4ABA1FFC2EA396BE=
+C0A7F3F1FEDF022966CED43C070B2000BEEEE7BB82375A4E1C1558E7FC7139DCEE9C6055C33=
+32D50572E14A0747B907440598C93B77F356689EE71ACDAECA9C1FF33C74106CD8C23ACA461=
+3F4D234A4C10A1D7AA3E469493A541838D40A065B17FD23F7D75A5F9BD29F59566BB7D450E9=
+70269FD90F914FFF0CE44D526D4914C32F35AD9A2C6BAF7F77BAAA0B4B77F80C29C683764BA=
+FADEAFC397D344DB2ABF996D
+  312:d=3D1  hl=3D3 l=3D 192 prim: OCTET STRING      [HEX DUMP]:00BE0020446=
+3515A27FC3B773B53F28C04C147D78991B02E7B2FAFE0E96FA11E79692FCA0010DE02ADCCEC=
+CADBA51D1C71283A37FFD608D0979B994054031FF7475505EBC0D45CB6808A93D83C64051CA=
+06043721D55D8FE514BDD997CB8B26199B62D2E8517C1DE5293AC6ED97EF278F648B072855B=
+73B2D32CB2B39315FA40FA6AAF618038D6F880465083A1140DF9792448F6D888C912A797EE9=
+43912E0EC78B9576748822580ABECE5D02B973DAF1C0F7CE15DC56D3BB15E9AE7FADDB7C2
+
+ $ tail -8 tpm2-engine.tss | openssl asn1parse
+    0:d=3D0  hl=3D4 l=3D 280 prim: OCTET STRING      [HEX DUMP]:01160001000=
+B000204400000001000100800000000000100C696B23A22C1516E22352CD1309A48BD7E6F05=
+4EE10BB7265BFC3BC85B622E75B658A03E15BB74CD9C542C4CEA22337467913058B3711E6EF=
+6CB4C8DA9B496E5888346B058426D645398613BF9BCE907947E63B5B4CD4ABA1FFC2EA396BE=
+C0A7F3F1FEDF022966CED43C070B2000BEEEE7BB82375A4E1C1558E7FC7139DCEE9C6055C33=
+32D50572E14A0747B907440598C93B77F356689EE71ACDAECA9C1FF33C74106CD8C23ACA461=
+3F4D234A4C10A1D7AA3E469493A541838D40A065B17FD23F7D75A5F9BD29F59566BB7D450E9=
+70269FD90F914FFF0CE44D526D4914C32F35AD9A2C6BAF7F77BAAA0B4B77F80C29C683764BA=
+FADEAFC397D344DB2ABF996D
+
+
+I note that 'tpm2tss-genkey' stopped working with the change I made at
+the beginning of this mail. I confess I haven't even looked up what any
+of those flags mean...
+
+$ ./tpm2tss-genkey  new.tss
+Initializing
+Setting owner auth to empty auth.
+Generating RSA key for 2048 bits keysize.
+Establishing connection with TPM.
+WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could n=
+ot load TCTI file: libtss2-tcti-default.so =
+
+WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could n=
+ot load TCTI file: libtss2-tcti-tabrmd.so =
+
+Creating primary key under owner.
+Generating the RSA key inside the TPM.
+WARNING:esys:src/tss2-esys/api/Esys_Create.c:411:Esys_Create_Finish() Recei=
+ved TPM Error =
+
+ERROR:esys:src/tss2-esys/api/Esys_Create.c:155:Esys_Create() Esys Finish Er=
+rorCode (0x000002c2) =
+
+Error: Generating key failed
+Key could not be generated.
+
+
+--===============6768106867173769201==
+Content-Type: application/x-pkcs7-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEFQw
+ggUxMIIEGaADAgECAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBCwUAMIGXMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
+VQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAeFw0xNzEyMjEwMDAwMDBaFw0xODEyMjEyMzU5
+NTlaMCQxIjAgBgkqhkiG9w0BCQEWE2R3bXcyQGluZnJhZGVhZC5vcmcwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQDgzLNWa18DNpGUj/ZeH0Sgz53ESIbzdPw3OJeuNP6jZhxZojbyfxbM
+hETscxI/Hj6UZ4a7sHm5BkVjlsB1Af2Za/PXUt8MmLAcPMHkMPGunvkUibEvblDvpqMkQZlaZM+t
+5PqFmWkbehLaEvbpNY7dmEAAeKh4klTzJzrr5AAzaCQ32cA2e3+DEIv5O5l9ViMIjy/JM+xMQrfX
+3PZ0chY1PaVWjg59d4Uno+5LRDbgCnPkKJX4ysBGadibjBGQGJEZCjh94iiEebn2KsRLvtrJ72Ph
+3W2HDEdngW3YP0wujFQVs81U7L8XN3kdPRsa9zNqGtYQP/+1KMMJQ57hnfi9AgMBAAGjggHpMIIB
+5TAfBgNVHSMEGDAWgBSCr2yM+MX+lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQUpL+/5lli9jmj2KHj
+ryyhnB2xRt0wDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwIAYDVR0lBBkwFwYIKwYBBQUH
+AwQGCysGAQQBsjEBAwUCMBEGCWCGSAGG+EIBAQQEAwIFIDBGBgNVHSAEPzA9MDsGDCsGAQQBsjEB
+AgEBATArMCkGCCsGAQUFBwIBFh1odHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8E
+UzBRME+gTaBLhklodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50
+aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKG
+SWh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5k
+U2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAe
+BgNVHREEFzAVgRNkd213MkBpbmZyYWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQCK28BdbVJ9
+QKQqTDfXwogAYiRBEGptfE1Bjy4F5vC6eWJqOJ15vunxjLwdbZYb4L0qrJlh+ZHHHlbIK8uEZu7N
+XHUntmWMbGbZiu7JgrbSXJK1ct9gxrN/sdWYJ+JDjVHg7GfDTvTTPa26JMRqJsO1TjjyDX7A3K39
+TjV8C0hqXvwF9BsNf+qBeWO6GVzJ5572awY221hc1umibmZaKV4fg+7fS7qscx5TSuIc6uvMBQhm
+7NQiCq6euMMWBDUDlotQCDW0ilm0OuLW3IVLuZCm6Msc+6hT9+dCT4JUvxTHZnnO7uLCxV+Ujad+
+PH3itRm38i96p2zvwgLr8vwWA0ckMIIFMTCCBBmgAwIBAgIQTUYRMpPx2e52jnkx1q87gDANBgkq
+hkiG9w0BAQsFADCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQ
+MA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENP
+TU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTcx
+MjIxMDAwMDAwWhcNMTgxMjIxMjM1OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRl
+YWQub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4MyzVmtfAzaRlI/2Xh9EoM+d
+xEiG83T8NziXrjT+o2YcWaI28n8WzIRE7HMSPx4+lGeGu7B5uQZFY5bAdQH9mWvz11LfDJiwHDzB
+5DDxrp75FImxL25Q76ajJEGZWmTPreT6hZlpG3oS2hL26TWO3ZhAAHioeJJU8yc66+QAM2gkN9nA
+Nnt/gxCL+TuZfVYjCI8vyTPsTEK319z2dHIWNT2lVo4OfXeFJ6PuS0Q24Apz5CiV+MrARmnYm4wR
+kBiRGQo4feIohHm59irES77aye9j4d1thwxHZ4Ft2D9MLoxUFbPNVOy/Fzd5HT0bGvczahrWED//
+tSjDCUOe4Z34vQIDAQABo4IB6TCCAeUwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8Aw
+HQYDVR0OBBYEFKS/v+ZZYvY5o9ih468soZwdsUbdMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8E
+AjAAMCAGA1UdJQQZMBcGCCsGAQUFBwMEBgsrBgEEAbIxAQMFAjARBglghkgBhvhCAQEEBAMCBSAw
+RgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAQEwKzApBggrBgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUu
+Y29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20v
+Q09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYIKwYB
+BQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FD
+bGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQGCCsGAQUFBzABhhhodHRw
+Oi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkq
+hkiG9w0BAQsFAAOCAQEAitvAXW1SfUCkKkw318KIAGIkQRBqbXxNQY8uBebwunliajideb7p8Yy8
+HW2WG+C9KqyZYfmRxx5WyCvLhGbuzVx1J7ZljGxm2YruyYK20lyStXLfYMazf7HVmCfiQ41R4Oxn
+w0700z2tuiTEaibDtU448g1+wNyt/U41fAtIal78BfQbDX/qgXljuhlcyeee9msGNttYXNbpom5m
+WileH4Pu30u6rHMeU0riHOrrzAUIZuzUIgqunrjDFgQ1A5aLUAg1tIpZtDri1tyFS7mQpujLHPuo
+U/fnQk+CVL8Ux2Z5zu7iwsVflI2nfjx94rUZt/Iveqds78IC6/L8FgNHJDCCBeYwggPOoAMCAQIC
+EGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNVBAYTAkdCMRswGQYDVQQI
+ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
+QSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4X
+DTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
+cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
+aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
+dXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvrOeV6wodnVAFsc4
+A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf+bGBSyD9aH95dDSmeny1
+nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcfWlP8dSsE3Rfywq09N0Zf
+xcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqzaaPpGRqXB7IMjtf7tTmU2
+jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDKCMPybTjoNCQuelc0IAaO
+4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAUu69+Aj36pvE8hI6t7jiY
+7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1UdDwEB/wQEAwIBhjASBgNV
+HRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8ERTBDMEGgP6A9hjtodHRw
+Oi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDBx
+BggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
+T1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20w
+DQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2SQgG1NgvNc3fQP7TcePo
+7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs0j8CGpfb+SJA3GaBQ+39
+4k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDMKVmU/PUWNMKSTvtlenlx
+Bhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+E2pvOUtY+hPebuPtTbq7
+vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfHM5tdhYF/8v5UY5g2xANP
+ECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4jkhJiA7EuTecP/CFtR72
+uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1tyZR2niOYihZ+FCbtf3D9
+mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4ognzgXtgtdk3ShrtOS1iA
+N2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAbR9HWdFqzcOoB/hxfEyIQ
+px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
+ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
+QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
+U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMDIxODU4MTFaMC8GCSqG
+SIb3DQEJBDEiBCB0FGVX9IXtdUZ/kMfxmWdhbhr877jTKvUstBhrFCuMyzCBvQYJKwYBBAGCNxAE
+MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
+IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
+jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
+cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
+aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAGcGPD+o4l32
+fa350nIsSiqjzq7L6eO7Su14g9ViZnFFwkBanftru8zTcv9CgihR0EajqVGQYxelameifRq/7BDf
+VFwIZwuse8Rb4/tDo3fuT+92iL8G/o8Mz+2lGE4mwsEHD47S+/xbSzh+i+uFzI3CZW8lsGaA8s/Q
+R69AASxTVDdPtFKuT3DMeYcIK+psb3NjJkk5+ajrJyGbNjFV1d7GcjxOy+tBrIMtsuw25kp+BSla
+Dy9qOYByc5H+nZ6yuRCe+rxhmiXAnEulMsO13CMUcq3QosejSemma+XP88I5GFOFV27c8Z6ON04X
+8RvI2AOliwPDpdkxSmqoaQSPp1AAAAAAAAA=
+--===============6768106867173769201==--
 
