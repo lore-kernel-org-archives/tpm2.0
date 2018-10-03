@@ -1,19 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============6768106867173769201=="
+Content-Type: multipart/mixed; boundary="===============1838325416811777854=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Tue, 02 Oct 2018 19:58:11 +0100
-Message-ID: <d338f832ccf2452e1b26d6fcb6b44c42b9ccc880.camel@infradead.org>
-In-Reply-To: 1538502026.14607.12.camel@HansenPartnership.com
+Date: Wed, 03 Oct 2018 11:35:28 +0100
+Message-ID: <dae7fbbfe3469d5420f761dae3c2e96a872d4356.camel@infradead.org>
+In-Reply-To: d338f832ccf2452e1b26d6fcb6b44c42b9ccc880.camel@infradead.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6768106867173769201==
+--===============1838325416811777854==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-OK.. I think this makes a difference:
+On Tue, 2018-10-02 at 19:58 +0100, David Woodhouse wrote:
+> =
+
+> So... that now *is* working for signing. However, while the
+> corresponding 'rsautl -verify' works fine with James's tpm2 engine, it
+> fails with tpm2tss:
+> =
+
+> $ openssl rsautl -verify -engine tpm2tss -inkey ../openssl_tpm2_engine/tp=
+m2-engine.tss -keyform engine -in testsig.tpm2tss
+> Initializing
+> engine "tpm2tss" set.
+> Loading private key ../openssl_tpm2_engine/tpm2-engine.tss
+> get_auth called for object user key with ui_method 0x55ced253fdc0
+> Enter password for user key:
+> password is =
+
+> Loaded key uses alg-id 1
+> Creating RSA key object.
+> Created RSA key object.
+> TPM2 Key loaded
+> RSA operation error
+> 140407559393728:error:0407006A:rsa routines:RSA_padding_check_PKCS1_type_=
+1:block type is not 01:../crypto/rsa/rsa_pk1.c:75:
+> 140407559393728:error:04067072:rsa routines:rsa_ossl_public_decrypt:paddi=
+ng check failed:../crypto/rsa/rsa_ossl.c:586:
+> =
+
+> =
+
+> So... is it the public key that I've misconverted somehow?
+
+I've resolved that one too. James explicitly sets the exponent in =
+
+tpm2Data->pub.publicArea.parameters.rsaDetail.exponent to zero if it's
+0x10001, with a comment saying "zero means standard exponent. Some TPM
+chips will reject a non standard exponent".
+
+So now I do have OpenConnect using my wrapped VPN key, with both
+engines (although tpm2-tss-engine stills asks me for an empty
+password).
+
+By setting objectAttributes when creating a key, I can make
+tpm2tss-genkey work again too.
+
+Full patch below, for reference. Don't heckle too hard; it exists
+mostly to document the current incompatibilities. I'll let the two of
+you come to an agreement on the correct way to resolve them, while I
+throw together some GnuTLS code to use the same PEM files.
+
+(Since the tpm2-tss-engine code is under a licence which lets me crib
+from it, and the libraries actually have pkgconfig etc., I suppose
+that's made this application author's implementation choice fairly much
+a no-brainer...)
+
+
 
 
 --- a/src/tpm2-tss-engine-common.h
@@ -29,116 +84,48 @@ le,
                               TPMA_OBJECT_SENSITIVEDATAORIGIN), \
          .authPolicy =3D { \
               .size =3D 0, \
+--- a/src/tpm2-tss-engine-rsa.c
++++ b/src/tpm2-tss-engine-rsa.c
+@@ -304,7 +304,7 @@ populate_rsa(RSA *rsa) {
+         ERR(populate_rsa, ERR_R_MALLOC_FAILURE);
+         goto error;
+     }
+-    BN_set_word(rsa->e, tpm2Data->pub.publicArea.parameters.rsaDetail.expo=
+nent);
++    BN_set_word(rsa->e, tpm2Data->pub.publicArea.parameters.rsaDetail.expo=
+nent ? : 0x10001);
+ =
+
+     /* Setting private portions to 0 values so the public key can be extra=
+cted
+        from the keyfile if this is desired. */
+@@ -366,7 +366,7 @@ populate_rsa(RSA *rsa) {
+         goto error;
+     }
+ =
+
+-    BN_set_word(e, tpm2Data->pub.publicArea.parameters.rsaDetail.exponent);
++    BN_set_word(e, tpm2Data->pub.publicArea.parameters.rsaDetail.exponent =
+? : 0x10001);
+     BN_set_word(d, 0);
+     BN_set_word(p, 0);
+     BN_set_word(q, 0);
+@@ -485,6 +485,8 @@ tpm2tss_rsa_genkey(RSA *rsa, int bits, BIGNUM *e, char =
+*password)
+     if (e)
+         inPublic.publicArea.parameters.rsaDetail.exponent =3D BN_get_word(=
+e);
+ =
+
++    inPublic.publicArea.objectAttributes =3D TPMA_OBJECT_SENSITIVEDATAORIG=
+IN | TPMA_OBJECT_NODA;
++
+     if (password) {
+         DBG("Setting a password for the created key.\n");
+         if (strlen(password) > sizeof(tpm2Data->userauth.buffer) - 1) {
 
 
-Now, I have two PEM files, one 'machine.tss' created with James's tpm2
-engine, and a second 'tpm2-engine.tss' which is converted manually as
-described in issue #11 to be used with the tpm2tss engine.
-
-
-$ openssl rsautl -sign -engine tpm2tss -inkey tpm2-engine.tss -keyform engi=
-ne < testfile > testsig.tpm2tss
-$ openssl rsautl -sign -engine tpm2 -inkey machine.tss -keyform engine < te=
-stfile > testsig.tpm2
-$ sha1sum testsig.tpm*
-fb9e8c1f4a1872f4144fd760af1740af75a9a8b2  testsig.tpm2
-fb9e8c1f4a1872f4144fd760af1740af75a9a8b2  testsig.tpm2tss
-
-So... that now *is* working for signing. However, while the
-corresponding 'rsautl -verify' works fine with James's tpm2 engine, it
-fails with tpm2tss:
-
-$ openssl rsautl -verify -engine tpm2tss -inkey ../openssl_tpm2_engine/tpm2=
--engine.tss -keyform engine -in testsig.tpm2tss
-Initializing
-engine "tpm2tss" set.
-Loading private key ../openssl_tpm2_engine/tpm2-engine.tss
-get_auth called for object user key with ui_method 0x55ced253fdc0
-Enter password for user key:
-password is =
-
-Loaded key uses alg-id 1
-Creating RSA key object.
-Created RSA key object.
-TPM2 Key loaded
-RSA operation error
-140407559393728:error:0407006A:rsa routines:RSA_padding_check_PKCS1_type_1:=
-block type is not 01:../crypto/rsa/rsa_pk1.c:75:
-140407559393728:error:04067072:rsa routines:rsa_ossl_public_decrypt:padding=
- check failed:../crypto/rsa/rsa_ossl.c:586:
-
-
-So... is it the public key that I've misconverted somehow?
-
- $ openssl asn1parse -in machine.tss =
-
-    0:d=3D0  hl=3D4 l=3D 503 cons: SEQUENCE          =
-
-    4:d=3D1  hl=3D2 l=3D   5 prim: OBJECT            :2.23.133.10.2
-   11:d=3D1  hl=3D2 l=3D   3 cons: cont [ 0 ]        =
-
-   13:d=3D2  hl=3D2 l=3D   1 prim: BOOLEAN           :1
-   16:d=3D1  hl=3D2 l=3D   6 cons: cont [ 1 ]        =
-
-   18:d=3D2  hl=3D2 l=3D   4 prim: INTEGER           :40000001
-   24:d=3D1  hl=3D4 l=3D 284 cons: cont [ 2 ]        =
-
-   28:d=3D2  hl=3D4 l=3D 280 prim: OCTET STRING      [HEX DUMP]:01160001000=
-B000204400000001000100800000000000100C696B23A22C1516E22352CD1309A48BD7E6F05=
-4EE10BB7265BFC3BC85B622E75B658A03E15BB74CD9C542C4CEA22337467913058B3711E6EF=
-6CB4C8DA9B496E5888346B058426D645398613BF9BCE907947E63B5B4CD4ABA1FFC2EA396BE=
-C0A7F3F1FEDF022966CED43C070B2000BEEEE7BB82375A4E1C1558E7FC7139DCEE9C6055C33=
-32D50572E14A0747B907440598C93B77F356689EE71ACDAECA9C1FF33C74106CD8C23ACA461=
-3F4D234A4C10A1D7AA3E469493A541838D40A065B17FD23F7D75A5F9BD29F59566BB7D450E9=
-70269FD90F914FFF0CE44D526D4914C32F35AD9A2C6BAF7F77BAAA0B4B77F80C29C683764BA=
-FADEAFC397D344DB2ABF996D
-  312:d=3D1  hl=3D3 l=3D 192 prim: OCTET STRING      [HEX DUMP]:00BE0020446=
-3515A27FC3B773B53F28C04C147D78991B02E7B2FAFE0E96FA11E79692FCA0010DE02ADCCEC=
-CADBA51D1C71283A37FFD608D0979B994054031FF7475505EBC0D45CB6808A93D83C64051CA=
-06043721D55D8FE514BDD997CB8B26199B62D2E8517C1DE5293AC6ED97EF278F648B072855B=
-73B2D32CB2B39315FA40FA6AAF618038D6F880465083A1140DF9792448F6D888C912A797EE9=
-43912E0EC78B9576748822580ABECE5D02B973DAF1C0F7CE15DC56D3BB15E9AE7FADDB7C2
-
- $ tail -8 tpm2-engine.tss | openssl asn1parse
-    0:d=3D0  hl=3D4 l=3D 280 prim: OCTET STRING      [HEX DUMP]:01160001000=
-B000204400000001000100800000000000100C696B23A22C1516E22352CD1309A48BD7E6F05=
-4EE10BB7265BFC3BC85B622E75B658A03E15BB74CD9C542C4CEA22337467913058B3711E6EF=
-6CB4C8DA9B496E5888346B058426D645398613BF9BCE907947E63B5B4CD4ABA1FFC2EA396BE=
-C0A7F3F1FEDF022966CED43C070B2000BEEEE7BB82375A4E1C1558E7FC7139DCEE9C6055C33=
-32D50572E14A0747B907440598C93B77F356689EE71ACDAECA9C1FF33C74106CD8C23ACA461=
-3F4D234A4C10A1D7AA3E469493A541838D40A065B17FD23F7D75A5F9BD29F59566BB7D450E9=
-70269FD90F914FFF0CE44D526D4914C32F35AD9A2C6BAF7F77BAAA0B4B77F80C29C683764BA=
-FADEAFC397D344DB2ABF996D
-
-
-I note that 'tpm2tss-genkey' stopped working with the change I made at
-the beginning of this mail. I confess I haven't even looked up what any
-of those flags mean...
-
-$ ./tpm2tss-genkey  new.tss
-Initializing
-Setting owner auth to empty auth.
-Generating RSA key for 2048 bits keysize.
-Establishing connection with TPM.
-WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could n=
-ot load TCTI file: libtss2-tcti-default.so =
-
-WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could n=
-ot load TCTI file: libtss2-tcti-tabrmd.so =
-
-Creating primary key under owner.
-Generating the RSA key inside the TPM.
-WARNING:esys:src/tss2-esys/api/Esys_Create.c:411:Esys_Create_Finish() Recei=
-ved TPM Error =
-
-ERROR:esys:src/tss2-esys/api/Esys_Create.c:155:Esys_Create() Esys Finish Er=
-rorCode (0x000002c2) =
-
-Error: Generating key failed
-Key could not be generated.
-
-
---===============6768106867173769201==
+--===============1838325416811777854==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -222,19 +209,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMDIxODU4MTFaMC8GCSqG
-SIb3DQEJBDEiBCB0FGVX9IXtdUZ/kMfxmWdhbhr877jTKvUstBhrFCuMyzCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMDMxMDM1MjhaMC8GCSqG
+SIb3DQEJBDEiBCCrTzF/WjWWaRL0R8wFXiFzoVgWrz2JNOsH7gw8MdIDZDCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAGcGPD+o4l32
-fa350nIsSiqjzq7L6eO7Su14g9ViZnFFwkBanftru8zTcv9CgihR0EajqVGQYxelameifRq/7BDf
-VFwIZwuse8Rb4/tDo3fuT+92iL8G/o8Mz+2lGE4mwsEHD47S+/xbSzh+i+uFzI3CZW8lsGaA8s/Q
-R69AASxTVDdPtFKuT3DMeYcIK+psb3NjJkk5+ajrJyGbNjFV1d7GcjxOy+tBrIMtsuw25kp+BSla
-Dy9qOYByc5H+nZ6yuRCe+rxhmiXAnEulMsO13CMUcq3QosejSemma+XP88I5GFOFV27c8Z6ON04X
-8RvI2AOliwPDpdkxSmqoaQSPp1AAAAAAAAA=
---===============6768106867173769201==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBACRL6ldok0Cu
+OoccXHaJt6P/q8hWAk92FnaHFQN/X3p8B8OYczl64ILxQHHLdKUfsqh3HJb4SQXx6dDwOcmFawPB
+PYhQVZI+cbGIJmHhhkkdDiJZeIJ9U5IC0nQ5ow0J9GLja09DIXowzBjbwgdHpA+e0uc9Wlx3ZQvn
+4I6hTxUTU8WZE7itdZnhubt3bBCy1dxPwuxe2xzSOlEhVXler3aI00naYQpfxZGSV13/efBI+eT3
+SB9MXyTP5ACnvU+JsHW6vI/ZU70+c/q+lH2cD+4w7aBQF/w9CEZJCEMVEkOOqlxQvWrAtTDYUcUo
+Ejb8TlzcRIZc+oDEJ/+1K1+v1zMAAAAAAAA=
+--===============1838325416811777854==--
 
