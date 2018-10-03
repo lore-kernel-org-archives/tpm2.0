@@ -1,131 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============1838325416811777854=="
+Content-Type: multipart/mixed; boundary="===============4623523426062277461=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Wed, 03 Oct 2018 11:35:28 +0100
-Message-ID: <dae7fbbfe3469d5420f761dae3c2e96a872d4356.camel@infradead.org>
-In-Reply-To: d338f832ccf2452e1b26d6fcb6b44c42b9ccc880.camel@infradead.org
+Date: Wed, 03 Oct 2018 11:47:15 +0100
+Message-ID: <50805b898f328f04efecc89bbbc15e2c3999febf.camel@infradead.org>
+In-Reply-To: 1538563222.7448.8.camel@HansenPartnership.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1838325416811777854==
+--===============4623523426062277461==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2018-10-02 at 19:58 +0100, David Woodhouse wrote:
+On Wed, 2018-10-03 at 12:40 +0200, James Bottomley wrote:
+> > --- a/src/tpm2-tss-engine-common.h
+> > +++ b/src/tpm2-tss-engine-common.h
+> > @@ -55,8 +55,7 @@ TSS2_RC init_tpm_key(ESYS_CONTEXT **ctx, ESYS_TR
+> > *keyHandle,
+> >          .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH | \
+> >                               TPMA_OBJECT_RESTRICTED | \
+> >                               TPMA_OBJECT_DECRYPT | \
+> > -                             TPMA_OBJECT_FIXEDTPM | \
+> > -                             TPMA_OBJECT_FIXEDPARENT | \
+> > +                             TPMA_OBJECT_NODA | \
 > =
 
-> So... that now *is* working for signing. However, while the
-> corresponding 'rsautl -verify' works fine with James's tpm2 engine, it
-> fails with tpm2tss:
-> =
+> This is the only troubling change, the rest looks fine to me.  The
+> template for a TPM created key *must* contain those two flags.  NODA is
+> one of those things which should be specified on the command line
+> rather than hard coded as well.  So to be exact, you need an extra
+> command line flag for whether or not you want TPMA_OBJECT_NODA (some
+> keys would like DA protection, especially private VPN ones, but the
+> creator of the key should ultimately decide) and if you have a TPM
+> create key you need TPMA_OBJECT_FIXEDTPM and TPMA_OBJECT_FIXEDPARENT
+> but if you're wrapping an existing key they have to be clear.
 
-> $ openssl rsautl -verify -engine tpm2tss -inkey ../openssl_tpm2_engine/tp=
-m2-engine.tss -keyform engine -in testsig.tpm2tss
-> Initializing
-> engine "tpm2tss" set.
-> Loading private key ../openssl_tpm2_engine/tpm2-engine.tss
-> get_auth called for object user key with ui_method 0x55ced253fdc0
-> Enter password for user key:
-> password is =
+This is for generating the primary key. It looks like your code always
+sets NODA, but *not* FIXEDTPM and FIXEDPARENT.
 
-> Loaded key uses alg-id 1
-> Creating RSA key object.
-> Created RSA key object.
-> TPM2 Key loaded
-> RSA operation error
-> 140407559393728:error:0407006A:rsa routines:RSA_padding_check_PKCS1_type_=
-1:block type is not 01:../crypto/rsa/rsa_pk1.c:75:
-> 140407559393728:error:04067072:rsa routines:rsa_ossl_public_decrypt:paddi=
-ng check failed:../crypto/rsa/rsa_ossl.c:586:
-> =
+The tpm2-tss engine does set FIXEDTPM and FIXEDPARENT, but not NODA.
 
-> =
+As noted, the above patch comes from blindly making tpm2-tss-engine
+look like your code, without even looking at what the flags mean :)
 
-> So... is it the public key that I've misconverted somehow?
+I don't see why you set NODA on the primary key which has no auth
+anyway, and you seem to be saying that the lack of FIXED{TPM,PARENT} on
+your side is also problematic? Does that mean we should be changing
+your code to match what's in tpm2-tss-engine?
 
-I've resolved that one too. James explicitly sets the exponent in =
-
-tpm2Data->pub.publicArea.parameters.rsaDetail.exponent to zero if it's
-0x10001, with a comment saying "zero means standard exponent. Some TPM
-chips will reject a non standard exponent".
-
-So now I do have OpenConnect using my wrapped VPN key, with both
-engines (although tpm2-tss-engine stills asks me for an empty
-password).
-
-By setting objectAttributes when creating a key, I can make
-tpm2tss-genkey work again too.
-
-Full patch below, for reference. Don't heckle too hard; it exists
-mostly to document the current incompatibilities. I'll let the two of
-you come to an agreement on the correct way to resolve them, while I
-throw together some GnuTLS code to use the same PEM files.
-
-(Since the tpm2-tss-engine code is under a licence which lets me crib
-from it, and the libraries actually have pkgconfig etc., I suppose
-that's made this application author's implementation choice fairly much
-a no-brainer...)
-
-
-
-
---- a/src/tpm2-tss-engine-common.h
-+++ b/src/tpm2-tss-engine-common.h
-@@ -55,8 +55,7 @@ TSS2_RC init_tpm_key(ESYS_CONTEXT **ctx, ESYS_TR *keyHand=
-le,
-         .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH | \
-                              TPMA_OBJECT_RESTRICTED | \
-                              TPMA_OBJECT_DECRYPT | \
--                             TPMA_OBJECT_FIXEDTPM | \
--                             TPMA_OBJECT_FIXEDPARENT | \
-+                             TPMA_OBJECT_NODA | \
-                              TPMA_OBJECT_SENSITIVEDATAORIGIN), \
-         .authPolicy =3D { \
-              .size =3D 0, \
---- a/src/tpm2-tss-engine-rsa.c
-+++ b/src/tpm2-tss-engine-rsa.c
-@@ -304,7 +304,7 @@ populate_rsa(RSA *rsa) {
-         ERR(populate_rsa, ERR_R_MALLOC_FAILURE);
-         goto error;
-     }
--    BN_set_word(rsa->e, tpm2Data->pub.publicArea.parameters.rsaDetail.expo=
-nent);
-+    BN_set_word(rsa->e, tpm2Data->pub.publicArea.parameters.rsaDetail.expo=
-nent ? : 0x10001);
- =
-
-     /* Setting private portions to 0 values so the public key can be extra=
-cted
-        from the keyfile if this is desired. */
-@@ -366,7 +366,7 @@ populate_rsa(RSA *rsa) {
-         goto error;
-     }
- =
-
--    BN_set_word(e, tpm2Data->pub.publicArea.parameters.rsaDetail.exponent);
-+    BN_set_word(e, tpm2Data->pub.publicArea.parameters.rsaDetail.exponent =
-? : 0x10001);
-     BN_set_word(d, 0);
-     BN_set_word(p, 0);
-     BN_set_word(q, 0);
-@@ -485,6 +485,8 @@ tpm2tss_rsa_genkey(RSA *rsa, int bits, BIGNUM *e, char =
-*password)
-     if (e)
-         inPublic.publicArea.parameters.rsaDetail.exponent =3D BN_get_word(=
-e);
- =
-
-+    inPublic.publicArea.objectAttributes =3D TPMA_OBJECT_SENSITIVEDATAORIG=
-IN | TPMA_OBJECT_NODA;
-+
-     if (password) {
-         DBG("Setting a password for the created key.\n");
-         if (strlen(password) > sizeof(tpm2Data->userauth.buffer) - 1) {
-
-
---===============1838325416811777854==
+--===============4623523426062277461==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -209,19 +133,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMDMxMDM1MjhaMC8GCSqG
-SIb3DQEJBDEiBCCrTzF/WjWWaRL0R8wFXiFzoVgWrz2JNOsH7gw8MdIDZDCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMDMxMDQ3MTVaMC8GCSqG
+SIb3DQEJBDEiBCBKnTwB3M94PLssMJIL4We88B6/5RzLuuu7ZG18mlZ+5TCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBACRL6ldok0Cu
-OoccXHaJt6P/q8hWAk92FnaHFQN/X3p8B8OYczl64ILxQHHLdKUfsqh3HJb4SQXx6dDwOcmFawPB
-PYhQVZI+cbGIJmHhhkkdDiJZeIJ9U5IC0nQ5ow0J9GLja09DIXowzBjbwgdHpA+e0uc9Wlx3ZQvn
-4I6hTxUTU8WZE7itdZnhubt3bBCy1dxPwuxe2xzSOlEhVXler3aI00naYQpfxZGSV13/efBI+eT3
-SB9MXyTP5ACnvU+JsHW6vI/ZU70+c/q+lH2cD+4w7aBQF/w9CEZJCEMVEkOOqlxQvWrAtTDYUcUo
-Ejb8TlzcRIZc+oDEJ/+1K1+v1zMAAAAAAAA=
---===============1838325416811777854==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAFSq+EZkAUG9
+2z7TS3YrtnH0zGoJudkN/KHrdUhupRBpZx7uPHzg4TwEsSMaz7N1zoe4H0aUVGG87WFjnIp0OfX9
+j2/BIO3Of0BuCLG/NRoNa0Fx0aaGjW9bRLsvLyoII2IjApau/SYb1bdLrRH1mZ8TkUIb+1JlCD4w
+u5odR74DVv9NfwUbMZXUu/vV0pgVrcoQipWuWqYnQr9yrkM/FIlq+DSvh9rgZhj5jicIP21B0jps
+JT1hwRtJrt4/sOliyUaxqdHTcDmvpfxk6p2ifDiZCdB9V2S+WHfflaTuTMHlnEP9JMblKqDtf2Bs
+iVbW5SMM1hg9QyXjiQral5jUnQ8AAAAAAAA=
+--===============4623523426062277461==--
 
