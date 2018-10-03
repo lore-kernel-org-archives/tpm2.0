@@ -1,55 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============4623523426062277461=="
+Content-Type: multipart/mixed; boundary="===============5155030929582461964=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Wed, 03 Oct 2018 11:47:15 +0100
-Message-ID: <50805b898f328f04efecc89bbbc15e2c3999febf.camel@infradead.org>
-In-Reply-To: 1538563222.7448.8.camel@HansenPartnership.com
+Date: Wed, 03 Oct 2018 12:06:09 +0100
+Message-ID: <3bf2ba5655ca867b333e4da210c588be98691c7f.camel@infradead.org>
+In-Reply-To: 9efa7e3d-0e78-4d5f-9c54-3def2431f63a@email.android.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4623523426062277461==
+--===============5155030929582461964==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2018-10-03 at 12:40 +0200, James Bottomley wrote:
-> > --- a/src/tpm2-tss-engine-common.h
-> > +++ b/src/tpm2-tss-engine-common.h
-> > @@ -55,8 +55,7 @@ TSS2_RC init_tpm_key(ESYS_CONTEXT **ctx, ESYS_TR
-> > *keyHandle,
-> >          .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH | \
-> >                               TPMA_OBJECT_RESTRICTED | \
-> >                               TPMA_OBJECT_DECRYPT | \
-> > -                             TPMA_OBJECT_FIXEDTPM | \
-> > -                             TPMA_OBJECT_FIXEDPARENT | \
-> > +                             TPMA_OBJECT_NODA | \
+On Wed, 2018-10-03 at 13:00 +0200, James Bottomley wrote:
+> On October 3, 2018 12:47:15 PM CEST, David Woodhouse <dwmw2(a)infradead.o=
+rg> wrote:
+> > On Wed, 2018-10-03 at 12:40 +0200, James Bottomley wrote:
+> > > > --- a/src/tpm2-tss-engine-common.h
+> > > > +++ b/src/tpm2-tss-engine-common.h
+> > > > @@ -55,8 +55,7 @@ TSS2_RC init_tpm_key(ESYS_CONTEXT **ctx, ESYS_TR
+> > > > *keyHandle,
+> > > >          .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH | \
+> > > >                               TPMA_OBJECT_RESTRICTED | \
+> > > >                               TPMA_OBJECT_DECRYPT | \
+> > > > -                             TPMA_OBJECT_FIXEDTPM | \
+> > > > -                             TPMA_OBJECT_FIXEDPARENT | \
+> > > > +                             TPMA_OBJECT_NODA | \
+> > > =
+
+> > > This is the only troubling change, the rest looks fine to me.  The
+> > > template for a TPM created key *must* contain those two flags.  NODA
+> > =
+
+> > is
+> > > one of those things which should be specified on the command line
+> > > rather than hard coded as well.  So to be exact, you need an extra
+> > > command line flag for whether or not you want TPMA_OBJECT_NODA (some
+> > > keys would like DA protection, especially private VPN ones, but the
+> > > creator of the key should ultimately decide) and if you have a TPM
+> > > create key you need TPMA_OBJECT_FIXEDTPM and TPMA_OBJECT_FIXEDPARENT
+> > > but if you're wrapping an existing key they have to be clear.
+> > =
+
+> > This is for generating the primary key. It looks like your code always
+> > sets NODA, but *not* FIXEDTPM and FIXEDPARENT.
+> > =
+
+> > The tpm2-tss engine does set FIXEDTPM and FIXEDPARENT, but not NODA.
+> > =
+
+> > As noted, the above patch comes from blindly making tpm2-tss-engine
+> > look like your code, without even looking at what the flags mean :)
+> > =
+
+> > I don't see why you set NODA on the primary key which has no auth
+> > anyway, and you seem to be saying that the lack of FIXED{TPM,PARENT} on
+> > your side is also problematic?
 > =
 
-> This is the only troubling change, the rest looks fine to me.  The
-> template for a TPM created key *must* contain those two flags.  NODA is
-> one of those things which should be specified on the command line
-> rather than hard coded as well.  So to be exact, you need an extra
-> command line flag for whether or not you want TPMA_OBJECT_NODA (some
-> keys would like DA protection, especially private VPN ones, but the
-> creator of the key should ultimately decide) and if you have a TPM
-> create key you need TPMA_OBJECT_FIXEDTPM and TPMA_OBJECT_FIXEDPARENT
-> but if you're wrapping an existing key they have to be clear.
+> For createprimary, noda is correct because it has no password.  Let
+> me check the fixeds. The primary should have them.  I'm boarding in
+> Paris at the moment but will check in-flight. =
 
-This is for generating the primary key. It looks like your code always
-sets NODA, but *not* FIXEDTPM and FIXEDPARENT.
+> =
 
-The tpm2-tss engine does set FIXEDTPM and FIXEDPARENT, but not NODA.
+> > Does that mean we should be changing
+> > your code to match what's in tpm2-tss-engine?
+> =
 
-As noted, the above patch comes from blindly making tpm2-tss-engine
-look like your code, without even looking at what the flags mean :)
+> I think for the fixeds yes but likely it doesn't matter for the
+> primary because it will be assumed.
 
-I don't see why you set NODA on the primary key which has no auth
-anyway, and you seem to be saying that the lack of FIXED{TPM,PARENT} on
-your side is also problematic? Does that mean we should be changing
-your code to match what's in tpm2-tss-engine?
+Whether it's assumed or not, changing it does appear to change the
+resulting primary so that it can no longer unwrap the previously-
+wrapped keys.
 
---===============4623523426062277461==
+
+--===============5155030929582461964==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -133,19 +161,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMDMxMDQ3MTVaMC8GCSqG
-SIb3DQEJBDEiBCBKnTwB3M94PLssMJIL4We88B6/5RzLuuu7ZG18mlZ+5TCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMDMxMTA2MDlaMC8GCSqG
+SIb3DQEJBDEiBCBfVcsadBe0dnGVC+wLaTa0wgqnx+mMEzE1ITAeEMHfzzCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAFSq+EZkAUG9
-2z7TS3YrtnH0zGoJudkN/KHrdUhupRBpZx7uPHzg4TwEsSMaz7N1zoe4H0aUVGG87WFjnIp0OfX9
-j2/BIO3Of0BuCLG/NRoNa0Fx0aaGjW9bRLsvLyoII2IjApau/SYb1bdLrRH1mZ8TkUIb+1JlCD4w
-u5odR74DVv9NfwUbMZXUu/vV0pgVrcoQipWuWqYnQr9yrkM/FIlq+DSvh9rgZhj5jicIP21B0jps
-JT1hwRtJrt4/sOliyUaxqdHTcDmvpfxk6p2ifDiZCdB9V2S+WHfflaTuTMHlnEP9JMblKqDtf2Bs
-iVbW5SMM1hg9QyXjiQral5jUnQ8AAAAAAAA=
---===============4623523426062277461==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAG32AtAFc2KL
+vsK2ryYPRysMkVV9hmpv4SAcdxKjo8UKb3M6XLnuAVWf6cibv6YFnGyNmHjI9x8u6doycnL4YF7O
+vpFixHnbVnfCAquiKZnzQ1p8CdbQJBCbIXb4hbZCPeY02qGxVEMw+U/r/kduga9rhT2EA/s5WNV2
+Txuid8Kuu0PYnK76AVKvgr8PEkjt70FMatNVKFol2GmsWq4FYUtuXkqstqlUoS9sa3bU3L4Ndaj6
+4uknLgThYI0e/4LOVWWXeeKav6Z8ahSe39bf6FILFDdFUPJ4x2YfpwSCqzhMWuc9BhLgHXjb8WO+
+iNk7RxO0z62aNl5AyM5w063V8KwAAAAAAAA=
+--===============5155030929582461964==--
 
