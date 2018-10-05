@@ -1,33 +1,27 @@
-Content-Type: multipart/mixed; boundary="===============0572264127298670308=="
+Content-Type: multipart/mixed; boundary="===============5304531592268326794=="
 MIME-Version: 1.0
 From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Fri, 05 Oct 2018 15:22:58 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D01473373C1@exch2010c.sit.fraunhofer.de>
-In-Reply-To: abda908c04a629bd40e292ff3febfc9cd43e0056.camel@infradead.org
+Date: Fri, 05 Oct 2018 15:24:06 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D01473373D4@exch2010c.sit.fraunhofer.de>
+In-Reply-To: 9b90a8506d0a562d0bee11310b55798d361f04a7.camel@infradead.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0572264127298670308==
+--===============5304531592268326794==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi David,
-
-are you sure this is about the (default) parent, i.e. primary key ?
-
-I assume you're talking about the actual key, which I left out for the spec=
-ification.
-Can this be ?
-
-Cheers,
-Andreas
+Actually, I like the TSS2 PEM Tag.
+We could then also get rid of the OPTIONAL for publicKey, since we won't su=
+pport TPMv1.2 anymore.
 ________________________________________
 From: David Woodhouse [dwmw2(a)infradead.org]
-Sent: Friday, October 05, 2018 12:27
+Sent: Friday, October 05, 2018 13:59
 To: Fuchs, Andreas; James Bottomley; tpm2(a)lists.01.org; Nikos Mavrogianno=
 poulos
+Cc: Richard Levitte
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
 
 On Fri, 2018-10-05 at 09:44 +0000, Fuchs, Andreas wrote:
@@ -41,28 +35,19 @@ n-disk-format
 >
 > There are a bunch of ??? about the tss2-engine where I'd need input from =
 you.
+>
+> And a bunch of tbds of the tpm2-tss-engine where I'll have to do some cod=
+ing.
+>
+> Thanks a lot,
 
-My GnuTLS code mostly follows tpm2-tss-engine here, except for the
-different objectAttributes when generating the parent key. That differs
-in the NODA, FIXEDTPM and FIXEDPARENT flags, as discussed =E2=80=94 and I
-follow James's version here so that I can actually test VPN connections
-with a valid key (which I have on disk, and has to be wrapped).
+Can we change the PEM tag too, to -----BEGIN TSS2 PRIVATE KEY----- ?
 
-Every other part of the default parent key generation, is the same
-between the engines. It's only the objectAttributes I had to change.
+Ending with "PRIVATE KEY" is needed for OpenSSL 1.1.1 to be able to
+automatically load it without having to hack *every* application to
+recognise the strings and try the appropriate engine.
 
+See https://github.com/openssl/openssl/issues/7354
 
-I'm not sure you have the 'Parent key is 0x81000001 if it exists' part
-right.
-
-The parent key is encoded in the PEM ASN.1.
-
-If it matches 0x81xxxxxx, it's used as a key handle directly.
-
-If not, it identifies the hierarchy under which the EC primary key is
-generated. James's version defaults to TPM_RH_OWNER, but I think other
-hierarchies can be specified.
-
-
---===============0572264127298670308==--
+--===============5304531592268326794==--
 
