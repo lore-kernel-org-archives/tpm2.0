@@ -1,14 +1,14 @@
-Content-Type: multipart/mixed; boundary="===============3886534500267890163=="
+Content-Type: multipart/mixed; boundary="===============4452789352643397044=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Fri, 05 Oct 2018 11:27:25 +0100
-Message-ID: <abda908c04a629bd40e292ff3febfc9cd43e0056.camel@infradead.org>
+Date: Fri, 05 Oct 2018 12:59:53 +0100
+Message-ID: <9b90a8506d0a562d0bee11310b55798d361f04a7.camel@infradead.org>
 In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D014267842C@EXCH2010B.sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3886534500267890163==
+--===============4452789352643397044==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -27,30 +27,24 @@ n-disk-format
 
 > There are a bunch of ??? about the tss2-engine where I'd need input from =
 you.
+> =
 
-My GnuTLS code mostly follows tpm2-tss-engine here, except for the
-different objectAttributes when generating the parent key. That differs
-in the NODA, FIXEDTPM and FIXEDPARENT flags, as discussed =E2=80=94 and I
-follow James's version here so that I can actually test VPN connections
-with a valid key (which I have on disk, and has to be wrapped).
+> And a bunch of tbds of the tpm2-tss-engine where I'll have to do some cod=
+ing.
+> =
 
-Every other part of the default parent key generation, is the same
-between the engines. It's only the objectAttributes I had to change.
+> Thanks a lot,
 
-
-I'm not sure you have the 'Parent key is 0x81000001 if it exists' part
-right.
-
-The parent key is encoded in the PEM ASN.1.
-
-If it matches 0x81xxxxxx, it's used as a key handle directly.
-
-If not, it identifies the hierarchy under which the EC primary key is
-generated. James's version defaults to TPM_RH_OWNER, but I think other
-hierarchies can be specified.
+Can we change the PEM tag too, to -----BEGIN TSS2 PRIVATE KEY----- ? =
 
 
---===============3886534500267890163==
+Ending with "PRIVATE KEY" is needed for OpenSSL 1.1.1 to be able to
+automatically load it without having to hack *every* application to
+recognise the strings and try the appropriate engine.
+
+See https://github.com/openssl/openssl/issues/7354
+
+--===============4452789352643397044==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -134,19 +128,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMDUxMDI3MjVaMC8GCSqG
-SIb3DQEJBDEiBCDChKkkWP0/Rj0JmJq4DfSQ71+27PjHXDGLBlmTqmlxWjCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMDUxMTU5NTNaMC8GCSqG
+SIb3DQEJBDEiBCAolKHPbnWMghogTlPTG1SVHI21YEP5xaXm+7+NBrmrwTCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAGsgq8KKjyoG
-RV4FL5HnoHn+v0VgKD/8dgJD/ouBA3qi8vxNCV4Oqv547bAWGk1MHjwGPC2cr5FF358znKIeA6TM
-j0p/oWru4AYaQpSH6Cx58aFpyp2Yws7SLLq+sGUNFURPWuEZoC+8N0omZmi14HS0ooMvtMUyT4Eo
-UQKa+dvl5zNzjCPh3PG9oocOyCBbbDJW6DawNu1p24ds4MDCYbqoYn91/r1uB/DPyiDn+D6ENxjx
-Gto3HhpwQwTQPVcq8r1ZsNdRctY//zX2JRI67/H9iGD4xIIBnFdnLobSM9u9LSIw0qdjq+AOoesG
-ysh/h4yG+kaOa1wF9TYPELXYFJ4AAAAAAAA=
---===============3886534500267890163==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAJTfsYYqv4hD
+ykSvSo6Oyjl97DPgJCauMBU1YAZVjBhKujaln+hkq96LLgmZp7fq1lWC+ATRPJ2hgWpFVgQGqyoM
+jsHoF+ggRLhks96L52RcZkFHIAgL9SYw1AaljM5+nHNtTqBBbwQwv9mv6EqOQIll88cthBnp4tY6
+fn/NzrmtbnC31BEwmKKUGKCPEGlCMK0nrwyauJ6M+EzZzwPn+JF4o6qoETqP5r3nl3hVVJ+10dPT
+PHwlhMfUMYSRYpA4+ZtS0R9cYzuiimP/3uYqe35uTDWmYFJ9DRlDPp3aougdsnbuC4kRqMUeSjmb
+Dq5T1pD07ifaLECFZ4DK4Y4cBxcAAAAAAAA=
+--===============4452789352643397044==--
 
