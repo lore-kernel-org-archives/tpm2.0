@@ -1,218 +1,135 @@
-Content-Type: multipart/mixed; boundary="===============6253612139838198876=="
+Content-Type: multipart/mixed; boundary="===============7416810200585787491=="
 MIME-Version: 1.0
-From: David Woodhouse <dwmw2 at infradead.org>
-Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Mon, 08 Oct 2018 11:15:22 +0100
-Message-ID: <7c3d5a4ac2f51f301164ba2ddefff643d5a8ce1b.camel@infradead.org>
-In-Reply-To: 9efa7e3d-0e78-4d5f-9c54-3def2431f63a@email.android.com
+From: Alok Pant <alokpant at hotmail.com>
+Subject: [tpm2] TPM questions
+Date: Wed, 10 Oct 2018 19:39:53 +0000
+Message-ID: <SN6PR13MB2509CD85B26AE707DBD26C9CCDE00@SN6PR13MB2509.namprd13.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6253612139838198876==
+--===============7416810200585787491==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2018-10-03 at 13:00 +0200, James Bottomley wrote:
-> On October 3, 2018 12:47:15 PM CEST, David Woodhouse <dwmw2(a)infradead.o=
-rg> wrote:
-> > On Wed, 2018-10-03 at 12:40 +0200, James Bottomley wrote:
-> > > > --- a/src/tpm2-tss-engine-common.h
-> > > > +++ b/src/tpm2-tss-engine-common.h
-> > > > @@ -55,8 +55,7 @@ TSS2_RC init_tpm_key(ESYS_CONTEXT **ctx, ESYS_TR
-> > > > *keyHandle,
-> > > >           .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH | \
-> > > >                                TPMA_OBJECT_RESTRICTED | \
-> > > >                                TPMA_OBJECT_DECRYPT | \
-> > > > -                             TPMA_OBJECT_FIXEDTPM | \
-> > > > -                             TPMA_OBJECT_FIXEDPARENT | \
-> > > > +                             TPMA_OBJECT_NODA | \
-> > > =
+Hi TPM Experts,
 
-> > > This is the only troubling change, the rest looks fine to me.  The
-> > > template for a TPM created key *must* contain those two flags. NODA is
-> > > one of those things which should be specified on the command line
-> > > rather than hard coded as well.  So to be exact, you need an extra
-> > > command line flag for whether or not you want TPMA_OBJECT_NODA (some
-> > > keys would like DA protection, especially private VPN ones, but the
-> > > creator of the key should ultimately decide) and if you have a TPM
-> > > create key you need TPMA_OBJECT_FIXEDTPM and TPMA_OBJECT_FIXEDPARENT
-> > > but if you're wrapping an existing key they have to be clear.
-> > =
-
-> > This is for generating the primary key. It looks like your code always
-> > sets NODA, but *not* FIXEDTPM and FIXEDPARENT.
-> > =
-
-> > The tpm2-tss engine does set FIXEDTPM and FIXEDPARENT, but not NODA.
-> > =
-
-> > As noted, the above patch comes from blindly making tpm2-tss-engine
-> > look like your code, without even looking at what the flags mean :)
-> > =
-
-> > I don't see why you set NODA on the primary key which has no auth
-> > anyway, and you seem to be saying that the lack of FIXED{TPM,PARENT} on
-> > your side is also problematic?
-> =
-
-> For createprimary, noda is correct because it has no password.  Let
-> me check the fixeds. The primary should have them.  I'm boarding in
-> Paris at the moment but will check in-flight. =
-
-> =
-
-> > Does that mean we should be changing
-> > your code to match what's in tpm2-tss-engine?
-> =
-
-> I think for the fixeds yes but likely it doesn't matter for the
-> primary because it will be assumed.
-
-It would be good to reach a conclusion on what the PEM format should
-be, so that I can push this to the OpenConnect master branch in
-preparation for a release.
-
-Let me attempt to summarise some of the discussions and create a
-definition / TODO list.
-
- =E2=80=A2 We all change to use all three of NODA/FIXEDTPM/FIXEDPARENT
-   objectAttributes for creating the primary key.
-
- =E2=80=A2 PEM file tag changes to 'BEGIN TSS2 PRIVATE KEY'. James can cont=
-inue
-   to use the old objectAttributes when loading files with the old PEM
-   tag for compatibility reasons, if he wants to.
-
- =E2=80=A2 Drop the TPMv1.2 compatibility via '12Key' and the 'importableKe=
-y' =
-
-   object types, which in fact means we can drop the 'type' field from
-   the ASN.1 definition altogether.
-
- =E2=80=A2 Make the pubkey field non-optional.
-
- =E2=80=A2 Ignore policy for now; we can define that later. We won't use the
-   [3] EXPLICIT tag for anything incompatible with James's existing =
-
-   definition, and if we settle on something else we'll use a different
-   explicit tag.
-
- =E2=80=A2 We produce a draft specifying the ASN.1 format and tpmkey: URI
-   scheme.
-
-
-That's probably enough for me to do a release of the GnuTLS code. On
-the OpenSSL side I also recommend that:
-
- =E2=80=A2 Both engines should use the same engine name so that applications
-   which match the PEM tag and load an engine don't have to try both.
-
- =E2=80=A2 Both engines should register the ASN.1 parser so that keys can be
-   used transparently by applications without having to explicitly
-   reference the engine at all (see =
-
-   https://github.com/openssl/openssl/issues/7354 )
+  I come from computer firmware (UEF aka BIOSI) background and have basis u=
+nderstanding of TPM. My goal is to implement the advance TPM capabilities (=
+ex-policy based operation) in PreOS space in firmware/BIOS. With various re=
+verse engineering method I now have  basic understanding of Auth/Handle and=
+ basic commands such as seal/unseal etc. I am still lost while reading  var=
+ious spec/books and was searching for reference code and sandbox area to be=
+tter understand the spec/implementation. I came across this wiki - https://=
+github.com/tpm2-software/tpm2-tools/blob/master/INSTALL.md and tried to pla=
+y with tpm2-tss and tpm2-tools under Ubuntu. This seems helpful but still l=
+ot to digest for new-bee like meI need some help as below
 
 
 
---===============6253612139838198876==
-Content-Type: application/x-pkcs7-signature
+a) I can compile tpm2_tss and tpm2_tools but I get build errors on TPM simu=
+lator similar to reported here (https://sourceforge.net/p/ibmswtpm2/discuss=
+ion/general/thread/8a4aac81/?limit=3D25) I tried various OpenSSL revision a=
+nd no luck. Do I need TPM simulator to work and if so how do I fix it
+
+
+b) I can now run various tpm_tools as root (i.e. sudo tpm2_getrandom, sudo =
+get_capabilities -c algorithms) etc so at least I have a good baseline for =
+tpmtools
+
+c) I am interested to print the low level packet that is sent to TPM (reque=
+st/response buffer). How can I do this? Is there verbose/build time options=
+ to print the actual request/response packet send to/from TPM
+
+d) Is there a way to debug (i.e. step through the code) so I can follow the=
+ code path and look various variable to better understand the code flow
+
+e) What afford is needed to port this stack in UEFI EDKII and where should =
+I look to start some investigation
+
+
+It seems there are subset of people (you) who understand it very well but t=
+here are insufficient books/document for new-comers(me)  to get up to speed=
+.  I apologize if this is too basic/broad question . Any help/pointers will=
+ be greatly appreciated
+
+
+Thanks again for offering help
+
+-Alok
+
+
+
+--===============7416810200585787491==
+Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
+Content-Disposition: attachment; filename="attachment.html"
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEFQw
-ggUxMIIEGaADAgECAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBCwUAMIGXMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
-VQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAeFw0xNzEyMjEwMDAwMDBaFw0xODEyMjEyMzU5
-NTlaMCQxIjAgBgkqhkiG9w0BCQEWE2R3bXcyQGluZnJhZGVhZC5vcmcwggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQDgzLNWa18DNpGUj/ZeH0Sgz53ESIbzdPw3OJeuNP6jZhxZojbyfxbM
-hETscxI/Hj6UZ4a7sHm5BkVjlsB1Af2Za/PXUt8MmLAcPMHkMPGunvkUibEvblDvpqMkQZlaZM+t
-5PqFmWkbehLaEvbpNY7dmEAAeKh4klTzJzrr5AAzaCQ32cA2e3+DEIv5O5l9ViMIjy/JM+xMQrfX
-3PZ0chY1PaVWjg59d4Uno+5LRDbgCnPkKJX4ysBGadibjBGQGJEZCjh94iiEebn2KsRLvtrJ72Ph
-3W2HDEdngW3YP0wujFQVs81U7L8XN3kdPRsa9zNqGtYQP/+1KMMJQ57hnfi9AgMBAAGjggHpMIIB
-5TAfBgNVHSMEGDAWgBSCr2yM+MX+lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQUpL+/5lli9jmj2KHj
-ryyhnB2xRt0wDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwIAYDVR0lBBkwFwYIKwYBBQUH
-AwQGCysGAQQBsjEBAwUCMBEGCWCGSAGG+EIBAQQEAwIFIDBGBgNVHSAEPzA9MDsGDCsGAQQBsjEB
-AgEBATArMCkGCCsGAQUFBwIBFh1odHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8E
-UzBRME+gTaBLhklodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50
-aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKG
-SWh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5k
-U2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAe
-BgNVHREEFzAVgRNkd213MkBpbmZyYWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQCK28BdbVJ9
-QKQqTDfXwogAYiRBEGptfE1Bjy4F5vC6eWJqOJ15vunxjLwdbZYb4L0qrJlh+ZHHHlbIK8uEZu7N
-XHUntmWMbGbZiu7JgrbSXJK1ct9gxrN/sdWYJ+JDjVHg7GfDTvTTPa26JMRqJsO1TjjyDX7A3K39
-TjV8C0hqXvwF9BsNf+qBeWO6GVzJ5572awY221hc1umibmZaKV4fg+7fS7qscx5TSuIc6uvMBQhm
-7NQiCq6euMMWBDUDlotQCDW0ilm0OuLW3IVLuZCm6Msc+6hT9+dCT4JUvxTHZnnO7uLCxV+Ujad+
-PH3itRm38i96p2zvwgLr8vwWA0ckMIIFMTCCBBmgAwIBAgIQTUYRMpPx2e52jnkx1q87gDANBgkq
-hkiG9w0BAQsFADCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQ
-MA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENP
-TU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTcx
-MjIxMDAwMDAwWhcNMTgxMjIxMjM1OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRl
-YWQub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4MyzVmtfAzaRlI/2Xh9EoM+d
-xEiG83T8NziXrjT+o2YcWaI28n8WzIRE7HMSPx4+lGeGu7B5uQZFY5bAdQH9mWvz11LfDJiwHDzB
-5DDxrp75FImxL25Q76ajJEGZWmTPreT6hZlpG3oS2hL26TWO3ZhAAHioeJJU8yc66+QAM2gkN9nA
-Nnt/gxCL+TuZfVYjCI8vyTPsTEK319z2dHIWNT2lVo4OfXeFJ6PuS0Q24Apz5CiV+MrARmnYm4wR
-kBiRGQo4feIohHm59irES77aye9j4d1thwxHZ4Ft2D9MLoxUFbPNVOy/Fzd5HT0bGvczahrWED//
-tSjDCUOe4Z34vQIDAQABo4IB6TCCAeUwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8Aw
-HQYDVR0OBBYEFKS/v+ZZYvY5o9ih468soZwdsUbdMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8E
-AjAAMCAGA1UdJQQZMBcGCCsGAQUFBwMEBgsrBgEEAbIxAQMFAjARBglghkgBhvhCAQEEBAMCBSAw
-RgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAQEwKzApBggrBgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUu
-Y29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20v
-Q09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYIKwYB
-BQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FD
-bGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQGCCsGAQUFBzABhhhodHRw
-Oi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkq
-hkiG9w0BAQsFAAOCAQEAitvAXW1SfUCkKkw318KIAGIkQRBqbXxNQY8uBebwunliajideb7p8Yy8
-HW2WG+C9KqyZYfmRxx5WyCvLhGbuzVx1J7ZljGxm2YruyYK20lyStXLfYMazf7HVmCfiQ41R4Oxn
-w0700z2tuiTEaibDtU448g1+wNyt/U41fAtIal78BfQbDX/qgXljuhlcyeee9msGNttYXNbpom5m
-WileH4Pu30u6rHMeU0riHOrrzAUIZuzUIgqunrjDFgQ1A5aLUAg1tIpZtDri1tyFS7mQpujLHPuo
-U/fnQk+CVL8Ux2Z5zu7iwsVflI2nfjx94rUZt/Iveqds78IC6/L8FgNHJDCCBeYwggPOoAMCAQIC
-EGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNVBAYTAkdCMRswGQYDVQQI
-ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
-QSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4X
-DTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
-cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
-aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvrOeV6wodnVAFsc4
-A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf+bGBSyD9aH95dDSmeny1
-nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcfWlP8dSsE3Rfywq09N0Zf
-xcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqzaaPpGRqXB7IMjtf7tTmU2
-jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDKCMPybTjoNCQuelc0IAaO
-4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAUu69+Aj36pvE8hI6t7jiY
-7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1UdDwEB/wQEAwIBhjASBgNV
-HRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8ERTBDMEGgP6A9hjtodHRw
-Oi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDBx
-BggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
-T1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20w
-DQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2SQgG1NgvNc3fQP7TcePo
-7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs0j8CGpfb+SJA3GaBQ+39
-4k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDMKVmU/PUWNMKSTvtlenlx
-Bhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+E2pvOUtY+hPebuPtTbq7
-vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfHM5tdhYF/8v5UY5g2xANP
-ECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4jkhJiA7EuTecP/CFtR72
-uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1tyZR2niOYihZ+FCbtf3D9
-mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4ognzgXtgtdk3ShrtOS1iA
-N2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAbR9HWdFqzcOoB/hxfEyIQ
-px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
-ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
-QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
-U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMDgxMDE1MjJaMC8GCSqG
-SIb3DQEJBDEiBCATLYqiw6QJ8JS9tcWWwzgx0O+VgmPX8eQzYVfC7Lvb6TCBvQYJKwYBBAGCNxAE
-MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
-IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
-jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
-cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
-aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAJQIna5g1831
-Hz0PN+4fx/GfEYqNQHHqulMkUr7soD3a7jNmfphbolUROUfrNTf5SJsxnYqgjEyUWns1jSdotzs3
-Krg5AUEgFm0m7BV60w8Y2/CrTOLmDzuaopnwPZmtHiWzvU5VxoasCrzhEyoFzUvHhtcTpORaK4hq
-BB1LgzGryGGEGREKeAUks2ghyaGZNlxlGRVCKzv1VpHARIZFoOF/41e6i3baANTvVZiwmTFYJP+9
-QPvdo/239TOLWGQBN5CrBar0P8vjxqnAw0cnPw487jj57UTO5IuCr5dadzwcTtmx97asRcSqFxRG
-Cq2kw7HlLhJeajBfU25ilkiU0+AAAAAAAAA=
---===============6253612139838198876==--
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+PCEtLSBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30g
+LS0+PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgaWQ9ImRpdnRhZ2RlZmF1
+bHR3cmFwcGVyIiBzdHlsZT0iZm9udC1zaXplOjEycHQ7Y29sb3I6IzAwMDAwMDtmb250LWZhbWls
+eTpDYWxpYnJpLEhlbHZldGljYSxzYW5zLXNlcmlmOyIgZGlyPSJsdHIiPgo8cCBzdHlsZT0ibWFy
+Z2luLXRvcDowO21hcmdpbi1ib3R0b206MCI+SGkgVFBNJm5ic3A7RXhwZXJ0cyw8L3A+CjxwIHN0
+eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowIj4mbmJzcDsgSSBjb21lIGZyb20gY29t
+cHV0ZXImbmJzcDtmaXJtd2FyZSAoVUVGIGFrYSBCSU9TSSkgYmFja2dyb3VuZCBhbmQgaGF2ZSBi
+YXNpcyB1bmRlcnN0YW5kaW5nIG9mIFRQTS4gTXkgZ29hbCBpcyZuYnNwOzxzcGFuIHN0eWxlPSJm
+b250LXNpemU6IDEycHQ7Ij50byBpbXBsZW1lbnQgdGhlIGFkdmFuY2UgVFBNIGNhcGFiaWxpdGll
+cyAoZXgtcG9saWN5IGJhc2VkIG9wZXJhdGlvbikgaW4gUHJlT1MKIHNwYWNlIGluIGZpcm13YXJl
+L0JJT1MuIFdpdGggdmFyaW91cyByZXZlcnNlIGVuZ2luZWVyaW5nIG1ldGhvZCBJIG5vdyBoYXZl
+Jm5ic3A7Jm5ic3A7YmFzaWMgdW5kZXJzdGFuZGluZyBvZiBBdXRoL0hhbmRsZSBhbmQgYmFzaWMg
+Y29tbWFuZHMgc3VjaCBhcyBzZWFsL3Vuc2VhbCBldGMuIEkmbmJzcDthbSBzdGlsbCBsb3N0IHdo
+aWxlIHJlYWRpbmcmbmJzcDsKPC9zcGFuPnZhcmlvdXM8c3BhbiBzdHlsZT0iZm9udC1zaXplOiAx
+MnB0OyI+Jm5ic3A7c3BlYy9ib29rcyBhbmQgd2FzIHNlYXJjaGluZyBmb3IgcmVmZXJlbmNlIGNv
+ZGUgYW5kIHNhbmRib3ggYXJlYSB0byBiZXR0ZXIgdW5kZXJzdGFuZCB0aGUgc3BlYy9pbXBsZW1l
+bnRhdGlvbjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOiAxMnB0OyI+LiBJIGNhbWUgYWNy
+b3NzIHRoaXMgd2lraSAtJm5ic3A7PC9zcGFuPjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90
+cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvYmxvYi9tYXN0ZXIvSU5TVEFMTC5tZCIgY2xhc3M9Ik9X
+QUF1dG9MaW5rIiBpZD0iTFBsbms3NTYwMTQiIHByZXZpZXdyZW1vdmVkPSJ0cnVlIiBzdHlsZT0i
+Zm9udC1zaXplOiAxMnB0OyI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10
+b29scy9ibG9iL21hc3Rlci9JTlNUQUxMLm1kPC9hPjxzcGFuIHN0eWxlPSJmb250LXNpemU6IDEy
+cHQ7Ij4mbmJzcDthbmQKIHRyaWVkIHRvIHBsYXkgd2l0aCB0cG0yLXRzcyBhbmQgdHBtMi10b29s
+cyB1bmRlciBVYnVudHUuIFRoaXMgc2VlbXMgaGVscGZ1bCBidXQgc3RpbGwgbG90IHRvIGRpZ2Vz
+dCBmb3IgbmV3LWJlZSBsaWtlIG1lPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LXNpemU6IDEycHQ7
+Ij5JIG5lZWQgc29tZSBoZWxwIGFzIGJlbG93PC9zcGFuPjwvcD4KPGJyPgo8cCBzdHlsZT0ibWFy
+Z2luLXRvcDowO21hcmdpbi1ib3R0b206MCI+PGJyPgo8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9w
+OjA7bWFyZ2luLWJvdHRvbTowIj5hKSBJIGNhbiBjb21waWxlIHRwbTJfdHNzIGFuZCB0cG0yX3Rv
+b2xzIGJ1dCBJIGdldCBidWlsZCBlcnJvcnMgb24gVFBNIHNpbXVsYXRvciBzaW1pbGFyIHRvIHJl
+cG9ydGVkIGhlcmUgKDxhIGhyZWY9Imh0dHBzOi8vc291cmNlZm9yZ2UubmV0L3AvaWJtc3d0cG0y
+L2Rpc2N1c3Npb24vZ2VuZXJhbC90aHJlYWQvOGE0YWFjODEvP2xpbWl0PTI1IiBjbGFzcz0iT1dB
+QXV0b0xpbmsiIGlkPSJMUGxuazEzNTY2IiBwcmV2aWV3cmVtb3ZlZD0idHJ1ZSI+aHR0cHM6Ly9z
+b3VyY2Vmb3JnZS5uZXQvcC9pYm1zd3RwbTIvZGlzY3Vzc2lvbi9nZW5lcmFsL3RocmVhZC84YTRh
+YWM4MS8/bGltaXQ9MjU8L2E+KQogSSB0cmllZCB2YXJpb3VzIE9wZW5TU0wgcmV2aXNpb24gYW5k
+IG5vIGx1Y2suIERvIEkgbmVlZCZuYnNwO1RQTSBzaW11bGF0b3IgdG8gd29yayBhbmQgaWYgc28g
+aG93IGRvIEkgZml4IGl0PC9wPgo8YnI+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJv
+dHRvbTowIj5iKSBJIGNhbiBub3cmbmJzcDtydW4gdmFyaW91cyB0cG1fdG9vbHMgYXMgcm9vdCAo
+aS5lLiBzdWRvIHRwbTJfZ2V0cmFuZG9tLCBzdWRvIGdldF9jYXBhYmlsaXRpZXMgLWMgYWxnb3Jp
+dGhtcykgZXRjIHNvIGF0IGxlYXN0IEkgaGF2ZSBhIGdvb2QgYmFzZWxpbmUgZm9yIHRwbXRvb2xz
+PC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MCI+YykgSSBhbSBpbnRl
+cmVzdGVkIHRvIHByaW50IHRoZSBsb3cgbGV2ZWwmbmJzcDtwYWNrZXQgdGhhdCBpcyBzZW50IHRv
+IFRQTSAocmVxdWVzdC9yZXNwb25zZSBidWZmZXIpLiBIb3cgY2FuIEkgZG8gdGhpcz8gSXMgdGhl
+cmUgdmVyYm9zZS9idWlsZCB0aW1lIG9wdGlvbnMgdG8gcHJpbnQgdGhlIGFjdHVhbCByZXF1ZXN0
+L3Jlc3BvbnNlIHBhY2tldCBzZW5kJm5ic3A7dG8vZnJvbSBUUE08L3A+CjxwIHN0eWxlPSJtYXJn
+aW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowIj5kKSBJcyB0aGVyZSBhIHdheSB0byBkZWJ1ZyAoaS5l
+LiBzdGVwIHRocm91Z2ggdGhlIGNvZGUpIHNvIEkgY2FuIGZvbGxvdyB0aGUgY29kZSBwYXRoIGFu
+ZCBsb29rIHZhcmlvdXMgdmFyaWFibGUgdG8gYmV0dGVyIHVuZGVyc3RhbmQgdGhlIGNvZGUgZmxv
+dzwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjAiPmUpIFdoYXQgYWZm
+b3JkIGlzIG5lZWRlZCB0byBwb3J0IHRoaXMgc3RhY2sgaW4gVUVGSSBFREtJSSBhbmQgd2hlcmUg
+c2hvdWxkIEkgbG9vayB0byBzdGFydCBzb21lIGludmVzdGlnYXRpb248L3A+CjxwIHN0eWxlPSJt
+YXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowIj48YnI+CjwvcD4KPHAgc3R5bGU9Im1hcmdpbi10
+b3A6MDttYXJnaW4tYm90dG9tOjAiPkl0IHNlZW1zIHRoZXJlIGFyZSBzdWJzZXQgb2YgcGVvcGxl
+ICh5b3UpIHdobyB1bmRlcnN0YW5kIGl0IHZlcnkgd2VsbCBidXQgdGhlcmUgYXJlIGluc3VmZmlj
+aWVudCBib29rcy9kb2N1bWVudCZuYnNwO2ZvciBuZXctY29tZXJzKG1lKSZuYnNwOyB0byBnZXQg
+dXAgdG8gc3BlZWQuJm5ic3A7Jm5ic3A7PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTogMTJwdDsiPkkg
+YXBvbG9naXplIGlmIHRoaXMgaXMgdG9vIGJhc2ljL2Jyb2FkCiBxdWVzdGlvbiAuIEFueSBoZWxw
+L3BvaW50ZXJzIHdpbGwgYmUgZ3JlYXRseSBhcHByZWNpYXRlZDwvc3Bhbj48L3A+CjxwIHN0eWxl
+PSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowIj48YnI+CjwvcD4KPHAgc3R5bGU9Im1hcmdp
+bi10b3A6MDttYXJnaW4tYm90dG9tOjAiPlRoYW5rcyBhZ2FpbiBmb3Igb2ZmZXJpbmcgaGVscDwv
+cD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjAiPi1BbG9rPC9wPgo8cCBz
+dHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MCI+PGJyPgo8L3A+Cjxicj4KPC9kaXY+
+CjwvYm9keT4KPC9odG1sPgo=
+
+--===============7416810200585787491==--
 
