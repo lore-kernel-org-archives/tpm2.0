@@ -1,39 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============0287033792544679799=="
+Content-Type: multipart/mixed; boundary="===============1056878370558421962=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Thu, 11 Oct 2018 11:40:22 -0700
-Message-ID: <99dccd4320b20d5e39552b26cc99ed0cbc99e5ca.camel@infradead.org>
-In-Reply-To: 1539283089.3108.12.camel@HansenPartnership.com
+Date: Thu, 11 Oct 2018 11:48:21 -0700
+Message-ID: <318ba257f4d437765885daacc103466be9708e0f.camel@infradead.org>
+In-Reply-To: CAJU7za+zys5o2h1gvsXFRbDmCup_nsT_n-fpikm1D+QbNoghkA@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0287033792544679799==
+--===============1056878370558421962==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2018-10-11 at 11:38 -0700, James Bottomley wrote:
-> Yes, it modifies the EK ECC template with
-> =
+On Thu, 2018-10-11 at 20:41 +0200, Nikos Mavrogiannopoulos wrote:
+> As a distribution representative for rhel/fedora, I really second
+> that. There is no reason to create code for auto-detection as a
+> typical application writer or app user would want to use "tpm2"
+> rather a specific engine. In fact we are even hiding the engine
+> loading when we can as this is a detail the user shouldn't bother.
 
-> noDA =3D 0
-> userWithAuth =3D 1
-> userWithPolicy =3D 0
-> =
+In an ideal world I'd go even further and suggest we should have just
+one engine =E2=80=94 all the ASN.1 parsing and OpenSSL interfacing, and the
+STORE bits I'd like to add, could exist just once. Likewise the policy
+parsing, in fact.
 
-> And authPolicy must be an empty buffer as defined by zero in size and
-> NULL in the entire buffer.  Everything else follows the EK ECC
-> provisioning guide.
-
-You mean NODA=3D1, but yes.
-
-So I believe that means you need to add FIXEDPARENT and FIXEDTPM, and
-Andreas needs to add NODA, and then we're aligned.
+And the back end which actually talks to the TPM could have two
+variants, for both TSS stacks. Much like the code I've put into
+OpenConnect, which I'm hoping to palm off onto Nikos for GnuTLS... :)
 
 
+--===============1056878370558421962==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
---===============0287033792544679799==
+PGh0bWwgZGlyPSJsdHIiPjxoZWFkPjwvaGVhZD48Ym9keSBzdHlsZT0idGV4dC1hbGlnbjpsZWZ0
+OyBkaXJlY3Rpb246bHRyOyI+PGRpdj5PbiBUaHUsIDIwMTgtMTAtMTEgYXQgMjA6NDEgKzAyMDAs
+IE5pa29zIE1hdnJvZ2lhbm5vcG91bG9zIHdyb3RlOjwvZGl2PjxibG9ja3F1b3RlIHR5cGU9ImNp
+dGUiIHN0eWxlPSJtYXJnaW46MCAwIDAgLjhleDsgYm9yZGVyLWxlZnQ6MnB4ICM3MjlmY2Ygc29s
+aWQ7cGFkZGluZy1sZWZ0OjFleCI+PGRpdj48YnI+PC9kaXY+PGRpdj5BcyBhIGRpc3RyaWJ1dGlv
+biByZXByZXNlbnRhdGl2ZSBmb3IgcmhlbC9mZWRvcmEsIEkgcmVhbGx5IHNlY29uZCB0aGF0LiBU
+aGVyZSBpcyBubyByZWFzb24gdG8gY3JlYXRlIGNvZGUgZm9yIGF1dG8tZGV0ZWN0aW9uIGFzIGEg
+dHlwaWNhbCBhcHBsaWNhdGlvbiB3cml0ZXIgb3IgYXBwIHVzZXIgd291bGQgd2FudCB0byB1c2Ug
+InRwbTIiIHJhdGhlciBhIHNwZWNpZmljIGVuZ2luZS4gSW4gZmFjdCB3ZSBhcmUgZXZlbiBoaWRp
+bmcgdGhlIGVuZ2luZSBsb2FkaW5nIHdoZW4gd2UgY2FuIGFzIHRoaXMgaXMgYSBkZXRhaWwgdGhl
+IHVzZXIgc2hvdWxkbid0IGJvdGhlci48L2Rpdj48ZGl2PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2
+Pjxicj48L2Rpdj48ZGl2PkluIGFuIGlkZWFsIHdvcmxkIEknZCBnbyBldmVuIGZ1cnRoZXIgYW5k
+IHN1Z2dlc3Qgd2Ugc2hvdWxkIGhhdmUganVzdCBvbmUgZW5naW5lIOKAlCBhbGwgdGhlIEFTTi4x
+IHBhcnNpbmcgYW5kIE9wZW5TU0wgaW50ZXJmYWNpbmcsIGFuZCB0aGUgU1RPUkUgYml0cyBJJ2Qg
+bGlrZSB0byBhZGQsIGNvdWxkIGV4aXN0IGp1c3Qgb25jZS4gTGlrZXdpc2UgdGhlIHBvbGljeSBw
+YXJzaW5nLCBpbiBmYWN0LjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+QW5kIHRoZSBiYWNrIGVu
+ZCB3aGljaCBhY3R1YWxseSB0YWxrcyB0byB0aGUgVFBNIGNvdWxkIGhhdmUgdHdvIHZhcmlhbnRz
+LCBmb3IgYm90aCBUU1Mgc3RhY2tzLiBNdWNoIGxpa2UgdGhlIGNvZGUgSSd2ZSBwdXQgaW50byBP
+cGVuQ29ubmVjdCwgd2hpY2ggSSdtIGhvcGluZyB0byBwYWxtIG9mZiBvbnRvIE5pa29zIGZvciBH
+bnVUTFMuLi4gOik8L2Rpdj48ZGl2Pjxicj48L2Rpdj48L2JvZHk+PC9odG1sPgo=
+
+--===============1056878370558421962==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -117,19 +141,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTExODQwMjJaMC8GCSqG
-SIb3DQEJBDEiBCC5k0ZLc9XLfZ+L+NYtCYneUzC/+RwFOoK62Si07lFt1DCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTExODQ4MjFaMC8GCSqG
+SIb3DQEJBDEiBCB/SZYCtfi3yWxCbX6b4Fm02IT7HAvFwxWRxjk/AKxaJjCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAHcBxOkmPDxT
-JmcudxUTohViakht92dLcTav5etb1zc+Umz6zA5q1FMJrmuTZYJfZwYN9WPZQxDgGdVimLtuAcXU
-ZD7+P1KKgv2FixIEgZJwd3ZX+hm2wCnwK1vEoHpZ8ZL6avSLyD9FpG5dqp2Tcjl98X9ZJX3cgB7u
-7DdcuMc4Bl+NYsfU97nW1/g5wUWpsFtsmEI9Xa4ea7j271+FIR4sevoGQUue6ktOn6jN8pcp6hzd
-ekJkrk3yPWpBz+uf99VccPZrzNY0t0NK+yNGv3qgvHXY9XYqunUN1drdtcV7aFTDF5Z0E8LwxwPX
-2plgBlWeAArdfIHw8U0A4fgmayYAAAAAAAA=
---===============0287033792544679799==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAEHbxrSCcgJX
+ffi5M4ydM5QAK1hCcWc3Miy2XvzIeZ5xPR+ZJ6a2AdDS9CGYawRLYm2buJfMcCyazS18f6/KcxQ+
+L0ejyFdvE9ytqD7bE7QdXEK+9NvyWSjt6BRaGRqqoGkPY7f4dXgckgsj8wGEBKaTl3o7GjKs6eAn
+EfS7t8tuL1jbCZSJNJcb+pL/+uc32gXWgBZKrusuncUq/y6JGaeZTaipra98mnagzwiaJ5TQ6DsR
+5Vj83JO/83cyNF/0rVJxKVUrfxs2Nv0bpJW8L/sR4U3dbk0AjPTYhFjD20zL924ZVm/NdaUY/MtN
+s5jTm6VbG/fZZct1HCmnWSZ+DPgAAAAAAAA=
+--===============1056878370558421962==--
 
