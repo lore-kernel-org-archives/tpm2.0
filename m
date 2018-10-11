@@ -1,104 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============4348723756337494628=="
+Content-Type: multipart/mixed; boundary="===============7110323796452660971=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Thu, 11 Oct 2018 11:07:27 -0700
-Message-ID: <deb61a582d7c95893cda406790e50da6fa564804.camel@infradead.org>
-In-Reply-To: 1539278866.2623.69.camel@HansenPartnership.com
+Date: Thu, 11 Oct 2018 11:31:36 -0700
+Message-ID: <290fb06eeb478137f5bd83616e3b2045d353bb24.camel@infradead.org>
+In-Reply-To: 1539281833.3108.6.camel@HansenPartnership.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4348723756337494628==
+--===============7110323796452660971==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2018-10-11 at 10:27 -0700, James Bottomley wrote:
-> On Thu, 2018-10-11 at 15:41 +0000, Fuchs, Andreas wrote:
-> > Hi David,
+On Thu, 2018-10-11 at 11:17 -0700, James Bottomley wrote:
+> > > > thanks for the summary. I agree with all of them. Some more
+> > > > things to agree on:
+> > > > =
+
+> > > > Primarykeys.publicArea:
+> > > > -  .type =3D TPM2_ALG_ECC,
+> > > >   .nameAlg =3D TPM2_ALG_SHA256
+> > > > - .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH |
+> > > > TPMA_OBJECT_RESTRICTED | TPMA_OBJECT_DECRYPT |
+> > > > TPMA_OBJECT_FIXEDTPM |
+> > > > TPMA_OBJECT_FIXEDPARENT | TPMA_OBJECT_SENSITIVEDATAORIGIN)
+> > > =
+
+> > > Actually, this is way too little.  In fact we don't care about the
+> > > asymmetric key at all because it's the derived symmetric key that's
+> > > used to encrypt the private blob (so you're missing its
+> > > parameters). Unfortunately the type and all the asymmetric
+> > > parameters (including a lot you haven't show here) are part of the
+> > > name which is input to KDFa for the symmetric key.  Let's just
+> > > follow all the provisioning guidance because it does outline them
+> > > in a table, so just say "The ECC Template from the EK and TPM
+> > > provisioning guides".
 > > =
 
-> > thanks for the summary. I agree with all of them. Some more things to
-> > agree on:
-> > =
-
-> > Primarykeys.publicArea:
-> > -  .type =3D TPM2_ALG_ECC,
-> >  .nameAlg =3D TPM2_ALG_SHA256
-> > - .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH |
-> > TPMA_OBJECT_RESTRICTED | TPMA_OBJECT_DECRYPT | TPMA_OBJECT_FIXEDTPM |
-> > TPMA_OBJECT_FIXEDPARENT | TPMA_OBJECT_SENSITIVEDATAORIGIN)
+> > That seems to make sense. Other than the objectAttributes, what else
+> > have we done *differently* to the template in the provisioning
+> > guides?
 > =
 
-> Actually, this is way too little.  In fact we don't care about the
-> asymmetric key at all because it's the derived symmetric key that's
-> used to encrypt the private blob (so you're missing its parameters). =
+> Nothing, everything else seems to match including the symmetric
+> parameters, the curve and the unique point.  The annoying thing is the
+> name as input to KDFa. It's the sha256 sum of the entire public area,
+> so every single parameter has to match to get the KDFa to spit back the
+> same symmetric key.
 
-> Unfortunately the type and all the asymmetric parameters (including a
-> lot you haven't show here) are part of the name which is input to KDFa
-> for the symmetric key.  Let's just follow all the provisioning guidance
-> because it does outline them in a table, so just say "The ECC Template
-> from the EK and TPM provisioning guides".
+The provisioning guide says to set TPMA_OBJECT_NODA, doesn't it?
 
-That seems to make sense. Other than the objectAttributes, what else
-have we done *differently* to the template in the provisioning guides?
-
-> > For the On-Disk-Format:
-> > We need to keep a placeholder for the (optional) policy I think.
-> =
-
-> We already have.  It's explicit element [3] of the key which is a
-> sequence of TPMPolicy.  If you mean you want a different policy format,
-> the elements of TPMPolicy are also explicits so they can be expanded.
-> =
-
-> > If we want to allow different formats in the future, we need to add
-> > some idetifier for the format type in there as well.
-> =
-
-> It can be added later without disturbing the current format ... that's
-> the point of ASN.1 EXPLICITs.
-
-Ack.
-
-> > Would you both agree ?
-> > =
-
-> > Regarding the engine naming:
-> > Won't we run into a naming problem with the engine names if we name
-> > them similarly =
-
-> =
-
-> To be honest perhaps the user shouldn't care about this: if they take
-> the same key files, it's an implementation choice, not a fundamental
-> one, so perhaps the user should simply decide on installation.
-
-This stuff should JustWork=E2=84=A2. People should be able to use any key t=
-hey
-happen to have =E2=80=94 PKCS#11 URIs, files in various PEM and DER formats
-including PKCS#12, PKCS#8, PKCS#1 and TSS blobs. I am utterly anal
-about this in OpenConnect, and it *does* work for fairly much
-everything under the sun. I've written this up in =
-
-http://david.woodhou.se/draft-woodhouse-cert-best-practice.html and
-have started making at least Fedora packaging guidelines move in that
-direction, saying that anything that takes a certificate+key SHOULD at
-least accept PKCS#11 URIs. I should go further and incorporate the
-whole of my draft, which also wants to be updated to talk about the new
-TPM2 PEM format we're defining here.
-
-So with that in mind... what advice do we give to application authors
-to help them get this right? Remember, it actually needs to be hard for
-them to get it *wrong*. The advice to actual users should always be "it
-should Just Work. Else file bugs".
-
-I think that having a single engine name, and having both engine
-implementation install themselves to be loaded the same way, makes most
-sense.
-
-
---===============4348723756337494628==
+--===============7110323796452660971==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -182,19 +135,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTExODA3MjdaMC8GCSqG
-SIb3DQEJBDEiBCB2uXvFV7zLYFtCZh+Z1LAi3ZRpKvKXJlh6+Wn/Opv5ETCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTExODMxMzZaMC8GCSqG
+SIb3DQEJBDEiBCBzKfD4jhakuxqNd8LVLsYlzeibPH7rZVZU4K9okR53LjCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBACGzoTdCyRh/
-+oyxzZxZMKyryv4UE0jLdSdSyjd+M00fc6Jvw9UPnYKPJ9RWyvfU/++goBLX/LgUmHOSwtBV0cP4
-NDAVrI3RJydKff1ll3JNpw4NaVUgAvpsy1nAJwi0LxaeNr1hTusgwCeUzhqDfHwJ/3XYTKMIgumz
-nq7PFb9bTM20vu8l0FGgml2WANVN5ggNTcKHPuZaDx7Gmp/kOTMigGRmP2X7Z7hCF17ACH4607dZ
-VLsQUpkMp1BRXLnEaVwLXEPBKnBKVA09fG+c/Llr8yG/zQogSbuH7vKUw+tG5ehTrViUQNXrykxs
-Sq+78IGr28KOAKRslHL0ls2rlikAAAAAAAA=
---===============4348723756337494628==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBADbpVyHzo2Kc
+rQN5j3/SKrSrU7Mk7Wa30v+gecsozRr28yv1KBPj9rQu2dBQDN3HSupSlHEBZixwlBwqVENHD6VB
+23ss0S/rNMNYvXM1YOtDyGdjCRePpBzcDBT67++lS8nT5PUlhTqeaWa13wQyOSf/QjKqZyk8/N7y
+oEmlERA5WodJ3lZsJ8E5fDQrk6p+zyER/0d428UM7d6IRH81y9J3syOniIawOL8bfi1gv/Em92K3
+Ctz8G8wOwVTFVzIj+11m/1fDtUdgxqChnLIJxeZHnNpLwQm9NUgRC00JzbL7fAFnxKQv/Nzy2Zom
+bVMoaT6MrNH9X8WWCR+EoGDC7gsAAAAAAAA=
+--===============7110323796452660971==--
 
