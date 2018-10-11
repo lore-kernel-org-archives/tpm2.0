@@ -1,57 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============7110323796452660971=="
+Content-Type: multipart/mixed; boundary="===============0287033792544679799=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Thu, 11 Oct 2018 11:31:36 -0700
-Message-ID: <290fb06eeb478137f5bd83616e3b2045d353bb24.camel@infradead.org>
-In-Reply-To: 1539281833.3108.6.camel@HansenPartnership.com
+Date: Thu, 11 Oct 2018 11:40:22 -0700
+Message-ID: <99dccd4320b20d5e39552b26cc99ed0cbc99e5ca.camel@infradead.org>
+In-Reply-To: 1539283089.3108.12.camel@HansenPartnership.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7110323796452660971==
+--===============0287033792544679799==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2018-10-11 at 11:17 -0700, James Bottomley wrote:
-> > > > thanks for the summary. I agree with all of them. Some more
-> > > > things to agree on:
-> > > > =
-
-> > > > Primarykeys.publicArea:
-> > > > -  .type =3D TPM2_ALG_ECC,
-> > > >   .nameAlg =3D TPM2_ALG_SHA256
-> > > > - .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH |
-> > > > TPMA_OBJECT_RESTRICTED | TPMA_OBJECT_DECRYPT |
-> > > > TPMA_OBJECT_FIXEDTPM |
-> > > > TPMA_OBJECT_FIXEDPARENT | TPMA_OBJECT_SENSITIVEDATAORIGIN)
-> > > =
-
-> > > Actually, this is way too little.  In fact we don't care about the
-> > > asymmetric key at all because it's the derived symmetric key that's
-> > > used to encrypt the private blob (so you're missing its
-> > > parameters). Unfortunately the type and all the asymmetric
-> > > parameters (including a lot you haven't show here) are part of the
-> > > name which is input to KDFa for the symmetric key.  Let's just
-> > > follow all the provisioning guidance because it does outline them
-> > > in a table, so just say "The ECC Template from the EK and TPM
-> > > provisioning guides".
-> > =
-
-> > That seems to make sense. Other than the objectAttributes, what else
-> > have we done *differently* to the template in the provisioning
-> > guides?
+On Thu, 2018-10-11 at 11:38 -0700, James Bottomley wrote:
+> Yes, it modifies the EK ECC template with
 > =
 
-> Nothing, everything else seems to match including the symmetric
-> parameters, the curve and the unique point.  The annoying thing is the
-> name as input to KDFa. It's the sha256 sum of the entire public area,
-> so every single parameter has to match to get the KDFa to spit back the
-> same symmetric key.
+> noDA =3D 0
+> userWithAuth =3D 1
+> userWithPolicy =3D 0
+> =
 
-The provisioning guide says to set TPMA_OBJECT_NODA, doesn't it?
+> And authPolicy must be an empty buffer as defined by zero in size and
+> NULL in the entire buffer.  Everything else follows the EK ECC
+> provisioning guide.
 
---===============7110323796452660971==
+You mean NODA=3D1, but yes.
+
+So I believe that means you need to add FIXEDPARENT and FIXEDTPM, and
+Andreas needs to add NODA, and then we're aligned.
+
+
+
+--===============0287033792544679799==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -135,19 +117,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTExODMxMzZaMC8GCSqG
-SIb3DQEJBDEiBCBzKfD4jhakuxqNd8LVLsYlzeibPH7rZVZU4K9okR53LjCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTExODQwMjJaMC8GCSqG
+SIb3DQEJBDEiBCC5k0ZLc9XLfZ+L+NYtCYneUzC/+RwFOoK62Si07lFt1DCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBADbpVyHzo2Kc
-rQN5j3/SKrSrU7Mk7Wa30v+gecsozRr28yv1KBPj9rQu2dBQDN3HSupSlHEBZixwlBwqVENHD6VB
-23ss0S/rNMNYvXM1YOtDyGdjCRePpBzcDBT67++lS8nT5PUlhTqeaWa13wQyOSf/QjKqZyk8/N7y
-oEmlERA5WodJ3lZsJ8E5fDQrk6p+zyER/0d428UM7d6IRH81y9J3syOniIawOL8bfi1gv/Em92K3
-Ctz8G8wOwVTFVzIj+11m/1fDtUdgxqChnLIJxeZHnNpLwQm9NUgRC00JzbL7fAFnxKQv/Nzy2Zom
-bVMoaT6MrNH9X8WWCR+EoGDC7gsAAAAAAAA=
---===============7110323796452660971==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAHcBxOkmPDxT
+JmcudxUTohViakht92dLcTav5etb1zc+Umz6zA5q1FMJrmuTZYJfZwYN9WPZQxDgGdVimLtuAcXU
+ZD7+P1KKgv2FixIEgZJwd3ZX+hm2wCnwK1vEoHpZ8ZL6avSLyD9FpG5dqp2Tcjl98X9ZJX3cgB7u
+7DdcuMc4Bl+NYsfU97nW1/g5wUWpsFtsmEI9Xa4ea7j271+FIR4sevoGQUue6ktOn6jN8pcp6hzd
+ekJkrk3yPWpBz+uf99VccPZrzNY0t0NK+yNGv3qgvHXY9XYqunUN1drdtcV7aFTDF5Z0E8LwxwPX
+2plgBlWeAArdfIHw8U0A4fgmayYAAAAAAAA=
+--===============0287033792544679799==--
 
