@@ -1,177 +1,110 @@
-Content-Type: multipart/mixed; boundary="===============2255849474545383802=="
+Content-Type: multipart/mixed; boundary="===============2225061307986176348=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] TPM questions
-Date: Thu, 11 Oct 2018 07:56:11 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0147344314@exch2010c.sit.fraunhofer.de>
-In-Reply-To: SN6PR13MB2509CD85B26AE707DBD26C9CCDE00@SN6PR13MB2509.namprd13.prod.outlook.com
+From: Tomasz Przybysz <tomaszp at mikronika.pl>
+Subject: [tpm2] How to clear DA lockout mode ?
+Date: Thu, 11 Oct 2018 08:36:11 +0000
+Message-ID: <d25dc0c3-5811-7d66-16d9-c2ecb1894f5c@mikronika.pl>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2255849474545383802==
+--===============2225061307986176348==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Some quick answers to parts of your questions:
 
-a) you don't require the simulator. It's just for development
-c) export TSS2_LOG=3Dtcti+debug
-d) use cgdb to step through the code: libtool --mode=3Dexecute cgdb --args =
-tpm2_xxx ... or something like this
-e) you can use libtss2-sys.a directly. Thing you need is to implement a new=
- tcti that corresponds to your environment.
+Hi,
+How to clear DA lockout mode ?
 
-Cheers,
-Andreas
+I did:
+tpm2_takeownership -c
+tpm2_takeownership -o ownerpasswd
+tpm2_takeownership -e endorsepasswd
+tpm2_takeownership -l lockpasswd
 
-________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Alok Pant [alokpant(a=
-)hotmail.com]
-Sent: Wednesday, October 10, 2018 21:39
-To: tpm2(a)lists.01.org; Alok Pant
-Subject: [tpm2] TPM questions
+Then I removed:
 
+tpm2_takeownership -O ownerpasswd
+tpm2_takeownership -E endorsepasswd
 
-Hi TPM Experts,
-
-  I come from computer firmware (UEF aka BIOSI) background and have basis u=
-nderstanding of TPM. My goal is to implement the advance TPM capabilities (=
-ex-policy based operation) in PreOS space in firmware/BIOS. With various re=
-verse engineering method I now have  basic understanding of Auth/Handle and=
- basic commands such as seal/unseal etc. I am still lost while reading  var=
-ious spec/books and was searching for reference code and sandbox area to be=
-tter understand the spec/implementation. I came across this wiki - https://=
-github.com/tpm2-software/tpm2-tools/blob/master/INSTALL.md and tried to pla=
-y with tpm2-tss and tpm2-tools under Ubuntu. This seems helpful but still l=
-ot to digest for new-bee like meI need some help as below
+but I can' remove lock pasword
 
 
 
-a) I can compile tpm2_tss and tpm2_tools but I get build errors on TPM simu=
-lator similar to reported here (https://sourceforge.net/p/ibmswtpm2/discuss=
-ion/general/thread/8a4aac81/?limit=3D25) I tried various OpenSSL revision a=
-nd no luck. Do I need TPM simulator to work and if so how do I fix it
+tpm2_getcap -c properties-variable
+TPM_PT_PERSISTENT:
+=C2=A0 ownerAuthSet:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 clear
+=C2=A0 endorsementAuthSet:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clear
+=C2=A0 lockoutAuthSet:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 set
+=C2=A0 reserved1:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clear
+=C2=A0 disableClear:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 clear
+=C2=A0 inLockout:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clear
+=C2=A0 tpmGeneratedEPS:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 clear
+=C2=A0 reserved2:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clear
+TPM_PT_STARTUP_CLEAR:
+=C2=A0 phEnable:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set
+=C2=A0 shEnable:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set
+=C2=A0 ehEnable:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set
+=C2=A0 phEnableNV:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set
+=C2=A0 reserved1:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clear
+=C2=A0 orderly:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clear
+TPM_PT_TPM2_HR_NV_INDEX:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x00000002
+TPM_PT_HR_LOADED:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0x00000000
+TPM_PT_HR_LOADED_AVAIL:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000003
+TPM_PT_HR_ACTIVE:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0x00000000
+TPM_PT_HR_ACTIVE_AVAIL:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000040
+TPM_PT_TPM2_HR_TRANSIENT_AVAIL:=C2=A0=C2=A0 0x00000003
+TPM_PT_TPM2_HR_PERSISTENT:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0000=
+0000
+TPM_PT_TPM2_HR_PERSISTENT_AVAIL:=C2=A0 0x00000012
+TPM_PT_NV_COUNTERS:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=
+x00000000
+TPM_PT_NV_COUNTERS_AVAIL:=C2=A0=C2=A0=C2=A0 0x0000000d
+TPM_PT_ALGORITHM_SET:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000000
+TPM_PT_LOADED_CURVES:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000002
+TPM_PT_LOCKOUT_COUNTER:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000001
+TPM_PT_MAX_AUTH_FAIL:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000020
+TPM_PT_LOCKOUT_INTERVAL:=C2=A0=C2=A0=C2=A0=C2=A0 0x00001c20
+TPM_PT_LOCKOUT_RECOVERY:=C2=A0=C2=A0=C2=A0=C2=A0 0x00015180
+TPM_PT_AUDIT_COUNTER_0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000000
+TPM_PT_AUDIT_COUNTER_1:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000000
 
 
-b) I can now run various tpm_tools as root (i.e. sudo tpm2_getrandom, sudo =
-get_capabilities -c algorithms) etc so at least I have a good baseline for =
-tpmtools
+After execute:
+tpm2_takeownership -c -L lockpasswd
+RROR: Clearing Failed! TPM error code: 0x921
+ERROR: Unable to run tpm2_takeownership
 
-c) I am interested to print the low level packet that is sent to TPM (reque=
-st/response buffer). How can I do this? Is there verbose/build time options=
- to print the actual request/response packet send to/from TPM
+tpm2_dictionarylockout -c -P lockpasswd
+ERROR: 0x921 Error clearing dictionary lockout.
+ERROR: Unable to run tpm2_dictionarylockout
 
-d) Is there a way to debug (i.e. step through the code) so I can follow the=
- code path and look various variable to better understand the code flow
+tpm2-tss: 2.1.0
+tpm2-abrmd: 2.0.2
+tpm2-tools: 3.1.3-rc1
+TMP dev: Infineon SLB9670
 
-e) What afford is needed to port this stack in UEFI EDKII and where should =
-I look to start some investigation
-
-
-It seems there are subset of people (you) who understand it very well but t=
-here are insufficient books/document for new-comers(me)  to get up to speed=
-.  I apologize if this is too basic/broad question . Any help/pointers will=
- be greatly appreciated
-
-
-Thanks again for offering help
-
--Alok
+Thanks,
+Tom
 
 
 
---===============2255849474545383802==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjxzdHlsZSB0eXBlPSJ0ZXh0
-L2NzcyIgc3R5bGU9IiI+CjwhLS0KcAoJe21hcmdpbi10b3A6MDsKCW1hcmdpbi1ib3R0b206MH0K
-LS0+Cjwvc3R5bGU+PHN0eWxlIHR5cGU9InRleHQvY3NzIiBpZD0ib3dhUGFyYVN0eWxlIj5QIHtt
-YXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO308L3N0eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0i
-bHRyIiBmcHN0eWxlPSIxIiBvY3NpPSIwIj4KPGRpdiBzdHlsZT0iZGlyZWN0aW9uOiBsdHI7Zm9u
-dC1mYW1pbHk6IFRhaG9tYTtjb2xvcjogIzAwMDAwMDtmb250LXNpemU6IDEwcHQ7Ij4KPGRpdj5T
-b21lIHF1aWNrIGFuc3dlcnMgdG8gcGFydHMgb2YgeW91ciBxdWVzdGlvbnM6PC9kaXY+CjxkaXY+
-PGJyPgo8L2Rpdj4KPGRpdj5hKSB5b3UgZG9uJ3QgcmVxdWlyZSB0aGUgc2ltdWxhdG9yLiBJdCdz
-IGp1c3QgZm9yIGRldmVsb3BtZW50PGJyPgo8L2Rpdj4KPGRpdj5jKSBleHBvcnQgVFNTMl9MT0c9
-dGN0aSYjNDM7ZGVidWc8L2Rpdj4KPGRpdj5kKSB1c2UgY2dkYiB0byBzdGVwIHRocm91Z2ggdGhl
-IGNvZGU6IGxpYnRvb2wgLS1tb2RlPWV4ZWN1dGUgY2dkYiAtLWFyZ3MgdHBtMl94eHggLi4uIG9y
-IHNvbWV0aGluZyBsaWtlIHRoaXM8L2Rpdj4KPGRpdj5lKSB5b3UgY2FuIHVzZSBsaWJ0c3MyLXN5
-cy5hIGRpcmVjdGx5LiBUaGluZyB5b3UgbmVlZCBpcyB0byBpbXBsZW1lbnQgYSBuZXcgdGN0aSB0
-aGF0IGNvcnJlc3BvbmRzIHRvIHlvdXIgZW52aXJvbm1lbnQuPC9kaXY+CjxkaXY+PGJyPgo8L2Rp
-dj4KPGRpdj5DaGVlcnMsPC9kaXY+CjxkaXY+QW5kcmVhczxicj4KPC9kaXY+CjxkaXY+PGJyPgo8
-L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IFRpbWVzIE5ldyBSb21hbjsgY29sb3I6ICMw
-MDAwMDA7IGZvbnQtc2l6ZTogMTZweCI+CjxociB0YWJpbmRleD0iLTEiPgo8ZGl2IGlkPSJkaXZS
-cEY0NDg2NTIiIHN0eWxlPSJkaXJlY3Rpb246IGx0cjsiPjxmb250IHNpemU9IjIiIGZhY2U9IlRh
-aG9tYSIgY29sb3I9IiMwMDAwMDAiPjxiPkZyb206PC9iPiB0cG0yIFt0cG0yLWJvdW5jZXNAbGlz
-dHMuMDEub3JnXSBvbiBiZWhhbGYgb2YgQWxvayBQYW50IFthbG9rcGFudEBob3RtYWlsLmNvbV08
-YnI+CjxiPlNlbnQ6PC9iPiBXZWRuZXNkYXksIE9jdG9iZXIgMTAsIDIwMTggMjE6Mzk8YnI+Cjxi
-PlRvOjwvYj4gdHBtMkBsaXN0cy4wMS5vcmc7IEFsb2sgUGFudDxicj4KPGI+U3ViamVjdDo8L2I+
-IFt0cG0yXSBUUE0gcXVlc3Rpb25zPGJyPgo8L2ZvbnQ+PGJyPgo8L2Rpdj4KPGRpdj48L2Rpdj4K
-PGRpdj4KPGRpdiBpZD0iZGl2dGFnZGVmYXVsdHdyYXBwZXIiIGRpcj0ibHRyIiBzdHlsZT0iZm9u
-dC1zaXplOjEycHQ7IGNvbG9yOiMwMDAwMDA7IGZvbnQtZmFtaWx5OkNhbGlicmksSGVsdmV0aWNh
-LHNhbnMtc2VyaWYiPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowOyBtYXJnaW4tYm90dG9tOjAiPkhp
-IFRQTSZuYnNwO0V4cGVydHMsPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowOyBtYXJnaW4tYm90
-dG9tOjAiPiZuYnNwOyBJIGNvbWUgZnJvbSBjb21wdXRlciZuYnNwO2Zpcm13YXJlIChVRUYgYWth
-IEJJT1NJKSBiYWNrZ3JvdW5kIGFuZCBoYXZlIGJhc2lzIHVuZGVyc3RhbmRpbmcgb2YgVFBNLiBN
-eSBnb2FsIGlzJm5ic3A7PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMnB0Ij50byBpbXBsZW1lbnQg
-dGhlIGFkdmFuY2UgVFBNIGNhcGFiaWxpdGllcyAoZXgtcG9saWN5IGJhc2VkIG9wZXJhdGlvbikg
-aW4gUHJlT1Mgc3BhY2UKIGluIGZpcm13YXJlL0JJT1MuIFdpdGggdmFyaW91cyByZXZlcnNlIGVu
-Z2luZWVyaW5nIG1ldGhvZCBJIG5vdyBoYXZlJm5ic3A7Jm5ic3A7YmFzaWMgdW5kZXJzdGFuZGlu
-ZyBvZiBBdXRoL0hhbmRsZSBhbmQgYmFzaWMgY29tbWFuZHMgc3VjaCBhcyBzZWFsL3Vuc2VhbCBl
-dGMuIEkmbmJzcDthbSBzdGlsbCBsb3N0IHdoaWxlIHJlYWRpbmcmbmJzcDsKPC9zcGFuPnZhcmlv
-dXM8c3BhbiBzdHlsZT0iZm9udC1zaXplOjEycHQiPiZuYnNwO3NwZWMvYm9va3MgYW5kIHdhcyBz
-ZWFyY2hpbmcgZm9yIHJlZmVyZW5jZSBjb2RlIGFuZCBzYW5kYm94IGFyZWEgdG8gYmV0dGVyIHVu
-ZGVyc3RhbmQgdGhlIHNwZWMvaW1wbGVtZW50YXRpb248L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQt
-c2l6ZToxMnB0Ij4uIEkgY2FtZSBhY3Jvc3MgdGhpcyB3aWtpIC0mbmJzcDs8L3NwYW4+PGEgaHJl
-Zj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10b29scy9ibG9iL21hc3Rl
-ci9JTlNUQUxMLm1kIiBjbGFzcz0iT1dBQXV0b0xpbmsiIGlkPSJMUGxuazc1NjAxNCIgc3R5bGU9
-ImZvbnQtc2l6ZToxMnB0IiB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVy
-Ij5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL2Jsb2IvbWFzdGVy
-L0lOU1RBTEwubWQ8L2E+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMnB0Ij4mbmJzcDthbmQKIHRy
-aWVkIHRvIHBsYXkgd2l0aCB0cG0yLXRzcyBhbmQgdHBtMi10b29scyB1bmRlciBVYnVudHUuIFRo
-aXMgc2VlbXMgaGVscGZ1bCBidXQgc3RpbGwgbG90IHRvIGRpZ2VzdCBmb3IgbmV3LWJlZSBsaWtl
-IG1lPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTJwdCI+SSBuZWVkIHNvbWUgaGVscCBh
-cyBiZWxvdzwvc3Bhbj48L3A+Cjxicj4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDsgbWFyZ2luLWJv
-dHRvbTowIj48YnI+CjwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDsgbWFyZ2luLWJvdHRvbTow
-Ij5hKSBJIGNhbiBjb21waWxlIHRwbTJfdHNzIGFuZCB0cG0yX3Rvb2xzIGJ1dCBJIGdldCBidWls
-ZCBlcnJvcnMgb24gVFBNIHNpbXVsYXRvciBzaW1pbGFyIHRvIHJlcG9ydGVkIGhlcmUgKDxhIGhy
-ZWY9Imh0dHBzOi8vc291cmNlZm9yZ2UubmV0L3AvaWJtc3d0cG0yL2Rpc2N1c3Npb24vZ2VuZXJh
-bC90aHJlYWQvOGE0YWFjODEvP2xpbWl0PTI1IiBjbGFzcz0iT1dBQXV0b0xpbmsiIGlkPSJMUGxu
-azEzNTY2IiB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIj5odHRwczov
-L3NvdXJjZWZvcmdlLm5ldC9wL2libXN3dHBtMi9kaXNjdXNzaW9uL2dlbmVyYWwvdGhyZWFkLzhh
-NGFhYzgxLz9saW1pdD0yNTwvYT4pCiBJIHRyaWVkIHZhcmlvdXMgT3BlblNTTCByZXZpc2lvbiBh
-bmQgbm8gbHVjay4gRG8gSSBuZWVkJm5ic3A7VFBNIHNpbXVsYXRvciB0byB3b3JrIGFuZCBpZiBz
-byBob3cgZG8gSSBmaXggaXQ8L3A+Cjxicj4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDsgbWFyZ2lu
-LWJvdHRvbTowIj5iKSBJIGNhbiBub3cmbmJzcDtydW4gdmFyaW91cyB0cG1fdG9vbHMgYXMgcm9v
-dCAoaS5lLiBzdWRvIHRwbTJfZ2V0cmFuZG9tLCBzdWRvIGdldF9jYXBhYmlsaXRpZXMgLWMgYWxn
-b3JpdGhtcykgZXRjIHNvIGF0IGxlYXN0IEkgaGF2ZSBhIGdvb2QgYmFzZWxpbmUgZm9yIHRwbXRv
-b2xzPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowOyBtYXJnaW4tYm90dG9tOjAiPmMpIEkgYW0g
-aW50ZXJlc3RlZCB0byBwcmludCB0aGUgbG93IGxldmVsJm5ic3A7cGFja2V0IHRoYXQgaXMgc2Vu
-dCB0byBUUE0gKHJlcXVlc3QvcmVzcG9uc2UgYnVmZmVyKS4gSG93IGNhbiBJIGRvIHRoaXM/IElz
-IHRoZXJlIHZlcmJvc2UvYnVpbGQgdGltZSBvcHRpb25zIHRvIHByaW50IHRoZSBhY3R1YWwgcmVx
-dWVzdC9yZXNwb25zZSBwYWNrZXQgc2VuZCZuYnNwO3RvL2Zyb20gVFBNPC9wPgo8cCBzdHlsZT0i
-bWFyZ2luLXRvcDowOyBtYXJnaW4tYm90dG9tOjAiPmQpIElzIHRoZXJlIGEgd2F5IHRvIGRlYnVn
-IChpLmUuIHN0ZXAgdGhyb3VnaCB0aGUgY29kZSkgc28gSSBjYW4gZm9sbG93IHRoZSBjb2RlIHBh
-dGggYW5kIGxvb2sgdmFyaW91cyB2YXJpYWJsZSB0byBiZXR0ZXIgdW5kZXJzdGFuZCB0aGUgY29k
-ZSBmbG93PC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowOyBtYXJnaW4tYm90dG9tOjAiPmUpIFdo
-YXQgYWZmb3JkIGlzIG5lZWRlZCB0byBwb3J0IHRoaXMgc3RhY2sgaW4gVUVGSSBFREtJSSBhbmQg
-d2hlcmUgc2hvdWxkIEkgbG9vayB0byBzdGFydCBzb21lIGludmVzdGlnYXRpb248L3A+CjxwIHN0
-eWxlPSJtYXJnaW4tdG9wOjA7IG1hcmdpbi1ib3R0b206MCI+PGJyPgo8L3A+CjxwIHN0eWxlPSJt
-YXJnaW4tdG9wOjA7IG1hcmdpbi1ib3R0b206MCI+SXQgc2VlbXMgdGhlcmUgYXJlIHN1YnNldCBv
-ZiBwZW9wbGUgKHlvdSkgd2hvIHVuZGVyc3RhbmQgaXQgdmVyeSB3ZWxsIGJ1dCB0aGVyZSBhcmUg
-aW5zdWZmaWNpZW50IGJvb2tzL2RvY3VtZW50Jm5ic3A7Zm9yIG5ldy1jb21lcnMobWUpJm5ic3A7
-IHRvIGdldCB1cCB0byBzcGVlZC4mbmJzcDsmbmJzcDs8c3BhbiBzdHlsZT0iZm9udC1zaXplOjEy
-cHQiPkkgYXBvbG9naXplIGlmIHRoaXMgaXMgdG9vIGJhc2ljL2Jyb2FkCiBxdWVzdGlvbiAuIEFu
-eSBoZWxwL3BvaW50ZXJzIHdpbGwgYmUgZ3JlYXRseSBhcHByZWNpYXRlZDwvc3Bhbj48L3A+Cjxw
-IHN0eWxlPSJtYXJnaW4tdG9wOjA7IG1hcmdpbi1ib3R0b206MCI+PGJyPgo8L3A+CjxwIHN0eWxl
-PSJtYXJnaW4tdG9wOjA7IG1hcmdpbi1ib3R0b206MCI+VGhhbmtzIGFnYWluIGZvciBvZmZlcmlu
-ZyBoZWxwPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowOyBtYXJnaW4tYm90dG9tOjAiPi1BbG9r
-PC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowOyBtYXJnaW4tYm90dG9tOjAiPjxicj4KPC9wPgo8
-YnI+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
-
---===============2255849474545383802==--
+--===============2225061307986176348==--
 
