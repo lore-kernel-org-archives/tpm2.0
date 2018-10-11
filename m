@@ -1,63 +1,135 @@
-Content-Type: multipart/mixed; boundary="===============1056878370558421962=="
+Content-Type: multipart/mixed; boundary="===============7872521798441379810=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Thu, 11 Oct 2018 11:48:21 -0700
-Message-ID: <318ba257f4d437765885daacc103466be9708e0f.camel@infradead.org>
-In-Reply-To: CAJU7za+zys5o2h1gvsXFRbDmCup_nsT_n-fpikm1D+QbNoghkA@mail.gmail.com
+Date: Thu, 11 Oct 2018 13:15:28 -0700
+Message-ID: <d7b5b112489eaf2dc185d1bbdfeb99f7d402cf7c.camel@infradead.org>
+In-Reply-To: CAJU7zaLvqGQ=K=Sd8wh5dvhz9ykmP-wi7_=d-PzfAwzxAxHU-g@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1056878370558421962==
+--===============7872521798441379810==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2018-10-11 at 20:41 +0200, Nikos Mavrogiannopoulos wrote:
-> As a distribution representative for rhel/fedora, I really second
-> that. There is no reason to create code for auto-detection as a
-> typical application writer or app user would want to use "tpm2"
-> rather a specific engine. In fact we are even hiding the engine
-> loading when we can as this is a detail the user shouldn't bother.
+On Thu, 2018-10-11 at 21:40 +0200, Nikos Mavrogiannopoulos wrote:
+> On Thu, Oct 11, 2018 at 8:48 PM David Woodhouse <dwmw2(a)infradead.org>
+> wrote:
+> > On Thu, 2018-10-11 at 20:41 +0200, Nikos Mavrogiannopoulos wrote:
+> > > As a distribution representative for rhel/fedora, I really second
+> > > that. There is no reason to create code for auto-detection as a
+> > > typical application writer or app user would want to use "tpm2"
+> > > rather a specific engine. In fact we are even hiding the engine
+> > > loading when we can as this is a detail the user shouldn't
+> > > bother.
+> > =
 
-In an ideal world I'd go even further and suggest we should have just
-one engine =E2=80=94 all the ASN.1 parsing and OpenSSL interfacing, and the
-STORE bits I'd like to add, could exist just once. Likewise the policy
-parsing, in fact.
+> > In an ideal world I'd go even further and suggest we should have
+> > just one engine =E2=80=94 all the ASN.1 parsing and OpenSSL interfacing,
+> > and the STORE bits I'd like to add, could exist just once. Likewise
+> > the policy parsing, in fact.
+> > =
 
-And the back end which actually talks to the TPM could have two
-variants, for both TSS stacks. Much like the code I've put into
-OpenConnect, which I'm hoping to palm off onto Nikos for GnuTLS... :)
+> > And the back end which actually talks to the TPM could have two
+> > variants, for both TSS stacks. Much like the code I've put into
+> > OpenConnect, which I'm hoping to palm off onto Nikos for GnuTLS...
+> > :)
+> =
+
+> I'd really appreciate a PR!
+>  =
 
 
---===============1056878370558421962==
+I haven't even pushed it to my own master branch yet :)
+
+As well as finalising the discussion we're having here, I would very
+much appreciate some review from James for =
+
+
+http://git.infradead.org/users/dwmw2/openconnect.git/blob/tpm2:/gnutls_tpm2=
+_ibm.c
+and from Andreas for
+
+http://git.infradead.org/users/dwmw2/openconnect.git/blob/tpm2:/gnutls_tpm2=
+_esys.c
+
+Going further with my fantasies about an ideal world, it would actually
+be great to have a single "use a key from a TPM" library that has the
+two implementations for each TSS, and is used *both* from a single
+OpenSSL ENGINE implementation and also from GnuTLS....
+
+Realistically speaking, I suspect we'll end up with separate but very
+similar implementations as we have now. I'll settle for bashing heads
+together and making sure they all interoperate and we publish the specs
+in a sane form.
+
+
+
+
+
+
+--===============7872521798441379810==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
 PGh0bWwgZGlyPSJsdHIiPjxoZWFkPjwvaGVhZD48Ym9keSBzdHlsZT0idGV4dC1hbGlnbjpsZWZ0
-OyBkaXJlY3Rpb246bHRyOyI+PGRpdj5PbiBUaHUsIDIwMTgtMTAtMTEgYXQgMjA6NDEgKzAyMDAs
+OyBkaXJlY3Rpb246bHRyOyI+PGRpdj5PbiBUaHUsIDIwMTgtMTAtMTEgYXQgMjE6NDAgKzAyMDAs
 IE5pa29zIE1hdnJvZ2lhbm5vcG91bG9zIHdyb3RlOjwvZGl2PjxibG9ja3F1b3RlIHR5cGU9ImNp
 dGUiIHN0eWxlPSJtYXJnaW46MCAwIDAgLjhleDsgYm9yZGVyLWxlZnQ6MnB4ICM3MjlmY2Ygc29s
-aWQ7cGFkZGluZy1sZWZ0OjFleCI+PGRpdj48YnI+PC9kaXY+PGRpdj5BcyBhIGRpc3RyaWJ1dGlv
-biByZXByZXNlbnRhdGl2ZSBmb3IgcmhlbC9mZWRvcmEsIEkgcmVhbGx5IHNlY29uZCB0aGF0LiBU
-aGVyZSBpcyBubyByZWFzb24gdG8gY3JlYXRlIGNvZGUgZm9yIGF1dG8tZGV0ZWN0aW9uIGFzIGEg
-dHlwaWNhbCBhcHBsaWNhdGlvbiB3cml0ZXIgb3IgYXBwIHVzZXIgd291bGQgd2FudCB0byB1c2Ug
-InRwbTIiIHJhdGhlciBhIHNwZWNpZmljIGVuZ2luZS4gSW4gZmFjdCB3ZSBhcmUgZXZlbiBoaWRp
-bmcgdGhlIGVuZ2luZSBsb2FkaW5nIHdoZW4gd2UgY2FuIGFzIHRoaXMgaXMgYSBkZXRhaWwgdGhl
-IHVzZXIgc2hvdWxkbid0IGJvdGhlci48L2Rpdj48ZGl2PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2
-Pjxicj48L2Rpdj48ZGl2PkluIGFuIGlkZWFsIHdvcmxkIEknZCBnbyBldmVuIGZ1cnRoZXIgYW5k
-IHN1Z2dlc3Qgd2Ugc2hvdWxkIGhhdmUganVzdCBvbmUgZW5naW5lIOKAlCBhbGwgdGhlIEFTTi4x
-IHBhcnNpbmcgYW5kIE9wZW5TU0wgaW50ZXJmYWNpbmcsIGFuZCB0aGUgU1RPUkUgYml0cyBJJ2Qg
-bGlrZSB0byBhZGQsIGNvdWxkIGV4aXN0IGp1c3Qgb25jZS4gTGlrZXdpc2UgdGhlIHBvbGljeSBw
-YXJzaW5nLCBpbiBmYWN0LjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+QW5kIHRoZSBiYWNrIGVu
-ZCB3aGljaCBhY3R1YWxseSB0YWxrcyB0byB0aGUgVFBNIGNvdWxkIGhhdmUgdHdvIHZhcmlhbnRz
-LCBmb3IgYm90aCBUU1Mgc3RhY2tzLiBNdWNoIGxpa2UgdGhlIGNvZGUgSSd2ZSBwdXQgaW50byBP
-cGVuQ29ubmVjdCwgd2hpY2ggSSdtIGhvcGluZyB0byBwYWxtIG9mZiBvbnRvIE5pa29zIGZvciBH
-bnVUTFMuLi4gOik8L2Rpdj48ZGl2Pjxicj48L2Rpdj48L2JvZHk+PC9odG1sPgo=
+aWQ7cGFkZGluZy1sZWZ0OjFleCI+PGRpdiBkaXI9Imx0ciI+PGJyPjxicj48ZGl2IGNsYXNzPSJn
+bWFpbF9xdW90ZSI+PGRpdiBkaXI9Imx0ciI+T24gVGh1LCBPY3QgMTEsIDIwMTggYXQgODo0OCBQ
+TSBEYXZpZCBXb29kaG91c2UgJmx0OzxhIGhyZWY9Im1haWx0bzpkd213MkBpbmZyYWRlYWQub3Jn
+Ij5kd213MkBpbmZyYWRlYWQub3JnPC9hPiZndDsgd3JvdGU6PGJyPjwvZGl2PjxibG9ja3F1b3Rl
+IHR5cGU9ImNpdGUiIHN0eWxlPSJtYXJnaW46MCAwIDAgLjhleDsgYm9yZGVyLWxlZnQ6MnB4ICM3
+MjlmY2Ygc29saWQ7cGFkZGluZy1sZWZ0OjFleCI+PGRpdiBzdHlsZT0idGV4dC1hbGlnbjpsZWZ0
+O2RpcmVjdGlvbjpsdHIiPjxkaXY+T24gVGh1LCAyMDE4LTEwLTExIGF0IDIwOjQxICswMjAwLCBO
+aWtvcyBNYXZyb2dpYW5ub3BvdWxvcyB3cm90ZTo8L2Rpdj48YmxvY2txdW90ZSB0eXBlPSJjaXRl
+IiBzdHlsZT0ibWFyZ2luOjAgMCAwIC44ZXg7IGJvcmRlci1sZWZ0OjJweCAjNzI5ZmNmIHNvbGlk
+O3BhZGRpbmctbGVmdDoxZXgiPjxkaXY+PGJyPjwvZGl2PjxkaXY+QXMgYSBkaXN0cmlidXRpb24g
+cmVwcmVzZW50YXRpdmUgZm9yIHJoZWwvZmVkb3JhLCBJIHJlYWxseSBzZWNvbmQgdGhhdC4gVGhl
+cmUgaXMgbm8gcmVhc29uIHRvIGNyZWF0ZSBjb2RlIGZvciBhdXRvLWRldGVjdGlvbiBhcyBhIHR5
+cGljYWwgYXBwbGljYXRpb24gd3JpdGVyIG9yIGFwcCB1c2VyIHdvdWxkIHdhbnQgdG8gdXNlICJ0
+cG0yIiByYXRoZXIgYSBzcGVjaWZpYyBlbmdpbmUuIEluIGZhY3Qgd2UgYXJlIGV2ZW4gaGlkaW5n
+IHRoZSBlbmdpbmUgbG9hZGluZyB3aGVuIHdlIGNhbiBhcyB0aGlzIGlzIGEgZGV0YWlsIHRoZSB1
+c2VyIHNob3VsZG4ndCBib3RoZXIuPC9kaXY+PC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2Pjwv
+ZGl2PjxkaXYgc3R5bGU9InRleHQtYWxpZ246bGVmdDtkaXJlY3Rpb246bHRyIj48ZGl2PkluIGFu
+IGlkZWFsIHdvcmxkIEknZCBnbyBldmVuIGZ1cnRoZXIgYW5kIHN1Z2dlc3Qgd2Ugc2hvdWxkIGhh
+dmUganVzdCBvbmUgZW5naW5lIOKAlCBhbGwgdGhlIEFTTi4xIHBhcnNpbmcgYW5kIE9wZW5TU0wg
+aW50ZXJmYWNpbmcsIGFuZCB0aGUgU1RPUkUgYml0cyBJJ2QgbGlrZSB0byBhZGQsIGNvdWxkIGV4
+aXN0IGp1c3Qgb25jZS4gTGlrZXdpc2UgdGhlIHBvbGljeSBwYXJzaW5nLCBpbiBmYWN0LjwvZGl2
+PjxkaXY+PGJyPjwvZGl2PjxkaXY+QW5kIHRoZSBiYWNrIGVuZCB3aGljaCBhY3R1YWxseSB0YWxr
+cyB0byB0aGUgVFBNIGNvdWxkIGhhdmUgdHdvIHZhcmlhbnRzLCBmb3IgYm90aCBUU1Mgc3RhY2tz
+LiBNdWNoIGxpa2UgdGhlIGNvZGUgSSd2ZSBwdXQgaW50byBPcGVuQ29ubmVjdCwgd2hpY2ggSSdt
+IGhvcGluZyB0byBwYWxtIG9mZiBvbnRvIE5pa29zIGZvciBHbnVUTFMuLi4gOik8L2Rpdj48L2Rp
+dj48YnI+PC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2PjxkaXY+SSdkIHJlYWxseSBhcHByZWNp
+YXRlIGEgUFIhPC9kaXY+PGRpdj4gPC9kaXY+PC9kaXY+PC9kaXY+CjwvYmxvY2txdW90ZT48ZGl2
+Pjxicj48L2Rpdj48ZGl2PkkgaGF2ZW4ndCBldmVuIHB1c2hlZCBpdCB0byBteSBvd24gbWFzdGVy
+IGJyYW5jaCB5ZXQgOik8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkFzIHdlbGwgYXMgZmluYWxp
+c2luZyB0aGUgZGlzY3Vzc2lvbiB3ZSdyZSBoYXZpbmcgaGVyZSwgSSB3b3VsZCB2ZXJ5IG11Y2gg
+YXBwcmVjaWF0ZSBzb21lIHJldmlldyBmcm9tIEphbWVzIGZvciA8L2Rpdj48ZGl2PjxhIGhyZWY9
+Imh0dHA6Ly9naXQuaW5mcmFkZWFkLm9yZy91c2Vycy9kd213Mi9vcGVuY29ubmVjdC5naXQvYmxv
+Yi90cG0yOi9nbnV0bHNfdHBtMl9pYm0uYyI+aHR0cDovL2dpdC5pbmZyYWRlYWQub3JnL3VzZXJz
+L2R3bXcyL29wZW5jb25uZWN0LmdpdC9ibG9iL3RwbTI6L2dudXRsc190cG0yX2libS5jPC9hPjwv
+ZGl2PjxkaXY+YW5kIGZyb20gQW5kcmVhcyBmb3I8L2Rpdj48ZGl2PjxhIGhyZWY9Imh0dHA6Ly9n
+aXQuaW5mcmFkZWFkLm9yZy91c2Vycy9kd213Mi9vcGVuY29ubmVjdC5naXQvYmxvYi90cG0yOi9n
+bnV0bHNfdHBtMl9pYm0uYyI+aHR0cDovL2dpdC5pbmZyYWRlYWQub3JnL3VzZXJzL2R3bXcyL29w
+ZW5jb25uZWN0LmdpdC9ibG9iL3RwbTI6L2dudXRsc190cG0yX2VzeXMuYzwvYT48L2Rpdj48ZGl2
+Pjxicj48L2Rpdj48ZGl2PkdvaW5nIGZ1cnRoZXIgd2l0aCBteSBmYW50YXNpZXMgYWJvdXQgYW4g
+aWRlYWwgd29ybGQsIGl0IHdvdWxkIGFjdHVhbGx5IGJlIGdyZWF0IHRvIGhhdmUgYSBzaW5nbGUg
+InVzZSBhIGtleSBmcm9tIGEgVFBNIiBsaWJyYXJ5IHRoYXQgaGFzIHRoZSB0d28gaW1wbGVtZW50
+YXRpb25zIGZvciBlYWNoIFRTUywgYW5kIGlzIHVzZWQgKmJvdGgqIGZyb20gYSBzaW5nbGUgT3Bl
+blNTTCBFTkdJTkUgaW1wbGVtZW50YXRpb24gYW5kIGFsc28gZnJvbSBHbnVUTFMuLi4uPC9kaXY+
+PGRpdj48YnI+PC9kaXY+PGRpdj5SZWFsaXN0aWNhbGx5IHNwZWFraW5nLCBJIHN1c3BlY3Qgd2Un
+bGwgZW5kIHVwIHdpdGggc2VwYXJhdGUgYnV0IHZlcnkgc2ltaWxhciBpbXBsZW1lbnRhdGlvbnMg
+YXMgd2UgaGF2ZSBub3cuIEknbGwgc2V0dGxlIGZvciBiYXNoaW5nIGhlYWRzIHRvZ2V0aGVyIGFu
+ZCBtYWtpbmcgc3VyZSB0aGV5IGFsbCBpbnRlcm9wZXJhdGUgYW5kIHdlIHB1Ymxpc2ggdGhlIHNw
+ZWNzIGluIGEgc2FuZSBmb3JtLjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2Pjxk
+aXY+PGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjwvYm9keT48L2h0bWw+Cg==
 
---===============1056878370558421962==
+--===============7872521798441379810==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -141,19 +213,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTExODQ4MjFaMC8GCSqG
-SIb3DQEJBDEiBCB/SZYCtfi3yWxCbX6b4Fm02IT7HAvFwxWRxjk/AKxaJjCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTEyMDE1MjhaMC8GCSqG
+SIb3DQEJBDEiBCCyPmTDxv0m29k4zF4VP9uM1kWzLNAUxQG8XYf4doKsIzCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAEHbxrSCcgJX
-ffi5M4ydM5QAK1hCcWc3Miy2XvzIeZ5xPR+ZJ6a2AdDS9CGYawRLYm2buJfMcCyazS18f6/KcxQ+
-L0ejyFdvE9ytqD7bE7QdXEK+9NvyWSjt6BRaGRqqoGkPY7f4dXgckgsj8wGEBKaTl3o7GjKs6eAn
-EfS7t8tuL1jbCZSJNJcb+pL/+uc32gXWgBZKrusuncUq/y6JGaeZTaipra98mnagzwiaJ5TQ6DsR
-5Vj83JO/83cyNF/0rVJxKVUrfxs2Nv0bpJW8L/sR4U3dbk0AjPTYhFjD20zL924ZVm/NdaUY/MtN
-s5jTm6VbG/fZZct1HCmnWSZ+DPgAAAAAAAA=
---===============1056878370558421962==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAHA9pt7g8gYt
+qxomW1zo9omLP8MZUFCttI2ri/FHRpUlSpEdeNpKPHN0+bmeUf3qH9NAAXOQ7iB2sE77ffkwh7hn
+eksV/EUqbYvEEu8fhIl6/nfpjEgEvaXpDKYEyuy0sBqp5wPuKulaV5QQoYCzHLnA5zL2cSM5c9De
+WPOW1pt2WaHoc88ZCa44sJ5U2wA8UuF8idtQdEG++0Vyg2uXmEw21WDWPVHFtjFClJrXDHcY+KJY
+u/itvfcBKWaLXx1gTJQXwObbxIr4YT7Oor1Sx4jUgva/bLUUEojAyz872t+UE/7tUqt6X2YADhFo
+lpAs6bXCfhkG8fGLFXIOudnL4bkAAAAAAAA=
+--===============7872521798441379810==--
 
