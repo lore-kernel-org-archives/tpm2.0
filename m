@@ -1,64 +1,99 @@
-Content-Type: multipart/mixed; boundary="===============4575696153938866501=="
+Content-Type: multipart/mixed; boundary="===============4348628997140803826=="
 MIME-Version: 1.0
-From: Litjes, Christian <christian.litjes at philips.com>
-Subject: Re: [tpm2] How to clear DA lockout mode ?
-Date: Thu, 11 Oct 2018 14:03:41 +0000
-Message-ID: <AM0P122MB0099EAA3547CDA52CEE1D68D90E10@AM0P122MB0099.EURP122.PROD.OUTLOOK.COM>
-In-Reply-To: 848b1467-f06e-f99b-1af2-f4e117056a78@mikronika.pl
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
+Date: Thu, 11 Oct 2018 15:41:08 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D014734482C@exch2010c.sit.fraunhofer.de>
+In-Reply-To: 7c3d5a4ac2f51f301164ba2ddefff643d5a8ce1b.camel@infradead.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4575696153938866501==
+--===============4348628997140803826==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Heey Tomasz,
+Hi David,
 
-I'll help you out:
-Clear you're tpm from your bios.
+thanks for the summary. I agree with all of them. Some more things to agree=
+ on:
 
-PASS=3D"1234"
-tpm2_takeownership -T "device" -c
-Returns an error, like you mention. This is correct behavior. (I read this =
-somewhere can't find the source atm)
+Primarykeys.publicArea:
+-  .type =3D TPM2_ALG_ECC, .nameAlg =3D TPM2_ALG_SHA256
+- .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH | TPMA_OBJECT_RESTRICTED =
+| TPMA_OBJECT_DECRYPT | TPMA_OBJECT_FIXEDTPM | TPMA_OBJECT_FIXEDPARENT | TP=
+MA_OBJECT_SENSITIVEDATAORIGIN)
 
-tpm2_takeownership -T "device" -l "$PASS"
-tpm2_dictionarylockout -T "device" -s -n 30 -l 1200 -t 0 -p "$PASS"
+For the On-Disk-Format:
+We need to keep a placeholder for the (optional) policy I think.
+If we want to allow different formats in the future, we need to add some
+idetifier for the format type in there as well.
 
-By setting -t to 0 you disable the lockout mode.
+Would you both agree ?
 
-Kind Regards,
-Christian Litjes
+Regarding the engine naming:
+Won't we run into a naming problem with the engine names if we name them si=
+milarly ?
 
------Original Message-----
-From: tpm2 <tpm2-bounces(a)lists.01.org> On Behalf Of Tomasz Przybysz
-Sent: donderdag 11 oktober 2018 11:00
-To: tpm2(a)lists.01.org
-Subject: Re: [tpm2] How to clear DA lockout mode ?
+P.S. The reason I did not call the engine "openssl-something-engine" is tha=
+t this
+is prohibited by the OpenSSL code license, unless openssl-core@ agrees, but
+they never answered... ;-)
 
-Also:
-tpm2_takeownership -c
-ERROR: Clearing Failed! TPM error code: 0x921
-ERROR: Unable to run tpm2_takeownership
+Cheers,
+Andreas
 
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org
-https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flists.=
-01.org%2Fmailman%2Flistinfo%2Ftpm2&amp;data=3D02%7C01%7C%7C4def8b29c0af4070=
-d05408d62f57e9b0%7C1a407a2d76754d178692b3ac285306e4%7C0%7C0%7C6367484519614=
-07815&amp;sdata=3DzmyqQCHATgm7Xu%2Fx7o3LCBurHqdy4TAkV8OzWxkXhug%3D&amp;rese=
-rved=3D0
+________________________________________
+From: David Woodhouse [dwmw2(a)infradead.org]
+Sent: Monday, October 08, 2018 12:15
+To: James Bottomley; Fuchs, Andreas; tpm2(a)lists.01.org; Nikos Mavrogianno=
+poulos
+Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
 
-________________________________
-The information contained in this message may be confidential and legally p=
-rotected under applicable law. The message is intended solely for the addre=
-ssee(s). If you are not the intended recipient, you are hereby notified tha=
-t any use, forwarding, dissemination, or reproduction of this message is st=
-rictly prohibited and may be unlawful. If you are not the intended recipien=
-t, please contact the sender by return e-mail and destroy all copies of the=
- original message.
 
---===============4575696153938866501==--
+It would be good to reach a conclusion on what the PEM format should
+be, so that I can push this to the OpenConnect master branch in
+preparation for a release.
+
+Let me attempt to summarise some of the discussions and create a
+definition / TODO list.
+
+ =E2=80=A2 We all change to use all three of NODA/FIXEDTPM/FIXEDPARENT
+   objectAttributes for creating the primary key.
+
+ =E2=80=A2 PEM file tag changes to 'BEGIN TSS2 PRIVATE KEY'. James can cont=
+inue
+   to use the old objectAttributes when loading files with the old PEM
+   tag for compatibility reasons, if he wants to.
+
+ =E2=80=A2 Drop the TPMv1.2 compatibility via '12Key' and the 'importableKe=
+y'
+   object types, which in fact means we can drop the 'type' field from
+   the ASN.1 definition altogether.
+
+ =E2=80=A2 Make the pubkey field non-optional.
+
+ =E2=80=A2 Ignore policy for now; we can define that later. We won't use the
+   [3] EXPLICIT tag for anything incompatible with James's existing
+   definition, and if we settle on something else we'll use a different
+   explicit tag.
+
+ =E2=80=A2 We produce a draft specifying the ASN.1 format and tpmkey: URI
+   scheme.
+
+
+That's probably enough for me to do a release of the GnuTLS code. On
+the OpenSSL side I also recommend that:
+
+ =E2=80=A2 Both engines should use the same engine name so that applications
+   which match the PEM tag and load an engine don't have to try both.
+
+ =E2=80=A2 Both engines should register the ASN.1 parser so that keys can be
+   used transparently by applications without having to explicitly
+   reference the engine at all (see
+   https://github.com/openssl/openssl/issues/7354 )
+
+
+
+--===============4348628997140803826==--
 
