@@ -1,169 +1,104 @@
-Content-Type: multipart/mixed; boundary="===============8932437873269918385=="
+Content-Type: multipart/mixed; boundary="===============4348723756337494628=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Thu, 11 Oct 2018 10:34:47 -0700
-Message-ID: <55db471bd6d4d0d1f7205b8188d8b3c1b8a8759f.camel@infradead.org>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D014734482C@exch2010c.sit.fraunhofer.de
+Date: Thu, 11 Oct 2018 11:07:27 -0700
+Message-ID: <deb61a582d7c95893cda406790e50da6fa564804.camel@infradead.org>
+In-Reply-To: 1539278866.2623.69.camel@HansenPartnership.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8932437873269918385==
+--===============4348723756337494628==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2018-10-11 at 15:41 +0000, Fuchs, Andreas wrote:
-> Hi David,
+On Thu, 2018-10-11 at 10:27 -0700, James Bottomley wrote:
+> On Thu, 2018-10-11 at 15:41 +0000, Fuchs, Andreas wrote:
+> > Hi David,
+> > =
+
+> > thanks for the summary. I agree with all of them. Some more things to
+> > agree on:
+> > =
+
+> > Primarykeys.publicArea:
+> > -  .type =3D TPM2_ALG_ECC,
+> >  .nameAlg =3D TPM2_ALG_SHA256
+> > - .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH |
+> > TPMA_OBJECT_RESTRICTED | TPMA_OBJECT_DECRYPT | TPMA_OBJECT_FIXEDTPM |
+> > TPMA_OBJECT_FIXEDPARENT | TPMA_OBJECT_SENSITIVEDATAORIGIN)
 > =
 
-> thanks for the summary. I agree with all of them. Some more things to
-> agree on:
+> Actually, this is way too little.  In fact we don't care about the
+> asymmetric key at all because it's the derived symmetric key that's
+> used to encrypt the private blob (so you're missing its parameters). =
+
+> Unfortunately the type and all the asymmetric parameters (including a
+> lot you haven't show here) are part of the name which is input to KDFa
+> for the symmetric key.  Let's just follow all the provisioning guidance
+> because it does outline them in a table, so just say "The ECC Template
+> from the EK and TPM provisioning guides".
+
+That seems to make sense. Other than the objectAttributes, what else
+have we done *differently* to the template in the provisioning guides?
+
+> > For the On-Disk-Format:
+> > We need to keep a placeholder for the (optional) policy I think.
 > =
 
-> Primarykeys.publicArea:
-> -  .type =3D TPM2_ALG_ECC, .nameAlg =3D TPM2_ALG_SHA256
-> - .objectAttributes =3D (TPMA_OBJECT_USERWITHAUTH |
-> TPMA_OBJECT_RESTRICTED | TPMA_OBJECT_DECRYPT | TPMA_OBJECT_FIXEDTPM |
-> TPMA_OBJECT_FIXEDPARENT | TPMA_OBJECT_SENSITIVEDATAORIGIN)
-
-Agreed. As James switches to the new PEM tag with 'PRIVATE KEY' he can
-change those too, and if he wants he can use the old objectAttributes
-for compatibility with files using his old PEM tag.
-
-I'm in Seattle this week, and I have my GnuTLS OpenConnect code working
-with both TSS libraries. I'm hoping to sit down with James at the
-weekend and get this all working.
-
-> For the On-Disk-Format:
-> We need to keep a placeholder for the (optional) policy I think.
-> If we want to allow different formats in the future, we need to add
-> some idetifier for the format type in there as well.
-
-I think we have this already, as the fields are already optional and
-explicitly tagged. So James's policy field has a tag of (IIRC) 4. An
-implementation which doesn't recognise that will not accept the file.
-If we introduce a policy format which is different, it can have a
-different tag.
-
-It would be nice to define the format for the policy, of course, but
-right now it's OK and we have a compatibility plan.
-
-> Regarding the engine naming:
-> Won't we run into a naming problem with the engine names if we name
-> them similarly ?
+> We already have.  It's explicit element [3] of the key which is a
+> sequence of TPMPolicy.  If you mean you want a different policy format,
+> the elements of TPMPolicy are also explicits so they can be expanded.
 > =
 
-> P.S. The reason I did not call the engine "openssl-something-engine"
-> is that this
-> is prohibited by the OpenSSL code license, unless openssl-core@
-> agrees, but
-> they never answered... ;-)
-
-We're looking at the "tpm2" vs. "tpm2tss" naming for the engines here;
-the OpenSSL part is purely cosmetic. See my code where I have to choose
-the engine to load:
-http://git.infradead.org/users/dwmw2/openconnect.git/blob/tpm2:/openssl.c#l=
-949
-
-With both engines supporting the same PEM format, apps end up having to
-try one and then the next?
-
-It would be better to have both engines install with the same engine
-name. We don't expect people to install *both* at the same time, but to
-choose one TSS stack or the other. Distributions can use their
-'alternatives' mechanisms to allow one or the other package to end up
-in the right place as the "tpm2" engine. Perhaps we do that with a
-symlink, and people can also explicitly load 'tpm2-ibm' or 'tpm2-tss'
-engines if they have some reason to specifically want one or the other
-(but let's avoid there being a reason for them to want that).
-
-Of course, making it all work automatically using the STORE interface
-makes it go away because applications won't need to explicitly know
-about engines, but realistically speaking that's for the future.
-
-
-
-
-> Cheers,
-> Andreas
+> > If we want to allow different formats in the future, we need to add
+> > some idetifier for the format type in there as well.
 > =
 
-> ________________________________________
-> From: David Woodhouse [dwmw2(a)infradead.org]
-> Sent: Monday, October 08, 2018 12:15
-> To: James Bottomley; Fuchs, Andreas; tpm2(a)lists.01.org; Nikos
-> Mavrogiannopoulos
-> Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-> =
+> It can be added later without disturbing the current format ... that's
+> the point of ASN.1 EXPLICITs.
+
+Ack.
+
+> > Would you both agree ?
+> > =
+
+> > Regarding the engine naming:
+> > Won't we run into a naming problem with the engine names if we name
+> > them similarly =
 
 > =
 
-> It would be good to reach a conclusion on what the PEM format should
-> be, so that I can push this to the OpenConnect master branch in
-> preparation for a release.
-> =
+> To be honest perhaps the user shouldn't care about this: if they take
+> the same key files, it's an implementation choice, not a fundamental
+> one, so perhaps the user should simply decide on installation.
 
-> Let me attempt to summarise some of the discussions and create a
-> definition / TODO list.
-> =
+This stuff should JustWork=E2=84=A2. People should be able to use any key t=
+hey
+happen to have =E2=80=94 PKCS#11 URIs, files in various PEM and DER formats
+including PKCS#12, PKCS#8, PKCS#1 and TSS blobs. I am utterly anal
+about this in OpenConnect, and it *does* work for fairly much
+everything under the sun. I've written this up in =
 
->  =E2=80=A2 We all change to use all three of NODA/FIXEDTPM/FIXEDPARENT
->    objectAttributes for creating the primary key.
-> =
+http://david.woodhou.se/draft-woodhouse-cert-best-practice.html and
+have started making at least Fedora packaging guidelines move in that
+direction, saying that anything that takes a certificate+key SHOULD at
+least accept PKCS#11 URIs. I should go further and incorporate the
+whole of my draft, which also wants to be updated to talk about the new
+TPM2 PEM format we're defining here.
 
->  =E2=80=A2 PEM file tag changes to 'BEGIN TSS2 PRIVATE KEY'. James can
-> continue
->    to use the old objectAttributes when loading files with the old
-> PEM
->    tag for compatibility reasons, if he wants to.
-> =
+So with that in mind... what advice do we give to application authors
+to help them get this right? Remember, it actually needs to be hard for
+them to get it *wrong*. The advice to actual users should always be "it
+should Just Work. Else file bugs".
 
->  =E2=80=A2 Drop the TPMv1.2 compatibility via '12Key' and the 'importable=
-Key'
->    object types, which in fact means we can drop the 'type' field
-> from
->    the ASN.1 definition altogether.
-> =
-
->  =E2=80=A2 Make the pubkey field non-optional.
-> =
-
->  =E2=80=A2 Ignore policy for now; we can define that later. We won't use =
-the
->    [3] EXPLICIT tag for anything incompatible with James's existing
->    definition, and if we settle on something else we'll use a
-> different
->    explicit tag.
-> =
-
->  =E2=80=A2 We produce a draft specifying the ASN.1 format and tpmkey: URI
->    scheme.
-> =
-
-> =
-
-> That's probably enough for me to do a release of the GnuTLS code. On
-> the OpenSSL side I also recommend that:
-> =
-
->  =E2=80=A2 Both engines should use the same engine name so that applicati=
-ons
->    which match the PEM tag and load an engine don't have to try both.
-> =
-
->  =E2=80=A2 Both engines should register the ASN.1 parser so that keys can=
- be
->    used transparently by applications without having to explicitly
->    reference the engine at all (see
->    https://github.com/openssl/openssl/issues/7354 )
-> =
-
-> =
+I think that having a single engine name, and having both engine
+implementation install themselves to be loaded the same way, makes most
+sense.
 
 
-
---===============8932437873269918385==
+--===============4348723756337494628==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -247,19 +182,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTExNzM0NDdaMC8GCSqG
-SIb3DQEJBDEiBCDjlf8vKCsbc7juuu4qqOLfk1MwTwK+Ism5R+bsGI6d1TCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTExODA3MjdaMC8GCSqG
+SIb3DQEJBDEiBCB2uXvFV7zLYFtCZh+Z1LAi3ZRpKvKXJlh6+Wn/Opv5ETCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAFDb25j5/OXJ
-eMio3PKzccSJQIbEDetx2n8N6xBCoeZcaNAqC9TXRje65C5jgIqM1/b0Jz3AwXD44s4xQ5t9K0ml
-P5D7hQLEPECk5CbVQ4dsaC+5t+rpSFEBca72Mj/ydCgFV+ep8dl9Mq3WLd8PCADELYR4HvX2VplM
-CZUzXi/ajY3mFWct+4aXOq8XS84mhDjv7mZdMFlc0PIXh6/MnwQ6V4K50a5z5bW97dZNO9At2v1n
-0EYwFYiJR9MkBMsCgf8DpT3lLYKi0u60RanDTiC0X76ZnS5DlBXZSuex6ve7D/5Ihp8f2M4JXuov
-mKg8C11aph4pDnEeGHtfMVxdaAkAAAAAAAA=
---===============8932437873269918385==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBACGzoTdCyRh/
++oyxzZxZMKyryv4UE0jLdSdSyjd+M00fc6Jvw9UPnYKPJ9RWyvfU/++goBLX/LgUmHOSwtBV0cP4
+NDAVrI3RJydKff1ll3JNpw4NaVUgAvpsy1nAJwi0LxaeNr1hTusgwCeUzhqDfHwJ/3XYTKMIgumz
+nq7PFb9bTM20vu8l0FGgml2WANVN5ggNTcKHPuZaDx7Gmp/kOTMigGRmP2X7Z7hCF17ACH4607dZ
+VLsQUpkMp1BRXLnEaVwLXEPBKnBKVA09fG+c/Llr8yG/zQogSbuH7vKUw+tG5ehTrViUQNXrykxs
+Sq+78IGr28KOAKRslHL0ls2rlikAAAAAAAA=
+--===============4348723756337494628==--
 
