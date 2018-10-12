@@ -1,55 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============5601880863697810838=="
+Content-Type: multipart/mixed; boundary="===============4485171557306179678=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Thu, 11 Oct 2018 22:55:24 -0700
-Message-ID: <b4446220e34f3a3f867cdc5d5b01bd833c6cfd47.camel@infradead.org>
-In-Reply-To: 64543992618e55b50272d7df4f1f4014f669ce2a.camel@infradead.org
+Date: Thu, 11 Oct 2018 23:08:15 -0700
+Message-ID: <2a78f7707e864988ea2dd7010576e2ad864b8d97.camel@infradead.org>
+In-Reply-To: b4446220e34f3a3f867cdc5d5b01bd833c6cfd47.camel@infradead.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5601880863697810838==
+--===============4485171557306179678==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I've now sent patches to James, submitted a PR to tpm2-tss-engine, and
-modified my own OpenConnect code to support the same format:
+On Thu, 2018-10-11 at 22:55 -0700, David Woodhouse wrote:
+> My
+> =
 
-TPMKey ::=3D SEQUENCE {
-	type		OBJECT IDENTIFIER,
-	emptyAuth	[0] EXPLICIT BOOLEAN OPTIONAL,
-	parent		INTEGER,
-	pubkey		OCTET STRING,
-	privkey		OCTET STRING
- }
+> GnuTLS code can read files created by James's tpm2 engine but the
+> =
 
-Both tpm2 and tpm2tss engines can read key files created with the
-latter. However, I have not got it working the other way round. My
-GnuTLS code can read files created by James's tpm2 engine but the
-tpm2tss engine doesn't work...
+> tpm2tss engine doesn't work...
 
-Creating primary key under owner.
-Loading key blob.
-WARNING:esys:src/tss2-esys/api/Esys_Load.c:324:Esys_Load_Finish() Received =
-TPM Error =
+Verbose logs from both:
 
-ERROR:esys:src/tss2-esys/api/Esys_Load.c:117:Esys_Load() Esys Finish ErrorC=
-ode (0x000001df) =
-
-WARNING:esys:src/tss2-esys/esys_context.c:117:Esys_Finalize() Finalizing NU=
-LL context. =
-
-140278476894656:error:8007106D:tpm2-tss-engine:init_tpm_key:Unknown TPM err=
-or occured. Please check tpm2tss logs:src/tpm2-tss-engine-common.c:292:
-140278476894656:error:8008C06D:tpm2-tss-engine:rsa_priv_enc:Unknown TPM err=
-or occured. Please check tpm2tss logs:src/tpm2-tss-engine-rsa.c:161:
-140278476894656:error:0D0DC006:asn1 encoding routines:ASN1_item_sign_ctx:EV=
-P lib:../crypto/asn1/a_sign.c:208:
+http://david.woodhou.se/oc.txt (works)
+http://david.woodhou.se/engine.txt (fails)
 
 
 
---===============5601880863697810838==
+
+--===============4485171557306179678==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgZGlyPSJsdHIiPjxoZWFkPjwvaGVhZD48Ym9keSBzdHlsZT0idGV4dC1hbGlnbjpsZWZ0
+OyBkaXJlY3Rpb246bHRyOyI+PGRpdj5PbiBUaHUsIDIwMTgtMTAtMTEgYXQgMjI6NTUgLTA3MDAs
+IERhdmlkIFdvb2Rob3VzZSB3cm90ZTo8L2Rpdj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIiBzdHls
+ZT0ibWFyZ2luOjAgMCAwIC44ZXg7IGJvcmRlci1sZWZ0OjJweCAjNzI5ZmNmIHNvbGlkO3BhZGRp
+bmctbGVmdDoxZXgiPk15PGJyPgpHbnVUTFMgY29kZSBjYW4gcmVhZCBmaWxlcyBjcmVhdGVkIGJ5
+IEphbWVzJ3MgdHBtMiBlbmdpbmUgYnV0IHRoZTxicj4KdHBtMnRzcyBlbmdpbmUgZG9lc24ndCB3
+b3JrLi4uPGJyPjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rpdj48ZGl2PlZlcmJvc2UgbG9ncyBm
+cm9tIGJvdGg6PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj48YSBocmVmPSJodHRwOi8vZGF2aWQu
+d29vZGhvdS5zZS9vYy50eHQiPmh0dHA6Ly9kYXZpZC53b29kaG91LnNlL29jLnR4dDwvYT4gKHdv
+cmtzKTwvZGl2PjxkaXY+PGEgaHJlZj0iaHR0cDovL2RhdmlkLndvb2Rob3Uuc2UvZW5naW5lLnR4
+dCI+aHR0cDovL2RhdmlkLndvb2Rob3Uuc2UvZW5naW5lLnR4dDwvYT4gKGZhaWxzKTwvZGl2Pjxk
+aXY+PGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjwvYm9keT48L2h0bWw+
+Cg==
+
+--===============4485171557306179678==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -133,19 +134,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTIwNTU1MjRaMC8GCSqG
-SIb3DQEJBDEiBCCWFXW6SzZQo00jtTQgBR1daFqCou+bGi6GO/ej0yQBbjCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTIwNjA4MTVaMC8GCSqG
+SIb3DQEJBDEiBCDXoaXr9cyFGhlT+yWKxNMuc/xIYD/zZ4g9AS5whF/xJTCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAAykBLl2a5cy
-d0Z+SGtoYDbcWhkXr3fo+RD1rOR0jCfNOlHSjD94zu74kU4dCL4Xf/yugWVl9mzch5Ob6RKOnBv2
-hSD5IJlcPqZ35K4ynQAFNCXUARyJyztr684H40SWeRdbs1GrEzjqhYord63Lj5sWgV1IPGjLkPZp
-hPJpP3RYJ0qJOkq5CAIvPk4vK6/CY2xZKGsUkvwvHdaNsHdBx8ijGobGylYM6jiMIKh/kl7WqT1p
-bMgNU67Bv7pH/CMRxPXeO8sVrTb6xDDc9/1io6UOt2d2vlzHhcwP3JItyPonjWXLJSA/MSI2XrZM
-NBCbhSgKWAoS1t6/OLEHixdIGnEAAAAAAAA=
---===============5601880863697810838==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAAE0SJlo7A+U
+pGI/xvQP7UXPZcPN975pZTRJnm5bR6fPempo+DKiuOUH2sl1w5SkFRDX+5loBqLEhXAg83CD2N6k
+FuJoKiZXusLZtv46SiYtr/gjTwtbuIT85/YlTnaB8cxYhUWNzAU0kMRn60O78MdVoDeNmKsEurGC
+EUNyNQQAqKwW7iF/ZbE0lP2KBMcqzXa4lZ+YpmFa/gHFAyk4GTfT53XQHonVh2K+gq/hZ76/zdGF
+MZgw1xAnCtXAP0AHogvcOLHwTH58H07XN+XOuZat1mTmMRwRO4XvBYc+sVDMMOxgj3cbg9jNaE6h
+gOE033kfln/w5PopvcaOsAOnpSwAAAAAAAA=
+--===============4485171557306179678==--
 
