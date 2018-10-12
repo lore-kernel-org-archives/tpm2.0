@@ -1,49 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============4626816327520592900=="
+Content-Type: multipart/mixed; boundary="===============5601880863697810838=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Conflicting TPM2 engines and storage formats
-Date: Thu, 11 Oct 2018 15:25:12 -0700
-Message-ID: <64543992618e55b50272d7df4f1f4014f669ce2a.camel@infradead.org>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0142675FCB@EXCH2010B.sit.fraunhofer.de
+Date: Thu, 11 Oct 2018 22:55:24 -0700
+Message-ID: <b4446220e34f3a3f867cdc5d5b01bd833c6cfd47.camel@infradead.org>
+In-Reply-To: 64543992618e55b50272d7df4f1f4014f669ce2a.camel@infradead.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4626816327520592900==
+--===============5601880863697810838==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2018-10-02 at 17:18 +0000, Fuchs, Andreas wrote:
-> I'm still a bit confused about the TPM2LoadableKey vs TPM2ImportableKey.
-> I don't know what the use for the latter would be, since I'd assume we ju=
-st
-> import such a key into the TPM and then use the Loadable derivate from it.
-> =
+I've now sent patches to James, submitted a PR to tpm2-tss-engine, and
+modified my own OpenConnect code to support the same format:
 
-> Also what's the OID that ended up in the actual fomat ?
+TPMKey ::=3D SEQUENCE {
+	type		OBJECT IDENTIFIER,
+	emptyAuth	[0] EXPLICIT BOOLEAN OPTIONAL,
+	parent		INTEGER,
+	pubkey		OCTET STRING,
+	privkey		OCTET STRING
+ }
 
-Coming back to this part, as I reminded James about it by sending him a
-patch that removed the 'type' field from his engine...
+Both tpm2 and tpm2tss engines can read key files created with the
+latter. However, I have not got it working the other way round. My
+GnuTLS code can read files created by James's tpm2 engine but the
+tpm2tss engine doesn't work...
+
+Creating primary key under owner.
+Loading key blob.
+WARNING:esys:src/tss2-esys/api/Esys_Load.c:324:Esys_Load_Finish() Received =
+TPM Error =
+
+ERROR:esys:src/tss2-esys/api/Esys_Load.c:117:Esys_Load() Esys Finish ErrorC=
+ode (0x000001df) =
+
+WARNING:esys:src/tss2-esys/esys_context.c:117:Esys_Finalize() Finalizing NU=
+LL context. =
+
+140278476894656:error:8007106D:tpm2-tss-engine:init_tpm_key:Unknown TPM err=
+or occured. Please check tpm2tss logs:src/tpm2-tss-engine-common.c:292:
+140278476894656:error:8008C06D:tpm2-tss-engine:rsa_priv_enc:Unknown TPM err=
+or occured. Please check tpm2tss logs:src/tpm2-tss-engine-rsa.c:161:
+140278476894656:error:0D0DC006:asn1 encoding routines:ASN1_item_sign_ctx:EV=
+P lib:../crypto/asn1/a_sign.c:208:
 
 
-The TPM2ImportableKey type (says James) is an importable form of the
-key that can be created without having access to the actual TPM. Each
-time they're used, they need to be imported then loaded.
 
-It seems to make sense to keep this in the same kind of PEM file as the
-TPM2LoadableKey type that we're already using.
-
-So... do we properly assign those OIDs and retain a type field? Or
-could we have a simple 'loadable' optional boolean instead? Or even
-(ab)use the parent field, since there are only a handful of valid
-values for that (0x81xxxxxx and precisely four hierarchies).
-
-For the loadable key type, is there any *additional* information that
-needs to be stored? =
-
-
-
---===============4626816327520592900==
+--===============5601880863697810838==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -127,19 +133,19 @@ px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
 ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
 QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
 U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTEyMjI1MTJaMC8GCSqG
-SIb3DQEJBDEiBCCwwS7ksQPXFxwGQw9YgziITg1mzDFFLtHGsHo5xtsMITCBvQYJKwYBBAGCNxAE
+hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTIwNTU1MjRaMC8GCSqG
+SIb3DQEJBDEiBCCWFXW6SzZQo00jtTQgBR1daFqCou+bGi6GO/ej0yQBbjCBvQYJKwYBBAGCNxAE
 MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
 VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
 IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
 jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
 cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
 aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBALVEb8ryy0+C
-+4ZcGwrypTVwNjVuEwwhDVWlG6VvHJEdxNsCBRkRchmjjzPDqFbP1kLAb4ZnoRP5Lqe/d2Vz3GoF
-h5RC3ckfrJCjLRX5WEynsJbsAuRJcfm7m/JuWlMRCQBpu40CD9pBucl66Tq7WlpyV8CD09gtYAgT
-vWCNCdFYs/+DGEppvhZX0JedMTYtRdXeQHB8/jsjGUZQYea2sHLwRGPAPrBxT/dzD8qldt8LMikj
-FHLHWVG5vTKgCS8pP0O/iksA2OOohjfP4E/qmlf22ZIQ7AINLrgflq1p+RH4/jW4YP3Oq+rLWR8q
-UVsDqMeF546/hLvjsSNvy0VvGrkAAAAAAAA=
---===============4626816327520592900==--
+dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAAykBLl2a5cy
+d0Z+SGtoYDbcWhkXr3fo+RD1rOR0jCfNOlHSjD94zu74kU4dCL4Xf/yugWVl9mzch5Ob6RKOnBv2
+hSD5IJlcPqZ35K4ynQAFNCXUARyJyztr684H40SWeRdbs1GrEzjqhYord63Lj5sWgV1IPGjLkPZp
+hPJpP3RYJ0qJOkq5CAIvPk4vK6/CY2xZKGsUkvwvHdaNsHdBx8ijGobGylYM6jiMIKh/kl7WqT1p
+bMgNU67Bv7pH/CMRxPXeO8sVrTb6xDDc9/1io6UOt2d2vlzHhcwP3JItyPonjWXLJSA/MSI2XrZM
+NBCbhSgKWAoS1t6/OLEHixdIGnEAAAAAAAA=
+--===============5601880863697810838==--
 
