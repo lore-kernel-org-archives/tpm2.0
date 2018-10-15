@@ -1,25 +1,325 @@
-Content-Type: multipart/mixed; boundary="===============4181794340063291930=="
+Content-Type: multipart/mixed; boundary="===============5155301588082521844=="
 MIME-Version: 1.0
-From: Joshua Lock <joshua.g.lock at linux.intel.com>
-Subject: [tpm2] tpm2-tools 3.1.3 released
-Date: Mon, 15 Oct 2018 16:02:41 +0100
-Message-ID: <ecdd13f5c66fcfb4ac1e9770ae6cc9ff59528296.camel@linux.intel.com>
+From: Bryan Diehl <bryan.diehl at smartmatic.us>
+Subject: [tpm2] Advice on Building tpm-tools
+Date: Mon, 15 Oct 2018 17:16:39 +0000
+Message-ID: <CY4PR18MB098126C0197707B3224C7561FDFD0@CY4PR18MB0981.namprd18.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4181794340063291930==
+--===============5155301588082521844==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-All,
+I am trying to build and test the latest tpm-tools for tpm 2.0 and am havin=
+g problems with errors from unit and integration tests.
+Then I realized that I was using master branches and should be using releas=
+ed branches.
 
-tpm2-tools 3.1.3 has been tagged and released:
-https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.3
+Per https://github.com/tpm2-software/tpm2-tools/blob/master/INSTALL.md
+I should be using:
+tpm2-tools          version 3.1.0
+tpm2-tss              version 2.0.0
+tpm2-abrmd      version 2.0.0
 
-Thanks,
-Joshua
+tpm2-tss
+https://github.com/tpm2-software/tpm2-tss
+git clone https://github.com/tpm2-software/tpm2-tss.git
+cd tpm2-tss
+git checkout 2.0.x    #branch 2.0.x
+
+tpm2-abrmd
+git clone https://github.com/tpm2-software/tpm2-abrmd.git
+cd tpm2-abrmd
+git checkout tags/2.0.0   #tag 2.0.0
+
+tpm2-tools
+https://github.com/tpm2-software/tpm2-tools
+git clone https://github.com/tpm2-software/tpm2-abrmd.git
+cd tpm2-abrmd
+git checkout tags/3.1.0   #tag 3.1.0
+
+tpm-server (tpm emulator)
+https://sourceforge.net/projects/ibmswtpm2
+ibmtss1331.tar.gz
+Is 1331 the correct version to be using with the above tools, tss, and abrm=
+d?
+
+Are these the correct versions of each project to work together?
+I need to be doing testing at least installing certificates and generating =
+ECDSA asap.
+I cannot get these tools to build without error.
+
+Here are my install/build scripts:
+
+#=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+# tpm2-tss - ONE TIME ONLY - git source code and select the correct branch
+
+cd ~/src
+
+git clone https://github.com/tpm2-software/tpm2-tss.git
+cd tpm2-tss
+git checkout 2.0.x
+
+#=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+# tpm2-tss - Update Source and Build
+
+cd ~/src/tpm2-tss
+make clean
+git pull
+
+./bootstrap
+./configure --enable-unit --enable-integration
+
+make -j4 check
+
+sudo make install
 
 
---===============4181794340063291930==--
+#=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+# tpm2-abrmd - ONE TIME ONLY - git source code and select the correct branch
+
+cd ~/src
+
+git clone https://github.com/tpm2-software/tpm2-abrmd.git
+cd tpm2-abrmd
+
+#git the latest release branch, NOT the master
+git checkout tags/2.0.0
+
+
+#=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+# tpm2-abrmd - Update Source and Build
+
+cd ~/src/tpm2-abrmd
+make clean
+git pull
+
+./bootstrap
+./configure --enable-unit --with-dbuspolicydir=3D/etc/dbus-1/system.d
+
+#dbus-launch make check   # need dbus-launch? comment this out if not
+
+make -j4 check
+
+sudo make install
+
+
+#=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+# tpm2-tools - ONE TIME ONLY - git source code and select the correct branch
+
+cd ~/src
+
+git clone https://github.com/tpm2-software/tpm2-tools.git
+
+cd tpm2-tools
+
+#git the latest release branch, NOT the master
+git checkout tags/3.1.0
+
+#=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+# tpm2-tools - Update Source and Build
+
+cd ~/src/tpm2-tools
+make clean
+git pull
+
+./bootstrap
+./configure --enable-unit --enable-integration
+make -j4 check
+sudo make install
+
+
+
+
+Thank you!
+
+Bryan Diehl
+
+
+--===============5155301588082521844==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnAubXNvbm9ybWFsMCwgbGkubXNvbm9ybWFsMCwgZGl2Lm1zb25vcm1h
+bDAKCXttc28tc3R5bGUtbmFtZTptc29ub3JtYWw7Cgltc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzsK
+CW1hcmdpbi1yaWdodDowaW47Cgltc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0bzsKCW1hcmdpbi1s
+ZWZ0OjBpbjsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1z
+ZXJpZjt9CnNwYW4uRW1haWxTdHlsZTE4Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9z
+ZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30KLk1zb0NocERlZmF1bHQKCXtt
+c28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtc2l6ZToxMC4wcHQ7fQpAcGFnZSBXb3Jk
+U2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsKCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAx
+LjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+
+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNw
+aWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1s
+Pgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRh
+PSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkg
+bGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRpdiBjbGFzcz0i
+V29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSBhbSB0cnlpbmcgdG8gYnVpbGQg
+YW5kIHRlc3QgdGhlIGxhdGVzdCB0cG0tdG9vbHMgZm9yIHRwbSAyLjAgYW5kIGFtIGhhdmluZyBw
+cm9ibGVtcyB3aXRoIGVycm9ycyBmcm9tIHVuaXQgYW5kIGludGVncmF0aW9uIHRlc3RzLjxvOnA+
+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGVuIEkgcmVhbGl6ZWQgdGhhdCBJIHdh
+cyB1c2luZyBtYXN0ZXIgYnJhbmNoZXMgYW5kIHNob3VsZCBiZSB1c2luZyByZWxlYXNlZCBicmFu
+Y2hlcy48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286
+cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlBlciA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5j
+b20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL2Jsb2IvbWFzdGVyL0lOU1RBTEwubWQiPgpodHRw
+czovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL2Jsb2IvbWFzdGVyL0lOU1RB
+TEwubWQ8L2E+PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkgc2hvdWxkIGJl
+IHVzaW5nOjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj50cG0yLXRvb2xzJm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHZlcnNp
+b24gMy4xLjA8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+dHBtMi10c3MmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsgdmVyc2lvbiAyLjAuMDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0i
+TXNvTm9ybWFsIj50cG0yLWFicm1kJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHZlcnNp
+b24gMi4wLjA8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8
+L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxiPnRwbTItdHNzPG86cD48L286cD48L2I+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBt
+Mi1zb2Z0d2FyZS90cG0yLXRzcyI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBt
+Mi10c3M8L2E+PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPmdpdCBjbG9uZSBo
+dHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy5naXQ8bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Y2QgdHBtMi10c3M8bzpwPjwvbzpwPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+Z2l0IGNoZWNrb3V0IDIuMC54Jm5ic3A7Jm5ic3A7Jm5ic3A7IDxiPiNi
+cmFuY2ggMi4wLng8L2I+PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+
+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48Yj50cG0yLWFicm1kPG86cD48
+L286cD48L2I+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5naXQgY2xvbmUgaHR0cHM6Ly9naXRo
+dWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC5naXQ8bzpwPjwvbzpwPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+Y2QgdHBtMi1hYnJtZDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj5naXQgY2hlY2tvdXQgdGFncy8yLjAuMCZuYnNwOyZuYnNwOyA8Yj4jdGFnIDIuMC4w
+PG86cD48L286cD48L2I+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpw
+PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+dHBtMi10b29sczxvOnA+PC9vOnA+PC9iPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTIt
+c29mdHdhcmUvdHBtMi10b29scyI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBt
+Mi10b29sczwvYT48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Z2l0IGNsb25l
+IGh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQuZ2l0PG86cD48L286
+cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPmNkIHRwbTItYWJybWQ8bzpwPjwvbzpwPjwvcD4K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+Z2l0IGNoZWNrb3V0IHRhZ3MvMy4xLjAmbmJzcDsmbmJzcDsg
+PGI+I3RhZyAzLjEuMDxvOnA+PC9vOnA+PC9iPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86
+cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxiPnRwbS1zZXJ2ZXI8L2I+
+ICh0cG0gZW11bGF0b3IpPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxhIGhy
+ZWY9Imh0dHBzOi8vc291cmNlZm9yZ2UubmV0L3Byb2plY3RzL2libXN3dHBtMiI+aHR0cHM6Ly9z
+b3VyY2Vmb3JnZS5uZXQvcHJvamVjdHMvaWJtc3d0cG0yPC9hPjxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj5pYm10c3MxMzMxLnRhci5nejxvOnA+PC9vOnA+PC9wPgo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj5JcyAxMzMxIHRoZSBjb3JyZWN0IHZlcnNpb24gdG8gYmUgdXNpbmcgd2l0
+aCB0aGUgYWJvdmUgdG9vbHMsIHRzcywgYW5kIGFicm1kPzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+QXJlIHRoZXNlIHRoZSBjb3JyZWN0IHZlcnNpb25zIG9mIGVhY2ggcHJvamVjdCB0byB3b3JrIHRv
+Z2V0aGVyPzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JIG5lZWQgdG8gYmUg
+ZG9pbmcgdGVzdGluZyBhdCBsZWFzdCBpbnN0YWxsaW5nIGNlcnRpZmljYXRlcyBhbmQgZ2VuZXJh
+dGluZyBFQ0RTQSBhc2FwLjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JIGNh
+bm5vdCBnZXQgdGhlc2UgdG9vbHMgdG8gYnVpbGQgd2l0aG91dCBlcnJvci48bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPkhlcmUgYXJlIG15IGluc3RhbGwvYnVpbGQgc2NyaXB0czo8bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPiM9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT08bzpw
+PjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+IyB0cG0yLXRzcyAtIE9ORSBUSU1FIE9O
+TFkgLSBnaXQgc291cmNlIGNvZGUgYW5kIHNlbGVjdCB0aGUgY29ycmVjdCBicmFuY2g8bzpwPjwv
+bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPmNkIH4vc3JjPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5naXQgY2xvbmUg
+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3MuZ2l0PG86cD48L286cD48
+L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPmNkIHRwbTItdHNzPG86cD48L286cD48L3A+CjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPmdpdCBjaGVja291dCAyLjAueDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+Iz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PTxvOnA+PC9vOnA+PC9w
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4jIHRwbTItdHNzIC0gVXBkYXRlIFNvdXJjZSBhbmQgQnVp
+bGQ8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48
+L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPmNkIH4vc3JjL3RwbTItdHNzPG86cD48L286cD48L3A+
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPm1ha2UgY2xlYW48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+Z2l0IHB1bGw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPi4vYm9vdHN0cmFwPG86
+cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPi4vY29uZmlndXJlIC0tZW5hYmxlLXVu
+aXQgLS1lbmFibGUtaW50ZWdyYXRpb248bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPm1ha2UgLWo0IGNo
+ZWNrPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5zdWRvIG1ha2UgaW5zdGFsbDxvOnA+PC9vOnA+PC9w
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiM9PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT08bzpwPjwvbzpwPjwvcD4KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+IyB0cG0yLWFicm1kIC0gT05FIFRJTUUgT05MWSAtIGdpdCBzb3Vy
+Y2UgY29kZSBhbmQgc2VsZWN0IHRoZSBjb3JyZWN0IGJyYW5jaDxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+Y2Qgfi9zcmM8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJz
+cDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPmdpdCBjbG9uZSBodHRwczovL2dpdGh1
+Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kLmdpdDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj5jZCB0cG0yLWFicm1kPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4jZ2l0IHRo
+ZSBsYXRlc3QgcmVsZWFzZSBicmFuY2gsIE5PVCB0aGUgbWFzdGVyPG86cD48L286cD48L3A+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPmdpdCBjaGVja291dCB0YWdzLzIuMC4wPG86cD48L286cD48L3A+
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Iz09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PTxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj4jIHRwbTItYWJybWQgLSBVcGRhdGUgU291cmNlIGFuZCBCdWlsZDxv
+OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+Y2Qgfi9zcmMvdHBtMi1hYnJtZDxvOnA+PC9vOnA+PC9wPgo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj5tYWtlIGNsZWFuPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPmdpdCBwdWxsPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxv
+OnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4uL2Jvb3RzdHJhcDxvOnA+
+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4uL2NvbmZpZ3VyZSAtLWVuYWJsZS11bml0
+IC0td2l0aC1kYnVzcG9saWN5ZGlyPS9ldGMvZGJ1cy0xL3N5c3RlbS5kPG86cD48L286cD48L3A+
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj4jZGJ1cy1sYXVuY2ggbWFrZSBjaGVjayZuYnNwOyZuYnNwOyAjIG5lZWQgZGJ1cy1s
+YXVuY2g/IGNvbW1lbnQgdGhpcyBvdXQgaWYgbm90PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5tYWtl
+IC1qNCBjaGVjazxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
+OzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+c3VkbyBtYWtlIGluc3RhbGw8bzpwPjwv
+bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij4jPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PG86cD48L286cD48
+L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiMgdHBtMi10b29scyAtIE9ORSBUSU1FIE9OTFkgLSBn
+aXQgc291cmNlIGNvZGUgYW5kIHNlbGVjdCB0aGUgY29ycmVjdCBicmFuY2g8bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPmNkIH4vc3JjPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxv
+OnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5naXQgY2xvbmUgaHR0cHM6
+Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10b29scy5naXQ8bzpwPjwvbzpwPjwvcD4K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiPmNkIHRwbTItdG9vbHM8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiNnaXQgdGhlIGxhdGVz
+dCByZWxlYXNlIGJyYW5jaCwgTk9UIHRoZSBtYXN0ZXI8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+Z2l0IGNoZWNrb3V0IHRhZ3MvMy4xLjA8bzpwPjwvbzpwPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PiM9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT08bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+IyB0cG0yLXRvb2xzIC0gVXBkYXRlIFNvdXJjZSBhbmQg
+QnVpbGQ8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286
+cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPmNkIH4vc3JjL3RwbTItdG9vbHM8bzpwPjwvbzpw
+PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+bWFrZSBjbGVhbjxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj5naXQgcHVsbDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Li9ib290c3Ry
+YXA8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Li9jb25maWd1cmUgLS1lbmFi
+bGUtdW5pdCAtLWVuYWJsZS1pbnRlZ3JhdGlvbjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj5tYWtlIC1qNCBjaGVjazxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij5zdWRvIG1ha2UgaW5zdGFsbDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
+bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286
+cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+VGhhbmsgeW91ITxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
+OzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+QnJ5YW4gRGllaGw8bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjwvZGl2Pgo8L2Jv
+ZHk+CjwvaHRtbD4K
+
+--===============5155301588082521844==--
 
