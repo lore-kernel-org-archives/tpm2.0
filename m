@@ -1,128 +1,125 @@
-Content-Type: multipart/mixed; boundary="===============6253422558671058933=="
+Content-Type: multipart/mixed; boundary="===============1486706373916711621=="
 MIME-Version: 1.0
-From: David Woodhouse <dwmw2 at infradead.org>
-Subject: Re: [tpm2] tpm2-tss-engine key compatibility with tpm2-pkcs11
-Date: Wed, 17 Oct 2018 10:03:06 -0700
-Message-ID: <311a633731ce7d74e6718ae9845b46953a8c024b.camel@infradead.org>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649C5F42B@ORSMSX101.amr.corp.intel.com
+From: Philip Tricca <philip.b.tricca at intel.com>
+Subject: Re: [tpm2] TPM questions
+Date: Wed, 17 Oct 2018 10:26:47 -0700
+Message-ID: <20181017172647.e2qtikozurmlftgh@jake>
+In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0147344314@exch2010c.sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6253422558671058933==
+--===============1486706373916711621==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2018-10-17 at 16:09 +0000, Roberts, William C wrote:
-> I wish I could fully appreciate what you're saying here. I don't know
-> squat about
-> PKCS#11 URIs or where how you specify them.
+With regard to the UEFI TCTI this may be useful:
+https://github.com/flihp/tpm2-uefi
 
-Unless you're the type who'd prefer to read RFC7512, a suitable primer
-might be http://www.infradead.org/openconnect/pkcs11.html =E2=80=94 it talks
-you through using URIs from the user point of view.
+Also see the last slide from our LSS talk:
+https://events.linuxfoundation.org/wp-content/uploads/2017/11/Getting-Start=
+ed-with-the-TPM2-Software-Stack-TSS2-Philip-Tricca-Intel-1.pdf
 
-The point I was making about Fedora is that this stuff should mostly
-JustWork=E2=84=A2 there, which means you only have to get your head round h=
-ow=20
+Finding a way to work this back into the tpm2-software GH org is in my
+work queue. Feedback would be appreciated.
 
---===============6253422558671058933==
-Content-Type: application/x-pkcs7-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
+Philip
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEFQw
-ggUxMIIEGaADAgECAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBCwUAMIGXMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
-VQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAeFw0xNzEyMjEwMDAwMDBaFw0xODEyMjEyMzU5
-NTlaMCQxIjAgBgkqhkiG9w0BCQEWE2R3bXcyQGluZnJhZGVhZC5vcmcwggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQDgzLNWa18DNpGUj/ZeH0Sgz53ESIbzdPw3OJeuNP6jZhxZojbyfxbM
-hETscxI/Hj6UZ4a7sHm5BkVjlsB1Af2Za/PXUt8MmLAcPMHkMPGunvkUibEvblDvpqMkQZlaZM+t
-5PqFmWkbehLaEvbpNY7dmEAAeKh4klTzJzrr5AAzaCQ32cA2e3+DEIv5O5l9ViMIjy/JM+xMQrfX
-3PZ0chY1PaVWjg59d4Uno+5LRDbgCnPkKJX4ysBGadibjBGQGJEZCjh94iiEebn2KsRLvtrJ72Ph
-3W2HDEdngW3YP0wujFQVs81U7L8XN3kdPRsa9zNqGtYQP/+1KMMJQ57hnfi9AgMBAAGjggHpMIIB
-5TAfBgNVHSMEGDAWgBSCr2yM+MX+lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQUpL+/5lli9jmj2KHj
-ryyhnB2xRt0wDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwIAYDVR0lBBkwFwYIKwYBBQUH
-AwQGCysGAQQBsjEBAwUCMBEGCWCGSAGG+EIBAQQEAwIFIDBGBgNVHSAEPzA9MDsGDCsGAQQBsjEB
-AgEBATArMCkGCCsGAQUFBwIBFh1odHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8E
-UzBRME+gTaBLhklodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50
-aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKG
-SWh0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5k
-U2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAe
-BgNVHREEFzAVgRNkd213MkBpbmZyYWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQCK28BdbVJ9
-QKQqTDfXwogAYiRBEGptfE1Bjy4F5vC6eWJqOJ15vunxjLwdbZYb4L0qrJlh+ZHHHlbIK8uEZu7N
-XHUntmWMbGbZiu7JgrbSXJK1ct9gxrN/sdWYJ+JDjVHg7GfDTvTTPa26JMRqJsO1TjjyDX7A3K39
-TjV8C0hqXvwF9BsNf+qBeWO6GVzJ5572awY221hc1umibmZaKV4fg+7fS7qscx5TSuIc6uvMBQhm
-7NQiCq6euMMWBDUDlotQCDW0ilm0OuLW3IVLuZCm6Msc+6hT9+dCT4JUvxTHZnnO7uLCxV+Ujad+
-PH3itRm38i96p2zvwgLr8vwWA0ckMIIFMTCCBBmgAwIBAgIQTUYRMpPx2e52jnkx1q87gDANBgkq
-hkiG9w0BAQsFADCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQ
-MA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENP
-TU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTcx
-MjIxMDAwMDAwWhcNMTgxMjIxMjM1OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRl
-YWQub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4MyzVmtfAzaRlI/2Xh9EoM+d
-xEiG83T8NziXrjT+o2YcWaI28n8WzIRE7HMSPx4+lGeGu7B5uQZFY5bAdQH9mWvz11LfDJiwHDzB
-5DDxrp75FImxL25Q76ajJEGZWmTPreT6hZlpG3oS2hL26TWO3ZhAAHioeJJU8yc66+QAM2gkN9nA
-Nnt/gxCL+TuZfVYjCI8vyTPsTEK319z2dHIWNT2lVo4OfXeFJ6PuS0Q24Apz5CiV+MrARmnYm4wR
-kBiRGQo4feIohHm59irES77aye9j4d1thwxHZ4Ft2D9MLoxUFbPNVOy/Fzd5HT0bGvczahrWED//
-tSjDCUOe4Z34vQIDAQABo4IB6TCCAeUwHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8Aw
-HQYDVR0OBBYEFKS/v+ZZYvY5o9ih468soZwdsUbdMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8E
-AjAAMCAGA1UdJQQZMBcGCCsGAQUFBwMEBgsrBgEEAbIxAQMFAjARBglghkgBhvhCAQEEBAMCBSAw
-RgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAQEwKzApBggrBgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUu
-Y29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20v
-Q09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYIKwYB
-BQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FD
-bGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQGCCsGAQUFBzABhhhodHRw
-Oi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkq
-hkiG9w0BAQsFAAOCAQEAitvAXW1SfUCkKkw318KIAGIkQRBqbXxNQY8uBebwunliajideb7p8Yy8
-HW2WG+C9KqyZYfmRxx5WyCvLhGbuzVx1J7ZljGxm2YruyYK20lyStXLfYMazf7HVmCfiQ41R4Oxn
-w0700z2tuiTEaibDtU448g1+wNyt/U41fAtIal78BfQbDX/qgXljuhlcyeee9msGNttYXNbpom5m
-WileH4Pu30u6rHMeU0riHOrrzAUIZuzUIgqunrjDFgQ1A5aLUAg1tIpZtDri1tyFS7mQpujLHPuo
-U/fnQk+CVL8Ux2Z5zu7iwsVflI2nfjx94rUZt/Iveqds78IC6/L8FgNHJDCCBeYwggPOoAMCAQIC
-EGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNVBAYTAkdCMRswGQYDVQQI
-ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
-QSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4X
-DTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
-cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
-aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvrOeV6wodnVAFsc4
-A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf+bGBSyD9aH95dDSmeny1
-nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcfWlP8dSsE3Rfywq09N0Zf
-xcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqzaaPpGRqXB7IMjtf7tTmU2
-jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDKCMPybTjoNCQuelc0IAaO
-4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAUu69+Aj36pvE8hI6t7jiY
-7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1UdDwEB/wQEAwIBhjASBgNV
-HRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8ERTBDMEGgP6A9hjtodHRw
-Oi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDBx
-BggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9E
-T1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20w
-DQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2SQgG1NgvNc3fQP7TcePo
-7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs0j8CGpfb+SJA3GaBQ+39
-4k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDMKVmU/PUWNMKSTvtlenlx
-Bhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+E2pvOUtY+hPebuPtTbq7
-vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfHM5tdhYF/8v5UY5g2xANP
-ECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4jkhJiA7EuTecP/CFtR72
-uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1tyZR2niOYihZ+FCbtf3D9
-mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4ognzgXtgtdk3ShrtOS1iA
-N2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAbR9HWdFqzcOoB/hxfEyIQ
-px9/s81rgzdEZOofSlZHynoSMYIDxzCCA8MCAQEwgawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
-ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBD
-QSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
-U2VjdXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCWCGSAFlAwQCAQUAoIIB6zAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xODEwMTcxNzAzMDZaMC8GCSqG
-SIb3DQEJBDEiBCBdE/wvEr3X9TMPlhWfReVnTrGv+1HT07W/R3BAY+Os+zCBvQYJKwYBBAGCNxAE
-MYGvMIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RP
-IFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQTUYRMpPx2e52
-jnkx1q87gDCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJH
-cmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBM
-aW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2Vj
-dXJlIEVtYWlsIENBAhBNRhEyk/HZ7naOeTHWrzuAMA0GCSqGSIb3DQEBAQUABIIBAJTGCyTghT6l
-nbHbNxaMsMT4dIVmP+yZ4FaMzE8R+Tz+uKgu8NNWIyyNNAi0Xd5nnBghNuL6nbSh19yN4oBOImE7
-ips8SxBbddH08zEX/kDdUQrExoJENQ07ZhWxvkzIiOYQL7IJiunpgcis7Z/NL2uG6+q8vrV56J/0
-KHP+fOjvgW7m8CqiigZS6w4VhwfEUxjQfUbupwSkGw53JiKd+pgCHVq1trXz0KDxNvoBcI6M2SXC
-+9H0Utd6S1E1p8yp4TRgt4vl8VP2Y0AsTDvNOkqs/iK7OqyjojREntuYO6kWl16g5iRGoEy95nRQ
-X/OV3SuhboF7n9CAENh3y71oG+QAAAAAAAA=
---===============6253422558671058933==--
+On Thu, Oct 11, 2018 at 07:56:11AM +0000, Fuchs, Andreas wrote:
+> Some quick answers to parts of your questions:
+> =
+
+> a) you don't require the simulator. It's just for development
+> c) export TSS2_LOG=3Dtcti+debug
+> d) use cgdb to step through the code: libtool --mode=3Dexecute cgdb --arg=
+s tpm2_xxx ... or something like this
+> e) you can use libtss2-sys.a directly. Thing you need is to implement a n=
+ew tcti that corresponds to your environment.
+> =
+
+> Cheers,
+> Andreas
+> =
+
+> ________________________________
+> From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Alok Pant [alokpant=
+(a)hotmail.com]
+> Sent: Wednesday, October 10, 2018 21:39
+> To: tpm2(a)lists.01.org; Alok Pant
+> Subject: [tpm2] TPM questions
+> =
+
+> =
+
+> Hi TPM Experts,
+> =
+
+>   I come from computer firmware (UEF aka BIOSI) background and have basis=
+ understanding of TPM. My goal is to implement the advance TPM capabilities=
+ (ex-policy based operation) in PreOS space in firmware/BIOS. With various =
+reverse engineering method I now have  basic understanding of Auth/Handle a=
+nd basic commands such as seal/unseal etc. I am still lost while reading  v=
+arious spec/books and was searching for reference code and sandbox area to =
+better understand the spec/implementation. I came across this wiki - https:=
+//github.com/tpm2-software/tpm2-tools/blob/master/INSTALL.md and tried to p=
+lay with tpm2-tss and tpm2-tools under Ubuntu. This seems helpful but still=
+ lot to digest for new-bee like meI need some help as below
+> =
+
+> =
+
+> =
+
+> a) I can compile tpm2_tss and tpm2_tools but I get build errors on TPM si=
+mulator similar to reported here (https://sourceforge.net/p/ibmswtpm2/discu=
+ssion/general/thread/8a4aac81/?limit=3D25) I tried various OpenSSL revision=
+ and no luck. Do I need TPM simulator to work and if so how do I fix it
+> =
+
+> =
+
+> b) I can now run various tpm_tools as root (i.e. sudo tpm2_getrandom, sud=
+o get_capabilities -c algorithms) etc so at least I have a good baseline fo=
+r tpmtools
+> =
+
+> c) I am interested to print the low level packet that is sent to TPM (req=
+uest/response buffer). How can I do this? Is there verbose/build time optio=
+ns to print the actual request/response packet send to/from TPM
+> =
+
+> d) Is there a way to debug (i.e. step through the code) so I can follow t=
+he code path and look various variable to better understand the code flow
+> =
+
+> e) What afford is needed to port this stack in UEFI EDKII and where shoul=
+d I look to start some investigation
+> =
+
+> =
+
+> It seems there are subset of people (you) who understand it very well but=
+ there are insufficient books/document for new-comers(me)  to get up to spe=
+ed.  I apologize if this is too basic/broad question . Any help/pointers wi=
+ll be greatly appreciated
+> =
+
+> =
+
+> Thanks again for offering help
+> =
+
+> -Alok
+> =
+
+> =
+
+
+> _______________________________________________
+> tpm2 mailing list
+> tpm2(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/tpm2
+
+
+--===============1486706373916711621==--
 
