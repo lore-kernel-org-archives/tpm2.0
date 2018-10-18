@@ -1,125 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============1486706373916711621=="
+Content-Type: multipart/mixed; boundary="===============0117712759901867368=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] TPM questions
-Date: Wed, 17 Oct 2018 10:26:47 -0700
-Message-ID: <20181017172647.e2qtikozurmlftgh@jake>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0147344314@exch2010c.sit.fraunhofer.de
+From: Terry An <terry.an.bj at gmail.com>
+Subject: [tpm2] cannot find the definition of "TSS2_TCTI_CONTEXT"
+Date: Thu, 18 Oct 2018 16:27:59 +0800
+Message-ID: <CA+tBKVgDv+MMg0=s6sxVfA1+b3BqDMseqwjVia_3oSim5aqLAw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1486706373916711621==
+--===============0117712759901867368==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-With regard to the UEFI TCTI this may be useful:
-https://github.com/flihp/tpm2-uefi
+./src/main.c: In function =E2=80=98tcti_device_init=E2=80=99:
+./src/main.c:25:35: error: invalid application of =E2=80=98sizeof=E2=80=99 =
+to incomplete
+type =E2=80=98TSS2_TCTI_CONTEXT=E2=80=99
+     if ((tcti_ctx =3D malloc(sizeof(TSS2_TCTI_CONTEXT))) =3D=3D NULL) {
 
-Also see the last slide from our LSS talk:
-https://events.linuxfoundation.org/wp-content/uploads/2017/11/Getting-Start=
-ed-with-the-TPM2-Software-Stack-TSS2-Philip-Tricca-Intel-1.pdf
+# grep TSS2_TCTI_OPAQUE_CONTEXT_BLOB /usr/include/* -r
+sapi/tss2_tcti.h:typedef struct TSS2_TCTI_OPAQUE_CONTEXT_BLOB
+TSS2_TCTI_CONTEXT;
+#
 
-Finding a way to work this back into the tpm2-software GH org is in my
-work queue. Feedback would be appreciated.
+and BTW, does anywhere have a demo code to describe how to program with
+TPM2.0 ?
 
-Philip
+--===============0117712759901867368==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-On Thu, Oct 11, 2018 at 07:56:11AM +0000, Fuchs, Andreas wrote:
-> Some quick answers to parts of your questions:
-> =
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdj4uL3NyYy9t
+YWluLmM6IEluIGZ1bmN0aW9uIOKAmHRjdGlfZGV2aWNlX2luaXTigJk6PC9kaXY+PGRpdj4uL3Ny
+Yy9tYWluLmM6MjU6MzU6IGVycm9yOiBpbnZhbGlkIGFwcGxpY2F0aW9uIG9mIOKAmHNpemVvZuKA
+mSB0byBpbmNvbXBsZXRlIHR5cGUg4oCYVFNTMl9UQ1RJX0NPTlRFWFTigJk8L2Rpdj48ZGl2PsKg
+IMKgIMKgaWYgKCh0Y3RpX2N0eCA9IG1hbGxvYyhzaXplb2YoVFNTMl9UQ1RJX0NPTlRFWFQpKSkg
+PT0gTlVMTCkgezwvZGl2PjxkaXY+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqDCoDwvZGl2PjxkaXY+PGRpdj4jIGdyZXAgVFNTMl9UQ1RJX09QQVFVRV9DT05U
+RVhUX0JMT0IgL3Vzci9pbmNsdWRlLyogLXI8L2Rpdj48ZGl2PnNhcGkvdHNzMl90Y3RpLmg6dHlw
+ZWRlZiBzdHJ1Y3QgVFNTMl9UQ1RJX09QQVFVRV9DT05URVhUX0JMT0IgVFNTMl9UQ1RJX0NPTlRF
+WFQ7PC9kaXY+PGRpdj4jwqA8L2Rpdj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PmFuZCBCVFcs
+IGRvZXMgYW55d2hlcmUgaGF2ZSBhIGRlbW8gY29kZSB0byBkZXNjcmliZSBob3cgdG8gcHJvZ3Jh
+bSB3aXRoIFRQTTIuMCA/wqA8L2Rpdj48ZGl2Pjxicj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4K
 
-> a) you don't require the simulator. It's just for development
-> c) export TSS2_LOG=3Dtcti+debug
-> d) use cgdb to step through the code: libtool --mode=3Dexecute cgdb --arg=
-s tpm2_xxx ... or something like this
-> e) you can use libtss2-sys.a directly. Thing you need is to implement a n=
-ew tcti that corresponds to your environment.
-> =
-
-> Cheers,
-> Andreas
-> =
-
-> ________________________________
-> From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Alok Pant [alokpant=
-(a)hotmail.com]
-> Sent: Wednesday, October 10, 2018 21:39
-> To: tpm2(a)lists.01.org; Alok Pant
-> Subject: [tpm2] TPM questions
-> =
-
-> =
-
-> Hi TPM Experts,
-> =
-
->   I come from computer firmware (UEF aka BIOSI) background and have basis=
- understanding of TPM. My goal is to implement the advance TPM capabilities=
- (ex-policy based operation) in PreOS space in firmware/BIOS. With various =
-reverse engineering method I now have  basic understanding of Auth/Handle a=
-nd basic commands such as seal/unseal etc. I am still lost while reading  v=
-arious spec/books and was searching for reference code and sandbox area to =
-better understand the spec/implementation. I came across this wiki - https:=
-//github.com/tpm2-software/tpm2-tools/blob/master/INSTALL.md and tried to p=
-lay with tpm2-tss and tpm2-tools under Ubuntu. This seems helpful but still=
- lot to digest for new-bee like meI need some help as below
-> =
-
-> =
-
-> =
-
-> a) I can compile tpm2_tss and tpm2_tools but I get build errors on TPM si=
-mulator similar to reported here (https://sourceforge.net/p/ibmswtpm2/discu=
-ssion/general/thread/8a4aac81/?limit=3D25) I tried various OpenSSL revision=
- and no luck. Do I need TPM simulator to work and if so how do I fix it
-> =
-
-> =
-
-> b) I can now run various tpm_tools as root (i.e. sudo tpm2_getrandom, sud=
-o get_capabilities -c algorithms) etc so at least I have a good baseline fo=
-r tpmtools
-> =
-
-> c) I am interested to print the low level packet that is sent to TPM (req=
-uest/response buffer). How can I do this? Is there verbose/build time optio=
-ns to print the actual request/response packet send to/from TPM
-> =
-
-> d) Is there a way to debug (i.e. step through the code) so I can follow t=
-he code path and look various variable to better understand the code flow
-> =
-
-> e) What afford is needed to port this stack in UEFI EDKII and where shoul=
-d I look to start some investigation
-> =
-
-> =
-
-> It seems there are subset of people (you) who understand it very well but=
- there are insufficient books/document for new-comers(me)  to get up to spe=
-ed.  I apologize if this is too basic/broad question . Any help/pointers wi=
-ll be greatly appreciated
-> =
-
-> =
-
-> Thanks again for offering help
-> =
-
-> -Alok
-> =
-
-> =
-
-
-> _______________________________________________
-> tpm2 mailing list
-> tpm2(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/tpm2
-
-
---===============1486706373916711621==--
+--===============0117712759901867368==--
 
