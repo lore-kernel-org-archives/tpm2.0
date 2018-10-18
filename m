@@ -1,75 +1,140 @@
-Content-Type: multipart/mixed; boundary="===============5795232848990149901=="
+Content-Type: multipart/mixed; boundary="===============5079877299603537973=="
 MIME-Version: 1.0
-From: Terry An <terry.an.bj at gmail.com>
+From: Tricca, Philip B <philip.b.tricca at intel.com>
 Subject: Re: [tpm2] does anyone compile tpm2-tss-2.1.0 successful on CentOS7?
-Date: Thu, 18 Oct 2018 19:07:58 +0800
-Message-ID: <CA+tBKVhcZPfdKj-O+_aZrjrr8FamukWRSqd7BdXW7Wt4rHd_uA@mail.gmail.com>
+Date: Thu, 18 Oct 2018 21:26:01 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909ACBE2E1@ORSMSX103.amr.corp.intel.com>
 In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0147347A88@exch2010c.sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5795232848990149901==
+--===============5079877299603537973==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks, I'll check it out.
+If we're not checking for these dependencies @ configure time then I'd call=
+ this a bug. The gcrypt handling stuff in the autoconf file is pretty convo=
+luted but if I'm reading your last message correctly you're saying that it =
+can't tell the difference between libgcrypt 1.2 & 2.0?
 
-On Thu, Oct 18, 2018 at 6:35 PM Fuchs, Andreas <
-andreas.fuchs(a)sit.fraunhofer.de> wrote:
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Fuchs, Andreas
+Sent: 18 October, 2018 03:35
+To: Terry An <terry.an.bj(a)gmail.com>; tpm2(a)lists.01.org
+Subject: Re: [tpm2] does anyone compile tpm2-tss-2.1.0 successful on CentOS=
+7?
 
-> tpm2-tss requires libgcrypt20 (at least that's was it's called on Ubuntu).
-> libgcrypt (which is the 1.x branch) is quite old and had a different API
-> than the 20 series...
->
-> Maybe that's the problem...
-> ------------------------------
-> *From:* tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Terry An [
-> terry.an.bj(a)gmail.com]
-> *Sent:* Thursday, October 18, 2018 12:18
-> *To:* tpm2(a)lists.01.org
-> *Subject:* [tpm2] does anyone compile tpm2-tss-2.1.0 successful on
-> CentOS7?
->
-> lots of errors on my laptop.
->
-> I have updated libgpg-error, libgcrypt-devel, etc..
->
+tpm2-tss requires libgcrypt20 (at least that's was it's called on Ubuntu).
+libgcrypt (which is the 1.x branch) is quite old and had a different API th=
+an the 20 series...
 
---===============5795232848990149901==
+Maybe that's the problem...
+________________________________
+From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Terry An [terry.an.bj=
+(a)gmail.com]
+Sent: Thursday, October 18, 2018 12:18
+To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
+Subject: [tpm2] does anyone compile tpm2-tss-2.1.0 successful on CentOS7?
+lots of errors on my laptop.
+
+I have updated libgpg-error, libgcrypt-devel, etc..
+
+--===============5079877299603537973==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+VGhhbmtzLCBJJiMzOTtsbCBjaGVjayBpdCBvdXQuwqA8YnI+PC9kaXY+
-PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0ibHRyIj5PbiBUaHUsIE9jdCAx
-OCwgMjAxOCBhdCA2OjM1IFBNIEZ1Y2hzLCBBbmRyZWFzICZsdDs8YSBocmVmPSJtYWlsdG86YW5k
-cmVhcy5mdWNoc0BzaXQuZnJhdW5ob2Zlci5kZSI+YW5kcmVhcy5mdWNoc0BzaXQuZnJhdW5ob2Zl
-ci5kZTwvYT4mZ3Q7IHdyb3RlOjxicj48L2Rpdj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVv
-dGUiIHN0eWxlPSJtYXJnaW46MCAwIDAgLjhleDtib3JkZXItbGVmdDoxcHggI2NjYyBzb2xpZDtw
-YWRkaW5nLWxlZnQ6MWV4Ij4KCgoKCjxkaXY+CjxkaXYgc3R5bGU9ImRpcmVjdGlvbjpsdHI7Zm9u
-dC1mYW1pbHk6VGFob21hO2NvbG9yOiMwMDAwMDA7Zm9udC1zaXplOjEwcHQiPgo8ZGl2PnRwbTIt
-dHNzIHJlcXVpcmVzIGxpYmdjcnlwdDIwIChhdCBsZWFzdCB0aGF0JiMzOTtzIHdhcyBpdCYjMzk7
-cyBjYWxsZWQgb24gVWJ1bnR1KS48L2Rpdj4KPGRpdj5saWJnY3J5cHQgKHdoaWNoIGlzIHRoZSAx
-LnggYnJhbmNoKSBpcyBxdWl0ZSBvbGQgYW5kIGhhZCBhIGRpZmZlcmVudCBBUEkgdGhhbiB0aGUg
-MjAgc2VyaWVzLi4uPGJyPgo8L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2Pk1heWJlIHRoYXQm
-IzM5O3MgdGhlIHByb2JsZW0uLi48YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpU
-aW1lcyBOZXcgUm9tYW47Y29sb3I6IzAwMDAwMDtmb250LXNpemU6MTZweCI+Cjxocj4KPGRpdiBp
-ZD0ibV80MTIyMTQzMzQzMDQ0ODEwMjM3ZGl2UnBGMzMxMTAwIiBzdHlsZT0iZGlyZWN0aW9uOmx0
-ciI+PGZvbnQgc2l6ZT0iMiIgZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8
-L2I+IHRwbTIgWzxhIGhyZWY9Im1haWx0bzp0cG0yLWJvdW5jZXNAbGlzdHMuMDEub3JnIiB0YXJn
-ZXQ9Il9ibGFuayI+dHBtMi1ib3VuY2VzQGxpc3RzLjAxLm9yZzwvYT5dIG9uIGJlaGFsZiBvZiBU
-ZXJyeSBBbiBbPGEgaHJlZj0ibWFpbHRvOnRlcnJ5LmFuLmJqQGdtYWlsLmNvbSIgdGFyZ2V0PSJf
-YmxhbmsiPnRlcnJ5LmFuLmJqQGdtYWlsLmNvbTwvYT5dPGJyPgo8Yj5TZW50OjwvYj4gVGh1cnNk
-YXksIE9jdG9iZXIgMTgsIDIwMTggMTI6MTg8YnI+CjxiPlRvOjwvYj4gPGEgaHJlZj0ibWFpbHRv
-OnRwbTJAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+
-PGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIGRvZXMgYW55b25lIGNvbXBpbGUgdHBtMi10c3Mt
-Mi4xLjAgc3VjY2Vzc2Z1bCBvbiBDZW50T1M3Pzxicj4KPC9mb250Pjxicj4KPC9kaXY+CjxkaXY+
-PC9kaXY+CjxkaXY+CjxkaXYgZGlyPSJsdHIiPmxvdHMgb2YgZXJyb3JzIG9uIG15IGxhcHRvcC4K
-PGRpdj48YnI+CjwvZGl2Pgo8ZGl2PkkgaGF2ZSB1cGRhdGVkIGxpYmdwZy1lcnJvciwgbGliZ2Ny
-eXB0LWRldmVsLCBldGMuLjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+
-Cgo8L2Jsb2NrcXVvdGU+PC9kaXY+Cg==
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8IS0tW2lm
+ICFtc29dPjxzdHlsZT52XDoqIHtiZWhhdmlvcjp1cmwoI2RlZmF1bHQjVk1MKTt9Cm9cOioge2Jl
+aGF2aW9yOnVybCgjZGVmYXVsdCNWTUwpO30Kd1w6KiB7YmVoYXZpb3I6dXJsKCNkZWZhdWx0I1ZN
+TCk7fQouc2hhcGUge2JlaGF2aW9yOnVybCgjZGVmYXVsdCNWTUwpO30KPC9zdHlsZT48IVtlbmRp
+Zl0tLT48c3R5bGU+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250
+LWZhbWlseToiQ2FtYnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpA
+Zm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0
+IDMgMiA0O30KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OlRhaG9tYTsKCXBhbm9zZS0xOjIgMTEg
+NiA0IDMgNSA0IDQgMiA0O30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxp
+Lk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4w
+MDAxcHQ7Cglmb250LXNpemU6MTIuMHB0OwoJZm9udC1mYW1pbHk6IlRpbWVzIE5ldyBSb21hbiIs
+c2VyaWY7fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5
+OwoJY29sb3I6IzA1NjNDMTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQs
+IHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xv
+cjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnAKCXttc28tc3R5bGUtcHJp
+b3JpdHk6OTk7CgltYXJnaW46MGluOwoJbWFyZ2luLWJvdHRvbTouMDAwMXB0OwoJZm9udC1zaXpl
+OjEyLjBwdDsKCWZvbnQtZmFtaWx5OiJUaW1lcyBOZXcgUm9tYW4iLHNlcmlmO30Kc3Bhbi5FbWFp
+bFN0eWxlMTgKCXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1yZXBseTsKCWZvbnQtZmFtaWx5OiJD
+YWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6IzFGNDk3RDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNv
+LXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250LXNpemU6MTAuMHB0O30KQHBhZ2UgV29yZFNl
+Y3Rpb24xCgl7c2l6ZTo4LjVpbiAxMS4waW47CgltYXJnaW46MS4waW4gMS4waW4gMS4waW4gMS4w
+aW47fQpkaXYuV29yZFNlY3Rpb24xCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQotLT48L3N0eWxlPjwh
+LS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlk
+bWF4PSIxMDI2IiAvPgo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4K
+PG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPgo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0i
+MSIgLz4KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPgo8L2hlYWQ+Cjxib2R5IGxh
+bmc9IkVOLVVTIiBsaW5rPSIjMDU2M0MxIiB2bGluaz0iIzk1NEY3MiI+CjxkaXYgY2xhc3M9Ildv
+cmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6
+MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjoj
+MUY0OTdEIj5JZiB3ZSYjODIxNztyZSBub3QgY2hlY2tpbmcgZm9yIHRoZXNlIGRlcGVuZGVuY2ll
+cyBAIGNvbmZpZ3VyZSB0aW1lIHRoZW4gSSYjODIxNztkIGNhbGwgdGhpcyBhIGJ1Zy4gVGhlIGdj
+cnlwdCBoYW5kbGluZyBzdHVmZiBpbiB0aGUgYXV0b2NvbmYgZmlsZSBpcyBwcmV0dHkgY29udm9s
+dXRlZCBidXQKIGlmIEkmIzgyMTc7bSByZWFkaW5nIHlvdXIgbGFzdCBtZXNzYWdlIGNvcnJlY3Rs
+eSB5b3UmIzgyMTc7cmUgc2F5aW5nIHRoYXQgaXQgY2FuJiM4MjE3O3QgdGVsbCB0aGUgZGlmZmVy
+ZW5jZSBiZXR3ZWVuIGxpYmdjcnlwdCAxLjIgJmFtcDsgMi4wPzxvOnA+PC9vOnA+PC9zcGFuPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgbmFtZT0iX01haWxFbmRDb21wb3NlIj48c3BhbiBz
+dHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNh
+bnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9hPjwvcD4K
+PGRpdj4KPGRpdiBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLXRvcDpzb2xpZCAjRTFFMUUxIDEu
+MHB0O3BhZGRpbmc6My4wcHQgMGluIDBpbiAwaW4iPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBu
+YW1lPSJfX19fX3JlcGx5c2VwYXJhdG9yIj48L2E+PGI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTox
+MS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj5Gcm9tOjwv
+c3Bhbj48L2I+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7
+Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj4gdHBtMiBbbWFpbHRvOnRwbTItYm91bmNlc0BsaXN0
+cy4wMS5vcmddCjxiPk9uIEJlaGFsZiBPZiA8L2I+RnVjaHMsIEFuZHJlYXM8YnI+CjxiPlNlbnQ6
+PC9iPiAxOCBPY3RvYmVyLCAyMDE4IDAzOjM1PGJyPgo8Yj5Ubzo8L2I+IFRlcnJ5IEFuICZsdDt0
+ZXJyeS5hbi5iakBnbWFpbC5jb20mZ3Q7OyB0cG0yQGxpc3RzLjAxLm9yZzxicj4KPGI+U3ViamVj
+dDo8L2I+IFJlOiBbdHBtMl0gZG9lcyBhbnlvbmUgY29tcGlsZSB0cG0yLXRzcy0yLjEuMCBzdWNj
+ZXNzZnVsIG9uIENlbnRPUzc/PG86cD48L286cD48L3NwYW4+PC9wPgo8L2Rpdj4KPC9kaXY+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8ZGl2Pgo8ZGl2Pgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWls
+eTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibGFjayI+dHBtMi10c3MgcmVx
+dWlyZXMgbGliZ2NyeXB0MjAgKGF0IGxlYXN0IHRoYXQncyB3YXMgaXQncyBjYWxsZWQgb24gVWJ1
+bnR1KS48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjwvZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtUYWhv
+bWEmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibGFjayI+bGliZ2NyeXB0ICh3aGljaCBpcyB0aGUg
+MS54IGJyYW5jaCkgaXMgcXVpdGUgb2xkIGFuZCBoYWQgYSBkaWZmZXJlbnQgQVBJIHRoYW4gdGhl
+IDIwIHNlcmllcy4uLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPC9kaXY+CjxkaXY+CjxwIGNsYXNz
+PSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZx
+dW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsYWNrIj48bzpwPiZuYnNwOzwvbzpw
+Pjwvc3Bhbj48L3A+CjwvZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHls
+ZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1z
+ZXJpZjtjb2xvcjpibGFjayI+TWF5YmUgdGhhdCdzIHRoZSBwcm9ibGVtLi4uPG86cD48L286cD48
+L3NwYW4+PC9wPgo8L2Rpdj4KPGRpdj4KPGRpdiBjbGFzcz0iTXNvTm9ybWFsIiBhbGlnbj0iY2Vu
+dGVyIiBzdHlsZT0idGV4dC1hbGlnbjpjZW50ZXIiPjxzcGFuIHN0eWxlPSJjb2xvcjpibGFjayI+
+CjxociBzaXplPSIzIiB3aWR0aD0iMTAwJSIgYWxpZ249ImNlbnRlciI+Cjwvc3Bhbj48L2Rpdj4K
+PGRpdiBpZD0iZGl2UnBGMzMxMTAwIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdp
+bi1ib3R0b206MTIuMHB0Ij48Yj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZh
+bWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibGFjayI+RnJvbTo8L3Nw
+YW4+PC9iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1Rh
+aG9tYSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsYWNrIj4gdHBtMiBbdHBtMi1ib3VuY2VzQGxp
+c3RzLjAxLm9yZ10gb24gYmVoYWxmCiBvZiBUZXJyeSBBbiBbdGVycnkuYW4uYmpAZ21haWwuY29t
+XTxicj4KPGI+U2VudDo8L2I+IFRodXJzZGF5LCBPY3RvYmVyIDE4LCAyMDE4IDEyOjE4PGJyPgo8
+Yj5Ubzo8L2I+IDxhIGhyZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9yZyI+dHBtMkBsaXN0cy4w
+MS5vcmc8L2E+PGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIGRvZXMgYW55b25lIGNvbXBpbGUg
+dHBtMi10c3MtMi4xLjAgc3VjY2Vzc2Z1bCBvbiBDZW50T1M3Pzwvc3Bhbj48c3BhbiBzdHlsZT0i
+Y29sb3I6YmxhY2siPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPC9kaXY+CjxkaXY+CjxkaXY+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJjb2xvcjpibGFjayI+bG90cyBvZiBlcnJv
+cnMgb24gbXkgbGFwdG9wLiA8bzpwPgo8L286cD48L3NwYW4+PC9wPgo8ZGl2Pgo8cCBjbGFzcz0i
+TXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iY29sb3I6YmxhY2siPjxvOnA+Jm5ic3A7PC9vOnA+PC9z
+cGFuPjwvcD4KPC9kaXY+CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJj
+b2xvcjpibGFjayI+SSBoYXZlIHVwZGF0ZWQgbGliZ3BnLWVycm9yLCBsaWJnY3J5cHQtZGV2ZWws
+IGV0Yy4uPG86cD48L286cD48L3NwYW4+PC9wPgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4K
+PC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
 
---===============5795232848990149901==--
+--===============5079877299603537973==--
 
