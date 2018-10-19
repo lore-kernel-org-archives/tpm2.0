@@ -1,154 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============4824979261957161223=="
+Content-Type: multipart/mixed; boundary="===============8820804342358345115=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] does anyone compile tpm2-tss-2.1.0 successful on CentOS7?
-Date: Thu, 18 Oct 2018 21:51:30 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0147347F43@exch2010c.sit.fraunhofer.de>
-In-Reply-To: DB638850A6A2434A93ECADDA0BC838909ACBE2E1@ORSMSX103.amr.corp.intel.com
+From: Terry An <terry.an.bj at gmail.com>
+Subject: [tpm2] There is no '-I' option for tpm2_rsaencrypt which I found it
+ in the doc.
+Date: Fri, 19 Oct 2018 16:36:57 +0800
+Message-ID: <CA+tBKViQvj4SfavhkL6z=GQnkWkcB7SNEgNzWSQFsZcvkLgUeQ@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4824979261957161223==
+--===============8820804342358345115==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I've just remembered running into this problem some time back and situation=
- sounded familiar...
+[root(a)localhost Test]# tpm2_rsaencrypt -I data.in -c obj.ctx  -o
+data.encrypted
+tpm2_rsaencrypt: invalid option -- 'I'
+[root(a)localhost Test]#
 
-Yes you are right, we should check for one of the 2.0-only symbols, and I t=
-hought we were.
-We should double-check that in configure.ac. If only gcrypt had a pkg-confi=
-g file.
-________________________________
-From: Tricca, Philip B [philip.b.tricca(a)intel.com]
-Sent: Thursday, October 18, 2018 23:26
-To: Fuchs, Andreas
-Cc: Terry An; tpm2(a)lists.01.org
-Subject: RE: [tpm2] does anyone compile tpm2-tss-2.1.0 successful on CentOS=
-7?
-
-If we=E2=80=99re not checking for these dependencies @ configure time then =
-I=E2=80=99d call this a bug. The gcrypt handling stuff in the autoconf file=
- is pretty convoluted but if I=E2=80=99m reading your last message correctl=
-y you=E2=80=99re saying that it can=E2=80=99t tell the difference between l=
-ibgcrypt 1.2 & 2.0?
-
-From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Fuchs, Andreas
-Sent: 18 October, 2018 03:35
-To: Terry An <terry.an.bj(a)gmail.com>; tpm2(a)lists.01.org
-Subject: Re: [tpm2] does anyone compile tpm2-tss-2.1.0 successful on CentOS=
-7?
-
-tpm2-tss requires libgcrypt20 (at least that's was it's called on Ubuntu).
-libgcrypt (which is the 1.x branch) is quite old and had a different API th=
-an the 20 series...
-
-Maybe that's the problem...
-________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Terry An [terry.an.bj=
-(a)gmail.com]
-Sent: Thursday, October 18, 2018 12:18
-To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Subject: [tpm2] does anyone compile tpm2-tss-2.1.0 successful on CentOS7?
-lots of errors on my laptop.
-
-I have updated libgpg-error, libgcrypt-devel, etc..
-
---===============4824979261957161223==
+--===============8820804342358345115==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9V2luZG93cy0xMjUyIj4KPHN0eWxlPgo8IS0tCkBm
-b250LWZhY2UKCXtmb250LWZhbWlseToiQ2FtYnJpYSBNYXRoIn0KQGZvbnQtZmFjZQoJe2ZvbnQt
-ZmFtaWx5OkNhbGlicml9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpUYWhvbWF9CnAuTXNvTm9y
-bWFsLCBsaS5Nc29Ob3JtYWwsIGRpdi5Nc29Ob3JtYWwKCXttYXJnaW46MGluOwoJbWFyZ2luLWJv
-dHRvbTouMDAwMXB0OwoJZm9udC1zaXplOjEyLjBwdDsKCWZvbnQtZmFtaWx5OiJUaW1lcyBOZXcg
-Um9tYW4iLHNlcmlmfQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7Y29sb3I6IzA1NjNDMTsK
-CXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmV9CmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBlcmxpbmtG
-b2xsb3dlZAoJe2NvbG9yOiM5NTRGNzI7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lfQpwCgl7
-bWFyZ2luOjBpbjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZvbnQtc2l6ZToxMi4wcHQ7Cglm
-b250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZn0Kc3Bhbi5FbWFpbFN0eWxlMTgKCXtm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOiMxRjQ5N0R9Ci5Nc29DaHBE
-ZWZhdWx0Cgl7Zm9udC1zaXplOjEwLjBwdH0KQHBhZ2UgV29yZFNlY3Rpb24xCgl7bWFyZ2luOjEu
-MGluIDEuMGluIDEuMGluIDEuMGlufQotLT4KPC9zdHlsZT48c3R5bGUgdHlwZT0idGV4dC9jc3Mi
-IGlkPSJvd2FQYXJhU3R5bGUiPlAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fTwvc3R5
-bGU+CjwvaGVhZD4KPGJvZHkgZnBzdHlsZT0iMSIgb2NzaT0iMCIgdmxpbms9IiM5NTRGNzIiIGxp
-bms9IiMwNTYzQzEiIGxhbmc9IkVOLVVTIj4KPGRpdiBzdHlsZT0iZGlyZWN0aW9uOiBsdHI7Zm9u
-dC1mYW1pbHk6IFRhaG9tYTtjb2xvcjogIzAwMDAwMDtmb250LXNpemU6IDEwcHQ7Ij4KPGRpdj4K
-PGRpdj5JJ3ZlIGp1c3QgcmVtZW1iZXJlZCBydW5uaW5nIGludG8gdGhpcyBwcm9ibGVtIHNvbWUg
-dGltZSBiYWNrIGFuZCBzaXR1YXRpb24gc291bmRlZCBmYW1pbGlhci4uLjwvZGl2Pgo8ZGl2Pjxi
-cj4KPC9kaXY+CjwvZGl2Pgo8ZGl2PlllcyB5b3UgYXJlIHJpZ2h0LCB3ZSBzaG91bGQgY2hlY2sg
-Zm9yIG9uZSBvZiB0aGUgMi4wLW9ubHkgc3ltYm9scywgYW5kIEkgdGhvdWdodCB3ZSB3ZXJlLjwv
-ZGl2Pgo8ZGl2PldlIHNob3VsZCBkb3VibGUtY2hlY2sgdGhhdCBpbiBjb25maWd1cmUuYWMuIElm
-IG9ubHkgZ2NyeXB0IGhhZCBhIHBrZy1jb25maWcgZmlsZS48L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
-dC1mYW1pbHk6IFRpbWVzIE5ldyBSb21hbjsgY29sb3I6ICMwMDAwMDA7IGZvbnQtc2l6ZTogMTZw
-eCI+CjxociB0YWJpbmRleD0iLTEiPgo8ZGl2IGlkPSJkaXZScEYzODQwNTYiIHN0eWxlPSJkaXJl
-Y3Rpb246IGx0cjsiPjxmb250IHNpemU9IjIiIGZhY2U9IlRhaG9tYSIgY29sb3I9IiMwMDAwMDAi
-PjxiPkZyb206PC9iPiBUcmljY2EsIFBoaWxpcCBCIFtwaGlsaXAuYi50cmljY2FAaW50ZWwuY29t
-XTxicj4KPGI+U2VudDo8L2I+IFRodXJzZGF5LCBPY3RvYmVyIDE4LCAyMDE4IDIzOjI2PGJyPgo8
-Yj5Ubzo8L2I+IEZ1Y2hzLCBBbmRyZWFzPGJyPgo8Yj5DYzo8L2I+IFRlcnJ5IEFuOyB0cG0yQGxp
-c3RzLjAxLm9yZzxicj4KPGI+U3ViamVjdDo8L2I+IFJFOiBbdHBtMl0gZG9lcyBhbnlvbmUgY29t
-cGlsZSB0cG0yLXRzcy0yLjEuMCBzdWNjZXNzZnVsIG9uIENlbnRPUzc/PGJyPgo8L2ZvbnQ+PGJy
-Pgo8L2Rpdj4KPGRpdj48L2Rpdj4KPGRpdj4KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7IGZvbnQtZmFt
-aWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6IzFGNDk3RCI+SWYgd2WS
-cmUgbm90IGNoZWNraW5nIGZvciB0aGVzZSBkZXBlbmRlbmNpZXMgQCBjb25maWd1cmUgdGltZSB0
-aGVuIEmSZCBjYWxsIHRoaXMgYSBidWcuIFRoZSBnY3J5cHQgaGFuZGxpbmcgc3R1ZmYgaW4gdGhl
-IGF1dG9jb25mIGZpbGUgaXMgcHJldHR5IGNvbnZvbHV0ZWQKIGJ1dCBpZiBJkm0gcmVhZGluZyB5
-b3VyIGxhc3QgbWVzc2FnZSBjb3JyZWN0bHkgeW91knJlIHNheWluZyB0aGF0IGl0IGNhbpJ0IHRl
-bGwgdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiBsaWJnY3J5cHQgMS4yICZhbXA7IDIuMD88L3NwYW4+
-PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBuYW1lPSJfTWFpbEVuZENvbXBvc2UiPjxzcGFu
-IHN0eWxlPSJmb250LXNpemU6MTEuMHB0OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7
-LHNhbnMtc2VyaWY7IGNvbG9yOiMxRjQ5N0QiPiZuYnNwOzwvc3Bhbj48L2E+PC9wPgo8ZGl2Pgo8
-ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTsgYm9yZGVyLXRvcDpzb2xpZCAjRTFFMUUxIDEuMHB0OyBw
-YWRkaW5nOjMuMHB0IDBpbiAwaW4gMGluIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgbmFtZT0i
-X19fX19yZXBseXNlcGFyYXRvciI+PC9hPjxiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0
-OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWYiPkZyb206PC9zcGFu
-PjwvYj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q2Fs
-aWJyaSZxdW90OyxzYW5zLXNlcmlmIj4gdHBtMiBbbWFpbHRvOnRwbTItYm91bmNlc0BsaXN0cy4w
-MS5vcmddCjxiPk9uIEJlaGFsZiBPZiA8L2I+RnVjaHMsIEFuZHJlYXM8YnI+CjxiPlNlbnQ6PC9i
-PiAxOCBPY3RvYmVyLCAyMDE4IDAzOjM1PGJyPgo8Yj5Ubzo8L2I+IFRlcnJ5IEFuICZsdDt0ZXJy
-eS5hbi5iakBnbWFpbC5jb20mZ3Q7OyB0cG0yQGxpc3RzLjAxLm9yZzxicj4KPGI+U3ViamVjdDo8
-L2I+IFJlOiBbdHBtMl0gZG9lcyBhbnlvbmUgY29tcGlsZSB0cG0yLXRzcy0yLjEuMCBzdWNjZXNz
-ZnVsIG9uIENlbnRPUzc/PC9zcGFuPjwvcD4KPC9kaXY+CjwvZGl2Pgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj4mbmJzcDs8L3A+CjxkaXY+CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0
-eWxlPSJmb250LXNpemU6MTAuMHB0OyBmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fu
-cy1zZXJpZjsgY29sb3I6YmxhY2siPnRwbTItdHNzIHJlcXVpcmVzIGxpYmdjcnlwdDIwIChhdCBs
-ZWFzdCB0aGF0J3Mgd2FzIGl0J3MgY2FsbGVkIG9uIFVidW50dSkuPC9zcGFuPjwvcD4KPC9kaXY+
-CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0
-OyBmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2si
-PmxpYmdjcnlwdCAod2hpY2ggaXMgdGhlIDEueCBicmFuY2gpIGlzIHF1aXRlIG9sZCBhbmQgaGFk
-IGEgZGlmZmVyZW50IEFQSSB0aGFuIHRoZSAyMCBzZXJpZXMuLi48L3NwYW4+PC9wPgo8L2Rpdj4K
-PGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7
-IGZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmOyBjb2xvcjpibGFjayI+
-Jm5ic3A7PC9zcGFuPjwvcD4KPC9kaXY+CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IHN0eWxlPSJmb250LXNpemU6MTAuMHB0OyBmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDss
-c2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPk1heWJlIHRoYXQncyB0aGUgcHJvYmxlbS4uLjwvc3Bh
-bj48L3A+CjwvZGl2Pgo8ZGl2Pgo8ZGl2IGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJ0ZXh0LWFs
-aWduOmNlbnRlciIgYWxpZ249ImNlbnRlciI+PHNwYW4gc3R5bGU9ImNvbG9yOmJsYWNrIj4KPGhy
-IHdpZHRoPSIxMDAlIiBzaXplPSIzIiBhbGlnbj0iY2VudGVyIj4KPC9zcGFuPjwvZGl2Pgo8ZGl2
-IGlkPSJkaXZScEYzMzExMDAiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luLWJv
-dHRvbToxMi4wcHQiPjxiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0OyBmb250LWZhbWls
-eTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPkZyb206PC9zcGFu
-PjwvYj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7VGFo
-b21hJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj4gdHBtMiBbdHBtMi1ib3VuY2VzQGxp
-c3RzLjAxLm9yZ10KIG9uIGJlaGFsZiBvZiBUZXJyeSBBbiBbdGVycnkuYW4uYmpAZ21haWwuY29t
-XTxicj4KPGI+U2VudDo8L2I+IFRodXJzZGF5LCBPY3RvYmVyIDE4LCAyMDE4IDEyOjE4PGJyPgo8
-Yj5Ubzo8L2I+IDxhIGhyZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxh
-bmsiIHJlbD0ibm9vcGVuZXIgbm9yZWZlcnJlciI+CnRwbTJAbGlzdHMuMDEub3JnPC9hPjxicj4K
-PGI+U3ViamVjdDo8L2I+IFt0cG0yXSBkb2VzIGFueW9uZSBjb21waWxlIHRwbTItdHNzLTIuMS4w
-IHN1Y2Nlc3NmdWwgb24gQ2VudE9TNz88L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOmJsYWNrIj48
-L3NwYW4+PC9wPgo8L2Rpdj4KPGRpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
-c3R5bGU9ImNvbG9yOmJsYWNrIj5sb3RzIG9mIGVycm9ycyBvbiBteSBsYXB0b3AuIDwvc3Bhbj4K
-PC9wPgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iY29sb3I6YmxhY2si
-PiZuYnNwOzwvc3Bhbj48L3A+CjwvZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBzdHlsZT0iY29sb3I6YmxhY2siPkkgaGF2ZSB1cGRhdGVkIGxpYmdwZy1lcnJvciwgbGliZ2Ny
-eXB0LWRldmVsLCBldGMuLjwvc3Bhbj48L3A+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8
-L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdj5bcm9vdEBsb2NhbGhvc3QgVGVzdF0j
+IHRwbTJfcnNhZW5jcnlwdCAtSSA8YSBocmVmPSJodHRwOi8vZGF0YS5pbiI+ZGF0YS5pbjwvYT4g
+LWMgb2JqLmN0eMKgIC1vIGRhdGEuZW5jcnlwdGVkwqA8L2Rpdj48ZGl2PnRwbTJfcnNhZW5jcnlw
+dDogaW52YWxpZCBvcHRpb24gLS0gJiMzOTtJJiMzOTs8L2Rpdj48ZGl2Pltyb290QGxvY2FsaG9z
+dCBUZXN0XSM8L2Rpdj48L2Rpdj48L2Rpdj4K
 
---===============4824979261957161223==--
+--===============8820804342358345115==--
 
