@@ -1,64 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============6132829228897619661=="
+Content-Type: multipart/mixed; boundary="===============6651898422274502440=="
 MIME-Version: 1.0
 From: Terry An <terry.an.bj at gmail.com>
-Subject: Re: [tpm2] There is no '-I' option for tpm2_rsaencrypt which I found
- it in the doc.
-Date: Mon, 22 Oct 2018 10:38:17 +0800
-Message-ID: <CA+tBKVhrdZp+oDYPtrbC-9cDczuaQjU1+1eQiykHuOhBS5Zw4Q@mail.gmail.com>
-In-Reply-To: 82664f73d081578de7dc45fb804ab4527fede427.camel@linux.intel.com
+Subject: [tpm2] How do I import a PEM format privateKey into TPM2 ?
+Date: Mon, 22 Oct 2018 14:25:59 +0800
+Message-ID: <CA+tBKViXgSTQASd03OPDcCH1LFPM2tjOJcVgtwvj00Xa3Zyi0w@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6132829228897619661==
+--===============6651898422274502440==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks, I'll check it out.
+Hi everyone,
 
-On Fri, Oct 19, 2018 at 8:10 PM Joshua Lock <joshua.g.lock(a)linux.intel.co=
-m>
-wrote:
+I generated a PEM format keypair using openssl:
+# openssl genrsa -out priv.key
+# openssl rsa -in priv.key  -out pub.key -pubout
 
-> On Fri, 2018-10-19 at 16:36 +0800, Terry An wrote:
-> > [root(a)localhost Test]# tpm2_rsaencrypt -I data.in -c obj.ctx  -o
-> > data.encrypted
-> > tpm2_rsaencrypt: invalid option -- 'I'
-> > [root(a)localhost Test]#
->
-> I see the example was incorrect in both the 3.0.X and 3.X branches,
-> I've sent pull requests to update.
->
-> You want:
-> # tpm2_rsaencrypt -c obj.ctx -o data.encrypted data.in
->
-> Joshua
->
->
+and then I used tpm2-tools to import:
+# tpm2_createprimary -H o -g sha256 -G ecc -C context.out
+ObjectAttribute: 0x00030072
+CreatePrimary Succeed ! Handle: 0x800000ff
 
---===============6132829228897619661==
+# tpm2_load -H 0x80000ff -c context.out -r priv.key
+ERROR: File "priv.key" size is larger than buffer, got 1766 expected less
+than 1552
+an error appeared.
+
+My purpose is to encrypt by public key and decrypt by tpm2.0
+Encrypt:
+# openssl rsautl -encrypt -inkey pub.key  -pubin -in data.in -out data.enc
+
+Decrypt:
+what should I do?
+
+--===============6651898422274502440==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+VGhhbmtzLCBJJiMzOTtsbCBjaGVjayBpdCBvdXQuwqA8YnI+PC9kaXY+
-PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0ibHRyIj5PbiBGcmksIE9jdCAx
-OSwgMjAxOCBhdCA4OjEwIFBNIEpvc2h1YSBMb2NrICZsdDs8YSBocmVmPSJtYWlsdG86am9zaHVh
-LmcubG9ja0BsaW51eC5pbnRlbC5jb20iPmpvc2h1YS5nLmxvY2tAbGludXguaW50ZWwuY29tPC9h
-PiZndDsgd3JvdGU6PGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5
-bGU9Im1hcmdpbjowIDAgMCAuOGV4O2JvcmRlci1sZWZ0OjFweCAjY2NjIHNvbGlkO3BhZGRpbmct
-bGVmdDoxZXgiPk9uIEZyaSwgMjAxOC0xMC0xOSBhdCAxNjozNiArMDgwMCwgVGVycnkgQW4gd3Jv
-dGU6PGJyPgomZ3Q7IFtyb290QGxvY2FsaG9zdCBUZXN0XSMgdHBtMl9yc2FlbmNyeXB0IC1JIDxh
-IGhyZWY9Imh0dHA6Ly9kYXRhLmluIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5k
-YXRhLmluPC9hPiAtYyBvYmouY3R4wqAgLW88YnI+CiZndDsgZGF0YS5lbmNyeXB0ZWQgPGJyPgom
-Z3Q7IHRwbTJfcnNhZW5jcnlwdDogaW52YWxpZCBvcHRpb24gLS0gJiMzOTtJJiMzOTs8YnI+CiZn
-dDsgW3Jvb3RAbG9jYWxob3N0IFRlc3RdIzxicj4KPGJyPgpJIHNlZSB0aGUgZXhhbXBsZSB3YXMg
-aW5jb3JyZWN0IGluIGJvdGggdGhlIDMuMC5YIGFuZCAzLlggYnJhbmNoZXMsPGJyPgpJJiMzOTt2
-ZSBzZW50IHB1bGwgcmVxdWVzdHMgdG8gdXBkYXRlLjxicj4KPGJyPgpZb3Ugd2FudDo8YnI+CiMg
-dHBtMl9yc2FlbmNyeXB0IC1jIG9iai5jdHggLW8gZGF0YS5lbmNyeXB0ZWQgPGEgaHJlZj0iaHR0
-cDovL2RhdGEuaW4iIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPmRhdGEuaW48L2E+
-PGJyPgo8YnI+Ckpvc2h1YTxicj4KPGJyPgo8L2Jsb2NrcXVvdGU+PC9kaXY+Cg==
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0
+ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+SGkgZXZlcnlvbmUsPC9kaXY+PGRpdiBk
+aXI9Imx0ciI+PGJyPjwvZGl2PjxkaXYgZGlyPSJsdHIiPjxkaXY+SSBnZW5lcmF0ZWQgYSBQRU0g
+Zm9ybWF0IGtleXBhaXIgdXNpbmcgb3BlbnNzbDo8L2Rpdj48ZGl2PiMgb3BlbnNzbCBnZW5yc2Eg
+LW91dCBwcml2LmtleTxicj48L2Rpdj48ZGl2PiMgb3BlbnNzbCByc2EgLWluIHByaXYua2V5wqAg
+LW91dCBwdWIua2V5IC1wdWJvdXQ8YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5hbmQgdGhl
+biBJIHVzZWQgdHBtMi10b29scyB0byBpbXBvcnQ6PC9kaXY+PGRpdj48ZGl2PiMgdHBtMl9jcmVh
+dGVwcmltYXJ5IC1IIG8gLWcgc2hhMjU2IC1HIGVjYyAtQyBjb250ZXh0Lm91dMKgPC9kaXY+PGRp
+dj5PYmplY3RBdHRyaWJ1dGU6IDB4MDAwMzAwNzI8L2Rpdj48ZGl2PkNyZWF0ZVByaW1hcnkgU3Vj
+Y2VlZCAhIEhhbmRsZTogMHg4MDAwMDBmZjwvZGl2PjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+
+PGRpdj4jIHRwbTJfbG9hZCAtSCAweDgwMDAwZmYgLWMgY29udGV4dC5vdXQgLXIgcHJpdi5rZXnC
+oDwvZGl2PjxkaXY+RVJST1I6IEZpbGUgJnF1b3Q7cHJpdi5rZXkmcXVvdDsgc2l6ZSBpcyBsYXJn
+ZXIgdGhhbiBidWZmZXIsIGdvdCAxNzY2IGV4cGVjdGVkIGxlc3MgdGhhbiAxNTUyPC9kaXY+PC9k
+aXY+PGRpdj5hbiBlcnJvciBhcHBlYXJlZC48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pk15IHB1
+cnBvc2UgaXMgdG8gZW5jcnlwdCBieSBwdWJsaWMga2V5IGFuZCBkZWNyeXB0IGJ5IHRwbTIuMDwv
+ZGl2PjxkaXY+RW5jcnlwdDo8L2Rpdj48ZGl2PjxkaXY+IyBvcGVuc3NsIHJzYXV0bCAtZW5jcnlw
+dCAtaW5rZXkgcHViLmtlecKgIC1wdWJpbiAtaW4gPGEgaHJlZj0iaHR0cDovL2RhdGEuaW4iPmRh
+dGEuaW48L2E+IC1vdXQgZGF0YS5lbmM8L2Rpdj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkRl
+Y3J5cHQ6wqA8L2Rpdj48ZGl2PndoYXQgc2hvdWxkIEkgZG8/PC9kaXY+PC9kaXY+PC9kaXY+PC9k
+aXY+PC9kaXY+PC9kaXY+PC9kaXY+Cg==
 
---===============6132829228897619661==--
+--===============6651898422274502440==--
 
