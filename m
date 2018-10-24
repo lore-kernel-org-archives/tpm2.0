@@ -1,63 +1,268 @@
-Content-Type: multipart/mixed; boundary="===============3170071854516121431=="
+Content-Type: multipart/mixed; boundary="===============3571104114023081477=="
 MIME-Version: 1.0
-From: Philip Tricca <philip.b.tricca at intel.com>
-Subject: Re: [tpm2] bootstrap error on CentOS7
-Date: Tue, 23 Oct 2018 08:23:27 -0700
-Message-ID: <20181023152327.c7nyzqb5d7rwa5gh@jake>
-In-Reply-To: CA+tBKVh3O7FRpY8_96YDSOKsFzQoegTMvh0ckWVHCd9+ypw-fw@mail.gmail.com
+From: Yasuhiro Hosoda <hosoda-yasuhiro at ntt-el.com>
+Subject: Re: [tpm2] tpm2-tss question
+Date: Wed, 24 Oct 2018 14:03:04 +0900
+Message-ID: <9d5b32cf-47e9-9421-14c3-76f4309fa111@ntt-el.com>
+In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D010EB03680@exch2010c.sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3170071854516121431==
+--===============3571104114023081477==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Terry An,
+I=E3=80=80checked the following combinations with my test program.
 
-On Tue, Oct 23, 2018 at 03:51:08PM +0800, Terry An wrote:
-> I have cloned the latest code of kms-tools from github, and I need to test
-> the command 'tpm2-import'
-> but the master branch doesn't have "configure" command, and "bootstrap"
-> return error
-> =
+tpm2-abrmd-1.1.0 and=C2=A0 tpm2-tss-1.3.0
+tpm2-abrmd-1.2.0 and=C2=A0 tpm2-tss-1.3.0
+tpm2-abrmd-1.3.0 and=C2=A0 tpm2-tss-1.3.0
 
-> [root(a)localhost tpm2-tools]# ./bootstrap
-> Generating file lists: src_vars.mk
-> libtoolize: putting auxiliary files in `.'.
-> libtoolize: linking file `./ltmain.sh'
-> libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `m4'.
-> libtoolize: linking file `m4/libtool.m4'
-> libtoolize: linking file `m4/ltoptions.m4'
-> libtoolize: linking file `m4/ltsugar.m4'
-> libtoolize: linking file `m4/ltversion.m4'
-> libtoolize: linking file `m4/lt~obsolete.m4'
-> configure.ac:65: error: possibly undefined macro: AC_MSG_ERROR
->       If this token and others are legitimate, please use m4_pattern_allo=
-w.
->       See the Autoconf documentation.
-> autoreconf: /usr/bin/autoconf failed with exit status: 1
-> [root(a)localhost tpm2-tools]# rpm -q libtool pkgconfig autoconf automake=
- m4
-> libtool-2.4.2-22.el7_3.x86_64
-> pkgconfig-0.27.1-4.el7.x86_64
-> autoconf-2.69-11.el7.noarch
-> automake-1.13.4-3.el7.noarch
-> m4-1.4.16-10.el7.x86_64
+They worked well and I am convinced that sessions (no matter if policy =
 
-This question has been asked and answered several times in our public
-bug tracker:
+or hmac or trial)
+ =C2=A0are not virtualized.
 
-https://github.com/tpm2-software/tpm2-tss/issues/55
-https://github.com/tpm2-software/tpm2-tss/issues/185
-https://github.com/tpm2-software/tpm2-tss/issues/227
-https://github.com/tpm2-software/tpm2-tss/issues/259
-https://github.com/tpm2-software/tpm2-tss/issues/1110
+Still, with the TPM2.0-TSS-1.0 resource manager, it seems that
+sessions are virtualized.
+Does it mean that the TPM2.0-TSS-1.0 resource manager dose not
+comply with "TCG TSS 2.0 TAB and Resource Manager specification"?
 
-If the solutions from these threads doesn't work for you please provide
-additional detail.
+Regards,
+> Yes, sessions (no matter if policy or hmac or trial) are noirtualized.
+>
+> I assume tpm2-abrmd to be conforming to the spec.
+> If you find any deviation, they'll most happily fix them
+>
+> ------------------------------------------------------------------------
+> *From:* Yasuhiro Hosoda [hosoda-yasuhiro(a)ntt-el.com]
+> *Sent:* Wednesday, April 11, 2018 10:38
+> *To:* Fuchs, Andreas; tpm2(a)lists.01.org
+> *Subject:* Re: [tpm2] tpm2-tss question
+>
+> Thank you very much for your answer.
+>
+> I understand that the spec. is that the handles of policy session are
+> not virtualized
+>
+> I check the source programs of the resource managers.
+> (TPM2,0-TSS-1.0 and tpm2-abrmd-1.2.0)
+> It seems that HMAC sessions and Policy sessions are handled
+> in the same way. Do you have any comment comment about
+> implementations?
+>
+>> According to the spec, only key and sequence handles are virtualized.
+>>
+>> Thus for PolicySecret, the virtual and TPM handles for policySession =
 
-Philip
+>> shall be the same.
+>>
+>> For keys and sequences (such as authHandle in PolicySecret) the =
 
---===============3170071854516121431==--
+>> virtual and TPM handles differ.
+>> But instead of the handle the key's / sequence's public name is used =
+
+>> within the hmac calculation.
+>>
+>> Hope this helps...
+>>
+>> ------------------------------------------------------------------------
+>> *From:* tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Yasuhiro Hosoda =
+
+>> [hosoda-yasuhiro(a)ntt-el.com]
+>> *Sent:* Wednesday, April 11, 2018 08:11
+>> *To:* william.c.roberts(a)intel.com; tpm2(a)lists.01.org
+>> *Subject:* Re: [tpm2] tpm2-tss question
+>>
+>> I have one finding about the RM and PolicySecret command,
+>>
+>> It says in page 10 of the following document
+>> "TCG TSS 2.0 TAB and Resource Manager specification"
+>> https://trustedcomputinggroup.org/wp-content/uploads/TSS-2.0-TAB-Resourc=
+e-Manager-SpecVer1.0-Rev18_review_END030918.pdf
+>> that
+>> "
+>> The RM performs a mapping from the (unchanging) virtual handle to the =
+
+>> (currently assigned) TPM
+>> handle. It replaces the virtual handle with the TPM handle in the TPM =
+
+>> command packet.
+>>
+>> NOTE: The TPM 2.0 library specification excludes the handle from =
+
+>> command stream HMAC calculations to enable this
+>> substitution."
+>> This means that if the virtual handle and the (currently assigned) =
+
+>> TPM differs,
+>> the HMAC calculations for most of the commands go well.
+>>
+>> But, the PolicySecret command takes the policy handle to extend as a =
+
+>> parameter for HMAC.
+>> If, the virtual handle and the (currently assigned) TPM differs, the =
+
+>> HMAC calculations
+>> for this command doesn't go well and produces the error code 0x98e.
+>> Is my understanding right?
+>> If so, is there any workaround?
+>>
+>> Thank you in advance.
+>
+-----
+ =C2=A0Yasuhiro Hosoda
+
+NTT Electronics Corporation =EF=BC=88NEL)
+
+
+--===============3571104114023081477==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
+bnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+CiAgPC9oZWFkPgogIDxib2R5IHRleHQ9IiMw
+MDAwMDAiIGJnY29sb3I9IiNGRkZGRkYiPgogICAgPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4
+Ij5J44CAY2hlY2tlZCB0aGUgZm9sbG93aW5nIGNvbWJpbmF0aW9ucwogICAgICB3aXRoIG15IHRl
+c3QgcHJvZ3JhbS48YnI+CiAgICAgIDxicj4KICAgICAgdHBtMi1hYnJtZC0xLjEuMCBhbmTCoCB0
+cG0yLXRzcy0xLjMuMDxicj4KICAgICAgdHBtMi1hYnJtZC0xLjIuMCBhbmTCoCB0cG0yLXRzcy0x
+LjMuMDxicj4KICAgICAgdHBtMi1hYnJtZC0xLjMuMCBhbmTCoCB0cG0yLXRzcy0xLjMuMDxicj4K
+ICAgICAgPGJyPgogICAgICBUaGV5IHdvcmtlZCB3ZWxsIGFuZCBJIGFtIGNvbnZpbmNlZCB0aGF0
+IHNlc3Npb25zIChubyBtYXR0ZXIgaWYKICAgICAgcG9saWN5IG9yIGhtYWMgb3IgdHJpYWwpPGJy
+PgogICAgICDCoGFyZSBub3QgdmlydHVhbGl6ZWQuPGJyPgogICAgICA8YnI+CiAgICAgIFN0aWxs
+LCB3aXRoIHRoZSBUUE0yLjAtVFNTLTEuMCByZXNvdXJjZSBtYW5hZ2VyLCBpdCBzZWVtcyB0aGF0
+PGJyPgogICAgICBzZXNzaW9ucyBhcmUgdmlydHVhbGl6ZWQuPGJyPgogICAgICBEb2VzIGl0IG1l
+YW4gdGhhdCB0aGUgVFBNMi4wLVRTUy0xLjAgcmVzb3VyY2UgbWFuYWdlciBkb3NlIG5vdDxicj4K
+ICAgICAgY29tcGx5IHdpdGggIlRDRyBUU1MgMi4wIFRBQiBhbmQgUmVzb3VyY2UgTWFuYWdlciBz
+cGVjaWZpY2F0aW9uIj88YnI+CiAgICAgIDxicj4KICAgICAgUmVnYXJkcyw8YnI+CiAgICA8L2Rp
+dj4KICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUiCmNpdGU9Im1pZDo5RjQ4RTFBODIzQjAzQjQ3
+OTBCN0U2RTY5NDMwNzI0RDAxMEVCMDM2ODBAZXhjaDIwMTBjLnNpdC5mcmF1bmhvZmVyLmRlIj4K
+ICAgICAgPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7
+IGNoYXJzZXQ9dXRmLTgiPgogICAgICA8ZGl2IHN0eWxlPSJkaXJlY3Rpb246IGx0cjtmb250LWZh
+bWlseTogVGFob21hO2NvbG9yOgogICAgICAgICMwMDAwMDA7Zm9udC1zaXplOiAxMHB0OyI+WWVz
+LCBzZXNzaW9ucyAobm8gbWF0dGVyIGlmIHBvbGljeSBvcgogICAgICAgIGhtYWMgb3IgdHJpYWwp
+IGFyZSBub2lydHVhbGl6ZWQuPGJyPgogICAgICAgIDxicj4KICAgICAgICBJIGFzc3VtZSB0cG0y
+LWFicm1kIHRvIGJlIGNvbmZvcm1pbmcgdG8gdGhlIHNwZWMuPGJyPgogICAgICAgIElmIHlvdSBm
+aW5kIGFueSBkZXZpYXRpb24sIHRoZXknbGwgbW9zdCBoYXBwaWx5IGZpeCB0aGVtPGJyPgogICAg
+ICAgIDxicj4KICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogVGltZXMgTmV3IFJvbWFu
+OyBjb2xvcjogIzAwMDAwMDsKICAgICAgICAgIGZvbnQtc2l6ZTogMTZweCI+CiAgICAgICAgICA8
+aHIgdGFiaW5kZXg9Ii0xIj4KICAgICAgICAgIDxkaXYgaWQ9ImRpdlJwRjU1MjA4MSIgc3R5bGU9
+ImRpcmVjdGlvbjogbHRyOyI+PGZvbnQgc2l6ZT0iMiIKICAgICAgICAgICAgICBjb2xvcj0iIzAw
+MDAwMCIgZmFjZT0iVGFob21hIj48Yj5Gcm9tOjwvYj4gWWFzdWhpcm8gSG9zb2RhCiAgICAgICAg
+ICAgICAgWzxhIGNsYXNzPSJtb3otdHh0LWxpbmstYWJicmV2aWF0ZWQiCiAgICAgICAgICAgICAg
+ICBocmVmPSJtYWlsdG86aG9zb2RhLXlhc3VoaXJvQG50dC1lbC5jb20iPmhvc29kYS15YXN1aGly
+b0BudHQtZWwuY29tPC9hPl08YnI+CiAgICAgICAgICAgICAgPGI+U2VudDo8L2I+IFdlZG5lc2Rh
+eSwgQXByaWwgMTEsIDIwMTggMTA6Mzg8YnI+CiAgICAgICAgICAgICAgPGI+VG86PC9iPiBGdWNo
+cywgQW5kcmVhczsgPGEKICAgICAgICAgICAgICAgIGNsYXNzPSJtb3otdHh0LWxpbmstYWJicmV2
+aWF0ZWQiCiAgICAgICAgICAgICAgICBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciPnRw
+bTJAbGlzdHMuMDEub3JnPC9hPjxicj4KICAgICAgICAgICAgICA8Yj5TdWJqZWN0OjwvYj4gUmU6
+IFt0cG0yXSB0cG0yLXRzcyBxdWVzdGlvbjxicj4KICAgICAgICAgICAgPC9mb250Pjxicj4KICAg
+ICAgICAgIDwvZGl2PgogICAgICAgICAgPGRpdj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0ibW96
+LWNpdGUtcHJlZml4Ij5UaGFuayB5b3UgdmVyeSBtdWNoIGZvciB5b3VyCiAgICAgICAgICAgICAg
+YW5zd2VyLjxicj4KICAgICAgICAgICAgICA8YnI+CiAgICAgICAgICAgICAgSSB1bmRlcnN0YW5k
+IHRoYXQgdGhlIHNwZWMuIGlzIHRoYXQgdGhlIGhhbmRsZXMgb2YgcG9saWN5CiAgICAgICAgICAg
+ICAgc2Vzc2lvbiBhcmUgPGJyPgogICAgICAgICAgICAgIG5vdCB2aXJ0dWFsaXplZCA8YnI+CiAg
+ICAgICAgICAgICAgPGJyPgogICAgICAgICAgICAgIEkgY2hlY2sgdGhlIHNvdXJjZSBwcm9ncmFt
+cyBvZiB0aGUgcmVzb3VyY2UgbWFuYWdlcnMuPGJyPgogICAgICAgICAgICAgIChUUE0yLDAtVFNT
+LTEuMCBhbmQgdHBtMi1hYnJtZC0xLjIuMCk8YnI+CiAgICAgICAgICAgICAgSXQgc2VlbXMgdGhh
+dCBITUFDIHNlc3Npb25zIGFuZCBQb2xpY3kgc2Vzc2lvbnMgYXJlCiAgICAgICAgICAgICAgaGFu
+ZGxlZDxicj4KICAgICAgICAgICAgICBpbiB0aGUgc2FtZSB3YXkuIERvIHlvdSBoYXZlIGFueSBj
+b21tZW50IGNvbW1lbnQgYWJvdXQ8YnI+CiAgICAgICAgICAgICAgaW1wbGVtZW50YXRpb25zPzxi
+cj4KICAgICAgICAgICAgICA8YnI+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8Ymxv
+Y2txdW90ZSB0eXBlPSJjaXRlIj4KICAgICAgICAgICAgICA8c3R5bGUgdHlwZT0idGV4dC9jc3Mi
+IGlkPSJvd2FQYXJhU3R5bGUiPgo8IS0tCnAKCXttYXJnaW4tdG9wOjA7CgltYXJnaW4tYm90dG9t
+OjB9Ci0tPgpCT0RZIHtkaXJlY3Rpb246IGx0cjtmb250LWZhbWlseTogVGFob21hO2NvbG9yOiAj
+MDAwMDAwO2ZvbnQtc2l6ZTogMTBwdDt9UCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9
+PC9zdHlsZT4KICAgICAgICAgICAgICA8ZGl2IHN0eWxlPSJkaXJlY3Rpb246bHRyOyBmb250LWZh
+bWlseTpUYWhvbWE7CiAgICAgICAgICAgICAgICBjb2xvcjojMDAwMDAwOyBmb250LXNpemU6MTBw
+dCI+QWNjb3JkaW5nIHRvIHRoZSBzcGVjLAogICAgICAgICAgICAgICAgb25seSBrZXkgYW5kIHNl
+cXVlbmNlIGhhbmRsZXMgYXJlIHZpcnR1YWxpemVkLjxicj4KICAgICAgICAgICAgICAgIDxicj4K
+ICAgICAgICAgICAgICAgIFRodXMgZm9yIFBvbGljeVNlY3JldCwgdGhlIHZpcnR1YWwgYW5kIFRQ
+TSBoYW5kbGVzIGZvcgogICAgICAgICAgICAgICAgcG9saWN5U2Vzc2lvbiBzaGFsbCBiZSB0aGUg
+c2FtZS48YnI+CiAgICAgICAgICAgICAgICA8YnI+CiAgICAgICAgICAgICAgICBGb3Iga2V5cyBh
+bmQgc2VxdWVuY2VzIChzdWNoIGFzIGF1dGhIYW5kbGUgaW4KICAgICAgICAgICAgICAgIFBvbGlj
+eVNlY3JldCkgdGhlIHZpcnR1YWwgYW5kIFRQTSBoYW5kbGVzIGRpZmZlci48YnI+CiAgICAgICAg
+ICAgICAgICBCdXQgaW5zdGVhZCBvZiB0aGUgaGFuZGxlIHRoZSBrZXkncyAvIHNlcXVlbmNlJ3Mg
+cHVibGljCiAgICAgICAgICAgICAgICBuYW1lIGlzIHVzZWQgd2l0aGluIHRoZSBobWFjIGNhbGN1
+bGF0aW9uLjxicj4KICAgICAgICAgICAgICAgIDxicj4KICAgICAgICAgICAgICAgIEhvcGUgdGhp
+cyBoZWxwcy4uLjxicj4KICAgICAgICAgICAgICAgIDxicj4KICAgICAgICAgICAgICAgIDxkaXYg
+c3R5bGU9ImZvbnQtZmFtaWx5OlRpbWVzIE5ldyBSb21hbjsgY29sb3I6IzAwMDAwMDsKICAgICAg
+ICAgICAgICAgICAgZm9udC1zaXplOjE2cHgiPgogICAgICAgICAgICAgICAgICA8aHIgdGFiaW5k
+ZXg9Ii0xIj4KICAgICAgICAgICAgICAgICAgPGRpdiBpZD0iZGl2UnBGODUxOTQ5IiBzdHlsZT0i
+ZGlyZWN0aW9uOmx0ciI+PGZvbnQKICAgICAgICAgICAgICAgICAgICAgIHNpemU9IjIiIGNvbG9y
+PSIjMDAwMDAwIiBmYWNlPSJUYWhvbWEiPjxiPkZyb206PC9iPgogICAgICAgICAgICAgICAgICAg
+ICAgdHBtMiBbPGEgY2xhc3M9Im1vei10eHQtbGluay1hYmJyZXZpYXRlZCIKICAgICAgICAgICAg
+ICAgICAgICAgICAgaHJlZj0ibWFpbHRvOnRwbTItYm91bmNlc0BsaXN0cy4wMS5vcmciCiAgICAg
+ICAgICAgICAgICAgICAgICAgIHRhcmdldD0iX2JsYW5rIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJy
+ZXIiCiAgICAgICAgICAgICAgICAgICAgICAgIG1vei1kby1ub3Qtc2VuZD0idHJ1ZSI+dHBtMi1i
+b3VuY2VzQGxpc3RzLjAxLm9yZzwvYT5dCiAgICAgICAgICAgICAgICAgICAgICBvbiBiZWhhbGYg
+b2YgWWFzdWhpcm8gSG9zb2RhIFs8YQogICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz0ibW96
+LXR4dC1saW5rLWFiYnJldmlhdGVkIgogICAgICAgICAgICAgICAgICAgICAgICBocmVmPSJtYWls
+dG86aG9zb2RhLXlhc3VoaXJvQG50dC1lbC5jb20iCiAgICAgICAgICAgICAgICAgICAgICAgIHRh
+cmdldD0iX2JsYW5rIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiCiAgICAgICAgICAgICAgICAg
+ICAgICAgIG1vei1kby1ub3Qtc2VuZD0idHJ1ZSI+aG9zb2RhLXlhc3VoaXJvQG50dC1lbC5jb208
+L2E+XTxicj4KICAgICAgICAgICAgICAgICAgICAgIDxiPlNlbnQ6PC9iPiBXZWRuZXNkYXksIEFw
+cmlsIDExLCAyMDE4IDA4OjExPGJyPgogICAgICAgICAgICAgICAgICAgICAgPGI+VG86PC9iPiA8
+YSBjbGFzcz0ibW96LXR4dC1saW5rLWFiYnJldmlhdGVkIgogICAgICAgICAgICAgICAgICAgICAg
+ICBocmVmPSJtYWlsdG86d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29tIgogICAgICAgICAgICAg
+ICAgICAgICAgICB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIgogICAg
+ICAgICAgICAgICAgICAgICAgICBtb3otZG8tbm90LXNlbmQ9InRydWUiPgogICAgICAgICAgICAg
+ICAgICAgICAgICB3aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5jb208L2E+OyA8YQogICAgICAgICAg
+ICAgICAgICAgICAgICBjbGFzcz0ibW96LXR4dC1saW5rLWFiYnJldmlhdGVkIgogICAgICAgICAg
+ICAgICAgICAgICAgICBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciIHRhcmdldD0iX2Js
+YW5rIgogICAgICAgICAgICAgICAgICAgICAgICByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiIG1v
+ei1kby1ub3Qtc2VuZD0idHJ1ZSI+CiAgICAgICAgICAgICAgICAgICAgICAgIHRwbTJAbGlzdHMu
+MDEub3JnPC9hPjxicj4KICAgICAgICAgICAgICAgICAgICAgIDxiPlN1YmplY3Q6PC9iPiBSZTog
+W3RwbTJdIHRwbTItdHNzIHF1ZXN0aW9uPGJyPgogICAgICAgICAgICAgICAgICAgIDwvZm9udD48
+YnI+CiAgICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgICA8ZGl2PgogICAg
+ICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9Im1vei1jaXRlLXByZWZpeCI+SSBoYXZlIG9uZSBm
+aW5kaW5nCiAgICAgICAgICAgICAgICAgICAgICBhYm91dCB0aGUgUk0gYW5kIFBvbGljeVNlY3Jl
+dCBjb21tYW5kLDxicj4KICAgICAgICAgICAgICAgICAgICAgIDxicj4KICAgICAgICAgICAgICAg
+ICAgICAgIEl0IHNheXMgaW4gcGFnZSAxMCBvZiB0aGUgZm9sbG93aW5nIGRvY3VtZW50PGJyPgog
+ICAgICAgICAgICAgICAgICAgICAgIlRDRyBUU1MgMi4wIFRBQiBhbmQgUmVzb3VyY2UgTWFuYWdl
+cgogICAgICAgICAgICAgICAgICAgICAgc3BlY2lmaWNhdGlvbiI8YnI+CiAgICAgICAgICAgICAg
+ICAgICAgICA8YSBjbGFzcz0ibW96LXR4dC1saW5rLWZyZWV0ZXh0IgpocmVmPSJodHRwczovL3Ry
+dXN0ZWRjb21wdXRpbmdncm91cC5vcmcvd3AtY29udGVudC91cGxvYWRzL1RTUy0yLjAtVEFCLVJl
+c291cmNlLU1hbmFnZXItU3BlY1ZlcjEuMC1SZXYxOF9yZXZpZXdfRU5EMDMwOTE4LnBkZiIKICAg
+ICAgICAgICAgICAgICAgICAgICAgcmVsPSJub29wZW5lciBub3JlZmVycmVyIiB0YXJnZXQ9Il9i
+bGFuayIKICAgICAgICAgICAgICAgICAgICAgICAgbW96LWRvLW5vdC1zZW5kPSJ0cnVlIj5odHRw
+czovL3RydXN0ZWRjb21wdXRpbmdncm91cC5vcmcvd3AtY29udGVudC91cGxvYWRzL1RTUy0yLjAt
+VEFCLVJlc291cmNlLU1hbmFnZXItU3BlY1ZlcjEuMC1SZXYxOF9yZXZpZXdfRU5EMDMwOTE4LnBk
+ZjwvYT48YnI+CiAgICAgICAgICAgICAgICAgICAgICB0aGF0IDxicj4KICAgICAgICAgICAgICAg
+ICAgICAgICI8YnI+CiAgICAgICAgICAgICAgICAgICAgICBUaGUgUk0gcGVyZm9ybXMgYSBtYXBw
+aW5nIGZyb20gdGhlICh1bmNoYW5naW5nKQogICAgICAgICAgICAgICAgICAgICAgdmlydHVhbCBo
+YW5kbGUgdG8gdGhlIChjdXJyZW50bHkgYXNzaWduZWQpIFRQTTxicj4KICAgICAgICAgICAgICAg
+ICAgICAgIGhhbmRsZS4gSXQgcmVwbGFjZXMgdGhlIHZpcnR1YWwgaGFuZGxlIHdpdGggdGhlCiAg
+ICAgICAgICAgICAgICAgICAgICBUUE0gaGFuZGxlIGluIHRoZSBUUE0gY29tbWFuZCBwYWNrZXQu
+PGJyPgogICAgICAgICAgICAgICAgICAgICAgPGJyPgogICAgICAgICAgICAgICAgICAgICAgTk9U
+RTogVGhlIFRQTSAyLjAgbGlicmFyeSBzcGVjaWZpY2F0aW9uIGV4Y2x1ZGVzCiAgICAgICAgICAg
+ICAgICAgICAgICB0aGUgaGFuZGxlIGZyb20gY29tbWFuZCBzdHJlYW0gSE1BQyBjYWxjdWxhdGlv
+bnMKICAgICAgICAgICAgICAgICAgICAgIHRvIGVuYWJsZSB0aGlzPGJyPgogICAgICAgICAgICAg
+ICAgICAgICAgc3Vic3RpdHV0aW9uLiI8YnI+CiAgICAgICAgICAgICAgICAgICAgICBUaGlzIG1l
+YW5zIHRoYXQgaWYgdGhlIHZpcnR1YWwgaGFuZGxlIGFuZCB0aGUKICAgICAgICAgICAgICAgICAg
+ICAgIChjdXJyZW50bHkgYXNzaWduZWQpIFRQTSBkaWZmZXJzLDxicj4KICAgICAgICAgICAgICAg
+ICAgICAgIHRoZSBITUFDIGNhbGN1bGF0aW9ucyBmb3IgbW9zdCBvZiB0aGUgY29tbWFuZHMgZ28K
+ICAgICAgICAgICAgICAgICAgICAgIHdlbGwuPGJyPgogICAgICAgICAgICAgICAgICAgICAgPGJy
+PgogICAgICAgICAgICAgICAgICAgICAgQnV0LCB0aGUgUG9saWN5U2VjcmV0IGNvbW1hbmQgdGFr
+ZXMgdGhlIHBvbGljeQogICAgICAgICAgICAgICAgICAgICAgaGFuZGxlIHRvIGV4dGVuZCBhcyBh
+IHBhcmFtZXRlciBmb3IgSE1BQy48YnI+CiAgICAgICAgICAgICAgICAgICAgICBJZiwgdGhlIHZp
+cnR1YWwgaGFuZGxlIGFuZCB0aGUgKGN1cnJlbnRseQogICAgICAgICAgICAgICAgICAgICAgYXNz
+aWduZWQpIFRQTSBkaWZmZXJzLCB0aGUgSE1BQyBjYWxjdWxhdGlvbnM8YnI+CiAgICAgICAgICAg
+ICAgICAgICAgICBmb3IgdGhpcyBjb21tYW5kIGRvZXNuJ3QgZ28gd2VsbCBhbmQgcHJvZHVjZXMg
+dGhlCiAgICAgICAgICAgICAgICAgICAgICBlcnJvciBjb2RlIDB4OThlLjxicj4KICAgICAgICAg
+ICAgICAgICAgICAgIElzIG15IHVuZGVyc3RhbmRpbmcgcmlnaHQ/PGJyPgogICAgICAgICAgICAg
+ICAgICAgICAgSWYgc28sIGlzIHRoZXJlIGFueSB3b3JrYXJvdW5kPzxicj4KICAgICAgICAgICAg
+ICAgICAgICAgIDxicj4KICAgICAgICAgICAgICAgICAgICAgIFRoYW5rIHlvdSBpbiBhZHZhbmNl
+Ljxicj4KICAgICAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgICAgPC9kaXY+
+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAg
+PC9ibG9ja3F1b3RlPgogICAgICAgICAgICA8YnI+CiAgICAgICAgICA8L2Rpdj4KICAgICAgICA8
+L2Rpdj4KICAgICAgPC9kaXY+CiAgICA8L2Jsb2NrcXVvdGU+CiAgICAtLS0tLQogICAgPGJyPgog
+ICAgwqBZYXN1aGlybyBIb3NvZGEKICAgIDxicj4KICAgIDxicj4KICAgIE5UVCBFbGVjdHJvbmlj
+cyBDb3Jwb3JhdGlvbiDvvIhORUwpCiAgICA8cHJlIGNsYXNzPSJtb3otc2lnbmF0dXJlIiBjb2xz
+PSI3MiI+CjwvcHJlPgogIDwvYm9keT4KPC9odG1sPgo=
+
+--===============3571104114023081477==--
 
