@@ -1,268 +1,155 @@
-Content-Type: multipart/mixed; boundary="===============3571104114023081477=="
+Content-Type: multipart/mixed; boundary="===============1016932440367115520=="
 MIME-Version: 1.0
-From: Yasuhiro Hosoda <hosoda-yasuhiro at ntt-el.com>
-Subject: Re: [tpm2] tpm2-tss question
-Date: Wed, 24 Oct 2018 14:03:04 +0900
-Message-ID: <9d5b32cf-47e9-9421-14c3-76f4309fa111@ntt-el.com>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D010EB03680@exch2010c.sit.fraunhofer.de
+From: Tomasz Przybysz <tomaszp at mikronika.pl>
+Subject: [tpm2] tpm2-tss and /dev/urandom seed
+Date: Wed, 24 Oct 2018 08:32:34 +0000
+Message-ID: <7843db61-0eec-488e-867a-3a42dca7e326@mikronika.pl>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3571104114023081477==
+--===============1016932440367115520==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I=E3=80=80checked the following combinations with my test program.
+Hi,
 
-tpm2-abrmd-1.1.0 and=C2=A0 tpm2-tss-1.3.0
-tpm2-abrmd-1.2.0 and=C2=A0 tpm2-tss-1.3.0
-tpm2-abrmd-1.3.0 and=C2=A0 tpm2-tss-1.3.0
+I have found that there is a problem with tpm2-tss and /dev/urandom.
+On our company embedded cpu board there is Infineon TPM-2.0 device and we w=
+ant to have access to the TPM device immediately after board reboot.
+As I found tpm2-tss library is based on libgcrypt library.
 
-They worked well and I am convinced that sessions (no matter if policy =
+TSS2_RC iesys_cryptogcry_random2b(TPM2B_NONCE * nonce, size_t num_bytes)
+{
+    if (num_bytes =3D=3D 0) {
+        nonce->size =3D sizeof(TPMU_HA);
+    } else {
+        nonce->size =3D num_bytes;
+    }
+    /*
+     * possible values for random level:
+     *  GCRY_WEAK_RANDOM GCRY_STRONG_RANDOM  GCRY_VERY_STRONG_RANDOM
+     */
+    gcry_randomize(&nonce->buffer[0], nonce->size, GCRY_STRONG_RANDOM);
+    return TSS2_RC_SUCCESS;
+}
 
-or hmac or trial)
- =C2=A0are not virtualized.
+The problem is that with the new kernel Linux buildroot 4.14.74-xilinx
+/dev/urandom seed is ready after 120 secs from system reboot.
+It's not acceptable for us to wait such long to get TPM device ready.
 
-Still, with the TPM2.0-TSS-1.0 resource manager, it seems that
-sessions are virtualized.
-Does it mean that the TPM2.0-TSS-1.0 resource manager dose not
-comply with "TCG TSS 2.0 TAB and Resource Manager specification"?
+I test it on Zynq cpu:
+processor       : 0
+model name      : ARMv7 Processor rev 0 (v7l)
+BogoMIPS        : 666.66
+Features        : half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x3
+CPU part        : 0xc09
+CPU revision    : 0
 
-Regards,
-> Yes, sessions (no matter if policy or hmac or trial) are noirtualized.
->
-> I assume tpm2-abrmd to be conforming to the spec.
-> If you find any deviation, they'll most happily fix them
->
-> ------------------------------------------------------------------------
-> *From:* Yasuhiro Hosoda [hosoda-yasuhiro(a)ntt-el.com]
-> *Sent:* Wednesday, April 11, 2018 10:38
-> *To:* Fuchs, Andreas; tpm2(a)lists.01.org
-> *Subject:* Re: [tpm2] tpm2-tss question
->
-> Thank you very much for your answer.
->
-> I understand that the spec. is that the handles of policy session are
-> not virtualized
->
-> I check the source programs of the resource managers.
-> (TPM2,0-TSS-1.0 and tpm2-abrmd-1.2.0)
-> It seems that HMAC sessions and Policy sessions are handled
-> in the same way. Do you have any comment comment about
-> implementations?
->
->> According to the spec, only key and sequence handles are virtualized.
->>
->> Thus for PolicySecret, the virtual and TPM handles for policySession =
+processor       : 1
+model name      : ARMv7 Processor rev 0 (v7l)
+BogoMIPS        : 666.66
+Features        : half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x3
+CPU part        : 0xc09
+CPU revision    : 0
 
->> shall be the same.
->>
->> For keys and sequences (such as authHandle in PolicySecret) the =
+I think that there is no problem with cpu  performance.
 
->> virtual and TPM handles differ.
->> But instead of the handle the key's / sequence's public name is used =
+I looked into kernel sources:
+drivers/char/random.c
+and it changed on april 2018
 
->> within the hmac calculation.
->>
->> Hope this helps...
->>
->> ------------------------------------------------------------------------
->> *From:* tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Yasuhiro Hosoda =
+Previous it was:
+#define crng_ready() (likely(crng_init > 0))
 
->> [hosoda-yasuhiro(a)ntt-el.com]
->> *Sent:* Wednesday, April 11, 2018 08:11
->> *To:* william.c.roberts(a)intel.com; tpm2(a)lists.01.org
->> *Subject:* Re: [tpm2] tpm2-tss question
->>
->> I have one finding about the RM and PolicySecret command,
->>
->> It says in page 10 of the following document
->> "TCG TSS 2.0 TAB and Resource Manager specification"
->> https://trustedcomputinggroup.org/wp-content/uploads/TSS-2.0-TAB-Resourc=
-e-Manager-SpecVer1.0-Rev18_review_END030918.pdf
->> that
->> "
->> The RM performs a mapping from the (unchanging) virtual handle to the =
+Now It's:
+#define crng_ready() (likely(crng_init > 1))
 
->> (currently assigned) TPM
->> handle. It replaces the virtual handle with the TPM handle in the TPM =
-
->> command packet.
->>
->> NOTE: The TPM 2.0 library specification excludes the handle from =
-
->> command stream HMAC calculations to enable this
->> substitution."
->> This means that if the virtual handle and the (currently assigned) =
-
->> TPM differs,
->> the HMAC calculations for most of the commands go well.
->>
->> But, the PolicySecret command takes the policy handle to extend as a =
-
->> parameter for HMAC.
->> If, the virtual handle and the (currently assigned) TPM differs, the =
-
->> HMAC calculations
->> for this command doesn't go well and produces the error code 0x98e.
->> Is my understanding right?
->> If so, is there any workaround?
->>
->> Thank you in advance.
->
------
- =C2=A0Yasuhiro Hosoda
-
-NTT Electronics Corporation =EF=BC=88NEL)
+ * crng_init =3D  0 --> Uninitialized
+ *        1 --> Initialized
+ *        2 --> Initialized from input_pool
 
 
---===============3571104114023081477==
+Is it possible that random level of gcry_randomize in tss library could be =
+configurable, not fixed ?
+Please add such functionality, maybe it could be determined while compilati=
+on.
+
+Thanks,
+Tomasz Przybysz
+
+
+--===============1016932440367115520==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
-bnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+CiAgPC9oZWFkPgogIDxib2R5IHRleHQ9IiMw
-MDAwMDAiIGJnY29sb3I9IiNGRkZGRkYiPgogICAgPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4
-Ij5J44CAY2hlY2tlZCB0aGUgZm9sbG93aW5nIGNvbWJpbmF0aW9ucwogICAgICB3aXRoIG15IHRl
-c3QgcHJvZ3JhbS48YnI+CiAgICAgIDxicj4KICAgICAgdHBtMi1hYnJtZC0xLjEuMCBhbmTCoCB0
-cG0yLXRzcy0xLjMuMDxicj4KICAgICAgdHBtMi1hYnJtZC0xLjIuMCBhbmTCoCB0cG0yLXRzcy0x
-LjMuMDxicj4KICAgICAgdHBtMi1hYnJtZC0xLjMuMCBhbmTCoCB0cG0yLXRzcy0xLjMuMDxicj4K
-ICAgICAgPGJyPgogICAgICBUaGV5IHdvcmtlZCB3ZWxsIGFuZCBJIGFtIGNvbnZpbmNlZCB0aGF0
-IHNlc3Npb25zIChubyBtYXR0ZXIgaWYKICAgICAgcG9saWN5IG9yIGhtYWMgb3IgdHJpYWwpPGJy
-PgogICAgICDCoGFyZSBub3QgdmlydHVhbGl6ZWQuPGJyPgogICAgICA8YnI+CiAgICAgIFN0aWxs
-LCB3aXRoIHRoZSBUUE0yLjAtVFNTLTEuMCByZXNvdXJjZSBtYW5hZ2VyLCBpdCBzZWVtcyB0aGF0
-PGJyPgogICAgICBzZXNzaW9ucyBhcmUgdmlydHVhbGl6ZWQuPGJyPgogICAgICBEb2VzIGl0IG1l
-YW4gdGhhdCB0aGUgVFBNMi4wLVRTUy0xLjAgcmVzb3VyY2UgbWFuYWdlciBkb3NlIG5vdDxicj4K
-ICAgICAgY29tcGx5IHdpdGggIlRDRyBUU1MgMi4wIFRBQiBhbmQgUmVzb3VyY2UgTWFuYWdlciBz
-cGVjaWZpY2F0aW9uIj88YnI+CiAgICAgIDxicj4KICAgICAgUmVnYXJkcyw8YnI+CiAgICA8L2Rp
-dj4KICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUiCmNpdGU9Im1pZDo5RjQ4RTFBODIzQjAzQjQ3
-OTBCN0U2RTY5NDMwNzI0RDAxMEVCMDM2ODBAZXhjaDIwMTBjLnNpdC5mcmF1bmhvZmVyLmRlIj4K
-ICAgICAgPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7
-IGNoYXJzZXQ9dXRmLTgiPgogICAgICA8ZGl2IHN0eWxlPSJkaXJlY3Rpb246IGx0cjtmb250LWZh
-bWlseTogVGFob21hO2NvbG9yOgogICAgICAgICMwMDAwMDA7Zm9udC1zaXplOiAxMHB0OyI+WWVz
-LCBzZXNzaW9ucyAobm8gbWF0dGVyIGlmIHBvbGljeSBvcgogICAgICAgIGhtYWMgb3IgdHJpYWwp
-IGFyZSBub2lydHVhbGl6ZWQuPGJyPgogICAgICAgIDxicj4KICAgICAgICBJIGFzc3VtZSB0cG0y
-LWFicm1kIHRvIGJlIGNvbmZvcm1pbmcgdG8gdGhlIHNwZWMuPGJyPgogICAgICAgIElmIHlvdSBm
-aW5kIGFueSBkZXZpYXRpb24sIHRoZXknbGwgbW9zdCBoYXBwaWx5IGZpeCB0aGVtPGJyPgogICAg
-ICAgIDxicj4KICAgICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogVGltZXMgTmV3IFJvbWFu
-OyBjb2xvcjogIzAwMDAwMDsKICAgICAgICAgIGZvbnQtc2l6ZTogMTZweCI+CiAgICAgICAgICA8
-aHIgdGFiaW5kZXg9Ii0xIj4KICAgICAgICAgIDxkaXYgaWQ9ImRpdlJwRjU1MjA4MSIgc3R5bGU9
-ImRpcmVjdGlvbjogbHRyOyI+PGZvbnQgc2l6ZT0iMiIKICAgICAgICAgICAgICBjb2xvcj0iIzAw
-MDAwMCIgZmFjZT0iVGFob21hIj48Yj5Gcm9tOjwvYj4gWWFzdWhpcm8gSG9zb2RhCiAgICAgICAg
-ICAgICAgWzxhIGNsYXNzPSJtb3otdHh0LWxpbmstYWJicmV2aWF0ZWQiCiAgICAgICAgICAgICAg
-ICBocmVmPSJtYWlsdG86aG9zb2RhLXlhc3VoaXJvQG50dC1lbC5jb20iPmhvc29kYS15YXN1aGly
-b0BudHQtZWwuY29tPC9hPl08YnI+CiAgICAgICAgICAgICAgPGI+U2VudDo8L2I+IFdlZG5lc2Rh
-eSwgQXByaWwgMTEsIDIwMTggMTA6Mzg8YnI+CiAgICAgICAgICAgICAgPGI+VG86PC9iPiBGdWNo
-cywgQW5kcmVhczsgPGEKICAgICAgICAgICAgICAgIGNsYXNzPSJtb3otdHh0LWxpbmstYWJicmV2
-aWF0ZWQiCiAgICAgICAgICAgICAgICBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciPnRw
-bTJAbGlzdHMuMDEub3JnPC9hPjxicj4KICAgICAgICAgICAgICA8Yj5TdWJqZWN0OjwvYj4gUmU6
-IFt0cG0yXSB0cG0yLXRzcyBxdWVzdGlvbjxicj4KICAgICAgICAgICAgPC9mb250Pjxicj4KICAg
-ICAgICAgIDwvZGl2PgogICAgICAgICAgPGRpdj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0ibW96
-LWNpdGUtcHJlZml4Ij5UaGFuayB5b3UgdmVyeSBtdWNoIGZvciB5b3VyCiAgICAgICAgICAgICAg
-YW5zd2VyLjxicj4KICAgICAgICAgICAgICA8YnI+CiAgICAgICAgICAgICAgSSB1bmRlcnN0YW5k
-IHRoYXQgdGhlIHNwZWMuIGlzIHRoYXQgdGhlIGhhbmRsZXMgb2YgcG9saWN5CiAgICAgICAgICAg
-ICAgc2Vzc2lvbiBhcmUgPGJyPgogICAgICAgICAgICAgIG5vdCB2aXJ0dWFsaXplZCA8YnI+CiAg
-ICAgICAgICAgICAgPGJyPgogICAgICAgICAgICAgIEkgY2hlY2sgdGhlIHNvdXJjZSBwcm9ncmFt
-cyBvZiB0aGUgcmVzb3VyY2UgbWFuYWdlcnMuPGJyPgogICAgICAgICAgICAgIChUUE0yLDAtVFNT
-LTEuMCBhbmQgdHBtMi1hYnJtZC0xLjIuMCk8YnI+CiAgICAgICAgICAgICAgSXQgc2VlbXMgdGhh
-dCBITUFDIHNlc3Npb25zIGFuZCBQb2xpY3kgc2Vzc2lvbnMgYXJlCiAgICAgICAgICAgICAgaGFu
-ZGxlZDxicj4KICAgICAgICAgICAgICBpbiB0aGUgc2FtZSB3YXkuIERvIHlvdSBoYXZlIGFueSBj
-b21tZW50IGNvbW1lbnQgYWJvdXQ8YnI+CiAgICAgICAgICAgICAgaW1wbGVtZW50YXRpb25zPzxi
-cj4KICAgICAgICAgICAgICA8YnI+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8Ymxv
-Y2txdW90ZSB0eXBlPSJjaXRlIj4KICAgICAgICAgICAgICA8c3R5bGUgdHlwZT0idGV4dC9jc3Mi
-IGlkPSJvd2FQYXJhU3R5bGUiPgo8IS0tCnAKCXttYXJnaW4tdG9wOjA7CgltYXJnaW4tYm90dG9t
-OjB9Ci0tPgpCT0RZIHtkaXJlY3Rpb246IGx0cjtmb250LWZhbWlseTogVGFob21hO2NvbG9yOiAj
-MDAwMDAwO2ZvbnQtc2l6ZTogMTBwdDt9UCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9
-PC9zdHlsZT4KICAgICAgICAgICAgICA8ZGl2IHN0eWxlPSJkaXJlY3Rpb246bHRyOyBmb250LWZh
-bWlseTpUYWhvbWE7CiAgICAgICAgICAgICAgICBjb2xvcjojMDAwMDAwOyBmb250LXNpemU6MTBw
-dCI+QWNjb3JkaW5nIHRvIHRoZSBzcGVjLAogICAgICAgICAgICAgICAgb25seSBrZXkgYW5kIHNl
-cXVlbmNlIGhhbmRsZXMgYXJlIHZpcnR1YWxpemVkLjxicj4KICAgICAgICAgICAgICAgIDxicj4K
-ICAgICAgICAgICAgICAgIFRodXMgZm9yIFBvbGljeVNlY3JldCwgdGhlIHZpcnR1YWwgYW5kIFRQ
-TSBoYW5kbGVzIGZvcgogICAgICAgICAgICAgICAgcG9saWN5U2Vzc2lvbiBzaGFsbCBiZSB0aGUg
-c2FtZS48YnI+CiAgICAgICAgICAgICAgICA8YnI+CiAgICAgICAgICAgICAgICBGb3Iga2V5cyBh
-bmQgc2VxdWVuY2VzIChzdWNoIGFzIGF1dGhIYW5kbGUgaW4KICAgICAgICAgICAgICAgIFBvbGlj
-eVNlY3JldCkgdGhlIHZpcnR1YWwgYW5kIFRQTSBoYW5kbGVzIGRpZmZlci48YnI+CiAgICAgICAg
-ICAgICAgICBCdXQgaW5zdGVhZCBvZiB0aGUgaGFuZGxlIHRoZSBrZXkncyAvIHNlcXVlbmNlJ3Mg
-cHVibGljCiAgICAgICAgICAgICAgICBuYW1lIGlzIHVzZWQgd2l0aGluIHRoZSBobWFjIGNhbGN1
-bGF0aW9uLjxicj4KICAgICAgICAgICAgICAgIDxicj4KICAgICAgICAgICAgICAgIEhvcGUgdGhp
-cyBoZWxwcy4uLjxicj4KICAgICAgICAgICAgICAgIDxicj4KICAgICAgICAgICAgICAgIDxkaXYg
-c3R5bGU9ImZvbnQtZmFtaWx5OlRpbWVzIE5ldyBSb21hbjsgY29sb3I6IzAwMDAwMDsKICAgICAg
-ICAgICAgICAgICAgZm9udC1zaXplOjE2cHgiPgogICAgICAgICAgICAgICAgICA8aHIgdGFiaW5k
-ZXg9Ii0xIj4KICAgICAgICAgICAgICAgICAgPGRpdiBpZD0iZGl2UnBGODUxOTQ5IiBzdHlsZT0i
-ZGlyZWN0aW9uOmx0ciI+PGZvbnQKICAgICAgICAgICAgICAgICAgICAgIHNpemU9IjIiIGNvbG9y
-PSIjMDAwMDAwIiBmYWNlPSJUYWhvbWEiPjxiPkZyb206PC9iPgogICAgICAgICAgICAgICAgICAg
-ICAgdHBtMiBbPGEgY2xhc3M9Im1vei10eHQtbGluay1hYmJyZXZpYXRlZCIKICAgICAgICAgICAg
-ICAgICAgICAgICAgaHJlZj0ibWFpbHRvOnRwbTItYm91bmNlc0BsaXN0cy4wMS5vcmciCiAgICAg
-ICAgICAgICAgICAgICAgICAgIHRhcmdldD0iX2JsYW5rIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJy
-ZXIiCiAgICAgICAgICAgICAgICAgICAgICAgIG1vei1kby1ub3Qtc2VuZD0idHJ1ZSI+dHBtMi1i
-b3VuY2VzQGxpc3RzLjAxLm9yZzwvYT5dCiAgICAgICAgICAgICAgICAgICAgICBvbiBiZWhhbGYg
-b2YgWWFzdWhpcm8gSG9zb2RhIFs8YQogICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz0ibW96
-LXR4dC1saW5rLWFiYnJldmlhdGVkIgogICAgICAgICAgICAgICAgICAgICAgICBocmVmPSJtYWls
-dG86aG9zb2RhLXlhc3VoaXJvQG50dC1lbC5jb20iCiAgICAgICAgICAgICAgICAgICAgICAgIHRh
-cmdldD0iX2JsYW5rIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiCiAgICAgICAgICAgICAgICAg
-ICAgICAgIG1vei1kby1ub3Qtc2VuZD0idHJ1ZSI+aG9zb2RhLXlhc3VoaXJvQG50dC1lbC5jb208
-L2E+XTxicj4KICAgICAgICAgICAgICAgICAgICAgIDxiPlNlbnQ6PC9iPiBXZWRuZXNkYXksIEFw
-cmlsIDExLCAyMDE4IDA4OjExPGJyPgogICAgICAgICAgICAgICAgICAgICAgPGI+VG86PC9iPiA8
-YSBjbGFzcz0ibW96LXR4dC1saW5rLWFiYnJldmlhdGVkIgogICAgICAgICAgICAgICAgICAgICAg
-ICBocmVmPSJtYWlsdG86d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29tIgogICAgICAgICAgICAg
-ICAgICAgICAgICB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIgogICAg
-ICAgICAgICAgICAgICAgICAgICBtb3otZG8tbm90LXNlbmQ9InRydWUiPgogICAgICAgICAgICAg
-ICAgICAgICAgICB3aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5jb208L2E+OyA8YQogICAgICAgICAg
-ICAgICAgICAgICAgICBjbGFzcz0ibW96LXR4dC1saW5rLWFiYnJldmlhdGVkIgogICAgICAgICAg
-ICAgICAgICAgICAgICBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciIHRhcmdldD0iX2Js
-YW5rIgogICAgICAgICAgICAgICAgICAgICAgICByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiIG1v
-ei1kby1ub3Qtc2VuZD0idHJ1ZSI+CiAgICAgICAgICAgICAgICAgICAgICAgIHRwbTJAbGlzdHMu
-MDEub3JnPC9hPjxicj4KICAgICAgICAgICAgICAgICAgICAgIDxiPlN1YmplY3Q6PC9iPiBSZTog
-W3RwbTJdIHRwbTItdHNzIHF1ZXN0aW9uPGJyPgogICAgICAgICAgICAgICAgICAgIDwvZm9udD48
-YnI+CiAgICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgICA8ZGl2PgogICAg
-ICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9Im1vei1jaXRlLXByZWZpeCI+SSBoYXZlIG9uZSBm
-aW5kaW5nCiAgICAgICAgICAgICAgICAgICAgICBhYm91dCB0aGUgUk0gYW5kIFBvbGljeVNlY3Jl
-dCBjb21tYW5kLDxicj4KICAgICAgICAgICAgICAgICAgICAgIDxicj4KICAgICAgICAgICAgICAg
-ICAgICAgIEl0IHNheXMgaW4gcGFnZSAxMCBvZiB0aGUgZm9sbG93aW5nIGRvY3VtZW50PGJyPgog
-ICAgICAgICAgICAgICAgICAgICAgIlRDRyBUU1MgMi4wIFRBQiBhbmQgUmVzb3VyY2UgTWFuYWdl
-cgogICAgICAgICAgICAgICAgICAgICAgc3BlY2lmaWNhdGlvbiI8YnI+CiAgICAgICAgICAgICAg
-ICAgICAgICA8YSBjbGFzcz0ibW96LXR4dC1saW5rLWZyZWV0ZXh0IgpocmVmPSJodHRwczovL3Ry
-dXN0ZWRjb21wdXRpbmdncm91cC5vcmcvd3AtY29udGVudC91cGxvYWRzL1RTUy0yLjAtVEFCLVJl
-c291cmNlLU1hbmFnZXItU3BlY1ZlcjEuMC1SZXYxOF9yZXZpZXdfRU5EMDMwOTE4LnBkZiIKICAg
-ICAgICAgICAgICAgICAgICAgICAgcmVsPSJub29wZW5lciBub3JlZmVycmVyIiB0YXJnZXQ9Il9i
-bGFuayIKICAgICAgICAgICAgICAgICAgICAgICAgbW96LWRvLW5vdC1zZW5kPSJ0cnVlIj5odHRw
-czovL3RydXN0ZWRjb21wdXRpbmdncm91cC5vcmcvd3AtY29udGVudC91cGxvYWRzL1RTUy0yLjAt
-VEFCLVJlc291cmNlLU1hbmFnZXItU3BlY1ZlcjEuMC1SZXYxOF9yZXZpZXdfRU5EMDMwOTE4LnBk
-ZjwvYT48YnI+CiAgICAgICAgICAgICAgICAgICAgICB0aGF0IDxicj4KICAgICAgICAgICAgICAg
-ICAgICAgICI8YnI+CiAgICAgICAgICAgICAgICAgICAgICBUaGUgUk0gcGVyZm9ybXMgYSBtYXBw
-aW5nIGZyb20gdGhlICh1bmNoYW5naW5nKQogICAgICAgICAgICAgICAgICAgICAgdmlydHVhbCBo
-YW5kbGUgdG8gdGhlIChjdXJyZW50bHkgYXNzaWduZWQpIFRQTTxicj4KICAgICAgICAgICAgICAg
-ICAgICAgIGhhbmRsZS4gSXQgcmVwbGFjZXMgdGhlIHZpcnR1YWwgaGFuZGxlIHdpdGggdGhlCiAg
-ICAgICAgICAgICAgICAgICAgICBUUE0gaGFuZGxlIGluIHRoZSBUUE0gY29tbWFuZCBwYWNrZXQu
-PGJyPgogICAgICAgICAgICAgICAgICAgICAgPGJyPgogICAgICAgICAgICAgICAgICAgICAgTk9U
-RTogVGhlIFRQTSAyLjAgbGlicmFyeSBzcGVjaWZpY2F0aW9uIGV4Y2x1ZGVzCiAgICAgICAgICAg
-ICAgICAgICAgICB0aGUgaGFuZGxlIGZyb20gY29tbWFuZCBzdHJlYW0gSE1BQyBjYWxjdWxhdGlv
-bnMKICAgICAgICAgICAgICAgICAgICAgIHRvIGVuYWJsZSB0aGlzPGJyPgogICAgICAgICAgICAg
-ICAgICAgICAgc3Vic3RpdHV0aW9uLiI8YnI+CiAgICAgICAgICAgICAgICAgICAgICBUaGlzIG1l
-YW5zIHRoYXQgaWYgdGhlIHZpcnR1YWwgaGFuZGxlIGFuZCB0aGUKICAgICAgICAgICAgICAgICAg
-ICAgIChjdXJyZW50bHkgYXNzaWduZWQpIFRQTSBkaWZmZXJzLDxicj4KICAgICAgICAgICAgICAg
-ICAgICAgIHRoZSBITUFDIGNhbGN1bGF0aW9ucyBmb3IgbW9zdCBvZiB0aGUgY29tbWFuZHMgZ28K
-ICAgICAgICAgICAgICAgICAgICAgIHdlbGwuPGJyPgogICAgICAgICAgICAgICAgICAgICAgPGJy
-PgogICAgICAgICAgICAgICAgICAgICAgQnV0LCB0aGUgUG9saWN5U2VjcmV0IGNvbW1hbmQgdGFr
-ZXMgdGhlIHBvbGljeQogICAgICAgICAgICAgICAgICAgICAgaGFuZGxlIHRvIGV4dGVuZCBhcyBh
-IHBhcmFtZXRlciBmb3IgSE1BQy48YnI+CiAgICAgICAgICAgICAgICAgICAgICBJZiwgdGhlIHZp
-cnR1YWwgaGFuZGxlIGFuZCB0aGUgKGN1cnJlbnRseQogICAgICAgICAgICAgICAgICAgICAgYXNz
-aWduZWQpIFRQTSBkaWZmZXJzLCB0aGUgSE1BQyBjYWxjdWxhdGlvbnM8YnI+CiAgICAgICAgICAg
-ICAgICAgICAgICBmb3IgdGhpcyBjb21tYW5kIGRvZXNuJ3QgZ28gd2VsbCBhbmQgcHJvZHVjZXMg
-dGhlCiAgICAgICAgICAgICAgICAgICAgICBlcnJvciBjb2RlIDB4OThlLjxicj4KICAgICAgICAg
-ICAgICAgICAgICAgIElzIG15IHVuZGVyc3RhbmRpbmcgcmlnaHQ/PGJyPgogICAgICAgICAgICAg
-ICAgICAgICAgSWYgc28sIGlzIHRoZXJlIGFueSB3b3JrYXJvdW5kPzxicj4KICAgICAgICAgICAg
-ICAgICAgICAgIDxicj4KICAgICAgICAgICAgICAgICAgICAgIFRoYW5rIHlvdSBpbiBhZHZhbmNl
-Ljxicj4KICAgICAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgICAgPC9kaXY+
-CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAg
-PC9ibG9ja3F1b3RlPgogICAgICAgICAgICA8YnI+CiAgICAgICAgICA8L2Rpdj4KICAgICAgICA8
-L2Rpdj4KICAgICAgPC9kaXY+CiAgICA8L2Jsb2NrcXVvdGU+CiAgICAtLS0tLQogICAgPGJyPgog
-ICAgwqBZYXN1aGlybyBIb3NvZGEKICAgIDxicj4KICAgIDxicj4KICAgIE5UVCBFbGVjdHJvbmlj
-cyBDb3Jwb3JhdGlvbiDvvIhORUwpCiAgICA8cHJlIGNsYXNzPSJtb3otc2lnbmF0dXJlIiBjb2xz
-PSI3MiI+CjwvcHJlPgogIDwvYm9keT4KPC9odG1sPgo=
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5IHRleHQ9IiMwMDAwMDAi
+IGJnY29sb3I9IiNGRkZGRkYiPg0KSGksPGJyPg0KPGJyPg0KSSBoYXZlIGZvdW5kIHRoYXQgdGhl
+cmUgaXMgYSBwcm9ibGVtIHdpdGggdHBtMi10c3MgYW5kIC9kZXYvdXJhbmRvbS48YnI+DQpPbiBv
+dXIgY29tcGFueSBlbWJlZGRlZCBjcHUgYm9hcmQgdGhlcmUgaXMgSW5maW5lb24gVFBNLTIuMCBk
+ZXZpY2UgYW5kIHdlIHdhbnQgdG8gaGF2ZSBhY2Nlc3MgdG8gdGhlIFRQTSBkZXZpY2UgaW1tZWRp
+YXRlbHkgYWZ0ZXIgYm9hcmQgcmVib290Ljxicj4NCkFzIEkgZm91bmQgdHBtMi10c3MgbGlicmFy
+eSBpcyBiYXNlZCBvbiBsaWJnY3J5cHQgbGlicmFyeS48YnI+DQo8YnI+DQpUU1MyX1JDIGllc3lz
+X2NyeXB0b2djcnlfcmFuZG9tMmIoVFBNMkJfTk9OQ0UgKiBub25jZSwgc2l6ZV90IG51bV9ieXRl
+cyk8YnI+DQp7PGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7IGlmIChudW1fYnl0ZXMgPT0gMCkgezxi
+cj4NCiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBub25jZS0mZ3Q7
+c2l6ZSA9IHNpemVvZihUUE1VX0hBKTs8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsgfSBlbHNlIHs8
+YnI+DQombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgbm9uY2UtJmd0
+O3NpemUgPSBudW1fYnl0ZXM7PGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7IH08YnI+DQombmJzcDsm
+bmJzcDsmbmJzcDsgLyo8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgKiBwb3NzaWJsZSB2
+YWx1ZXMgZm9yIHJhbmRvbSBsZXZlbDo8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgKiZu
+YnNwOyBHQ1JZX1dFQUtfUkFORE9NIEdDUllfU1RST05HX1JBTkRPTSZuYnNwOyBHQ1JZX1ZFUllf
+U1RST05HX1JBTkRPTTxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAqLzxicj4NCiZuYnNw
+OyZuYnNwOyZuYnNwOyBnY3J5X3JhbmRvbWl6ZSgmYW1wO25vbmNlLSZndDtidWZmZXJbMF0sIG5v
+bmNlLSZndDtzaXplLCBHQ1JZX1NUUk9OR19SQU5ET00pOzxicj4NCiZuYnNwOyZuYnNwOyZuYnNw
+OyByZXR1cm4gVFNTMl9SQ19TVUNDRVNTOzxicj4NCn0gPGJyPg0KPGJyPg0KVGhlIHByb2JsZW0g
+aXMgdGhhdCB3aXRoIHRoZSBuZXcga2VybmVsIExpbnV4IGJ1aWxkcm9vdCA0LjE0Ljc0LXhpbGlu
+eDxicj4NCi9kZXYvdXJhbmRvbSBzZWVkIGlzIHJlYWR5IGFmdGVyIDEyMCBzZWNzIGZyb20gc3lz
+dGVtIHJlYm9vdC48YnI+DQpJdCdzIG5vdCBhY2NlcHRhYmxlIGZvciB1cyB0byB3YWl0IHN1Y2gg
+bG9uZyB0byBnZXQgVFBNIGRldmljZSByZWFkeS48YnI+DQo8YnI+DQpJIHRlc3QgaXQgb24gWnlu
+cSBjcHU6PGJyPg0KcHJvY2Vzc29yJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+IDogMDxicj4NCm1vZGVsIG5hbWUmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgOiBBUk12
+NyBQcm9jZXNzb3IgcmV2IDAgKHY3bCk8YnI+DQpCb2dvTUlQUyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyA6IDY2Ni42Njxicj4NCkZlYXR1cmVzJm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDogaGFsZiB0aHVtYiBmYXN0bXVsdCB2ZnAg
+ZWRzcCBuZW9uIHZmcHYzIHRscyB2ZnBkMzI8YnI+DQpDUFUgaW1wbGVtZW50ZXIgOiAweDQxPGJy
+Pg0KQ1BVIGFyY2hpdGVjdHVyZTogNzxicj4NCkNQVSB2YXJpYW50Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7IDogMHgzPGJyPg0KQ1BVIHBhcnQmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsgOiAweGMwOTxicj4NCkNQVSByZXZpc2lvbiZuYnNwOyZuYnNwOyZuYnNwOyA6
+IDA8YnI+DQo8YnI+DQpwcm9jZXNzb3ImbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsgOiAxPGJyPg0KbW9kZWwgbmFtZSZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyA6IEFS
+TXY3IFByb2Nlc3NvciByZXYgMCAodjdsKTxicj4NCkJvZ29NSVBTJm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDogNjY2LjY2PGJyPg0KRmVhdHVyZXMmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgOiBoYWxmIHRodW1iIGZhc3RtdWx0IHZm
+cCBlZHNwIG5lb24gdmZwdjMgdGxzIHZmcGQzMjxicj4NCkNQVSBpbXBsZW1lbnRlciA6IDB4NDE8
+YnI+DQpDUFUgYXJjaGl0ZWN0dXJlOiA3PGJyPg0KQ1BVIHZhcmlhbnQmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsgOiAweDM8YnI+DQpDUFUgcGFydCZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyA6IDB4YzA5PGJyPg0KQ1BVIHJldmlzaW9uJm5ic3A7Jm5ic3A7Jm5ic3A7
+IDogMDxicj4NCjxicj4NCkkgdGhpbmsgdGhhdCB0aGVyZSBpcyBubyBwcm9ibGVtIHdpdGggY3B1
+Jm5ic3A7IHBlcmZvcm1hbmNlLjxicj4NCjxicj4NCkkgbG9va2VkIGludG8ga2VybmVsIHNvdXJj
+ZXM6PGJyPg0KZHJpdmVycy9jaGFyL3JhbmRvbS5jPGJyPg0KYW5kIGl0IGNoYW5nZWQgb24gYXBy
+aWwgMjAxODxicj4NCjxicj4NClByZXZpb3VzIGl0IHdhczo8YnI+DQojZGVmaW5lIGNybmdfcmVh
+ZHkoKSAobGlrZWx5KGNybmdfaW5pdCAmZ3Q7IDApKTxicj4NCjxicj4NCk5vdyBJdCdzOjxicj4N
+CiNkZWZpbmUgY3JuZ19yZWFkeSgpIChsaWtlbHkoY3JuZ19pbml0ICZndDsgMSkpPGJyPg0KPGJy
+Pg0KJm5ic3A7KiBjcm5nX2luaXQgPSZuYnNwOyAwIC0tJmd0OyBVbmluaXRpYWxpemVkPGJyPg0K
+Jm5ic3A7KiZuYnNwOyZuYnNwOyZuYnNwOyAmbmJzcDsmbmJzcDsmbmJzcDsgMSAtLSZndDsgSW5p
+dGlhbGl6ZWQ8YnI+DQombmJzcDsqJm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyZuYnNwOyZuYnNw
+OyAyIC0tJmd0OyBJbml0aWFsaXplZCBmcm9tIGlucHV0X3Bvb2w8YnI+DQo8YnI+DQo8YnI+DQpJ
+cyBpdCBwb3NzaWJsZSB0aGF0IHJhbmRvbSBsZXZlbCBvZiBnY3J5X3JhbmRvbWl6ZSBpbiB0c3Mg
+bGlicmFyeSBjb3VsZCBiZSBjb25maWd1cmFibGUsIG5vdCBmaXhlZCA/PGJyPg0KUGxlYXNlIGFk
+ZCBzdWNoIGZ1bmN0aW9uYWxpdHksIG1heWJlIGl0IGNvdWxkIGJlIGRldGVybWluZWQgd2hpbGUg
+Y29tcGlsYXRpb24uPGJyPg0KPGJyPg0KVGhhbmtzLDxzbWFsbD48Yj48YnI+DQpUb21hc3ogUHJ6
+eWJ5c3o8L2I+IDwvc21hbGw+PGJyPg0KPGRpdiBjbGFzcz0ibW96LXNpZ25hdHVyZSI+PGJyPg0K
+PC9kaXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
 
---===============3571104114023081477==--
+--===============1016932440367115520==--
 
