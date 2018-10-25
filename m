@@ -1,40 +1,242 @@
-Content-Type: multipart/mixed; boundary="===============6466153398830318438=="
+Content-Type: multipart/mixed; boundary="===============6175444546476809222=="
 MIME-Version: 1.0
-From: Terry An <terry.an.bj at gmail.com>
-Subject: [tpm2] How do I input password via tmp2_import
-Date: Thu, 25 Oct 2018 17:02:14 +0800
-Message-ID: <CA+tBKVjCFwbHvimhGSX_Dh+O7cESQnw-P9mu_fKByPU8MNaeMA@mail.gmail.com>
+From: Tomasz Przybysz <tomaszp at mikronika.pl>
+Subject: Re: [tpm2] tpm2-tss and /dev/urandom seed
+Date: Thu, 25 Oct 2018 13:48:21 +0000
+Message-ID: <6066011f-defc-1e37-0b0a-ca8d0a652d27@mikronika.pl>
+In-Reply-To: 7843db61-0eec-488e-867a-3a42dca7e326@mikronika.pl
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6466153398830318438==
+--===============6175444546476809222==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-How do I input password via tpm2_import?
+When I use --with-crypto=3Dossl switch during tpm2-tss compilation, tss doe=
+sn't use libgcrypt, it uses openssl.
+In such case there it not such 120 secs delay. Instead there is about 7 sec=
+s delay before each sessions establishing, when openssl generates random da=
+ta.
 
-[root(a)bogon Test]# tpm2_import -C 0x81020009 -G rsa -k priv.pem -u pub.key
--r priv.key
-Enter PEM pass phrase:
-ERROR: Tss2_Sys_Import(0x98E) - tpm:session(1):the authorization HMAC check
-failed and DA counter incremented
-ERROR: Unable to run tpm2_import
+I need to add that we use ESAPI and encrypted session to communicate with T=
+PM device.
+Encrypted session needs random data.
 
---===============6466153398830318438==
+I found that on the linux is the problem with drivers/char/random.c
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/dri=
+vers/char/random.c?h=3Dv4.14.78&id=3D6e513bc20ca63f594632eca4e1968791240b8f=
+18
+
+random: fix crng_ready() test
+commit 43838a23a05fbd13e47d750d3dfd77001536dd33 upstream. The crng_init var=
+iable has three states: 0: The CRNG is not initialized at all 1: The CRNG h=
+as a small amount of entropy, hopefully good enough for early-boot, non-cry=
+ptographical use cases 2: The CRNG is fully initialized and we are sure it =
+is safe for cryptographic use cases. The crng_ready() function should only =
+return true once we are in the last state. This addresses CVE-2018-1108.
+
+
+https://access.redhat.com/security/cve/cve-2018-1108
+
+Those changes causes that /dev/urandom is ready after 120 secs from system =
+reboot.
+
+
+
+Tomasz Przybysz
+
+Hi,
+
+I have found that there is a problem with tpm2-tss and /dev/urandom.
+On our company embedded cpu board there is Infineon TPM-2.0 device and we w=
+ant to have access to the TPM device immediately after board reboot.
+As I found tpm2-tss library is based on libgcrypt library.
+
+TSS2_RC iesys_cryptogcry_random2b(TPM2B_NONCE * nonce, size_t num_bytes)
+{
+    if (num_bytes =3D=3D 0) {
+        nonce->size =3D sizeof(TPMU_HA);
+    } else {
+        nonce->size =3D num_bytes;
+    }
+    /*
+     * possible values for random level:
+     *  GCRY_WEAK_RANDOM GCRY_STRONG_RANDOM  GCRY_VERY_STRONG_RANDOM
+     */
+    gcry_randomize(&nonce->buffer[0], nonce->size, GCRY_STRONG_RANDOM);
+    return TSS2_RC_SUCCESS;
+}
+
+The problem is that with the new kernel Linux buildroot 4.14.74-xilinx
+/dev/urandom seed is ready after 120 secs from system reboot.
+It's not acceptable for us to wait such long to get TPM device ready.
+
+I test it on Zynq cpu:
+processor       : 0
+model name      : ARMv7 Processor rev 0 (v7l)
+BogoMIPS        : 666.66
+Features        : half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x3
+CPU part        : 0xc09
+CPU revision    : 0
+
+processor       : 1
+model name      : ARMv7 Processor rev 0 (v7l)
+BogoMIPS        : 666.66
+Features        : half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x3
+CPU part        : 0xc09
+CPU revision    : 0
+
+I think that there is no problem with cpu  performance.
+
+I looked into kernel sources:
+drivers/char/random.c
+and it changed on april 2018
+
+Previous it was:
+#define crng_ready() (likely(crng_init > 0))
+
+Now It's:
+#define crng_ready() (likely(crng_init > 1))
+
+ * crng_init =3D  0 --> Uninitialized
+ *        1 --> Initialized
+ *        2 --> Initialized from input_pool
+
+
+Is it possible that random level of gcry_randomize in tss library could be =
+configurable, not fixed ?
+Please add such functionality, maybe it could be determined while compilati=
+on.
+
+Thanks,
+Tomasz Przybysz
+
+
+
+--===============6175444546476809222==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdj5Ib3cgZG8g
-SSBpbnB1dCBwYXNzd29yZCB2aWEgdHBtMl9pbXBvcnQ/wqA8L2Rpdj48ZGl2Pjxicj48L2Rpdj48
-ZGl2PjxkaXY+W3Jvb3RAYm9nb24gVGVzdF0jIHRwbTJfaW1wb3J0IC1DIDB4ODEwMjAwMDkgLUcg
-cnNhIC1rIHByaXYucGVtIC11IHB1Yi5rZXkgLXIgcHJpdi5rZXnCoDwvZGl2PjxkaXY+RW50ZXIg
-UEVNIHBhc3MgcGhyYXNlOjwvZGl2PjxkaXY+RVJST1I6IFRzczJfU3lzX0ltcG9ydCgweDk4RSkg
-LSB0cG06c2Vzc2lvbigxKTp0aGUgYXV0aG9yaXphdGlvbiBITUFDIGNoZWNrIGZhaWxlZCBhbmQg
-REEgY291bnRlciBpbmNyZW1lbnRlZDwvZGl2PjxkaXY+RVJST1I6IFVuYWJsZSB0byBydW4gdHBt
-Ml9pbXBvcnQ8L2Rpdj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4K
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5IHRleHQ9IiMwMDAwMDAi
+IGJnY29sb3I9IiNGRkZGRkYiPg0KV2hlbiBJIHVzZSAtLXdpdGgtY3J5cHRvPW9zc2wgc3dpdGNo
+IGR1cmluZyB0cG0yLXRzcyBjb21waWxhdGlvbiwgdHNzIGRvZXNuJ3QgdXNlIGxpYmdjcnlwdCwg
+aXQgdXNlcyBvcGVuc3NsLjxicj4NCkluIHN1Y2ggY2FzZSB0aGVyZSBpdCBub3Qgc3VjaCAxMjAg
+c2VjcyBkZWxheS4gSW5zdGVhZCB0aGVyZSBpcyBhYm91dCA3IHNlY3MgZGVsYXkgYmVmb3JlIGVh
+Y2ggc2Vzc2lvbnMgZXN0YWJsaXNoaW5nLCB3aGVuIG9wZW5zc2wgZ2VuZXJhdGVzIHJhbmRvbSBk
+YXRhLjxicj4NCjxicj4NCkkgbmVlZCB0byBhZGQgdGhhdCB3ZSB1c2UgRVNBUEkgYW5kIGVuY3J5
+cHRlZCBzZXNzaW9uIHRvIGNvbW11bmljYXRlIHdpdGggVFBNIGRldmljZS48YnI+DQpFbmNyeXB0
+ZWQgc2Vzc2lvbiBuZWVkcyByYW5kb20gZGF0YS48YnI+DQo8YnI+DQpJIGZvdW5kIHRoYXQgb24g
+dGhlIGxpbnV4IGlzIHRoZSBwcm9ibGVtIHdpdGggZHJpdmVycy9jaGFyL3JhbmRvbS5jPGJyPg0K
+PGJyPg0KPGEgY2xhc3M9Im1vei10eHQtbGluay1mcmVldGV4dCIgaHJlZj0iaHR0cHM6Ly9naXQu
+a2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvc3RhYmxlL2xpbnV4LmdpdC9jb21t
+aXQvZHJpdmVycy9jaGFyL3JhbmRvbS5jP2g9djQuMTQuNzgmYW1wO2lkPTZlNTEzYmMyMGNhNjNm
+NTk0NjMyZWNhNGUxOTY4NzkxMjQwYjhmMTgiPmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3Nj
+bS9saW51eC9rZXJuZWwvZ2l0L3N0YWJsZS9saW51eC5naXQvY29tbWl0L2RyaXZlcnMvY2hhci9y
+YW5kb20uYz9oPXY0LjE0Ljc4JmFtcDtpZD02ZTUxM2JjMjBjYTYzZjU5NDYzMmVjYTRlMTk2ODc5
+MTI0MGI4ZjE4PC9hPjxicj4NCjxicj4NCjxkaXYgY2xhc3M9ImNvbW1pdC1zdWJqZWN0IiBzdHls
+ZT0iZm9udC13ZWlnaHQ6IGJvbGQ7IGZvbnQtc2l6ZToNCiAgICAgIDE2LjY2NjdweDsgbWFyZ2lu
+OiAxLjVlbSAwZW0gMC41ZW07IHBhZGRpbmc6IDBlbTsgY29sb3I6IHJnYig1MSwNCiAgICAgIDUx
+LCA1MSk7IGZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmOyBmb250LXN0eWxlOiBub3JtYWw7DQogICAg
+ICBmb250LXZhcmlhbnQtbGlnYXR1cmVzOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3Jt
+YWw7DQogICAgICBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyBvcnBoYW5zOiAyOyB0ZXh0LWFsaWdu
+OiBzdGFydDsNCiAgICAgIHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3
+aGl0ZS1zcGFjZTogbm9ybWFsOw0KICAgICAgd2lkb3dzOiAyOyB3b3JkLXNwYWNpbmc6IDBweDsg
+LXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4Ow0KICAgICAgYmFja2dyb3VuZC1jb2xvcjog
+cmdiKDI1NSwgMjU1LCAyNTUpOyB0ZXh0LWRlY29yYXRpb24tc3R5bGU6DQogICAgICBpbml0aWFs
+OyB0ZXh0LWRlY29yYXRpb24tY29sb3I6IGluaXRpYWw7Ij4NCnJhbmRvbTogZml4IGNybmdfcmVh
+ZHkoKSB0ZXN0PC9kaXY+DQo8ZGl2IGNsYXNzPSJjb21taXQtbXNnIiBzdHlsZT0id2hpdGUtc3Bh
+Y2U6IHByZTsgZm9udC1mYW1pbHk6IG1vbm9zcGFjZTsgY29sb3I6IHJnYig1MSwgNTEsIDUxKTsg
+Zm9udC1zaXplOiAxMy4zMzMzcHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWxp
+Z2F0dXJlczogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDog
+NDAwOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyBvcnBoYW5zOiAyOyB0ZXh0LWFsaWduOiBzdGFy
+dDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdpZG93czogMjsgd29y
+ZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsgYmFja2dyb3Vu
+ZC1jb2xvcjogcmdiKDI1NSwgMjU1LCAyNTUpOyB0ZXh0LWRlY29yYXRpb24tc3R5bGU6IGluaXRp
+YWw7IHRleHQtZGVjb3JhdGlvbi1jb2xvcjogaW5pdGlhbDsiPg0KY29tbWl0IDQzODM4YTIzYTA1
+ZmJkMTNlNDdkNzUwZDNkZmQ3NzAwMTUzNmRkMzMgdXBzdHJlYW0uIFRoZSBjcm5nX2luaXQgdmFy
+aWFibGUgaGFzIHRocmVlIHN0YXRlczogMDogVGhlIENSTkcgaXMgbm90IGluaXRpYWxpemVkIGF0
+IGFsbCAxOiBUaGUgQ1JORyBoYXMgYSBzbWFsbCBhbW91bnQgb2YgZW50cm9weSwgaG9wZWZ1bGx5
+IGdvb2QgZW5vdWdoIGZvciBlYXJseS1ib290LCBub24tY3J5cHRvZ3JhcGhpY2FsIHVzZSBjYXNl
+cyAyOiBUaGUgQ1JORw0KIGlzIGZ1bGx5IGluaXRpYWxpemVkIGFuZCB3ZSBhcmUgc3VyZSBpdCBp
+cyBzYWZlIGZvciBjcnlwdG9ncmFwaGljIHVzZSBjYXNlcy4gVGhlIGNybmdfcmVhZHkoKSBmdW5j
+dGlvbiBzaG91bGQgb25seSByZXR1cm4gdHJ1ZSBvbmNlIHdlIGFyZSBpbiB0aGUgbGFzdCBzdGF0
+ZS4gVGhpcyBhZGRyZXNzZXMgQ1ZFLTIwMTgtMTEwOC48L2Rpdj4NCjxicj4NCjxicj4NCjxhIGNs
+YXNzPSJtb3otdHh0LWxpbmstZnJlZXRleHQiIGhyZWY9Imh0dHBzOi8vYWNjZXNzLnJlZGhhdC5j
+b20vc2VjdXJpdHkvY3ZlL2N2ZS0yMDE4LTExMDgiPmh0dHBzOi8vYWNjZXNzLnJlZGhhdC5jb20v
+c2VjdXJpdHkvY3ZlL2N2ZS0yMDE4LTExMDg8L2E+PGJyPg0KPGJyPg0KVGhvc2UgY2hhbmdlcyBj
+YXVzZXMgdGhhdCAvZGV2L3VyYW5kb20gaXMgcmVhZHkgYWZ0ZXIgMTIwIHNlY3MgZnJvbSBzeXN0
+ZW0gcmVib290Ljxicj4NCjxicj4NCjxicj4NCjxicj4NCjxkaXYgY2xhc3M9Im1vei1zaWduYXR1
+cmUiPg0KPHRpdGxlPjwvdGl0bGU+DQo8ZGl2PjxzbWFsbD48Yj5Ub21hc3ogUHJ6eWJ5c3o8L2I+
+IDwvc21hbGw+PGJyPg0KPGJyPg0KSGksPGJyPg0KPC9kaXY+DQo8L2Rpdj4NCjxibG9ja3F1b3Rl
+IHR5cGU9ImNpdGUiIGNpdGU9Im1pZDo3ODQzZGI2MS0wZWVjLTQ4OGUtODY3YS0zYTQyZGNhN2Uz
+MjZAbWlrcm9uaWthLnBsIj4NCjxicj4NCkkgaGF2ZSBmb3VuZCB0aGF0IHRoZXJlIGlzIGEgcHJv
+YmxlbSB3aXRoIHRwbTItdHNzIGFuZCAvZGV2L3VyYW5kb20uPGJyPg0KT24gb3VyIGNvbXBhbnkg
+ZW1iZWRkZWQgY3B1IGJvYXJkIHRoZXJlIGlzIEluZmluZW9uIFRQTS0yLjAgZGV2aWNlIGFuZCB3
+ZSB3YW50IHRvIGhhdmUgYWNjZXNzIHRvIHRoZSBUUE0gZGV2aWNlIGltbWVkaWF0ZWx5IGFmdGVy
+IGJvYXJkIHJlYm9vdC48YnI+DQpBcyBJIGZvdW5kIHRwbTItdHNzIGxpYnJhcnkgaXMgYmFzZWQg
+b24gbGliZ2NyeXB0IGxpYnJhcnkuPGJyPg0KPGJyPg0KVFNTMl9SQyBpZXN5c19jcnlwdG9nY3J5
+X3JhbmRvbTJiKFRQTTJCX05PTkNFICogbm9uY2UsIHNpemVfdCBudW1fYnl0ZXMpPGJyPg0Kezxi
+cj4NCiZuYnNwOyZuYnNwOyZuYnNwOyBpZiAobnVtX2J5dGVzID09IDApIHs8YnI+DQombmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgbm9uY2UtJmd0O3NpemUgPSBzaXpl
+b2YoVFBNVV9IQSk7PGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7IH0gZWxzZSB7PGJyPg0KJm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IG5vbmNlLSZndDtzaXplID0gbnVt
+X2J5dGVzOzxicj4NCiZuYnNwOyZuYnNwOyZuYnNwOyB9PGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7
+IC8qPGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICogcG9zc2libGUgdmFsdWVzIGZvciBy
+YW5kb20gbGV2ZWw6PGJyPg0KJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICombmJzcDsgR0NSWV9X
+RUFLX1JBTkRPTSBHQ1JZX1NUUk9OR19SQU5ET00mbmJzcDsgR0NSWV9WRVJZX1NUUk9OR19SQU5E
+T008YnI+DQombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgKi88YnI+DQombmJzcDsmbmJzcDsmbmJz
+cDsgZ2NyeV9yYW5kb21pemUoJmFtcDtub25jZS0mZ3Q7YnVmZmVyWzBdLCBub25jZS0mZ3Q7c2l6
+ZSwgR0NSWV9TVFJPTkdfUkFORE9NKTs8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsgcmV0dXJuIFRT
+UzJfUkNfU1VDQ0VTUzs8YnI+DQp9IDxicj4NCjxicj4NClRoZSBwcm9ibGVtIGlzIHRoYXQgd2l0
+aCB0aGUgbmV3IGtlcm5lbCBMaW51eCBidWlsZHJvb3QgNC4xNC43NC14aWxpbng8YnI+DQovZGV2
+L3VyYW5kb20gc2VlZCBpcyByZWFkeSBhZnRlciAxMjAgc2VjcyBmcm9tIHN5c3RlbSByZWJvb3Qu
+PGJyPg0KSXQncyBub3QgYWNjZXB0YWJsZSBmb3IgdXMgdG8gd2FpdCBzdWNoIGxvbmcgdG8gZ2V0
+IFRQTSBkZXZpY2UgcmVhZHkuPGJyPg0KPGJyPg0KSSB0ZXN0IGl0IG9uIFp5bnEgY3B1Ojxicj4N
+CnByb2Nlc3NvciZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyA6IDA8YnI+DQpt
+b2RlbCBuYW1lJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDogQVJNdjcgUHJvY2Vzc29y
+IHJldiAwICh2N2wpPGJyPg0KQm9nb01JUFMmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsgOiA2NjYuNjY8YnI+DQpGZWF0dXJlcyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyA6IGhhbGYgdGh1bWIgZmFzdG11bHQgdmZwIGVkc3AgbmVvbiB2
+ZnB2MyB0bHMgdmZwZDMyPGJyPg0KQ1BVIGltcGxlbWVudGVyIDogMHg0MTxicj4NCkNQVSBhcmNo
+aXRlY3R1cmU6IDc8YnI+DQpDUFUgdmFyaWFudCZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyA6IDB4
+Mzxicj4NCkNQVSBwYXJ0Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+IDogMHhjMDk8YnI+DQpDUFUgcmV2aXNpb24mbmJzcDsmbmJzcDsmbmJzcDsgOiAwPGJyPg0KPGJy
+Pg0KcHJvY2Vzc29yJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDogMTxicj4N
+Cm1vZGVsIG5hbWUmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgOiBBUk12NyBQcm9jZXNz
+b3IgcmV2IDAgKHY3bCk8YnI+DQpCb2dvTUlQUyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyA6IDY2Ni42Njxicj4NCkZlYXR1cmVzJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDogaGFsZiB0aHVtYiBmYXN0bXVsdCB2ZnAgZWRzcCBuZW9u
+IHZmcHYzIHRscyB2ZnBkMzI8YnI+DQpDUFUgaW1wbGVtZW50ZXIgOiAweDQxPGJyPg0KQ1BVIGFy
+Y2hpdGVjdHVyZTogNzxicj4NCkNQVSB2YXJpYW50Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDog
+MHgzPGJyPg0KQ1BVIHBhcnQmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsgOiAweGMwOTxicj4NCkNQVSByZXZpc2lvbiZuYnNwOyZuYnNwOyZuYnNwOyA6IDA8YnI+DQo8
+YnI+DQpJIHRoaW5rIHRoYXQgdGhlcmUgaXMgbm8gcHJvYmxlbSB3aXRoIGNwdSZuYnNwOyBwZXJm
+b3JtYW5jZS48YnI+DQo8YnI+DQpJIGxvb2tlZCBpbnRvIGtlcm5lbCBzb3VyY2VzOjxicj4NCmRy
+aXZlcnMvY2hhci9yYW5kb20uYzxicj4NCmFuZCBpdCBjaGFuZ2VkIG9uIGFwcmlsIDIwMTg8YnI+
+DQo8YnI+DQpQcmV2aW91cyBpdCB3YXM6PGJyPg0KI2RlZmluZSBjcm5nX3JlYWR5KCkgKGxpa2Vs
+eShjcm5nX2luaXQgJmd0OyAwKSk8YnI+DQo8YnI+DQpOb3cgSXQnczo8YnI+DQojZGVmaW5lIGNy
+bmdfcmVhZHkoKSAobGlrZWx5KGNybmdfaW5pdCAmZ3Q7IDEpKTxicj4NCjxicj4NCiZuYnNwOyog
+Y3JuZ19pbml0ID0mbmJzcDsgMCAtLSZndDsgVW5pbml0aWFsaXplZDxicj4NCiZuYnNwOyombmJz
+cDsmbmJzcDsmbmJzcDsgJm5ic3A7Jm5ic3A7Jm5ic3A7IDEgLS0mZ3Q7IEluaXRpYWxpemVkPGJy
+Pg0KJm5ic3A7KiZuYnNwOyZuYnNwOyZuYnNwOyAmbmJzcDsmbmJzcDsmbmJzcDsgMiAtLSZndDsg
+SW5pdGlhbGl6ZWQgZnJvbSBpbnB1dF9wb29sPGJyPg0KPGJyPg0KPGJyPg0KSXMgaXQgcG9zc2li
+bGUgdGhhdCByYW5kb20gbGV2ZWwgb2YgZ2NyeV9yYW5kb21pemUgaW4gdHNzIGxpYnJhcnkgY291
+bGQgYmUgY29uZmlndXJhYmxlLCBub3QgZml4ZWQgPzxicj4NClBsZWFzZSBhZGQgc3VjaCBmdW5j
+dGlvbmFsaXR5LCBtYXliZSBpdCBjb3VsZCBiZSBkZXRlcm1pbmVkIHdoaWxlIGNvbXBpbGF0aW9u
+Ljxicj4NCjxicj4NClRoYW5rcyw8c21hbGw+PGI+PGJyPg0KVG9tYXN6IFByenlieXN6PC9iPiA8
+L3NtYWxsPjxicj4NCjxkaXYgY2xhc3M9Im1vei1zaWduYXR1cmUiPjxicj4NCjwvZGl2Pg0KPC9i
+bG9ja3F1b3RlPg0KPGJyPg0KPC9ib2R5Pg0KPC9odG1sPg0K
 
---===============6466153398830318438==--
+--===============6175444546476809222==--
 
