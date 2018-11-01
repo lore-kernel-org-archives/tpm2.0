@@ -1,37 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============0462876315844085008=="
+Content-Type: multipart/mixed; boundary="===============6918076503463962695=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: Re: [tpm2] what the different between 0x1d5 and 0x3d5
-Date: Wed, 31 Oct 2018 09:46:58 -0700
-Message-ID: <28a8dda7-a4a4-fc47-a86d-91747d94adf3@intel.com>
-In-Reply-To: CA+tBKVhSh75EO1jwhgVXjPffCEitQ5PX6HCWYrU6feYosPeCdg@mail.gmail.com
+From: Philip Tricca <philip.b.tricca at intel.com>
+Subject: Re: [tpm2] tpm2-abrmd 2.0.3_rc0
+Date: Wed, 31 Oct 2018 17:24:51 -0700
+Message-ID: <20181101002451.qpfpqr7rvytf7fxy@jake>
+In-Reply-To: 20181023151258.6lbibakst6agl3w2@jake
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0462876315844085008==
+--===============6918076503463962695==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 10/31/18 2:15 AM, Terry An wrote:
-> [root(a)localhost tpm2-init]# tpm2_rc_decode=C2=A0 0x1d5
-> tpm:parameter(1):structure is the wrong size
-> [root(a)localhost tpm2-init]# tpm2_rc_decode=C2=A0 0x3d5
-> tpm:parameter(3):structure is the wrong size
+On Tue, Oct 23, 2018 at 08:12:58AM -0700, Philip Tricca wrote:
+> Good morning all,
 > =
 
-> I'm so confusing where my code is wrong.
+> Now that Github is working again I've merged the remaining PRs that
+> were stuck waiting for CI runs and tagged 2.0.3_rc0. We'll run the
+> typical RC cycle over the next week so please provide feedback if you
+> can.
+> =
 
-The first error code indicates that the size of the
-first parameter is wrong, and the second error code
-says that the size of the third parameter is wrong.
-See section 6.6 of: https://trustedcomputinggroup.org/wp-content/uploads/TP=
-M-Rev-2.0-Part-2-Structures-01.38.pdf
-for details.
+> https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.0.3_rc0
 
--- =
+The RC0 window (~1 week) has closed with no additional fixes. The
+release is now available on Github:
+https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.0.3
 
-Tadeusz
+Philip
 
---===============0462876315844085008==--
+--===============6918076503463962695==--
 
