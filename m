@@ -1,44 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============1935316666047377071=="
+Content-Type: multipart/mixed; boundary="===============4155156017634378186=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: Re: [tpm2] what the different between 0x1d5 and 0x3d5
-Date: Thu, 01 Nov 2018 08:48:50 -0700
-Message-ID: <d6074499-8e4d-f61c-e317-4eeba88dde28@intel.com>
-In-Reply-To: CA+tBKVjSH9vXnAgw_KjTubcOZX7v34OW0J-MmOgxdV7gziaHtw@mail.gmail.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] tpm2-pkcs11: m4 changes
+Date: Fri, 02 Nov 2018 13:35:07 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649C78D27@ORSMSX101.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1935316666047377071==
+--===============4155156017634378186==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 11/1/18 12:47 AM, Terry An wrote:
-> 782=C2=A0 =C2=A0 =C2=A0TSS2_RC rval =3D TSS2_RETRY_EXP(Tss2_Sys_Import(sa=
-pi_context, phandle,
-> 783=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&session=
-sData, enc_sensitive_key, public,
-> 784=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0private,=
- encrypted_seed, sym_alg,
-> 785=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0imported=
-_private, &npsessionsDataOut));
-> 786=C2=A0 =C2=A0 =C2=A0if (rval !=3D TPM2_RC_SUCCESS) {
-> 787=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0LOG_ERROR("Tss2_Sys_Import() failed:=
- %#x", rval);
-> 788=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -1;
-> 789=C2=A0 =C2=A0 =C2=A0}
-> =
+If you're trying to build tpm2-pkcs11 project, note a recent PR will cause =
+build breakages:
+https://github.com/tpm2-software/tpm2-pkcs11/pull/65
 
-> =
+You'll need to satisfy m4 dependencies on:
+autoconf-archive
+gnulib
 
-> This function returns 0x3d5, and I don't know which parameter should be c=
-hecked.
+The simplest way I found to satisfy them is to copy the requisite files sim=
+ilar to what the PR's CI changes
+are doing. There may be better ways, and If you know of other/better ways, =
+ please share them.
 
-I would say that it complains about the sessionsData.
+Thanks,
+Bill
 
--- =
 
-Tadeusz
-
---===============1935316666047377071==--
+--===============4155156017634378186==--
 
