@@ -1,147 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============2799799130505601479=="
+Content-Type: multipart/mixed; boundary="===============8971557112965526068=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] Generate restricted signing key under owner hierarchy
-Date: Mon, 05 Nov 2018 22:36:07 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649C7A8CC@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: c544c73e-16e2-9771-1ff2-70c08fe0255a@polito.it
+From: Davide Rutigliano <davide.ruti at gmail.com>
+Subject: [tpm2] CertifyCreation and VerifySignature
+Date: Tue, 06 Nov 2018 00:23:20 +0100
+Message-ID: <CAOysEad4d89cnGEJig1XEpUXF5PKp6568pwqriBU9dgwYTcwEw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2799799130505601479==
+--===============8971557112965526068==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
+I want to verify the signature of creationHash produced by
+TPM2_CertifyCreation command.
 
-> -----Original Message-----
-> From: Roberts, William C
-> Sent: Monday, November 5, 2018 2:14 PM
-> To: 'Marco De Benedictis' <marco.debenedictis(a)polito.it>; tpm2(a)lists.=
-01.org
-> Subject: RE: [tpm2] Generate restricted signing key under owner hierarchy
-> =
+When I run the TPM2_VerifySignature on the same creationHash I get rc =3D
+0x000002db (i.e. tpm:parameter(2):the signature is not valid).
 
-> > -----Original Message-----
-> > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Marco De
-> > Benedictis
-> > Sent: Monday, November 5, 2018 1:20 PM
-> > To: tpm2(a)lists.01.org
-> > Subject: [tpm2] Generate restricted signing key under owner hierarchy
-> >
-> > Hi all,
-> >
-> > I am using tpm2-tools on master (commit
-> > a9fbf1879a8b008f89dc90f32b4ac701ac5ce2dd) and I am unable to generate
-> > a restricted signing key under the owner hierarchy.
-> >
-> > First, I have generated a primary key on the owner hierarchy:
-> >
-> >    tpm2_createprimary -a o -g sha256 -G ecc -o primary/context.ctx
-> >
-> > and then I run:
-> >
-> >    tpm2_create -C primary/context.ctx \
-> >      -g sha256-G ecc \
-> >      -u child.pub \
-> >      -r child.priv \
-> >      -A
-> > "fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|sign"
-> >
-> > I get an error:
-> >
-> >    "ERROR: Tss2_Sys_Create(0x2D2) - tpm:parameter(2):unsupported or
-> >    incompatible scheme"
-> >
-> > If I run the same command without the "restricted" object attribute, it=
- works.
-> > Any idea on this behavior? Does this comply with the specs?
-> =
+Something goes wrong and I cannot understand what.
 
-> I see the same behavior on the simulator, your failing at the following c=
-heck:
-> =
+Should I do sign of HMAC( proof( TK | obj->name | creationHash) ) and then
+verify the signature on it?
 
-> TPM_RC
-> SchemeChecks(
-> 	     OBJECT          *parentObject,  // IN: parent (null if primary seed)
-> 	     TPMT_PUBLIC     *publicArea     // IN: public area of the object
-> 	     ) {
-> <snip>
-> =
+Thanks,
+Davide.
 
-> 			    // signing key that does not have a proper signing
-> scheme.
-> 			    // This is OK if the key is not restricted and its scheme
-> 			    // is TPM_ALG_NULL
-> 			    if(attributes.restricted || scheme !=3D TPM_ALG_NULL)
-> 				return TPM_RCS_SCHEME;
-> <snip>
-> }
-> =
+--===============8971557112965526068==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-> Which was added in Revision 101 of the spec (see the change log):
-> https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-1-
-> Architecture-01.38.pdf
-> =
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+SGkgYWxsLDxkaXY+
+PGJyPjwvZGl2PjxkaXY+SSB3YW50IHRvIHZlcmlmeSB0aGUgc2lnbmF0dXJlIG9mIGNyZWF0aW9u
+SGFzaCBwcm9kdWNlZCBieSBUUE0yX0NlcnRpZnlDcmVhdGlvbiBjb21tYW5kLjwvZGl2PjxkaXY+
+PGJyPjwvZGl2PjxkaXY+V2hlbiBJIHJ1biB0aGUgVFBNMl9WZXJpZnlTaWduYXR1cmUgb24gdGhl
+IHNhbWUgY3JlYXRpb25IYXNoIEkgZ2V0IHJjID0gMHgwMDAwMDJkYiAoaS5lLiB0cG06cGFyYW1l
+dGVyKDIpOnRoZSBzaWduYXR1cmUgaXMgbm90IHZhbGlkKS48YnI+PC9kaXY+PGRpdj48YnI+PC9k
+aXY+PGRpdj5Tb21ldGhpbmcgZ29lcyB3cm9uZyBhbmQgSSBjYW5ub3QgdW5kZXJzdGFuZCB3aGF0
+LjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+U2hvdWxkIEkgZG8gc2lnbiBvZiBITUFDKCBwcm9v
+ZiggVEsgfCBvYmotJmd0O25hbWUgfCBjcmVhdGlvbkhhc2gpICkgYW5kIHRoZW4gdmVyaWZ5IHRo
+ZSBzaWduYXR1cmUgb24gaXQ/PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFua3MsPC9kaXY+
+PGRpdj5EYXZpZGUuPC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+Cg==
 
-> If you apply this patch:
-> diff --git a/lib/tpm2_alg_util.c b/lib/tpm2_alg_util.c index
-> f109ca98e520..b018b1cbd9f0 100644
-> --- a/lib/tpm2_alg_util.c
-> +++ b/lib/tpm2_alg_util.c
-> @@ -302,11 +302,11 @@ static bool handle_asym_scheme_common(const char
-> *ext, TPM2B_PUBLIC *public) {
->          }
->      }
-> =
-
-> -    if (is_restricted && s->scheme.scheme !=3D TPM2_ALG_NULL) {
-> -        LOG_ERR("Restricted objects require a NULL scheme");
-> -        /* don't print another error message */
-> -        return false;
-> -    }
-> +//    if (is_restricted && s->scheme.scheme !=3D TPM2_ALG_NULL) {
-> +//        LOG_ERR("Restricted objects require a NULL scheme");
-> +//        /* don't print another error message */
-> +//        return false;
-> +//    }
-> =
-
->      /*
->       * If the scheme is set, both the encrypt and decrypt attributes can=
-not be set,
-> =
-
-> ---
-> =
-
-> It should work if you do (note I changed file names):
-> tpm2_create -C primary.ctx -g sha256 -G ecc256:ecdsa:null -u child.pub -r
-> child.priv -A
-> "fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|sign"
-> =
-
-> The important takeaway is that you need a full algorithm specified for a =
-restricted
-> key, as restricted keys MUST have a signing scheme and MUST have a NULL
-> symmetric details.
-
-FYI PR: https://github.com/tpm2-software/tpm2-tools/pull/1234
-
-> =
-
-> >
-> > Thanks,
-> > Marco
-> >
-> >
-> > --
-> > MARCO DE BENEDICTIS
-> > Department of Control and Computer Engineering Politecnico di Torino
-> > E-mail: marco.debenedictis(a)polito.it - Phone: +39 (011) 090 7192
-
-
---===============2799799130505601479==--
+--===============8971557112965526068==--
 
