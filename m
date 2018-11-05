@@ -1,104 +1,50 @@
-Content-Type: multipart/mixed; boundary="===============7693869116931503280=="
+Content-Type: multipart/mixed; boundary="===============7979258879552101345=="
 MIME-Version: 1.0
-From: Sherry Zhang(BJ-RD) <SherryZhang at zhaoxin.com>
-Subject: Re: [tpm2] It is a problem about device or resource busy when I use
- the tpm2-tools
-Date: Mon, 05 Nov 2018 03:08:35 +0000
-Message-ID: <9962618e8d2044fc9aae52fe67970a64@zhaoxin.com>
+From: Sourajit Mukhopadhyay <smukho16 at gmail.com>
+Subject: [tpm2] Need assistance to encrypt/decrypt data using tpm2-tss
+Date: Mon, 05 Nov 2018 15:41:01 +0100
+Message-ID: <CANva-dxWzMEZUzsKEMBJuBqpjsUxzS+cHOz9Q34RON0hM-nzKA@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7693869116931503280==
+--===============7979258879552101345==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Tadeusz,
-I reinstalled  tpm-tss , tpm-abrmd, tpm-tools.
-Now they can use with /dev/tpm0.
+Dear team,
 
-Thank you!
-Sherry
+I am a beginner trying to learn more about the TPM and its functionalities.
+I am trying to write a basic code using the SAPI to make the TPM generate a
+key and encrypt some data/file, and then later decrypt the same.
+So far I have been unable to perform the desired task. I have referred to
+the sapi-assymetric-encrypt-decrypt test module. I am using the IBM TPM
+simulator on Linux. So far searching on the internet for anything relevant
+ended with nothing positive. I would be highly grateful if someone could
+give a short description/steps to guide me through this.
 
+Regards,
+Sourajit Mukhopadhyay
 
-?????
-?????????????????????????????????????????????????????
-CONFIDENTIAL NOTE:
-This email contains confidential or legally privileged information and is f=
-or the sole use of its intended recipient. Any unauthorized review, use, co=
-pying or forwarding of this email or the content of this email is strictly =
-prohibited.
-
---===============7693869116931503280==
+--===============7979258879552101345==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6XDdCNDlcN0VCRjsKCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQpA
-Zm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6IlxAXDdCNDlcN0VCRiI7CglwYW5vc2UtMToyIDEgNiAw
-IDMgMSAxIDEgMSAxO30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1z
-b05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAx
-cHQ7Cgl0ZXh0LWFsaWduOmp1c3RpZnk7Cgl0ZXh0LWp1c3RpZnk6aW50ZXItaWRlb2dyYXBoOwoJ
-Zm9udC1zaXplOjEwLjVwdDsKCWZvbnQtZmFtaWx5Olw3QjQ5XDdFQkY7fQphOmxpbmssIHNwYW4u
-TXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRl
-eHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9s
-bG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNv
-cmF0aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVy
-c29uYWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5Olw3QjQ5XDdFQkY7Cgljb2xvcjp3aW5kb3d0ZXh0
-O30KLk1zb0NocERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFt
-aWx5Olw3QjQ5XDdFQkY7fQovKiBQYWdlIERlZmluaXRpb25zICovCkBwYWdlIFdvcmRTZWN0aW9u
-MQoJe3NpemU6NjEyLjBwdCA3OTIuMHB0OwoJbWFyZ2luOjcyLjBwdCA5MC4wcHQgNzIuMHB0IDkw
-LjBwdDt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+
-PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNw
-aWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1s
-Pgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRh
-PSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkg
-bGFuZz0iWkgtQ04iIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIiBzdHlsZT0idGV4dC1q
-dXN0aWZ5LXRyaW06cHVuY3R1YXRpb24iPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+SGkgVGFkZXVzeiw8bzpwPjwvbzpw
-Pjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHls
-ZT0iZm9udC1zaXplOjkuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2Vy
-aWY7Y29sb3I6IzJFMzAzMztiYWNrZ3JvdW5kOiNFRUYwRjIiPkkgcmVpbnN0YWxsZWQgJm5ic3A7
-dHBtLXRzcyAsIHRwbS1hYnJtZCwgdHBtLXRvb2xzLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6OS4w
-cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMkUzMDMz
-O2JhY2tncm91bmQ6I0VFRjBGMiI+Tm93IHRoZXkgY2FuIHVzZSB3aXRoIC9kZXYvdHBtMC48L3Nw
-YW4+PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPlRoYW5rIHlvdSE8bzpwPjwv
-bzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5T
-aGVycnk8L3NwYW4+PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPC9k
-aXY+CjxwPjwvcD4KPGJyPgo8YnI+CjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMHB0OyBsaW5lLWhl
-aWdodDoxMHB0OyBmb250LWZhbWlseTogJyYjMjM0MzU7JiMyMDMwNzsnO2NvbG9yOiM1OTU5NTk7
-Ij4mIzIwNDQ1OyYjMjM0OTQ7JiMyMjc2ODsmIzI2MTI2OyYjNjUzMDY7PC9kaXY+CjxkaXYgc3R5
-bGU9ImZvbnQtc2l6ZToxMHB0OyBsaW5lLWhlaWdodDoxMHB0OyBmb250LWZhbWlseTogJyYjMjM0
-MzU7JiMyMDMwNzsnO2NvbG9yOiM1OTU5NTk7Ij4mIzI2NDEyOyYjMzcwMzg7JiMyMDIxNDsmIzIx
-NTQ3OyYjMjYzNzc7JiMyMDQ0NTsmIzIzNDk0OyYjMjUxMTA7JiMxOTk4NzsmIzI2Mzc3OyYjMjA0
-NDk7JiMyNDY4NzsmIzY1MjkyOyYjMjAxNjU7JiMyMDM3OTsmIzI1MzUxOyYjMjM0NTA7JiMyNTkx
-MDsmIzIwMjE0OyYjMjAxNTQ7JiMyMDM1MTsmIzI5OTkyOyYjMTIyOTA7JiMyMDAwNTsmIzMxMTA1
-OyYjMjM1NDU7JiMyNjQxMjsmIzM3MDM4OyYjMjAyMTQ7JiMyNTExMDsmIzIwODU0OyYjMjA4Njk7
-JiMyMzQ4MTsmIzIwNTcwOyYjMjAyMTk7JiMyMDMwOTsmIzI2NDEwOyYjMzI0NjM7JiMyNTQ4MDsm
-IzI2NDM1OyYjMzAzNDA7JiMyNjU5NzsmIzM4NDA1OyYjMTIyODk7JiMyMDM1MTsmIzI5OTkyOyYj
-MTIyODk7JiMyMjc5NzsmIzIxMDQ2OyYjMjUxMTA7JiMzNjcxNjsmIzIxNDU3OyYjMTIyOTA7PC9k
-aXY+CjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMHB0OyBsaW5lLWhlaWdodDoxMHB0OyBmb250LWZh
-bWlseTogJ1RpbWVzIE5ldyBSb21hbic7Y29sb3I6IzU5NTk1OTsiPgo8aT5DT05GSURFTlRJQUwg
-Tk9URTogPC9pPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LXNpemU6MTBwdDsgbGluZS1oZWlnaHQ6
-MTBwdDsgZm9udC1mYW1pbHk6ICdUaW1lcyBOZXcgUm9tYW4nO2NvbG9yOiM1OTU5NTk7Ij4KPGk+
-VGhpcyBlbWFpbCBjb250YWlucyBjb25maWRlbnRpYWwgb3IgbGVnYWxseSBwcml2aWxlZ2VkIGlu
-Zm9ybWF0aW9uIGFuZCBpcyBmb3IgdGhlIHNvbGUgdXNlIG9mIGl0cyBpbnRlbmRlZCByZWNpcGll
-bnQuIEFueSB1bmF1dGhvcml6ZWQgcmV2aWV3LCB1c2UsIGNvcHlpbmcgb3IgZm9yd2FyZGluZyBv
-ZiB0aGlzIGVtYWlsIG9yIHRoZSBjb250ZW50IG9mIHRoaXMgZW1haWwgaXMgc3RyaWN0bHkgcHJv
-aGliaXRlZC48L2k+PC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+PGRpdiBkaXI9Imx0ciI+RGVhciB0ZWFtLDxkaXY+PGJyPjwvZGl2PjxkaXY+SSBhbSBhIGJlZ2lu
+bmVyIHRyeWluZyB0byBsZWFybiBtb3JlIGFib3V0IHRoZSBUUE0gYW5kIGl0cyBmdW5jdGlvbmFs
+aXRpZXMuIEkgYW0gdHJ5aW5nIHRvIHdyaXRlIGEgYmFzaWMgY29kZSB1c2luZyB0aGUgU0FQSSB0
+byBtYWtlIHRoZSBUUE0gZ2VuZXJhdGUgYSBrZXkgYW5kIGVuY3J5cHQgc29tZSBkYXRhL2ZpbGUs
+IGFuZCB0aGVuIGxhdGVyIGRlY3J5cHQgdGhlIHNhbWUuwqA8L2Rpdj48ZGl2PlNvIGZhciBJIGhh
+dmUgYmVlbiB1bmFibGUgdG8gcGVyZm9ybSB0aGUgZGVzaXJlZCB0YXNrLiBJIGhhdmUgcmVmZXJy
+ZWQgdG8gdGhlIHNhcGktYXNzeW1ldHJpYy1lbmNyeXB0LWRlY3J5cHQgdGVzdCBtb2R1bGUuIEkg
+YW0gdXNpbmcgdGhlIElCTSBUUE0gc2ltdWxhdG9yIG9uIExpbnV4LiBTbyBmYXIgc2VhcmNoaW5n
+IG9uIHRoZSBpbnRlcm5ldCBmb3IgYW55dGhpbmcgcmVsZXZhbnQgZW5kZWQgd2l0aCBub3RoaW5n
+IHBvc2l0aXZlLiBJIHdvdWxkIGJlIGhpZ2hseSBncmF0ZWZ1bCBpZiBzb21lb25lIGNvdWxkIGdp
+dmUgYSBzaG9ydCBkZXNjcmlwdGlvbi9zdGVwcyB0byBndWlkZSBtZSB0aHJvdWdowqB0aGlzLsKg
+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5SZWdhcmRzLDwvZGl2PjxkaXY+U291cmFqaXQgTXVr
+aG9wYWRoeWF5PC9kaXY+PC9kaXY+Cg==
 
---===============7693869116931503280==--
+--===============7979258879552101345==--
 
