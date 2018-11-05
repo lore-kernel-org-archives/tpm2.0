@@ -1,146 +1,136 @@
-Content-Type: multipart/mixed; boundary="===============0129844026358585483=="
+Content-Type: multipart/mixed; boundary="===============5265358040039015549=="
 MIME-Version: 1.0
-From: Marco De Benedictis <marco.debenedictis at polito.it>
-Subject: [tpm2] Generate restricted signing key under owner hierarchy
-Date: Mon, 05 Nov 2018 21:20:02 +0000
-Message-ID: <c544c73e-16e2-9771-1ff2-70c08fe0255a@polito.it>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] Generate restricted signing key under owner hierarchy
+Date: Mon, 05 Nov 2018 22:13:59 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649C7A88A@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: c544c73e-16e2-9771-1ff2-70c08fe0255a@polito.it
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0129844026358585483==
+--===============5265358040039015549==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Marco De
+> Benedictis
+> Sent: Monday, November 5, 2018 1:20 PM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Generate restricted signing key under owner hierarchy
+> =
 
-I am using tpm2-tools on master (commit
-a9fbf1879a8b008f89dc90f32b4ac701ac5ce2dd) and I am unable to generate a
-restricted signing key under the owner hierarchy.
+> Hi all,
+> =
 
-First, I have generated a primary key on the owner hierarchy:
+> I am using tpm2-tools on master (commit
+> a9fbf1879a8b008f89dc90f32b4ac701ac5ce2dd) and I am unable to generate a
+> restricted signing key under the owner hierarchy.
+> =
 
-   tpm2_createprimary -a o -g sha256 -G ecc -o primary/context.ctx
+> First, I have generated a primary key on the owner hierarchy:
+> =
 
-and then I run:
+>    tpm2_createprimary -a o -g sha256 -G ecc -o primary/context.ctx
+> =
 
-   tpm2_create -C primary/context.ctx \
-     -g sha256-G ecc \
-     -u child.pub \
-     -r child.priv \
-     -A =
+> and then I run:
+> =
 
-"fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|sign"
+>    tpm2_create -C primary/context.ctx \
+>      -g sha256-G ecc \
+>      -u child.pub \
+>      -r child.priv \
+>      -A
+> "fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|sign"
+> =
 
-I get an error:
+> I get an error:
+> =
 
-   "ERROR: Tss2_Sys_Create(0x2D2) - tpm:parameter(2):unsupported or
-   incompatible scheme"
+>    "ERROR: Tss2_Sys_Create(0x2D2) - tpm:parameter(2):unsupported or
+>    incompatible scheme"
+> =
 
-If I run the same command without the "restricted" object attribute, it
-works. Any idea on this behavior? Does this comply with the specs?
+> If I run the same command without the "restricted" object attribute, it w=
+orks.
+> Any idea on this behavior? Does this comply with the specs?
 
-Thanks,
-Marco
+I see the same behavior on the simulator, your failing at the following che=
+ck:
+
+TPM_RC
+SchemeChecks(
+	     OBJECT          *parentObject,  // IN: parent (null if primary seed)
+	     TPMT_PUBLIC     *publicArea     // IN: public area of the object
+	     ) {
+<snip>
+
+			    // signing key that does not have a proper signing scheme.
+			    // This is OK if the key is not restricted and its scheme
+			    // is TPM_ALG_NULL
+			    if(attributes.restricted || scheme !=3D TPM_ALG_NULL)
+				return TPM_RCS_SCHEME;
+<snip>
+}
+
+Which was added in Revision 101 of the spec (see the change log):
+https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-1-Arc=
+hitecture-01.38.pdf
+
+If you apply this patch:
+diff --git a/lib/tpm2_alg_util.c b/lib/tpm2_alg_util.c
+index f109ca98e520..b018b1cbd9f0 100644
+--- a/lib/tpm2_alg_util.c
++++ b/lib/tpm2_alg_util.c
+@@ -302,11 +302,11 @@ static bool handle_asym_scheme_common(const char *ext=
+, TPM2B_PUBLIC *public) {
+         }
+     }
+ =
+
+-    if (is_restricted && s->scheme.scheme !=3D TPM2_ALG_NULL) {
+-        LOG_ERR("Restricted objects require a NULL scheme");
+-        /* don't print another error message */
+-        return false;
+-    }
++//    if (is_restricted && s->scheme.scheme !=3D TPM2_ALG_NULL) {
++//        LOG_ERR("Restricted objects require a NULL scheme");
++//        /* don't print another error message */
++//        return false;
++//    }
+ =
+
+     /*
+      * If the scheme is set, both the encrypt and decrypt attributes canno=
+t be set,
+
+---
+
+It should work if you do (note I changed file names):
+tpm2_create -C primary.ctx -g sha256 -G ecc256:ecdsa:null -u child.pub -r c=
+hild.priv -A "fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restric=
+ted|sign"
+
+The important takeaway is that you need a full algorithm specified for a re=
+stricted key, as restricted keys MUST have a signing scheme and MUST have a=
+ NULL symmetric
+details.
+
+> =
+
+> Thanks,
+> Marco
+> =
+
+> =
+
+> --
+> MARCO DE BENEDICTIS
+> Department of Control and Computer Engineering Politecnico di Torino
+> E-mail: marco.debenedictis(a)polito.it - Phone: +39 (011) 090 7192
 
 
--- =
-
-MARCO DE BENEDICTIS
-Department of Control and Computer Engineering
-Politecnico di Torino
-E-mail: marco.debenedictis(a)polito.it - Phone: +39 (011) 090 7192
-
-
---===============0129844026358585483==
-Content-Type: application/pkcs7-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDuIw
-ggR4MIIDYKADAgECAgECMA0GCSqGSIb3DQEBBQUAMEMxEDAOBgNVBAoTB0V1cm9QS0kxFTATBgNV
-BAsTDEV1cm9QS0kgcm9vdDEYMBYGA1UEAxMPRXVyb1BLSSByb290IENBMB4XDTEwMTIxODEzNDY0
-N1oXDTIwMTIzMTIzNTk1OVowVDELMAkGA1UEBhMCSVQxEDAOBgNVBAoTB0V1cm9QS0kxFjAUBgNV
-BAsTDUV1cm9QS0kgSXRhbHkxGzAZBgNVBAMTEkV1cm9QS0kgSXRhbGlhbiBDQTCCASIwDQYJKoZI
-hvcNAQEBBQADggEPADCCAQoCggEBAJfEyV1trtaj8Z9P5ciATbx9UuSwTN0pCxaDRz0sfE2Ymfn+
-5yl3pzdodOyoSEEZsnEJ9xUKlVM5vH7lesyvCXttCb6f4rC/3z3D0G7uRtfomh+7lP/RbquzABS/
-j3fkriRkhFdEZu4xDSN+uPap2S2b18sOE6NpKkAZQlCS8Un8ou+KyKqhA1+Xopgn/givJlPYLczm
-WQgodMoRVNyB0doIsqWrIp0g7LOTzvi21S4eFejTFOaGcdrceRSmnmCSIVEahS8UVTJX9hBm3uCz
-rgJWr9RmbfLnWaIh/2/g/Y+4W3epzR7po0vJwt4Ze2Mm8RYMDJ6UT3N0AyjBo+Mn+iECAwEAAaOC
-AWQwggFgMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBTQdeU/68q6
-a5ZRfCClmL3zZ9O0SjAfBgNVHSMEGDAWgBTwcRwoM1i3xca1w79RdahQ9JzSNDBJBgNVHSAEQjBA
-MD4GCisGAQQBqQcBAQIwMDAuBggrBgEFBQcCARYiaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9j
-cHMvMS4yLzBxBggrBgEFBQcBAQRlMGMwIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLmV1cm9wa2ku
-b3JnMDwGCCsGAQUFBzAChjBodHRwOi8vd3d3LmV1cm9wa2kub3JnL2NhL2NlcnRzL2V1cm9wa2lf
-cm9vdC5jZXIwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9jcmwv
-ZXVyb3BraV9yb290LmNybDANBgkqhkiG9w0BAQUFAAOCAQEAhDLeMx/dP2whwGb7ITa6sI6JUQZ3
-H9DQApdTGfz6iLIOiZeeoUt/XE9kYgcFp23IC1+wQzsfY6wRWKStF4lscqDSlNnw4yyaVYkogY3B
-k8pE7QxNXIlgsFk4IMnbDCamCon/pxMGPV8ruBwVxFjp4PctlbububbB10CixAgbzcDFNvLEYUCJ
-CV8V/iCAIs/w3MYk1NsAz/TfoCMXBrfn7ik69ImKdVOrdxwtyHs7vOx9A3xxCd5XCAc524mMC5Ce
-nj+KQbh+dczXRIQAkEFbBEVrc8ytQv+NRT4FbqhS0FL1E2zkPTNtGdK4yyrWd/K8Pa1s3h2GtamU
-iD8Mdj0MMzCCBPMwggPboAMCAQICAQEwDQYJKoZIhvcNAQEFBQAwVDELMAkGA1UEBhMCSVQxEDAO
-BgNVBAoTB0V1cm9QS0kxFjAUBgNVBAsTDUV1cm9QS0kgSXRhbHkxGzAZBgNVBAMTEkV1cm9QS0kg
-SXRhbGlhbiBDQTAeFw0xMDEyMTgxMzU4MjJaFw0yMDEyMzEyMzU5NTlaMGUxCzAJBgNVBAYTAklU
-MR4wHAYDVQQKExVQb2xpdGVjbmljbyBkaSBUb3Jpbm8xNjA0BgNVBAMTLVBvbGl0ZWNuaWNvIGRp
-IFRvcmlubyBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-AQoCggEBAMhpj5X8VQEnxMEjxZAwHADWcxXc/TufCqQhBypLMJx+aowv9Qfr96jrXwpD/OKl6cz3
-Bmv0s/4oP5+ode2bWFXsVEKWR3J8vCusF1NvtPI16g8t5numZ+JGZqC3ZpvUTNsODUxb+M5L4T2z
-NtO4GqZlgDhB9QOKq+71LeKp+R3q5cIXtSBPWYiH6EPbzQJQdxcbh3d9d+rxmtW1W4LmGqjBL2YG
-TezsbagbsHmSMX4Djw7TyuFR9qkBNhLLiHizz0AdNqW95XY+/5GzTZak7k5FGxwwzR/sN6Q/Sj1x
-HcWNw+ROo1aUtf5k5jVQaScHDjixGbqLQFf/2fItHfCRMMcCAwEAAaOCAb0wggG5MA8GA1UdEwEB
-/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBTNm1tbnup2IcQQaOjSLTfbHy/I5DAf
-BgNVHSMEGDAWgBTQdeU/68q6a5ZRfCClmL3zZ9O0SjCBkQYDVR0gBIGJMIGGMD4GCisGAQQBqQcB
-AQIwMDAuBggrBgEFBQcCARYiaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9jcHMvMS4yLzBEBgor
-BgEEAakHAgECMDYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93d3cuaXRhbHkuZXVyb3BraS5vcmcvY2Ev
-Y3BzLzEuMi8wfgYIKwYBBQUHAQEEcjBwMCkGCCsGAQUFBzABhh1odHRwOi8vb2NzcC5pdGFseS5l
-dXJvcGtpLm9yZzBDBggrBgEFBQcwAoY3aHR0cDovL3d3dy5pdGFseS5ldXJvcGtpLm9yZy9jYS9j
-ZXJ0cy9ldXJvcGtpX2l0YWx5LmNlcjBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vd3d3Lml0YWx5
-LmV1cm9wa2kub3JnL2NhL2NybC9pdGFseV9jcmwuY3JsMA0GCSqGSIb3DQEBBQUAA4IBAQBTVJWI
-UBlbjxFQTkjRLgvNPt03m2NIhgCt+SIIFuC4rhB10VqHisAW68hXxHEfFZ06LxeMLn3oGnPriWQd
-pPkC7MAt87iSyIG6Ofd1vN0oUhuWgiYqDKEOV/WX3fo9QXyFf8wEcoaKxL4Au3aBnwVcRt6gJkBG
-G6J6LYc+FCVpXdxnd85sKaqTTCxtiTtwSVjqwLp/Ulj1USzhP/dj6v40zAei5LHtCjSUwWzRz1M8
-nTsz1LTwOybzA582+i/fIVVaiqMZicNwtrFfzTpf7bk30unZ2cqWbLUWjldCUloD+DwKnD7XtDeN
-IfKuA/0XYOT+xHFJJYGai+e3MlAgkK6PMIIFazCCBFOgAwIBAgICCiIwDQYJKoZIhvcNAQEFBQAw
-ZTELMAkGA1UEBhMCSVQxHjAcBgNVBAoTFVBvbGl0ZWNuaWNvIGRpIFRvcmlubzE2MDQGA1UEAxMt
-UG9saXRlY25pY28gZGkgVG9yaW5vIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTE2MDIwNDA5
-MDU0NloXDTIwMTIzMTIzNTk1OVowZTELMAkGA1UEBhMCSVQxHjAcBgNVBAoTFVBvbGl0ZWNuaWNv
-IGRpIFRvcmlubzEdMBsGA1UEAxMUTWFyY28gIERlIEJlbmVkaWN0aXMxFzAVBgoJkiaJk/IsZAEB
-EwdkMDM0NjUzMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtdQEsB1ClB89/WlYu23V
-vTa08ANsEbbIVUvY+l5KkCy4HhG4L4pZxzzO0mQcwMZZ9nhzKA+AkQMwExfdO2assqNkKJDQTzVx
-SrcYch5LSXqUihqK5OwIzr1tYR+te/kvZB/s7THqniI+W7zywR0zJ0bpOYM8XzzBq7XDM46PCXBR
-wAV9I4Wh8qAlnDiFb7l/12wGSOXo8HTYyZvZD2PMuetIwk8AGJ1T89WUrYYukUuieTHXudxIRzmf
-R9mUtMs36Ub/LUMgu2iBQVvPphiY3FPgLZS9D+DS/+2GQh4vVXkMXA9fhZvUPJPYDK4soLqWkudN
-zpUr+/AYTlhdVfZXIQIDAQABo4ICIzCCAh8wDgYDVR0PAQH/BAQDAgP4MCcGA1UdJQQgMB4GCCsG
-AQUFBwMCBggrBgEFBQcDAwYIKwYBBQUHAwQwJwYDVR0RBCAwHoEcbWFyY28uZGViZW5lZGljdGlz
-QHBvbGl0by5pdDAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBRMQTy5js1E0onij2pm+QMmxAFwMTAf
-BgNVHSMEGDAWgBTNm1tbnup2IcQQaOjSLTfbHy/I5DCBywYDVR0gBIHDMIHAMD4GCisGAQQBqQcB
-AQIwMDAuBggrBgEFBQcCARYiaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9jcHMvMS4yLzBEBgor
-BgEEAakHAgECMDYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93d3cuaXRhbHkuZXVyb3BraS5vcmcvY2Ev
-Y3BzLzEuMi8wOAYKKwYBBAGVYgECAjAqMCgGCCsGAQUFBwIBFhxodHRwOi8vY2EucG9saXRvLml0
-L2Nwcy8yLjIvMGYGCCsGAQUFBwEBBFowWDAhBggrBgEFBQcwAYYVaHR0cDovL29jc3AucG9saXRv
-Lml0MDMGCCsGAQUFBzAChidodHRwOi8vY2EucG9saXRvLml0L2NlcnRzL3BvbGl0b19jYS5jZXIw
-NwYDVR0fBDAwLjAsoCqgKIYmaHR0cDovL2NhLnBvbGl0by5pdC9jcmwvcG9saXRvX2NybC5jcmww
-DQYJKoZIhvcNAQEFBQADggEBAEEfRPgJVAYt6TqB0xHCN6dunWP4ZhU9rfuP7Xq22gsrtCvzvH6E
-1QL2+HljPMtg2GEFEJNC9GwcetwQHmT62ptGB1ZBVO5Wk/uRI02+8aNhV9xjalvz9EO2u117H5lG
-VlHwJ7Hrp68TDc9xmR8dUjZ3i2G5WGh/0yBntEuhSa+n9CNwC5UdG3LJLOgHpu++a/k/WTNAYwwB
-x2Jx+geaXmxnJ06pP7uTQb+DtIPP0fpKsrWOF2V55niChtKfp4oVY0dKtARUlkYcENKa5AI1b8Zr
-DHeWc4Ml/Rc08iaZUSJjHWV2Ee+XRp0Yk1498igs1OGm/73L97DtI4koj2nnHxExggNrMIIDZwIB
-ATBrMGUxCzAJBgNVBAYTAklUMR4wHAYDVQQKExVQb2xpdGVjbmljbyBkaSBUb3Jpbm8xNjA0BgNV
-BAMTLVBvbGl0ZWNuaWNvIGRpIFRvcmlubyBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eQICCiIwDQYJ
-YIZIAWUDBAIBBQCgggHRMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE4MTEwNTIxMjAwM1owLwYJKoZIhvcNAQkEMSIEIKzG1v52tXaLlRFcXIQWqhuPXamwvFvkhy04
-GQx9cJitMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG
-9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwIC
-ASgwegYJKwYBBAGCNxAEMW0wazBlMQswCQYDVQQGEwJJVDEeMBwGA1UEChMVUG9saXRlY25pY28g
-ZGkgVG9yaW5vMTYwNAYDVQQDEy1Qb2xpdGVjbmljbyBkaSBUb3Jpbm8gQ2VydGlmaWNhdGlvbiBB
-dXRob3JpdHkCAgoiMHwGCyqGSIb3DQEJEAILMW2gazBlMQswCQYDVQQGEwJJVDEeMBwGA1UEChMV
-UG9saXRlY25pY28gZGkgVG9yaW5vMTYwNAYDVQQDEy1Qb2xpdGVjbmljbyBkaSBUb3Jpbm8gQ2Vy
-dGlmaWNhdGlvbiBBdXRob3JpdHkCAgoiMA0GCSqGSIb3DQEBAQUABIIBADHtnK51woSrNTFbzBIi
-S4icWmOYyYkI6ctrcwFT1pR+domOBxThsad0mlWQYS8FPbxo+wEcp6DQRCVGCCZDZ3Pqge/pBY/u
-26CjJOlRQJGSFMi62yTo2GpizyM1AV/9ubeL6NxDa26vNgqYBxPbxLaXqIyHliKDxKI9gcd7h1Z0
-rjUiB+0HUNdsql3Tj8X6f9X56dSm+vmgnh/frGQNf4zL3oz/zdPwe67o9yGe8e7yipXVM6x3wp+H
-Y3yrbhlQ5TInfHinL1AcpcIGCvH+kxLHGk39G7FZ7XohvpgOvFaFgdFYRp9xQ2tpuqAWMFdWEWla
-jjnvJSEU907+okpgk5UAAAAAAAA=
---===============0129844026358585483==--
+--===============5265358040039015549==--
 
