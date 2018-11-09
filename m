@@ -1,149 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============2399017127994677736=="
+Content-Type: multipart/mixed; boundary="===============0799731096908506325=="
 MIME-Version: 1.0
-From: Sherry Zhang(BJ-RD) <SherryZhang at zhaoxin.com>
-Subject: [tpm2] SPI TPM and SPI flash can not work at the same time
-Date: Tue, 06 Nov 2018 04:13:58 +0000
-Message-ID: <28a77a01b97f4e83bab04f490f9ac24f@zhaoxin.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] tpm2-tools who uses transient handles in workflows?
+Date: Fri, 09 Nov 2018 15:40:39 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649C8AE73@ORSMSX106.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2399017127994677736==
+--===============0799731096908506325==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi All,
-Ubuntu16.04 with the kernel 4.16.2:
-I use a spi port2 with a FIFO TPM2.0 and  two flash on the spi port 0/1.
-First, I unload drivers of spi controller and test the TPM2.0 (built-in tpm=
-_tis.o)
-#tpm2_abrmd -tcti=3D"device:/dev/tpm0" -allow-root &
-#tpm2_pcrlist
-#tpm2_nvlist
-And I can use tpm2-tools to test and it is normal .
+We're working on porting the tpm2-tools to use ESAPI so can we provide bett=
+er session support and drive down session
+related bugs.
 
-Then I load spi controller driver, and test /dev/mtd0 at spi port0 that can=
- work well.
-But when I run the commad  "tpm2_nvlist" , it shows a error.
-#tpm2_nvlist
-ERROR: Tss2_Sys_GetCapability(0x97) -tpm: handle(unk): incorrect structure =
-tag
-ERROR: Unable to run tpm2_nvlist
+With that said, ESAPI doesn't support using transient object handles. Inter=
+nally the library keeps track of ESYS_TR handles,
+Which are handles on steroids (meta data). Because there is no way to extra=
+ct the transient object handle, as ESAPI considers
+That an implementation detail that shouldn't be exposed to regular users, w=
+e can (in order of sanity with 1 being most sane):
 
-PS:
-tpm2-tss 2.1.0
-Tpm2-abrmd 2.0.3_rc0
-Tpm2-tools 3.0.2
+1. Require save/load context
+2. Try and change ESAPI to expose this
+   a. uses a serialized in memory ESYS_TR and find the handle via offset (s=
+ic)
+3. serialize ESYS handles to disk
+4. serialize ESYS handles and base64 output to stdout
 
-Best regards,
-Sherry Zhang
+I'm leaning towards 1, it would require additional TPM commands, but it wor=
+ks in RM and non-RM environments which
+I think means fielding less questions about where did my object go on exit =
+when it said it was handle XXX.  However,
+That breaks a possible workflow, and we want to get 4.0 release right, so w=
+e can stop with backwards incompatible
+changes.
 
+Thoughts, opinions?
 
+Bill
 
-?????
-?????????????????????????????????????????????????????
-CONFIDENTIAL NOTE:
-This email contains confidential or legally privileged information and is f=
-or the sole use of its intended recipient. Any unauthorized review, use, co=
-pying or forwarding of this email or the content of this email is strictly =
-prohibited.
-
---===============2399017127994677736==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6RGVuZ1hpYW47CglwYW5vc2UtMToyIDEgNiAwIDMgMSAxIDEgMSAxO30KQGZv
-bnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkRlbmdYaWFuOwoJcGFub3NlLTE6MiAxIDYgMCAzIDEgMSAx
-IDEgMTt9Ci8qIFN0eWxlIERlZmluaXRpb25zICovCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwKCXttYXJnaW46MGNtOwoJbWFyZ2luLWJvdHRvbTouMDAwMXB0OwoJdGV4
-dC1hbGlnbjpqdXN0aWZ5OwoJdGV4dC1qdXN0aWZ5OmludGVyLWlkZW9ncmFwaDsKCWZvbnQtc2l6
-ZToxMC41cHQ7Cglmb250LWZhbWlseTpEZW5nWGlhbjt9CmE6bGluaywgc3Bhbi5Nc29IeXBlcmxp
-bmsKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojMDU2M0MxOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBlcmxpbmtGb2xsb3dlZAoJe21z
-by1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOiM5NTRGNzI7Cgl0ZXh0LWRlY29yYXRpb246dW5k
-ZXJsaW5lO30Kc3Bhbi5FbWFpbFN0eWxlMTcKCXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1jb21w
-b3NlOwoJZm9udC1mYW1pbHk6RGVuZ1hpYW47Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0NocERl
-ZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OkRlbmdYaWFu
-O30KLyogUGFnZSBEZWZpbml0aW9ucyAqLwpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjYxMi4w
-cHQgNzkyLjBwdDsKCW1hcmdpbjo3Mi4wcHQgOTAuMHB0IDcyLjBwdCA5MC4wcHQ7fQpkaXYuV29y
-ZFNlY3Rpb24xCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1z
-byA5XT48eG1sPgo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAv
-Pgo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVsYXlv
-dXQgdjpleHQ9ImVkaXQiPgo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4KPC9vOnNo
-YXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPgo8L2hlYWQ+Cjxib2R5IGxhbmc9IlpILUNOIiBs
-aW5rPSIjMDU2M0MxIiB2bGluaz0iIzk1NEY3MiIgc3R5bGU9InRleHQtanVzdGlmeS10cmltOnB1
-bmN0dWF0aW9uIj4KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PHNwYW4gbGFuZz0iRU4tVVMiPkhpIEFsbCw8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5VYnVudHUxNi4wNCB3aXRoIHRoZSBr
-ZXJuZWwgNC4xNi4yOjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHNwYW4gbGFuZz0iRU4tVVMiPkkgdXNlIGEgc3BpIHBvcnQyIHdpdGggYSBGSUZPIFRQTTIuMCBh
-bmQmbmJzcDsgdHdvIGZsYXNoIG9uIHRoZSBzcGkgcG9ydCAwLzEuPG86cD48L286cD48L3NwYW4+
-PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Rmlyc3QsIEkgdW5s
-b2FkIGRyaXZlcnMgb2Ygc3BpIGNvbnRyb2xsZXIgYW5kIHRlc3QgdGhlIFRQTTIuMCAoYnVpbHQt
-aW4gdHBtX3Rpcy5vKTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHNwYW4gbGFuZz0iRU4tVVMiPiN0cG0yX2Ficm1kICYjODIxMTt0Y3RpPSYjODIyMTtkZXZpY2U6
-L2Rldi90cG0wJiM4MjIxOyAmIzgyMTE7YWxsb3ctcm9vdCAmYW1wOzxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiN0cG0yX3Bjcmxp
-c3Q8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9
-IkVOLVVTIj4jdHBtMl9udmxpc3Q8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5BbmQgSSBjYW4gdXNlIHRwbTItdG9vbHMgdG8gdGVz
-dCBhbmQgaXQgaXMgbm9ybWFsIC48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+Cjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5UaGVuIEkgbG9hZCBzcGkgY29u
-dHJvbGxlciBkcml2ZXIsIGFuZCB0ZXN0IC9kZXYvbXRkMCBhdCBzcGkgcG9ydDAgdGhhdCBjYW4g
-d29yayB3ZWxsLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
-YW4gbGFuZz0iRU4tVVMiPkJ1dCB3aGVuIEkgcnVuIHRoZSBjb21tYWQgJm5ic3A7JiM4MjIwO3Rw
-bTJfbnZsaXN0JiM4MjIxOyAsIGl0IHNob3dzIGEgZXJyb3IuPG86cD48L286cD48L3NwYW4+PC9w
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+I3RwbTJfbnZsaXN0PG86
-cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48Yj48c3BhbiBsYW5nPSJF
-Ti1VUyI+RVJST1I6IFRzczJfU3lzX0dldENhcGFiaWxpdHkoMHg5NykgJiM4MjExO3RwbTogaGFu
-ZGxlKHVuayk6IGluY29ycmVjdCBzdHJ1Y3R1cmUgdGFnPG86cD48L286cD48L3NwYW4+PC9iPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gbGFuZz0iRU4tVVMiPkVSUk9SOiBVbmFi
-bGUgdG8gcnVuIHRwbTJfbnZsaXN0PG86cD48L286cD48L3NwYW4+PC9iPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PGI+PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFu
-PjwvYj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5QUzo8bzpw
-PjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVT
-Ij50cG0yLXRzcyAyLjEuMDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PHNwYW4gbGFuZz0iRU4tVVMiPlRwbTItYWJybWQgMi4wLjNfcmMwPG86cD48L286cD48L3Nw
-YW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+VHBtMi10b29s
-cyAzLjAuMjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
-bGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPkJlc3QgcmVnYXJkcyw8bzpwPjwvbzpwPjwvc3Bhbj48
-L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5TaGVycnkgWmhhbmcg
-PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJF
-Ti1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8L2Rpdj4KPHA+PC9wPgo8YnI+Cjxi
-cj4KPGRpdiBzdHlsZT0iZm9udC1zaXplOjEwcHQ7IGxpbmUtaGVpZ2h0OjEwcHQ7IGZvbnQtZmFt
-aWx5OiAnJiMyMzQzNTsmIzIwMzA3Oyc7Y29sb3I6IzU5NTk1OTsiPiYjMjA0NDU7JiMyMzQ5NDsm
-IzIyNzY4OyYjMjYxMjY7JiM2NTMwNjs8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1zaXplOjEwcHQ7
-IGxpbmUtaGVpZ2h0OjEwcHQ7IGZvbnQtZmFtaWx5OiAnJiMyMzQzNTsmIzIwMzA3Oyc7Y29sb3I6
-IzU5NTk1OTsiPiYjMjY0MTI7JiMzNzAzODsmIzIwMjE0OyYjMjE1NDc7JiMyNjM3NzsmIzIwNDQ1
-OyYjMjM0OTQ7JiMyNTExMDsmIzE5OTg3OyYjMjYzNzc7JiMyMDQ0OTsmIzI0Njg3OyYjNjUyOTI7
-JiMyMDE2NTsmIzIwMzc5OyYjMjUzNTE7JiMyMzQ1MDsmIzI1OTEwOyYjMjAyMTQ7JiMyMDE1NDsm
-IzIwMzUxOyYjMjk5OTI7JiMxMjI5MDsmIzIwMDA1OyYjMzExMDU7JiMyMzU0NTsmIzI2NDEyOyYj
-MzcwMzg7JiMyMDIxNDsmIzI1MTEwOyYjMjA4NTQ7JiMyMDg2OTsmIzIzNDgxOyYjMjA1NzA7JiMy
-MDIxOTsmIzIwMzA5OyYjMjY0MTA7JiMzMjQ2MzsmIzI1NDgwOyYjMjY0MzU7JiMzMDM0MDsmIzI2
-NTk3OyYjMzg0MDU7JiMxMjI4OTsmIzIwMzUxOyYjMjk5OTI7JiMxMjI4OTsmIzIyNzk3OyYjMjEw
-NDY7JiMyNTExMDsmIzM2NzE2OyYjMjE0NTc7JiMxMjI5MDs8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
-dC1zaXplOjEwcHQ7IGxpbmUtaGVpZ2h0OjEwcHQ7IGZvbnQtZmFtaWx5OiAnVGltZXMgTmV3IFJv
-bWFuJztjb2xvcjojNTk1OTU5OyI+CjxpPkNPTkZJREVOVElBTCBOT1RFOiA8L2k+PC9kaXY+Cjxk
-aXYgc3R5bGU9ImZvbnQtc2l6ZToxMHB0OyBsaW5lLWhlaWdodDoxMHB0OyBmb250LWZhbWlseTog
-J1RpbWVzIE5ldyBSb21hbic7Y29sb3I6IzU5NTk1OTsiPgo8aT5UaGlzIGVtYWlsIGNvbnRhaW5z
-IGNvbmZpZGVudGlhbCBvciBsZWdhbGx5IHByaXZpbGVnZWQgaW5mb3JtYXRpb24gYW5kIGlzIGZv
-ciB0aGUgc29sZSB1c2Ugb2YgaXRzIGludGVuZGVkIHJlY2lwaWVudC4gQW55IHVuYXV0aG9yaXpl
-ZCByZXZpZXcsIHVzZSwgY29weWluZyBvciBmb3J3YXJkaW5nIG9mIHRoaXMgZW1haWwgb3IgdGhl
-IGNvbnRlbnQgb2YgdGhpcyBlbWFpbCBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLjwvaT48L2Rpdj4K
-PC9ib2R5Pgo8L2h0bWw+Cg==
-
---===============2399017127994677736==--
+--===============0799731096908506325==--
 
