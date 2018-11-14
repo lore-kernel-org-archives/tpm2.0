@@ -1,155 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============1295371407231487009=="
+Content-Type: multipart/mixed; boundary="===============8794558889736216485=="
 MIME-Version: 1.0
-From: Sherry Zhang(BJ-RD) <SherryZhang at zhaoxin.com>
-Subject: Re: [tpm2] SPI TPM and SPI flash can not work at the same time
-Date: Wed, 14 Nov 2018 04:28:17 +0000
-Message-ID: <2b6ac1d54a604dd4a133d9e4e0e17124@zhaoxin.com>
+From: Marco De Benedictis <marco.debenedictis at polito.it>
+Subject: [tpm2] Set unique in template of tpm2_createprimary from CLI
+Date: Wed, 14 Nov 2018 10:40:25 +0000
+Message-ID: <35e44431-0cdb-c180-0e67-712068a954bb@polito.it>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1295371407231487009==
+--===============8794558889736216485==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-First of all, thank you!!!
-Like:
-tpm2_getcap -c properties-fixed
-tpm2_getcap -c commands
-These commands can not work well.
 
-I do more experiments and find that tpm driver can not work well, but I do =
-not know the reason :
- spi port0/1: flash port2: TPM2.0
- driver modules: tpm_tis.ko(tpm driiver)   spi-zx.ko(spi controller driver)=
-   m25p80.ko(flash driver)
-(1) When I boot with ubuntu16.04 of the kernel-4.16.2 , I find that the os =
-only modprobe tpm_tis.ko and spi-zx.ko without m25p80.ko.
-So I can see /dev/tpm0,but /dev/mtd0 and /dev/mtd1.
-(2) If I do not modprobe m25p80, then /dev/tpm0 works well.
-(3) Then I modprobe m25p80,and I test /dev/mtd1. It seems normal.
-Then I rmmod spi_zx and m25p80 driver. It seems normal.
-But when I rmmod tpm_tis=EF=BC=8Cit shows:
-Tpm tpm0: A TPM error (151) occurred stopping the TPM
+Hi all,
 
-(4)boot os
-  rmmod tpm_tis  ----- normal
-  modprobe m25p80 -----normal
-  ./spi_flash /dev/mtd1 --- normal
-  rmmod m25p80   -----normal
+is it possible to include unique data in the TPM2B_PUBLIC template used
+by tpm2_createprimary CLI function (in tpm2-tools)? I would try to
+generate different primary keys in a given hierarchy that share same
+algorithm/key size/type of key etc. (and same primary seed, obviously).
 
-  modprobe tpm_tis ------error
+Thanks,
+Marco
+-- =
 
-tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x101, rev-id 0)
-tpm tpm0:A TPM error(151) occurred continue selftest
-tpm tpm0: TPM self test failed
-
-Best regards,
-Sherry Zhang
+MARCO DE BENEDICTIS
+Department of Control and Computer Engineering
+Politecnico di Torino
+E-mail: marco.debenedictis(a)polito.it - Phone: +39 (011) 090 7192
 
 
->
-> I wish I could help you more, but your TPM isn't returning a valid RC.
->
-> Since bit 7 is set in 0x97, this indicates that it is a FMT 1 response co=
-de.
->
-> Fmt 1 response codes have the handle encoded in bit positions 8-11
-> inclusive.
-> And is 1-based per
-> https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-
-> 2-Structures-01.38.pdf
-> Section 6.6.
->
-> It seems the error bits 0-5 inclusive are 0x17 which is TPM2_RC_TAG.
->
-> Which is "a parameter that should be a structure tag has a value that is =
-not
-> supported by the TPM"
->
-> I'm not sure why this is failing on your TPM, do any other tpm2_getcap
-> commands work?
->
-> Like:
-> tpm2_getcap -c properties-fixed
-> tpm2_getcap -c commands
->
-> Bill
->
-> > -----Original Message-----
-> > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Sherry
-> > Zhang(BJ-
-> > RD)
-> > Sent: Monday, November 5, 2018 8:14 PM
-> > To: tpm2(a)lists.01.org
-> > Subject: [tpm2] SPI TPM and SPI flash can not work at the same time
-> >
-> > Hi All,
-> >
-> > Ubuntu16.04 with the kernel 4.16.2:
-> >
-> > I use a spi port2 with a FIFO TPM2.0 and  two flash on the spi port 0/1.
-> >
-> > First, I unload drivers of spi controller and test the TPM2.0
-> > (built-in tpm_tis.o)
-> >
-> > #tpm2_abrmd =EF=BF=BDtcti=3D=E2=80=9Ddevice:/dev/tpm0=E2=80=9D =EF=BF=
-=BDallow-root &
-> >
-> > #tpm2_pcrlist
-> >
-> > #tpm2_nvlist
-> >
-> > And I can use tpm2-tools to test and it is normal .
-> >
-> >
-> >
-> > Then I load spi controller driver, and test /dev/mtd0 at spi port0
-> > that can work well.
-> >
-> > But when I run the commad  =E2=80=9Ctpm2_nvlist=E2=80=9D , it shows a e=
-rror.
-> >
-> > #tpm2_nvlist
-> >
-> > ERROR: Tss2_Sys_GetCapability(0x97) =EF=BF=BDtpm: handle(unk): incorrect
-> > structure tag
-> >
-> > ERROR: Unable to run tpm2_nvlist
-> >
-> >
-> >
-> > PS:
-> >
-> > tpm2-tss 2.1.0
-> >
-> > Tpm2-abrmd 2.0.3_rc0
-> >
-> > Tpm2-tools 3.0.2
-> >
-> >
-> >
-> > Best regards,
-> >
-> > Sherry Zhang
-> >
-> >
+--===============8794558889736216485==
+Content-Type: application/pkcs7-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
 
-
-
-=E4=BF=9D=E5=AF=86=E5=A3=B0=E6=98=8E=EF=BC=9A
-=E6=9C=AC=E9=82=AE=E4=BB=B6=E5=90=AB=E6=9C=89=E4=BF=9D=E5=AF=86=E6=88=96=E4=
-=B8=93=E6=9C=89=E4=BF=A1=E6=81=AF=EF=BC=8C=E4=BB=85=E4=BE=9B=E6=8C=87=E5=AE=
-=9A=E6=94=B6=E4=BB=B6=E4=BA=BA=E4=BD=BF=E7=94=A8=E3=80=82=E4=B8=A5=E7=A6=81=
-=E5=AF=B9=E6=9C=AC=E9=82=AE=E4=BB=B6=E6=88=96=E5=85=B6=E5=86=85=E5=AE=B9=E5=
-=81=9A=E4=BB=BB=E4=BD=95=E6=9C=AA=E7=BB=8F=E6=8E=88=E6=9D=83=E7=9A=84=E6=9F=
-=A5=E9=98=85=E3=80=81=E4=BD=BF=E7=94=A8=E3=80=81=E5=A4=8D=E5=88=B6=E6=88=96=
-=E8=BD=AC=E5=8F=91=E3=80=82
-CONFIDENTIAL NOTE:
-This email contains confidential or legally privileged information and is f=
-or the sole use of its intended recipient. Any unauthorized review, use, co=
-pying or forwarding of this email or the content of this email is strictly =
-prohibited.
-
---===============1295371407231487009==--
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDuIw
+ggR4MIIDYKADAgECAgECMA0GCSqGSIb3DQEBBQUAMEMxEDAOBgNVBAoTB0V1cm9QS0kxFTATBgNV
+BAsTDEV1cm9QS0kgcm9vdDEYMBYGA1UEAxMPRXVyb1BLSSByb290IENBMB4XDTEwMTIxODEzNDY0
+N1oXDTIwMTIzMTIzNTk1OVowVDELMAkGA1UEBhMCSVQxEDAOBgNVBAoTB0V1cm9QS0kxFjAUBgNV
+BAsTDUV1cm9QS0kgSXRhbHkxGzAZBgNVBAMTEkV1cm9QS0kgSXRhbGlhbiBDQTCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBAJfEyV1trtaj8Z9P5ciATbx9UuSwTN0pCxaDRz0sfE2Ymfn+
+5yl3pzdodOyoSEEZsnEJ9xUKlVM5vH7lesyvCXttCb6f4rC/3z3D0G7uRtfomh+7lP/RbquzABS/
+j3fkriRkhFdEZu4xDSN+uPap2S2b18sOE6NpKkAZQlCS8Un8ou+KyKqhA1+Xopgn/givJlPYLczm
+WQgodMoRVNyB0doIsqWrIp0g7LOTzvi21S4eFejTFOaGcdrceRSmnmCSIVEahS8UVTJX9hBm3uCz
+rgJWr9RmbfLnWaIh/2/g/Y+4W3epzR7po0vJwt4Ze2Mm8RYMDJ6UT3N0AyjBo+Mn+iECAwEAAaOC
+AWQwggFgMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBTQdeU/68q6
+a5ZRfCClmL3zZ9O0SjAfBgNVHSMEGDAWgBTwcRwoM1i3xca1w79RdahQ9JzSNDBJBgNVHSAEQjBA
+MD4GCisGAQQBqQcBAQIwMDAuBggrBgEFBQcCARYiaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9j
+cHMvMS4yLzBxBggrBgEFBQcBAQRlMGMwIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLmV1cm9wa2ku
+b3JnMDwGCCsGAQUFBzAChjBodHRwOi8vd3d3LmV1cm9wa2kub3JnL2NhL2NlcnRzL2V1cm9wa2lf
+cm9vdC5jZXIwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9jcmwv
+ZXVyb3BraV9yb290LmNybDANBgkqhkiG9w0BAQUFAAOCAQEAhDLeMx/dP2whwGb7ITa6sI6JUQZ3
+H9DQApdTGfz6iLIOiZeeoUt/XE9kYgcFp23IC1+wQzsfY6wRWKStF4lscqDSlNnw4yyaVYkogY3B
+k8pE7QxNXIlgsFk4IMnbDCamCon/pxMGPV8ruBwVxFjp4PctlbububbB10CixAgbzcDFNvLEYUCJ
+CV8V/iCAIs/w3MYk1NsAz/TfoCMXBrfn7ik69ImKdVOrdxwtyHs7vOx9A3xxCd5XCAc524mMC5Ce
+nj+KQbh+dczXRIQAkEFbBEVrc8ytQv+NRT4FbqhS0FL1E2zkPTNtGdK4yyrWd/K8Pa1s3h2GtamU
+iD8Mdj0MMzCCBPMwggPboAMCAQICAQEwDQYJKoZIhvcNAQEFBQAwVDELMAkGA1UEBhMCSVQxEDAO
+BgNVBAoTB0V1cm9QS0kxFjAUBgNVBAsTDUV1cm9QS0kgSXRhbHkxGzAZBgNVBAMTEkV1cm9QS0kg
+SXRhbGlhbiBDQTAeFw0xMDEyMTgxMzU4MjJaFw0yMDEyMzEyMzU5NTlaMGUxCzAJBgNVBAYTAklU
+MR4wHAYDVQQKExVQb2xpdGVjbmljbyBkaSBUb3Jpbm8xNjA0BgNVBAMTLVBvbGl0ZWNuaWNvIGRp
+IFRvcmlubyBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+AQoCggEBAMhpj5X8VQEnxMEjxZAwHADWcxXc/TufCqQhBypLMJx+aowv9Qfr96jrXwpD/OKl6cz3
+Bmv0s/4oP5+ode2bWFXsVEKWR3J8vCusF1NvtPI16g8t5numZ+JGZqC3ZpvUTNsODUxb+M5L4T2z
+NtO4GqZlgDhB9QOKq+71LeKp+R3q5cIXtSBPWYiH6EPbzQJQdxcbh3d9d+rxmtW1W4LmGqjBL2YG
+TezsbagbsHmSMX4Djw7TyuFR9qkBNhLLiHizz0AdNqW95XY+/5GzTZak7k5FGxwwzR/sN6Q/Sj1x
+HcWNw+ROo1aUtf5k5jVQaScHDjixGbqLQFf/2fItHfCRMMcCAwEAAaOCAb0wggG5MA8GA1UdEwEB
+/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBTNm1tbnup2IcQQaOjSLTfbHy/I5DAf
+BgNVHSMEGDAWgBTQdeU/68q6a5ZRfCClmL3zZ9O0SjCBkQYDVR0gBIGJMIGGMD4GCisGAQQBqQcB
+AQIwMDAuBggrBgEFBQcCARYiaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9jcHMvMS4yLzBEBgor
+BgEEAakHAgECMDYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93d3cuaXRhbHkuZXVyb3BraS5vcmcvY2Ev
+Y3BzLzEuMi8wfgYIKwYBBQUHAQEEcjBwMCkGCCsGAQUFBzABhh1odHRwOi8vb2NzcC5pdGFseS5l
+dXJvcGtpLm9yZzBDBggrBgEFBQcwAoY3aHR0cDovL3d3dy5pdGFseS5ldXJvcGtpLm9yZy9jYS9j
+ZXJ0cy9ldXJvcGtpX2l0YWx5LmNlcjBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vd3d3Lml0YWx5
+LmV1cm9wa2kub3JnL2NhL2NybC9pdGFseV9jcmwuY3JsMA0GCSqGSIb3DQEBBQUAA4IBAQBTVJWI
+UBlbjxFQTkjRLgvNPt03m2NIhgCt+SIIFuC4rhB10VqHisAW68hXxHEfFZ06LxeMLn3oGnPriWQd
+pPkC7MAt87iSyIG6Ofd1vN0oUhuWgiYqDKEOV/WX3fo9QXyFf8wEcoaKxL4Au3aBnwVcRt6gJkBG
+G6J6LYc+FCVpXdxnd85sKaqTTCxtiTtwSVjqwLp/Ulj1USzhP/dj6v40zAei5LHtCjSUwWzRz1M8
+nTsz1LTwOybzA582+i/fIVVaiqMZicNwtrFfzTpf7bk30unZ2cqWbLUWjldCUloD+DwKnD7XtDeN
+IfKuA/0XYOT+xHFJJYGai+e3MlAgkK6PMIIFazCCBFOgAwIBAgICCiIwDQYJKoZIhvcNAQEFBQAw
+ZTELMAkGA1UEBhMCSVQxHjAcBgNVBAoTFVBvbGl0ZWNuaWNvIGRpIFRvcmlubzE2MDQGA1UEAxMt
+UG9saXRlY25pY28gZGkgVG9yaW5vIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTE2MDIwNDA5
+MDU0NloXDTIwMTIzMTIzNTk1OVowZTELMAkGA1UEBhMCSVQxHjAcBgNVBAoTFVBvbGl0ZWNuaWNv
+IGRpIFRvcmlubzEdMBsGA1UEAxMUTWFyY28gIERlIEJlbmVkaWN0aXMxFzAVBgoJkiaJk/IsZAEB
+EwdkMDM0NjUzMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtdQEsB1ClB89/WlYu23V
+vTa08ANsEbbIVUvY+l5KkCy4HhG4L4pZxzzO0mQcwMZZ9nhzKA+AkQMwExfdO2assqNkKJDQTzVx
+SrcYch5LSXqUihqK5OwIzr1tYR+te/kvZB/s7THqniI+W7zywR0zJ0bpOYM8XzzBq7XDM46PCXBR
+wAV9I4Wh8qAlnDiFb7l/12wGSOXo8HTYyZvZD2PMuetIwk8AGJ1T89WUrYYukUuieTHXudxIRzmf
+R9mUtMs36Ub/LUMgu2iBQVvPphiY3FPgLZS9D+DS/+2GQh4vVXkMXA9fhZvUPJPYDK4soLqWkudN
+zpUr+/AYTlhdVfZXIQIDAQABo4ICIzCCAh8wDgYDVR0PAQH/BAQDAgP4MCcGA1UdJQQgMB4GCCsG
+AQUFBwMCBggrBgEFBQcDAwYIKwYBBQUHAwQwJwYDVR0RBCAwHoEcbWFyY28uZGViZW5lZGljdGlz
+QHBvbGl0by5pdDAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBRMQTy5js1E0onij2pm+QMmxAFwMTAf
+BgNVHSMEGDAWgBTNm1tbnup2IcQQaOjSLTfbHy/I5DCBywYDVR0gBIHDMIHAMD4GCisGAQQBqQcB
+AQIwMDAuBggrBgEFBQcCARYiaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9jcHMvMS4yLzBEBgor
+BgEEAakHAgECMDYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93d3cuaXRhbHkuZXVyb3BraS5vcmcvY2Ev
+Y3BzLzEuMi8wOAYKKwYBBAGVYgECAjAqMCgGCCsGAQUFBwIBFhxodHRwOi8vY2EucG9saXRvLml0
+L2Nwcy8yLjIvMGYGCCsGAQUFBwEBBFowWDAhBggrBgEFBQcwAYYVaHR0cDovL29jc3AucG9saXRv
+Lml0MDMGCCsGAQUFBzAChidodHRwOi8vY2EucG9saXRvLml0L2NlcnRzL3BvbGl0b19jYS5jZXIw
+NwYDVR0fBDAwLjAsoCqgKIYmaHR0cDovL2NhLnBvbGl0by5pdC9jcmwvcG9saXRvX2NybC5jcmww
+DQYJKoZIhvcNAQEFBQADggEBAEEfRPgJVAYt6TqB0xHCN6dunWP4ZhU9rfuP7Xq22gsrtCvzvH6E
+1QL2+HljPMtg2GEFEJNC9GwcetwQHmT62ptGB1ZBVO5Wk/uRI02+8aNhV9xjalvz9EO2u117H5lG
+VlHwJ7Hrp68TDc9xmR8dUjZ3i2G5WGh/0yBntEuhSa+n9CNwC5UdG3LJLOgHpu++a/k/WTNAYwwB
+x2Jx+geaXmxnJ06pP7uTQb+DtIPP0fpKsrWOF2V55niChtKfp4oVY0dKtARUlkYcENKa5AI1b8Zr
+DHeWc4Ml/Rc08iaZUSJjHWV2Ee+XRp0Yk1498igs1OGm/73L97DtI4koj2nnHxExggNrMIIDZwIB
+ATBrMGUxCzAJBgNVBAYTAklUMR4wHAYDVQQKExVQb2xpdGVjbmljbyBkaSBUb3Jpbm8xNjA0BgNV
+BAMTLVBvbGl0ZWNuaWNvIGRpIFRvcmlubyBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eQICCiIwDQYJ
+YIZIAWUDBAIBBQCgggHRMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+DTE4MTExNDEwNDAyNVowLwYJKoZIhvcNAQkEMSIEICDw8QUACzwrTmkhGx6hCy/KoCk9ImosjEJP
+FoBIXEjMMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG
+9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwIC
+ASgwegYJKwYBBAGCNxAEMW0wazBlMQswCQYDVQQGEwJJVDEeMBwGA1UEChMVUG9saXRlY25pY28g
+ZGkgVG9yaW5vMTYwNAYDVQQDEy1Qb2xpdGVjbmljbyBkaSBUb3Jpbm8gQ2VydGlmaWNhdGlvbiBB
+dXRob3JpdHkCAgoiMHwGCyqGSIb3DQEJEAILMW2gazBlMQswCQYDVQQGEwJJVDEeMBwGA1UEChMV
+UG9saXRlY25pY28gZGkgVG9yaW5vMTYwNAYDVQQDEy1Qb2xpdGVjbmljbyBkaSBUb3Jpbm8gQ2Vy
+dGlmaWNhdGlvbiBBdXRob3JpdHkCAgoiMA0GCSqGSIb3DQEBAQUABIIBAKGYyAfcNDr17eceUBUL
+yQs0BF4bNHdsWCZvVzptGLJ2bDIeAJ7mtRAd7oeBSVQODL6O8NjaCillE4YXvsAuZKutxNPJFqD4
+1HnGJqxuWV3AKgLp96pyWqz7OxXuzUDdYOEqMTEy+qtMW9Aybpdi7W6MFOVw0Swsj7H0wynq0bDJ
+OusVCT7cARHD7KcDpmUO8foOlfa7CuSG4RBdq18jpMqzn9uX0iQ2TLIGqr+ozZteJbk9jQP3uABK
+EtlgEZqcn4Sj6wORYh2CmE+HpBtuAr05q7Mv1D1OvSxs+LknKe4HTUd8Glmn/r0ryL/OJ+Q1BFL1
+TAzzF1Lidi+ZAlzh2j0AAAAAAAA=
+--===============8794558889736216485==--
 
