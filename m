@@ -1,124 +1,122 @@
-Content-Type: multipart/mixed; boundary="===============8794558889736216485=="
+Content-Type: multipart/mixed; boundary="===============6758090429940380762=="
 MIME-Version: 1.0
-From: Marco De Benedictis <marco.debenedictis at polito.it>
-Subject: [tpm2] Set unique in template of tpm2_createprimary from CLI
-Date: Wed, 14 Nov 2018 10:40:25 +0000
-Message-ID: <35e44431-0cdb-c180-0e67-712068a954bb@polito.it>
+From: Nick Meyer <nimeyer at oath.com>
+Subject: [tpm2] TPM2_Sign odd behavior
+Date: Wed, 14 Nov 2018 15:38:25 -0600
+Message-ID: <CAO6U=Ob53FFC+AR5M7s4KxwbwDiz-wtjNJrKRzj6jE8E_FUgjA@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8794558889736216485==
+--===============6758090429940380762==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Good afternoon all,
 
-Hi all,
+I'm seeing some odd behavior when trying to use the TPM2_Sign command in an
+EFI application.
+I'm guessing what I'm seeing is vendor-dependent, but I wanted to throw it
+out here too in case there are other avenues I can look down while I'm
+trying to contact the vendor.
 
-is it possible to include unique data in the TPM2B_PUBLIC template used
-by tpm2_createprimary CLI function (in tpm2-tools)? I would try to
-generate different primary keys in a given hierarchy that share same
-algorithm/key size/type of key etc. (and same primary seed, obviously).
+What I'm seeing is, when trying to sign with a loaded key, I'm getting a
+TPM_RC_VALUE error (exact code 0x84). The specification indicates this
+would be received if "the value to sign is larger than allowed for the type
+of keyHandle". However, I have intercepted the marshaled command and
+inspected it, and this is not the case.
 
-Thanks,
-Marco
+I have verified that the key has the Sign attribute; the key's signature
+scheme is TPM_ALG_NULL and this is defined to SHA256 in the TPM2_Sign
+command; and that the hash value being sent in the TPM2_Sign TPM2B_DIGEST
+value is in fact the 32 bytes expected for an SHA256 hash.
+
+The command is being sent via the EFI EFI_TCG2_PROTOCOL Submit Command
+operation, and I've validated in the vendor BIOS this is the correct
+protocol; plus there are some cases on other machines where this sign
+operation DOES work.
+
+Is there any other reason this error code might be returned from a
+TPM2_Sign command? I can't believe it would be, but is there some kind of
+format or value expected in the provided hash? (This is NOT a restricted
+signing key)
+
+For reference, here is an example marshaled command that fails:
+
+     | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
+------------------------------------------------------
+0x00 | 80 02 00 00 00 49 00 00 01 5d 80 00 00 01 00 00
+0x10 | 00 09 03 00 00 00 00 00 01 00 00 00 20 e8 d0 09
+0x20 | 45 d9 65 bf 21 46 cd 48 1f 57 72 82 bb 38 a7 a6
+0x30 | 70 c6 4d e3 a9 32 21 4f f3 7b 63 3f 8e 00 14 00
+0x40 | 0b 80 24 40 00 00 07 00 00
+
+Thanks for any insight.
 -- =
 
-MARCO DE BENEDICTIS
-Department of Control and Computer Engineering
-Politecnico di Torino
-E-mail: marco.debenedictis(a)polito.it - Phone: +39 (011) 090 7192
 
+*Nick Meyer*
 
---===============8794558889736216485==
-Content-Type: application/pkcs7-signature
+*Oath:*
+
+--===============6758090429940380762==
+Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
+Content-Disposition: attachment; filename="attachment.html"
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDuIw
-ggR4MIIDYKADAgECAgECMA0GCSqGSIb3DQEBBQUAMEMxEDAOBgNVBAoTB0V1cm9QS0kxFTATBgNV
-BAsTDEV1cm9QS0kgcm9vdDEYMBYGA1UEAxMPRXVyb1BLSSByb290IENBMB4XDTEwMTIxODEzNDY0
-N1oXDTIwMTIzMTIzNTk1OVowVDELMAkGA1UEBhMCSVQxEDAOBgNVBAoTB0V1cm9QS0kxFjAUBgNV
-BAsTDUV1cm9QS0kgSXRhbHkxGzAZBgNVBAMTEkV1cm9QS0kgSXRhbGlhbiBDQTCCASIwDQYJKoZI
-hvcNAQEBBQADggEPADCCAQoCggEBAJfEyV1trtaj8Z9P5ciATbx9UuSwTN0pCxaDRz0sfE2Ymfn+
-5yl3pzdodOyoSEEZsnEJ9xUKlVM5vH7lesyvCXttCb6f4rC/3z3D0G7uRtfomh+7lP/RbquzABS/
-j3fkriRkhFdEZu4xDSN+uPap2S2b18sOE6NpKkAZQlCS8Un8ou+KyKqhA1+Xopgn/givJlPYLczm
-WQgodMoRVNyB0doIsqWrIp0g7LOTzvi21S4eFejTFOaGcdrceRSmnmCSIVEahS8UVTJX9hBm3uCz
-rgJWr9RmbfLnWaIh/2/g/Y+4W3epzR7po0vJwt4Ze2Mm8RYMDJ6UT3N0AyjBo+Mn+iECAwEAAaOC
-AWQwggFgMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBTQdeU/68q6
-a5ZRfCClmL3zZ9O0SjAfBgNVHSMEGDAWgBTwcRwoM1i3xca1w79RdahQ9JzSNDBJBgNVHSAEQjBA
-MD4GCisGAQQBqQcBAQIwMDAuBggrBgEFBQcCARYiaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9j
-cHMvMS4yLzBxBggrBgEFBQcBAQRlMGMwIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLmV1cm9wa2ku
-b3JnMDwGCCsGAQUFBzAChjBodHRwOi8vd3d3LmV1cm9wa2kub3JnL2NhL2NlcnRzL2V1cm9wa2lf
-cm9vdC5jZXIwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9jcmwv
-ZXVyb3BraV9yb290LmNybDANBgkqhkiG9w0BAQUFAAOCAQEAhDLeMx/dP2whwGb7ITa6sI6JUQZ3
-H9DQApdTGfz6iLIOiZeeoUt/XE9kYgcFp23IC1+wQzsfY6wRWKStF4lscqDSlNnw4yyaVYkogY3B
-k8pE7QxNXIlgsFk4IMnbDCamCon/pxMGPV8ruBwVxFjp4PctlbububbB10CixAgbzcDFNvLEYUCJ
-CV8V/iCAIs/w3MYk1NsAz/TfoCMXBrfn7ik69ImKdVOrdxwtyHs7vOx9A3xxCd5XCAc524mMC5Ce
-nj+KQbh+dczXRIQAkEFbBEVrc8ytQv+NRT4FbqhS0FL1E2zkPTNtGdK4yyrWd/K8Pa1s3h2GtamU
-iD8Mdj0MMzCCBPMwggPboAMCAQICAQEwDQYJKoZIhvcNAQEFBQAwVDELMAkGA1UEBhMCSVQxEDAO
-BgNVBAoTB0V1cm9QS0kxFjAUBgNVBAsTDUV1cm9QS0kgSXRhbHkxGzAZBgNVBAMTEkV1cm9QS0kg
-SXRhbGlhbiBDQTAeFw0xMDEyMTgxMzU4MjJaFw0yMDEyMzEyMzU5NTlaMGUxCzAJBgNVBAYTAklU
-MR4wHAYDVQQKExVQb2xpdGVjbmljbyBkaSBUb3Jpbm8xNjA0BgNVBAMTLVBvbGl0ZWNuaWNvIGRp
-IFRvcmlubyBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-AQoCggEBAMhpj5X8VQEnxMEjxZAwHADWcxXc/TufCqQhBypLMJx+aowv9Qfr96jrXwpD/OKl6cz3
-Bmv0s/4oP5+ode2bWFXsVEKWR3J8vCusF1NvtPI16g8t5numZ+JGZqC3ZpvUTNsODUxb+M5L4T2z
-NtO4GqZlgDhB9QOKq+71LeKp+R3q5cIXtSBPWYiH6EPbzQJQdxcbh3d9d+rxmtW1W4LmGqjBL2YG
-TezsbagbsHmSMX4Djw7TyuFR9qkBNhLLiHizz0AdNqW95XY+/5GzTZak7k5FGxwwzR/sN6Q/Sj1x
-HcWNw+ROo1aUtf5k5jVQaScHDjixGbqLQFf/2fItHfCRMMcCAwEAAaOCAb0wggG5MA8GA1UdEwEB
-/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBTNm1tbnup2IcQQaOjSLTfbHy/I5DAf
-BgNVHSMEGDAWgBTQdeU/68q6a5ZRfCClmL3zZ9O0SjCBkQYDVR0gBIGJMIGGMD4GCisGAQQBqQcB
-AQIwMDAuBggrBgEFBQcCARYiaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9jcHMvMS4yLzBEBgor
-BgEEAakHAgECMDYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93d3cuaXRhbHkuZXVyb3BraS5vcmcvY2Ev
-Y3BzLzEuMi8wfgYIKwYBBQUHAQEEcjBwMCkGCCsGAQUFBzABhh1odHRwOi8vb2NzcC5pdGFseS5l
-dXJvcGtpLm9yZzBDBggrBgEFBQcwAoY3aHR0cDovL3d3dy5pdGFseS5ldXJvcGtpLm9yZy9jYS9j
-ZXJ0cy9ldXJvcGtpX2l0YWx5LmNlcjBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vd3d3Lml0YWx5
-LmV1cm9wa2kub3JnL2NhL2NybC9pdGFseV9jcmwuY3JsMA0GCSqGSIb3DQEBBQUAA4IBAQBTVJWI
-UBlbjxFQTkjRLgvNPt03m2NIhgCt+SIIFuC4rhB10VqHisAW68hXxHEfFZ06LxeMLn3oGnPriWQd
-pPkC7MAt87iSyIG6Ofd1vN0oUhuWgiYqDKEOV/WX3fo9QXyFf8wEcoaKxL4Au3aBnwVcRt6gJkBG
-G6J6LYc+FCVpXdxnd85sKaqTTCxtiTtwSVjqwLp/Ulj1USzhP/dj6v40zAei5LHtCjSUwWzRz1M8
-nTsz1LTwOybzA582+i/fIVVaiqMZicNwtrFfzTpf7bk30unZ2cqWbLUWjldCUloD+DwKnD7XtDeN
-IfKuA/0XYOT+xHFJJYGai+e3MlAgkK6PMIIFazCCBFOgAwIBAgICCiIwDQYJKoZIhvcNAQEFBQAw
-ZTELMAkGA1UEBhMCSVQxHjAcBgNVBAoTFVBvbGl0ZWNuaWNvIGRpIFRvcmlubzE2MDQGA1UEAxMt
-UG9saXRlY25pY28gZGkgVG9yaW5vIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTE2MDIwNDA5
-MDU0NloXDTIwMTIzMTIzNTk1OVowZTELMAkGA1UEBhMCSVQxHjAcBgNVBAoTFVBvbGl0ZWNuaWNv
-IGRpIFRvcmlubzEdMBsGA1UEAxMUTWFyY28gIERlIEJlbmVkaWN0aXMxFzAVBgoJkiaJk/IsZAEB
-EwdkMDM0NjUzMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtdQEsB1ClB89/WlYu23V
-vTa08ANsEbbIVUvY+l5KkCy4HhG4L4pZxzzO0mQcwMZZ9nhzKA+AkQMwExfdO2assqNkKJDQTzVx
-SrcYch5LSXqUihqK5OwIzr1tYR+te/kvZB/s7THqniI+W7zywR0zJ0bpOYM8XzzBq7XDM46PCXBR
-wAV9I4Wh8qAlnDiFb7l/12wGSOXo8HTYyZvZD2PMuetIwk8AGJ1T89WUrYYukUuieTHXudxIRzmf
-R9mUtMs36Ub/LUMgu2iBQVvPphiY3FPgLZS9D+DS/+2GQh4vVXkMXA9fhZvUPJPYDK4soLqWkudN
-zpUr+/AYTlhdVfZXIQIDAQABo4ICIzCCAh8wDgYDVR0PAQH/BAQDAgP4MCcGA1UdJQQgMB4GCCsG
-AQUFBwMCBggrBgEFBQcDAwYIKwYBBQUHAwQwJwYDVR0RBCAwHoEcbWFyY28uZGViZW5lZGljdGlz
-QHBvbGl0by5pdDAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBRMQTy5js1E0onij2pm+QMmxAFwMTAf
-BgNVHSMEGDAWgBTNm1tbnup2IcQQaOjSLTfbHy/I5DCBywYDVR0gBIHDMIHAMD4GCisGAQQBqQcB
-AQIwMDAuBggrBgEFBQcCARYiaHR0cDovL3d3dy5ldXJvcGtpLm9yZy9jYS9jcHMvMS4yLzBEBgor
-BgEEAakHAgECMDYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93d3cuaXRhbHkuZXVyb3BraS5vcmcvY2Ev
-Y3BzLzEuMi8wOAYKKwYBBAGVYgECAjAqMCgGCCsGAQUFBwIBFhxodHRwOi8vY2EucG9saXRvLml0
-L2Nwcy8yLjIvMGYGCCsGAQUFBwEBBFowWDAhBggrBgEFBQcwAYYVaHR0cDovL29jc3AucG9saXRv
-Lml0MDMGCCsGAQUFBzAChidodHRwOi8vY2EucG9saXRvLml0L2NlcnRzL3BvbGl0b19jYS5jZXIw
-NwYDVR0fBDAwLjAsoCqgKIYmaHR0cDovL2NhLnBvbGl0by5pdC9jcmwvcG9saXRvX2NybC5jcmww
-DQYJKoZIhvcNAQEFBQADggEBAEEfRPgJVAYt6TqB0xHCN6dunWP4ZhU9rfuP7Xq22gsrtCvzvH6E
-1QL2+HljPMtg2GEFEJNC9GwcetwQHmT62ptGB1ZBVO5Wk/uRI02+8aNhV9xjalvz9EO2u117H5lG
-VlHwJ7Hrp68TDc9xmR8dUjZ3i2G5WGh/0yBntEuhSa+n9CNwC5UdG3LJLOgHpu++a/k/WTNAYwwB
-x2Jx+geaXmxnJ06pP7uTQb+DtIPP0fpKsrWOF2V55niChtKfp4oVY0dKtARUlkYcENKa5AI1b8Zr
-DHeWc4Ml/Rc08iaZUSJjHWV2Ee+XRp0Yk1498igs1OGm/73L97DtI4koj2nnHxExggNrMIIDZwIB
-ATBrMGUxCzAJBgNVBAYTAklUMR4wHAYDVQQKExVQb2xpdGVjbmljbyBkaSBUb3Jpbm8xNjA0BgNV
-BAMTLVBvbGl0ZWNuaWNvIGRpIFRvcmlubyBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eQICCiIwDQYJ
-YIZIAWUDBAIBBQCgggHRMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTE4MTExNDEwNDAyNVowLwYJKoZIhvcNAQkEMSIEICDw8QUACzwrTmkhGx6hCy/KoCk9ImosjEJP
-FoBIXEjMMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG
-9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwIC
-ASgwegYJKwYBBAGCNxAEMW0wazBlMQswCQYDVQQGEwJJVDEeMBwGA1UEChMVUG9saXRlY25pY28g
-ZGkgVG9yaW5vMTYwNAYDVQQDEy1Qb2xpdGVjbmljbyBkaSBUb3Jpbm8gQ2VydGlmaWNhdGlvbiBB
-dXRob3JpdHkCAgoiMHwGCyqGSIb3DQEJEAILMW2gazBlMQswCQYDVQQGEwJJVDEeMBwGA1UEChMV
-UG9saXRlY25pY28gZGkgVG9yaW5vMTYwNAYDVQQDEy1Qb2xpdGVjbmljbyBkaSBUb3Jpbm8gQ2Vy
-dGlmaWNhdGlvbiBBdXRob3JpdHkCAgoiMA0GCSqGSIb3DQEBAQUABIIBAKGYyAfcNDr17eceUBUL
-yQs0BF4bNHdsWCZvVzptGLJ2bDIeAJ7mtRAd7oeBSVQODL6O8NjaCillE4YXvsAuZKutxNPJFqD4
-1HnGJqxuWV3AKgLp96pyWqz7OxXuzUDdYOEqMTEy+qtMW9Aybpdi7W6MFOVw0Swsj7H0wynq0bDJ
-OusVCT7cARHD7KcDpmUO8foOlfa7CuSG4RBdq18jpMqzn9uX0iQ2TLIGqr+ozZteJbk9jQP3uABK
-EtlgEZqcn4Sj6wORYh2CmE+HpBtuAr05q7Mv1D1OvSxs+LknKe4HTUd8Glmn/r0ryL/OJ+Q1BFL1
-TAzzF1Lidi+ZAlzh2j0AAAAAAAA=
---===============8794558889736216485==--
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+R29vZCBhZnRlcm5vb24gYWxsLDxkaXY+PGJy
+PjwvZGl2PjxkaXY+SSYjMzk7bSBzZWVpbmcgc29tZSBvZGQgYmVoYXZpb3Igd2hlbiB0cnlpbmcg
+dG8gdXNlIHRoZSBUUE0yX1NpZ24gY29tbWFuZCBpbiBhbiBFRkkgYXBwbGljYXRpb24uPC9kaXY+
+PGRpdj5JJiMzOTttIGd1ZXNzaW5nIHdoYXQgSSYjMzk7bSBzZWVpbmcgaXMgdmVuZG9yLWRlcGVu
+ZGVudCwgYnV0IEkgd2FudGVkIHRvIHRocm93IGl0IG91dCBoZXJlIHRvbyBpbiBjYXNlIHRoZXJl
+IGFyZSBvdGhlciBhdmVudWVzIEkgY2FuIGxvb2sgZG93biB3aGlsZSBJJiMzOTttIHRyeWluZyB0
+byBjb250YWN0IHRoZSB2ZW5kb3IuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5XaGF0IEkmIzM5
+O20gc2VlaW5nIGlzLCB3aGVuIHRyeWluZyB0byBzaWduIHdpdGggYSBsb2FkZWQga2V5LCBJJiMz
+OTttIGdldHRpbmcgYSBUUE1fUkNfVkFMVUUgZXJyb3IgKGV4YWN0IGNvZGUgMHg4NCkuIFRoZSBz
+cGVjaWZpY2F0aW9uIGluZGljYXRlcyB0aGlzIHdvdWxkIGJlIHJlY2VpdmVkIGlmICZxdW90O3Ro
+ZSB2YWx1ZSB0byBzaWduIGlzIGxhcmdlciB0aGFuIGFsbG93ZWQgZm9yIHRoZSB0eXBlIG9mIGtl
+eUhhbmRsZSZxdW90Oy4gSG93ZXZlciwgSSBoYXZlIGludGVyY2VwdGVkIHRoZSBtYXJzaGFsZWQg
+Y29tbWFuZCBhbmQgaW5zcGVjdGVkIGl0LCBhbmQgdGhpcyBpcyBub3QgdGhlIGNhc2UuPC9kaXY+
+PGRpdj48YnI+PC9kaXY+PGRpdj5JIGhhdmUgdmVyaWZpZWQgdGhhdCB0aGUga2V5IGhhcyB0aGUg
+U2lnbiBhdHRyaWJ1dGU7IHRoZSBrZXkmIzM5O3Mgc2lnbmF0dXJlIHNjaGVtZSBpcyBUUE1fQUxH
+X05VTEwgYW5kIHRoaXMgaXMgZGVmaW5lZCB0byBTSEEyNTYgaW4gdGhlIFRQTTJfU2lnbiBjb21t
+YW5kOyBhbmQgdGhhdCB0aGUgaGFzaCB2YWx1ZSBiZWluZyBzZW50IGluIHRoZSBUUE0yX1NpZ24g
+VFBNMkJfRElHRVNUIHZhbHVlIGlzIGluIGZhY3QgdGhlIDMyIGJ5dGVzIGV4cGVjdGVkIGZvciBh
+biBTSEEyNTYgaGFzaC48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRoZSBjb21tYW5kIGlzIGJl
+aW5nIHNlbnQgdmlhIHRoZSBFRkkgRUZJX1RDRzJfUFJPVE9DT0wgU3VibWl0IENvbW1hbmQgb3Bl
+cmF0aW9uLCBhbmQgSSYjMzk7dmUgdmFsaWRhdGVkIGluIHRoZSB2ZW5kb3IgQklPUyB0aGlzIGlz
+IHRoZSBjb3JyZWN0IHByb3RvY29sOyBwbHVzIHRoZXJlIGFyZSBzb21lIGNhc2VzIG9uIG90aGVy
+IG1hY2hpbmVzIHdoZXJlIHRoaXMgc2lnbiBvcGVyYXRpb24gRE9FUyB3b3JrLjwvZGl2PjxkaXY+
+PGJyPjwvZGl2PjxkaXY+SXMgdGhlcmUgYW55IG90aGVyIHJlYXNvbiB0aGlzIGVycm9yIGNvZGUg
+bWlnaHQgYmUgcmV0dXJuZWQgZnJvbSBhIFRQTTJfU2lnbiBjb21tYW5kPyBJIGNhbiYjMzk7dCBi
+ZWxpZXZlIGl0IHdvdWxkIGJlLCBidXQgaXMgdGhlcmUgc29tZSBraW5kIG9mIGZvcm1hdCBvciB2
+YWx1ZSBleHBlY3RlZCBpbiB0aGUgcHJvdmlkZWQgaGFzaD8gKFRoaXMgaXMgTk9UIGEgcmVzdHJp
+Y3RlZCBzaWduaW5nIGtleSk8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkZvciByZWZlcmVuY2Us
+IGhlcmUgaXMgYW4gZXhhbXBsZSBtYXJzaGFsZWQgY29tbWFuZCB0aGF0IGZhaWxzOjwvZGl2Pjxk
+aXY+PGZvbnQgZmFjZT0ibW9ub3NwYWNlLCBtb25vc3BhY2UiPjxicj48L2ZvbnQ+PC9kaXY+PGRp
+dj48ZGl2Pjxmb250IGZhY2U9Im1vbm9zcGFjZSwgbW9ub3NwYWNlIj7CoCDCoCDCoHwgMDAgMDEg
+MDIgMDMgMDQgMDUgMDYgMDcgMDggMDkgMEEgMEIgMEMgMEQgMEUgMEY8L2ZvbnQ+PC9kaXY+PGRp
+dj48Zm9udCBmYWNlPSJtb25vc3BhY2UsIG1vbm9zcGFjZSI+LS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPC9mb250PjwvZGl2PjxkaXY+PGZvbnQg
+ZmFjZT0ibW9ub3NwYWNlLCBtb25vc3BhY2UiPjB4MDAgfCA4MCAwMiAwMCAwMCAwMCA0OSAwMCAw
+MCAwMSA1ZCA4MCAwMCAwMCAwMSAwMCAwMMKgPC9mb250PjwvZGl2PjxkaXY+PGZvbnQgZmFjZT0i
+bW9ub3NwYWNlLCBtb25vc3BhY2UiPjB4MTAgfCAwMCAwOSAwMyAwMCAwMCAwMCAwMCAwMCAwMSAw
+MCAwMCAwMCAyMCBlOCBkMCAwOTwvZm9udD48L2Rpdj48ZGl2Pjxmb250IGZhY2U9Im1vbm9zcGFj
+ZSwgbW9ub3NwYWNlIj4weDIwIHwgNDUgZDkgNjUgYmYgMjEgNDYgY2QgNDggMWYgNTcgNzIgODIg
+YmIgMzggYTcgYTbCoDwvZm9udD48L2Rpdj48ZGl2Pjxmb250IGZhY2U9Im1vbm9zcGFjZSwgbW9u
+b3NwYWNlIj4weDMwIHwgNzAgYzYgNGQgZTMgYTkgMzIgMjEgNGYgZjMgN2IgNjMgM2YgOGUgMDAg
+MTQgMDA8L2ZvbnQ+PC9kaXY+PGRpdj48Zm9udCBmYWNlPSJtb25vc3BhY2UsIG1vbm9zcGFjZSI+
+MHg0MCB8IDBiIDgwIDI0IDQwIDAwIDAwIDA3IDAwIDAwPC9mb250PjwvZGl2PjwvZGl2PjxkaXY+
+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFua3MgZm9yIGFueSBpbnNpZ2h0LjwvZGl2Pi0tIDxicj48
+ZGl2IGRpcj0ibHRyIiBjbGFzcz0iZ21haWxfc2lnbmF0dXJlIj48ZGl2IGRpcj0ibHRyIj48ZGl2
+PjxkaXYgZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PHAgc3R5bGU9Im1hcmdpbjoxLjI1
+ZW0gMHB4O2NvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6TmV1ZUhhYXMtV2ViLEhlbHZldGlj
+YSxBcmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToyMHB4Ij48c3Ryb25nPk5pY2sgTWV5ZXI8L3N0
+cm9uZz48YnI+PC9wPjxwIHN0eWxlPSJtYXJnaW46MS4yNWVtIDBweDtjb2xvcjpyZ2IoMCwwLDAp
+O2ZvbnQtZmFtaWx5Ok5ldWVIYWFzLVdlYixIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtmb250
+LXNpemU6MjBweCI+PHN0cm9uZz5PYXRoOjwvc3Ryb25nPjwvcD48L2Rpdj48L2Rpdj48L2Rpdj48
+L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4K
+
+--===============6758090429940380762==--
 
