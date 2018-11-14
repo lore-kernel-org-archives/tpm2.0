@@ -1,149 +1,248 @@
-Content-Type: multipart/mixed; boundary="===============9153361464910526594=="
+Content-Type: multipart/mixed; boundary="===============1078007714574500045=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] SPI TPM and SPI flash can not work at the same time
-Date: Tue, 13 Nov 2018 16:43:08 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649C9BC94@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 28a77a01b97f4e83bab04f490f9ac24f@zhaoxin.com
+From: Javier Martinez Canillas <javierm at redhat.com>
+Subject: Re: [tpm2] tpm2-tools who uses transient handles in workflows?
+Date: Wed, 14 Nov 2018 01:19:52 +0100
+Message-ID: <2667ebfa-679c-0f89-676e-feacf49246d3@redhat.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649C8AE73@ORSMSX106.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9153361464910526594==
+--===============1078007714574500045==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I wish I could help you more, but your TPM isn't returning a valid RC.
+Hello Bill,
 
-Since bit 7 is set in 0x97, this indicates that it is a FMT 1 response code.
-
-Fmt 1 response codes have the handle encoded in bit positions 8-11 inclusiv=
-e.
-And is 1-based per https://trustedcomputinggroup.org/wp-content/uploads/TPM=
--Rev-2.0-Part-2-Structures-01.38.pdf
-Section 6.6.
-
-It seems the error bits 0-5 inclusive are 0x17 which is TPM2_RC_TAG.
-
-Which is "a parameter that should be a structure tag has a value that is no=
-t supported by
-the TPM"
-
-I'm not sure why this is failing on your TPM, do any other tpm2_getcap comm=
-ands work?
-
-Like:
-tpm2_getcap -c properties-fixed
-tpm2_getcap -c commands
-
-Bill
-
-> -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Sherry Zhang=
-(BJ-
-> RD)
-> Sent: Monday, November 5, 2018 8:14 PM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] SPI TPM and SPI flash can not work at the same time
+On 11/9/18 4:40 PM, Roberts, William C wrote:
+> We're working on porting the tpm2-tools to use ESAPI so can we provide be=
+tter session support and drive down session
+> related bugs.
 > =
 
-> Hi All,
+> With that said, ESAPI doesn't support using transient object handles. Int=
+ernally the library keeps track of ESYS_TR handles,
+> Which are handles on steroids (meta data). Because there is no way to ext=
+ract the transient object handle, as ESAPI considers
+> That an implementation detail that shouldn't be exposed to regular users,=
+ we can (in order of sanity with 1 being most sane):
 > =
 
-> Ubuntu16.04 with the kernel 4.16.2:
+> 1. Require save/load context
+> 2. Try and change ESAPI to expose this
+>    a. uses a serialized in memory ESYS_TR and find the handle via offset =
+(sic)
+> 3. serialize ESYS handles to disk
+> 4. serialize ESYS handles and base64 output to stdout
 > =
 
-> I use a spi port2 with a FIFO TPM2.0 and  two flash on the spi port 0/1.
+> I'm leaning towards 1, it would require additional TPM commands, but it w=
+orks in RM and non-RM environments which
+> I think means fielding less questions about where did my object go on exi=
+t when it said it was handle XXX.  However,
+> That breaks a possible workflow, and we want to get 4.0 release right, so=
+ we can stop with backwards incompatible
+> changes.
 > =
 
-> First, I unload drivers of spi controller and test the TPM2.0 (built-in t=
-pm_tis.o)
+> Thoughts, opinions?
+>
+
+Yes, I agree with you that (1) is the saner option. Transient objects handl=
+es
+only really worked when the TPM was accessed directly and the handles were =
+not
+virtualized. But I guess that accessing the TPM directly is really not the =
+most
+common setup.
+
+With both the in-kernel and the user-space resource managers, we had to use=
+ a
+context save/load anyways. I just tried the following commands using differ=
+ent
+TCTI with the latest stable versions.
+
+a) Accessing the TPM directly without a resource manager:
+
+
+$ export TPM2TOOLS_TCTI_NAME=3Ddevice
+$ export TPM2TOOLS_DEVICE_FILE=3D/dev/tpm0
+
+$ tpm2_createprimary -H o -g sha256 -G ecc
+ObjectAttribute: 0x00030072
+
+CreatePrimary Succeed ! Handle: 0x80000000
+
+$ tpm2_create -H 0x80000000 -g sha256 -G keyedhash -u pub -r priv
+algorithm:
+  value: sha256
+  raw: 0xb
+attributes:
+  value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|sign
+  raw: 0x40072
+type: =
+
+  value: keyedhash
+  raw: 0x8
+  keyedhash: d4596c017ab954e9db7d7681eece41592cd675270745e7851d2b2c68e282cb=
+f3
+
+
+Handles do work in this case as expected since are not virtualized.
+
+b) Accessing the TPM through the in-kernel resource manager:
+
+
+$ export TPM2TOOLS_DEVICE_FILE=3D/dev/tpmrm0
+
+$ tpm2_createprimary -H o -g sha256 -G ecc
+ObjectAttribute: 0x00030072
+
+CreatePrimary Succeed ! Handle: 0x80ffffff
+
+$ tpm2_create -H 0x80ffffff -g sha256 -G keyedhash -u pub -r priv
+WARNING:tcti:src/tss2-tcti/tcti-device.c:158:tcti_device_receive() Got EOF =
+instead of response. =
+
+ERROR: =
+
+Create Object Failed ! ErrorCode: 0xa0008
+
+ERROR: Unable to run tpm2_create
+
+$ tpm2_rc_decode 0xa0008
+error layer
+  hex: 0xa0000
+  identifier: TSS2_TCTI_RC_LAYER
+  description: Error from the TCTI
+base error code
+  identifier: TSS2_BASE_RC_NO_CONNECTION
+  description: Fails to connect to next lower layer
+
+
+In this case it doesn't work, because as we know the kernel flushes all the
+contexts associated with objects and sessions when the file is closed.
+
+Doing a context load/save does work of course since a new transient object
+is loaded on context load.
+
+
+$ tpm2_createprimary -H o -g sha256 -G ecc -C primary.context
+ObjectAttribute: 0x00030072
+
+CreatePrimary Succeed ! Handle: 0x80ffffff
+
+$ tpm2_create -c primary.context -g sha256 -G keyedhash -u pub -r priv
+algorithm:
+  value: sha256
+  raw: 0xb
+attributes:
+  value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|sign
+  raw: 0x40072
+type: =
+
+  value: keyedhash
+  raw: 0x8
+  keyedhash: 33282b64ac1423d264818c5e64be48d94d49970dfd4776237be2009a2181e2=
+a7
+
+
+c) Accessing the TPM through the tpm2-abrmd:
+
+
+$ export TPM2TOOLS_TCTI_NAME=3Dtabrmd
+
+$ tpm2_createprimary -H o -g sha256 -G ecc
+ObjectAttribute: 0x00030072
+
+CreatePrimary Succeed ! Handle: 0x800000ff
+
+$ tpm2_create -H 0x800000ff -g sha256 -G keyedhash -u pub -r priv
+ERROR: =
+
+Create Object Failed ! ErrorCode: 0x184
+
+ERROR: Unable to run tpm2_create
+
+$ tpm2_rc_decode 0x184
+error layer
+  hex: 0x0
+  identifier: TSS2_TPM_RC_LAYER
+  description: Error produced by the TPM
+format 1 error code
+  hex: 0x04
+  identifier: TPM2_RC_VALUE
+  description: value is out of range or is not correct for the context
+handle
+  hex:0x100
+  identifier:  TPM2_RC_1
+  description:  (null)
+
+
+I though this used to work? I noticed that we are a little behind in Fedora=
+ and
+ship tpm2-abrmd-2.0.1, so maybe this works in 2.0.3?
+
+But again context save/load does work with the tpm2-abrmd:
+
+
+$ tpm2_createprimary -H o -g sha256 -G ecc -C primary.context
+ObjectAttribute: 0x00030072
+
+CreatePrimary Succeed ! Handle: 0x800000ff
+
+$ tpm2_create -c primary.context -g sha256 -G keyedhash -u pub -r priv
+algorithm:
+  value: sha256
+  raw: 0xb
+attributes:
+  value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|sign
+  raw: 0x40072
+type: =
+
+  value: keyedhash
+  raw: 0x8
+  keyedhash: a3353165c9090ead288bbb2eece7997de254c6c4d9b89843181c45a0bf7b7e=
+48
+
+
+Now, I assume that this is only about handles for transient objects and for
+persistent objects nothing changes. We will continue using handles there and
+ESAPI can expose those just fine?
+
+Another thing that we never finished discussing is how to properly support
+session contexts with the tools when using the in-kernel resource manager
+(since the session contexts are also flushed on file decriptor close).
+
+I remember you mentioned once having a small daemon that would keep the file
+opened, and used it as a proxy instead of accessing the /dev/tpmrm? chardev
+directly. I don't think we never made progress on that front.
+
+Another option is to only support simple policies (i.e: like tpm2_unseal do=
+es)
+when using the in-kernel resource manager, but I think that in this case we
+should warn the user instead of getting cryptic TPM errors like in the exam=
+ple
+shown above.
+
+It would be a pity though to not support sessions for the /dev/tpmrm, speci=
+ally
+now that Imran added support for TPM2_PolicyAuthorize so data can be sealed=
+ and
+not worry about brittle PCRs.
+ =
+
+> Bill
 > =
 
-> #tpm2_abrmd =EF=BF=BDtcti=3D=E2=80=9Ddevice:/dev/tpm0=E2=80=9D =EF=BF=BDa=
-llow-root &
-> =
 
-> #tpm2_pcrlist
-> =
+Best regards,
+-- =
 
-> #tpm2_nvlist
-> =
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
 
-> And I can use tpm2-tools to test and it is normal .
-> =
-
-> =
-
-> =
-
-> Then I load spi controller driver, and test /dev/mtd0 at spi port0 that c=
-an work
-> well.
-> =
-
-> But when I run the commad  =E2=80=9Ctpm2_nvlist=E2=80=9D , it shows a err=
-or.
-> =
-
-> #tpm2_nvlist
-> =
-
-> ERROR: Tss2_Sys_GetCapability(0x97) =EF=BF=BDtpm: handle(unk): incorrect =
-structure tag
-> =
-
-> ERROR: Unable to run tpm2_nvlist
-> =
-
-> =
-
-> =
-
-> PS:
-> =
-
-> tpm2-tss 2.1.0
-> =
-
-> Tpm2-abrmd 2.0.3_rc0
-> =
-
-> Tpm2-tools 3.0.2
-> =
-
-> =
-
-> =
-
-> Best regards,
-> =
-
-> Sherry Zhang
-> =
-
-> =
-
-> =
-
-> =
-
-> =
-
-> =E4=BF=9D=E5=AF=86=E5=A3=B0=E6=98=8E=EF=BC=9A
-> =E6=9C=AC=E9=82=AE=E4=BB=B6=E5=90=AB=E6=9C=89=E4=BF=9D=E5=AF=86=E6=88=96=
-=E4=B8=93=E6=9C=89=E4=BF=A1=E6=81=AF=EF=BC=8C=E4=BB=85=E4=BE=9B=E6=8C=87=E5=
-=AE=9A=E6=94=B6=E4=BB=B6=E4=BA=BA=E4=BD=BF=E7=94=A8=E3=80=82=E4=B8=A5=E7=A6=
-=81=E5=AF=B9=E6=9C=AC=E9=82=AE=E4=BB=B6=E6=88=96=E5=85=B6
-> =E5=86=85=E5=AE=B9=E5=81=9A=E4=BB=BB=E4=BD=95=E6=9C=AA=E7=BB=8F=E6=8E=88=
-=E6=9D=83=E7=9A=84=E6=9F=A5=E9=98=85=E3=80=81=E4=BD=BF=E7=94=A8=E3=80=81=E5=
-=A4=8D=E5=88=B6=E6=88=96=E8=BD=AC=E5=8F=91=E3=80=82
-> CONFIDENTIAL NOTE:
-> This email contains confidential or legally privileged information and is=
- for the sole
-> use of its intended recipient. Any unauthorized review, use, copying or
-> forwarding of this email or the content of this email is strictly prohibi=
-ted.
-
---===============9153361464910526594==--
+--===============1078007714574500045==--
 
