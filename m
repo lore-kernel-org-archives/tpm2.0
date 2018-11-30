@@ -1,38 +1,98 @@
-Content-Type: multipart/mixed; boundary="===============4758643413691562326=="
+Content-Type: multipart/mixed; boundary="===============6709985591732021796=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] tpm2-tools who uses transient handles in workflows?
-Date: Fri, 30 Nov 2018 16:14:40 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649CA3B77@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 2667ebfa-679c-0f89-676e-feacf49246d3@redhat.com
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: [tpm2] tpm2-tcti-uefi status and future direction
+Date: Fri, 30 Nov 2018 18:40:31 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909ACD0ED2@ORSMSX103.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4758643413691562326==
+--===============6709985591732021796==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-<snip>
+Hello,
 
-> > Another thing that we never finished discussing is how to properly
-> > support session contexts with the tools when using the in-kernel
-> > resource manager (since the session contexts are also flushed on file d=
-ecriptor
-> close).
-> =
+I've been working to clean up the tpm2-tcti-uefi build / repo (https://gith=
+ub.com/flihp/tpm2-tcti-uefi) now that we have better control over the compi=
+lation flags in the tpm2-tss build. The tpm2-tss submodule and all of the c=
+ustom build logic has now been removed and I've got travis-ci building the =
+example UEFI executables using libtss2-mu and libtss2-sys built using the a=
+ppropriate autotools mechanisms (config.site: https://github.com/flihp/tpm2=
+-tcti-uefi/blob/master/.travis.yml#L33). Currently I'm adding some details =
+to the documentation and working on a set of instructions for testing the e=
+xample UEFI application under qemu using the OVMF firmware.
 
-> I just proposed this change to Jarkko this week. Mixed feelings on it. I =
-explained
-> that In some embedded devices they don=E2=80=99t wish to stand up another=
- service.
-> Think small Embedded IoT. I forgot to mention that there is precedence he=
-re in
-> that things like the in-kernel event manager (for creating dev nodes, for=
-got the
-> name) exists. That replaces the ueventd behavior for embedded devices.
+While I'm finishing up the docs I wanted to get a message out to the list t=
+o solicit input from anyone interested in this work. If you have a few spar=
+e cycles I'd appreciate input on the repo as it stands now as well as any o=
+pinions on including this repo in the tpm2-software github org since this i=
+s my goal once the docs are done.
 
-It's called CONFIG_DEVTMPFS
+Thanks,
+Philip
 
---===============4758643413691562326==--
+--===============6709985591732021796==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
+ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
+b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
+emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
+cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
+c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
+Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
+b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
+aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
+bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbyw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkmIzgy
+MTc7dmUgYmVlbiB3b3JraW5nIHRvIGNsZWFuIHVwIHRoZSB0cG0yLXRjdGktdWVmaSBidWlsZCAv
+IHJlcG8gKDxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS9mbGlocC90cG0yLXRjdGktdWVmaSI+
+aHR0cHM6Ly9naXRodWIuY29tL2ZsaWhwL3RwbTItdGN0aS11ZWZpPC9hPikgbm93IHRoYXQgd2Ug
+aGF2ZSBiZXR0ZXIgY29udHJvbCBvdmVyIHRoZSBjb21waWxhdGlvbiBmbGFncyBpbiB0aGUgdHBt
+Mi10c3MgYnVpbGQuCiBUaGUgdHBtMi10c3Mgc3VibW9kdWxlIGFuZCBhbGwgb2YgdGhlIGN1c3Rv
+bSBidWlsZCBsb2dpYyBoYXMgbm93IGJlZW4gcmVtb3ZlZCBhbmQgSSYjODIxNzt2ZSBnb3QgdHJh
+dmlzLWNpIGJ1aWxkaW5nIHRoZSBleGFtcGxlIFVFRkkgZXhlY3V0YWJsZXMgdXNpbmcgbGlidHNz
+Mi1tdSBhbmQgbGlidHNzMi1zeXMgYnVpbHQgdXNpbmcgdGhlIGFwcHJvcHJpYXRlIGF1dG90b29s
+cyBtZWNoYW5pc21zIChjb25maWcuc2l0ZToKPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL2Zs
+aWhwL3RwbTItdGN0aS11ZWZpL2Jsb2IvbWFzdGVyLy50cmF2aXMueW1sI0wzMyI+aHR0cHM6Ly9n
+aXRodWIuY29tL2ZsaWhwL3RwbTItdGN0aS11ZWZpL2Jsb2IvbWFzdGVyLy50cmF2aXMueW1sI0wz
+MzwvYT4pLiBDdXJyZW50bHkgSSYjODIxNzttIGFkZGluZyBzb21lIGRldGFpbHMgdG8gdGhlIGRv
+Y3VtZW50YXRpb24gYW5kIHdvcmtpbmcgb24gYSBzZXQgb2YgaW5zdHJ1Y3Rpb25zIGZvciB0ZXN0
+aW5nIHRoZQogZXhhbXBsZSBVRUZJIGFwcGxpY2F0aW9uIHVuZGVyIHFlbXUgdXNpbmcgdGhlIE9W
+TUYgZmlybXdhcmUuPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5i
+c3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5XaGlsZSBJJiM4MjE3O20gZmluaXNo
+aW5nIHVwIHRoZSBkb2NzIEkgd2FudGVkIHRvIGdldCBhIG1lc3NhZ2Ugb3V0IHRvIHRoZSBsaXN0
+IHRvIHNvbGljaXQgaW5wdXQgZnJvbSBhbnlvbmUgaW50ZXJlc3RlZCBpbiB0aGlzIHdvcmsuIElm
+IHlvdSBoYXZlIGEgZmV3IHNwYXJlIGN5Y2xlcyBJJiM4MjE3O2QgYXBwcmVjaWF0ZSBpbnB1dCBv
+biB0aGUgcmVwbyBhcyBpdCBzdGFuZHMgbm93IGFzIHdlbGwgYXMgYW55IG9waW5pb25zIG9uCiBp
+bmNsdWRpbmcgdGhpcyByZXBvIGluIHRoZSB0cG0yLXNvZnR3YXJlIGdpdGh1YiBvcmcgc2luY2Ug
+dGhpcyBpcyBteSBnb2FsIG9uY2UgdGhlIGRvY3MgYXJlIGRvbmUuPG86cD48L286cD48L3A+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5UaGFua3MsPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlBoaWxpcDxv
+OnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============6709985591732021796==--
 
