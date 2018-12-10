@@ -1,25 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============2964730569341392625=="
+Content-Type: multipart/mixed; boundary="===============3811846047802026126=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
 Subject: Re: [tpm2] Problem with tpm2_unseal after reboot
-Date: Mon, 10 Dec 2018 18:25:44 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649CB5BA0@ORSMSX101.amr.corp.intel.com>
+Date: Mon, 10 Dec 2018 21:31:28 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649CB7FDD@ORSMSX101.amr.corp.intel.com>
 In-Reply-To: 20A6FE0AC912764FB8B5BC5A1A7CB92B2F9FEDD3@fmsmsx101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2964730569341392625==
+--===============3811846047802026126==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I initially though PCR state changed, but you checked and
-are noting the PCRs as the same value.
+Oliver,
 
-Javier is using the PCR policy unseal flow, perhaps he can
-Spot the issue, Javier anything?
+I wonder if this some weird side-effect. I have never had a persistent obje=
+ct under a non-persistent
+object, does this cause the primary object to persist as well? I wonder how=
+ you could persist a child
+object when the primary parent object is unloaded since the primary object =
+seed protects it's children.
+
+What happens if you persist the primary object as well?
 
 Bill
+
 
 > -----Original Message-----
 > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Oliver, Dari=
@@ -343,5 +349,5 @@ data?
 
 
 
---===============2964730569341392625==--
+--===============3811846047802026126==--
 
