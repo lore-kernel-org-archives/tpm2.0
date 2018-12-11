@@ -1,667 +1,464 @@
-Content-Type: multipart/mixed; boundary="===============0552357040869870117=="
+Content-Type: multipart/mixed; boundary="===============0533366361578192790=="
 MIME-Version: 1.0
-From: Oliver, Dario N <dario.n.oliver at intel.com>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: Re: [tpm2] Problem with tpm2_unseal after reboot
-Date: Tue, 11 Dec 2018 03:00:43 +0000
-Message-ID: <20A6FE0AC912764FB8B5BC5A1A7CB92B2FA00963@fmsmsx101.amr.corp.intel.com>
-In-Reply-To: CAFOAJEfH7FpbTp+k+nxd84d0ScVGYJqb5krqHoh+oL=o37MOLw@mail.gmail.com
+Date: Tue, 11 Dec 2018 20:12:57 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649CBA378@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 20A6FE0AC912764FB8B5BC5A1A7CB92B2FA00963@fmsmsx101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0552357040869870117==
+--===============0533366361578192790==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I have good and bad news =E2=98=BA
-
-Good news:
-
-I tested this in my NUC, the exact same process described below, and after =
-rebooting the device, I was able to unseal the secret without problems. But=
- I noticed that my persistent objects were several, so I tried to tpm2_evic=
-tcontrol them to clean up. The command failed, and I tried a tpm2_takeowner=
-ship =E2=80=93c, and it failed with =E2=80=9Cauthorization failure without =
-DA implications=E2=80=9D. I got in an error state again, so I tried to do a=
- TPM clear (by removing the security jumper in the NUC). Each time I send a=
- tpm clear with that process, and boot again, my persistent objects are sti=
-ll there, and I run into the same errors. No luck with the NUC.
-
-I moved back to my fitlet2 with fTPM, and flash the firmware again, I wante=
-d to test again with a clean state. Then, I cleared the TPM using the BIOS =
-menu in the fitlet. I reboot the device, and do a tpm2_listpersistent, ever=
-ything is clean now! I tested the process described below, and now I can un=
-seal my secret after reboot. So, flashing the firmware again, and clearing =
-the TPM solved my problem. After 3 reboots, I am still able to get my secre=
-t.
-
-Bad News:
-
-
-1.       I don=E2=80=99t know why I run into that error state after trying =
-to do tpm2_evictcontrol (to clear persistent objects), or tpm2_takeownershi=
-p =E2=80=93c. For a =E2=80=9Creal=E2=80=9D scenario, having to completely r=
-eset the device (and loose the secrets in the tpm) Is not an option. So I w=
-onder how you recover from this state?
-
-2.       I am unable to clear the TPM in a NUC! I will keep looking at
-
-3.       Your statement that =E2=80=9Cthe primary object is not persisted=
-=E2=80=9D made sense to me, until I get it working after the tpm2 clear in =
-the BIOS. Now I have less idea of which will be the explanation of what hap=
-pened.
-
-My problem is solved, and I thank you for your help and time.
-
-If you want to enlighten me why I run into that error state, it will be gre=
-at for me =E2=98=BA
-
-Thank you!
-
-From: Javier Martinez Canillas [mailto:javierm(a)redhat.com]
-Sent: Monday, December 10, 2018 2:18 PM
-To: Oliver, Dario N <dario.n.oliver(a)intel.com>
-Cc: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.org
-Subject: Re: [tpm2] Problem with tpm2_unseal after reboot
-
-Hello,
-
-I don=E2=80=99t have access to a machine with a TPM2 now but I=E2=80=99ll t=
-est it tomorro.
-
-I think Bill is right here though and the problem is that the primary key i=
-sn=E2=80=99t present in the TPM2.
-
-Could you please execute the tpm2_primary command after the reboot? The pri=
-mary keys are generated using a key derivation function that=E2=80=99s dete=
-rministic using the hierarchy seed so the PK should be the same.
-
-Best regards,
-Javier
-
-On Mon, 10 Dec 2018 at 22:37, Oliver, Dario N <dario.n.oliver(a)intel.com<m=
-ailto:dario.n.oliver(a)intel.com>> wrote:
-The only persistent object I see with tpm2_listpersistent is the child obje=
-ct. So I think the parent is not being persisted.
-
-I am trying again the same set of commands in a NUC device, just to see if =
-the problem is not the device itself. After that, I will try you approach a=
-nd persist the primary object as well. Hope that works
-
-It is possible that our approach to persist the secret is wrong. in that ca=
-se, do you have some docs showing a sealing process that is expected to wor=
-k with pcr policies with the versions I am using?
-
-Thank you!
-
------Original Message-----
-From: Roberts, William C
-Sent: Monday, December 10, 2018 1:31 PM
-To: Oliver, Dario N <dario.n.oliver(a)intel.com<mailto:dario.n.oliver(a)int=
-el.com>>; tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Subject: RE: Problem with tpm2_unseal after reboot
-
-Oliver,
-
-I wonder if this some weird side-effect. I have never had a persistent obje=
-ct under a non-persistent object, does this cause the primary object to per=
-sist as well? I wonder how you could persist a child object when the primar=
-y parent object is unloaded since the primary object seed protects it's chi=
-ldren.
-
-What happens if you persist the primary object as well?
-
-Bill
 
 
 > -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org<mailto:tpm2-bounces(a)list=
-s.01.org>] On Behalf Of Oliver,
-> Dario N
-> Sent: Friday, December 7, 2018 2:36 PM
-> To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-> Subject: [tpm2] Problem with tpm2_unseal after reboot
->
-> Hello!
->
->
->
-> I am currently having problems to unseal a secret from the tpm.
->
-> I hope that you can detect the issue in my instructions below :)
->
->
->
-> The versions that I am using are the following:
->
-> 1.       Tpm2-tss 2.0.0
->
-> 2.       Tpm2-abrmd 2.0.0
->
-> 3.       Tpm2-tools 3.1.0
->
->
->
-> The platform I am using is a Compulab Fitlet2 device (Intel Atom
-> x5-E3950 Apollo Lake), with Fedora 28 and Linux kernel 4.19.x.
->
-> In this case, the device support firmware tpm, and it is enabled in
-> the BIOS
-> (fTPM)
->
->
->
-> So, after installing the tpm2 stack from github releases, I am sealing
-> a secret with the following commands:
->
->
->
-> # Create a random secret to be saved in the TPM
->
-> tpm2_getrandom 32 --output key.bin
->
->
->
-> # I use a pcr policy on sha1 banks 0 and 1, this gets the pcr state
->
-> tpm2_pcrlist --sel-list sha1:0,1 --output pcr_state.bin
->
->
->
-> # Create a policy with those PCR
->
-> tpm2_createpolicy --policy-pcr --set-list sha1:0,1 \
->
->                   --pcr-input-file pcr_state.bin
->
->                   --policy-file policy.bin
->
->
->
-> # Create a primary object with endorsement hierarchy
->
-> tpm2_createprimary --hierarchy e --halg sha1 --kalg rsa --context
-> primary.context
->
->
->
-> # Create an object to be loaded in the TPM
->
-> tpm2_create --halg sha256 --kalg keyedhash --pubfile key.pub
-> --privfile key.priv \
->
->             --context-parent primary.context --policy-file policy.bin
-> \
->
->            --object-attributes
-> "fixedtpm|fixedparent|noda|adminwithpolicy" --in-file key.bin
->
->
->
-> # Load the object in the TPM
->
-> tpm2_load --context-parent primary.context --pubfile key.pub
-> --privfile key.priv \
->
->           --context load.context
->
->
->
-> # Persist the object in the TPM
->
-> tpm2_evictcontrol --auth o --context load.context --persistent
-> 0x81010002
->
->
->
-> # Check if the object is persisted, looks good
->
-> tpm2_listpersistent
->
-> persistent-handle[0]:0x81010002 key-alg:keyedhash hash-alg:sha256
-> object- attr:fixedtpm|fixedparent|noda|adminwithpolicy
->
->
->
-> # Unseal the object, works!
->
-> tpm2_unseal --item 0x81010002 --set-list sha1:0,1 > compare_key.bin
->
->
->
-> # Compare original and unsealed objects, the match :)
->
-> diff compare_key.bin key.bin
->
->
->
-> ##############
->
-> # After this initial setup, I reboot the device, and try to unseal the
-> secret again
->
-> ##############
->
->
->
-> # After reboot, open a terminal an do
->
-> tpm2_unseal --item 0x81010002 --set-list sha1:0,1 >
-> compare_disk_key.bin
->
-> ERROR: Sys_Unseal failed. Error Code: 0x99d
->
-> ERROR: Unseal failed!
->
-> ERROR: Unable to run tpm2_unseal
->
->
->
-> # Use tpm2_rc_decode to decode the error message 0x99d, it is a policy
-> check error!
->
-> tpm2_rc_decode 0x99d
->
-> error layer
->
->     hex: 0x0
->
->     identifier: TSS2_TPM_RC_LAYER
->
->     description: Error produced by the TPM
->
-> format 1 error code
->
->     hex: 0x1d
->
->     identifier: TPM2_RC_POLICY_FAIL
->
->     description: a policy check failed
->
-> session
->
->     hex: 0x100
->
->     identifier: TPM2_RC_1
->
->     description: (null)
->
->
->
-> ###############
->
-> # I checked the PCR 0,1, and they have the same values as at the
-> moment to seal the object.
->
-> # So I don't understand why I am having a "TPM2_RC_POLICY_FAIL" error.
->
-> # I tried the same process several times, and each time I end up in
-> the same error state.
->
-> ###############
->
->
->
-> Is there something I am missing here?
->
-> Is something additional I need to do to satisfy the policy to unseal the =
-data?
->
-> Any help is appreciated!
->
->
->
-> Thank you in advance.
->
->
->
->
->
->
+> From: Oliver, Dario N
+> Sent: Monday, December 10, 2018 7:01 PM
+> To: Javier Martinez Canillas <javierm(a)redhat.com>
+> Cc: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.o=
+rg
+> Subject: RE: [tpm2] Problem with tpm2_unseal after reboot
+> =
 
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-https://lists.01.org/mailman/listinfo/tpm2
+> I have good and bad news :)
+> =
 
---===============0552357040869870117==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-V2luZ2RpbmdzOw0KCXBhbm9zZS0xOjUgMCAwIDAgMCAwIDAgMCAwIDA7fQ0KQGZvbnQtZmFjZQ0K
-CXtmb250LWZhbWlseToiQ2FtYnJpYSBNYXRoIjsNCglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMg
-MiA0O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsNCglwYW5vc2UtMToyIDE1
-IDUgMiAyIDIgNCAzIDIgNDt9DQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLw0KcC5Nc29Ob3JtYWws
-IGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbA0KCXttYXJnaW46MGNtOw0KCW1hcmdpbi1ib3R0
-b206LjAwMDFwdDsNCglmb250LXNpemU6MTIuMHB0Ow0KCWZvbnQtZmFtaWx5OiJUaW1lcyBOZXcg
-Um9tYW4iLHNlcmlmO30NCmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsNCgl7bXNvLXN0eWxlLXBy
-aW9yaXR5Ojk5Ow0KCWNvbG9yOmJsdWU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQph
-OnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQNCgl7bXNvLXN0eWxlLXByaW9yaXR5
-Ojk5Ow0KCWNvbG9yOnB1cnBsZTsNCgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30NCnAuTXNv
-TGlzdFBhcmFncmFwaCwgbGkuTXNvTGlzdFBhcmFncmFwaCwgZGl2Lk1zb0xpc3RQYXJhZ3JhcGgN
-Cgl7bXNvLXN0eWxlLXByaW9yaXR5OjM0Ow0KCW1hcmdpbi10b3A6MGNtOw0KCW1hcmdpbi1yaWdo
-dDowY207DQoJbWFyZ2luLWJvdHRvbTowY207DQoJbWFyZ2luLWxlZnQ6MzYuMHB0Ow0KCW1hcmdp
-bi1ib3R0b206LjAwMDFwdDsNCglmb250LXNpemU6MTIuMHB0Ow0KCWZvbnQtZmFtaWx5OiJUaW1l
-cyBOZXcgUm9tYW4iLHNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE3DQoJe21zby1zdHlsZS10eXBl
-OnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOw0KCWNv
-bG9yOiMxRjQ5N0Q7fQ0KLk1zb0NocERlZmF1bHQNCgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9u
-bHk7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3NpemU6NjEyLjBwdCA3OTIuMHB0Ow0KCW1hcmdp
-bjo3Mi4wcHQgNzIuMHB0IDcyLjBwdCA3Mi4wcHQ7fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdl
-OldvcmRTZWN0aW9uMTt9DQovKiBMaXN0IERlZmluaXRpb25zICovDQpAbGlzdCBsMA0KCXttc28t
-bGlzdC1pZDo4MTAzNjM5OTE7DQoJbXNvLWxpc3QtdHlwZTpoeWJyaWQ7DQoJbXNvLWxpc3QtdGVt
-cGxhdGUtaWRzOjE1MzkzMjI5MjIgNjc2OTg3MDMgNjc2OTg3MTMgNjc2OTg3MTUgNjc2OTg3MDMg
-Njc2OTg3MTMgNjc2OTg3MTUgNjc2OTg3MDMgNjc2OTg3MTMgNjc2OTg3MTU7fQ0KQGxpc3QgbDA6
-bGV2ZWwxDQoJe21zby1sZXZlbC10YWItc3RvcDpub25lOw0KCW1zby1sZXZlbC1udW1iZXItcG9z
-aXRpb246bGVmdDsNCgl0ZXh0LWluZGVudDotMTguMHB0O30NCkBsaXN0IGwwOmxldmVsMg0KCXtt
-c28tbGV2ZWwtbnVtYmVyLWZvcm1hdDphbHBoYS1sb3dlcjsNCgltc28tbGV2ZWwtdGFiLXN0b3A6
-bm9uZTsNCgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7DQoJdGV4dC1pbmRlbnQ6LTE4
-LjBwdDt9DQpAbGlzdCBsMDpsZXZlbDMNCgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6cm9tYW4t
-bG93ZXI7DQoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7DQoJbXNvLWxldmVsLW51bWJlci1wb3Np
-dGlvbjpyaWdodDsNCgl0ZXh0LWluZGVudDotOS4wcHQ7fQ0KQGxpc3QgbDA6bGV2ZWw0DQoJe21z
-by1sZXZlbC10YWItc3RvcDpub25lOw0KCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsN
-Cgl0ZXh0LWluZGVudDotMTguMHB0O30NCkBsaXN0IGwwOmxldmVsNQ0KCXttc28tbGV2ZWwtbnVt
-YmVyLWZvcm1hdDphbHBoYS1sb3dlcjsNCgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsNCgltc28t
-bGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7DQoJdGV4dC1pbmRlbnQ6LTE4LjBwdDt9DQpAbGlz
-dCBsMDpsZXZlbDYNCgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6cm9tYW4tbG93ZXI7DQoJbXNv
-LWxldmVsLXRhYi1zdG9wOm5vbmU7DQoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpyaWdodDsN
-Cgl0ZXh0LWluZGVudDotOS4wcHQ7fQ0KQGxpc3QgbDA6bGV2ZWw3DQoJe21zby1sZXZlbC10YWIt
-c3RvcDpub25lOw0KCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsNCgl0ZXh0LWluZGVu
-dDotMTguMHB0O30NCkBsaXN0IGwwOmxldmVsOA0KCXttc28tbGV2ZWwtbnVtYmVyLWZvcm1hdDph
-bHBoYS1sb3dlcjsNCgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsNCgltc28tbGV2ZWwtbnVtYmVy
-LXBvc2l0aW9uOmxlZnQ7DQoJdGV4dC1pbmRlbnQ6LTE4LjBwdDt9DQpAbGlzdCBsMDpsZXZlbDkN
-Cgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6cm9tYW4tbG93ZXI7DQoJbXNvLWxldmVsLXRhYi1z
-dG9wOm5vbmU7DQoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpyaWdodDsNCgl0ZXh0LWluZGVu
-dDotOS4wcHQ7fQ0Kb2wNCgl7bWFyZ2luLWJvdHRvbTowY207fQ0KdWwNCgl7bWFyZ2luLWJvdHRv
-bTowY207fQ0KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlZGVm
-YXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+DQo8L3htbD48IVtlbmRpZl0tLT48
-IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4NCjxv
-OmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPg0KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwh
-W2VuZGlmXS0tPg0KPC9oZWFkPg0KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJsdWUiIHZsaW5r
-PSJwdXJwbGUiPg0KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGli
-cmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj5JIGhhdmUgZ29vZCBhbmQgYmFkIG5l
-d3MNCjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTpXaW5n
-ZGluZ3M7Y29sb3I6IzFGNDk3RCI+Sjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBw
-dDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3
-RCI+DQo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBz
-dHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNh
-bnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1p
-bHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPkdvb2QgbmV3
-czoNCjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0
-eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fu
-cy1zZXJpZjtjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWls
-eTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+SSB0ZXN0ZWQg
-dGhpcyBpbiBteSBOVUMsIHRoZSBleGFjdCBzYW1lIHByb2Nlc3MgZGVzY3JpYmVkIGJlbG93LCBh
-bmQgYWZ0ZXIgcmVib290aW5nIHRoZSBkZXZpY2UsIEkgd2FzIGFibGUgdG8gdW5zZWFsIHRoZSBz
-ZWNyZXQgd2l0aG91dCBwcm9ibGVtcy4gQnV0IEkgbm90aWNlZA0KIHRoYXQgbXkgcGVyc2lzdGVu
-dCBvYmplY3RzIHdlcmUgc2V2ZXJhbCwgc28gSSB0cmllZCB0byB0cG0yX2V2aWN0Y29udHJvbCB0
-aGVtIHRvIGNsZWFuIHVwLiBUaGUgY29tbWFuZCBmYWlsZWQsIGFuZCBJIHRyaWVkIGEgdHBtMl90
-YWtlb3duZXJzaGlwIOKAk2MsIGFuZCBpdCBmYWlsZWQgd2l0aCDigJxhdXRob3JpemF0aW9uIGZh
-aWx1cmUgd2l0aG91dCBEQSBpbXBsaWNhdGlvbnPigJ0uIEkgZ290IGluIGFuIGVycm9yIHN0YXRl
-IGFnYWluLCBzbyBJIHRyaWVkDQogdG8gZG8gYSBUUE0gY2xlYXIgKGJ5IHJlbW92aW5nIHRoZSBz
-ZWN1cml0eSBqdW1wZXIgaW4gdGhlIE5VQykuIEVhY2ggdGltZSBJIHNlbmQgYSB0cG0gY2xlYXIg
-d2l0aCB0aGF0IHByb2Nlc3MsIGFuZCBib290IGFnYWluLCBteSBwZXJzaXN0ZW50IG9iamVjdHMg
-YXJlIHN0aWxsIHRoZXJlLCBhbmQgSSBydW4gaW50byB0aGUgc2FtZSBlcnJvcnMuIE5vIGx1Y2sg
-d2l0aCB0aGUgTlVDLiAmbmJzcDsmbmJzcDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTom
-cXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8
-L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQt
-c2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2Nv
-bG9yOiMxRjQ5N0QiPkkgbW92ZWQgYmFjayB0byBteSBmaXRsZXQyIHdpdGggZlRQTSwgYW5kIGZs
-YXNoIHRoZSBmaXJtd2FyZSBhZ2FpbiwgSSB3YW50ZWQgdG8gdGVzdCBhZ2FpbiB3aXRoIGEgY2xl
-YW4gc3RhdGUuIFRoZW4sIEkgY2xlYXJlZCB0aGUgVFBNIHVzaW5nIHRoZSBCSU9TIG1lbnUgaW4N
-CiB0aGUgZml0bGV0LiBJIHJlYm9vdCB0aGUgZGV2aWNlLCBhbmQgZG8gYSB0cG0yX2xpc3RwZXJz
-aXN0ZW50LCBldmVyeXRoaW5nIGlzIGNsZWFuIG5vdyEgSSB0ZXN0ZWQgdGhlIHByb2Nlc3MgZGVz
-Y3JpYmVkIGJlbG93LCBhbmQgbm93IEkgY2FuIHVuc2VhbCBteSBzZWNyZXQgYWZ0ZXIgcmVib290
-LiBTbywgZmxhc2hpbmcgdGhlIGZpcm13YXJlIGFnYWluLCBhbmQgY2xlYXJpbmcgdGhlIFRQTSBz
-b2x2ZWQgbXkgcHJvYmxlbS4gQWZ0ZXIgMyByZWJvb3RzLA0KIEkgYW0gc3RpbGwgYWJsZSB0byBn
-ZXQgbXkgc2VjcmV0LjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
-cXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48
-L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtm
-b250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+
-QmFkIE5ld3M6PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
-YW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90
-OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4N
-CjxwIGNsYXNzPSJNc29MaXN0UGFyYWdyYXBoIiBzdHlsZT0idGV4dC1pbmRlbnQ6LTE4LjBwdDtt
-c28tbGlzdDpsMCBsZXZlbDEgbGZvMSI+PCFbaWYgIXN1cHBvcnRMaXN0c10+PHNwYW4gc3R5bGU9
-ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNl
-cmlmO2NvbG9yOiMxRjQ5N0QiPjxzcGFuIHN0eWxlPSJtc28tbGlzdDpJZ25vcmUiPjEuPHNwYW4g
-c3R5bGU9ImZvbnQ6Ny4wcHQgJnF1b3Q7VGltZXMgTmV3IFJvbWFuJnF1b3Q7Ij4mbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsNCjwvc3Bhbj48L3NwYW4+PC9zcGFuPjwhW2VuZGlm
-XT48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJp
-JnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+SSBkb27igJl0IGtub3cgd2h5IEkgcnVu
-IGludG8gdGhhdCBlcnJvciBzdGF0ZSBhZnRlciB0cnlpbmcgdG8gZG8gdHBtMl9ldmljdGNvbnRy
-b2wgKHRvIGNsZWFyIHBlcnNpc3RlbnQgb2JqZWN0cyksIG9yIHRwbTJfdGFrZW93bmVyc2hpcCDi
-gJNjLiBGb3IgYSDigJxyZWFs4oCdDQogc2NlbmFyaW8sIGhhdmluZyB0byBjb21wbGV0ZWx5IHJl
-c2V0IHRoZSBkZXZpY2UgKGFuZCBsb29zZSB0aGUgc2VjcmV0cyBpbiB0aGUgdHBtKTxhIG5hbWU9
-Il9NYWlsRW5kQ29tcG9zZSI+IElzIG5vdCBhbiBvcHRpb24uIFNvIEkgd29uZGVyIGhvdyB5b3Ug
-cmVjb3ZlciBmcm9tIHRoaXMgc3RhdGU/PG86cD48L286cD48L2E+PC9zcGFuPjwvcD4NCjxwIGNs
-YXNzPSJNc29MaXN0UGFyYWdyYXBoIiBzdHlsZT0idGV4dC1pbmRlbnQ6LTE4LjBwdDttc28tbGlz
-dDpsMCBsZXZlbDEgbGZvMSI+PCFbaWYgIXN1cHBvcnRMaXN0c10+PHNwYW4gc3R5bGU9ImZvbnQt
-c2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2Nv
-bG9yOiMxRjQ5N0QiPjxzcGFuIHN0eWxlPSJtc28tbGlzdDpJZ25vcmUiPjIuPHNwYW4gc3R5bGU9
-ImZvbnQ6Ny4wcHQgJnF1b3Q7VGltZXMgTmV3IFJvbWFuJnF1b3Q7Ij4mbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsNCjwvc3Bhbj48L3NwYW4+PC9zcGFuPjwhW2VuZGlmXT48c3Bh
-biBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7
-LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+SSBhbSB1bmFibGUgdG8gY2xlYXIgdGhlIFRQTSBp
-biBhIE5VQyEgSSB3aWxsIGtlZXAgbG9va2luZyBhdA0KPG86cD48L286cD48L3NwYW4+PC9wPg0K
-PHAgY2xhc3M9Ik1zb0xpc3RQYXJhZ3JhcGgiIHN0eWxlPSJ0ZXh0LWluZGVudDotMTguMHB0O21z
-by1saXN0OmwwIGxldmVsMSBsZm8xIj48IVtpZiAhc3VwcG9ydExpc3RzXT48c3BhbiBzdHlsZT0i
-Zm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2Vy
-aWY7Y29sb3I6IzFGNDk3RCI+PHNwYW4gc3R5bGU9Im1zby1saXN0Oklnbm9yZSI+My48c3BhbiBz
-dHlsZT0iZm9udDo3LjBwdCAmcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDsiPiZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOw0KPC9zcGFuPjwvc3Bhbj48L3NwYW4+PCFbZW5kaWZd
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
-cXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj5Zb3VyIHN0YXRlbWVudCB0aGF0IOKAnHRo
-ZSBwcmltYXJ5IG9iamVjdCBpcyBub3QgcGVyc2lzdGVk4oCdIG1hZGUgc2Vuc2UgdG8gbWUsIHVu
-dGlsIEkgZ2V0IGl0IHdvcmtpbmcgYWZ0ZXIgdGhlIHRwbTIgY2xlYXIgaW4gdGhlIEJJT1MuIE5v
-dyBJIGhhdmUgbGVzcw0KIGlkZWEgb2Ygd2hpY2ggd2lsbCBiZSB0aGUgZXhwbGFuYXRpb24gb2Yg
-d2hhdCBoYXBwZW5lZC48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJp
-JnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+
-PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7
-Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0Qi
-Pk15IHByb2JsZW0gaXMgc29sdmVkLCBhbmQgSSB0aGFuayB5b3UgZm9yIHlvdXIgaGVscCBhbmQg
-dGltZS4NCjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDss
-c2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZh
-bWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RCI+SWYgeW91
-IHdhbnQgdG8gZW5saWdodGVuIG1lIHdoeSBJIHJ1biBpbnRvIHRoYXQgZXJyb3Igc3RhdGUsIGl0
-IHdpbGwgYmUgZ3JlYXQgZm9yIG1lDQo8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4w
-cHQ7Zm9udC1mYW1pbHk6V2luZ2RpbmdzO2NvbG9yOiMxRjQ5N0QiPko8L3NwYW4+PHNwYW4gc3R5
-bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5z
-LXNlcmlmO2NvbG9yOiMxRjQ5N0QiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90
-O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpw
-Pjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXpl
-OjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6
-IzFGNDk3RCI+VGhhbmsgeW91ITxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0Nh
-bGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwv
-c3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBuYW1lPSJfX19fX3JlcGx5c2VwYXJh
-dG9yIj48L2E+PGI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1
-b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj5Gcm9tOjwvc3Bhbj48L2I+PHNwYW4gc3R5bGU9
-ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNl
-cmlmIj4gSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzIFttYWlsdG86amF2aWVybUByZWRoYXQuY29t
-XQ0KPGJyPg0KPGI+U2VudDo8L2I+IE1vbmRheSwgRGVjZW1iZXIgMTAsIDIwMTggMjoxOCBQTTxi
-cj4NCjxiPlRvOjwvYj4gT2xpdmVyLCBEYXJpbyBOICZsdDtkYXJpby5uLm9saXZlckBpbnRlbC5j
-b20mZ3Q7PGJyPg0KPGI+Q2M6PC9iPiBSb2JlcnRzLCBXaWxsaWFtIEMgJmx0O3dpbGxpYW0uYy5y
-b2JlcnRzQGludGVsLmNvbSZndDs7IHRwbTJAbGlzdHMuMDEub3JnPGJyPg0KPGI+U3ViamVjdDo8
-L2I+IFJlOiBbdHBtMl0gUHJvYmxlbSB3aXRoIHRwbTJfdW5zZWFsIGFmdGVyIHJlYm9vdDxvOnA+
-PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9wPg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbyw8bzpwPjwvbzpw
-PjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4m
-bmJzcDs8L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JIGRv
-buKAmXQgaGF2ZSBhY2Nlc3MgdG8gYSBtYWNoaW5lIHdpdGggYSBUUE0yIG5vdyBidXQgSeKAmWxs
-IHRlc3QgaXQgdG9tb3Jyby48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNz
-PSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+SSB0aGluayBCaWxsIGlzIHJpZ2h0IGhlcmUgdGhvdWdoIGFuZCB0aGUg
-cHJvYmxlbSBpcyB0aGF0IHRoZSBwcmltYXJ5IGtleSBpc27igJl0IHByZXNlbnQgaW4gdGhlIFRQ
-TTIuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PkNvdWxkIHlvdSBwbGVhc2UgZXhlY3V0ZSB0aGUgdHBtMl9wcmltYXJ5IGNvbW1hbmQgYWZ0ZXIg
-dGhlIHJlYm9vdD8gVGhlIHByaW1hcnkga2V5cyBhcmUgZ2VuZXJhdGVkIHVzaW5nIGEga2V5IGRl
-cml2YXRpb24gZnVuY3Rpb24gdGhhdOKAmXMgZGV0ZXJtaW5pc3RpYyB1c2luZyB0aGUgaGllcmFy
-Y2h5IHNlZWQgc28gdGhlIFBLIHNob3VsZCBiZSB0aGUgc2FtZS48bzpwPjwvbzpwPjwvcD4NCjwv
-ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0K
-PC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+QmVzdCByZWdhcmRzLDxvOnA+PC9v
-OnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SmF2aWVyPG86cD48
-L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9wPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPk9uIE1vbiwgMTAgRGVjIDIwMTggYXQg
-MjI6MzcsIE9saXZlciwgRGFyaW8gTiAmbHQ7PGEgaHJlZj0ibWFpbHRvOmRhcmlvLm4ub2xpdmVy
-QGludGVsLmNvbSI+ZGFyaW8ubi5vbGl2ZXJAaW50ZWwuY29tPC9hPiZndDsgd3JvdGU6PG86cD48
-L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoZSBvbmx5IHBlcnNpc3Rl
-bnQgb2JqZWN0IEkgc2VlIHdpdGggdHBtMl9saXN0cGVyc2lzdGVudCBpcyB0aGUgY2hpbGQgb2Jq
-ZWN0LiBTbyBJIHRoaW5rIHRoZSBwYXJlbnQgaXMgbm90IGJlaW5nIHBlcnNpc3RlZC4NCjxicj4N
-Cjxicj4NCkkgYW0gdHJ5aW5nIGFnYWluIHRoZSBzYW1lIHNldCBvZiBjb21tYW5kcyBpbiBhIE5V
-QyBkZXZpY2UsIGp1c3QgdG8gc2VlIGlmIHRoZSBwcm9ibGVtIGlzIG5vdCB0aGUgZGV2aWNlIGl0
-c2VsZi4gQWZ0ZXIgdGhhdCwgSSB3aWxsIHRyeSB5b3UgYXBwcm9hY2ggYW5kIHBlcnNpc3QgdGhl
-IHByaW1hcnkgb2JqZWN0IGFzIHdlbGwuIEhvcGUgdGhhdCB3b3Jrczxicj4NCjxicj4NCkl0IGlz
-IHBvc3NpYmxlIHRoYXQgb3VyIGFwcHJvYWNoIHRvIHBlcnNpc3QgdGhlIHNlY3JldCBpcyB3cm9u
-Zy4gaW4gdGhhdCBjYXNlLCBkbyB5b3UgaGF2ZSBzb21lIGRvY3Mgc2hvd2luZyBhIHNlYWxpbmcg
-cHJvY2VzcyB0aGF0IGlzIGV4cGVjdGVkIHRvIHdvcmsgd2l0aCBwY3IgcG9saWNpZXMgd2l0aCB0
-aGUgdmVyc2lvbnMgSSBhbSB1c2luZz8NCjxicj4NCjxicj4NClRoYW5rIHlvdSE8YnI+DQo8YnI+
-DQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLTxicj4NCkZyb206IFJvYmVydHMsIFdpbGxpYW0g
-QyA8YnI+DQpTZW50OiBNb25kYXksIERlY2VtYmVyIDEwLCAyMDE4IDE6MzEgUE08YnI+DQpUbzog
-T2xpdmVyLCBEYXJpbyBOICZsdDs8YSBocmVmPSJtYWlsdG86ZGFyaW8ubi5vbGl2ZXJAaW50ZWwu
-Y29tIiB0YXJnZXQ9Il9ibGFuayI+ZGFyaW8ubi5vbGl2ZXJAaW50ZWwuY29tPC9hPiZndDs7DQo8
-YSBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciIHRhcmdldD0iX2JsYW5rIj50cG0yQGxp
-c3RzLjAxLm9yZzwvYT48YnI+DQpTdWJqZWN0OiBSRTogUHJvYmxlbSB3aXRoIHRwbTJfdW5zZWFs
-IGFmdGVyIHJlYm9vdDxicj4NCjxicj4NCk9saXZlciw8YnI+DQo8YnI+DQpJIHdvbmRlciBpZiB0
-aGlzIHNvbWUgd2VpcmQgc2lkZS1lZmZlY3QuIEkgaGF2ZSBuZXZlciBoYWQgYSBwZXJzaXN0ZW50
-IG9iamVjdCB1bmRlciBhIG5vbi1wZXJzaXN0ZW50IG9iamVjdCwgZG9lcyB0aGlzIGNhdXNlIHRo
-ZSBwcmltYXJ5IG9iamVjdCB0byBwZXJzaXN0IGFzIHdlbGw/IEkgd29uZGVyIGhvdyB5b3UgY291
-bGQgcGVyc2lzdCBhIGNoaWxkIG9iamVjdCB3aGVuIHRoZSBwcmltYXJ5IHBhcmVudCBvYmplY3Qg
-aXMgdW5sb2FkZWQgc2luY2UNCiB0aGUgcHJpbWFyeSBvYmplY3Qgc2VlZCBwcm90ZWN0cyBpdCdz
-IGNoaWxkcmVuLjxicj4NCjxicj4NCldoYXQgaGFwcGVucyBpZiB5b3UgcGVyc2lzdCB0aGUgcHJp
-bWFyeSBvYmplY3QgYXMgd2VsbD88YnI+DQo8YnI+DQpCaWxsPGJyPg0KPGJyPg0KPGJyPg0KJmd0
-OyAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLTxicj4NCiZndDsgRnJvbTogdHBtMiBbbWFpbHRv
-OjxhIGhyZWY9Im1haWx0bzp0cG0yLWJvdW5jZXNAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFu
-ayI+dHBtMi1ib3VuY2VzQGxpc3RzLjAxLm9yZzwvYT5dIE9uIEJlaGFsZiBPZiBPbGl2ZXIsDQo8
-YnI+DQomZ3Q7IERhcmlvIE48YnI+DQomZ3Q7IFNlbnQ6IEZyaWRheSwgRGVjZW1iZXIgNywgMjAx
-OCAyOjM2IFBNPGJyPg0KJmd0OyBUbzogPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3Jn
-IiB0YXJnZXQ9Il9ibGFuayI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+PGJyPg0KJmd0OyBTdWJqZWN0
-OiBbdHBtMl0gUHJvYmxlbSB3aXRoIHRwbTJfdW5zZWFsIGFmdGVyIHJlYm9vdDxicj4NCiZndDsg
-PGJyPg0KJmd0OyBIZWxsbyE8YnI+DQomZ3Q7IDxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQom
-Z3Q7IEkgYW0gY3VycmVudGx5IGhhdmluZyBwcm9ibGVtcyB0byB1bnNlYWwgYSBzZWNyZXQgZnJv
-bSB0aGUgdHBtLjxicj4NCiZndDsgPGJyPg0KJmd0OyBJIGhvcGUgdGhhdCB5b3UgY2FuIGRldGVj
-dCB0aGUgaXNzdWUgaW4gbXkgaW5zdHJ1Y3Rpb25zIGJlbG93IDopPGJyPg0KJmd0OyA8YnI+DQom
-Z3Q7IDxicj4NCiZndDsgPGJyPg0KJmd0OyBUaGUgdmVyc2lvbnMgdGhhdCBJIGFtIHVzaW5nIGFy
-ZSB0aGUgZm9sbG93aW5nOjxicj4NCiZndDsgPGJyPg0KJmd0OyAxLiZuYnNwOyAmbmJzcDsgJm5i
-c3A7ICZuYnNwO1RwbTItdHNzIDIuMC4wPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDIuJm5ic3A7ICZu
-YnNwOyAmbmJzcDsgJm5ic3A7VHBtMi1hYnJtZCAyLjAuMDxicj4NCiZndDsgPGJyPg0KJmd0OyAz
-LiZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwO1RwbTItdG9vbHMgMy4xLjA8YnI+DQomZ3Q7IDxi
-cj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IFRoZSBwbGF0Zm9ybSBJIGFtIHVzaW5nIGlz
-IGEgQ29tcHVsYWIgRml0bGV0MiBkZXZpY2UgKEludGVsIEF0b20mbmJzcDsgPGJyPg0KJmd0OyB4
-NS1FMzk1MCBBcG9sbG8gTGFrZSksIHdpdGggRmVkb3JhIDI4IGFuZCBMaW51eCBrZXJuZWwgNC4x
-OS54Ljxicj4NCiZndDsgPGJyPg0KJmd0OyBJbiB0aGlzIGNhc2UsIHRoZSBkZXZpY2Ugc3VwcG9y
-dCBmaXJtd2FyZSB0cG0sIGFuZCBpdCBpcyBlbmFibGVkIGluIDxicj4NCiZndDsgdGhlIEJJT1M8
-YnI+DQomZ3Q7IChmVFBNKTxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4NCiZn
-dDsgU28sIGFmdGVyIGluc3RhbGxpbmcgdGhlIHRwbTIgc3RhY2sgZnJvbSBnaXRodWIgcmVsZWFz
-ZXMsIEkgYW0gc2VhbGluZyA8YnI+DQomZ3Q7IGEgc2VjcmV0IHdpdGggdGhlIGZvbGxvd2luZyBj
-b21tYW5kczo8YnI+DQomZ3Q7IDxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7ICMgQ3Jl
-YXRlIGEgcmFuZG9tIHNlY3JldCB0byBiZSBzYXZlZCBpbiB0aGUgVFBNPGJyPg0KJmd0OyA8YnI+
-DQomZ3Q7IHRwbTJfZ2V0cmFuZG9tIDMyIC0tb3V0cHV0IGtleS5iaW48YnI+DQomZ3Q7IDxicj4N
-CiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7ICMgSSB1c2UgYSBwY3IgcG9saWN5IG9uIHNoYTEg
-YmFua3MgMCBhbmQgMSwgdGhpcyBnZXRzIHRoZSBwY3Igc3RhdGU8YnI+DQomZ3Q7IDxicj4NCiZn
-dDsgdHBtMl9wY3JsaXN0IC0tc2VsLWxpc3Qgc2hhMTowLDEgLS1vdXRwdXQgcGNyX3N0YXRlLmJp
-bjxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4NCiZndDsgIyBDcmVhdGUgYSBw
-b2xpY3kgd2l0aCB0aG9zZSBQQ1I8YnI+DQomZ3Q7IDxicj4NCiZndDsgdHBtMl9jcmVhdGVwb2xp
-Y3kgLS1wb2xpY3ktcGNyIC0tc2V0LWxpc3Qgc2hhMTowLDEgXDxicj4NCiZndDsgPGJyPg0KJmd0
-OyZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsg
-Jm5ic3A7ICZuYnNwOy0tcGNyLWlucHV0LWZpbGUgcGNyX3N0YXRlLmJpbjxicj4NCiZndDsgPGJy
-Pg0KJmd0OyZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAm
-bmJzcDsgJm5ic3A7ICZuYnNwOy0tcG9saWN5LWZpbGUgcG9saWN5LmJpbjxicj4NCiZndDsgPGJy
-Pg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4NCiZndDsgIyBDcmVhdGUgYSBwcmltYXJ5IG9iamVjdCB3
-aXRoIGVuZG9yc2VtZW50IGhpZXJhcmNoeTxicj4NCiZndDsgPGJyPg0KJmd0OyB0cG0yX2NyZWF0
-ZXByaW1hcnkgLS1oaWVyYXJjaHkgZSAtLWhhbGcgc2hhMSAtLWthbGcgcnNhIC0tY29udGV4dCA8
-YnI+DQomZ3Q7IHByaW1hcnkuY29udGV4dDxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7
-IDxicj4NCiZndDsgIyBDcmVhdGUgYW4gb2JqZWN0IHRvIGJlIGxvYWRlZCBpbiB0aGUgVFBNPGJy
-Pg0KJmd0OyA8YnI+DQomZ3Q7IHRwbTJfY3JlYXRlIC0taGFsZyBzaGEyNTYgLS1rYWxnIGtleWVk
-aGFzaCAtLXB1YmZpbGUga2V5LnB1YiA8YnI+DQomZ3Q7IC0tcHJpdmZpbGUga2V5LnByaXYgXDxi
-cj4NCiZndDsgPGJyPg0KJmd0OyZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5i
-c3A7ICZuYnNwOy0tY29udGV4dC1wYXJlbnQgcHJpbWFyeS5jb250ZXh0IC0tcG9saWN5LWZpbGUg
-cG9saWN5LmJpbiA8YnI+DQomZ3Q7IFw8YnI+DQomZ3Q7IDxicj4NCiZndDsmbmJzcDsgJm5ic3A7
-ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAtLW9iamVjdC1hdHRyaWJ1dGVzIDxicj4NCiZn
-dDsgJnF1b3Q7Zml4ZWR0cG18Zml4ZWRwYXJlbnR8bm9kYXxhZG1pbndpdGhwb2xpY3kmcXVvdDsg
-LS1pbi1maWxlIGtleS5iaW48YnI+DQomZ3Q7IDxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQom
-Z3Q7ICMgTG9hZCB0aGUgb2JqZWN0IGluIHRoZSBUUE08YnI+DQomZ3Q7IDxicj4NCiZndDsgdHBt
-Ml9sb2FkIC0tY29udGV4dC1wYXJlbnQgcHJpbWFyeS5jb250ZXh0IC0tcHViZmlsZSBrZXkucHVi
-IDxicj4NCiZndDsgLS1wcml2ZmlsZSBrZXkucHJpdiBcPGJyPg0KJmd0OyA8YnI+DQomZ3Q7Jm5i
-c3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDstLWNvbnRleHQgbG9hZC5jb250
-ZXh0PGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4NCiZndDsgPGJyPg0KJmd0OyAjIFBlcnNpc3Qg
-dGhlIG9iamVjdCBpbiB0aGUgVFBNPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IHRwbTJfZXZpY3Rjb250
-cm9sIC0tYXV0aCBvIC0tY29udGV4dCBsb2FkLmNvbnRleHQgLS1wZXJzaXN0ZW50IDxicj4NCiZn
-dDsgMHg4MTAxMDAwMjxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4NCiZndDsg
-IyBDaGVjayBpZiB0aGUgb2JqZWN0IGlzIHBlcnNpc3RlZCwgbG9va3MgZ29vZDxicj4NCiZndDsg
-PGJyPg0KJmd0OyB0cG0yX2xpc3RwZXJzaXN0ZW50PGJyPg0KJmd0OyA8YnI+DQomZ3Q7IHBlcnNp
-c3RlbnQtaGFuZGxlWzBdOjB4ODEwMTAwMDIga2V5LWFsZzprZXllZGhhc2ggaGFzaC1hbGc6c2hh
-MjU2IDxicj4NCiZndDsgb2JqZWN0LSBhdHRyOmZpeGVkdHBtfGZpeGVkcGFyZW50fG5vZGF8YWRt
-aW53aXRocG9saWN5PGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4NCiZndDsgPGJyPg0KJmd0OyAj
-IFVuc2VhbCB0aGUgb2JqZWN0LCB3b3JrcyE8YnI+DQomZ3Q7IDxicj4NCiZndDsgdHBtMl91bnNl
-YWwgLS1pdGVtIDB4ODEwMTAwMDIgLS1zZXQtbGlzdCBzaGExOjAsMSAmZ3Q7IGNvbXBhcmVfa2V5
-LmJpbjxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4NCiZndDsgIyBDb21wYXJl
-IG9yaWdpbmFsIGFuZCB1bnNlYWxlZCBvYmplY3RzLCB0aGUgbWF0Y2ggOik8YnI+DQomZ3Q7IDxi
-cj4NCiZndDsgZGlmZiBjb21wYXJlX2tleS5iaW4ga2V5LmJpbjxicj4NCiZndDsgPGJyPg0KJmd0
-OyA8YnI+DQomZ3Q7IDxicj4NCiZndDsgIyMjIyMjIyMjIyMjIyM8YnI+DQomZ3Q7IDxicj4NCiZn
-dDsgIyBBZnRlciB0aGlzIGluaXRpYWwgc2V0dXAsIEkgcmVib290IHRoZSBkZXZpY2UsIGFuZCB0
-cnkgdG8gdW5zZWFsIHRoZSA8YnI+DQomZ3Q7IHNlY3JldCBhZ2Fpbjxicj4NCiZndDsgPGJyPg0K
-Jmd0OyAjIyMjIyMjIyMjIyMjIzxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4N
-CiZndDsgIyBBZnRlciByZWJvb3QsIG9wZW4gYSB0ZXJtaW5hbCBhbiBkbzxicj4NCiZndDsgPGJy
-Pg0KJmd0OyB0cG0yX3Vuc2VhbCAtLWl0ZW0gMHg4MTAxMDAwMiAtLXNldC1saXN0IHNoYTE6MCwx
-ICZndDsgPGJyPg0KJmd0OyBjb21wYXJlX2Rpc2tfa2V5LmJpbjxicj4NCiZndDsgPGJyPg0KJmd0
-OyBFUlJPUjogU3lzX1Vuc2VhbCBmYWlsZWQuIEVycm9yIENvZGU6IDB4OTlkPGJyPg0KJmd0OyA8
-YnI+DQomZ3Q7IEVSUk9SOiBVbnNlYWwgZmFpbGVkITxicj4NCiZndDsgPGJyPg0KJmd0OyBFUlJP
-UjogVW5hYmxlIHRvIHJ1biB0cG0yX3Vuc2VhbDxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQom
-Z3Q7IDxicj4NCiZndDsgIyBVc2UgdHBtMl9yY19kZWNvZGUgdG8gZGVjb2RlIHRoZSBlcnJvciBt
-ZXNzYWdlIDB4OTlkLCBpdCBpcyBhIHBvbGljeSA8YnI+DQomZ3Q7IGNoZWNrIGVycm9yITxicj4N
-CiZndDsgPGJyPg0KJmd0OyB0cG0yX3JjX2RlY29kZSAweDk5ZDxicj4NCiZndDsgPGJyPg0KJmd0
-OyBlcnJvciBsYXllcjxicj4NCiZndDsgPGJyPg0KJmd0OyZuYnNwOyAmbmJzcDsgJm5ic3A7aGV4
-OiAweDA8YnI+DQomZ3Q7IDxicj4NCiZndDsmbmJzcDsgJm5ic3A7ICZuYnNwO2lkZW50aWZpZXI6
-IFRTUzJfVFBNX1JDX0xBWUVSPGJyPg0KJmd0OyA8YnI+DQomZ3Q7Jm5ic3A7ICZuYnNwOyAmbmJz
-cDtkZXNjcmlwdGlvbjogRXJyb3IgcHJvZHVjZWQgYnkgdGhlIFRQTTxicj4NCiZndDsgPGJyPg0K
-Jmd0OyBmb3JtYXQgMSBlcnJvciBjb2RlPGJyPg0KJmd0OyA8YnI+DQomZ3Q7Jm5ic3A7ICZuYnNw
-OyAmbmJzcDtoZXg6IDB4MWQ8YnI+DQomZ3Q7IDxicj4NCiZndDsmbmJzcDsgJm5ic3A7ICZuYnNw
-O2lkZW50aWZpZXI6IFRQTTJfUkNfUE9MSUNZX0ZBSUw8YnI+DQomZ3Q7IDxicj4NCiZndDsmbmJz
-cDsgJm5ic3A7ICZuYnNwO2Rlc2NyaXB0aW9uOiBhIHBvbGljeSBjaGVjayBmYWlsZWQ8YnI+DQom
-Z3Q7IDxicj4NCiZndDsgc2Vzc2lvbjxicj4NCiZndDsgPGJyPg0KJmd0OyZuYnNwOyAmbmJzcDsg
-Jm5ic3A7aGV4OiAweDEwMDxicj4NCiZndDsgPGJyPg0KJmd0OyZuYnNwOyAmbmJzcDsgJm5ic3A7
-aWRlbnRpZmllcjogVFBNMl9SQ18xPGJyPg0KJmd0OyA8YnI+DQomZ3Q7Jm5ic3A7ICZuYnNwOyAm
-bmJzcDtkZXNjcmlwdGlvbjogKG51bGwpPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4NCiZndDsg
-PGJyPg0KJmd0OyAjIyMjIyMjIyMjIyMjIyM8YnI+DQomZ3Q7IDxicj4NCiZndDsgIyBJIGNoZWNr
-ZWQgdGhlIFBDUiAwLDEsIGFuZCB0aGV5IGhhdmUgdGhlIHNhbWUgdmFsdWVzIGFzIGF0IHRoZSA8
-YnI+DQomZ3Q7IG1vbWVudCB0byBzZWFsIHRoZSBvYmplY3QuPGJyPg0KJmd0OyA8YnI+DQomZ3Q7
-ICMgU28gSSBkb24ndCB1bmRlcnN0YW5kIHdoeSBJIGFtIGhhdmluZyBhICZxdW90O1RQTTJfUkNf
-UE9MSUNZX0ZBSUwmcXVvdDsgZXJyb3IuPGJyPg0KJmd0OyA8YnI+DQomZ3Q7ICMgSSB0cmllZCB0
-aGUgc2FtZSBwcm9jZXNzIHNldmVyYWwgdGltZXMsIGFuZCBlYWNoIHRpbWUgSSBlbmQgdXAgaW4g
-PGJyPg0KJmd0OyB0aGUgc2FtZSBlcnJvciBzdGF0ZS48YnI+DQomZ3Q7IDxicj4NCiZndDsgIyMj
-IyMjIyMjIyMjIyMjPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4NCiZndDsgPGJyPg0KJmd0OyBJ
-cyB0aGVyZSBzb21ldGhpbmcgSSBhbSBtaXNzaW5nIGhlcmU/PGJyPg0KJmd0OyA8YnI+DQomZ3Q7
-IElzIHNvbWV0aGluZyBhZGRpdGlvbmFsIEkgbmVlZCB0byBkbyB0byBzYXRpc2Z5IHRoZSBwb2xp
-Y3kgdG8gdW5zZWFsIHRoZSBkYXRhPzxicj4NCiZndDsgPGJyPg0KJmd0OyBBbnkgaGVscCBpcyBh
-cHByZWNpYXRlZCE8YnI+DQomZ3Q7IDxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IFRo
-YW5rIHlvdSBpbiBhZHZhbmNlLjxicj4NCiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4N
-CiZndDsgPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IDxicj4NCjxicj4NCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fPGJyPg0KdHBtMiBtYWlsaW5nIGxpc3Q8YnI+
-DQo8YSBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciIHRhcmdldD0iX2JsYW5rIj50cG0y
-QGxpc3RzLjAxLm9yZzwvYT48YnI+DQo8YSBocmVmPSJodHRwczovL2xpc3RzLjAxLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL3RwbTIiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL2xpc3RzLjAxLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL3RwbTI8L2E+PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjwvYm9keT4N
-CjwvaHRtbD4NCg==
+> =
 
---===============0552357040869870117==--
+> Good news:
+> =
+
+> =
+
+> =
+
+> I tested this in my NUC, the exact same process described below, and after
+> rebooting the device, I was able to unseal the secret without problems. B=
+ut I
+> noticed that my persistent objects were several, so I tried to tpm2_evict=
+control
+> them to clean up. The command failed, and I tried a tpm2_takeownership =
+=E2=80=93c, and
+> it failed with =E2=80=9Cauthorization failure without DA implications=E2=
+=80=9D. I got in an error state
+> again, so I tried to do a TPM clear (by removing the security jumper in t=
+he NUC).
+> Each time I send a tpm clear with that process, and boot again, my persis=
+tent
+> objects are still there, and I run into the same errors. No luck with the=
+ NUC.
+> =
+
+> =
+
+> =
+
+> I moved back to my fitlet2 with fTPM, and flash the firmware again, I wan=
+ted to
+> test again with a clean state. Then, I cleared the TPM using the BIOS men=
+u in the
+> fitlet. I reboot the device, and do a tpm2_listpersistent, everything is =
+clean now! I
+> tested the process described below, and now I can unseal my secret after
+> reboot. So, flashing the firmware again, and clearing the TPM solved my p=
+roblem.
+> After 3 reboots, I am still able to get my secret.
+> =
+
+> =
+
+> =
+
+> Bad News:
+> =
+
+> =
+
+> =
+
+> 1.       I don=E2=80=99t know why I run into that error state after tryin=
+g to do
+> tpm2_evictcontrol (to clear persistent objects), or tpm2_takeownership =
+=E2=80=93c. For a
+> =E2=80=9Creal=E2=80=9D scenario, having to completely reset the device (a=
+nd loose the secrets in
+> the tpm) Is not an option. So I wonder how you recover from this state?
+
+I don=E2=80=99t know offhand how to recover.
+
+> =
+
+> 2.       I am unable to clear the TPM in a NUC! I will keep looking at
+> =
+
+> 3.       Your statement that =E2=80=9Cthe primary object is not persisted=
+=E2=80=9D made sense to
+> me, until I get it working after the tpm2 clear in the BIOS. Now I have l=
+ess idea of
+> which will be the explanation of what happened.
+
+I am very surprised that works, but perhaps the TPM does some magic when pe=
+rsisting
+an object I am not aware of.
+
+> =
+
+> =
+
+> =
+
+> My problem is solved, and I thank you for your help and time.
+
+That's at least one positive
+
+> =
+
+> =
+
+> =
+
+> If you want to enlighten me why I run into that error state, it will be g=
+reat for me
+> :)
+> =
+
+> =
+
+> =
+
+> Thank you!
+> =
+
+> =
+
+> =
+
+> From: Javier Martinez Canillas [mailto:javierm(a)redhat.com]
+> Sent: Monday, December 10, 2018 2:18 PM
+> To: Oliver, Dario N <dario.n.oliver(a)intel.com>
+> Cc: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.o=
+rg
+> Subject: Re: [tpm2] Problem with tpm2_unseal after reboot
+> =
+
+> =
+
+> =
+
+> Hello,
+> =
+
+> =
+
+> =
+
+> I don=E2=80=99t have access to a machine with a TPM2 now but I=E2=80=99ll=
+ test it tomorro.
+> =
+
+> =
+
+> =
+
+> I think Bill is right here though and the problem is that the primary key=
+ isn=E2=80=99t
+> present in the TPM2.
+> =
+
+> =
+
+> =
+
+> Could you please execute the tpm2_primary command after the reboot? The
+> primary keys are generated using a key derivation function that=E2=80=99s=
+ deterministic
+> using the hierarchy seed so the PK should be the same.
+> =
+
+> =
+
+> =
+
+> Best regards,
+> =
+
+> Javier
+> =
+
+> =
+
+> =
+
+> On Mon, 10 Dec 2018 at 22:37, Oliver, Dario N <dario.n.oliver(a)intel.com
+> <mailto:dario.n.oliver(a)intel.com> > wrote:
+> =
+
+> The only persistent object I see with tpm2_listpersistent is the child ob=
+ject. So I
+> think the parent is not being persisted.
+> =
+
+> I am trying again the same set of commands in a NUC device, just to see i=
+f the
+> problem is not the device itself. After that, I will try you approach and=
+ persist the
+> primary object as well. Hope that works
+> =
+
+> It is possible that our approach to persist the secret is wrong. in that =
+case, do you
+> have some docs showing a sealing process that is expected to work with pcr
+> policies with the versions I am using?
+> =
+
+> Thank you!
+> =
+
+> -----Original Message-----
+> From: Roberts, William C
+> Sent: Monday, December 10, 2018 1:31 PM
+> To: Oliver, Dario N <dario.n.oliver(a)intel.com <mailto:dario.n.oliver(a)=
+intel.com>
+> >; tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> Subject: RE: Problem with tpm2_unseal after reboot
+> =
+
+> Oliver,
+> =
+
+> I wonder if this some weird side-effect. I have never had a persistent ob=
+ject
+> under a non-persistent object, does this cause the primary object to pers=
+ist as
+> well? I wonder how you could persist a child object when the primary pare=
+nt
+> object is unloaded since the primary object seed protects it's children.
+> =
+
+> What happens if you persist the primary object as well?
+> =
+
+> Bill
+> =
+
+> =
+
+> > -----Original Message-----
+> > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org
+> > <mailto:tpm2-bounces(a)lists.01.org> ] On Behalf Of Oliver, Dario N
+> > Sent: Friday, December 7, 2018 2:36 PM
+> > To: tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> > Subject: [tpm2] Problem with tpm2_unseal after reboot
+> >
+> > Hello!
+> >
+> >
+> >
+> > I am currently having problems to unseal a secret from the tpm.
+> >
+> > I hope that you can detect the issue in my instructions below :)
+> >
+> >
+> >
+> > The versions that I am using are the following:
+> >
+> > 1.       Tpm2-tss 2.0.0
+> >
+> > 2.       Tpm2-abrmd 2.0.0
+> >
+> > 3.       Tpm2-tools 3.1.0
+> >
+> >
+> >
+> > The platform I am using is a Compulab Fitlet2 device (Intel Atom
+> > x5-E3950 Apollo Lake), with Fedora 28 and Linux kernel 4.19.x.
+> >
+> > In this case, the device support firmware tpm, and it is enabled in
+> > the BIOS
+> > (fTPM)
+> >
+> >
+> >
+> > So, after installing the tpm2 stack from github releases, I am sealing
+> > a secret with the following commands:
+> >
+> >
+> >
+> > # Create a random secret to be saved in the TPM
+> >
+> > tpm2_getrandom 32 --output key.bin
+> >
+> >
+> >
+> > # I use a pcr policy on sha1 banks 0 and 1, this gets the pcr state
+> >
+> > tpm2_pcrlist --sel-list sha1:0,1 --output pcr_state.bin
+> >
+> >
+> >
+> > # Create a policy with those PCR
+> >
+> > tpm2_createpolicy --policy-pcr --set-list sha1:0,1 \
+> >
+> >                   --pcr-input-file pcr_state.bin
+> >
+> >                   --policy-file policy.bin
+> >
+> >
+> >
+> > # Create a primary object with endorsement hierarchy
+> >
+> > tpm2_createprimary --hierarchy e --halg sha1 --kalg rsa --context
+> > primary.context
+> >
+> >
+> >
+> > # Create an object to be loaded in the TPM
+> >
+> > tpm2_create --halg sha256 --kalg keyedhash --pubfile key.pub
+> > --privfile key.priv \
+> >
+> >             --context-parent primary.context --policy-file policy.bin
+> > \
+> >
+> >            --object-attributes
+> > "fixedtpm|fixedparent|noda|adminwithpolicy" --in-file key.bin
+> >
+> >
+> >
+> > # Load the object in the TPM
+> >
+> > tpm2_load --context-parent primary.context --pubfile key.pub
+> > --privfile key.priv \
+> >
+> >           --context load.context
+> >
+> >
+> >
+> > # Persist the object in the TPM
+> >
+> > tpm2_evictcontrol --auth o --context load.context --persistent
+> > 0x81010002
+> >
+> >
+> >
+> > # Check if the object is persisted, looks good
+> >
+> > tpm2_listpersistent
+> >
+> > persistent-handle[0]:0x81010002 key-alg:keyedhash hash-alg:sha256
+> > object- attr:fixedtpm|fixedparent|noda|adminwithpolicy
+> >
+> >
+> >
+> > # Unseal the object, works!
+> >
+> > tpm2_unseal --item 0x81010002 --set-list sha1:0,1 > compare_key.bin
+> >
+> >
+> >
+> > # Compare original and unsealed objects, the match :)
+> >
+> > diff compare_key.bin key.bin
+> >
+> >
+> >
+> > ##############
+> >
+> > # After this initial setup, I reboot the device, and try to unseal the
+> > secret again
+> >
+> > ##############
+> >
+> >
+> >
+> > # After reboot, open a terminal an do
+> >
+> > tpm2_unseal --item 0x81010002 --set-list sha1:0,1 >
+> > compare_disk_key.bin
+> >
+> > ERROR: Sys_Unseal failed. Error Code: 0x99d
+> >
+> > ERROR: Unseal failed!
+> >
+> > ERROR: Unable to run tpm2_unseal
+> >
+> >
+> >
+> > # Use tpm2_rc_decode to decode the error message 0x99d, it is a policy
+> > check error!
+> >
+> > tpm2_rc_decode 0x99d
+> >
+> > error layer
+> >
+> >     hex: 0x0
+> >
+> >     identifier: TSS2_TPM_RC_LAYER
+> >
+> >     description: Error produced by the TPM
+> >
+> > format 1 error code
+> >
+> >     hex: 0x1d
+> >
+> >     identifier: TPM2_RC_POLICY_FAIL
+> >
+> >     description: a policy check failed
+> >
+> > session
+> >
+> >     hex: 0x100
+> >
+> >     identifier: TPM2_RC_1
+> >
+> >     description: (null)
+> >
+> >
+> >
+> > ###############
+> >
+> > # I checked the PCR 0,1, and they have the same values as at the
+> > moment to seal the object.
+> >
+> > # So I don't understand why I am having a "TPM2_RC_POLICY_FAIL" error.
+> >
+> > # I tried the same process several times, and each time I end up in
+> > the same error state.
+> >
+> > ###############
+> >
+> >
+> >
+> > Is there something I am missing here?
+> >
+> > Is something additional I need to do to satisfy the policy to unseal th=
+e data?
+> >
+> > Any help is appreciated!
+> >
+> >
+> >
+> > Thank you in advance.
+> >
+> >
+> >
+> >
+> >
+> >
+> =
+
+> _______________________________________________
+> tpm2 mailing list
+> tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> https://lists.01.org/mailman/listinfo/tpm2
+
+
+--===============0533366361578192790==--
 
