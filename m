@@ -1,35 +1,144 @@
-Content-Type: multipart/mixed; boundary="===============6042507753890103522=="
+Content-Type: multipart/mixed; boundary="===============9153905672507206136=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] tpm2-totp
-Date: Tue, 18 Dec 2018 17:11:28 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D014B46DD8F@EXCH2010B.sit.fraunhofer.de>
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: Re: [tpm2] tpm2-tcti-uefi status and future direction
+Date: Tue, 18 Dec 2018 19:24:14 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909C46431E@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: DB638850A6A2434A93ECADDA0BC838909ACD0ED2@ORSMSX103.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6042507753890103522==
+--===============9153905672507206136==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hello again. The documentation mentioned below has been completed. The exam=
+ple code has also been verified as functional under Qemu using the OVMF tha=
+nks to @pdxjohnny: https://github.com/flihp/tpm2-tcti-uefi/issues/21. This =
+brings the code base up to the level I had wanted before migrating it to th=
+e tpm2-software Github org and so this migration will happen in the next fe=
+w days.
 
-as a little pre-christmas thing I've done a reimplementation of mjg's tpm-t=
-otp but for TPM2.0
-Also I've split up the project into a library and a wrapping executable to =
-make GUIs easier to implement.
+Regards,
+Philip
 
-Please consider to test it and give any feedback (especially also positive =
-feedback) so we can move this from
-my personal namespace over into the github.com/tpm2-software namespace and =
-make it an "official" project.
+From: Tricca, Philip B
+Sent: 30 November, 2018 10:41
+To: tpm2(a)lists.01.org
+Cc: Roberts, William C <william.c.roberts(a)intel.com>; Struk, Tadeusz <tad=
+eusz.struk(a)intel.com>; andreas.fuchs(a)sit.fraunhofer.de; Lock, Joshua G =
+<joshua.g.lock(a)intel.com>
+Subject: tpm2-tcti-uefi status and future direction
 
-https://github.com/AndreasFuchsSIT/tpm2-totp
+Hello,
 
-P.S. There are still 4 TODOs inside the code, but those are basically "futu=
-re features".
+I've been working to clean up the tpm2-tcti-uefi build / repo (https://gith=
+ub.com/flihp/tpm2-tcti-uefi) now that we have better control over the compi=
+lation flags in the tpm2-tss build. The tpm2-tss submodule and all of the c=
+ustom build logic has now been removed and I've got travis-ci building the =
+example UEFI executables using libtss2-mu and libtss2-sys built using the a=
+ppropriate autotools mechanisms (config.site: https://github.com/flihp/tpm2=
+-tcti-uefi/blob/master/.travis.yml#L33). Currently I'm adding some details =
+to the documentation and working on a set of instructions for testing the e=
+xample UEFI application under qemu using the OVMF firmware.
 
-Thanks a lot,
-Andreas
---===============6042507753890103522==--
+While I'm finishing up the docs I wanted to get a message out to the list t=
+o solicit input from anyone interested in this work. If you have a few spar=
+e cycles I'd appreciate input on the repo as it stands now as well as any o=
+pinions on including this repo in the tpm2-software github org since this i=
+s my goal once the docs are done.
+
+Thanks,
+Philip
+
+--===============9153905672507206136==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWw7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7
+fQpzcGFuLkVtYWlsU3R5bGUxOAoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5OwoJZm9u
+dC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgljb2xvcjojMUY0OTdEO30KLk1zb0NocERl
+ZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtc2l6ZToxMC4wcHQ7fQpA
+cGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsKCW1hcmdpbjoxLjBpbiAxLjBp
+biAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0t
+Pjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9
+ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1z
+byA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJl
+ZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVh
+ZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRp
+diBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9
+ImNvbG9yOiMxRjQ5N0QiPkhlbGxvIGFnYWluLiBUaGUgZG9jdW1lbnRhdGlvbiBtZW50aW9uZWQg
+YmVsb3cgaGFzIGJlZW4gY29tcGxldGVkLiBUaGUgZXhhbXBsZSBjb2RlIGhhcyBhbHNvIGJlZW4g
+dmVyaWZpZWQgYXMgZnVuY3Rpb25hbCB1bmRlciBRZW11IHVzaW5nIHRoZSBPVk1GIHRoYW5rcyB0
+byBAcGR4am9obm55Ogo8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vZmxpaHAvdHBtMi10Y3Rp
+LXVlZmkvaXNzdWVzLzIxIj5odHRwczovL2dpdGh1Yi5jb20vZmxpaHAvdHBtMi10Y3RpLXVlZmkv
+aXNzdWVzLzIxPC9hPi4gVGhpcyBicmluZ3MgdGhlIGNvZGUgYmFzZSB1cCB0byB0aGUgbGV2ZWwg
+SSBoYWQgd2FudGVkIGJlZm9yZSBtaWdyYXRpbmcgaXQgdG8gdGhlIHRwbTItc29mdHdhcmUgR2l0
+aHViIG9yZyBhbmQgc28gdGhpcyBtaWdyYXRpb24gd2lsbCBoYXBwZW4gaW4KIHRoZSBuZXh0IGZl
+dyBkYXlzLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
+c3R5bGU9ImNvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOiMxRjQ5N0QiPlJlZ2FyZHMsPG86cD48
+L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iY29sb3I6
+IzFGNDk3RCI+UGhpbGlwPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij48YSBuYW1lPSJfTWFpbEVuZENvbXBvc2UiPjxzcGFuIHN0eWxlPSJjb2xvcjojMUY0OTdEIj48
+bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L2E+PC9wPgo8ZGl2Pgo8ZGl2IHN0eWxlPSJib3JkZXI6
+bm9uZTtib3JkZXItdG9wOnNvbGlkICNFMUUxRTEgMS4wcHQ7cGFkZGluZzozLjBwdCAwaW4gMGlu
+IDBpbiI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxhIG5hbWU9Il9fX19fcmVwbHlzZXBhcmF0b3Ii
+PjwvYT48Yj5Gcm9tOjwvYj4gVHJpY2NhLCBQaGlsaXAgQgo8YnI+CjxiPlNlbnQ6PC9iPiAzMCBO
+b3ZlbWJlciwgMjAxOCAxMDo0MTxicj4KPGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9yZzxicj4K
+PGI+Q2M6PC9iPiBSb2JlcnRzLCBXaWxsaWFtIEMgJmx0O3dpbGxpYW0uYy5yb2JlcnRzQGludGVs
+LmNvbSZndDs7IFN0cnVrLCBUYWRldXN6ICZsdDt0YWRldXN6LnN0cnVrQGludGVsLmNvbSZndDs7
+IGFuZHJlYXMuZnVjaHNAc2l0LmZyYXVuaG9mZXIuZGU7IExvY2ssIEpvc2h1YSBHICZsdDtqb3No
+dWEuZy5sb2NrQGludGVsLmNvbSZndDs8YnI+CjxiPlN1YmplY3Q6PC9iPiB0cG0yLXRjdGktdWVm
+aSBzdGF0dXMgYW5kIGZ1dHVyZSBkaXJlY3Rpb248bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvZGl2
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+SGVsbG8sPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+
+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JJiM4MjE3O3ZlIGJlZW4gd29y
+a2luZyB0byBjbGVhbiB1cCB0aGUgdHBtMi10Y3RpLXVlZmkgYnVpbGQgLyByZXBvICg8YSBocmVm
+PSJodHRwczovL2dpdGh1Yi5jb20vZmxpaHAvdHBtMi10Y3RpLXVlZmkiPmh0dHBzOi8vZ2l0aHVi
+LmNvbS9mbGlocC90cG0yLXRjdGktdWVmaTwvYT4pIG5vdyB0aGF0IHdlIGhhdmUgYmV0dGVyIGNv
+bnRyb2wgb3ZlciB0aGUgY29tcGlsYXRpb24gZmxhZ3MgaW4gdGhlIHRwbTItdHNzIGJ1aWxkLgog
+VGhlIHRwbTItdHNzIHN1Ym1vZHVsZSBhbmQgYWxsIG9mIHRoZSBjdXN0b20gYnVpbGQgbG9naWMg
+aGFzIG5vdyBiZWVuIHJlbW92ZWQgYW5kIEkmIzgyMTc7dmUgZ290IHRyYXZpcy1jaSBidWlsZGlu
+ZyB0aGUgZXhhbXBsZSBVRUZJIGV4ZWN1dGFibGVzIHVzaW5nIGxpYnRzczItbXUgYW5kIGxpYnRz
+czItc3lzIGJ1aWx0IHVzaW5nIHRoZSBhcHByb3ByaWF0ZSBhdXRvdG9vbHMgbWVjaGFuaXNtcyAo
+Y29uZmlnLnNpdGU6CjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS9mbGlocC90cG0yLXRjdGkt
+dWVmaS9ibG9iL21hc3Rlci8udHJhdmlzLnltbCNMMzMiPmh0dHBzOi8vZ2l0aHViLmNvbS9mbGlo
+cC90cG0yLXRjdGktdWVmaS9ibG9iL21hc3Rlci8udHJhdmlzLnltbCNMMzM8L2E+KS4gQ3VycmVu
+dGx5IEkmIzgyMTc7bSBhZGRpbmcgc29tZSBkZXRhaWxzIHRvIHRoZSBkb2N1bWVudGF0aW9uIGFu
+ZCB3b3JraW5nIG9uIGEgc2V0IG9mIGluc3RydWN0aW9ucyBmb3IgdGVzdGluZyB0aGUKIGV4YW1w
+bGUgVUVGSSBhcHBsaWNhdGlvbiB1bmRlciBxZW11IHVzaW5nIHRoZSBPVk1GIGZpcm13YXJlLjxv
+OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+V2hpbGUgSSYjODIxNzttIGZpbmlzaGluZyB1cCB0aGUgZG9j
+cyBJIHdhbnRlZCB0byBnZXQgYSBtZXNzYWdlIG91dCB0byB0aGUgbGlzdCB0byBzb2xpY2l0IGlu
+cHV0IGZyb20gYW55b25lIGludGVyZXN0ZWQgaW4gdGhpcyB3b3JrLiBJZiB5b3UgaGF2ZSBhIGZl
+dyBzcGFyZSBjeWNsZXMgSSYjODIxNztkIGFwcHJlY2lhdGUgaW5wdXQgb24gdGhlIHJlcG8gYXMg
+aXQgc3RhbmRzIG5vdyBhcyB3ZWxsIGFzIGFueSBvcGluaW9ucyBvbgogaW5jbHVkaW5nIHRoaXMg
+cmVwbyBpbiB0aGUgdHBtMi1zb2Z0d2FyZSBnaXRodWIgb3JnIHNpbmNlIHRoaXMgaXMgbXkgZ29h
+bCBvbmNlIHRoZSBkb2NzIGFyZSBkb25lLjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhhbmtzLDxv
+OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5QaGlsaXA8bzpwPjwvbzpwPjwvcD4K
+PC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+
+--===============9153905672507206136==--
 
