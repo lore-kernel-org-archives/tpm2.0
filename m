@@ -1,41 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============7931927377835334712=="
+Content-Type: multipart/mixed; boundary="===============6042507753890103522=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: Re: [tpm2] how can i use abrmd/tpmrm0 with tpm2-tools
-Date: Wed, 12 Dec 2018 07:55:47 -0800
-Message-ID: <8f9ee707-d44e-53ee-5946-fb12530587b8@intel.com>
-In-Reply-To: 20181212154532.GD1889@carbon
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: [tpm2] tpm2-totp
+Date: Tue, 18 Dec 2018 17:11:28 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D014B46DD8F@EXCH2010B.sit.fraunhofer.de>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7931927377835334712==
+--===============6042507753890103522==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 12/12/18 7:45 AM, Petko Manolov wrote:
-> # tpm2_takeownership -c
-> ERROR:tcti:src/tss2-tcti/tcti-device.c:319:Tss2_Tcti_Device_Init() Failed=
- to open device file /dev/tpm0: Device or resource busy
-> ERROR: tcti init allocation routine failed for library: "device" options:=
- "(null)"
-> ERROR: Could not load tcti, got: "device"
-> =
+Hi all,
 
-> How do i tell tpm2_xxx to use the userspace daemon instead of /dev/tpm0?
-> =
+as a little pre-christmas thing I've done a reimplementation of mjg's tpm-t=
+otp but for TPM2.0
+Also I've split up the project into a library and a wrapping executable to =
+make GUIs easier to implement.
 
-> I'd like to apologize if this has been answered before.  If that's the ca=
-se =
+Please consider to test it and give any feedback (especially also positive =
+feedback) so we can move this from
+my personal namespace over into the github.com/tpm2-software namespace and =
+make it an "official" project.
 
-> please point me to the corresponding thread.
+https://github.com/AndreasFuchsSIT/tpm2-totp
 
-Try 'man tpm2_takeownership' and find the TCTI ENVIRONMENT and TCTI OPTIONS=
- sections.
+P.S. There are still 4 TODOs inside the code, but those are basically "futu=
+re features".
 
--- =
-
-Tadeusz
-
---===============7931927377835334712==--
+Thanks a lot,
+Andreas
+--===============6042507753890103522==--
 
