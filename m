@@ -1,72 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============5726937721860312613=="
+Content-Type: multipart/mixed; boundary="===============0814695267898191121=="
 MIME-Version: 1.0
-From: Tricca, Philip B <philip.b.tricca at intel.com>
-Subject: [tpm2] tpm2-abrmd 2.1.0_rc0
-Date: Fri, 04 Jan 2019 00:33:12 +0000
-Message-ID: <DB638850A6A2434A93ECADDA0BC838909C475310@ORSMSX103.amr.corp.intel.com>
+From: Petko Manolov <sti at nucleusys.com>
+Subject: [tpm2] facilitating BIOS update with seamless PCR policy change
+Date: Fri, 04 Jan 2019 20:20:36 +0200
+Message-ID: <20190104182036.GA8278@carbon>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5726937721860312613==
+--===============0814695267898191121==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello all,
+	Hello guys,
 
-We just tagged the first release candidate for version 2.1.0 of the tpm2-ab=
-rmd. The tag and relevant data can be found here: https://github.com/tpm2-s=
-oftware/tpm2-abrmd/releases/tag/2.1.0_rc0. Please create issues in github f=
-or any feedback you may have during the review period.
+I'm trying to devise a way to change the PCR policy used to seal certain ke=
+y =
 
-Thanks,
-Philip
+into TPM2 in case of BIOS change.  So far i've run into this article (along=
+ with =
 
---===============5726937721860312613==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+the references it suggests):
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
-cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
-Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
-b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
-bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbyBhbGwsPG86cD48L286cD48L3A+CjxwIGNsYXNz
-PSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5X
-ZSBqdXN0IHRhZ2dlZCB0aGUgZmlyc3QgcmVsZWFzZSBjYW5kaWRhdGUgZm9yIHZlcnNpb24gMi4x
-LjAgb2YgdGhlIHRwbTItYWJybWQuIFRoZSB0YWcgYW5kIHJlbGV2YW50IGRhdGEgY2FuIGJlIGZv
-dW5kIGhlcmU6CjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTIt
-YWJybWQvcmVsZWFzZXMvdGFnLzIuMS4wX3JjMCI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29m
-dHdhcmUvdHBtMi1hYnJtZC9yZWxlYXNlcy90YWcvMi4xLjBfcmMwPC9hPi4gUGxlYXNlIGNyZWF0
-ZSBpc3N1ZXMgaW4gZ2l0aHViIGZvciBhbnkgZmVlZGJhY2sgeW91IG1heSBoYXZlIGR1cmluZyB0
-aGUgcmV2aWV3IHBlcmlvZC48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86
-cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoYW5rcyw8bzpwPjwvbzpw
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+UGhpbGlwPG86cD48L286cD48L3A+CjwvZGl2Pgo8
-L2JvZHk+CjwvaHRtbD4K
+	https://github.com/tpm2-software/tpm2-tss/issues/487
 
---===============5726937721860312613==--
+However, i did not find a definitive answer there.  Could someone please =
+
+elaborate or point me in the right direction i can read more about how to =
+
+authorize the new PCR policy?
+
+
+thanks a bunch,
+Petko
+
+--===============0814695267898191121==--
 
