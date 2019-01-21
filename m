@@ -1,101 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============8848506527634680265=="
+Content-Type: multipart/mixed; boundary="===============5836983816017625655=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] [tpm2-software/tpm2-tools] NV write/read with authorized
- policy (#1281)
-Date: Wed, 16 Jan 2019 16:15:56 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649CDA6EB@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: tpm2-software/tpm2-tools/issues/1281@github.com
+From: Thibaut Sautereau <thibaut.sautereau at clip-os.org>
+Subject: [tpm2] Issues experimenting with tpm2-tools and keyctl trusted keys
+Date: Mon, 21 Jan 2019 09:16:42 +0100
+Message-ID: <20190121081642.GB976@gandi.net>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8848506527634680265==
+--===============5836983816017625655==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-+tpm2 mailing list. In the future direct questions there.
+Hello folks,
 
-> -----Original Message-----
-> From: Kai Che [mailto:notifications(a)github.com]
-> Sent: Wednesday, January 16, 2019 8:00 AM
-> To: tpm2-software/tpm2-tools <tpm2-tools(a)noreply.github.com>
-> Cc: Subscribed <subscribed(a)noreply.github.com>
-> Subject: [tpm2-software/tpm2-tools] NV write/read with authorized policy
-> (#1281)
-> =
+I'm experimenting with TPM 2.0 (using swtpm 0.1.0), tpm2-tools 3.1.3,
+tpm2-tss 2.1.0 and the Linux 4.19.16 kernel's trusted keys. I found this
+thread [1] about the "policydigest" and "policyhandle" options added to
+keyctl but I cannot reproduce the given example [2] using tpm2-tools
+instead of the author's Python testing scripts [3]. I wonder if I do
+something wrong by executing the following commands:
 
-> Hello everyone,
-> =
+export TPM2TOOLS_TCTI=3D"device:/dev/tpmrm0"
+tpm2_takeownership --clear
+# I tried fiddling with the object attributes in the following command
+# but AIUI the default ones should be OK
+tpm2_createprimary --hierarchy=3Do --halg=3Dsha256 --kalg=3Drsa \
+	--context=3D/tmp/primary.context =
 
-> I'm trying to write/read a NV area which was defined with a policy output=
- from
-> tpm2_policyauthorize:
+tpm2_evictcontrol --auth=3Do --context=3D/tmp/primary.context \
+	--handle=3D0x80ffffff --persistent=3D0x81010001
+tpm2_createpolicy --policy-file=3D/tmp/policy.digest --policy-pcr \
+	--set-list=3Dsha256:0 --policy-digest-alg=3Dsha256
+policydigest=3D$(xxd -p /tmp/policy.digest | tr -d '\n')
+keyid=3D$(keyctl add trusted test \
+	"new 32 keyhandle=3D0x81010001 hash=3Dsha256 policydigest=3D$policydigest"=
+ @u)
+keyctl link @us @s
+keyctl pipe $keyid > /tmp/blob.hex
 
-I'm assuming you're setup steps would be here and you're just showing the a=
-ttempt
-To define a new space with the policy.
+Until here, everything works fine.
 
-> tpm2_policyauthorize -S session.ctx -o authorized.policy -f pcr.policy -n=
- signing_key.name
-> tpm2_nvdefine -x 0x1500001 -a 0x40000001 -s 32 -t "policyread|policywrite=
-" -L authorized.policy
-> tpm2_nvread -x 0x1500001 -s 32 -L sha256:8 -o 0 =
+Now for testing I want to reimport the key from the blob file, but I
+need a handle to a TPM_SE_POLICY and thus need to directly use the TPM
+device, as the in-kernel resource manager I was using so far would
+prevent me from keeping a policy session "opened". So I re-export
+TPM2TOOLS_TCTI just as Javier Martinez Canillas showed on GitHub [4]:
 
+export TPM2TOOLS_TCTI=3D"device:/dev/tpm0"
+# --auth-policy-session implies --extend-policy-session
+tpm2_createpolicy --policy-pcr --set-list=3Dsha256:0 \
+	--policy-digest-alg=3Dsha256 --auth-policy-session
+keyctl add trusted test2 \
+	"load $(cat /tmp/blob.hex) keyhandle=3D0x81010001 policyhandle=3D0x0300000=
+0" @u
 
-On master, I am seeing no way to pass the authorizing session context to tp=
-m2_nvread. The options to
-NV read for PCR policy satisfaction are all internal, and quite limited in =
-support.
+This last command causes: "add_key: Operation not permitted".
+In kernel logs, I have:
+	[ 1350.287556] tpm tpm0: A TPM error (2466) occurred unsealing
+	[ 1350.289856] trusted_key: key_unseal failed (-1)
 
-You really would want something like:
-tpm2_nvread -p session=3Dsession.ctx <args|opts>
+The TPM error is 0x9a2, i.e. TPM2_RC_BAD_AUTH. I cannot see what I'm
+doing wrong. Do you see something obvious?
 
-This way the first handle of the sessions array can be specified.
+[1] https://lkml.org/lkml/2015/11/17/520
+[2] https://lkml.org/lkml/2015/11/21/125
+[3] https://github.com/jsakkine-intel/tpm2-scripts
+[4] https://github.com/tpm2-software/tpm2-tools/issues/510#issuecomment-331=
+385565
 
-You also need tpm2-abrmd and not /dev/tpm0 or /dev/tpmrm0 as extended sessi=
-ons (ie
-Session blobs between tool invocations) is an abrmd only feature.
+Thanks a lot for your time and your work!
 
-Sorry this support is not there currently, but it's on the roadmap for 2019=
-. My major goal for the 2019
-Release is to have:
-1. proper session/password support. Each part of the session array should b=
-e specifiable. =
+-- =
 
-2. HMAC passwords
-3. Consistent options (command line interface will freeze at 4.0)
+Thibaut Sautereau
+CLIP OS developper
 
-> ERROR: Failed to read NVRAM area at index 0x1500001
-> ERROR: Tss2_Sys_NV_Read(0x99D) - tpm:session(1):a policy check failed
-> ERROR: Unable to run tpm2_nvread
-> =
-
-> Write/read with a "normal" PCR policy is working fine with the proper PCR=
- values:
-> tpm2_nvdefine -x 0x1500001 -a 0x40000001 -s 32 -t "policyread|policywrite=
-" -L
-> pcr.policy
-> =
-
-> How can I access the NV area with an authorized policy?
-> =
-
-> Thanks and best regards,
-> =
-
-> Kai
-> =
-
-> =E2=80=94
-> You are receiving this because you are subscribed to this thread.
-> Reply to this email directly, view it on GitHub <https://github.com/tpm2-
-> software/tpm2-tools/issues/1281> , or mute the thread
-> <https://github.com/notifications/unsubscribe-
-> auth/AQ7bB6hC0v0CWNUvFQmwwZ6D4feE2w_Fks5vD0yEgaJpZM4aDY32> .
-> <https://github.com/notifications/beacon/AQ7bB_1Kg32-
-> 17tEQAoXM8S8E0yOROGeks5vD0yEgaJpZM4aDY32.gif>
-
-
---===============8848506527634680265==--
+--===============5836983816017625655==--
 
