@@ -1,36 +1,117 @@
-Content-Type: multipart/mixed; boundary="===============3535575269042454115=="
+Content-Type: multipart/mixed; boundary="===============8006898248233306184=="
 MIME-Version: 1.0
-From: Thibaut Sautereau <thibaut.sautereau at clip-os.org>
-Subject: Re: [tpm2] Issues experimenting with tpm2-tools and keyctl trusted
- keys
-Date: Wed, 23 Jan 2019 14:56:57 +0100
-Message-ID: <20190123135657.GB12820@gandi.net>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D014B4C36D5@exch2010c.sit.fraunhofer.de
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: Re: [tpm2] tpm2-abrmd 2.1.0_rc0
+Date: Wed, 23 Jan 2019 18:58:02 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909CE328D8@ORSMSX104.amr.corp.intel.com>
+In-Reply-To: DB638850A6A2434A93ECADDA0BC838909C475310@ORSMSX103.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3535575269042454115==
+--===============8006898248233306184==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 23, 2019 at 01:11:20PM +0000, Fuchs, Andreas wrote:
-> have you tried running the same sequences but using tpm2_create
-> instead of "keyctl new" and tpm2_unseal instead of "keyctl load" ?
-> Just to make sure that the TPM side of things is working ok ?
+The PR queue got a bit stuck between RC0 and RC1 on account of some changes=
+ upstream that broke the autobuilder. All sorted out now and the required c=
+hanges are in RC1. This RC will likely be cut a bit short on account of how=
+ long RC0 took and some impending travel (FOSDEM!).
 
-Yes, using tpm2_create instead of "keyctl new" and tpm2_load+tpm2_unseal
-(exclusively with handles) instead of "keyctl load" works perfectly.
+RC1 is here: https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.1.0=
+_rc1
 
-> Then it would be narrowed down to finding the diff between the basic
-> commands and how keyctl uses them.
+Best,
+Philip
 
-Right.
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Tricca, Philip=
+ B
+Sent: 3 January, 2019 16:33
+To: 'tpm2(a)lists.01.org' <tpm2(a)lists.01.org>
+Subject: [tpm2] tpm2-abrmd 2.1.0_rc0
 
--- =
+Hello all,
 
-Thibaut Sautereau
-CLIP OS developer
+We just tagged the first release candidate for version 2.1.0 of the tpm2-ab=
+rmd. The tag and relevant data can be found here: https://github.com/tpm2-s=
+oftware/tpm2-abrmd/releases/tag/2.1.0_rc0. Please create issues in github f=
+or any feedback you may have during the review period.
 
---===============3535575269042454115==--
+Thanks,
+Philip
+
+--===============8006898248233306184==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWw7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7
+fQpzcGFuLkVtYWlsU3R5bGUxOAoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5OwoJZm9u
+dC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgljb2xvcjojMUY0OTdEO30KLk1zb0NocERl
+ZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtc2l6ZToxMC4wcHQ7fQpA
+cGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsKCW1hcmdpbjoxLjBpbiAxLjBp
+biAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0t
+Pjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9
+ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1z
+byA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJl
+ZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVh
+ZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRp
+diBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9
+ImNvbG9yOiMxRjQ5N0QiPlRoZSBQUiBxdWV1ZSBnb3QgYSBiaXQgc3R1Y2sgYmV0d2VlbiBSQzAg
+YW5kIFJDMSBvbiBhY2NvdW50IG9mIHNvbWUgY2hhbmdlcyB1cHN0cmVhbSB0aGF0IGJyb2tlIHRo
+ZSBhdXRvYnVpbGRlci4gQWxsIHNvcnRlZCBvdXQgbm93IGFuZCB0aGUgcmVxdWlyZWQgY2hhbmdl
+cyBhcmUgaW4gUkMxLiBUaGlzIFJDIHdpbGwgbGlrZWx5IGJlIGN1dCBhIGJpdCBzaG9ydAogb24g
+YWNjb3VudCBvZiBob3cgbG9uZyBSQzAgdG9vayBhbmQgc29tZSBpbXBlbmRpbmcgdHJhdmVsIChG
+T1NERU0hKS48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
+IHN0eWxlPSJjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJjb2xvcjojMUY0OTdEIj5SQzEgaXMgaGVyZTog
+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9yZWxl
+YXNlcy90YWcvMi4xLjBfcmMxIj4KaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBt
+Mi1hYnJtZC9yZWxlYXNlcy90YWcvMi4xLjBfcmMxPC9hPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5i
+c3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNv
+bG9yOiMxRjQ5N0QiPkJlc3QsPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48c3BhbiBzdHlsZT0iY29sb3I6IzFGNDk3RCI+UGhpbGlwPG86cD48L286cD48L3NwYW4+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBuYW1lPSJfTWFpbEVuZENvbXBvc2UiPjxzcGFu
+IHN0eWxlPSJjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L2E+PC9wPgo8
+ZGl2Pgo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItdG9wOnNvbGlkICNFMUUxRTEgMS4w
+cHQ7cGFkZGluZzozLjBwdCAwaW4gMGluIDBpbiI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxhIG5h
+bWU9Il9fX19fcmVwbHlzZXBhcmF0b3IiPjwvYT48Yj5Gcm9tOjwvYj4gdHBtMiBbbWFpbHRvOnRw
+bTItYm91bmNlc0BsaXN0cy4wMS5vcmddCjxiPk9uIEJlaGFsZiBPZiA8L2I+VHJpY2NhLCBQaGls
+aXAgQjxicj4KPGI+U2VudDo8L2I+IDMgSmFudWFyeSwgMjAxOSAxNjozMzxicj4KPGI+VG86PC9i
+PiAndHBtMkBsaXN0cy4wMS5vcmcnICZsdDt0cG0yQGxpc3RzLjAxLm9yZyZndDs8YnI+CjxiPlN1
+YmplY3Q6PC9iPiBbdHBtMl0gdHBtMi1hYnJtZCAyLjEuMF9yYzA8bzpwPjwvbzpwPjwvcD4KPC9k
+aXY+CjwvZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+SGVsbG8gYWxsLDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+V2UganVz
+dCB0YWdnZWQgdGhlIGZpcnN0IHJlbGVhc2UgY2FuZGlkYXRlIGZvciB2ZXJzaW9uIDIuMS4wIG9m
+IHRoZSB0cG0yLWFicm1kLiBUaGUgdGFnIGFuZCByZWxldmFudCBkYXRhIGNhbiBiZSBmb3VuZCBo
+ZXJlOgo8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1k
+L3JlbGVhc2VzL3RhZy8yLjEuMF9yYzAiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJl
+L3RwbTItYWJybWQvcmVsZWFzZXMvdGFnLzIuMS4wX3JjMDwvYT4uIFBsZWFzZSBjcmVhdGUgaXNz
+dWVzIGluIGdpdGh1YiBmb3IgYW55IGZlZWRiYWNrIHlvdSBtYXkgaGF2ZSBkdXJpbmcgdGhlIHJl
+dmlldyBwZXJpb2QuPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5i
+c3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGFua3MsPG86cD48L286cD48L3A+
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlBoaWxpcDxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5
+Pgo8L2h0bWw+Cg==
+
+--===============8006898248233306184==--
 
