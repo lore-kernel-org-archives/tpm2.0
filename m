@@ -1,31 +1,168 @@
-Content-Type: multipart/mixed; boundary="===============3280978596303903052=="
+Content-Type: multipart/mixed; boundary="===============5634572535208342154=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] tpm2-tss 2.2.0-rc1
-Date: Thu, 24 Jan 2019 13:50:27 -0800
-Message-ID: <de1c7fc4-9ba4-097d-928b-95438bdfc7e0@intel.com>
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: Re: [tpm2] tpm2-abrmd 2.1.0_rc0
+Date: Mon, 28 Jan 2019 23:01:46 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909CE336C1@ORSMSX104.amr.corp.intel.com>
+In-Reply-To: DB638850A6A2434A93ECADDA0BC838909CE328D8@ORSMSX104.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3280978596303903052==
+--===============5634572535208342154==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-An updated release candidate for tpm2-tss 2.2.0 is out. It can be found her=
-e:
+RC2 for the 2.1.0 release was just tagged. This includes a few small change=
+s to make the build compatible with the latest autoconf-archive release and=
+ to eliminate a dependency on dbus-x11 from the automake test harness. Than=
+ks to everyone who pushed me to get these changes into this release and apo=
+logies to everyone else for inflicting another RC cycle on you. I'll be at =
+FOSDEM over the upcoming weekend so my plan is to sign the release Friday b=
+efore the conference unless other issues come up.
 
-https://github.com/tpm2-software/tpm2-tss/releases/tag/2.2.0_rc1
+RC2 is here: https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.1.0=
+_rc2
 
-All changes and fixed issues are listed in the CHAGNELOG.md file.
-Please give it some testing. Any feedback is appreciated.
+Best,
+Philip
+
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Tricca, Philip=
+ B
+Sent: 23 January, 2019 10:58
+To: 'tpm2(a)lists.01.org' <tpm2(a)lists.01.org>
+Subject: Re: [tpm2] tpm2-abrmd 2.1.0_rc0
+
+The PR queue got a bit stuck between RC0 and RC1 on account of some changes=
+ upstream that broke the autobuilder. All sorted out now and the required c=
+hanges are in RC1. This RC will likely be cut a bit short on account of how=
+ long RC0 took and some impending travel (FOSDEM!).
+
+RC1 is here: https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.1.0=
+_rc1
+
+Best,
+Philip
+
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Tricca, Philip=
+ B
+Sent: 3 January, 2019 16:33
+To: 'tpm2(a)lists.01.org' <tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>>
+Subject: [tpm2] tpm2-abrmd 2.1.0_rc0
+
+Hello all,
+
+We just tagged the first release candidate for version 2.1.0 of the tpm2-ab=
+rmd. The tag and relevant data can be found here: https://github.com/tpm2-s=
+oftware/tpm2-abrmd/releases/tag/2.1.0_rc0. Please create issues in github f=
+or any feedback you may have during the review period.
 
 Thanks,
--- =
+Philip
 
-Tadeusz
+--===============5634572535208342154==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWw7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7
+fQpzcGFuLkVtYWlsU3R5bGUxOAoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsOwoJZm9udC1mYW1p
+bHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgljb2xvcjojMUY0OTdEO30Kc3Bhbi5FbWFpbFN0eWxl
+MTkKCXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1yZXBseTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJp
+IixzYW5zLXNlcmlmOwoJY29sb3I6IzFGNDk3RDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxl
+LXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250LXNpemU6MTAuMHB0O30KQHBhZ2UgV29yZFNlY3Rpb24x
+Cgl7c2l6ZTo4LjVpbiAxMS4waW47CgltYXJnaW46MS4waW4gMS4waW4gMS4waW4gMS4waW47fQpk
+aXYuV29yZFNlY3Rpb24xCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQotLT48L3N0eWxlPjwhLS1baWYg
+Z3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIx
+MDI2IiAvPgo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hh
+cGVsYXlvdXQgdjpleHQ9ImVkaXQiPgo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4K
+PC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPgo8L2hlYWQ+Cjxib2R5IGxhbmc9IkVO
+LVVTIiBsaW5rPSIjMDU2M0MxIiB2bGluaz0iIzk1NEY3MiI+CjxkaXYgY2xhc3M9IldvcmRTZWN0
+aW9uMSI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJjb2xvcjojMUY0OTdEIj5S
+QzIgZm9yIHRoZSAyLjEuMCByZWxlYXNlIHdhcyBqdXN0IHRhZ2dlZC4gVGhpcyBpbmNsdWRlcyBh
+IGZldyBzbWFsbCBjaGFuZ2VzIHRvIG1ha2UgdGhlIGJ1aWxkIGNvbXBhdGlibGUgd2l0aCB0aGUg
+bGF0ZXN0IGF1dG9jb25mLWFyY2hpdmUgcmVsZWFzZSBhbmQgdG8gZWxpbWluYXRlIGEgZGVwZW5k
+ZW5jeSBvbiBkYnVzLXgxMSBmcm9tIHRoZSBhdXRvbWFrZSB0ZXN0CiBoYXJuZXNzLiBUaGFua3Mg
+dG8gZXZlcnlvbmUgd2hvIHB1c2hlZCBtZSB0byBnZXQgdGhlc2UgY2hhbmdlcyBpbnRvIHRoaXMg
+cmVsZWFzZSBhbmQgYXBvbG9naWVzIHRvIGV2ZXJ5b25lIGVsc2UgZm9yIGluZmxpY3RpbmcgYW5v
+dGhlciBSQyBjeWNsZSBvbiB5b3UuIEkmIzgyMTc7bGwgYmUgYXQgRk9TREVNIG92ZXIgdGhlIHVw
+Y29taW5nIHdlZWtlbmQgc28gbXkgcGxhbiBpcyB0byBzaWduIHRoZSByZWxlYXNlIEZyaWRheSBi
+ZWZvcmUgdGhlIGNvbmZlcmVuY2UKIHVubGVzcyBvdGhlciBpc3N1ZXMgY29tZSB1cC48bzpwPjwv
+bzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJjb2xvcjoj
+MUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxzcGFuIHN0eWxlPSJjb2xvcjojMUY0OTdEIj5SQzIgaXMgaGVyZTogPGEgaHJlZj0iaHR0cHM6
+Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9yZWxlYXNlcy90YWcvMi4xLjBf
+cmMyIj4KaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9yZWxlYXNl
+cy90YWcvMi4xLjBfcmMyPC9hPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFu
+PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOiMxRjQ5N0QiPkJl
+c3QsPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHls
+ZT0iY29sb3I6IzFGNDk3RCI+UGhpbGlwPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0i
+TXNvTm9ybWFsIj48YSBuYW1lPSJfTWFpbEVuZENvbXBvc2UiPjxzcGFuIHN0eWxlPSJjb2xvcjoj
+MUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L2E+PC9wPgo8ZGl2Pgo8ZGl2IHN0eWxl
+PSJib3JkZXI6bm9uZTtib3JkZXItdG9wOnNvbGlkICNFMUUxRTEgMS4wcHQ7cGFkZGluZzozLjBw
+dCAwaW4gMGluIDBpbiI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxhIG5hbWU9Il9fX19fcmVwbHlz
+ZXBhcmF0b3IiPjwvYT48Yj5Gcm9tOjwvYj4gdHBtMiBbbWFpbHRvOnRwbTItYm91bmNlc0BsaXN0
+cy4wMS5vcmddCjxiPk9uIEJlaGFsZiBPZiA8L2I+VHJpY2NhLCBQaGlsaXAgQjxicj4KPGI+U2Vu
+dDo8L2I+IDIzIEphbnVhcnksIDIwMTkgMTA6NTg8YnI+CjxiPlRvOjwvYj4gJ3RwbTJAbGlzdHMu
+MDEub3JnJyAmbHQ7dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PGJyPgo8Yj5TdWJqZWN0OjwvYj4gUmU6
+IFt0cG0yXSB0cG0yLWFicm1kIDIuMS4wX3JjMDxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9kaXY+
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj48c3BhbiBzdHlsZT0iY29sb3I6IzFGNDk3RCI+VGhlIFBSIHF1ZXVlIGdvdCBhIGJp
+dCBzdHVjayBiZXR3ZWVuIFJDMCBhbmQgUkMxIG9uIGFjY291bnQgb2Ygc29tZSBjaGFuZ2VzIHVw
+c3RyZWFtIHRoYXQgYnJva2UgdGhlIGF1dG9idWlsZGVyLiBBbGwgc29ydGVkIG91dCBub3cgYW5k
+IHRoZSByZXF1aXJlZCBjaGFuZ2VzIGFyZSBpbiBSQzEuIFRoaXMgUkMgd2lsbCBsaWtlbHkgYmUg
+Y3V0IGEgYml0IHNob3J0CiBvbiBhY2NvdW50IG9mIGhvdyBsb25nIFJDMCB0b29rIGFuZCBzb21l
+IGltcGVuZGluZyB0cmF2ZWwgKEZPU0RFTSEpLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOiMxRjQ5N0QiPjxvOnA+Jm5ic3A7PC9v
+OnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOiMx
+RjQ5N0QiPlJDMSBpcyBoZXJlOiA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0
+d2FyZS90cG0yLWFicm1kL3JlbGVhc2VzL3RhZy8yLjEuMF9yYzEiPgpodHRwczovL2dpdGh1Yi5j
+b20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL3JlbGVhc2VzL3RhZy8yLjEuMF9yYzE8L2E+PG86
+cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iY29s
+b3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48c3BhbiBzdHlsZT0iY29sb3I6IzFGNDk3RCI+QmVzdCw8bzpwPjwvbzpwPjwvc3Bhbj48
+L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJjb2xvcjojMUY0OTdEIj5QaGls
+aXA8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxl
+PSJjb2xvcjojMUY0OTdEIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxkaXY+CjxkaXYg
+c3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci10b3A6c29saWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5n
+OjMuMHB0IDBpbiAwaW4gMGluIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+RnJvbTo8L2I+IHRw
+bTIgWzxhIGhyZWY9Im1haWx0bzp0cG0yLWJvdW5jZXNAbGlzdHMuMDEub3JnIj5tYWlsdG86dHBt
+Mi1ib3VuY2VzQGxpc3RzLjAxLm9yZzwvYT5dCjxiPk9uIEJlaGFsZiBPZiA8L2I+VHJpY2NhLCBQ
+aGlsaXAgQjxicj4KPGI+U2VudDo8L2I+IDMgSmFudWFyeSwgMjAxOSAxNjozMzxicj4KPGI+VG86
+PC9iPiAndHBtMkBsaXN0cy4wMS5vcmcnICZsdDs8YSBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4w
+MS5vcmciPnRwbTJAbGlzdHMuMDEub3JnPC9hPiZndDs8YnI+CjxiPlN1YmplY3Q6PC9iPiBbdHBt
+Ml0gdHBtMi1hYnJtZCAyLjEuMF9yYzA8bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvZGl2Pgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+SGVsbG8gYWxsLDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZu
+YnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+V2UganVzdCB0YWdnZWQgdGhlIGZp
+cnN0IHJlbGVhc2UgY2FuZGlkYXRlIGZvciB2ZXJzaW9uIDIuMS4wIG9mIHRoZSB0cG0yLWFicm1k
+LiBUaGUgdGFnIGFuZCByZWxldmFudCBkYXRhIGNhbiBiZSBmb3VuZCBoZXJlOgo8YSBocmVmPSJo
+dHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL3JlbGVhc2VzL3RhZy8y
+LjEuMF9yYzAiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQvcmVs
+ZWFzZXMvdGFnLzIuMS4wX3JjMDwvYT4uIFBsZWFzZSBjcmVhdGUgaXNzdWVzIGluIGdpdGh1YiBm
+b3IgYW55IGZlZWRiYWNrIHlvdSBtYXkgaGF2ZSBkdXJpbmcgdGhlIHJldmlldyBwZXJpb2QuPG86
+cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGFua3MsPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiPlBoaWxpcDxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
---===============3280978596303903052==--
+--===============5634572535208342154==--
 
