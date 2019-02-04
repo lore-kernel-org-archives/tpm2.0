@@ -1,57 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============2760958224746916153=="
+Content-Type: multipart/mixed; boundary="===============7718660289394937384=="
 MIME-Version: 1.0
-From: Luke Hinds <lhinds at redhat.com>
-Subject: [tpm2] tpm2-abrmd in a container
-Date: Mon, 04 Feb 2019 15:46:31 +0000
-Message-ID: <CAKrSGQQj4SSifdM78ELkw0LtoZbE1MEJ888EC0Ld_xK7D9gdjw@mail.gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] tpm2-abrmd in a container
+Date: Mon, 04 Feb 2019 16:11:32 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649CDE780@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAKrSGQQj4SSifdM78ELkw0LtoZbE1MEJ888EC0Ld_xK7D9gdjw@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2760958224746916153==
+--===============7718660289394937384==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+I run it in our CI system which is using a docker container, not sure if th=
+at helps
+But you can look at our scripts for it.
 
-I have been working on trying to get tpm2-abrmd running in a container, but
-its proving problematic as there is a requirement on system-d and dbus.
-This in turn requires running the container as privileged and mounting the
-hosts cgroup (and adding cap sys-admin).
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Luke Hinds
+> Sent: Monday, February 4, 2019 7:47 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] tpm2-abrmd in a container
+> =
 
-My reason for using a container, is for CI / functional testing of a
-project that will use abrmd and having a lightweight means to test against
-the resource manager running in a container.
+> Hello,
+> =
 
-I am still early in looking at ways to achieve this, so I wanted to ask if
-any others have snippets of previous attempts (successful or not) they
-could share?
+> I have been working on trying to get tpm2-abrmd running in a container, b=
+ut its
+> proving problematic as there is a requirement on system-d and dbus. This =
+in turn
+> requires running the container as privileged and mounting the hosts cgrou=
+p (and
+> adding cap sys-admin).
+> =
 
-Thanks,
+> My reason for using a container, is for CI / functional testing of a proj=
+ect that will
+> use abrmd and having a lightweight means to test against the resource man=
+ager
+> running in a container.
+> =
 
-Luke
+> I am still early in looking at ways to achieve this, so I wanted to ask i=
+f any others
+> have snippets of previous attempts (successful or not) they could share?
+> =
 
---===============2760958224746916153==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> Thanks,
+> =
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+SGVsbG8sPGRpdj48
-YnI+PC9kaXY+PGRpdj5JIGhhdmUgYmVlbiB3b3JraW5nIG9uIHRyeWluZyB0byBnZXQgdHBtMi1h
-YnJtZCBydW5uaW5nIGluIGEgY29udGFpbmVyLCBidXQgaXRzIHByb3ZpbmcgcHJvYmxlbWF0aWMg
-YXMgdGhlcmUgaXMgYSByZXF1aXJlbWVudCBvbiBzeXN0ZW0tZCBhbmQgZGJ1cy4gVGhpcyBpbiB0
-dXJuIHJlcXVpcmVzIHJ1bm5pbmcgdGhlIGNvbnRhaW5lciBhcyBwcml2aWxlZ2VkIGFuZCBtb3Vu
-dGluZyB0aGUgaG9zdHMgY2dyb3VwIChhbmQgYWRkaW5nIGNhcCBzeXMtYWRtaW4pLjwvZGl2Pjxk
-aXY+PGJyPjwvZGl2PjxkaXY+TXkgcmVhc29uIGZvciB1c2luZyBhIGNvbnRhaW5lciwgaXMgZm9y
-IENJIC8gZnVuY3Rpb25hbCB0ZXN0aW5nIG9mIGEgcHJvamVjdCB0aGF0IHdpbGwgdXNlIGFicm1k
-wqBhbmQgaGF2aW5nIGEgbGlnaHR3ZWlnaHQgbWVhbnMgdG8gdGVzdCBhZ2FpbnN0IHRoZSByZXNv
-dXJjZSBtYW5hZ2VyIHJ1bm5pbmcgaW4gYSBjb250YWluZXIuwqA8L2Rpdj48ZGl2Pjxicj48L2Rp
-dj48ZGl2PkkgYW0gc3RpbGwgZWFybHkgaW4gbG9va2luZyBhdCB3YXlzIHRvIGFjaGlldmUgdGhp
-cywgc28gSSB3YW50ZWQgdG8gYXNrIGlmIGFueSBvdGhlcnMgaGF2ZSBzbmlwcGV0cyBvZiBwcmV2
-aW91cyBhdHRlbXB0cyAoc3VjY2Vzc2Z1bCBvciBub3QpIHRoZXkgY291bGQgc2hhcmU/PC9kaXY+
-PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFua3MsPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5MdWtl
-PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+Cg==
+> Luke
 
---===============2760958224746916153==--
+--===============7718660289394937384==--
 
