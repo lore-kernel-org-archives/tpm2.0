@@ -1,70 +1,263 @@
-Content-Type: multipart/mixed; boundary="===============8309187120097553767=="
+Content-Type: multipart/mixed; boundary="===============3639488756175776486=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: Re: [tpm2] tpm2-tss v2.2.0
-Date: Tue, 05 Feb 2019 09:55:20 -0800
-Message-ID: <4ced1f47-62ab-457b-0e6e-46f7e5de147a@intel.com>
-In-Reply-To: 215e4114-07d2-7875-47fa-727b35b2634b@redhat.com
+From: Munson, Charles - 0553 - MITLL <Charles.Munson at ll.mit.edu>
+Subject: [tpm2] tpm2-tools AK authorization question
+Date: Tue, 05 Feb 2019 23:35:43 +0000
+Message-ID: <3c447329edc3414092b36c75f12c1c36@ll.mit.edu>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8309187120097553767==
+--===============3639488756175776486==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Javier,
+Hello, =
 
-On 2/4/19 11:36 PM, Javier Martinez Canillas wrote:
-> Thanks a lot for the releases and the announcements. I've a maybe silly
-> question but it wasn't clear to me why we have both a 2.1.1 and 2.2.0
-> releases. From the CHANGELOG it seems that the only difference is that
-> 2.2.0 has new features (QNX build and dev TCTI partial reads support)
-> while 2.1.1 only contains the fixes.
-> =
 
-> Does it mean that it's safe to update the Fedora package from 2.1.0 to
-> 2.2.0 or should I update to 2.1.1? My understanding is that the former.
+ =
 
-Yes, the logic is that the first number changes if there are changes that
-break backwards compatibility. The second number bumps if that are new
-features, but the release does not break backward compatibility, and
-the last number is just for bug fixes. So it is safe to update from 2.1.1
-to 2.2.0. As you noted - it includes bug fixes and the two new features.
-The 2.1.1 version is for users who, for whatever reason, do not want to
-have the new features, but want to get all the bug fixes. Similar story
-with 2.0.2.
-I imagine that for 2.0.x and 2.1.x we will maintain them for one year
-after the initial release, and only release new version if there will
-be explicit ask for it from the users.
 
-The numbering method is described in
-https://github.com/tpm2-software/tpm2-tss/blob/master/RELEASE.md#version-nu=
-mbers
+I'm not sure if this is user error or an issue with one of the tools.   I am
+trying to do a createek -> createak -> makecredential -> activatecredential
+workflow with the new ESAPI tools in master (following the advice when used
+with a resource manager here:
+https://github.com/tpm2-software/tpm2-tools/blob/master/man/tpm2_createak.1.
+md).  This seems to work well when there is no AK authorization set (when
+performing createak), though fails with an "authorization HMAC check failed"
+error when setting an AK_AUTH.  =
 
-> =
 
-> I wonder if there's a lot of value in having too many 2.X releases or
-> if we should just stick with one, as long as there are no backward
-> incompatible changes. At least for me as a packager is confusing and
-> have to dig to understand the differences between all these release
-I'm not sure if there is a lot of value in having many 2.x versions,
-but it is what we decided to follow as it gives users flexibility and
-control over what features do they want to have. Some of the changes
-depend on the version of the TPM driver so users who use old driver
-may want to stick with the older version of the library and just
-get the fixes. Hope that makes sense.
+ =
 
-> =
 
-> For example in tpm2-tools we did have to do both 3.0.X and 3.X releases
-> because there was a non-backward compatible change between 3.0 and 3.1
-> (migration from tpm2-tss 1.4.0 to 2.0.0).
+So for instance (following the documentation): =
 
-Thanks,
--- =
 
-Tadeusz
+ =
 
---===============8309187120097553767==--
+
+tpm2_createek -c 0x81010001 -G rsa -p ek.pub
+
+tpm2_createak -C 0x81010001 -k 0x81010002 -p ak.pub -n ak.name -P "akpw"
+
+tpm2_makecredential -e ek.pub -s file_input_data.txt -n <ak.name here> -o
+outcred.out
+
+tpm2_activatecredential -c 0x81010002 -C 0x81010001 -f outcred.out -o
+verify.out -P "akpw"
+
+WARNING:esys:src/tss2-esys/api/Esys_ActivateCredential.c:342:Esys_ActivateCr
+edential_Finish() Received TPM Error =
+
+
+ERROR:esys:src/tss2-esys/api/Esys_ActivateCredential.c:127:Esys_ActivateCred
+ential() Esys Finish ErrorCode (0x0000098e) =
+
+
+ERROR: Esys_ActivateCredential(0x98E) - tpm:session(1):the authorization
+HMAC check failed and DA counter incremented
+
+ERROR: Unable to run tpm2_activatecredential
+
+ =
+
+
+Note that by not using an AK_AUTH (removing all of the  -P "akpw" code) that
+this works, and this example used to work pre-ESAPI.  Is this no longer
+supported?  Everything seems to work fine still with tpm2_quote. =
+
+
+ =
+
+
+Best,
+
+Charlie =
+
+
+ =
+
+
+
+--===============3639488756175776486==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+PGhlYWQ+PE1FVEEgSFRUUC1FUVVJVj0iQ29udGVudC1UeXBlIiBDT05U
+RU5UPSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXMtYXNjaWkiPjxtZXRhIG5hbWU9R2VuZXJhdG9yIGNv
+bnRlbnQ9Ik1pY3Jvc29mdCBXb3JkIDE1IChmaWx0ZXJlZCBtZWRpdW0pIj48c3R5bGU+PCEtLQov
+KiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2FtYnJpYSBN
+YXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7Zm9udC1m
+YW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyogU3R5bGUg
+RGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJ
+e21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEuMHB0OwoJ
+Zm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNvSHlwZXJs
+aW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQtZGVjb3Jh
+dGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQKCXtt
+c28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVu
+ZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29t
+cG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93dGV4
+dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250LWZh
+bWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3NpemU6OC41
+aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2LldvcmRTZWN0
+aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+
+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4KPC94
+bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0IHY6
+ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFwZWxh
+eW91dD48L3htbD48IVtlbmRpZl0tLT48L2hlYWQ+PGJvZHkgbGFuZz1FTi1VUyBsaW5rPSIjMDU2
+M0MxIiB2bGluaz0iIzk1NEY3MiI+PGRpdiBjbGFzcz1Xb3JkU2VjdGlvbjE+PHAgY2xhc3M9TXNv
+Tm9ybWFsPkhlbGxvLCA8bzpwPjwvbzpwPjwvcD48cCBjbGFzcz1Nc29Ob3JtYWw+PG86cD4mbmJz
+cDs8L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPkkmIzgyMTc7bSBub3Qgc3VyZSBpZiB0aGlz
+IGlzIHVzZXIgZXJyb3Igb3IgYW4gaXNzdWUgd2l0aCBvbmUgb2YgdGhlIHRvb2xzLiZuYnNwOyZu
+YnNwOyBJIGFtIHRyeWluZyB0byBkbyBhIGNyZWF0ZWVrIC0mZ3Q7IGNyZWF0ZWFrIC0mZ3Q7IG1h
+a2VjcmVkZW50aWFsIC0mZ3Q7IGFjdGl2YXRlY3JlZGVudGlhbCB3b3JrZmxvdyB3aXRoIHRoZSBu
+ZXcgRVNBUEkgdG9vbHMgaW4gbWFzdGVyIChmb2xsb3dpbmcgdGhlIGFkdmljZSB3aGVuIHVzZWQg
+d2l0aCBhIHJlc291cmNlIG1hbmFnZXIgaGVyZTogPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29t
+L3RwbTItc29mdHdhcmUvdHBtMi10b29scy9ibG9iL21hc3Rlci9tYW4vdHBtMl9jcmVhdGVhay4x
+Lm1kIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL2Jsb2IvbWFz
+dGVyL21hbi90cG0yX2NyZWF0ZWFrLjEubWQ8L2E+KS4mbmJzcDsgVGhpcyBzZWVtcyB0byB3b3Jr
+IHdlbGwgd2hlbiB0aGVyZSBpcyBubyBBSyBhdXRob3JpemF0aW9uIHNldCAod2hlbiBwZXJmb3Jt
+aW5nIGNyZWF0ZWFrKSwgdGhvdWdoIGZhaWxzIHdpdGggYW4gJiM4MjIwO2F1dGhvcml6YXRpb24g
+SE1BQyBjaGVjayBmYWlsZWQmIzgyMjA7IGVycm9yIHdoZW4gc2V0dGluZyBhbiBBS19BVVRILiZu
+YnNwOyA8bzpwPjwvbzpwPjwvcD48cCBjbGFzcz1Nc29Ob3JtYWw+PG86cD4mbmJzcDs8L286cD48
+L3A+PHAgY2xhc3M9TXNvTm9ybWFsPlNvIGZvciBpbnN0YW5jZSAoZm9sbG93aW5nIHRoZSBkb2N1
+bWVudGF0aW9uKTogPG86cD48L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7
+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD50cG0yX2NyZWF0ZWVrIC1jIDB4ODEwMTAwMDEg
+LUcgcnNhIC1wIGVrLnB1YjxvOnA+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD50cG0yX2Ny
+ZWF0ZWFrIC1DIDB4ODEwMTAwMDEgLWsgMHg4MTAxMDAwMiAtcCBhay5wdWIgLW4gYWsubmFtZTxi
+PiAtUCAmcXVvdDtha3B3JnF1b3Q7PC9iPjxvOnA+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1h
+bD50cG0yX21ha2VjcmVkZW50aWFsIC1lIGVrLnB1YiAtcyBmaWxlX2lucHV0X2RhdGEudHh0IC1u
+ICZsdDthay5uYW1lIGhlcmUmZ3Q7IC1vIG91dGNyZWQub3V0PG86cD48L286cD48L3A+PHAgY2xh
+c3M9TXNvTm9ybWFsPnRwbTJfYWN0aXZhdGVjcmVkZW50aWFsIC1jIDB4ODEwMTAwMDIgLUMgMHg4
+MTAxMDAwMSAtZiBvdXRjcmVkLm91dCAtbyB2ZXJpZnkub3V0PGI+IC1QICZxdW90O2FrcHcmcXVv
+dDs8L2I+PG86cD48L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPldBUk5JTkc6ZXN5czpzcmMv
+dHNzMi1lc3lzL2FwaS9Fc3lzX0FjdGl2YXRlQ3JlZGVudGlhbC5jOjM0MjpFc3lzX0FjdGl2YXRl
+Q3JlZGVudGlhbF9GaW5pc2goKSBSZWNlaXZlZCBUUE0gRXJyb3IgPG86cD48L286cD48L3A+PHAg
+Y2xhc3M9TXNvTm9ybWFsPkVSUk9SOmVzeXM6c3JjL3RzczItZXN5cy9hcGkvRXN5c19BY3RpdmF0
+ZUNyZWRlbnRpYWwuYzoxMjc6RXN5c19BY3RpdmF0ZUNyZWRlbnRpYWwoKSBFc3lzIEZpbmlzaCBF
+cnJvckNvZGUgKDB4MDAwMDA5OGUpIDxvOnA+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD5F
+UlJPUjogRXN5c19BY3RpdmF0ZUNyZWRlbnRpYWwoMHg5OEUpIC0gdHBtOnNlc3Npb24oMSk6dGhl
+IGF1dGhvcml6YXRpb24gSE1BQyBjaGVjayBmYWlsZWQgYW5kIERBIGNvdW50ZXIgaW5jcmVtZW50
+ZWQ8bzpwPjwvbzpwPjwvcD48cCBjbGFzcz1Nc29Ob3JtYWw+RVJST1I6IFVuYWJsZSB0byBydW4g
+dHBtMl9hY3RpdmF0ZWNyZWRlbnRpYWw8bzpwPjwvbzpwPjwvcD48cCBjbGFzcz1Nc29Ob3JtYWw+
+PG86cD4mbmJzcDs8L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPk5vdGUgdGhhdCBieSBub3Qg
+dXNpbmcgYW4gQUtfQVVUSCAocmVtb3ZpbmcgYWxsIG9mIHRoZSAmbmJzcDstUCAmcXVvdDtha3B3
+JnF1b3Q7IGNvZGUpIHRoYXQgdGhpcyB3b3JrcywgYW5kIHRoaXMgZXhhbXBsZSB1c2VkIHRvIHdv
+cmsgcHJlLUVTQVBJLiZuYnNwOyBJcyB0aGlzIG5vIGxvbmdlciBzdXBwb3J0ZWQ/ICZuYnNwO0V2
+ZXJ5dGhpbmcgc2VlbXMgdG8gd29yayBmaW5lIHN0aWxsIHdpdGggdHBtMl9xdW90ZS4gPG86cD48
+L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPjxwIGNsYXNz
+PU1zb05vcm1hbD5CZXN0LDxvOnA+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD5DaGFybGll
+IDxvOnA+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD48bzpwPiZuYnNwOzwvbzpwPjwvcD48
+L2Rpdj48L2JvZHk+PC9odG1sPg==
+--===============3639488756175776486==
+Content-Type: application/pkcs7-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+
+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
+dG9yeTEPMA0GA1UECxMGUGVvcGxlMSUwIwYDVQQDExxNdW5zb24uQ2hhcmxlcy5FLklWLjUwMDEw
+OTAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqD+LqVIpcCoKj12C5auJvHkZD7zt
+rY2Vj/Zeu2zav/9WayKJsBZdzQ7JIaBKBdN+djFYgX+D2a740Ki41b54D6hK0YaU8p9/Lu34l13/
+3DprETroPThBF+EHimgQ7OADvuIakYd90dZKT9qw4Zjp5oBL8nSU45W8ls9HmseIJjyXZuF5+QP2
+I+Hm1O4Nco3wDHiRshenWLRL20Yp65Alm/YiHwgAhXSArLuotq4GXjtCemOwD293Utv7n9lKJwv9
+lt4s4pS927s4eenLOnhLjLymYTy4U5dfm6Qy/eA4aK4jOmRuzVQlvgnWfVIxDnbTBl7n1lx+0GNc
+BrORvsq1dwIDAQABo4IBwDCCAbwwHQYDVR0OBBYEFDiyzLSrZ46NSXdPtcn6qzT0GH97MA4GA1Ud
+DwEB/wQEAwIFIDAfBgNVHSMEGDAWgBTXYGYOe0mNdUwN/c9G3sjHEofKvzAzBgNVHR8ELDAqMCig
+JqAkhiJodHRwOi8vY3JsLmxsLm1pdC5lZHUvZ2V0Y3JsL0xMQ0EzMGYGCCsGAQUFBwEBBFowWDAt
+BggrBgEFBQcwAoYhaHR0cDovL2NybC5sbC5taXQuZWR1L2dldHRvL0xMQ0EzMCcGCCsGAQUFBzAB
+hhtodHRwOi8vb2NzcC5sbC5taXQuZWR1L29jc3AwPQYJKwYBBAGCNxUHBDAwLgYmKwYBBAGCNxUI
+g4PlHYfsp2aGrYcVg+rwRYW2oR8dhevQcIPr7SACAWQCAQUwJQYDVR0lBB4wHAYEVR0lAAYIKwYB
+BQUHAwQGCisGAQQBgjcKAwQwGAYDVR0gBBEwDzANBgsqhkiG9xICAQMBCDAkBgNVHREEHTAbgRlD
+aGFybGVzLk11bnNvbkBsbC5taXQuZWR1MCcGCSsGAQQBgjcUAgQaHhgATABMAFUAcwBlAHIARQBu
+AGMALQBTAFcwDQYJKoZIhvcNAQELBQADggEBAIju+QENqIsx+/0VjvsuIgYvLetljOJ6OJetAC4L
+ohC2UehVT12rUnzeiE4vH/LsdHfh5+0axXaP2kzgwi8LwvQ90DTXmO2wEnm1jjPrdp9yK/CooRFm
+tFxsWLVCAHA4zQgBu5xQqc9577/XSSc1vdG9x72ri/4Mc0ywX9hNLuT941vUf1nf9bTNiux+uaze
++7mKiELGtTL+yO0jOZUwbaEaYQ4AKaF+RjldIi1ihz7TrVy1gHXfTjrB38DyJoj2K89iii31iSoN
+9dheh7GXF3QJOfiX7hOb4g9LInE9zMxpMAYyURaDusjaRzS2C4Z2BrnaE+ipXUP0XBGXekLCJeIx
+ggLvMIIC6wIBATBfMFExCzAJBgNVBAYTAlVTMR8wHQYDVQQKExZNSVQgTGluY29sbiBMYWJvcmF0
+b3J5MQwwCgYDVQQLEwNQS0kxEzARBgNVBAMTCk1JVExMIENBLTMCCkffmKAAAAAAqMwwCQYFKw4D
+AhoFAKCCAWUwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkwMjA1
+MjMzNTQzWjAjBgkqhkiG9w0BCQQxFgQUjJr7ANDMAu69qTfpDqVlev22L3IwJAYJKoZIhvcNAQkP
+MRcwFTAKBggqhkiG9w0DBzAHBgUrDgMCGjBuBgkrBgEEAYI3EAQxYTBfMFExCzAJBgNVBAYTAlVT
+MR8wHQYDVQQKExZNSVQgTGluY29sbiBMYWJvcmF0b3J5MQwwCgYDVQQLEwNQS0kxEzARBgNVBAMT
+Ck1JVExMIENBLTMCCkffh94AAAAAqMswcAYLKoZIhvcNAQkQAgsxYaBfMFExCzAJBgNVBAYTAlVT
+MR8wHQYDVQQKExZNSVQgTGluY29sbiBMYWJvcmF0b3J5MQwwCgYDVQQLEwNQS0kxEzARBgNVBAMT
+Ck1JVExMIENBLTMCCkffh94AAAAAqMswDQYJKoZIhvcNAQEBBQAEggEAZxva11A6tjvt927MuZfE
+Q/2L8j4LnxeDq4CZNjqYQyxreXXbZ2m/d8dG2+ecCsqQyd/O9j/ejYXdtVj1Iea3URj/srvISFSo
+otuWhYKdFkkwev2SCO6TdF/TP/EclvdhXSnwNWL3ui4Ry4HNIbRT8vZVh+xyWZykjOO4de8b+fWo
+1H1Qf/MaCoZRIABuyntNzSclCATueq++yJQABN3jMYTrkPaeqmmVC2CavxU2DT/4vOkEgSRpAw/R
+fmG6kxK3yEtGoeL4WX+sfWCpjYkp/GkIZTLIo/I7UcNTCAt/Cr9LK4+Cp+11vrMGMfu+HW36YYj7
+O5e2BBZT3e/0XZqVmwAAAAAAAA==
+--===============3639488756175776486==--
 
