@@ -1,327 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============7267991096401115955=="
+Content-Type: multipart/mixed; boundary="===============9107677449099122474=="
 MIME-Version: 1.0
-From: Eric.Zaluzec at vertivco.com
-Subject: [tpm2] tpm2 rsaencrypt and rsadecrypt
-Date: Wed, 06 Feb 2019 19:42:26 +0000
-Message-ID: <DM5PR1301MB1883D9F1BF65ECADDA3C6047FE6F0@DM5PR1301MB1883.namprd13.prod.outlook.com>
+From: Petr Vandrovec <petr at vmware.com>
+Subject: Re: [tpm2] tpm2 rsaencrypt and rsadecrypt
+Date: Wed, 06 Feb 2019 19:54:33 +0000
+Message-ID: <47d382ae-6249-d2b7-6dc9-b86d5491d706@vmware.com>
+In-Reply-To: DM5PR1301MB1883D9F1BF65ECADDA3C6047FE6F0@DM5PR1301MB1883.namprd13.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7267991096401115955==
+--===============9107677449099122474==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Does the tpm2 allow an encrypted file file, encrypted by tpm2_rsaencrypt, t=
-o be decrypted, by tpm2_rsadecrypt, on another device if the public key is =
-passed and loaded with tpm2_loadexternal? Both devices are have a tpm. This=
- scenario is similar to how tpm2 can be used to sign a file; then that file=
-, public key & signature can be passed to another device and verified there.
+Eric.Zaluzec(a)vertivco.com wrote on 2/6/2019 11:42 AM:
+> Does the tpm2 allow an encrypted file file, encrypted by =
 
-Both systems are running kernel v4.14.78 on an arch x86_64 GNU/Linux platfo=
-rm. The tpm2 software versions are:
+> tpm2_rsaencrypt, to be decrypted, by tpm2_rsadecrypt, on another device =
 
-  *   tpm2-abrmd v2.0.1
-  *   tpm2-tools v3.1.1
-  *   tpm2-tss v2.0.0
+> if the public key is passed and loaded with tpm2_loadexternal? Both =
 
-Here is what I tried, on the first device (node 1), I created & encrypted t=
-he file:
+> devices are have a tpm. This scenario is similar to how tpm2 can be used =
 
-                tpm2_createprimary -V -H e -g sha256 -G rsa -C node1.ctx -A=
- "fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|decrypt"
-                tpm2_create -V -c node1.ctx -g sha256 -G rsa -u node1key.pu=
-b -r node1key.priv
-                echo 123 > test.txt
-                tpm2_loadexternal -V -H e -u node1key.pub -C node1.ext.ctx
-                tpm2_rsaencrypt -V -c node1.ext.ctx -o test.txt.encrypted t=
-est.txt
+> to sign a file; then that file, public key & signature can be passed to =
 
-On the second device (node 2), I transferred node1key.pub and test.txt.encr=
-ypted & decrypted the file:
+> another device and verified there.
+> =
 
-                tpm2_createprimary -V -H e -g sha256 -G rsa -C node2.ctx -A=
- "fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|decrypt"
-                tpm2_create -V -c node2.ctx -g sha256 -G rsa -u node2key.pu=
-b -r node2key.priv
-                *transfer test.txt.encrypted & node1key.pub
-                tpm2_loadexternal -V -H e -u node1key.pub -C node1.ext.ctx
-                tpm2_rsadecrypt -V -c node1.ext.ctx -I test.txt.encrypted -=
-o test.txt.decrypted
+> Both systems are running kernel v4.14.78 on an arch x86_64 GNU/Linux =
 
-After decrypt, I get an error output with reference to no authvalue or auth=
-policy for entity:
+> platform. The tpm2 software versions are:
 
-                ERROR on line: "82" in file: "../tpm2-tools-3.1.1/tools/tpm=
-2_rsadecrypt.c": rsaDecrypt failed, error code: 0x12f
-                ERROR on line: "168" in file: "../tpm2-tools-3.1.1/tools/tp=
-m2_tool.c": Unable to run ./tpm2_rsadecrypt
+Yes, it is other way around:
 
-                tpm2_rc_decode 0x12f
-                  hex: 0x2f
-                  name: TPM2_RC_AUTH_UNAVAILABLE
-                  description: authValue or authPolicy is not available for=
- selected entity.
+You can do encryption with public-key external entity, but decryption =
 
-I see the usage for tpm2_rsadecrypt allow a password, key handle, and input=
- session handle, but rsaencrypt usage does not allow these options:
+requires both public + private key.  TPM error about Auth value needed =
 
-               tpm2_rsaencrypt
-                Usage: tpm2_rsaencrypt [<options>] <arguments>
-                Where <options> are:
-                                [ -k | --key-handle=3D<value>] [ -o | --out=
--file=3D<value>] [ -c | --key-context=3D<value>]
+is symptom of trying to use public-only key for operation that needs =
 
+private key.
 
-                tpm2_rsadecrypt
-                Usage: tpm2_rsadecrypt [<options>]
-                Where <options> are:
-                                [ -k | --key-handle=3D<value>] [ -P | --pwd=
-k=3D<value>] [ -I | --in-file=3D<value>] [ -o | --out-file=3D<value>]
-                                [ -c | --key-context=3D<value>] [ -S | --in=
-put-session-handle=3D<value>]
+It would not make much sense otherwise - if only one entity can encrypt =
 
+it, while everybody can decrypt it, you are actually not getting =
 
-I've attempted to change the attribute objects but have not been successful.
+encryption, but obfuscation, as public keys are... public.  You want =
 
-Any input or feedback on what I'm doing wrong? Any help would be very helpf=
-ul. I'd be happy to provide more feedback. For questions on why I'm looking=
- to decrypt on a separate device, I am looking to pass encrypted data throu=
-gh a hyperledger and have the hyperledger's validator able to decrypt it.
+signing, to prove that data originated at the source holding private key.
 
-Cheers,
--Eric Z
-(Eric.Zaluzec(a)vertivco.com)
+If you want obfuscation so that entities that do not posses your public =
 
-CONFIDENTIALITY NOTICE: This e-mail and any files transmitted with it are i=
-ntended solely for the use of the individual or entity to whom they are add=
-ressed and may contain confidential and privileged information protected by=
- law. If you received this e-mail in error, any review, use, dissemination,=
- distribution, or copying of the e-mail is strictly prohibited. Please noti=
-fy the sender immediately by return e-mail and delete all copies from your =
-system.
+key cannot see data, use RSA signing (for authenticity) + symmetric =
 
---===============7267991096401115955==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+encryption key (for obfuscation or "encryption") derived from RSA public =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpXaW5n
-ZGluZ3M7CglwYW5vc2UtMTo1IDAgMCAwIDAgMCAwIDAgMCAwO30KQGZvbnQtZmFjZQoJe2ZvbnQt
-ZmFtaWx5OiJDYW1icmlhIE1hdGgiOwoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9CkBm
-b250LWZhY2UKCXtmb250LWZhbWlseTpDYWxpYnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQg
-MyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFs
-LCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBpbjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZv
-bnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CmE6bGlu
-aywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjpibHVl
-OwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBlcmxp
-bmtGb2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOnB1cnBsZTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQpwLk1zb0xpc3RQYXJhZ3JhcGgsIGxpLk1zb0xpc3RQYXJh
-Z3JhcGgsIGRpdi5Nc29MaXN0UGFyYWdyYXBoCgl7bXNvLXN0eWxlLXByaW9yaXR5OjM0OwoJbWFy
-Z2luLXRvcDowaW47CgltYXJnaW4tcmlnaHQ6MGluOwoJbWFyZ2luLWJvdHRvbTowaW47CgltYXJn
-aW4tbGVmdDouNWluOwoJbWFyZ2luLWJvdHRvbTouMDAwMXB0OwoJZm9udC1zaXplOjExLjBwdDsK
-CWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30Kc3Bhbi5FbWFpbFN0eWxlMTcKCXtt
-c28tc3R5bGUtdHlwZTpwZXJzb25hbC1jb21wb3NlOwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNh
-bnMtc2VyaWY7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0NocERlZmF1bHQKCXttc28tc3R5bGUt
-dHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30KQHBh
-Z2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo4LjVpbiAxMS4waW47CgltYXJnaW46MS4waW4gMS4waW4g
-MS4waW4gMS4waW47fQpkaXYuV29yZFNlY3Rpb24xCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQovKiBM
-aXN0IERlZmluaXRpb25zICovCkBsaXN0IGwwCgl7bXNvLWxpc3QtaWQ6NTc1MDkxNDU1OwoJbXNv
-LWxpc3QtdHlwZTpoeWJyaWQ7Cgltc28tbGlzdC10ZW1wbGF0ZS1pZHM6Nzg4OTQ1NDgwIC02Nzkx
-ODc0NTIgNjc2OTg2OTEgNjc2OTg2OTMgNjc2OTg2ODkgNjc2OTg2OTEgNjc2OTg2OTMgNjc2OTg2
-ODkgNjc2OTg2OTEgNjc2OTg2OTM7fQpAbGlzdCBsMDpsZXZlbDEKCXttc28tbGV2ZWwtbnVtYmVy
-LWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDotOwoJbXNvLWxldmVsLXRhYi1zdG9wOm5v
-bmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47
-Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCW1zby1mYXJlYXN0LWZvbnQtZmFt
-aWx5OkNhbGlicmk7fQpAbGlzdCBsMDpsZXZlbDIKCXttc28tbGV2ZWwtbnVtYmVyLWZvcm1hdDpi
-dWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpvOwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7Cgltc28t
-bGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZh
-bWlseToiQ291cmllciBOZXciO30KQGxpc3QgbDA6bGV2ZWwzCgl7bXNvLWxldmVsLW51bWJlci1m
-b3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6XEYwQTc7Cgltc28tbGV2ZWwtdGFiLXN0b3A6
-bm9uZTsKCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsKCXRleHQtaW5kZW50Oi0uMjVp
-bjsKCWZvbnQtZmFtaWx5OldpbmdkaW5nczt9CkBsaXN0IGwwOmxldmVsNAoJe21zby1sZXZlbC1u
-dW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJbXNvLWxldmVsLXRh
-Yi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVu
-dDotLjI1aW47Cglmb250LWZhbWlseTpTeW1ib2w7fQpAbGlzdCBsMDpsZXZlbDUKCXttc28tbGV2
-ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpvOwoJbXNvLWxldmVsLXRh
-Yi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVu
-dDotLjI1aW47Cglmb250LWZhbWlseToiQ291cmllciBOZXciO30KQGxpc3QgbDA6bGV2ZWw2Cgl7
-bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6XEYwQTc7Cglt
-c28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsK
-CXRleHQtaW5kZW50Oi0uMjVpbjsKCWZvbnQtZmFtaWx5OldpbmdkaW5nczt9CkBsaXN0IGwwOmxl
-dmVsNwoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxG
-MEI3OwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9u
-OmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseTpTeW1ib2w7fQpAbGlzdCBs
-MDpsZXZlbDgKCXttc28tbGV2ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4
-dDpvOwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9u
-OmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseToiQ291cmllciBOZXciO30K
-QGxpc3QgbDA6bGV2ZWw5Cgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxl
-dmVsLXRleHQ6XEYwQTc7Cgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1i
-ZXItcG9zaXRpb246bGVmdDsKCXRleHQtaW5kZW50Oi0uMjVpbjsKCWZvbnQtZmFtaWx5Oldpbmdk
-aW5nczt9Cm9sCgl7bWFyZ2luLWJvdHRvbTowaW47fQp1bAoJe21hcmdpbi1ib3R0b206MGluO30K
-LS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4
-dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUg
-bXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9
-ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9o
-ZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIgdmxpbms9InB1cnBsZSI+CjxkaXYg
-Y2xhc3M9IldvcmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkRvZXMgdGhlIHRwbTIg
-YWxsb3cgYW4gZW5jcnlwdGVkIGZpbGUgZmlsZSwgZW5jcnlwdGVkIGJ5IHRwbTJfcnNhZW5jcnlw
-dCwgdG8gYmUgZGVjcnlwdGVkLCBieSB0cG0yX3JzYWRlY3J5cHQsIG9uIGFub3RoZXIgZGV2aWNl
-IGlmIHRoZSBwdWJsaWMga2V5IGlzIHBhc3NlZCBhbmQgbG9hZGVkIHdpdGggdHBtMl9sb2FkZXh0
-ZXJuYWw/IEJvdGggZGV2aWNlcyBhcmUgaGF2ZSBhIHRwbS4gVGhpcyBzY2VuYXJpbyBpcwogc2lt
-aWxhciB0byBob3cgdHBtMiBjYW4gYmUgdXNlZCB0byBzaWduIGEgZmlsZTsgdGhlbiB0aGF0IGZp
-bGUsIHB1YmxpYyBrZXkgJmFtcDsgc2lnbmF0dXJlIGNhbiBiZSBwYXNzZWQgdG8gYW5vdGhlciBk
-ZXZpY2UgYW5kIHZlcmlmaWVkIHRoZXJlLjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Qm90aCBzeXN0
-ZW1zIGFyZSBydW5uaW5nIGtlcm5lbCB2NC4xNC43OCBvbiBhbiBhcmNoIHg4Nl82NCBHTlUvTGlu
-dXggcGxhdGZvcm0uIFRoZSB0cG0yIHNvZnR3YXJlIHZlcnNpb25zIGFyZTo8bzpwPjwvbzpwPjwv
-cD4KPHVsIHN0eWxlPSJtYXJnaW4tdG9wOjBpbiIgdHlwZT0iZGlzYyI+CjxsaSBjbGFzcz0iTXNv
-TGlzdFBhcmFncmFwaCIgc3R5bGU9Im1hcmdpbi1sZWZ0OjBpbjttc28tbGlzdDpsMCBsZXZlbDEg
-bGZvMSI+dHBtMi1hYnJtZCB2Mi4wLjE8bzpwPjwvbzpwPjwvbGk+PGxpIGNsYXNzPSJNc29MaXN0
-UGFyYWdyYXBoIiBzdHlsZT0ibWFyZ2luLWxlZnQ6MGluO21zby1saXN0OmwwIGxldmVsMSBsZm8x
-Ij50cG0yLXRvb2xzIHYzLjEuMTxvOnA+PC9vOnA+PC9saT48bGkgY2xhc3M9Ik1zb0xpc3RQYXJh
-Z3JhcGgiIHN0eWxlPSJtYXJnaW4tbGVmdDowaW47bXNvLWxpc3Q6bDAgbGV2ZWwxIGxmbzEiPnRw
-bTItdHNzIHYyLjAuMDxvOnA+PC9vOnA+PC9saT48L3VsPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGVyZSBpcyB3aGF0IEkg
-dHJpZWQsIG9uIHRoZSBmaXJzdCBkZXZpY2UgKG5vZGUgMSksIEkgY3JlYXRlZCAmYW1wOyBlbmNy
-eXB0ZWQgdGhlIGZpbGU6PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+
-Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsgdHBtMl9jcmVhdGVwcmltYXJ5IC1WIC1IIGUgLWcgc2hhMjU2IC1HIHJz
-YSAtQyBub2RlMS5jdHggLUEgJnF1b3Q7Zml4ZWR0cG18Zml4ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0
-YW9yaWdpbnx1c2Vyd2l0aGF1dGh8cmVzdHJpY3RlZHxkZWNyeXB0JnF1b3Q7PG86cD48L286cD48
-L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyB0cG0yX2NyZWF0ZSAtViAtYyBub2RlMS5jdHggLWcgc2hhMjU2IC1HIHJzYSAtdSBub2RlMWtl
-eS5wdWIgLXIgbm9kZTFrZXkucHJpdjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgZWNobyAxMjMgJmd0OyB0ZXN0LnR4
-dDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsgdHBtMl9sb2FkZXh0ZXJuYWwgLVYgLUggZSAtdSBub2RlMWtleS5wdWIg
-LUMgbm9kZTEuZXh0LmN0eDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgdHBtMl9yc2FlbmNyeXB0IC1WIC1jIG5vZGUx
-LmV4dC5jdHggLW8gdGVzdC50eHQuZW5jcnlwdGVkIHRlc3QudHh0PG86cD48L286cD48L3A+Cjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj5PbiB0aGUgc2Vjb25kIGRldmljZSAobm9kZSAyKSwgSSB0cmFuc2ZlcnJlZCBub2RlMWtl
-eS5wdWIgYW5kIHRlc3QudHh0LmVuY3J5cHRlZCAmYW1wOyBkZWNyeXB0ZWQgdGhlIGZpbGU6PG86
-cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgdHBt
-Ml9jcmVhdGVwcmltYXJ5IC1WIC1IIGUgLWcgc2hhMjU2IC1HIHJzYSAtQyBub2RlMi5jdHggLUEg
-JnF1b3Q7Zml4ZWR0cG18Zml4ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1
-dGh8cmVzdHJpY3RlZHxkZWNyeXB0JnF1b3Q7PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB0cG0yX2NyZWF0ZSAtViAt
-YyBub2RlMi5jdHggLWcgc2hhMjU2IC1HIHJzYSAtdSBub2RlMmtleS5wdWIgLXIgbm9kZTJrZXku
-cHJpdjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsgKnRyYW5zZmVyIHRlc3QudHh0LmVuY3J5cHRlZCAmYW1wOyBub2Rl
-MWtleS5wdWI8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHRwbTJfbG9hZGV4dGVybmFsIC1WIC1IIGUgLXUgbm9kZTFr
-ZXkucHViIC1DIG5vZGUxLmV4dC5jdHg8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHRwbTJfcnNhZGVjcnlwdCAtViAt
-YyBub2RlMS5leHQuY3R4IC1JIHRlc3QudHh0LmVuY3J5cHRlZCAtbyB0ZXN0LnR4dC5kZWNyeXB0
-ZWQmbmJzcDsmbmJzcDsmbmJzcDsKPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5BZnRlciBkZWNyeXB0
-LCBJIGdldCBhbiBlcnJvciBvdXRwdXQgd2l0aCByZWZlcmVuY2UgdG8gbm8gYXV0aHZhbHVlIG9y
-IGF1dGhwb2xpY3kgZm9yIGVudGl0eTo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBFUlJPUiBvbiBsaW5lOiAmcXVvdDs4MiZxdW90OyBpbiBm
-aWxlOiAmcXVvdDsuLi90cG0yLXRvb2xzLTMuMS4xL3Rvb2xzL3RwbTJfcnNhZGVjcnlwdC5jJnF1
-b3Q7OiByc2FEZWNyeXB0IGZhaWxlZCwgZXJyb3IgY29kZTogMHgxMmY8bzpwPjwvbzpwPjwvcD4K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IEVS
-Uk9SIG9uIGxpbmU6ICZxdW90OzE2OCZxdW90OyBpbiBmaWxlOiAmcXVvdDsuLi90cG0yLXRvb2xz
-LTMuMS4xL3Rvb2xzL3RwbTJfdG9vbC5jJnF1b3Q7OiBVbmFibGUgdG8gcnVuIC4vdHBtMl9yc2Fk
-ZWNyeXB0PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9v
-OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsgdHBtMl9yY19kZWNvZGUgMHgxMmY8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZuYnNwOyBoZXg6IDB4MmY8
-bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7ICZuYnNwOyBuYW1lOiBUUE0yX1JDX0FVVEhfVU5BVkFJTEFCTEU8bzpwPjwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7ICZuYnNwOyBkZXNjcmlwdGlvbjogYXV0aFZhbHVlIG9yIGF1dGhQb2xpY3kgaXMgbm90
-IGF2YWlsYWJsZSBmb3Igc2VsZWN0ZWQgZW50aXR5LjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSBz
-ZWUgdGhlIHVzYWdlIGZvciB0cG0yX3JzYWRlY3J5cHQgYWxsb3cgYSBwYXNzd29yZCwga2V5IGhh
-bmRsZSwgYW5kIGlucHV0IHNlc3Npb24gaGFuZGxlLCBidXQgcnNhZW5jcnlwdCB1c2FnZSBkb2Vz
-IG5vdCBhbGxvdyB0aGVzZSBvcHRpb25zOjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7IHRwbTJfcnNhZW5jcnlwdDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgVXNhZ2U6IHRw
-bTJfcnNhZW5jcnlwdCBbJmx0O29wdGlvbnMmZ3Q7XSAmbHQ7YXJndW1lbnRzJmd0OzxvOnA+PC9v
-OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsgV2hlcmUgJmx0O29wdGlvbnMmZ3Q7IGFyZTo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IFsgLWsgfCAtLWtleS1oYW5kbGU9Jmx0O3ZhbHVl
-Jmd0O10gWyAtbyB8IC0tb3V0LWZpbGU9Jmx0O3ZhbHVlJmd0O10gWyAtYyB8IC0ta2V5LWNvbnRl
-eHQ9Jmx0O3ZhbHVlJmd0O108bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86
-cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsgdHBtMl9yc2FkZWNyeXB0PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBVc2FnZTogdHBtMl9yc2FkZWNyeXB0IFsm
-bHQ7b3B0aW9ucyZndDtdPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBXaGVyZSAmbHQ7b3B0aW9ucyZndDsgYXJlOjxv
-OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgWyAtayB8
-IC0ta2V5LWhhbmRsZT0mbHQ7dmFsdWUmZ3Q7XSBbIC1QIHwgLS1wd2RrPSZsdDt2YWx1ZSZndDtd
-IFsgLUkgfCAtLWluLWZpbGU9Jmx0O3ZhbHVlJmd0O10gWyAtbyB8IC0tb3V0LWZpbGU9Jmx0O3Zh
-bHVlJmd0O108bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7IFsgLWMgfCAtLWtleS1jb250ZXh0PSZsdDt2YWx1ZSZndDtdIFsgLVMgfCAtLWlucHV0LXNl
-c3Npb24taGFuZGxlPSZsdDt2YWx1ZSZndDtdPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZu
-YnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSYjODIxNzt2ZSBhdHRlbXB0ZWQg
-dG8gY2hhbmdlIHRoZSBhdHRyaWJ1dGUgb2JqZWN0cyBidXQgaGF2ZSBub3QgYmVlbiBzdWNjZXNz
-ZnVsLjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpw
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+QW55IGlucHV0IG9yIGZlZWRiYWNrIG9uIHdoYXQg
-SSYjODIxNzttIGRvaW5nIHdyb25nPyBBbnkgaGVscCB3b3VsZCBiZSB2ZXJ5IGhlbHBmdWwuIEkm
-IzgyMTc7ZCBiZSBoYXBweSB0byBwcm92aWRlIG1vcmUgZmVlZGJhY2suIEZvciBxdWVzdGlvbnMg
-b24gd2h5IEkmIzgyMTc7bSBsb29raW5nIHRvIGRlY3J5cHQgb24gYSBzZXBhcmF0ZSBkZXZpY2Us
-IEkgYW0gbG9va2luZyB0byBwYXNzIGVuY3J5cHRlZCBkYXRhIHRocm91Z2ggYSBoeXBlcmxlZGdl
-cgogYW5kIGhhdmUgdGhlIGh5cGVybGVkZ2VyJiM4MjE3O3MgdmFsaWRhdG9yIGFibGUgdG8gZGVj
-cnlwdCBpdC48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8
-L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkNoZWVycyw8YnI+Ci1FcmljIFo8bzpwPjwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+KEVyaWMuWmFsdXplY0B2ZXJ0aXZjby5jb20p
-PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9w
-Pgo8L2Rpdj4KQ09ORklERU5USUFMSVRZIE5PVElDRTogVGhpcyBlLW1haWwgYW5kIGFueSBmaWxl
-cyB0cmFuc21pdHRlZCB3aXRoIGl0IGFyZSBpbnRlbmRlZCBzb2xlbHkgZm9yIHRoZSB1c2Ugb2Yg
-dGhlIGluZGl2aWR1YWwgb3IgZW50aXR5IHRvIHdob20gdGhleSBhcmUgYWRkcmVzc2VkIGFuZCBt
-YXkgY29udGFpbiBjb25maWRlbnRpYWwgYW5kIHByaXZpbGVnZWQgaW5mb3JtYXRpb24gcHJvdGVj
-dGVkIGJ5IGxhdy4gSWYgeW91IHJlY2VpdmVkIHRoaXMgZS1tYWlsCiBpbiBlcnJvciwgYW55IHJl
-dmlldywgdXNlLCBkaXNzZW1pbmF0aW9uLCBkaXN0cmlidXRpb24sIG9yIGNvcHlpbmcgb2YgdGhl
-IGUtbWFpbCBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiBQbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIg
-aW1tZWRpYXRlbHkgYnkgcmV0dXJuIGUtbWFpbCBhbmQgZGVsZXRlIGFsbCBjb3BpZXMgZnJvbSB5
-b3VyIHN5c3RlbS4KPC9ib2R5Pgo8L2h0bWw+Cg==
+key (you can use f.e. HMAC-SHA256 of public key as AES-256 key).
 
---===============7267991096401115955==--
+Petr
+
+--===============9107677449099122474==--
 
