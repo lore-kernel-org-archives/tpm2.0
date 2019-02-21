@@ -1,271 +1,115 @@
-Content-Type: multipart/mixed; boundary="===============1138605818648308341=="
+Content-Type: multipart/mixed; boundary="===============2810102518750605452=="
 MIME-Version: 1.0
-From: Petko Manolov <sti at nucleusys.com>
-Subject: Re: [tpm2] facilitating BIOS update with seamless PCR policy change
-Date: Thu, 21 Feb 2019 15:12:45 +0200
-Message-ID: <20190221131245.GA2213@p310>
-In-Reply-To: 20190220130533.GA1913@p310
+From: Desai, Imran <imran.desai at intel.com>
+Subject: Re: [tpm2] tpm2 Digest, Vol 20, Issue 16
+Date: Thu, 21 Feb 2019 20:18:25 +0000
+Message-ID: <688D07BB9E3A9E4A852BA1336D1910FF83EFCBCB@fmsmsx104.amr.corp.intel.com>
+In-Reply-To: mailman.17.1550779201.15811.tpm2@lists.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1138605818648308341==
+--===============2810102518750605452==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-	Hi,
+Persistent handles start with hex 81xxxxxx
+________________________________________
+From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of tpm2-request(a)lists.=
+01.org [tpm2-request(a)lists.01.org]
+Sent: Thursday, February 21, 2019 1:00 PM
+To: tpm2(a)lists.01.org
+Subject: tpm2 Digest, Vol 20, Issue 16
 
-Yet another update: the same script works fine on dTPM, regardless of the t=
-ype =
+Send tpm2 mailing list submissions to
+        tpm2(a)lists.01.org
 
-of PCR bank used - sha1 or sha256.
+To subscribe or unsubscribe via the World Wide Web, visit
+        https://lists.01.org/mailman/listinfo/tpm2
+or, via email, send a message with subject or body 'help' to
+        tpm2-request(a)lists.01.org
 
-I am currently trying to debug Esys_Unseal(0x8F) - invalid nonce size or no=
-nce =
+You can reach the person managing the list at
+        tpm2-owner(a)lists.01.org
 
-value mismatch problem.  Any suggestions where shall i start looking at?
-
-
-thanks,
-Petko
+When replying, please edit your Subject line so it is more specific
+than "Re: Contents of tpm2 digest..."
 
 
-On 19-02-20 15:05:33, Petko Manolov wrote:
-> 	Hello,
-> =
+Today's Topics:
 
-> Just FYI - another fTPM is giving me the same error:
-> =
+   1. Roadblock using TPM2 for mounting filesystems (martin doc)
+   2. Re: facilitating BIOS update with seamless PCR policy change
+      (Petko Manolov)
 
-> WARNING:esys:src/tss2-esys/api/Esys_Unseal.c:295:Esys_Unseal_Finish() Rec=
-eived TPM Error
-> ERROR:esys:src/tss2-esys/api/Esys_Unseal.c:101:Esys_Unseal() Esys Finish =
-ErrorCode (0x0000008f)
-> ERROR: Esys_Unseal(0x8F) - tpm:handle(unk):invalid nonce size or nonce va=
-lue mismatch
-> ERROR: Unseal failed!
-> ERROR: Unable to run tpm2_unseal
-> =
 
-> The machine is LENOVO P310, BIOS FWKT97A 11/08/2018, Sunrise Point-H chip=
-set.  =
+----------------------------------------------------------------------
 
-> Could you please give me some pointers as to how this could be worked aro=
-und?
-> =
+Message: 1
+Date: Thu, 21 Feb 2019 01:18:10 +0000
+From: martin doc <db1280(a)hotmail.com>
+To: "tpm2(a)lists.01.org" <tpm2(a)lists.01.org>
+Subject: [tpm2] Roadblock using TPM2 for mounting filesystems
+Message-ID:
+        <SL2P216MB0266A71D9099EBA6243311BCC27E0(a)SL2P216MB0266.KORP216.PRO=
+D.OUTLOOK.COM>
 
-> =
+Content-Type: text/plain; charset=3D"iso-8859-1"
 
-> thanks,
-> Petko
-> =
+I'm trying to get TPM2 working with encrypted filesystems on CentOS 7.
 
-> =
+I started out using this page as a guide:
+https://threat.tevora.com/secure-boot-tpm-2/
 
-> On 19-02-18 10:20:26, Petko Manolov wrote:
-> > I am sorry that this didn't go through because of the attached script. =
- I'm =
+but some of the CLI has changed. The commands I've used are:
 
-> > embedding it to this email so i'd like to apologize about the bloat.
-> > =
 
-> > ---
-> > =
+# dmesg | grep tpm_tis
+[    1.919443] tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1B, rev-id 16)
+# tpm2_createpolicy -P -L sha1:0,2,3,7 -F pcrs.bin -f policy.digest
 
-> > #!/bin/bash
-> > =
+# tpm2_createprimary -H e -g sha1 -G rsa -C primary.context
 
-> > source common.sh
-> > =
+ObjectAttribute: 0x00030072
+CreatePrimary Succeed ! Handle: 0x800000ff
 
-> > #   Create a signing authority
-> > openssl genrsa -out signing_key_private.pem 2048
-> > openssl rsa -in signing_key_private.pem -out signing_key_public.pem -pu=
-bout
-> > tpm2_loadexternal -G rsa -a o -u signing_key_public.pem -o signing_key.=
-ctx \
-> > 	-n signing_key.name
-> > =
 
-> > echo "Signing authority created"
-> > =
+# dd if=3D/dev/urandom of=3D/tmp/secret.bin bs=3D32 count=3D1
+# tpm2_create -g sha256 -G keyedhash -u obj.pub -r obj.priv -c primary.cont=
+ext -L policy.digest -A "noda|adminwithpolicy|fixedparent|fixedtpm" -I /tmp=
+/secret.bin
 
-> > #   Create a policy to be authorized like a pcr policy:
-> > tpm2_pcrlist -L $PCRS -o pcrs.sha256
-> > tpm2_startauthsession -S session.ctx
-> > tpm2_policypcr -S session.ctx -L $PCRS -F pcrs.sha256 -f pcr.policy
-> > tpm2_flushcontext -S session.ctx
-> > rm -f session.ctx
-> > =
+Load object into the TPM
 
-> > echo "pcr policy created"
-> > =
+# tpm2_load -c primary.context -u obj.pub -r obj.priv -C load.context
+Load succ.
+LoadedHandle: 0x80000100
 
-> > #   Sign the policy
-> > openssl dgst -sha256 -sign signing_key_private.pem -out pcr.signature p=
-cr.policy
-> > =
+But the final step fails:
 
-> > echo "policy is signed"
-> > =
+# tpm2_evictcontrol -A o -c load.context -S 0x80000100
+persistentHandle: 0x80000100
+ERROR: EvictControl failed, error code: 0x1c4
+# tpm2_rc_decode 0x1c4
+error layer
+hex: 0x0
+identifier: TSS2_TPM_ERROR_LEVEL
+description: Error produced by the TPM
+format 1 error code
+hex: 0x04
+identifier: TPM_RC_VALUE
+description: value is out of range or is not correct for the context
+parameter
+hex: 0x100
+identifier: TPM_RC_1
+description: (null)
 
-> > #   Authorize the policy in the policy digest:
-> > tpm2_startauthsession -S session.ctx
-> > tpm2_policyauthorize -S session.ctx -o authorized.policy -f pcr.policy \
-> > 	-n signing_key.name
-> > tpm2_flushcontext -S session.ctx
-> > rm -f session.ctx
-> > =
 
-> > echo "policy authorized"
-> > =
+The error description is a clue that the "-S #" is not right.
+It also doens't work if I use the handle value for the primary.
+Is there another step in here that I'm missing?
 
-> > #   Create a TPM object like a sealing object with the authorized policy
-> > #   based authentication:
-> > echo "secret to seal 123" > secret_file
-> > tpm2_createprimary -Q -a o -g sha256 -G rsa -o prim.ctx
-> > tpm2_create -Q -g sha256 -u sealing_pubkey.pub -r sealing_prikey.pub \
-> > 	-I secret_file -C prim.ctx -L authorized.policy
-> > =
 
-> > echo "sealing object created"
-> > =
 
-> > #   Satisfy policy and unseal the secret:
-> > tpm2_verifysignature -c signing_key.ctx -G sha256 -m pcr.policy \
-> > 	-s pcr.signature -t verification.tkt -f rsassa
-> > tpm2_startauthsession -a -S session.ctx
-> > tpm2_policypcr -Q -S session.ctx -L $PCRS -f pcr.policy
-> > tpm2_policyauthorize -S session.ctx -o authorized.policy -f pcr.policy \
-> > 	-n signing_key.name -t verification.tkt
-> > tpm2_load -Q -C prim.ctx -u sealing_pubkey.pub -r sealing_prikey.pub \
-> > 	-o sealing_key.ctx
-> > tpm2_unseal -p "session:session.ctx" -c sealing_key.ctx -o unsealed
-> > cat unsealed
-> > tpm2_flushcontext -S session.ctx
-> > rm -f session.ctx unsealed
-> > =
-
-> > echo "the end"
-> > =
-
-> > ---
-> > =
-
-> > =
-
-> > thanks,
-> > Petko
-> > =
-
-> > =
-
-> > On 19-02-18 09:48:37, Petko Manolov wrote:
-> > > 	Hello again,
-> > > =
-
-> > > I managed to get authorized PCR policies to work for me.  The attache=
-d script =
-
-> > > works fine on my thinkpad and on rpi3 with Infineon's SLB9670 SPI TPM=
-2.
-> > > =
-
-> > > However, i stumbled upon a problem with an fTPM implementation in a v=
-ery recent =
-
-> > > AMI BIOS.  Everything seems to be working properly, until i get tpm2_=
-unseal to =
-
-> > > give me the error below.  The tpm2-tools is built with at-the-time ti=
-p of git =
-
-> > > commit id:
-> > > =
-
-> > > 	872076e1b31f22b18391c6761d47575a93891cd7
-> > > =
-
-> > > tpm2_unseal -v:
-> > > =
-
-> > > 	tool=3D"tpm2_unseal" version=3D"3.0.2-858-g88956e75" tctis=3D"dynami=
-c" tcti-default=3Dtabrmd dlclose=3Denabled
-> > > =
-
-> > > tpm-tss is v2.1.0 and tpm-abrmd is v2.0.3.  Unfortunately the error m=
-essage does =
-
-> > > not mean much for me so any help will be greatly appreciated.
-> > > =
-
-> > > =
-
-> > > thanks,
-> > > Petko
-> > > =
-
-> > > =
-
-> > > =
-
-> > > ---
-> > > =
-
-> > > Generating RSA private key, 2048 bit long modulus
-> > > ..............................+++++
-> > > ...........................................+++++
-> > > e is 65537 (0x10001)
-> > > writing RSA key
-> > > transient-context: signing_key.ctx
-> > > name: 0x000b5e069ba4b591842c25155d812f635970dabe7cee663aff121088940f8=
-8e2da80
-> > > Signing authority created
-> > > sha256:
-> > >   0 : 0x647992CBC9EEBF49D367559D870620C324B1A4307EB2A6166F1ACEC0DC186=
-AEA
-> > >   1 : 0x519B03509291B643DA7FEC4407FFC47C1C18AF706A611ECA1C159D4608342=
-338
-> > >   2 : 0x369BB94CEB4A1DF8E76720141B64C57EC70E6C620F07B27E335E70AD2DDC2=
-5DB
-> > >   3 : 0x369BB94CEB4A1DF8E76720141B64C57EC70E6C620F07B27E335E70AD2DDC2=
-5DB
-> > > session-context: session.ctx
-> > > policy-digest: 0x22035897291FE4681D7800685BFC5C73EBCBB88C7A579AB20C2E=
-345A9815FDFE
-> > > pcr policy created
-> > > policy is signed
-> > > session-context: session.ctx
-> > > 45a41a53c9f74f09b72151af6ffdd199fe1129eff2b749b8e481b6b21f2281f1
-> > > policy authorized
-> > > sealing object created
-> > > session-context: session.ctx
-> > > 45a41a53c9f74f09b72151af6ffdd199fe1129eff2b749b8e481b6b21f2281f1
-> > > WARNING:esys:../tpm2-tss/src/tss2-esys/api/Esys_Unseal.c:295:Esys_Uns=
-eal_Finish() Received TPM Error
-> > > ERROR:esys:../tpm2-tss/src/tss2-esys/api/Esys_Unseal.c:101:Esys_Unsea=
-l() Esys Finish ErrorCode (0x0000008f)
-> > > ERROR: Esys_Unseal(0x8F) - tpm:handle(unk):invalid nonce size or nonc=
-e value mismatch
-> > > ERROR: Unseal failed!
-> > > ERROR: Unable to run tpm2_unseal
-> > > cat: unsealed: No such file or directory
-> > > the end
-> > =
-
-> > =
-
-> > _______________________________________________
-> > tpm2 mailing list
-> > tpm2(a)lists.01.org
-> > https://lists.01.org/mailman/listinfo/tpm2
-> > =
-
-> _______________________________________________
-> tpm2 mailing list
-> tpm2(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/tpm2
->=20
-
---===============1138605818648308341==--
+--===============2810102518750605452==--
 
