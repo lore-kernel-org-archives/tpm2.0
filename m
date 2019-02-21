@@ -1,176 +1,271 @@
-Content-Type: multipart/mixed; boundary="===============4266593540882065056=="
+Content-Type: multipart/mixed; boundary="===============1138605818648308341=="
 MIME-Version: 1.0
-From: martin doc <db1280 at hotmail.com>
-Subject: [tpm2] Roadblock using TPM2 for mounting filesystems
-Date: Thu, 21 Feb 2019 01:18:10 +0000
-Message-ID: <SL2P216MB0266A71D9099EBA6243311BCC27E0@SL2P216MB0266.KORP216.PROD.OUTLOOK.COM>
+From: Petko Manolov <sti at nucleusys.com>
+Subject: Re: [tpm2] facilitating BIOS update with seamless PCR policy change
+Date: Thu, 21 Feb 2019 15:12:45 +0200
+Message-ID: <20190221131245.GA2213@p310>
+In-Reply-To: 20190220130533.GA1913@p310
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4266593540882065056==
+--===============1138605818648308341==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I'm trying to get TPM2 working with encrypted filesystems on CentOS 7.
+	Hi,
 
-I started out using this page as a guide:
-https://threat.tevora.com/secure-boot-tpm-2/
+Yet another update: the same script works fine on dTPM, regardless of the t=
+ype =
 
-but some of the CLI has changed. The commands I've used are:
+of PCR bank used - sha1 or sha256.
 
+I am currently trying to debug Esys_Unseal(0x8F) - invalid nonce size or no=
+nce =
 
-# dmesg | grep tpm_tis
-[    1.919443] tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1B, rev-id 16)
-# tpm2_createpolicy -P -L sha1:0,2,3,7 -F pcrs.bin -f policy.digest
-
-# tpm2_createprimary -H e -g sha1 -G rsa -C primary.context
-
-ObjectAttribute: 0x00030072
-CreatePrimary Succeed ! Handle: 0x800000ff
+value mismatch problem.  Any suggestions where shall i start looking at?
 
 
-# dd if=3D/dev/urandom of=3D/tmp/secret.bin bs=3D32 count=3D1
-# tpm2_create -g sha256 -G keyedhash -u obj.pub -r obj.priv -c primary.cont=
-ext -L policy.digest -A "noda|adminwithpolicy|fixedparent|fixedtpm" -I /tmp=
-/secret.bin
-
-Load object into the TPM
-
-# tpm2_load -c primary.context -u obj.pub -r obj.priv -C load.context
-Load succ.
-LoadedHandle: 0x80000100
-
-But the final step fails:
-
-# tpm2_evictcontrol -A o -c load.context -S 0x80000100
-persistentHandle: 0x80000100
-ERROR: EvictControl failed, error code: 0x1c4
-# tpm2_rc_decode 0x1c4
-error layer
-hex: 0x0
-identifier: TSS2_TPM_ERROR_LEVEL
-description: Error produced by the TPM
-format 1 error code
-hex: 0x04
-identifier: TPM_RC_VALUE
-description: value is out of range or is not correct for the context
-parameter
-hex: 0x100
-identifier: TPM_RC_1
-description: (null)
+thanks,
+Petko
 
 
-The error description is a clue that the "-S #" is not right.
-It also doens't work if I use the handle value for the primary.
-Is there another step in here that I'm missing?
+On 19-02-20 15:05:33, Petko Manolov wrote:
+> 	Hello,
+> =
 
+> Just FYI - another fTPM is giving me the same error:
+> =
 
+> WARNING:esys:src/tss2-esys/api/Esys_Unseal.c:295:Esys_Unseal_Finish() Rec=
+eived TPM Error
+> ERROR:esys:src/tss2-esys/api/Esys_Unseal.c:101:Esys_Unseal() Esys Finish =
+ErrorCode (0x0000008f)
+> ERROR: Esys_Unseal(0x8F) - tpm:handle(unk):invalid nonce size or nonce va=
+lue mismatch
+> ERROR: Unseal failed!
+> ERROR: Unable to run tpm2_unseal
+> =
 
---===============4266593540882065056==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> The machine is LENOVO P310, BIOS FWKT97A 11/08/2018, Sunrise Point-H chip=
+set.  =
 
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
-ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
-eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
-bGlicmksIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdi
-KDAsIDAsIDApOyI+CkknbSB0cnlpbmcgdG8gZ2V0IFRQTTIgd29ya2luZyB3aXRoIGVuY3J5cHRl
-ZCBmaWxlc3lzdGVtcyBvbiBDZW50T1MgNy48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
-IENhbGlicmksIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjog
-cmdiKDAsIDAsIDApOyI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
-LCAwLCAwKTsiPgpJIHN0YXJ0ZWQgb3V0IHVzaW5nIHRoaXMgcGFnZSBhcyBhIGd1aWRlOjwvZGl2
-Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlm
-OyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGEgaHJlZj0iaHR0cHM6
-Ly90aHJlYXQudGV2b3JhLmNvbS9zZWN1cmUtYm9vdC10cG0tMi8iIGlkPSJMUE5vTFA1ODQ2NjMi
-Pmh0dHBzOi8vdGhyZWF0LnRldm9yYS5jb20vc2VjdXJlLWJvb3QtdHBtLTIvPC9hPjwvZGl2Pgo8
-ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBm
-b250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBz
-dHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1z
-aXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CmJ1dCBzb21lIG9mIHRoZSBDTEkgaGFz
-IGNoYW5nZWQuIFRoZSBjb21tYW5kcyBJJ3ZlIHVzZWQgYXJlOjwvZGl2Pgo8ZGl2IHN0eWxlPSJm
-b250LWZhbWlseTogQ2FsaWJyaSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEy
-cHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1m
-YW1pbHk6IENhbGlicmksIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
-b2xvcjogcmdiKDAsIDAsIDApOyI+CjxwcmUgc3R5bGU9Im1hcmdpbjogMTBweCAwcHggMHB4OyBm
-b250LWZhbWlseTogQ29uZmx1ZW5jZUluc3RhbGxlZEZvbnQsIG1vbm9zcGFjZTsgY2FyZXQtY29s
-b3I6IHJnYigyMywgNDMsIDc3KTsgY29sb3I6IHJnYigyMywgNDMsIDc3KTsgZm9udC1zaXplOiAx
-NHB4OyBmb250LXdlaWdodDogbm9ybWFsOyBvcnBoYW5zOiBhdXRvOyB3aWRvd3M6IGF1dG8iPjxz
-cGFuPiMgZG1lc2cgfCBncmVwIHRwbV90aXM8YnI+PC9zcGFuPjxzcGFuPlsgJm5ic3A7ICZuYnNw
-OzEuOTE5NDQzXSB0cG1fdGlzIE1TRlQwMTAxOjAwOiAyLjAgVFBNIChkZXZpY2UtaWQgMHgxQiwg
-cmV2LWlkIDE2KTwvc3Bhbj48YnI+IyB0cG0yX2NyZWF0ZXBvbGljeSAtUCAtTCBzaGExOjAsMiwz
-LDcgLUYgcGNycy5iaW4gLWYgcG9saWN5LmRpZ2VzdDxicj48cHJlIHN0eWxlPSJtYXJnaW46IDEw
-cHggMHB4IDBweDsgZm9udC1mYW1pbHk6IENvbmZsdWVuY2VJbnN0YWxsZWRGb250LCBtb25vc3Bh
-Y2U7IGNhcmV0LWNvbG9yOiByZ2IoMjMsIDQzLCA3Nyk7IGZvbnQtd2VpZ2h0OiBub3JtYWw7IG9y
-cGhhbnM6IGF1dG87IHdpZG93czogYXV0byI+PGNvZGUgc3R5bGU9ImZvbnQtZmFtaWx5OiBtb25v
-c3BhY2UiPiMgdHBtMl9jcmVhdGVwcmltYXJ5IC1IIGUgLWcgc2hhMSAtRyByc2EgLUMgcHJpbWFy
-eS5jb250ZXh0PC9jb2RlPjwvcHJlPjxwcmUgc3R5bGU9Im1hcmdpbjogMTBweCAwcHggMHB4OyBm
-b250LWZhbWlseTogQ29uZmx1ZW5jZUluc3RhbGxlZEZvbnQsIG1vbm9zcGFjZTsgY2FyZXQtY29s
-b3I6IHJnYigyMywgNDMsIDc3KTsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgb3JwaGFuczogYXV0bzsg
-d2lkb3dzOiBhdXRvIj48Y29kZSBzdHlsZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSI+T2JqZWN0
-QXR0cmlidXRlOiAweDAwMDMwMDcyPGJyPkNyZWF0ZVByaW1hcnkgU3VjY2VlZCAhIEhhbmRsZTog
-MHg4MDAwMDBmZiZuYnNwOzwvY29kZT48L3ByZT48YnI+PHByZSBzdHlsZT0ibWFyZ2luOiAxMHB4
-IDBweCAwcHg7IGZvbnQtZmFtaWx5OiBDb25mbHVlbmNlSW5zdGFsbGVkRm9udCwgbW9ub3NwYWNl
-OyBjYXJldC1jb2xvcjogcmdiKDIzLCA0MywgNzcpOyBmb250LXdlaWdodDogbm9ybWFsOyBvcnBo
-YW5zOiBhdXRvOyB3aWRvd3M6IGF1dG8iPjxjb2RlIHN0eWxlPSJmb250LWZhbWlseTogbW9ub3Nw
-YWNlIj48Y29kZT4jIGRkIGlmPS9kZXYvdXJhbmRvbSBvZj0vdG1wL3NlY3JldC5iaW4gYnM9MzIg
-Y291bnQ9MTwvY29kZT48YnI+IyB0cG0yX2NyZWF0ZSAtZyBzaGEyNTYgLUcga2V5ZWRoYXNoIC11
-IG9iai5wdWIgLXIgb2JqLnByaXYgLWMgcHJpbWFyeS5jb250ZXh0IC1MIHBvbGljeS5kaWdlc3Qg
-LUEgPHNwYW4+JnF1b3Q7bm9kYXxhZG1pbndpdGhwb2xpY3l8Zml4ZWRwYXJlbnR8Zml4ZWR0cG0m
-cXVvdDs8L3NwYW4+Jm5ic3A7LUkgL3RtcC9zZWNyZXQuYmluPC9jb2RlPjwvcHJlPjxwcmUgc3R5
-bGU9Im1hcmdpbjogMTBweCAwcHggMHB4OyBmb250LWZhbWlseTogQ29uZmx1ZW5jZUluc3RhbGxl
-ZEZvbnQsIG1vbm9zcGFjZTsgY2FyZXQtY29sb3I6IHJnYigyMywgNDMsIDc3KTsgZm9udC13ZWln
-aHQ6IG5vcm1hbDsgb3JwaGFuczogYXV0bzsgd2lkb3dzOiBhdXRvIj48Y29kZSBzdHlsZT0iZm9u
-dC1mYW1pbHk6IG1vbm9zcGFjZSI+TG9hZCBvYmplY3QgaW50byB0aGUgVFBNIDwvY29kZT48L3By
-ZT48cHJlIHN0eWxlPSJtYXJnaW46IDEwcHggMHB4IDBweDsgZm9udC1mYW1pbHk6IENvbmZsdWVu
-Y2VJbnN0YWxsZWRGb250LCBtb25vc3BhY2U7IGNhcmV0LWNvbG9yOiByZ2IoMjMsIDQzLCA3Nyk7
-IGZvbnQtd2VpZ2h0OiBub3JtYWw7IG9ycGhhbnM6IGF1dG87IHdpZG93czogYXV0byI+PGNvZGUg
-c3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2UiPiMgPC9jb2RlPjxzcGFuIHN0eWxlPSJsZXR0
-ZXItc3BhY2luZzogMHB4Ij50cG0yX2xvYWQgLWMgcHJpbWFyeS5jb250ZXh0IC11IG9iai5wdWIg
-LXIgb2JqLnByaXYgLUMgbG9hZC5jb250ZXh0PGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVy
-LXNwYWNpbmc6IDBweCI+TG9hZCBzdWNjLjxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRlci1z
-cGFjaW5nOiAwcHgiPkxvYWRlZEhhbmRsZTogMHg4MDAwMDEwMDwvc3Bhbj48L3ByZT48YnI+PHNw
-YW4gc3R5bGU9ImZvbnQtZmFtaWx5OiBjYWxpYnJpLCBoZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZv
-bnQtc2l6ZTogMTJwdDsgbGluZS1oZWlnaHQ6IG5vcm1hbDsgY29sb3I6IHJnYigwLCAwLCAwKTsg
-YmFja2dyb3VuZC1jb2xvcjogcmdiYSgwLCAwLCAwLCAwKTsiPkJ1dCB0aGUgZmluYWwgc3RlcCBm
-YWlsczo8L3NwYW4+PGJyPjxwcmUgc3R5bGU9Im1hcmdpbjogMTBweCAwcHggMHB4OyBmb250LWZh
-bWlseTogQ29uZmx1ZW5jZUluc3RhbGxlZEZvbnQsIG1vbm9zcGFjZTsgY2FyZXQtY29sb3I6IHJn
-YigyMywgNDMsIDc3KTsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgb3JwaGFuczogYXV0bzsgd2lkb3dz
-OiBhdXRvIj48Y29kZSBzdHlsZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSI+IyB0cG0yX2V2aWN0
-Y29udHJvbCAtQSBvIC1jIGxvYWQuY29udGV4dCAtUyA8L2NvZGU+PHNwYW4gc3R5bGU9ImxldHRl
-ci1zcGFjaW5nOiAwcHgiPjB4ODAwMDAxMDA8YnI+PC9zcGFuPjxzcGFuIHN0eWxlPSJsZXR0ZXIt
-c3BhY2luZzogMHB4Ij5wZXJzaXN0ZW50SGFuZGxlOiAweDgwMDAwMTAwPGJyPjwvc3Bhbj48c3Bh
-biBzdHlsZT0ibGV0dGVyLXNwYWNpbmc6IDBweCI+RVJST1I6IEV2aWN0Q29udHJvbCBmYWlsZWQs
-IGVycm9yIGNvZGU6IDB4MWM0PGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVyLXNwYWNpbmc6
-IDBweCI+IyB0cG0yX3JjX2RlY29kZSAweDFjNDxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRl
-ci1zcGFjaW5nOiAwcHgiPmVycm9yIGxheWVyPGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVy
-LXNwYWNpbmc6IDBweCI+aGV4OiAweDA8YnI+PC9zcGFuPjxzcGFuIHN0eWxlPSJsZXR0ZXItc3Bh
-Y2luZzogMHB4Ij5pZGVudGlmaWVyOiBUU1MyX1RQTV9FUlJPUl9MRVZFTDxicj48L3NwYW4+PHNw
-YW4gc3R5bGU9ImxldHRlci1zcGFjaW5nOiAwcHgiPmRlc2NyaXB0aW9uOiBFcnJvciBwcm9kdWNl
-ZCBieSB0aGUgVFBNPGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVyLXNwYWNpbmc6IDBweCI+
-Zm9ybWF0IDEgZXJyb3IgY29kZTxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRlci1zcGFjaW5n
-OiAwcHgiPmhleDogMHgwNDxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRlci1zcGFjaW5nOiAw
-cHgiPmlkZW50aWZpZXI6IFRQTV9SQ19WQUxVRTxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRl
-ci1zcGFjaW5nOiAwcHgiPmRlc2NyaXB0aW9uOiB2YWx1ZSBpcyBvdXQgb2YgcmFuZ2Ugb3IgaXMg
-bm90IGNvcnJlY3QgZm9yIHRoZSBjb250ZXh0PGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVy
-LXNwYWNpbmc6IDBweCI+cGFyYW1ldGVyPGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVyLXNw
-YWNpbmc6IDBweCI+aGV4OiAweDEwMDxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRlci1zcGFj
-aW5nOiAwcHgiPmlkZW50aWZpZXI6IFRQTV9SQ18xPGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0
-dGVyLXNwYWNpbmc6IDBweCI+ZGVzY3JpcHRpb246IChudWxsKTwvc3Bhbj48L3ByZT48YnI+PC9w
-cmU+ClRoZSBlcnJvciBkZXNjcmlwdGlvbiBpcyBhIGNsdWUgdGhhdCB0aGUgJnF1b3Q7LVMgIyZx
-dW90OyBpcyBub3QgcmlnaHQuPGJyPgpJdCBhbHNvIGRvZW5zJ3Qgd29yayBpZiBJIHVzZSB0aGUg
-aGFuZGxlIHZhbHVlIGZvciB0aGUgcHJpbWFyeS48YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250
-LWZhbWlseTogQ2FsaWJyaSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7
-IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KSXMgdGhlcmUgYW5vdGhlciBzdGVwIGluIGhlcmUgdGhh
-dCBJJ20gbWlzc2luZz88L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEhl
-bHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDAp
-OyI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBIZWx2ZXRp
-Y2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8
-YnI+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
+> Could you please give me some pointers as to how this could be worked aro=
+und?
+> =
 
---===============4266593540882065056==--
+> =
+
+> thanks,
+> Petko
+> =
+
+> =
+
+> On 19-02-18 10:20:26, Petko Manolov wrote:
+> > I am sorry that this didn't go through because of the attached script. =
+ I'm =
+
+> > embedding it to this email so i'd like to apologize about the bloat.
+> > =
+
+> > ---
+> > =
+
+> > #!/bin/bash
+> > =
+
+> > source common.sh
+> > =
+
+> > #   Create a signing authority
+> > openssl genrsa -out signing_key_private.pem 2048
+> > openssl rsa -in signing_key_private.pem -out signing_key_public.pem -pu=
+bout
+> > tpm2_loadexternal -G rsa -a o -u signing_key_public.pem -o signing_key.=
+ctx \
+> > 	-n signing_key.name
+> > =
+
+> > echo "Signing authority created"
+> > =
+
+> > #   Create a policy to be authorized like a pcr policy:
+> > tpm2_pcrlist -L $PCRS -o pcrs.sha256
+> > tpm2_startauthsession -S session.ctx
+> > tpm2_policypcr -S session.ctx -L $PCRS -F pcrs.sha256 -f pcr.policy
+> > tpm2_flushcontext -S session.ctx
+> > rm -f session.ctx
+> > =
+
+> > echo "pcr policy created"
+> > =
+
+> > #   Sign the policy
+> > openssl dgst -sha256 -sign signing_key_private.pem -out pcr.signature p=
+cr.policy
+> > =
+
+> > echo "policy is signed"
+> > =
+
+> > #   Authorize the policy in the policy digest:
+> > tpm2_startauthsession -S session.ctx
+> > tpm2_policyauthorize -S session.ctx -o authorized.policy -f pcr.policy \
+> > 	-n signing_key.name
+> > tpm2_flushcontext -S session.ctx
+> > rm -f session.ctx
+> > =
+
+> > echo "policy authorized"
+> > =
+
+> > #   Create a TPM object like a sealing object with the authorized policy
+> > #   based authentication:
+> > echo "secret to seal 123" > secret_file
+> > tpm2_createprimary -Q -a o -g sha256 -G rsa -o prim.ctx
+> > tpm2_create -Q -g sha256 -u sealing_pubkey.pub -r sealing_prikey.pub \
+> > 	-I secret_file -C prim.ctx -L authorized.policy
+> > =
+
+> > echo "sealing object created"
+> > =
+
+> > #   Satisfy policy and unseal the secret:
+> > tpm2_verifysignature -c signing_key.ctx -G sha256 -m pcr.policy \
+> > 	-s pcr.signature -t verification.tkt -f rsassa
+> > tpm2_startauthsession -a -S session.ctx
+> > tpm2_policypcr -Q -S session.ctx -L $PCRS -f pcr.policy
+> > tpm2_policyauthorize -S session.ctx -o authorized.policy -f pcr.policy \
+> > 	-n signing_key.name -t verification.tkt
+> > tpm2_load -Q -C prim.ctx -u sealing_pubkey.pub -r sealing_prikey.pub \
+> > 	-o sealing_key.ctx
+> > tpm2_unseal -p "session:session.ctx" -c sealing_key.ctx -o unsealed
+> > cat unsealed
+> > tpm2_flushcontext -S session.ctx
+> > rm -f session.ctx unsealed
+> > =
+
+> > echo "the end"
+> > =
+
+> > ---
+> > =
+
+> > =
+
+> > thanks,
+> > Petko
+> > =
+
+> > =
+
+> > On 19-02-18 09:48:37, Petko Manolov wrote:
+> > > 	Hello again,
+> > > =
+
+> > > I managed to get authorized PCR policies to work for me.  The attache=
+d script =
+
+> > > works fine on my thinkpad and on rpi3 with Infineon's SLB9670 SPI TPM=
+2.
+> > > =
+
+> > > However, i stumbled upon a problem with an fTPM implementation in a v=
+ery recent =
+
+> > > AMI BIOS.  Everything seems to be working properly, until i get tpm2_=
+unseal to =
+
+> > > give me the error below.  The tpm2-tools is built with at-the-time ti=
+p of git =
+
+> > > commit id:
+> > > =
+
+> > > 	872076e1b31f22b18391c6761d47575a93891cd7
+> > > =
+
+> > > tpm2_unseal -v:
+> > > =
+
+> > > 	tool=3D"tpm2_unseal" version=3D"3.0.2-858-g88956e75" tctis=3D"dynami=
+c" tcti-default=3Dtabrmd dlclose=3Denabled
+> > > =
+
+> > > tpm-tss is v2.1.0 and tpm-abrmd is v2.0.3.  Unfortunately the error m=
+essage does =
+
+> > > not mean much for me so any help will be greatly appreciated.
+> > > =
+
+> > > =
+
+> > > thanks,
+> > > Petko
+> > > =
+
+> > > =
+
+> > > =
+
+> > > ---
+> > > =
+
+> > > Generating RSA private key, 2048 bit long modulus
+> > > ..............................+++++
+> > > ...........................................+++++
+> > > e is 65537 (0x10001)
+> > > writing RSA key
+> > > transient-context: signing_key.ctx
+> > > name: 0x000b5e069ba4b591842c25155d812f635970dabe7cee663aff121088940f8=
+8e2da80
+> > > Signing authority created
+> > > sha256:
+> > >   0 : 0x647992CBC9EEBF49D367559D870620C324B1A4307EB2A6166F1ACEC0DC186=
+AEA
+> > >   1 : 0x519B03509291B643DA7FEC4407FFC47C1C18AF706A611ECA1C159D4608342=
+338
+> > >   2 : 0x369BB94CEB4A1DF8E76720141B64C57EC70E6C620F07B27E335E70AD2DDC2=
+5DB
+> > >   3 : 0x369BB94CEB4A1DF8E76720141B64C57EC70E6C620F07B27E335E70AD2DDC2=
+5DB
+> > > session-context: session.ctx
+> > > policy-digest: 0x22035897291FE4681D7800685BFC5C73EBCBB88C7A579AB20C2E=
+345A9815FDFE
+> > > pcr policy created
+> > > policy is signed
+> > > session-context: session.ctx
+> > > 45a41a53c9f74f09b72151af6ffdd199fe1129eff2b749b8e481b6b21f2281f1
+> > > policy authorized
+> > > sealing object created
+> > > session-context: session.ctx
+> > > 45a41a53c9f74f09b72151af6ffdd199fe1129eff2b749b8e481b6b21f2281f1
+> > > WARNING:esys:../tpm2-tss/src/tss2-esys/api/Esys_Unseal.c:295:Esys_Uns=
+eal_Finish() Received TPM Error
+> > > ERROR:esys:../tpm2-tss/src/tss2-esys/api/Esys_Unseal.c:101:Esys_Unsea=
+l() Esys Finish ErrorCode (0x0000008f)
+> > > ERROR: Esys_Unseal(0x8F) - tpm:handle(unk):invalid nonce size or nonc=
+e value mismatch
+> > > ERROR: Unseal failed!
+> > > ERROR: Unable to run tpm2_unseal
+> > > cat: unsealed: No such file or directory
+> > > the end
+> > =
+
+> > =
+
+> > _______________________________________________
+> > tpm2 mailing list
+> > tpm2(a)lists.01.org
+> > https://lists.01.org/mailman/listinfo/tpm2
+> > =
+
+> _______________________________________________
+> tpm2 mailing list
+> tpm2(a)lists.01.org
+> https://lists.01.org/mailman/listinfo/tpm2
+>=20
+
+--===============1138605818648308341==--
 
