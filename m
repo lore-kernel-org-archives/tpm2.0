@@ -1,29 +1,176 @@
-Content-Type: multipart/mixed; boundary="===============1845692555175385421=="
+Content-Type: multipart/mixed; boundary="===============4266593540882065056=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] tpm2-tss 2.2.1-rc1
-Date: Wed, 20 Feb 2019 10:13:57 -0800
-Message-ID: <9f261732-8bf1-e7f7-61b4-73053bbb6e30@intel.com>
+From: martin doc <db1280 at hotmail.com>
+Subject: [tpm2] Roadblock using TPM2 for mounting filesystems
+Date: Thu, 21 Feb 2019 01:18:10 +0000
+Message-ID: <SL2P216MB0266A71D9099EBA6243311BCC27E0@SL2P216MB0266.KORP216.PROD.OUTLOOK.COM>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1845692555175385421==
+--===============4266593540882065056==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-A new release candidate for tpm2-tss 2.2.1 is out. It can be found here:
+I'm trying to get TPM2 working with encrypted filesystems on CentOS 7.
 
-https://github.com/tpm2-software/tpm2-tss/releases/tag/2.2.1_rc1
+I started out using this page as a guide:
+https://threat.tevora.com/secure-boot-tpm-2/
 
-All changes and fixed issues are listed in the CHANGELOG.md file.
-Please give it some testing. Any feedback is appreciated.
+but some of the CLI has changed. The commands I've used are:
 
-Thanks,
--- =
 
-Tadeusz
+# dmesg | grep tpm_tis
+[    1.919443] tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1B, rev-id 16)
+# tpm2_createpolicy -P -L sha1:0,2,3,7 -F pcrs.bin -f policy.digest
 
---===============1845692555175385421==--
+# tpm2_createprimary -H e -g sha1 -G rsa -C primary.context
+
+ObjectAttribute: 0x00030072
+CreatePrimary Succeed ! Handle: 0x800000ff
+
+
+# dd if=3D/dev/urandom of=3D/tmp/secret.bin bs=3D32 count=3D1
+# tpm2_create -g sha256 -G keyedhash -u obj.pub -r obj.priv -c primary.cont=
+ext -L policy.digest -A "noda|adminwithpolicy|fixedparent|fixedtpm" -I /tmp=
+/secret.bin
+
+Load object into the TPM
+
+# tpm2_load -c primary.context -u obj.pub -r obj.priv -C load.context
+Load succ.
+LoadedHandle: 0x80000100
+
+But the final step fails:
+
+# tpm2_evictcontrol -A o -c load.context -S 0x80000100
+persistentHandle: 0x80000100
+ERROR: EvictControl failed, error code: 0x1c4
+# tpm2_rc_decode 0x1c4
+error layer
+hex: 0x0
+identifier: TSS2_TPM_ERROR_LEVEL
+description: Error produced by the TPM
+format 1 error code
+hex: 0x04
+identifier: TPM_RC_VALUE
+description: value is out of range or is not correct for the context
+parameter
+hex: 0x100
+identifier: TPM_RC_1
+description: (null)
+
+
+The error description is a clue that the "-S #" is not right.
+It also doens't work if I use the handle value for the primary.
+Is there another step in here that I'm missing?
+
+
+
+--===============4266593540882065056==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdi
+KDAsIDAsIDApOyI+CkknbSB0cnlpbmcgdG8gZ2V0IFRQTTIgd29ya2luZyB3aXRoIGVuY3J5cHRl
+ZCBmaWxlc3lzdGVtcyBvbiBDZW50T1MgNy48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
+IENhbGlicmksIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjog
+cmdiKDAsIDAsIDApOyI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
+YnJpLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
+LCAwLCAwKTsiPgpJIHN0YXJ0ZWQgb3V0IHVzaW5nIHRoaXMgcGFnZSBhcyBhIGd1aWRlOjwvZGl2
+Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlm
+OyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGEgaHJlZj0iaHR0cHM6
+Ly90aHJlYXQudGV2b3JhLmNvbS9zZWN1cmUtYm9vdC10cG0tMi8iIGlkPSJMUE5vTFA1ODQ2NjMi
+Pmh0dHBzOi8vdGhyZWF0LnRldm9yYS5jb20vc2VjdXJlLWJvb3QtdHBtLTIvPC9hPjwvZGl2Pgo8
+ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBm
+b250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBz
+dHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1z
+aXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CmJ1dCBzb21lIG9mIHRoZSBDTEkgaGFz
+IGNoYW5nZWQuIFRoZSBjb21tYW5kcyBJJ3ZlIHVzZWQgYXJlOjwvZGl2Pgo8ZGl2IHN0eWxlPSJm
+b250LWZhbWlseTogQ2FsaWJyaSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEy
+cHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1m
+YW1pbHk6IENhbGlicmksIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
+b2xvcjogcmdiKDAsIDAsIDApOyI+CjxwcmUgc3R5bGU9Im1hcmdpbjogMTBweCAwcHggMHB4OyBm
+b250LWZhbWlseTogQ29uZmx1ZW5jZUluc3RhbGxlZEZvbnQsIG1vbm9zcGFjZTsgY2FyZXQtY29s
+b3I6IHJnYigyMywgNDMsIDc3KTsgY29sb3I6IHJnYigyMywgNDMsIDc3KTsgZm9udC1zaXplOiAx
+NHB4OyBmb250LXdlaWdodDogbm9ybWFsOyBvcnBoYW5zOiBhdXRvOyB3aWRvd3M6IGF1dG8iPjxz
+cGFuPiMgZG1lc2cgfCBncmVwIHRwbV90aXM8YnI+PC9zcGFuPjxzcGFuPlsgJm5ic3A7ICZuYnNw
+OzEuOTE5NDQzXSB0cG1fdGlzIE1TRlQwMTAxOjAwOiAyLjAgVFBNIChkZXZpY2UtaWQgMHgxQiwg
+cmV2LWlkIDE2KTwvc3Bhbj48YnI+IyB0cG0yX2NyZWF0ZXBvbGljeSAtUCAtTCBzaGExOjAsMiwz
+LDcgLUYgcGNycy5iaW4gLWYgcG9saWN5LmRpZ2VzdDxicj48cHJlIHN0eWxlPSJtYXJnaW46IDEw
+cHggMHB4IDBweDsgZm9udC1mYW1pbHk6IENvbmZsdWVuY2VJbnN0YWxsZWRGb250LCBtb25vc3Bh
+Y2U7IGNhcmV0LWNvbG9yOiByZ2IoMjMsIDQzLCA3Nyk7IGZvbnQtd2VpZ2h0OiBub3JtYWw7IG9y
+cGhhbnM6IGF1dG87IHdpZG93czogYXV0byI+PGNvZGUgc3R5bGU9ImZvbnQtZmFtaWx5OiBtb25v
+c3BhY2UiPiMgdHBtMl9jcmVhdGVwcmltYXJ5IC1IIGUgLWcgc2hhMSAtRyByc2EgLUMgcHJpbWFy
+eS5jb250ZXh0PC9jb2RlPjwvcHJlPjxwcmUgc3R5bGU9Im1hcmdpbjogMTBweCAwcHggMHB4OyBm
+b250LWZhbWlseTogQ29uZmx1ZW5jZUluc3RhbGxlZEZvbnQsIG1vbm9zcGFjZTsgY2FyZXQtY29s
+b3I6IHJnYigyMywgNDMsIDc3KTsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgb3JwaGFuczogYXV0bzsg
+d2lkb3dzOiBhdXRvIj48Y29kZSBzdHlsZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSI+T2JqZWN0
+QXR0cmlidXRlOiAweDAwMDMwMDcyPGJyPkNyZWF0ZVByaW1hcnkgU3VjY2VlZCAhIEhhbmRsZTog
+MHg4MDAwMDBmZiZuYnNwOzwvY29kZT48L3ByZT48YnI+PHByZSBzdHlsZT0ibWFyZ2luOiAxMHB4
+IDBweCAwcHg7IGZvbnQtZmFtaWx5OiBDb25mbHVlbmNlSW5zdGFsbGVkRm9udCwgbW9ub3NwYWNl
+OyBjYXJldC1jb2xvcjogcmdiKDIzLCA0MywgNzcpOyBmb250LXdlaWdodDogbm9ybWFsOyBvcnBo
+YW5zOiBhdXRvOyB3aWRvd3M6IGF1dG8iPjxjb2RlIHN0eWxlPSJmb250LWZhbWlseTogbW9ub3Nw
+YWNlIj48Y29kZT4jIGRkIGlmPS9kZXYvdXJhbmRvbSBvZj0vdG1wL3NlY3JldC5iaW4gYnM9MzIg
+Y291bnQ9MTwvY29kZT48YnI+IyB0cG0yX2NyZWF0ZSAtZyBzaGEyNTYgLUcga2V5ZWRoYXNoIC11
+IG9iai5wdWIgLXIgb2JqLnByaXYgLWMgcHJpbWFyeS5jb250ZXh0IC1MIHBvbGljeS5kaWdlc3Qg
+LUEgPHNwYW4+JnF1b3Q7bm9kYXxhZG1pbndpdGhwb2xpY3l8Zml4ZWRwYXJlbnR8Zml4ZWR0cG0m
+cXVvdDs8L3NwYW4+Jm5ic3A7LUkgL3RtcC9zZWNyZXQuYmluPC9jb2RlPjwvcHJlPjxwcmUgc3R5
+bGU9Im1hcmdpbjogMTBweCAwcHggMHB4OyBmb250LWZhbWlseTogQ29uZmx1ZW5jZUluc3RhbGxl
+ZEZvbnQsIG1vbm9zcGFjZTsgY2FyZXQtY29sb3I6IHJnYigyMywgNDMsIDc3KTsgZm9udC13ZWln
+aHQ6IG5vcm1hbDsgb3JwaGFuczogYXV0bzsgd2lkb3dzOiBhdXRvIj48Y29kZSBzdHlsZT0iZm9u
+dC1mYW1pbHk6IG1vbm9zcGFjZSI+TG9hZCBvYmplY3QgaW50byB0aGUgVFBNIDwvY29kZT48L3By
+ZT48cHJlIHN0eWxlPSJtYXJnaW46IDEwcHggMHB4IDBweDsgZm9udC1mYW1pbHk6IENvbmZsdWVu
+Y2VJbnN0YWxsZWRGb250LCBtb25vc3BhY2U7IGNhcmV0LWNvbG9yOiByZ2IoMjMsIDQzLCA3Nyk7
+IGZvbnQtd2VpZ2h0OiBub3JtYWw7IG9ycGhhbnM6IGF1dG87IHdpZG93czogYXV0byI+PGNvZGUg
+c3R5bGU9ImZvbnQtZmFtaWx5OiBtb25vc3BhY2UiPiMgPC9jb2RlPjxzcGFuIHN0eWxlPSJsZXR0
+ZXItc3BhY2luZzogMHB4Ij50cG0yX2xvYWQgLWMgcHJpbWFyeS5jb250ZXh0IC11IG9iai5wdWIg
+LXIgb2JqLnByaXYgLUMgbG9hZC5jb250ZXh0PGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVy
+LXNwYWNpbmc6IDBweCI+TG9hZCBzdWNjLjxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRlci1z
+cGFjaW5nOiAwcHgiPkxvYWRlZEhhbmRsZTogMHg4MDAwMDEwMDwvc3Bhbj48L3ByZT48YnI+PHNw
+YW4gc3R5bGU9ImZvbnQtZmFtaWx5OiBjYWxpYnJpLCBoZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZv
+bnQtc2l6ZTogMTJwdDsgbGluZS1oZWlnaHQ6IG5vcm1hbDsgY29sb3I6IHJnYigwLCAwLCAwKTsg
+YmFja2dyb3VuZC1jb2xvcjogcmdiYSgwLCAwLCAwLCAwKTsiPkJ1dCB0aGUgZmluYWwgc3RlcCBm
+YWlsczo8L3NwYW4+PGJyPjxwcmUgc3R5bGU9Im1hcmdpbjogMTBweCAwcHggMHB4OyBmb250LWZh
+bWlseTogQ29uZmx1ZW5jZUluc3RhbGxlZEZvbnQsIG1vbm9zcGFjZTsgY2FyZXQtY29sb3I6IHJn
+YigyMywgNDMsIDc3KTsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgb3JwaGFuczogYXV0bzsgd2lkb3dz
+OiBhdXRvIj48Y29kZSBzdHlsZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSI+IyB0cG0yX2V2aWN0
+Y29udHJvbCAtQSBvIC1jIGxvYWQuY29udGV4dCAtUyA8L2NvZGU+PHNwYW4gc3R5bGU9ImxldHRl
+ci1zcGFjaW5nOiAwcHgiPjB4ODAwMDAxMDA8YnI+PC9zcGFuPjxzcGFuIHN0eWxlPSJsZXR0ZXIt
+c3BhY2luZzogMHB4Ij5wZXJzaXN0ZW50SGFuZGxlOiAweDgwMDAwMTAwPGJyPjwvc3Bhbj48c3Bh
+biBzdHlsZT0ibGV0dGVyLXNwYWNpbmc6IDBweCI+RVJST1I6IEV2aWN0Q29udHJvbCBmYWlsZWQs
+IGVycm9yIGNvZGU6IDB4MWM0PGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVyLXNwYWNpbmc6
+IDBweCI+IyB0cG0yX3JjX2RlY29kZSAweDFjNDxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRl
+ci1zcGFjaW5nOiAwcHgiPmVycm9yIGxheWVyPGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVy
+LXNwYWNpbmc6IDBweCI+aGV4OiAweDA8YnI+PC9zcGFuPjxzcGFuIHN0eWxlPSJsZXR0ZXItc3Bh
+Y2luZzogMHB4Ij5pZGVudGlmaWVyOiBUU1MyX1RQTV9FUlJPUl9MRVZFTDxicj48L3NwYW4+PHNw
+YW4gc3R5bGU9ImxldHRlci1zcGFjaW5nOiAwcHgiPmRlc2NyaXB0aW9uOiBFcnJvciBwcm9kdWNl
+ZCBieSB0aGUgVFBNPGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVyLXNwYWNpbmc6IDBweCI+
+Zm9ybWF0IDEgZXJyb3IgY29kZTxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRlci1zcGFjaW5n
+OiAwcHgiPmhleDogMHgwNDxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRlci1zcGFjaW5nOiAw
+cHgiPmlkZW50aWZpZXI6IFRQTV9SQ19WQUxVRTxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRl
+ci1zcGFjaW5nOiAwcHgiPmRlc2NyaXB0aW9uOiB2YWx1ZSBpcyBvdXQgb2YgcmFuZ2Ugb3IgaXMg
+bm90IGNvcnJlY3QgZm9yIHRoZSBjb250ZXh0PGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVy
+LXNwYWNpbmc6IDBweCI+cGFyYW1ldGVyPGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0dGVyLXNw
+YWNpbmc6IDBweCI+aGV4OiAweDEwMDxicj48L3NwYW4+PHNwYW4gc3R5bGU9ImxldHRlci1zcGFj
+aW5nOiAwcHgiPmlkZW50aWZpZXI6IFRQTV9SQ18xPGJyPjwvc3Bhbj48c3BhbiBzdHlsZT0ibGV0
+dGVyLXNwYWNpbmc6IDBweCI+ZGVzY3JpcHRpb246IChudWxsKTwvc3Bhbj48L3ByZT48YnI+PC9w
+cmU+ClRoZSBlcnJvciBkZXNjcmlwdGlvbiBpcyBhIGNsdWUgdGhhdCB0aGUgJnF1b3Q7LVMgIyZx
+dW90OyBpcyBub3QgcmlnaHQuPGJyPgpJdCBhbHNvIGRvZW5zJ3Qgd29yayBpZiBJIHVzZSB0aGUg
+aGFuZGxlIHZhbHVlIGZvciB0aGUgcHJpbWFyeS48YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250
+LWZhbWlseTogQ2FsaWJyaSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7
+IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KSXMgdGhlcmUgYW5vdGhlciBzdGVwIGluIGhlcmUgdGhh
+dCBJJ20gbWlzc2luZz88L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEhl
+bHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDAp
+OyI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBIZWx2ZXRp
+Y2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8
+YnI+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
+
+--===============4266593540882065056==--
 
