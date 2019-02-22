@@ -1,157 +1,149 @@
-Content-Type: multipart/mixed; boundary="===============2871964124692454351=="
+Content-Type: multipart/mixed; boundary="===============8079768920063382505=="
 MIME-Version: 1.0
-From: Gael GUEGAN <Gael.Guegan at non.se.com>
-Subject: [tpm2] tpm2_encryptdecrypt : other mode than the persistent key
-Date: Fri, 22 Feb 2019 16:21:04 +0000
-Message-ID: <VI1PR04MB5424E6EB722498DFF8B16B54DC7F0@VI1PR04MB5424.eurprd04.prod.outlook.com>
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: Re: [tpm2] tpm2_encryptdecrypt : other mode than the persistent key
+Date: Fri, 22 Feb 2019 09:15:40 -0800
+Message-ID: <e55e1371-4662-927a-058f-b811b0c2aae7@intel.com>
+In-Reply-To: VI1PR04MB5424E6EB722498DFF8B16B54DC7F0@VI1PR04MB5424.eurprd04.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2871964124692454351==
+--===============8079768920063382505==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When using the command : **tpm2_encryptdecrypt**, should we be able to ciph=
-er with a different mode than the one specified in the key ?
+On 2/22/19 8:21 AM, Gael GUEGAN wrote:
+> When using the command : **tpm2_encryptdecrypt**, should we be able to ci=
+pher with a different mode than the one specified in the key ?
+> =
 
-For example, if I have created a persistent **aes256cfb** :
+> =C2=A0
+> =
 
-```shell
-Tpm2_listpersistent
-- handle: 0x81000001
-  name-alg:
-    value: sha256
-    raw: 0xb
-  attributes:
-    value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|si=
-gn
-    raw: 0x60072
-  type:
-    value: symcipher
-    raw: 0x25
-  sym-alg:
-    value: aes
-    raw: 0x6
-  sym-mode:
-    value: ctr
-    raw: 0x40
-  sym-keybits: 128
-  symcipher: 873f743994e47004602011039322b108b49318c305b4f5eeace36b1fe634e3=
-6d
+> For example, if I have created a persistent **aes256cfb** :
+> =
 
-tpm2_encryptdecrypt -c 0x81000001 -I data.txt -o enc_data.txt -G cbc
-ERROR: Esys_EncryptDecrypt(0x2C9) - tpm:parameter(2):mode of operation not =
-supported
-```
+> =C2=A0
+> =
 
-This does not work ...
+> ```shell
+> =
 
-```shell
-tpm2_encryptdecrypt -c 0x8100001 -I data.txt -o enc_data.txt -G cfb
-```
+> Tpm2_listpersistent
+> =
 
-This works ...
+> - handle: 0x81000001
+> =
 
-Why the option -G exists, if it is to specified a mode already present in t=
-he key ?
+> =C2=A0 name-alg:
+> =
 
---===============2871964124692454351==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> =C2=A0=C2=A0=C2=A0 value: sha256
+> =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgltc28tZmFyZWFzdC1sYW5n
-dWFnZTpFTi1VUzt9CmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3Jp
-dHk6OTk7Cgljb2xvcjojMDU2M0MxOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlz
-aXRlZCwgc3Bhbi5Nc29IeXBlcmxpbmtGb2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsK
-CWNvbG9yOiM5NTRGNzI7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30Kc3Bhbi5FbWFpbFN0
-eWxlMTcKCXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1jb21wb3NlOwoJZm9udC1mYW1pbHk6IkNh
-bGlicmkiLHNhbnMtc2VyaWY7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0NocERlZmF1bHQKCXtt
-c28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNl
-cmlmOwoJbXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVM7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtz
-aXplOjYxMi4wcHQgNzkyLjBwdDsKCW1hcmdpbjo3MC44NXB0IDcwLjg1cHQgNzAuODVwdCA3MC44
-NXB0O30KZGl2LldvcmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48
-IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3Bp
-ZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+
-CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9
-IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBs
-YW5nPSJGUiIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3Jk
-U2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+V2hlbiB1
-c2luZyB0aGUgY29tbWFuZCA6ICoqdHBtMl9lbmNyeXB0ZGVjcnlwdCoqLCBzaG91bGQgd2UgYmUg
-YWJsZSB0byBjaXBoZXIgd2l0aCBhIGRpZmZlcmVudCBtb2RlIHRoYW4gdGhlIG9uZSBzcGVjaWZp
-ZWQgaW4gdGhlIGtleSA/PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48c3BhbiBsYW5nPSJFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Rm9yIGV4YW1wbGUsIGlmIEkgaGF2ZSBj
-cmVhdGVkIGEgcGVyc2lzdGVudCAqKmFlczI1NmNmYioqIDo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj48bzpwPiZuYnNwOzwvbzpw
-Pjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5gYGBz
-aGVsbDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFu
-Zz0iRU4tVVMiPlRwbTJfbGlzdHBlcnNpc3RlbnQ8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4tIGhhbmRsZTogMHg4MTAwMDAwMTxv
-OnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4t
-VVMiPiZuYnNwOyBuYW1lLWFsZzo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mbmJzcDsmbmJzcDsmbmJzcDsgdmFsdWU6IHNoYTI1
-NjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0i
-RU4tVVMiPiZuYnNwOyZuYnNwOyZuYnNwOyByYXc6IDB4YjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZuYnNwOyBhdHRyaWJ1dGVz
-OjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0i
-RU4tVVMiPiZuYnNwOyZuYnNwOyZuYnNwOyB2YWx1ZTogZml4ZWR0cG18Zml4ZWRwYXJlbnR8c2Vu
-c2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8ZGVjcnlwdHxzaWduPG86cD48L286cD48L3Nw
-YW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jm5ic3A7Jm5i
-c3A7Jm5ic3A7IHJhdzogMHg2MDA3MjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZuYnNwOyB0eXBlOjxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZuYnNwOyZuYnNw
-OyZuYnNwOyB2YWx1ZTogc3ltY2lwaGVyPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IHJhdzogMHgy
-NTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0i
-RU4tVVMiPiZuYnNwOyBzeW0tYWxnOjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZuYnNwOyZuYnNwOyZuYnNwOyB2YWx1ZTogYWVz
-PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJF
-Ti1VUyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IHJhdzogMHg2PG86cD48L286cD48L3NwYW4+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jm5ic3A7IHN5bS1tb2RlOjxv
-OnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4t
-VVMiPiZuYnNwOyZuYnNwOyZuYnNwOyB2YWx1ZTogY3RyPG86cD48L286cD48L3NwYW4+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7
-IHJhdzogMHg0MDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
-YW4gbGFuZz0iRU4tVVMiPiZuYnNwOyBzeW0ta2V5Yml0czogMTI4PG86cD48L286cD48L3NwYW4+
-PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jm5ic3A7IHN5bWNp
-cGhlcjogODczZjc0Mzk5NGU0NzAwNDYwMjAxMTAzOTMyMmIxMDhiNDkzMThjMzA1YjRmNWVlYWNl
-MzZiMWZlNjM0ZTM2ZCZuYnNwOwo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+Cjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj50cG0yX2VuY3J5cHRkZWNyeXB0
-IC1jIDB4ODEwMDAwMDEgLUkgZGF0YS50eHQgLW8gZW5jX2RhdGEudHh0IC1HIGNiYzxvOnA+PC9v
-OnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPkVS
-Uk9SOiBFc3lzX0VuY3J5cHREZWNyeXB0KDB4MkM5KSAtIHRwbTpwYXJhbWV0ZXIoMik6bW9kZSBv
-ZiBvcGVyYXRpb24gbm90IHN1cHBvcnRlZDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPmBgYDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPlRoaXMg
-ZG9lcyBub3Qgd29yayAuLi48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxzcGFuIGxhbmc9IkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5gYGBzaGVsbDxvOnA+PC9vOnA+PC9z
-cGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPnRwbTJfZW5j
-cnlwdGRlY3J5cHQgLWMgMHg4MTAwMDAxIC1JIGRhdGEudHh0IC1vIGVuY19kYXRhLnR4dCAtRyBj
-ZmI8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPmBgYDxvOnA+PC9v
-OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+VGhpcyB3b3JrcyAuLi48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IGxhbmc9IkVOLVVTIj5XaHkgdGhlIG9wdGlvbiAtRyBleGlzdHMsIGlmIGl0IGlzIHRvIHNwZWNp
-ZmllZCBhIG1vZGUgYWxyZWFkeSBwcmVzZW50IGluIHRoZSBrZXkgPzxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+> =C2=A0=C2=A0=C2=A0 raw: 0xb
+> =
 
---===============2871964124692454351==--
+> =C2=A0 attributes:
+> =
+
+> =C2=A0=C2=A0=C2=A0 value: fixedtpm|fixedparent|sensitivedataorigin|userwi=
+thauth|decrypt|sign
+> =
+
+> =C2=A0=C2=A0=C2=A0 raw: 0x60072
+> =
+
+> =C2=A0 type:
+> =
+
+> =C2=A0=C2=A0=C2=A0 value: symcipher
+> =
+
+> =C2=A0=C2=A0=C2=A0 raw: 0x25
+> =
+
+> =C2=A0 sym-alg:
+> =
+
+> =C2=A0=C2=A0=C2=A0 value: aes
+> =
+
+> =C2=A0=C2=A0=C2=A0 raw: 0x6
+> =
+
+> =C2=A0 sym-mode:
+> =
+
+> =C2=A0=C2=A0=C2=A0 value: ctr
+> =
+
+> =C2=A0=C2=A0=C2=A0 raw: 0x40
+> =
+
+> =C2=A0 sym-keybits: 128
+> =
+
+> =C2=A0 symcipher: 873f743994e47004602011039322b108b49318c305b4f5eeace36b1=
+fe634e36d=C2=A0
+> =
+
+> =C2=A0
+> =
+
+> tpm2_encryptdecrypt -c 0x81000001 -I data.txt -o enc_data.txt -G cbc
+> =
+
+> ERROR: Esys_EncryptDecrypt(0x2C9) - tpm:parameter(2):mode of operation no=
+t supported
+> =
+
+> ```
+> =
+
+> =C2=A0
+> =
+
+> This does not work ...
+> =
+
+> =C2=A0
+> =
+
+> ```shell
+> =
+
+> tpm2_encryptdecrypt -c 0x8100001 -I data.txt -o enc_data.txt -G cfb
+> =
+
+> ```
+> =
+
+> =C2=A0
+> =
+
+> This works ...
+> =
+
+> =C2=A0
+> =
+
+> Why the option -G exists, if it is to specified a mode already present in=
+ the key ?
+
+That is required by the TCG specification:
+"symmetric mode shall match the default mode of the key or be TPM_ALG_NULL."
+
+See "15.2 TPM2_EncryptDecrypt" in =
+
+https://www.trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-3=
+-Commands-01.38.pdf
+
+Thanks,
+-- =
+
+Tadeusz
+
+--===============8079768920063382505==--
 
