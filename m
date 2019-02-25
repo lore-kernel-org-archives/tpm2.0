@@ -1,137 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============7397481670801281200=="
+Content-Type: multipart/mixed; boundary="===============2993570074664200140=="
 MIME-Version: 1.0
-From: Gael GUEGAN <Gael.Guegan at non.se.com>
-Subject: Re: [tpm2] tpm2_encryptdecrypt : other mode than the persistent key
-Date: Mon, 25 Feb 2019 08:22:00 +0000
-Message-ID: <VI1PR04MB5424E5E60803032C4E5019C6DC7A0@VI1PR04MB5424.eurprd04.prod.outlook.com>
-In-Reply-To: e55e1371-4662-927a-058f-b811b0c2aae7@intel.com
+From: Bastian Fraune <bastian.fraune at hs-bremen.de>
+Subject: [tpm2] TSS-Engine store primary key in TPM
+Date: Mon, 25 Feb 2019 13:51:40 +0100
+Message-ID: <D2D58501-6496-48FD-AABD-A2C6EAFA2DE9@hs-bremen.de>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7397481670801281200==
+--===============2993570074664200140==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thank you for your help. I am sorry I don't know all the specification.
+Hey guys, thanks for the great contributions to the Linux TPM2 and TSS Soft=
+ware!
 
-Gael GUEGAN
-
-
------Message d'origine-----
-De=C2=A0: Tadeusz Struk <tadeusz.struk(a)intel.com> =
-
-Envoy=C3=A9=C2=A0: vendredi 22 f=C3=A9vrier 2019 18:16
-=C3=80=C2=A0: Gael GUEGAN <Gael.Guegan(a)non.se.com>; tpm2(a)lists.01.org
-Objet=C2=A0: Re: [tpm2] tpm2_encryptdecrypt : other mode than the persisten=
-t key
-
-[External email: Use caution with links and attachments]
-
-________________________________
+We are working with the TSS-Engine for OpenSSL and wonder how it is possibl=
+e to create RSA keys, where the private key remains in the TPM. Did we unde=
+rstood something wrong with the OpenSSL for TPM impl?
 
 
+Thanks in advance, best,
+Bastian Fraune
 
-On 2/22/19 8:21 AM, Gael GUEGAN wrote:
-> When using the command : **tpm2_encryptdecrypt**, should we be able to ci=
-pher with a different mode than the one specified in the key ?
->
->
->
-> For example, if I have created a persistent **aes256cfb** :
->
->
->
-> ```shell
->
-> Tpm2_listpersistent
->
-> - handle: 0x81000001
->
->   name-alg:
->
->     value: sha256
->
->     raw: 0xb
->
->   attributes:
->
->     value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|=
-sign
->
->     raw: 0x60072
->
->   type:
->
->     value: symcipher
->
->     raw: 0x25
->
->   sym-alg:
->
->     value: aes
->
->     raw: 0x6
->
->   sym-mode:
->
->     value: ctr
->
->     raw: 0x40
->
->   sym-keybits: 128
->
->   symcipher: 873f743994e47004602011039322b108b49318c305b4f5eeace36b1fe634=
-e36d
->
->
->
-> tpm2_encryptdecrypt -c 0x81000001 -I data.txt -o enc_data.txt -G cbc
->
-> ERROR: Esys_EncryptDecrypt(0x2C9) - tpm:parameter(2):mode of operation no=
-t supported
->
-> ```
->
->
->
-> This does not work ...
->
->
->
-> ```shell
->
-> tpm2_encryptdecrypt -c 0x8100001 -I data.txt -o enc_data.txt -G cfb
->
-> ```
->
->
->
-> This works ...
->
->
->
-> Why the option -G exists, if it is to specified a mode already present in=
- the key ?
 
-That is required by the TCG specification:
-"symmetric mode shall match the default mode of the key or be TPM_ALG_NULL."
+--===============2993570074664200140==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-See "15.2 TPM2_EncryptDecrypt" in
-https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww.tr=
-ustedcomputinggroup.org%2Fwp-content%2Fuploads%2FTPM-Rev-2.0-Part-3-Command=
-s-01.38.pdf&amp;data=3D02%7C01%7CGael.Guegan%40non.se.com%7C6f70d3c8c29a49c=
-0ed1e08d698e9618a%7C6e51e1adc54b4b39b5980ffe9ae68fef%7C0%7C0%7C636864525463=
-760195&amp;sdata=3DpPDgu3TfHY544zlcDyl4%2BzM%2BM9J%2F4lvpZpLJcJU3xqM%3D&amp=
-;reserved=3D0
+PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0
+L2h0bWw7IGNoYXJzZXQ9dXMtYXNjaWkiPjwvaGVhZD48Ym9keSBzdHlsZT0id29yZC13cmFwOiBi
+cmVhay13b3JkOyAtd2Via2l0LW5ic3AtbW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdo
+aXRlLXNwYWNlOyIgY2xhc3M9IiI+SGV5IGd1eXMsIHRoYW5rcyBmb3IgdGhlIGdyZWF0IGNvbnRy
+aWJ1dGlvbnMgdG8gdGhlIExpbnV4IFRQTTIgYW5kIFRTUyBTb2Z0d2FyZSE8ZGl2IGNsYXNzPSIi
+PjxiciBjbGFzcz0iIj48ZGl2IGNsYXNzPSIiPldlIGFyZSB3b3JraW5nIHdpdGggdGhlIFRTUy1F
+bmdpbmUgZm9yIE9wZW5TU0wgYW5kIHdvbmRlciBob3cgaXQgaXMgcG9zc2libGUgdG8gY3JlYXRl
+IFJTQSBrZXlzLCB3aGVyZSB0aGUgcHJpdmF0ZSBrZXkgcmVtYWlucyBpbiB0aGUgVFBNLiBEaWQg
+d2UgdW5kZXJzdG9vZCBzb21ldGhpbmcgd3Jvbmcgd2l0aCB0aGUgT3BlblNTTCBmb3IgVFBNIGlt
+cGw/PC9kaXY+PGRpdiBjbGFzcz0iIj48YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj48
+YnIgY2xhc3M9IiI+PC9kaXY+PGRpdiBjbGFzcz0iIj5UaGFua3MgaW4gYWR2YW5jZSwgYmVzdCw8
+L2Rpdj48ZGl2IGNsYXNzPSIiPkJhc3RpYW4gRnJhdW5lJm5ic3A7PC9kaXY+PGRpdiBjbGFzcz0i
+Ij48ZGl2IGNsYXNzPSIiPjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iY29sb3I6IHJnYigwLCAwLCAw
+KTsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50
+OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3b3JkLXNw
+YWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB3b3JkLXdyYXA6IGJy
+ZWFrLXdvcmQ7IC13ZWJraXQtbmJzcC1tb2RlOiBzcGFjZTsgbGluZS1icmVhazogYWZ0ZXItd2hp
+dGUtc3BhY2U7IiBjbGFzcz0iIj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImNvbG9yOiByZ2IoMCwg
+MCwgMCk7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWlu
+ZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgd29y
+ZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsgd29yZC13cmFw
+OiBicmVhay13b3JkOyAtd2Via2l0LW5ic3AtbW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVy
+LXdoaXRlLXNwYWNlOyIgY2xhc3M9IiI+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJ3b3JkLXdyYXA6
+IGJyZWFrLXdvcmQ7IC13ZWJraXQtbmJzcC1tb2RlOiBzcGFjZTsgbGluZS1icmVhazogYWZ0ZXIt
+d2hpdGUtc3BhY2U7IiBjbGFzcz0iIj48ZGl2IHN0eWxlPSJjb2xvcjogcmdiKDAsIDAsIDApOyBm
+b250LWZhbWlseTogSGVsdmV0aWNhOyBmb250LXNpemU6IDEycHg7IGZvbnQtc3R5bGU6IG5vcm1h
+bDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVy
+LXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRl
+eHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBw
+eDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyI+PGJyIGNsYXNzPSIiPjwvZGl2Pjwv
+ZGl2PjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2PjwvYm9keT48L2h0bWw+
+--===============2993570074664200140==
+Content-Type: application/pgp-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="signature.asc"
 
-Thanks,
---
-Tadeusz
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRRXpCQUVCQ0FBZEZpRUVIUjdsL1lhUjFJ
+Q21wL0tuZDlZSVI0RHJsbEFGQWx4ejVOd0FDZ2tRZDlZSVI0RHIKbGxBR0lnZjdCN3U2Q20wT1N5
+bDJNbXRqZzFjbGg5bk5CdTl5Y1I4V2xOb2p1Ry9VdEhlM3hkMHgwZjU1VFFtaAo3enlYZS9RNnFr
+dTNMQzRaZGJWUjExbmZ2N3ZtOXkyczhLSzJrby9XbFhFc2hqUEhlT1Rsb0M1Qk91a2YwYnNzCjUw
+NWFrbjRReEdLVDdUMDd0Z1RaU2Y1VG5tRFlQNFIrUWxEWlJxSGhDSFZCVTJibVNFdjFiNkltTitv
+M0txMHcKcHE2NXBDTDNmbWhpUHB5OE42K0FoMlo3cy9GbjFjQWY0YmxHVk5SdzhzNGNJV0VFZDRz
+eDJLRjVEbVdQYzhaWAo5QnFEV3doQ3EvR21QVXhvMnJMQzR3dkNSYWNrRTF2VENRd1V6RVF3Wjkx
+ckhqcnhkWkh5MjA2bFExOEw3NHNNCmJDQW1Xa213LzFidUZCVnV6TnQ1bytXNE45THg4Zz09Cj0z
+SzVHCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
 
-______________________________________________________________________
-This email has been scanned by the Symantec Email Security.cloud service.
-______________________________________________________________________
-
---===============7397481670801281200==--
+--===============2993570074664200140==--
 
