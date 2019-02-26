@@ -1,112 +1,137 @@
-Content-Type: multipart/mixed; boundary="===============9051769868581346220=="
+Content-Type: multipart/mixed; boundary="===============8403579696895862901=="
 MIME-Version: 1.0
-From: Sherry Zhang(BJ-RD) <SherryZhang at zhaoxin.com>
-Subject: [tpm2] when SPI controller is DMA mode, TPM can not work
-Date: Tue, 26 Feb 2019 08:03:36 +0000
-Message-ID: <83b85a63a25642e9bae1c881b56a82d5@zhaoxin.com>
+From: Petko Manolov <sti at nucleusys.com>
+Subject: Re: [tpm2] tpm2 Digest, Vol 20, Issue 17
+Date: Tue, 26 Feb 2019 13:20:45 +0200
+Message-ID: <20190226112045.GB4322@p310>
+In-Reply-To: D707E35E-98C6-4463-87B5-B6F787A3CE98@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9051769868581346220==
+--===============8403579696895862901==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-HI All,
-X86, kernel4.16:
-SPI port0 flash is used to boot BIOS.
-SPI port1 flash is a device.
-SPI port2 is connected with TPM.
+	Hey Imran,
+
+Thanks for looking at this one.  Unfortunately i can't reproduce your resul=
+ts on =
+
+either of my machines.  Here is a slightly modified script as "-I-" doesn't=
+ work =
+
+for me with tpm2_load:
+
+---
+#!/bin/bash
+
+rm -f   pcr0.sha256 \
+        pcr.signature \
+        session.ctx \
+        signing_key.ctx \
+	sealing_key.ctx \
+        signing_key.name \
+        signing_key_private.pem \
+        signing_key_public.pem
 
 
-I set the SPI controller is DMA mode, port0/1 flash can work well.
-devmem 0xfed40000
-OS hang and reboot can not work .So I poweroff.
-Does anyone know what is cause?
+tpm2_clear
+
+openssl genrsa -out signing_key_private.pem 2048
+openssl rsa -in signing_key_private.pem -out signing_key_public.pem -pubout
+tpm2_loadexternal -G rsa -a o -u signing_key_public.pem -o signing_key.ctx =
+-n signing_key.name
+tpm2_pcrlist -L sha256:0 -o pcr0.sha256
+tpm2_startauthsession -S session.ctx
+tpm2_policypcr -S session.ctx -L sha256:0 -F pcr0.sha256 -f pcr.policy
+tpm2_flushcontext -S session.ctx
+rm -f session.ctx
+openssl dgst -sha256 -sign signing_key_private.pem -out pcr.signature pcr.p=
+olicy
+tpm2_startauthsession -S session.ctx
+tpm2_policyauthorize -S session.ctx -o authorized.policy -f pcr.policy -n s=
+igning_key.name
+tpm2_flushcontext -S session.ctx
+rm -f session.ctx
+tpm2_createprimary -Q -a o -g sha256 -G rsa -o prim.ctx
+echo "primary created"
+tpm2_create -Q -g sha256 -u sealing_pubkey.pub -r sealing_prikey.pub -I da-=
+key -C prim.ctx -L authorized.policy
+echo " -I- "
+tpm2_verifysignature -c signing_key.ctx -G sha256 -m pcr.policy -s pcr.sign=
+ature -t verification.tkt -f rsassa
+tpm2_startauthsession -a -S session.ctx
+tpm2_policypcr -Q -S session.ctx -L sha256:0 -f pcr.policy
+tpm2_policyauthorize -S session.ctx -o authorized.policy -f pcr.policy -n s=
+igning_key.name -t verification.tkt
+tpm2_load -Q -C prim.ctx -u sealing_pubkey.pub -r sealing_prikey.pub -o sea=
+ling_key.ctx
+tpm2_unseal -p "session:session.ctx" -c sealing_key.ctx -o unsealed
+echo $unsealed
+tpm2_flushcontext -S session.ctx
+rm -f session.ctx
+---
+
+and the result being the same:
+
+---
+Generating RSA private key, 2048 bit long modulus
+.....................................................+++++
+...+++++
+e is 65537 (0x10001)
+writing RSA key
+transient-context: signing_key.ctx
+name: 0x000b2e70e1f0c627f7a6bd6cb39e0b8fb205224b412cc69a69d7a7fccc3c4d1a6204
+sha256:
+  0 : 0xAE356E2BE05D368ECC8918AC6E0812E046E278B57884729C0859A94330EE9695
+session-context: session.ctx
+policy-digest: 0x742C12E7BD0AB460FCF76253DBBB95D39C09C09D87E36FDFBBE3A60F41=
+DBF635
+session-context: session.ctx
+47b69be668ccacfc8b1fb50c3740500dc69153439a726b8f86a5e05ea1529ff1
+primary created
+ -I-
+session-context: session.ctx
+47b69be668ccacfc8b1fb50c3740500dc69153439a726b8f86a5e05ea1529ff1
+WARNING:esys:../tpm2-tss/src/tss2-esys/api/Esys_Unseal.c:295:Esys_Unseal_Fi=
+nish() Received TPM Error
+ERROR:esys:../tpm2-tss/src/tss2-esys/api/Esys_Unseal.c:101:Esys_Unseal() Es=
+ys Finish ErrorCode (0x0000008f)
+ERROR: Esys_Unseal(0x8F) - tpm:handle(unk):invalid nonce size or nonce valu=
+e mismatch
+ERROR: Unseal failed!
+ERROR: Unable to run tpm2_unseal
+---
+
+---
+root(a)alpha-board-a81d160db6b9:/tmp# tpm2_getcap -c properties-fixed | gre=
+p -i vendor_string -A2
+TPM2_PT_VENDOR_STRING_1:
+  raw: 0x496E7465
+  value: "Inte"
+TPM2_PT_VENDOR_STRING_2:
+  raw: 0x6C000000
+  value: "l"
+TPM2_PT_VENDOR_STRING_3:
+  raw: 0x0
+  value: ""
+TPM2_PT_VENDOR_STRING_4:
+  raw: 0x0
+  value: ""
+root(a)alpha-board-a81d160db6b9:/tmp#  tpm2_getcap --version
+tool=3D"tpm2_getcap" version=3D"3.0.2-858-g88956e75" tctis=3D"dynamic" tcti=
+-default=3Dtabrmd dlclose=3Denabled
+---
 
 
-?????
-?????????????????????????????????????????????????????
-CONFIDENTIAL NOTE:
-This email contains confidential or legally privileged information and is f=
-or the sole use of its intended recipient. Any unauthorized review, use, co=
-pying or forwarding of this email or the content of this email is strictly =
-prohibited.
+I wonder if this could be a build flags issue or something else as the TPM =
 
---===============9051769868581346220==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+version pretty much looks the same?
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6XDdCNDlcN0VCRjsKCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQpA
-Zm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6IlxAXDdCNDlcN0VCRiI7CglwYW5vc2UtMToyIDEgNiAw
-IDMgMSAxIDEgMSAxO30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1z
-b05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAx
-cHQ7Cgl0ZXh0LWFsaWduOmp1c3RpZnk7Cgl0ZXh0LWp1c3RpZnk6aW50ZXItaWRlb2dyYXBoOwoJ
-Zm9udC1zaXplOjEwLjVwdDsKCWZvbnQtZmFtaWx5Olw3QjQ5XDdFQkY7fQphOmxpbmssIHNwYW4u
-TXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRl
-eHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9s
-bG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNv
-cmF0aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVy
-c29uYWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5Olw3QjQ5XDdFQkY7Cgljb2xvcjp3aW5kb3d0ZXh0
-O30KLk1zb0NocERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFt
-aWx5Olw3QjQ5XDdFQkY7fQovKiBQYWdlIERlZmluaXRpb25zICovCkBwYWdlIFdvcmRTZWN0aW9u
-MQoJe3NpemU6NjEyLjBwdCA3OTIuMHB0OwoJbWFyZ2luOjcyLjBwdCA5MC4wcHQgNzIuMHB0IDkw
-LjBwdDt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+
-PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNw
-aWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1s
-Pgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRh
-PSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkg
-bGFuZz0iWkgtQ04iIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIiBzdHlsZT0idGV4dC1q
-dXN0aWZ5LXRyaW06cHVuY3R1YXRpb24iPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+SEkgQWxsLDxvOnA+PC9vOnA+PC9z
-cGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPlg4Niwga2Vy
-bmVsNC4xNjo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IGxhbmc9IkVOLVVTIj5TUEkgcG9ydDAgZmxhc2ggaXMgdXNlZCB0byBib290IEJJT1MuPG86cD48
-L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+
-U1BJIHBvcnQxIGZsYXNoIGlzIGEgZGV2aWNlLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPlNQSSBwb3J0MiBpcyBjb25uZWN0ZWQg
-d2l0aCBUUE0uPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBsYW5nPSJFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+SSBzZXQgdGhlIFNQSSBjb250
-cm9sbGVyIGlzIERNQSBtb2RlLCBwb3J0MC8xIGZsYXNoIGNhbiB3b3JrIHdlbGwuPG86cD48L286
-cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+ZGV2
-bWVtIDB4ZmVkNDAwMDA8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxzcGFuIGxhbmc9IkVOLVVTIj5PUyBoYW5nIGFuZCByZWJvb3QgY2FuIG5vdCB3b3JrIC5TbyBJ
-IHBvd2Vyb2ZmLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
-YW4gbGFuZz0iRU4tVVMiPkRvZXMgYW55b25lIGtub3cgd2hhdCBpcyBjYXVzZT88bzpwPjwvbzpw
-Pjwvc3Bhbj48L3A+CjwvZGl2Pgo8cD48L3A+Cjxicj4KPGJyPgo8ZGl2IHN0eWxlPSJmb250LXNp
-emU6MTBwdDsgbGluZS1oZWlnaHQ6MTBwdDsgZm9udC1mYW1pbHk6ICcmIzIzNDM1OyYjMjAzMDc7
-Jztjb2xvcjojNTk1OTU5OyI+JiMyMDQ0NTsmIzIzNDk0OyYjMjI3Njg7JiMyNjEyNjsmIzY1MzA2
-OzwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LXNpemU6MTBwdDsgbGluZS1oZWlnaHQ6MTBwdDsgZm9u
-dC1mYW1pbHk6ICcmIzIzNDM1OyYjMjAzMDc7Jztjb2xvcjojNTk1OTU5OyI+JiMyNjQxMjsmIzM3
-MDM4OyYjMjAyMTQ7JiMyMTU0NzsmIzI2Mzc3OyYjMjA0NDU7JiMyMzQ5NDsmIzI1MTEwOyYjMTk5
-ODc7JiMyNjM3NzsmIzIwNDQ5OyYjMjQ2ODc7JiM2NTI5MjsmIzIwMTY1OyYjMjAzNzk7JiMyNTM1
-MTsmIzIzNDUwOyYjMjU5MTA7JiMyMDIxNDsmIzIwMTU0OyYjMjAzNTE7JiMyOTk5MjsmIzEyMjkw
-OyYjMjAwMDU7JiMzMTEwNTsmIzIzNTQ1OyYjMjY0MTI7JiMzNzAzODsmIzIwMjE0OyYjMjUxMTA7
-JiMyMDg1NDsmIzIwODY5OyYjMjM0ODE7JiMyMDU3MDsmIzIwMjE5OyYjMjAzMDk7JiMyNjQxMDsm
-IzMyNDYzOyYjMjU0ODA7JiMyNjQzNTsmIzMwMzQwOyYjMjY1OTc7JiMzODQwNTsmIzEyMjg5OyYj
-MjAzNTE7JiMyOTk5MjsmIzEyMjg5OyYjMjI3OTc7JiMyMTA0NjsmIzI1MTEwOyYjMzY3MTY7JiMy
-MTQ1NzsmIzEyMjkwOzwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LXNpemU6MTBwdDsgbGluZS1oZWln
-aHQ6MTBwdDsgZm9udC1mYW1pbHk6ICdUaW1lcyBOZXcgUm9tYW4nO2NvbG9yOiM1OTU5NTk7Ij4K
-PGk+Q09ORklERU5USUFMIE5PVEU6IDwvaT48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1zaXplOjEw
-cHQ7IGxpbmUtaGVpZ2h0OjEwcHQ7IGZvbnQtZmFtaWx5OiAnVGltZXMgTmV3IFJvbWFuJztjb2xv
-cjojNTk1OTU5OyI+CjxpPlRoaXMgZW1haWwgY29udGFpbnMgY29uZmlkZW50aWFsIG9yIGxlZ2Fs
-bHkgcHJpdmlsZWdlZCBpbmZvcm1hdGlvbiBhbmQgaXMgZm9yIHRoZSBzb2xlIHVzZSBvZiBpdHMg
-aW50ZW5kZWQgcmVjaXBpZW50LiBBbnkgdW5hdXRob3JpemVkIHJldmlldywgdXNlLCBjb3B5aW5n
-IG9yIGZvcndhcmRpbmcgb2YgdGhpcyBlbWFpbCBvciB0aGUgY29udGVudCBvZiB0aGlzIGVtYWls
-IGlzIHN0cmljdGx5IHByb2hpYml0ZWQuPC9pPjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
 
---===============9051769868581346220==--
+thanks,
+Petko
+
+--===============8403579696895862901==--
 
