@@ -1,137 +1,185 @@
-Content-Type: multipart/mixed; boundary="===============8403579696895862901=="
+Content-Type: multipart/mixed; boundary="===============1631725624240794724=="
 MIME-Version: 1.0
-From: Petko Manolov <sti at nucleusys.com>
-Subject: Re: [tpm2] tpm2 Digest, Vol 20, Issue 17
-Date: Tue, 26 Feb 2019 13:20:45 +0200
-Message-ID: <20190226112045.GB4322@p310>
-In-Reply-To: D707E35E-98C6-4463-87B5-B6F787A3CE98@intel.com
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: Re: [tpm2] when SPI controller is DMA mode, TPM can not work
+Date: Tue, 26 Feb 2019 18:50:40 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909CE3BBE6@ORSMSX104.amr.corp.intel.com>
+In-Reply-To: 83b85a63a25642e9bae1c881b56a82d5@zhaoxin.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8403579696895862901==
+--===============1631725624240794724==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-	Hey Imran,
+Hello Sherry,
 
-Thanks for looking at this one.  Unfortunately i can't reproduce your resul=
-ts on =
+This list is specific to discussion of the userspace libraries and infrastr=
+ucture under development here: https://github.com/tpm2-software. Your quest=
+ion seems to be unrelated to this project unless I=E2=80=99m misunderstandi=
+ng. You may have better luck on a list more focused on hardware (possibly t=
+he linux device driver?).
 
-either of my machines.  Here is a slightly modified script as "-I-" doesn't=
- work =
+Regards,
+Philip
 
-for me with tpm2_load:
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Sherry Zhang(B=
+J-RD)
+Sent: 26 February, 2019 00:04
+To: tpm2(a)lists.01.org
+Subject: [tpm2] when SPI controller is DMA mode, TPM can not work
 
----
-#!/bin/bash
-
-rm -f   pcr0.sha256 \
-        pcr.signature \
-        session.ctx \
-        signing_key.ctx \
-	sealing_key.ctx \
-        signing_key.name \
-        signing_key_private.pem \
-        signing_key_public.pem
-
-
-tpm2_clear
-
-openssl genrsa -out signing_key_private.pem 2048
-openssl rsa -in signing_key_private.pem -out signing_key_public.pem -pubout
-tpm2_loadexternal -G rsa -a o -u signing_key_public.pem -o signing_key.ctx =
--n signing_key.name
-tpm2_pcrlist -L sha256:0 -o pcr0.sha256
-tpm2_startauthsession -S session.ctx
-tpm2_policypcr -S session.ctx -L sha256:0 -F pcr0.sha256 -f pcr.policy
-tpm2_flushcontext -S session.ctx
-rm -f session.ctx
-openssl dgst -sha256 -sign signing_key_private.pem -out pcr.signature pcr.p=
-olicy
-tpm2_startauthsession -S session.ctx
-tpm2_policyauthorize -S session.ctx -o authorized.policy -f pcr.policy -n s=
-igning_key.name
-tpm2_flushcontext -S session.ctx
-rm -f session.ctx
-tpm2_createprimary -Q -a o -g sha256 -G rsa -o prim.ctx
-echo "primary created"
-tpm2_create -Q -g sha256 -u sealing_pubkey.pub -r sealing_prikey.pub -I da-=
-key -C prim.ctx -L authorized.policy
-echo " -I- "
-tpm2_verifysignature -c signing_key.ctx -G sha256 -m pcr.policy -s pcr.sign=
-ature -t verification.tkt -f rsassa
-tpm2_startauthsession -a -S session.ctx
-tpm2_policypcr -Q -S session.ctx -L sha256:0 -f pcr.policy
-tpm2_policyauthorize -S session.ctx -o authorized.policy -f pcr.policy -n s=
-igning_key.name -t verification.tkt
-tpm2_load -Q -C prim.ctx -u sealing_pubkey.pub -r sealing_prikey.pub -o sea=
-ling_key.ctx
-tpm2_unseal -p "session:session.ctx" -c sealing_key.ctx -o unsealed
-echo $unsealed
-tpm2_flushcontext -S session.ctx
-rm -f session.ctx
----
-
-and the result being the same:
-
----
-Generating RSA private key, 2048 bit long modulus
-.....................................................+++++
-...+++++
-e is 65537 (0x10001)
-writing RSA key
-transient-context: signing_key.ctx
-name: 0x000b2e70e1f0c627f7a6bd6cb39e0b8fb205224b412cc69a69d7a7fccc3c4d1a6204
-sha256:
-  0 : 0xAE356E2BE05D368ECC8918AC6E0812E046E278B57884729C0859A94330EE9695
-session-context: session.ctx
-policy-digest: 0x742C12E7BD0AB460FCF76253DBBB95D39C09C09D87E36FDFBBE3A60F41=
-DBF635
-session-context: session.ctx
-47b69be668ccacfc8b1fb50c3740500dc69153439a726b8f86a5e05ea1529ff1
-primary created
- -I-
-session-context: session.ctx
-47b69be668ccacfc8b1fb50c3740500dc69153439a726b8f86a5e05ea1529ff1
-WARNING:esys:../tpm2-tss/src/tss2-esys/api/Esys_Unseal.c:295:Esys_Unseal_Fi=
-nish() Received TPM Error
-ERROR:esys:../tpm2-tss/src/tss2-esys/api/Esys_Unseal.c:101:Esys_Unseal() Es=
-ys Finish ErrorCode (0x0000008f)
-ERROR: Esys_Unseal(0x8F) - tpm:handle(unk):invalid nonce size or nonce valu=
-e mismatch
-ERROR: Unseal failed!
-ERROR: Unable to run tpm2_unseal
----
-
----
-root(a)alpha-board-a81d160db6b9:/tmp# tpm2_getcap -c properties-fixed | gre=
-p -i vendor_string -A2
-TPM2_PT_VENDOR_STRING_1:
-  raw: 0x496E7465
-  value: "Inte"
-TPM2_PT_VENDOR_STRING_2:
-  raw: 0x6C000000
-  value: "l"
-TPM2_PT_VENDOR_STRING_3:
-  raw: 0x0
-  value: ""
-TPM2_PT_VENDOR_STRING_4:
-  raw: 0x0
-  value: ""
-root(a)alpha-board-a81d160db6b9:/tmp#  tpm2_getcap --version
-tool=3D"tpm2_getcap" version=3D"3.0.2-858-g88956e75" tctis=3D"dynamic" tcti=
--default=3Dtabrmd dlclose=3Denabled
----
+HI All,
+X86, kernel4.16:
+SPI port0 flash is used to boot BIOS.
+SPI port1 flash is a device.
+SPI port2 is connected with TPM.
 
 
-I wonder if this could be a build flags issue or something else as the TPM =
+I set the SPI controller is DMA mode, port0/1 flash can work well.
+devmem 0xfed40000
+OS hang and reboot can not work .So I poweroff.
+Does anyone know what is cause?
 
-version pretty much looks the same?
+=E4=BF=9D=E5=AF=86=E5=A3=B0=E6=98=8E=EF=BC=9A
+=E6=9C=AC=E9=82=AE=E4=BB=B6=E5=90=AB=E6=9C=89=E4=BF=9D=E5=AF=86=E6=88=96=E4=
+=B8=93=E6=9C=89=E4=BF=A1=E6=81=AF=EF=BC=8C=E4=BB=85=E4=BE=9B=E6=8C=87=E5=AE=
+=9A=E6=94=B6=E4=BB=B6=E4=BA=BA=E4=BD=BF=E7=94=A8=E3=80=82=E4=B8=A5=E7=A6=81=
+=E5=AF=B9=E6=9C=AC=E9=82=AE=E4=BB=B6=E6=88=96=E5=85=B6=E5=86=85=E5=AE=B9=E5=
+=81=9A=E4=BB=BB=E4=BD=95=E6=9C=AA=E7=BB=8F=E6=8E=88=E6=9D=83=E7=9A=84=E6=9F=
+=A5=E9=98=85=E3=80=81=E4=BD=BF=E7=94=A8=E3=80=81=E5=A4=8D=E5=88=B6=E6=88=96=
+=E8=BD=AC=E5=8F=91=E3=80=82
+CONFIDENTIAL NOTE:
+This email contains confidential or legally privileged information and is f=
+or the sole use of its intended recipient. Any unauthorized review, use, co=
+pying or forwarding of this email or the content of this email is strictly =
+prohibited.
 
+--===============1631725624240794724==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-thanks,
-Petko
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1nYjIzMTIiPgo8bWV0YSBuYW1lPSJHZW5lcmF0b3Ii
+IGNvbnRlbnQ9Ik1pY3Jvc29mdCBXb3JkIDE1IChmaWx0ZXJlZCBtZWRpdW0pIj4KPHN0eWxlPjwh
+LS0KLyogRm9udCBEZWZpbml0aW9ucyAqLwpAZm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6U2ltU3Vu
+OwoJcGFub3NlLTE6MiAxIDYgMCAzIDEgMSAxIDEgMTt9CkBmb250LWZhY2UKCXtmb250LWZhbWls
+eToiQ2FtYnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1m
+YWNlCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0
+O30KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkRlbmdYaWFuO30KQGZvbnQtZmFjZQoJe2ZvbnQt
+ZmFtaWx5OiJcQFNpbVN1biI7CglwYW5vc2UtMToyIDEgNiAwIDMgMSAxIDEgMSAxO30KLyogU3R5
+bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1h
+bAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cgl0ZXh0LWFsaWduOmp1c3Rp
+Znk7Cgl0ZXh0LWp1c3RpZnk6aW50ZXItaWRlb2dyYXBoOwoJZm9udC1zaXplOjEwLjVwdDsKCWZv
+bnQtZmFtaWx5OkRlbmdYaWFuOwoJbXNvLWZhcmVhc3QtbGFuZ3VhZ2U6WkgtQ047fQphOmxpbmss
+IHNwYW4uTXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjND
+MTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJs
+aW5rRm9sbG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4
+dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnAKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgltc28t
+bWFyZ2luLXRvcC1hbHQ6YXV0bzsKCW1hcmdpbi1yaWdodDowaW47Cgltc28tbWFyZ2luLWJvdHRv
+bS1hbHQ6YXV0bzsKCW1hcmdpbi1sZWZ0OjBpbjsKCWZvbnQtc2l6ZToxMi4wcHQ7Cglmb250LWZh
+bWlseTpTaW1TdW47Cgltc28tZmFyZWFzdC1sYW5ndWFnZTpaSC1DTjt9CnNwYW4uRW1haWxTdHls
+ZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWw7Cglmb250LWZhbWlseTpEZW5nWGlhbjsKCWNv
+bG9yOndpbmRvd3RleHQ7fQpzcGFuLkVtYWlsU3R5bGUxOQoJe21zby1zdHlsZS10eXBlOnBlcnNv
+bmFsLXJlcGx5OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgljb2xvcjojMUY0
+OTdEO30KLk1zb0NocERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQt
+c2l6ZToxMC4wcHQ7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsKCW1h
+cmdpbjoxLjBpbiAxLjI1aW4gMS4waW4gMS4yNWluO30KZGl2LldvcmRTZWN0aW9uMQoJe3BhZ2U6
+V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hh
+cGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZd
+LS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4K
+PG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48
+IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxp
+bms9IiM5NTRGNzIiIHN0eWxlPSJ0ZXh0LWp1c3RpZnktdHJpbTpwdW5jdHVhdGlvbiI+CjxkaXYg
+Y2xhc3M9IldvcmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
+b250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJp
+Zjtjb2xvcjojMUY0OTdEO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5IZWxsbyBTaGVycnks
+PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0i
+Zm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2Vy
+aWY7Y29sb3I6IzFGNDk3RDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8
+L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1z
+aXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29s
+b3I6IzFGNDk3RDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+VGhpcyBsaXN0IGlzIHNwZWNp
+ZmljIHRvIGRpc2N1c3Npb24gb2YgdGhlIHVzZXJzcGFjZSBsaWJyYXJpZXMgYW5kIGluZnJhc3Ry
+dWN0dXJlIHVuZGVyIGRldmVsb3BtZW50IGhlcmU6CjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNv
+bS90cG0yLXNvZnR3YXJlIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZTwvYT4uIFlv
+dXIgcXVlc3Rpb24gc2VlbXMgdG8gYmUgdW5yZWxhdGVkIHRvIHRoaXMgcHJvamVjdCB1bmxlc3Mg
+SaGvbSBtaXN1bmRlcnN0YW5kaW5nLiBZb3UgbWF5IGhhdmUgYmV0dGVyIGx1Y2sgb24gYSBsaXN0
+IG1vcmUgZm9jdXNlZCBvbiBoYXJkd2FyZSAocG9zc2libHkgdGhlIGxpbnV4IGRldmljZSBkcml2
+ZXI/KS48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0
+eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fu
+cy1zZXJpZjtjb2xvcjojMUY0OTdEO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpwPiZu
+YnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
+b250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJp
+Zjtjb2xvcjojMUY0OTdEO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5SZWdhcmRzLDxvOnA+
+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQt
+c2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2Nv
+bG9yOiMxRjQ5N0Q7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPlBoaWxpcDxvOnA+PC9vOnA+
+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgbmFtZT0iX01haWxFbmRDb21wb3Nl
+Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJp
+JnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1V
+UyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9hPjwvcD4KPGRpdj4KPGRpdiBzdHlsZT0iYm9y
+ZGVyOm5vbmU7Ym9yZGVyLXRvcDpzb2xpZCAjRTFFMUUxIDEuMHB0O3BhZGRpbmc6My4wcHQgMGlu
+IDBpbiAwaW4iPgo8cCBjbGFzcz0iTXNvTm9ybWFsIiBhbGlnbj0ibGVmdCIgc3R5bGU9InRleHQt
+YWxpZ246bGVmdCI+PGEgbmFtZT0iX19fX19yZXBseXNlcGFyYXRvciI+PC9hPjxiPjxzcGFuIHN0
+eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fu
+cy1zZXJpZiI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2Zv
+bnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+IHRwbTIgW21haWx0bzp0
+cG0yLWJvdW5jZXNAbGlzdHMuMDEub3JnXQo8Yj5PbiBCZWhhbGYgT2YgPC9iPlNoZXJyeSBaaGFu
+ZyhCSi1SRCk8YnI+CjxiPlNlbnQ6PC9iPiAyNiBGZWJydWFyeSwgMjAxOSAwMDowNDxicj4KPGI+
+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9yZzxicj4KPGI+U3ViamVjdDo8L2I+IFt0cG0yXSB3aGVu
+IFNQSSBjb250cm9sbGVyIGlzIERNQSBtb2RlLCBUUE0gY2FuIG5vdCB3b3JrPG86cD48L286cD48
+L3NwYW4+PC9wPgo8L2Rpdj4KPC9kaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiIGFsaWduPSJsZWZ0
+IiBzdHlsZT0idGV4dC1hbGlnbjpsZWZ0Ij48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+SEkgQWxsLDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5Y
+ODYsIGtlcm5lbDQuMTY6PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlNQSSBw
+b3J0MCBmbGFzaCBpcyB1c2VkIHRvIGJvb3QgQklPUy48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+U1BJIHBvcnQxIGZsYXNoIGlzIGEgZGV2aWNlLjxvOnA+PC9vOnA+PC9wPgo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj5TUEkgcG9ydDIgaXMgY29ubmVjdGVkIHdpdGggVFBNLjxvOnA+
+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPkkgc2V0IHRoZSBTUEkgY29udHJvbGxlciBpcyBETUEgbW9kZSwgcG9ydDAvMSBmbGFzaCBj
+YW4gd29yayB3ZWxsLjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5kZXZtZW0g
+MHhmZWQ0MDAwMDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5PUyBoYW5nIGFu
+ZCByZWJvb3QgY2FuIG5vdCB3b3JrIC5TbyBJIHBvd2Vyb2ZmLjxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj5Eb2VzIGFueW9uZSBrbm93IHdoYXQgaXMgY2F1c2U/PG86cD48L286
+cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiIGFsaWduPSJsZWZ0IiBzdHlsZT0ibWFyZ2luLWJv
+dHRvbToxMi4wcHQ7dGV4dC1hbGlnbjpsZWZ0Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEyLjBw
+dDtmb250LWZhbWlseTpTaW1TdW4iPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPGRpdj4K
+PHAgY2xhc3M9Ik1zb05vcm1hbCIgYWxpZ249ImxlZnQiIHN0eWxlPSJ0ZXh0LWFsaWduOmxlZnQ7
+bGluZS1oZWlnaHQ6MTAuMHB0Ij48c3BhbiBsYW5nPSJaSC1DTiIgc3R5bGU9ImZvbnQtc2l6ZTox
+MC4wcHQ7Zm9udC1mYW1pbHk6U2ltU3VuO2NvbG9yOiM1OTU5NTkiPrGjw9zJ+cP3o7o8L3NwYW4+
+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6U2ltU3VuO2NvbG9yOiM1
+OTU5NTkiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPC9kaXY+CjxkaXY+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiIGFsaWduPSJsZWZ0IiBzdHlsZT0idGV4dC1hbGlnbjpsZWZ0O2xpbmUtaGVpZ2h0OjEw
+LjBwdCI+PHNwYW4gbGFuZz0iWkgtQ04iIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFt
+aWx5OlNpbVN1bjtjb2xvcjojNTk1OTU5Ij6xvtPKvP66rNPQsaPD3Lvy16jT0NDFz6KjrL32uanW
+uLaoytW8/sjLyrnTw6Gj0c+9+7bUsb7Tyrz+u/LG5MTayN3X9sjOus7OtL6tytrIqLXEsunUxKGi
+yrnTw6GiuLTWxrvy16q3oqGjPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2Zv
+bnQtZmFtaWx5OlNpbVN1bjtjb2xvcjojNTk1OTU5Ij48bzpwPjwvbzpwPjwvc3Bhbj48L3A+Cjwv
+ZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIiBhbGlnbj0ibGVmdCIgc3R5bGU9InRleHQt
+YWxpZ246bGVmdDtsaW5lLWhlaWdodDoxMC4wcHQiPjxpPjxzcGFuIHN0eWxlPSJmb250LXNpemU6
+MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1RpbWVzIE5ldyBSb21hbiZxdW90OyxzZXJpZjtjb2xv
+cjojNTk1OTU5Ij5DT05GSURFTlRJQUwgTk9URToKPC9zcGFuPjwvaT48c3BhbiBzdHlsZT0iZm9u
+dC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDssc2Vy
+aWY7Y29sb3I6IzU5NTk1OSI+PG86cD48L286cD48L3NwYW4+PC9wPgo8L2Rpdj4KPGRpdj4KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCIgYWxpZ249ImxlZnQiIHN0eWxlPSJ0ZXh0LWFsaWduOmxlZnQ7bGlu
+ZS1oZWlnaHQ6MTAuMHB0Ij48aT48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZh
+bWlseTomcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDssc2VyaWY7Y29sb3I6IzU5NTk1OSI+VGhp
+cyBlbWFpbCBjb250YWlucyBjb25maWRlbnRpYWwgb3IgbGVnYWxseSBwcml2aWxlZ2VkIGluZm9y
+bWF0aW9uIGFuZCBpcyBmb3IgdGhlIHNvbGUgdXNlIG9mIGl0cwogaW50ZW5kZWQgcmVjaXBpZW50
+LiBBbnkgdW5hdXRob3JpemVkIHJldmlldywgdXNlLCBjb3B5aW5nIG9yIGZvcndhcmRpbmcgb2Yg
+dGhpcyBlbWFpbCBvciB0aGUgY29udGVudCBvZiB0aGlzIGVtYWlsIGlzIHN0cmljdGx5IHByb2hp
+Yml0ZWQuPC9zcGFuPjwvaT48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWls
+eTomcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDssc2VyaWY7Y29sb3I6IzU5NTk1OSI+PG86cD48
+L286cD48L3NwYW4+PC9wPgo8L2Rpdj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
 
---===============8403579696895862901==--
+--===============1631725624240794724==--
 
