@@ -1,82 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============7980714057627357847=="
+Content-Type: multipart/mixed; boundary="===============2747956210346525441=="
 MIME-Version: 1.0
-From: Tricca, Philip B <philip.b.tricca at intel.com>
-Subject: [tpm2] tpm2-abrmd 1.3.3_rc0 and 2.1.1_rc0
-Date: Wed, 27 Feb 2019 20:04:29 +0000
-Message-ID: <DB638850A6A2434A93ECADDA0BC838909CE3BDF0@ORSMSX104.amr.corp.intel.com>
+From: arjun kashyap <arjun21k at gmail.com>
+Subject: [tpm2] Use endorsement key for encryption and decryption
+Date: Sun, 03 Mar 2019 14:57:44 -0600
+Message-ID: <CA+tUB7B6yeHEKb5D6J9K__ZCU1L_HPr82w370SsLieA4-iQu3g@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7980714057627357847==
+--===============2747956210346525441==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello all,
 
-There was a race condition fixed in the tabrmd last week. Fixes were merged=
- into both the 1.x and 2.x branches. I've just signed tags for bug fix rele=
-ases of both:
-https://github.com/tpm2-software/tpm2-abrmd/releases/tag/1.3.3_rc0
-https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.1.1_rc0
+I am using the IBM tpm2.0 simulator. My use case is that I would like to
+encrypt data and send to tpm and then decrypt this at the tpm side. I would
+want to use the endorsement key (EK) for this purpose. Hence, I would like
+to encrypt data using EK's public key and decrypt using EK's private key. I
+tried creating EK using tpm2_createek -G rsa -f pem -c - -p ek.pem. Now, I
+have the ek.pem( public portion of EK) to encrypt the data. When I load
+this key into the tpm and invoke tpm2_rsadecrypt I get an error. I also
+tried using tpm2_createprimary to create an EK but failed in the above
+attempt. Could anyone please help me out so that I can use EK to
+encrypt/decrypt data.
 
-Please send feedback during the RC window if you have any.
+Please let me know if more information is needed.
 
-Regards,
-Philip
+Thanks in advance.
 
+<https://www.avast.com/sig-email?utm_medium=3Demail&utm_source=3Dlink&utm_c=
+ampaign=3Dsig-email&utm_content=3Dwebmail&utm_term=3Dicon>
+Virus-free.
+www.avast.com
+<https://www.avast.com/sig-email?utm_medium=3Demail&utm_source=3Dlink&utm_c=
+ampaign=3Dsig-email&utm_content=3Dwebmail&utm_term=3Dlink>
+<#DAB4FAD8-2DD7-40BB-A1B8-4E2AA1F9FDF2>
 
---===============7980714057627357847==
+--===============2747956210346525441==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
-cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
-Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
-b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
-bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbyw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoZXJl
-IHdhcyBhIHJhY2UgY29uZGl0aW9uIGZpeGVkIGluIHRoZSB0YWJybWQgbGFzdCB3ZWVrLiBGaXhl
-cyB3ZXJlIG1lcmdlZCBpbnRvIGJvdGggdGhlIDEueCBhbmQgMi54IGJyYW5jaGVzLiBJJiM4MjE3
-O3ZlIGp1c3Qgc2lnbmVkIHRhZ3MgZm9yIGJ1ZyBmaXggcmVsZWFzZXMgb2YgYm90aDo8bzpwPjwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29t
-L3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9yZWxlYXNlcy90YWcvMS4zLjNfcmMwIj5odHRwczov
-L2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL3JlbGVhc2VzL3RhZy8xLjMuM19y
-YzA8L2E+PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxhIGhyZWY9Imh0dHBz
-Oi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQvcmVsZWFzZXMvdGFnLzIuMS4x
-X3JjMCI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9yZWxlYXNl
-cy90YWcvMi4xLjFfcmMwPC9hPjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+UGxlYXNlIHNlbmQgZmVl
-ZGJhY2sgZHVyaW5nIHRoZSBSQyB3aW5kb3cgaWYgeW91IGhhdmUgYW55LjxvOnA+PC9vOnA+PC9w
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+UmVnYXJkcyw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+UGhp
-bGlwPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+PGRpdiBkaXI9Imx0ciI+SGVsbG8gYWxsLDxkaXY+PGJyPjwvZGl2PjxkaXY+SSBhbSB1c2luZyB0
+aGUgSUJNwqB0cG0yLjAgc2ltdWxhdG9yLiBNeSB1c2UgY2FzZSBpcyB0aGF0IEkgd291bGQgbGlr
+ZSB0byBlbmNyeXB0IGRhdGEgYW5kIHNlbmQgdG8gdHBtwqBhbmQgdGhlbiBkZWNyeXB0IHRoaXMg
+YXQgdGhlIHRwbcKgc2lkZS4gSSB3b3VsZCB3YW50IHRvIHVzZSB0aGUgZW5kb3JzZW1lbnQga2V5
+IChFSykgZm9yIHRoaXMgcHVycG9zZS4gSGVuY2UsIEkgd291bGQgbGlrZSB0byBlbmNyeXB0IGRh
+dGEgdXNpbmcgRUsmIzM5O3MgcHVibGljIGtleSBhbmQgZGVjcnlwdCB1c2luZyBFSyYjMzk7cyBw
+cml2YXRlIGtleS4gSSB0cmllZCBjcmVhdGluZyBFSyB1c2luZyB0cG0yX2NyZWF0ZWVrIC1HIHJz
+YSAtZiBwZW0gLWMgLSAtcCBlay5wZW0uIE5vdywgSSBoYXZlIHRoZSBlay5wZW0oIHB1YmxpYyBw
+b3J0aW9uIG9mIEVLKSB0byBlbmNyeXB0IHRoZSBkYXRhLiBXaGVuIEkgbG9hZCB0aGlzIGtleSBp
+bnRvIHRoZSB0cG0gYW5kIGludm9rZSB0cG0yX3JzYWRlY3J5cHQgSSBnZXQgYW4gZXJyb3IuIEkg
+YWxzbyB0cmllZCB1c2luZyB0cG0yX2NyZWF0ZXByaW1hcnkgdG8gY3JlYXRlIGFuIEVLIGJ1dCBm
+YWlsZWQgaW4gdGhlIGFib3ZlIGF0dGVtcHQuIENvdWxkIGFueW9uZSBwbGVhc2UgaGVscCBtZSBv
+dXQgc28gdGhhdCBJIGNhbiB1c2UgRUsgdG8gZW5jcnlwdC9kZWNyeXB0IGRhdGEuPC9kaXY+PGRp
+dj48YnI+PC9kaXY+PGRpdj5QbGVhc2UgbGV0wqBtZSBrbm93IGlmIG1vcmUgaW5mb3JtYXRpb24g
+aXMgbmVlZGVkLsKgPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFua3MgaW4gYWR2YW5jZS48
+L2Rpdj48L2Rpdj48ZGl2IGlkPSJEQUI0RkFEOC0yREQ3LTQwQkItQTFCOC00RTJBQTFGOUZERjIi
+Pjxicj4KPHRhYmxlIHN0eWxlPSJib3JkZXItdG9wOjFweCBzb2xpZCAjZDNkNGRlIj4KCTx0cj4K
+ICAgICAgICA8dGQgc3R5bGU9IndpZHRoOjU1cHg7cGFkZGluZy10b3A6MTNweCI+PGEgaHJlZj0i
+aHR0cHM6Ly93d3cuYXZhc3QuY29tL3NpZy1lbWFpbD91dG1fbWVkaXVtPWVtYWlsJmFtcDt1dG1f
+c291cmNlPWxpbmsmYW1wO3V0bV9jYW1wYWlnbj1zaWctZW1haWwmYW1wO3V0bV9jb250ZW50PXdl
+Ym1haWwmYW1wO3V0bV90ZXJtPWljb24iIHRhcmdldD0iX2JsYW5rIj48aW1nIHNyYz0iaHR0cHM6
+Ly9pcG1jZG4uYXZhc3QuY29tL2ltYWdlcy9pY29ucy9pY29uLWVudmVsb3BlLXRpY2stcm91bmQt
+b3JhbmdlLWFuaW1hdGVkLW5vLXJlcGVhdC12MS5naWYiIGFsdD0iIiB3aWR0aD0iNDYiIGhlaWdo
+dD0iMjkiIHN0eWxlPSJ3aWR0aDogNDZweDsgaGVpZ2h0OiAyOXB4OyI+PC9hPjwvdGQ+CgkJPHRk
+IHN0eWxlPSJ3aWR0aDo0NzBweDtwYWRkaW5nLXRvcDoxMnB4O2NvbG9yOiM0MTQyNGU7Zm9udC1z
+aXplOjEzcHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7bGluZS1oZWln
+aHQ6MThweCI+VmlydXMtZnJlZS4gPGEgaHJlZj0iaHR0cHM6Ly93d3cuYXZhc3QuY29tL3NpZy1l
+bWFpbD91dG1fbWVkaXVtPWVtYWlsJmFtcDt1dG1fc291cmNlPWxpbmsmYW1wO3V0bV9jYW1wYWln
+bj1zaWctZW1haWwmYW1wO3V0bV9jb250ZW50PXdlYm1haWwmYW1wO3V0bV90ZXJtPWxpbmsiIHRh
+cmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6IzQ0NTNlYSI+d3d3LmF2YXN0LmNvbTwvYT4KCQk8
+L3RkPgoJPC90cj4KPC90YWJsZT48YSBocmVmPSIjREFCNEZBRDgtMkRENy00MEJCLUExQjgtNEUy
+QUExRjlGREYyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIj48L2E+PC9kaXY+Cg==
 
---===============7980714057627357847==--
+--===============2747956210346525441==--
 
