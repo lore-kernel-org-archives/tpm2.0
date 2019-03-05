@@ -1,26 +1,19 @@
-Content-Type: multipart/mixed; boundary="===============1597041826989688759=="
+Content-Type: multipart/mixed; boundary="===============6064395879705942689=="
 MIME-Version: 1.0
 From: Desai, Imran <imran.desai at intel.com>
 Subject: Re: [tpm2] tpm2 Digest, Vol 21, Issue 2
-Date: Tue, 05 Mar 2019 20:50:05 +0000
-Message-ID: <F50B7B1A-F3CF-4298-B129-D3650443D5EF@intel.com>
+Date: Tue, 05 Mar 2019 21:12:21 +0000
+Message-ID: <D6D090B6-B92A-42CC-81EE-1995ACAAAB0B@intel.com>
 In-Reply-To: mailman.14.1551816001.20077.tpm2@lists.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1597041826989688759==
+--===============6064395879705942689==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-+1 to what Bill said. If you must do this I'd suggest you use createprimary=
- to create the key under endorsement hierarchy. I understand that is exactl=
-y what tpm2_createek does but there is a caveat. For what you intend to do =
-it requires userwith attribute set to 1. The reason it is not set to 1 in c=
-reateek tool is because it would create an endorsement key off a non standa=
-rd template per TCK EK credential profile spec. The alternative is to satis=
-fy policysecret of the endorsement hierarchy and that will require a change=
- in the tool.
+Additionally it will also have to be non restricted decryption key.
 
 =EF=BB=BFOn 3/5/19, 1:00 PM, "tpm2 on behalf of tpm2-request(a)lists.01.org=
 " <tpm2-bounces(a)lists.01.org on behalf of tpm2-request(a)lists.01.org> wr=
@@ -152,5 +145,5 @@ t so that I
 
 
 
---===============1597041826989688759==--
+--===============6064395879705942689==--
 
