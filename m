@@ -1,33 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============1426338738019025414=="
+Content-Type: multipart/mixed; boundary="===============8085805377916699692=="
 MIME-Version: 1.0
-From: Joshua Lock <joshua.g.lock at linux.intel.com>
-Subject: [tpm2] tpm2-tools 3.1.4-rc0
-Date: Wed, 06 Mar 2019 23:06:11 +0000
-Message-ID: <a1464c89-d950-a053-5edb-10328497001c@linux.intel.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] using existing key with tpm2-tss-engine
+Date: Thu, 07 Mar 2019 18:26:26 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649CFB919@ORSMSX101.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1426338738019025414==
+--===============8085805377916699692==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Is there a way to use an existing key with the engine? Ie existing key to p=
+em file?
 
-The first release candidate for the next stable release in the 3.X =
+I am not seeing a mechanism for this.
 
-series is now ready for testing:
+My use case:
+I need to solve issue:
+https://github.com/tpm2-software/tpm2-pkcs11/issues/16
 
-https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.4-rc0
+So I can store the X509 certificate for a key in the attributes.
 
-This release includes further fixes for the broken -T/--tcti option, =
+Looks like cert creation is tested a bit in:
+test/sserver.sh
 
-various manual page fixes, test fixes and build compatibility fixes.
 
-Please do test and report any feedback.
+Bill
 
-Regards,
-Joshua
-
---===============1426338738019025414==--
+--===============8085805377916699692==--
 
