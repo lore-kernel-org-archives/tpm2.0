@@ -1,50 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============2966794190758390212=="
+Content-Type: multipart/mixed; boundary="===============5451035968316107103=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] using existing key with tpm2-tss-engine
-Date: Thu, 07 Mar 2019 18:31:27 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0162E6CA3D@exch2010c.sit.fraunhofer.de>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649CFB919@ORSMSX101.amr.corp.intel.com
+Date: Thu, 07 Mar 2019 18:57:05 +0000
+Message-ID: <7fd64c56-bcc5-4e64-8a76-c0fbab20d766@email.android.com>
+In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0162E6CA3D@exch2010c.sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2966794190758390212==
+--===============5451035968316107103==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Yes, X509 certificate creation works.
 
-"Importing an existing key" however is in the backlog:
-https://github.com/tpm2-software/tpm2-tss-engine/issues/39
+--===============5451035968316107103==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-Workaround for the moment could be to temporarily evictControl the key to p=
-ersistent.
-
-Otherwise sorry to keep you waiting for the moment.
-________________________________________
-From: Roberts, William C [william.c.roberts(a)intel.com]
-Sent: Thursday, March 07, 2019 19:26
-To: tpm2(a)lists.01.org
-Cc: Fuchs, Andreas
-Subject: using existing key with tpm2-tss-engine
-
-Is there a way to use an existing key with the engine? Ie existing key to p=
-em file?
-
-I am not seeing a mechanism for this.
-
-My use case:
-I need to solve issue:
-https://github.com/tpm2-software/tpm2-pkcs11/issues/16
-
-So I can store the X509 certificate for a key in the attributes.
-
-Looks like cert creation is tested a bit in:
-test/sserver.sh
-
-
-Bill
-
---===============2966794190758390212==--
+PGRpdiBkaXI9J2F1dG8nPjxkaXY+VGhlIG90aGVyIHdvcmthcm91bmQgaXMgdG8gaW1wb3J0IHdp
+dGggSmFtZXMgQm90dG9tbGV5J3Mgb3BlbnNzbF90cG0yX2VuZ2luZSBhbmQgdGhlbiB1c2UgaXQg
+d2l0aCB0cG0yLXRzcy1lbmdpbmUuPC9kaXY+PGRpdiBkaXI9ImF1dG8iPjxicj48ZGl2IGRhdGEt
+c21hcnRtYWlsPSJnbWFpbF9zaWduYXR1cmUiIGRpcj0iYXV0byI+LS0gPGJyPmR3bXcyPC9kaXY+
+PGRpdiBjbGFzcz0iZ21haWxfZXh0cmEiIGRpcj0iYXV0byI+PGJyPjxkaXYgY2xhc3M9ImdtYWls
+X3F1b3RlIj5PbiA3IE1hciAyMDE5IDE4OjMxLCAiRnVjaHMsIEFuZHJlYXMiICZsdDthbmRyZWFz
+LmZ1Y2hzQHNpdC5mcmF1bmhvZmVyLmRlJmd0OyB3cm90ZTo8YnIgdHlwZT0iYXR0cmlidXRpb24i
+PjxibG9ja3F1b3RlIGNsYXNzPSJxdW90ZSIgc3R5bGU9Im1hcmdpbjowIDAgMCAuOGV4O2JvcmRl
+ci1sZWZ0OjFweCAjY2NjIHNvbGlkO3BhZGRpbmctbGVmdDoxZXgiPjxwIGRpcj0ibHRyIj5ZZXMs
+IFg1MDkgY2VydGlmaWNhdGUgY3JlYXRpb24gd29ya3MuCjxicj4KCjxicj4KIkltcG9ydGluZyBh
+biBleGlzdGluZyBrZXkiIGhvd2V2ZXIgaXMgaW4gdGhlIGJhY2tsb2c6Cjxicj4KaHR0cHM6Ly9n
+aXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3MtZW5naW5lL2lzc3Vlcy8zOQo8YnI+Cgo8
+YnI+Cldvcmthcm91bmQgZm9yIHRoZSBtb21lbnQgY291bGQgYmUgdG8gdGVtcG9yYXJpbHkgZXZp
+Y3RDb250cm9sIHRoZSBrZXkgdG8gcGVyc2lzdGVudC4KPGJyPgoKPGJyPgpPdGhlcndpc2Ugc29y
+cnkgdG8ga2VlcCB5b3Ugd2FpdGluZyBmb3IgdGhlIG1vbWVudC4KPGJyPgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCjxicj4KRnJvbTogUm9iZXJ0cywgV2lsbGlhbSBD
+IFt3aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5jb21dCjxicj4KU2VudDogVGh1cnNkYXksIE1hcmNo
+IDA3LCAyMDE5IDE5OjI2Cjxicj4KVG86IHRwbTJAbGlzdHMuMDEub3JnCjxicj4KQ2M6IEZ1Y2hz
+LCBBbmRyZWFzCjxicj4KU3ViamVjdDogdXNpbmcgZXhpc3Rpbmcga2V5IHdpdGggdHBtMi10c3Mt
+ZW5naW5lCjxicj4KCjxicj4KSXMgdGhlcmUgYSB3YXkgdG8gdXNlIGFuIGV4aXN0aW5nIGtleSB3
+aXRoIHRoZSBlbmdpbmU/IEllIGV4aXN0aW5nIGtleSB0byBwZW0gZmlsZT8KPGJyPgoKPGJyPgpJ
+IGFtIG5vdCBzZWVpbmcgYSBtZWNoYW5pc20gZm9yIHRoaXMuCjxicj4KCjxicj4KTXkgdXNlIGNh
+c2U6Cjxicj4KSSBuZWVkIHRvIHNvbHZlIGlzc3VlOgo8YnI+Cmh0dHBzOi8vZ2l0aHViLmNvbS90
+cG0yLXNvZnR3YXJlL3RwbTItcGtjczExL2lzc3Vlcy8xNgo8YnI+Cgo8YnI+ClNvIEkgY2FuIHN0
+b3JlIHRoZSBYNTA5IGNlcnRpZmljYXRlIGZvciBhIGtleSBpbiB0aGUgYXR0cmlidXRlcy4KPGJy
+PgoKPGJyPgpMb29rcyBsaWtlIGNlcnQgY3JlYXRpb24gaXMgdGVzdGVkIGEgYml0IGluOgo8YnI+
+CnRlc3Qvc3NlcnZlci5zaAo8YnI+Cgo8YnI+Cgo8YnI+CkJpbGwKPGJyPgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo8YnI+CnRwbTIgbWFpbGluZyBsaXN0
+Cjxicj4KdHBtMkBsaXN0cy4wMS5vcmcKPGJyPgpodHRwczovL2xpc3RzLjAxLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL3RwbTIKPGJyPgo8L3A+CjwvYmxvY2txdW90ZT48L2Rpdj48YnI+PC9kaXY+PC9k
+aXY+PC9kaXY+
+--===============5451035968316107103==--
 
