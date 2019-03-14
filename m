@@ -1,125 +1,152 @@
-Content-Type: multipart/mixed; boundary="===============5651504226291860130=="
+Content-Type: multipart/mixed; boundary="===============7194966856278517654=="
 MIME-Version: 1.0
-From: Andersen, John <john.s.andersen at intel.com>
+From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] Support for EAP-TLS with openssl TPM2 engine
-Date: Thu, 14 Mar 2019 09:19:58 -0700
-Message-ID: <20190314161958.GB28769@johnsa1-desk.jf.intel.com>
-In-Reply-To: 81ab32db49bb3586d0fea02ca02aa6723009ef1d.camel@infradead.org
+Date: Thu, 14 Mar 2019 09:41:01 -0700
+Message-ID: <e57877d09a0aff0aeea32ae3c179311aa9c0cc73.camel@infradead.org>
+In-Reply-To: 20190314161958.GB28769@johnsa1-desk.jf.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5651504226291860130==
+--===============7194966856278517654==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 13, 2019 at 04:56:17PM -0700, David Woodhouse wrote:
-> On Sat, 2019-01-12 at 12:59 +0100, huger(a)web.de wrote:
-> > Hi
-> > =
-
-> > I am working on a plan to operate mobile Linux computers and would like =
-
-> > them to use corporate wifi with EAP TLS. Security requires us to safely =
-
-> > store the client key. Easiest solution would be in the computer's TPM =
-
-> > 2.0 device.
-> > =
-
-> > So far we were not successful trying to set this up with wpa_supplicant =
-
-> > and pkcs11 engine. Even if successful a solution with these multiple =
-
-> > layers of abstraction is quite complex and therefore might be prone to =
-
-> > updates of any of the components.
-> > =
-
-> > So I wonder if there are plans to directly support openssl tpm2 engine?
+On Thu, 2019-03-14 at 09:19 -0700, Andersen, John wrote:
+> Sweet! I'd been working on this too, I just got the hostapd / wpa_supplic=
+ant
+> test stuff working and was going to try setting
+> pkcs11_engine_path=3D/usr/lib/opensc/engine_pkcs11.so
 > =
 
-> Here's a quick hack to make it work by abusing the OpenSC engine
-> config, as a proof of concept. Making it work cleanly so that it can be
-> merged is left as an exercise for the reader, or perhaps an interested
-> party in one of the mailing lists I've added to Cc.
+> To the tpm2-software/tpm2-pcks11 library.
 > =
 
-> I have no idea why wpa_supplicant doesn't call ENGINE_load_dynamic()
-> for current versions of OpenSSL. That seems to be a bug, which is why
-> I've removed the #ifdefs around it.
+> From the amount of changes it took you, it seems like your approach is cl=
+eaner,
+> so, out of curiousity, what was your ratoinal for going with this approac=
+h? I
+> was going to try the pcks11 way because I came across
 > =
 
-> Signed-off-by: David Woodhouse <dwmw2(a)infradead.org> (not that you'd
-> want to apply it as-is).
+> https://w1.fi/cgit/hostap/plain/wpa_supplicant/examples/openCryptoki.conf
 > =
 
-> diff --git a/src/crypto/tls_openssl.c b/src/crypto/tls_openssl.c
-> index 705fa29a3..546d3a598 100644
-> --- a/src/crypto/tls_openssl.c
-> +++ b/src/crypto/tls_openssl.c
-> @@ -864,7 +864,7 @@ static int tls_engine_load_dynamic_pkcs11(const char =
-*pkcs11_so_path,
->   */
->  static int tls_engine_load_dynamic_opensc(const char *opensc_so_path)
->  {
-> -	char *engine_id =3D "opensc";
-> +	char *engine_id =3D "tpm2";
->  	const char *pre_cmd[] =3D {
->  		"SO_PATH", NULL /* opensc_so_path */,
->  		"ID", NULL /* engine_id */,
-> @@ -1034,10 +1034,8 @@ void * tls_init(const struct tls_config *conf)
->  =
+> But, I haven't gotten to it yet as I got sidetracked right after I got th=
+e tests
+> up and running.
 
->  #ifndef OPENSSL_NO_ENGINE
->  	wpa_printf(MSG_DEBUG, "ENGINE: Loading dynamic engine");
-> -#if OPENSSL_VERSION_NUMBER < 0x10100000L
->  	ERR_load_ENGINE_strings();
->  	ENGINE_load_dynamic();
-> -#endif /* OPENSSL_VERSION_NUMBER */
->  =
+If you are using the TPMv2 PKCS#11 token (or indeed any PKCS#11 token)
+and it's installed correctly, it ought to Just Work.
 
->  	if (conf &&
->  	    (conf->opensc_engine_path || conf->pkcs11_engine_path ||
-> diff --git a/wpa_supplicant/wpa_supplicant.conf b/wpa_supplicant/wpa_supp=
-licant.conf
-> index 1bd43b226..b3045fb3d 100644
-> --- a/wpa_supplicant/wpa_supplicant.conf
-> +++ b/wpa_supplicant/wpa_supplicant.conf
-> @@ -174,7 +174,7 @@ fast_reauth=3D1
->  # private_key option appear to be a PKCS#11 URI, and these options
->  # should not need to be used explicitly.
->  # make the opensc engine available
-> -#opensc_engine_path=3D/usr/lib/opensc/engine_opensc.so
-> +opensc_engine_path=3D/home/dwmw/git/openssl_tpm2_engine/.libs/libtpm2.so
->  # make the pkcs11 engine available
->  #pkcs11_engine_path=3D/usr/lib/opensc/engine_pkcs11.so
->  # configure the path to the pkcs11 module required by the pkcs11 engine
-> _______________________________________________
-> tpm2 mailing list
-> tpm2(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/tpm2
+You should be able to just give a PKCS#11 URI in place of a filename
+for any key or certificate, and any well-behaved application will do
+the right thing. I believe wpa_supplicant meets that definition of
+"well-behaved application", by automatically using the PKCS#11 ENGINE
+when the "filename" it's given is actually a PKCS#11 URI.
 
-Sweet! I'd been working on this too, I just got the hostapd / wpa_supplicant
-test stuff working and was going to try setting
-pkcs11_engine_path=3D/usr/lib/opensc/engine_pkcs11.so
+(Except for the fact that all ENGINE loading is broken in
+wpa_supplicant right now because the init call was removed, as noted).
 
-To the tpm2-software/tpm2-pcks11 library.
 
-From the amount of changes it took you, it seems like your approach is cle=
-aner,
-so, out of curiousity, what was your ratoinal for going with this approach?=
- I
-was going to try the pcks11 way because I came across
 
-https://w1.fi/cgit/hostap/plain/wpa_supplicant/examples/openCryptoki.conf
+--===============7194966856278517654==
+Content-Type: application/x-pkcs7-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
 
-But, I haven't gotten to it yet as I got sidetracked right after I got the =
-tests
-up and running.
-
-Thanks,
-John
-
---===============5651504226291860130==--
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
+ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
+OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
+RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
+cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
+uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
+Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
+Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
+xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
+YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
+nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
+PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
+7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
+Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
+MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
+NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
+/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
+0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
+vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
+ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
+ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
+CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
+aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
+bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
+bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
+LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
+W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
+vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
+gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
+RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
+jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
+b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
++bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
+WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
+aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
+CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
+u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
+RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
+QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
+b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
+cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
+SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
+0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
+KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
+E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
+M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
+yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
+gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
+R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
+ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkw
+MzE0MTY0MTAxWjAvBgkqhkiG9w0BCQQxIgQgno3ffCmI7LDdm4p9GRTRx+dTfRGP+Bxg1l2k1NdS
+9Skwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
+PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
+aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
+DQEBAQUABIIBACC6BTu72Y6c4KMZJqaEt6s19ClLmyG/YOhMXXe37DRziHLlzoF9YztW7IBvFof4
+97+HVVBfc8VuXndp2eXtV2PB14WCEjPW8L5H9Sp10lDWg56tmLbWOOvC+k+QcSAUSFj49Pxm18J0
+myZ0aper+VcB+gQgQ0WimH9t8wU1hSY2K0RbklcsGXhHengrzID14aKg15+OuvqIe9HnMK2BgGJa
+n9nhfdakSuDL/+Q/1QoNV6wKcH37oQZ7h+/zBv3i44oIKgd96AZ3tq8qm+j/aTsbD0p+7T7uUZwQ
+6UPiLVR7cALnAnz39IlV/OpSs8MIz59XiJzC2ngnOLW6OZsfzeoAAAAAAAA=
+--===============7194966856278517654==--
 
