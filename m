@@ -1,57 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============7194966856278517654=="
+Content-Type: multipart/mixed; boundary="===============7896653303186223540=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
-Subject: Re: [tpm2] Support for EAP-TLS with openssl TPM2 engine
-Date: Thu, 14 Mar 2019 09:41:01 -0700
-Message-ID: <e57877d09a0aff0aeea32ae3c179311aa9c0cc73.camel@infradead.org>
-In-Reply-To: 20190314161958.GB28769@johnsa1-desk.jf.intel.com
+Subject: Re: [tpm2] [openssl-tpm2-engine] Support for EAP-TLS with openssl
+ TPM2 engine
+Date: Thu, 14 Mar 2019 09:57:26 -0700
+Message-ID: <c445167b13a068de95713ee428664e65605cf8a6.camel@infradead.org>
+In-Reply-To: 1552580823.3042.32.camel@HansenPartnership.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7194966856278517654==
+--===============7896653303186223540==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-03-14 at 09:19 -0700, Andersen, John wrote:
-> Sweet! I'd been working on this too, I just got the hostapd / wpa_supplic=
-ant
-> test stuff working and was going to try setting
-> pkcs11_engine_path=3D/usr/lib/opensc/engine_pkcs11.so
+On Thu, 2019-03-14 at 09:27 -0700, James Bottomley wrote:
+> On Thu, 2019-03-14 at 09:19 -0700, Andersen, John wrote:
+> > On Wed, Mar 13, 2019 at 04:56:17PM -0700, David Woodhouse wrote:
+> > > Here's a quick hack to make it work by abusing the OpenSC engine
+> > > config, as a proof of concept. Making it work cleanly so that it
+> > > can be merged is left as an exercise for the reader, or perhaps an
+> > > interested party in one of the mailing lists I've added to Cc.
 > =
 
-> To the tpm2-software/tpm2-pcks11 library.
+> Well, you can't have the engine name hard coded ... that really needs
+> to be some type of parameter, which is going to be 99% of the hassle
+> making a proper patch ...
+
+And of course, it shouldn't have to be specified at all. If given a PEM
+file which happens to look like a TPM2 engine key, then the appropriate
+engine should be invoked automatically.
+
+> Just on this particular part: I recently got annoyed with the inability
+> to use TPM keys on firefox.  I did look at the tpm pkcs11 projects but
+> they all looked deficient to say the least, so I put together this
 > =
 
-> From the amount of changes it took you, it seems like your approach is cl=
-eaner,
-> so, out of curiousity, what was your ratoinal for going with this approac=
-h? I
-> was going to try the pcks11 way because I came across
+> https://git.kernel.org/pub/scm/linux/kernel/git/jejb/openssl-pkcs11-expor=
+t.git
 > =
 
-> https://w1.fi/cgit/hostap/plain/wpa_supplicant/examples/openCryptoki.conf
-> =
+> It's a generic engine key to pkcs11 exporter (will work for any openssl
+> engine) driven by a simple ini like config file.  The big advantage it
+> has is that now I can use openssl engines with gnutls.
 
-> But, I haven't gotten to it yet as I got sidetracked right after I got th=
-e tests
-> up and running.
+Nice. I like the fact that it interoperates with the key storage format
+we agreed upon for the ENGINEs.
 
-If you are using the TPMv2 PKCS#11 token (or indeed any PKCS#11 token)
-and it's installed correctly, it ought to Just Work.
+Although if you just wanted to use those keys with GnuTLS, you could
+have done that directly. I already ported it all except the new
+"importable" keys support.
 
-You should be able to just give a PKCS#11 URI in place of a filename
-for any key or certificate, and any well-behaved application will do
-the right thing. I believe wpa_supplicant meets that definition of
-"well-behaved application", by automatically using the PKCS#11 ENGINE
-when the "filename" it's given is actually a PKCS#11 URI.
+http://git.infradead.org/users/dwmw2/openconnect.git/blob/HEAD:/gnutls_tpm2=
+_ibm.c
 
-(Except for the fact that all ENGINE loading is broken in
-wpa_supplicant right now because the init call was removed, as noted).
+> Going the pkcs11 route is definitely the heath robinson approach, so
+> the direct engine route is definitely much better.
 
+:)
 
 
---===============7194966856278517654==
+--===============7896653303186223540==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -135,18 +144,18 @@ BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
 BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
 ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
 ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkw
-MzE0MTY0MTAxWjAvBgkqhkiG9w0BCQQxIgQgno3ffCmI7LDdm4p9GRTRx+dTfRGP+Bxg1l2k1NdS
-9Skwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+MzE0MTY1NzI2WjAvBgkqhkiG9w0BCQQxIgQgRI7i/mNN3OERowd0ksgiPWnUOOHWZ2SfkUzzjvBY
+JOAwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
 TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
 PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
 aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
 A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
 bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBACC6BTu72Y6c4KMZJqaEt6s19ClLmyG/YOhMXXe37DRziHLlzoF9YztW7IBvFof4
-97+HVVBfc8VuXndp2eXtV2PB14WCEjPW8L5H9Sp10lDWg56tmLbWOOvC+k+QcSAUSFj49Pxm18J0
-myZ0aper+VcB+gQgQ0WimH9t8wU1hSY2K0RbklcsGXhHengrzID14aKg15+OuvqIe9HnMK2BgGJa
-n9nhfdakSuDL/+Q/1QoNV6wKcH37oQZ7h+/zBv3i44oIKgd96AZ3tq8qm+j/aTsbD0p+7T7uUZwQ
-6UPiLVR7cALnAnz39IlV/OpSs8MIz59XiJzC2ngnOLW6OZsfzeoAAAAAAAA=
---===============7194966856278517654==--
+DQEBAQUABIIBACJeJH+3zvvI9UfLVvQh3Jj+PhPazkHXeFgfF2bFaBwePPEUagHlXdv7NksEl8N+
+oQX3ymRk3h5Jt938l+aDJgnYOiZ3Nw5oFjBHPudUiwZOAm0FBiBTJepf8GJbbpBFRQQbQcYEkmce
+tHICDDamnQWebnYAVW6tz43t2AfHI+5ucsvzWFWUITobJEwBYYdeOzx7sDVYuF58FQiqeBCqMCO8
+u5lIeD2X7zHOL/+QptF0FVoz39BJYOxTpD7Izyskj1ZN3fjBuej3RmZOXcPRSrpBcrlTZMobdzEh
+e3Aoo93jJ9BCo5ElZbfLJKwd5iK7YhiANWrZdQWu7FDmylpLtQEAAAAAAAA=
+--===============7896653303186223540==--
 
