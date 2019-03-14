@@ -1,66 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============7896653303186223540=="
+Content-Type: multipart/mixed; boundary="===============6741152071049006701=="
 MIME-Version: 1.0
 From: David Woodhouse <dwmw2 at infradead.org>
 Subject: Re: [tpm2] [openssl-tpm2-engine] Support for EAP-TLS with openssl
  TPM2 engine
-Date: Thu, 14 Mar 2019 09:57:26 -0700
-Message-ID: <c445167b13a068de95713ee428664e65605cf8a6.camel@infradead.org>
-In-Reply-To: 1552580823.3042.32.camel@HansenPartnership.com
+Date: Thu, 14 Mar 2019 11:33:26 -0700
+Message-ID: <870126a5133d2af15aae0b0580cf540c5362fa81.camel@infradead.org>
+In-Reply-To: 1552585835.3042.50.camel@HansenPartnership.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7896653303186223540==
+--===============6741152071049006701==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2019-03-14 at 09:27 -0700, James Bottomley wrote:
-> On Thu, 2019-03-14 at 09:19 -0700, Andersen, John wrote:
-> > On Wed, Mar 13, 2019 at 04:56:17PM -0700, David Woodhouse wrote:
-> > > Here's a quick hack to make it work by abusing the OpenSC engine
-> > > config, as a proof of concept. Making it work cleanly so that it
-> > > can be merged is left as an exercise for the reader, or perhaps an
-> > > interested party in one of the mailing lists I've added to Cc.
+On Thu, 2019-03-14 at 10:50 -0700, James Bottomley wrote:
+> On Thu, 2019-03-14 at 09:57 -0700, David Woodhouse wrote:
+> > On Thu, 2019-03-14 at 09:27 -0700, James Bottomley wrote:
+> > > On Thu, 2019-03-14 at 09:19 -0700, Andersen, John wrote:
+> > > > On Wed, Mar 13, 2019 at 04:56:17PM -0700, David Woodhouse wrote:
+> > > > > Here's a quick hack to make it work by abusing the OpenSC
+> > > > > engine config, as a proof of concept. Making it work cleanly so
+> > > > > that it can be merged is left as an exercise for the reader, or
+> > > > > perhaps an interested party in one of the mailing lists I've
+> > > > > added to Cc.
+> > > =
+
+> > > Well, you can't have the engine name hard coded ... that really
+> > > needs to be some type of parameter, which is going to be 99% of the
+> > > hassle making a proper patch ...
+> > =
+
+> > And of course, it shouldn't have to be specified at all. If given a
+> > PEM file which happens to look like a TPM2 engine key, then the
+> > appropriate engine should be invoked automatically.
 > =
 
-> Well, you can't have the engine name hard coded ... that really needs
-> to be some type of parameter, which is going to be 99% of the hassle
-> making a proper patch ...
-
-And of course, it shouldn't have to be specified at all. If given a PEM
-file which happens to look like a TPM2 engine key, then the appropriate
-engine should be invoked automatically.
-
-> Just on this particular part: I recently got annoyed with the inability
-> to use TPM keys on firefox.  I did look at the tpm pkcs11 projects but
-> they all looked deficient to say the least, so I put together this
-> =
-
-> https://git.kernel.org/pub/scm/linux/kernel/git/jejb/openssl-pkcs11-expor=
-t.git
-> =
-
-> It's a generic engine key to pkcs11 exporter (will work for any openssl
-> engine) driven by a simple ini like config file.  The big advantage it
-> has is that now I can use openssl engines with gnutls.
-
-Nice. I like the fact that it interoperates with the key storage format
-we agreed upon for the ENGINEs.
-
-Although if you just wanted to use those keys with GnuTLS, you could
-have done that directly. I already ported it all except the new
-"importable" keys support.
-
-http://git.infradead.org/users/dwmw2/openconnect.git/blob/HEAD:/gnutls_tpm2=
-_ibm.c
-
-> Going the pkcs11 route is definitely the heath robinson approach, so
-> the direct engine route is definitely much better.
+> Hey don't beat me on the sore spot ...
 
 :)
 
+This isn't really that hard to do in applications. For those using
+OpenSSL it's just a case of making them recognise the appropriate
+-----BEGIN string and invoke the engine appropriately.
 
---===============7896653303186223540==
+Once my support gets merged into GnuTLS, it really can be automatic
+with the application not having to do anything at all. OpenSSL might
+get there too, once we have STORE support working in applications.
+
+> > Although if you just wanted to use those keys with GnuTLS, you could
+> > have done that directly. I already ported it all except the new
+> > "importable" keys support.
+> > =
+
+> > http://git.infradead.org/users/dwmw2/openconnect.git/blob/HEAD:/gnutls_=
+tpm2_ibm.c
+> =
+
+> Well, you know, using engines with gnutls does mean we don't have to
+> write the same code twice over ...
+
+I'm not convinced that an OpenSSL ENGINE is the right form for
+implementing this kind of thing in the general case. PKCS#11 is much
+better as an existing portable standard, although it doesn't fit the
+TPMv2 usage model very well.
+
+Even OpenSSL is moving away from ENGINEs to a different plugin
+mechanism.
+
+--===============6741152071049006701==
 Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -144,18 +152,18 @@ BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
 BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
 ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
 ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkw
-MzE0MTY1NzI2WjAvBgkqhkiG9w0BCQQxIgQgRI7i/mNN3OERowd0ksgiPWnUOOHWZ2SfkUzzjvBY
-JOAwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+MzE0MTgzMzI2WjAvBgkqhkiG9w0BCQQxIgQg180bNOKt4nBrP83G9iktlgO0URKZy2Nc6l7H17m4
+gtUwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
 TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
 PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
 aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
 A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
 bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBACJeJH+3zvvI9UfLVvQh3Jj+PhPazkHXeFgfF2bFaBwePPEUagHlXdv7NksEl8N+
-oQX3ymRk3h5Jt938l+aDJgnYOiZ3Nw5oFjBHPudUiwZOAm0FBiBTJepf8GJbbpBFRQQbQcYEkmce
-tHICDDamnQWebnYAVW6tz43t2AfHI+5ucsvzWFWUITobJEwBYYdeOzx7sDVYuF58FQiqeBCqMCO8
-u5lIeD2X7zHOL/+QptF0FVoz39BJYOxTpD7Izyskj1ZN3fjBuej3RmZOXcPRSrpBcrlTZMobdzEh
-e3Aoo93jJ9BCo5ElZbfLJKwd5iK7YhiANWrZdQWu7FDmylpLtQEAAAAAAAA=
---===============7896653303186223540==--
+DQEBAQUABIIBAK548detopd3U+Zy/INZ2s/dqy6xLU/015PuNbf6r+yugRYXftiLmtcOTw/fQ4ig
+JQRKRxFw1VYfo0jtjtCLQK6qJxRSHmLjfvMTj/SJ8Pc6ErycrzbUb7P3AFILGCJrIIHXb3ZY4XNO
+Y7zdNvKeYrXw6cIOSdWoZklq0I0NnhfHzWdSIsZ3wPUf1Yf31HCtIPzaVwKO/6VfQTTuhua9SHlb
+qcrGdFfJGaOiu8fY2fEw37XSbdMPkM05hjf0+h9uGcD+1Hue/4aiV5G77RvB6xc91mWu6lHEN+9f
+PKcNIWFouu2wETlCpijaXsiDZzjicx3piWFoJBGUU5yx6Px5zsMAAAAAAAA=
+--===============6741152071049006701==--
 
