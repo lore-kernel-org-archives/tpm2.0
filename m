@@ -1,177 +1,103 @@
-Content-Type: multipart/mixed; boundary="===============1576686229407329025=="
+Content-Type: multipart/mixed; boundary="===============6712929324513257801=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] Issue with tpm2_sign
-Date: Mon, 01 Apr 2019 16:25:52 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D14C1B@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CAAxBZJsX7sjQUJTkLDhiRq+j5xFyjOt0M_rNAo01EW-yA8c2wg@mail.gmail.com
+From: Peter Huewe <peterhuewe at gmx.de>
+Subject: Re: [tpm2] CONGRATULATIONS on achieving a passing best practices
+ badge!
+Date: Mon, 01 Apr 2019 21:48:35 +0200
+Message-ID: <040299c0-8365-42d5-a218-6bf67f2cfe64@gmx.de>
+In-Reply-To: 5ca2669141b9e_52b0379845d0843984@5be718ef-c5b2-45e2-9685-ea99f0384e92.mail
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1576686229407329025==
+--===============6712929324513257801==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I just tested with:
-Tpm2-tools: fdc0fb34c49
-tpm2-tss: c3fc89d027
+Hi,
 
-./tools/tpm2_createprimary -o primary.ctx
-./tools/tpm2_create -C primary.ctx -o key.ctx
-echo "my file data" > data.dat
-./tools/ tpm2_sign -V -c key.ctx -G sha256 -m data.dat -o hash.sig
+I'm pleased to announce that we just passed the Core Infrastructure =
 
-Also:
-make check TESTS=3D'test/integration/tests/sign.sh'
-Seems to be working as expected.
+Initiative
+Best Practice Badge Programm!
+This is not an aprils fool but a serious achievement.
 
-So I even tried persistent:
-tpm2_evictcontrol -a o -c key.ctx -p 0x81010003
-persistentHandle: 0x81010003
+"The Linux Foundation (LF) Core Infrastructure Initiative (CII) Best =
 
-./tools/tpm2_sign -V -c 0x81010003 -G sha256 -m data.dat -o hash.sig
+Practices badge
+is a way for Free/Libre and Open Source Software (FLOSS) projects to show =
 
-And it all worked, sorry I can't reproduce. Can you run it against the simu=
-lator
-And see if it works? This might help to narrow down what's causing the issu=
-e.
+that they
+follow best practices. Projects can voluntarily self-certify, at no cost, =
+
+by using
+this web application to explain how they follow each best practice. The CII =
+
+Best Practices Badge is inspired by the many badges available to projects =
+
+on GitHub.
+Consumers of the badge can quickly assess which FLOSS projects are =
+
+following best
+practices and as a result are more likely to produce higher-quality secure =
+
+software."
+Taken from: https://bestpractices.coreinfrastructure.org/en
+
+Thanks everybody who worked on getting this achievement and turning our =
+
+project
+into a sustainable and healthy open source project.
+
+Please find the full email below.
+
+Thanks,
+Peter
 
 
-> -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Ian Oliver
-> Sent: Monday, April 1, 2019 4:28 AM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] Issue with tpm2_sign
-> =
 
-> Just starting having this issue with the latest master builds of tpm2_too=
-ls ( also
-> latest tss/abrmd )
-> =
+Am Montag, 1. April 2019 21:29:22 CEST schrieb =
 
-> I have a small file to be signed
-> =
+badgeapp(a)bestpractices.coreinfrastructure.org:
+> Congratulations!
+> According to the information that you've provided,
+> your project has earned the CII best practices 'passing' badge.
+> For more information, see this URL:
+> https://bestpractices.coreinfrastructure.org/en/projects/2332
+>
+> Please add your badge to your project and/or repository site;
+> you've earned it:
+> * In markdown you can add this:
+>   [![CII Best =
 
-> =
+> Practices](https://bestpractices.coreinfrastructure.org/projects/2332/bad=
+ge)](https://bestpractices.coreinfrastructure.org/projects/2332)
+> * In HTML you can add this:
+>   <a =
 
-> $ls -l hash.file
-> =
+> href=3D"https://bestpractices.coreinfrastructure.org/projects/2332"><img =
 
-> -rw-r--r-- 1 xxx xxx 64 huhti  1 14:10 hash.file
-> =
+> src=3D"https://bestpractices.coreinfrastructure.org/projects/2332/badge">=
+</a>
+>
+> We strongly encourage you to add or improve justification text,
+> including adding URLs that point to more information.
+> If you have suggestions on how to improve the criteria or
+> badge web application, please file an issue at:
+> https://github.com/coreinfrastructure/best-practices-badge/issues
+> If you made changes to your project to get a badge, please let us know
+> via email at cii-badges-questions(a)lists.coreinfrastructure.org.
+> One of our goals is to encourage projects to make some improvements.
+> We put some of these reports on the public wiki; please let us know
+> if you do NOT want the changes publicly posted at
+> https://github.com/coreinfrastructure/best-practices-badge/wiki/Impacts
+> Thank you, and congratulations.
+>
+> --- David A. Wheeler, CII Best Practices Badge Technical Lead
+>
+>
+>
 
-> =
 
-> =
-
-> $tpm2_sign -V -c 0x81010003 -G sha256 -m hash.file -o hash.sig
-> =
-
-> WARNING:esys:src/tss2-esys/api/Esys_Sign.c:340:Esys_Sign_Finish() Received
-> TPM Error
-> =
-
-> ERROR:esys:src/tss2-esys/api/Esys_Sign.c:133:Esys_Sign() Esys Finish Erro=
-rCode
-> (0x000003e0)
-> =
-
-> ERROR on line: "81" in file: "./lib/log.h": Eys_Sign(0x3E0) -
-> tpm:parameter(3):invalid ticket
-> =
-
-> ERROR on line: "171" in file: "tools/tpm2_tool.c": Unable to run tpm2_sign
-> =
-
-> =
-
-> The key at 0x8101003 is a signing key (actually it is the AK)
-> =
-
-> $tpm2_listpersistent
-> <cut....>
-> =
-
-> - handle: 0x81010003
-> =
-
->   name-alg:
-> =
-
->     value: sha256
-> =
-
->     raw: 0xb
-> =
-
->   attributes:
-> =
-
->     value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restrict=
-ed|sign
-> =
-
->     raw: 0x50072
-> =
-
->   type:
-> =
-
->     value: rsa
-> =
-
->     raw: 0x1
-> =
-
-> <cut....>
-> =
-
-> Working from the test file (./test/integration/tests/sign.sh) the syntax =
-appears
-> correct for this command (the man file is different)
-> =
-
-> =
-
->     tpm2_sign -Q -c $handle_signing_key -G $alg_hash -m $file_input_data =
--o
-> $file_output_data
-> =
-
-> =
-
-> Machine details:
-> =
-
-> $uname -a
-> Linux ioliver-ThinkPad-X1-Carbon-5th 4.15.0-46-generic #49-Ubuntu SMP Wed
-> Feb 6 09:33:07 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux $cat /etc/issue
-> Ubuntu 18.04.2 LTS
-> =
-
-> =
-
-> =
-
-> t.
-> =
-
-> Ian
-> =
-
-> =
-
-> --
-> =
-
-> Dr. Ian Oliver
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> =
-
-> Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
-> Twitter: @i_j_oliver
-
---===============1576686229407329025==--
+--===============6712929324513257801==--
 
