@@ -1,177 +1,177 @@
-Content-Type: multipart/mixed; boundary="===============2130455286643375970=="
+Content-Type: multipart/mixed; boundary="===============1576686229407329025=="
 MIME-Version: 1.0
-From: Ian Oliver <ian.justin.oliver at gmail.com>
-Subject: [tpm2] Issue with tpm2_sign
-Date: Mon, 01 Apr 2019 14:27:57 +0300
-Message-ID: <CAAxBZJsX7sjQUJTkLDhiRq+j5xFyjOt0M_rNAo01EW-yA8c2wg@mail.gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] Issue with tpm2_sign
+Date: Mon, 01 Apr 2019 16:25:52 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D14C1B@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAAxBZJsX7sjQUJTkLDhiRq+j5xFyjOt0M_rNAo01EW-yA8c2wg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2130455286643375970==
+--===============1576686229407329025==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
- Just starting having this issue with the latest master builds of
-tpm2_tools ( also latest tss/abrmd )
+I just tested with:
+Tpm2-tools: fdc0fb34c49
+tpm2-tss: c3fc89d027
 
-I have a small file to be signed
+./tools/tpm2_createprimary -o primary.ctx
+./tools/tpm2_create -C primary.ctx -o key.ctx
+echo "my file data" > data.dat
+./tools/ tpm2_sign -V -c key.ctx -G sha256 -m data.dat -o hash.sig
 
-$ls -l hash.file
--rw-r--r-- 1 xxx xxx 64 huhti  1 14:10 hash.file
+Also:
+make check TESTS=3D'test/integration/tests/sign.sh'
+Seems to be working as expected.
 
-$tpm2_sign -V -c 0x81010003 -G sha256 -m hash.file -o hash.sig
-WARNING:esys:src/tss2-esys/api/Esys_Sign.c:340:Esys_Sign_Finish() Received
-TPM Error
-ERROR:esys:src/tss2-esys/api/Esys_Sign.c:133:Esys_Sign() Esys Finish
-ErrorCode (0x000003e0)
-ERROR on line: "81" in file: "./lib/log.h": Eys_Sign(0x3E0) -
-tpm:parameter(3):invalid ticket
-ERROR on line: "171" in file: "tools/tpm2_tool.c": Unable to run tpm2_sign
+So I even tried persistent:
+tpm2_evictcontrol -a o -c key.ctx -p 0x81010003
+persistentHandle: 0x81010003
 
-The key at 0x8101003 is a signing key (actually it is the AK)
+./tools/tpm2_sign -V -c 0x81010003 -G sha256 -m data.dat -o hash.sig
 
-$tpm2_listpersistent
-<cut....>
-- handle: 0x81010003
-  name-alg:
-    value: sha256
-    raw: 0xb
-  attributes:
-    value:
-fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|sign
-    raw: 0x50072
-  type:
-    value: rsa
-    raw: 0x1
-<cut....>
-
-Working from the test file (./test/integration/tests/sign.sh) the syntax
-appears correct for this command (the man file is different)
-
-    tpm2_sign -Q -c $handle_signing_key -G $alg_hash -m $file_input_data -o
-$file_output_data
-
-Machine details:
-$uname -a
-Linux ioliver-ThinkPad-X1-Carbon-5th 4.15.0-46-generic #49-Ubuntu SMP Wed
-Feb 6 09:33:07 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-$cat /etc/issue
-Ubuntu 18.04.2 LTS
+And it all worked, sorry I can't reproduce. Can you run it against the simu=
+lator
+And see if it works? This might help to narrow down what's causing the issu=
+e.
 
 
-t.
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Ian Oliver
+> Sent: Monday, April 1, 2019 4:28 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Issue with tpm2_sign
+> =
 
-Ian
+> Just starting having this issue with the latest master builds of tpm2_too=
+ls ( also
+> latest tss/abrmd )
+> =
 
+> I have a small file to be signed
+> =
 
--- =
+> =
 
-*Dr. Ian Oliver*
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
-*Twitter: @i_j_oliver*
+> $ls -l hash.file
+> =
 
---===============2130455286643375970==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> -rw-r--r-- 1 xxx xxx 64 huhti  1 14:10 hash.file
+> =
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2Fs
-aWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXpl
-OjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+Ckp1c3Qgc3RhcnRpbmcgaGF2aW5nIHRoaXMgaXNzdWUg
-d2l0aCB0aGUgbGF0ZXN0IG1hc3RlciBidWlsZHMgb2YgdHBtMl90b29scyAoIGFsc28gbGF0ZXN0
-IHRzcy9hYnJtZCApPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWws
-SGVsdmV0aWNhLHNhbnMtc2VyaWYsc2VyaWYsRW1vamlGb250O2ZvbnQtc2l6ZToxMnB0O2NvbG9y
-OnJnYigwLDAsMCkiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJp
-LEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJw
-dDtjb2xvcjpyZ2IoMCwwLDApIj4KSSBoYXZlIGEgc21hbGwgZmlsZSB0byBiZSBzaWduZWQ8YnI+
-CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxz
-YW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2IoMCwwLDAp
-Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2
-ZXRpY2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdi
-KDAsMCwwKSI+CjxzcGFuPiRscyAtbCBoYXNoLmZpbGUgPGJyPgo8L3NwYW4+CjxkaXY+LXJ3LXIt
-LXItLSAxIHh4eCB4eHggNjQgaHVodGkgwqAxIDE0OjEwIGhhc2guZmlsZTxicj4KPC9kaXY+Cjxz
-cGFuPjwvc3Bhbj48YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFy
-aWFsLEhlbHZldGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtj
-b2xvcjpyZ2IoMCwwLDApIj4KPHNwYW4+JHRwbTJfc2lnbiAtViAtYyAweDgxMDEwMDAzIC1HIHNo
-YTI1NiAtbSBoYXNoLmZpbGUgLW8gaGFzaC5zaWc8YnI+Cjwvc3Bhbj4KPGRpdj5XQVJOSU5HOmVz
-eXM6c3JjL3RzczItZXN5cy9hcGkvRXN5c19TaWduLmM6MzQwOkVzeXNfU2lnbl9GaW5pc2goKSBS
-ZWNlaXZlZCBUUE0gRXJyb3IKPGJyPgo8L2Rpdj4KPGRpdj5FUlJPUjplc3lzOnNyYy90c3MyLWVz
-eXMvYXBpL0VzeXNfU2lnbi5jOjEzMzpFc3lzX1NpZ24oKSBFc3lzIEZpbmlzaCBFcnJvckNvZGUg
-KDB4MDAwMDAzZTApCjxicj4KPC9kaXY+CjxkaXY+RVJST1Igb24gbGluZTogJnF1b3Q7ODEmcXVv
-dDsgaW4gZmlsZTogJnF1b3Q7Li9saWIvbG9nLmgmcXVvdDs6IEV5c19TaWduKDB4M0UwKSAtIHRw
-bTpwYXJhbWV0ZXIoMyk6aW52YWxpZCB0aWNrZXQ8YnI+CjwvZGl2Pgo8ZGl2PkVSUk9SIG9uIGxp
-bmU6ICZxdW90OzE3MSZxdW90OyBpbiBmaWxlOiAmcXVvdDt0b29scy90cG0yX3Rvb2wuYyZxdW90
-OzogVW5hYmxlIHRvIHJ1biB0cG0yX3NpZ248YnI+CjwvZGl2Pgo8c3Bhbj48L3NwYW4+PC9kaXY+
-CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2Vy
-aWYsc2VyaWYsRW1vamlGb250O2ZvbnQtc2l6ZToxMnB0O2NvbG9yOnJnYigwLDAsMCkiPgo8YnI+
-CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxz
-YW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2IoMCwwLDAp
-Ij4KVGhlIGtleSBhdCAweDgxMDEwMDMgaXMgYSBzaWduaW5nIGtleSAoYWN0dWFsbHkgaXQgaXMg
-dGhlIEFLKTwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZl
-dGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2Io
-MCwwLDApIj4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlh
-bCxIZWx2ZXRpY2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXplOjEycHQ7Y29s
-b3I6cmdiKDAsMCwwKSI+CiR0cG0yX2xpc3RwZXJzaXN0ZW50PC9kaXY+CjxkaXYgc3R5bGU9ImZv
-bnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYsc2VyaWYsRW1vamlG
-b250O2ZvbnQtc2l6ZToxMnB0O2NvbG9yOnJnYigwLDAsMCkiPgombHQ7Y3V0Li4uLiZndDs8YnI+
-CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxz
-YW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2IoMCwwLDAp
-Ij4KPHNwYW4+LSBoYW5kbGU6IDB4ODEwMTAwMDM8YnI+Cjwvc3Bhbj4KPGRpdj7CoCBuYW1lLWFs
-Zzo8YnI+CjwvZGl2Pgo8ZGl2PsKgIMKgIHZhbHVlOiBzaGEyNTY8YnI+CjwvZGl2Pgo8ZGl2PsKg
-IMKgIHJhdzogMHhiPGJyPgo8L2Rpdj4KPGRpdj7CoCBhdHRyaWJ1dGVzOjxicj4KPC9kaXY+Cjxk
-aXY+wqAgwqAgdmFsdWU6IGZpeGVkdHBtfGZpeGVkcGFyZW50fHNlbnNpdGl2ZWRhdGFvcmlnaW58
-dXNlcndpdGhhdXRofHJlc3RyaWN0ZWR8c2lnbjxicj4KPC9kaXY+CjxkaXY+wqAgwqAgcmF3OiAw
-eDUwMDcyPGJyPgo8L2Rpdj4KPGRpdj7CoCB0eXBlOjxicj4KPC9kaXY+CjxkaXY+wqAgwqAgdmFs
-dWU6IHJzYTxicj4KPC9kaXY+CjxkaXY+wqAgwqAgcmF3OiAweDE8YnI+CjwvZGl2Pgo8c3Bhbj48
-L3NwYW4+Jmx0O2N1dC4uLi4mZ3Q7PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGli
-cmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYsc2VyaWYsRW1vamlGb250O2ZvbnQtc2l6ZTox
-MnB0O2NvbG9yOnJnYigwLDAsMCkiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWls
-eTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250
-LXNpemU6MTJwdDtjb2xvcjpyZ2IoMCwwLDApIj4KV29ya2luZyBmcm9tIHRoZSB0ZXN0IGZpbGUg
-KC4vdGVzdC9pbnRlZ3JhdGlvbi90ZXN0cy9zaWduLnNoKSB0aGUgc3ludGF4CiBhcHBlYXJzIGNv
-cnJlY3QgZm9yIHRoaXMgY29tbWFuZCAodGhlIG1hbiBmaWxlIGlzIGRpZmZlcmVudCk8YnI+Cjwv
-ZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5z
-LXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2IoMCwwLDApIj4K
-PGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2ZXRp
-Y2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAs
-MCwwKSI+CjxzcGFuPsKgIMKgIHRwbTJfc2lnbiAtUSAtYyAkaGFuZGxlX3NpZ25pbmdfa2V5IC1H
-ICRhbGdfaGFzaCAtbSAkZmlsZV9pbnB1dF9kYXRhIC1vICRmaWxlX291dHB1dF9kYXRhPGJyPgo8
-L3NwYW4+PHNwYW4+PC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJp
-LEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJw
-dDtjb2xvcjpyZ2IoMCwwLDApIj4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
-Q2FsaWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1z
-aXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+TWFjaGluZSBkZXRhaWxzOjxicj4KPC9kaXY+PGRp
-diBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZixz
-ZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+JHVuYW1lIC1h
-PGJyPkxpbnV4IGlvbGl2ZXItVGhpbmtQYWQtWDEtQ2FyYm9uLTV0aCA0LjE1LjAtNDYtZ2VuZXJp
-YyAjNDktVWJ1bnR1IFNNUCBXZWQgRmViIDYgMDk6MzM6MDcgVVRDIDIwMTkgeDg2XzY0IHg4Nl82
-NCB4ODZfNjQgR05VL0xpbnV4PGJyPiRjYXQgL2V0Yy9pc3N1ZTxicj5VYnVudHUgMTguMDQuMiBM
-VFM8YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2ZXRp
-Y2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAs
-MCwwKSI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVs
-dmV0aWNhLHNhbnMtc2VyaWYsc2VyaWYsRW1vamlGb250O2ZvbnQtc2l6ZToxMnB0O2NvbG9yOnJn
-YigwLDAsMCkiPjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJp
-YWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYsc2VyaWYsRW1vamlGb250O2ZvbnQtc2l6ZToxMnB0O2Nv
-bG9yOnJnYigwLDAsMCkiPgp0LjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJp
-LEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJw
-dDtjb2xvcjpyZ2IoMCwwLDApIj4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
-Q2FsaWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1z
-aXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+CklhbjwvZGl2PjxiciBjbGVhcj0iYWxsIj48YnI+
-LS0gPGJyPjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJnbWFpbF9zaWduYXR1cmUiPjxkaXYgZGlyPSJs
-dHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXYgZGly
-PSJsdHIiPjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OmFyaWFsO2ZvbnQtc2l6ZTpzbWFsbCI+PGI+
-RHIuIElhbiBPbGl2ZXI8L2I+PGJyPj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT08YnI+
-PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6YXJpYWw7Zm9udC1zaXplOnNtYWxsIj5Qcml2
-YWN5IEVuZ2luZWVyaW5nOsKgIDxiPjwvYj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDE3LDE3LDE3
-KTtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxM3B4O2xpbmUtaGVpZ2h0
-OjE5cHgiPjxhIGhyZWY9Imh0dHA6Ly93d3cuYW1hem9uLmNvLnVrL2RwLzE0OTc1Njk3MTAiIHRh
-cmdldD0iX2JsYW5rIj52aWEgQW1hem9uPC9hPjwvc3Bhbj48Yj48YnI+VHdpdHRlcjogQGlfal9v
-bGl2ZXI8L2I+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+
-PC9kaXY+PC9kaXY+PC9kaXY+Cg==
+> =
 
---===============2130455286643375970==--
+> =
+
+> $tpm2_sign -V -c 0x81010003 -G sha256 -m hash.file -o hash.sig
+> =
+
+> WARNING:esys:src/tss2-esys/api/Esys_Sign.c:340:Esys_Sign_Finish() Received
+> TPM Error
+> =
+
+> ERROR:esys:src/tss2-esys/api/Esys_Sign.c:133:Esys_Sign() Esys Finish Erro=
+rCode
+> (0x000003e0)
+> =
+
+> ERROR on line: "81" in file: "./lib/log.h": Eys_Sign(0x3E0) -
+> tpm:parameter(3):invalid ticket
+> =
+
+> ERROR on line: "171" in file: "tools/tpm2_tool.c": Unable to run tpm2_sign
+> =
+
+> =
+
+> The key at 0x8101003 is a signing key (actually it is the AK)
+> =
+
+> $tpm2_listpersistent
+> <cut....>
+> =
+
+> - handle: 0x81010003
+> =
+
+>   name-alg:
+> =
+
+>     value: sha256
+> =
+
+>     raw: 0xb
+> =
+
+>   attributes:
+> =
+
+>     value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restrict=
+ed|sign
+> =
+
+>     raw: 0x50072
+> =
+
+>   type:
+> =
+
+>     value: rsa
+> =
+
+>     raw: 0x1
+> =
+
+> <cut....>
+> =
+
+> Working from the test file (./test/integration/tests/sign.sh) the syntax =
+appears
+> correct for this command (the man file is different)
+> =
+
+> =
+
+>     tpm2_sign -Q -c $handle_signing_key -G $alg_hash -m $file_input_data =
+-o
+> $file_output_data
+> =
+
+> =
+
+> Machine details:
+> =
+
+> $uname -a
+> Linux ioliver-ThinkPad-X1-Carbon-5th 4.15.0-46-generic #49-Ubuntu SMP Wed
+> Feb 6 09:33:07 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux $cat /etc/issue
+> Ubuntu 18.04.2 LTS
+> =
+
+> =
+
+> =
+
+> t.
+> =
+
+> Ian
+> =
+
+> =
+
+> --
+> =
+
+> Dr. Ian Oliver
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> =
+
+> Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
+> Twitter: @i_j_oliver
+
+--===============1576686229407329025==--
 
