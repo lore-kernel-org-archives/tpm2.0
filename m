@@ -1,147 +1,177 @@
-Content-Type: multipart/mixed; boundary="===============5103902456001310907=="
+Content-Type: multipart/mixed; boundary="===============2130455286643375970=="
 MIME-Version: 1.0
-From: Desai, Imran <imran.desai at intel.com>
-Subject: Re: [tpm2] tpm2 Digest, Vol 21, Issue 16
-Date: Fri, 29 Mar 2019 16:53:44 +0000
-Message-ID: <688D07BB9E3A9E4A852BA1336D1910FF83F329D4@fmsmsx104.amr.corp.intel.com>
-In-Reply-To: mailman.2604.1553844484.2109.tpm2@lists.01.org
+From: Ian Oliver <ian.justin.oliver at gmail.com>
+Subject: [tpm2] Issue with tpm2_sign
+Date: Mon, 01 Apr 2019 14:27:57 +0300
+Message-ID: <CAAxBZJsX7sjQUJTkLDhiRq+j5xFyjOt0M_rNAo01EW-yA8c2wg@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5103902456001310907==
+--===============2130455286643375970==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-@songwu you can see the example for policycommandcode here https://github.c=
-om/tpm2-software/tpm2-tools/blob/master/man/tpm2_policycommandcode.1.md
+ Just starting having this issue with the latest master builds of
+tpm2_tools ( also latest tss/abrmd )
 
-________________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of tpm2-request(a)lists.=
-01.org [tpm2-request(a)lists.01.org]
-Sent: Friday, March 29, 2019 12:28 AM
-To: tpm2(a)lists.01.org
-Subject: tpm2 Digest, Vol 21, Issue 16
+I have a small file to be signed
 
-Send tpm2 mailing list submissions to
-        tpm2(a)lists.01.org
+$ls -l hash.file
+-rw-r--r-- 1 xxx xxx 64 huhti  1 14:10 hash.file
 
-To subscribe or unsubscribe via the World Wide Web, visit
-        https://lists.01.org/mailman/listinfo/tpm2
-or, via email, send a message with subject or body 'help' to
-        tpm2-request(a)lists.01.org
+$tpm2_sign -V -c 0x81010003 -G sha256 -m hash.file -o hash.sig
+WARNING:esys:src/tss2-esys/api/Esys_Sign.c:340:Esys_Sign_Finish() Received
+TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_Sign.c:133:Esys_Sign() Esys Finish
+ErrorCode (0x000003e0)
+ERROR on line: "81" in file: "./lib/log.h": Eys_Sign(0x3E0) -
+tpm:parameter(3):invalid ticket
+ERROR on line: "171" in file: "tools/tpm2_tool.c": Unable to run tpm2_sign
 
-You can reach the person managing the list at
-        tpm2-owner(a)lists.01.org
+The key at 0x8101003 is a signing key (actually it is the AK)
 
-When replying, please edit your Subject line so it is more specific
-than "Re: Contents of tpm2 digest..."
+$tpm2_listpersistent
+<cut....>
+- handle: 0x81010003
+  name-alg:
+    value: sha256
+    raw: 0xb
+  attributes:
+    value:
+fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|sign
+    raw: 0x50072
+  type:
+    value: rsa
+    raw: 0x1
+<cut....>
 
+Working from the test file (./test/integration/tests/sign.sh) the syntax
+appears correct for this command (the man file is different)
 
-Today's Topics:
+    tpm2_sign -Q -c $handle_signing_key -G $alg_hash -m $file_input_data -o
+$file_output_data
 
-   1. Re: Get error 0x99D in function Tss2_Sys_AC_Send() when
-      sending data from TPM to AC (Shen, Songwu)
-
-
-----------------------------------------------------------------------
-
-Message: 1
-Date: Fri, 29 Mar 2019 07:27:59 +0000
-From: "Shen, Songwu" <songwu.shen(a)intel.com>
-To: "Struk, Tadeusz" <tadeusz.struk(a)intel.com>, "tpm2(a)lists.01.org"
-        <tpm2(a)lists.01.org>, "Tricca, Philip B" <philip.b.tricca(a)intel.=
-com>
-Subject: Re: [tpm2] Get error 0x99D in function Tss2_Sys_AC_Send()
-        when sending data from TPM to AC
-Message-ID:
-        <14BD9F96BC6E0B4F8E42994AF8E306D4CAE1C9(a)shsmsx102.ccr.corp.intel.=
-com>
-Content-Type: text/plain; charset=3D"us-ascii"
-
-Hi Tadeusz,
-
-Maybe before calling TSS2_Sys_AC_SEND(), we should call Tss2_Sys_PolicyComm=
-andCode() to set policySession->commandCode to TPM2_CC_AC_Send according to=
- the spec.
-
-But I still don't know how to program it, could you provide any sample for =
-Tss2_Sys_PolicyCommandCode() and Tss2_Sys_AC_SEND()?
-
-Thanks
-Songwu
-
-From: Shen, Songwu
-Sent: Friday, March 29, 2019 10:24 AM
-To: Struk, Tadeusz <tadeusz.struk(a)intel.com>; tpm2(a)lists.01.org; Tricca=
-, Philip B <philip.b.tricca(a)intel.com>
-Subject: RE: Get error 0x99D in function Tss2_Sys_AC_Send() when sending da=
-ta from TPM to AC
+Machine details:
+$uname -a
+Linux ioliver-ThinkPad-X1-Carbon-5th 4.15.0-46-generic #49-Ubuntu SMP Wed
+Feb 6 09:33:07 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+$cat /etc/issue
+Ubuntu 18.04.2 LTS
 
 
-Hi Tadeusz,
+t.
+
+Ian
 
 
+-- =
 
-Thank you for correction:)
-I look into the spec and I'm sending TPM2_AC_SEND command,
-it mentioned that policySession->commandCode of policy session context is r=
-equired to be TPM_CC_AC_SEND, otherwise it will report TPM_RC_POLICY_FAIL.
-But I can't find the definition of policySession in TPM spec part2, and com=
-mandCode:
+*Dr. Ian Oliver*
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
+*Twitter: @i_j_oliver*
 
+--===============2130455286643375970==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2Fs
+aWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXpl
+OjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+Ckp1c3Qgc3RhcnRpbmcgaGF2aW5nIHRoaXMgaXNzdWUg
+d2l0aCB0aGUgbGF0ZXN0IG1hc3RlciBidWlsZHMgb2YgdHBtMl90b29scyAoIGFsc28gbGF0ZXN0
+IHRzcy9hYnJtZCApPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWws
+SGVsdmV0aWNhLHNhbnMtc2VyaWYsc2VyaWYsRW1vamlGb250O2ZvbnQtc2l6ZToxMnB0O2NvbG9y
+OnJnYigwLDAsMCkiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJp
+LEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJw
+dDtjb2xvcjpyZ2IoMCwwLDApIj4KSSBoYXZlIGEgc21hbGwgZmlsZSB0byBiZSBzaWduZWQ8YnI+
+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxz
+YW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2IoMCwwLDAp
+Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2
+ZXRpY2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdi
+KDAsMCwwKSI+CjxzcGFuPiRscyAtbCBoYXNoLmZpbGUgPGJyPgo8L3NwYW4+CjxkaXY+LXJ3LXIt
+LXItLSAxIHh4eCB4eHggNjQgaHVodGkgwqAxIDE0OjEwIGhhc2guZmlsZTxicj4KPC9kaXY+Cjxz
+cGFuPjwvc3Bhbj48YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFy
+aWFsLEhlbHZldGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtj
+b2xvcjpyZ2IoMCwwLDApIj4KPHNwYW4+JHRwbTJfc2lnbiAtViAtYyAweDgxMDEwMDAzIC1HIHNo
+YTI1NiAtbSBoYXNoLmZpbGUgLW8gaGFzaC5zaWc8YnI+Cjwvc3Bhbj4KPGRpdj5XQVJOSU5HOmVz
+eXM6c3JjL3RzczItZXN5cy9hcGkvRXN5c19TaWduLmM6MzQwOkVzeXNfU2lnbl9GaW5pc2goKSBS
+ZWNlaXZlZCBUUE0gRXJyb3IKPGJyPgo8L2Rpdj4KPGRpdj5FUlJPUjplc3lzOnNyYy90c3MyLWVz
+eXMvYXBpL0VzeXNfU2lnbi5jOjEzMzpFc3lzX1NpZ24oKSBFc3lzIEZpbmlzaCBFcnJvckNvZGUg
+KDB4MDAwMDAzZTApCjxicj4KPC9kaXY+CjxkaXY+RVJST1Igb24gbGluZTogJnF1b3Q7ODEmcXVv
+dDsgaW4gZmlsZTogJnF1b3Q7Li9saWIvbG9nLmgmcXVvdDs6IEV5c19TaWduKDB4M0UwKSAtIHRw
+bTpwYXJhbWV0ZXIoMyk6aW52YWxpZCB0aWNrZXQ8YnI+CjwvZGl2Pgo8ZGl2PkVSUk9SIG9uIGxp
+bmU6ICZxdW90OzE3MSZxdW90OyBpbiBmaWxlOiAmcXVvdDt0b29scy90cG0yX3Rvb2wuYyZxdW90
+OzogVW5hYmxlIHRvIHJ1biB0cG0yX3NpZ248YnI+CjwvZGl2Pgo8c3Bhbj48L3NwYW4+PC9kaXY+
+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2Vy
+aWYsc2VyaWYsRW1vamlGb250O2ZvbnQtc2l6ZToxMnB0O2NvbG9yOnJnYigwLDAsMCkiPgo8YnI+
+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxz
+YW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2IoMCwwLDAp
+Ij4KVGhlIGtleSBhdCAweDgxMDEwMDMgaXMgYSBzaWduaW5nIGtleSAoYWN0dWFsbHkgaXQgaXMg
+dGhlIEFLKTwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZl
+dGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2Io
+MCwwLDApIj4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlh
+bCxIZWx2ZXRpY2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXplOjEycHQ7Y29s
+b3I6cmdiKDAsMCwwKSI+CiR0cG0yX2xpc3RwZXJzaXN0ZW50PC9kaXY+CjxkaXYgc3R5bGU9ImZv
+bnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYsc2VyaWYsRW1vamlG
+b250O2ZvbnQtc2l6ZToxMnB0O2NvbG9yOnJnYigwLDAsMCkiPgombHQ7Y3V0Li4uLiZndDs8YnI+
+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxz
+YW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2IoMCwwLDAp
+Ij4KPHNwYW4+LSBoYW5kbGU6IDB4ODEwMTAwMDM8YnI+Cjwvc3Bhbj4KPGRpdj7CoCBuYW1lLWFs
+Zzo8YnI+CjwvZGl2Pgo8ZGl2PsKgIMKgIHZhbHVlOiBzaGEyNTY8YnI+CjwvZGl2Pgo8ZGl2PsKg
+IMKgIHJhdzogMHhiPGJyPgo8L2Rpdj4KPGRpdj7CoCBhdHRyaWJ1dGVzOjxicj4KPC9kaXY+Cjxk
+aXY+wqAgwqAgdmFsdWU6IGZpeGVkdHBtfGZpeGVkcGFyZW50fHNlbnNpdGl2ZWRhdGFvcmlnaW58
+dXNlcndpdGhhdXRofHJlc3RyaWN0ZWR8c2lnbjxicj4KPC9kaXY+CjxkaXY+wqAgwqAgcmF3OiAw
+eDUwMDcyPGJyPgo8L2Rpdj4KPGRpdj7CoCB0eXBlOjxicj4KPC9kaXY+CjxkaXY+wqAgwqAgdmFs
+dWU6IHJzYTxicj4KPC9kaXY+CjxkaXY+wqAgwqAgcmF3OiAweDE8YnI+CjwvZGl2Pgo8c3Bhbj48
+L3NwYW4+Jmx0O2N1dC4uLi4mZ3Q7PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGli
+cmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYsc2VyaWYsRW1vamlGb250O2ZvbnQtc2l6ZTox
+MnB0O2NvbG9yOnJnYigwLDAsMCkiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWls
+eTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250
+LXNpemU6MTJwdDtjb2xvcjpyZ2IoMCwwLDApIj4KV29ya2luZyBmcm9tIHRoZSB0ZXN0IGZpbGUg
+KC4vdGVzdC9pbnRlZ3JhdGlvbi90ZXN0cy9zaWduLnNoKSB0aGUgc3ludGF4CiBhcHBlYXJzIGNv
+cnJlY3QgZm9yIHRoaXMgY29tbWFuZCAodGhlIG1hbiBmaWxlIGlzIGRpZmZlcmVudCk8YnI+Cjwv
+ZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5z
+LXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2IoMCwwLDApIj4K
+PGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2ZXRp
+Y2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAs
+MCwwKSI+CjxzcGFuPsKgIMKgIHRwbTJfc2lnbiAtUSAtYyAkaGFuZGxlX3NpZ25pbmdfa2V5IC1H
+ICRhbGdfaGFzaCAtbSAkZmlsZV9pbnB1dF9kYXRhIC1vICRmaWxlX291dHB1dF9kYXRhPGJyPgo8
+L3NwYW4+PHNwYW4+PC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJp
+LEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJw
+dDtjb2xvcjpyZ2IoMCwwLDApIj4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
+Q2FsaWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1z
+aXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+TWFjaGluZSBkZXRhaWxzOjxicj4KPC9kaXY+PGRp
+diBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZixz
+ZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+JHVuYW1lIC1h
+PGJyPkxpbnV4IGlvbGl2ZXItVGhpbmtQYWQtWDEtQ2FyYm9uLTV0aCA0LjE1LjAtNDYtZ2VuZXJp
+YyAjNDktVWJ1bnR1IFNNUCBXZWQgRmViIDYgMDk6MzM6MDcgVVRDIDIwMTkgeDg2XzY0IHg4Nl82
+NCB4ODZfNjQgR05VL0xpbnV4PGJyPiRjYXQgL2V0Yy9pc3N1ZTxicj5VYnVudHUgMTguMDQuMiBM
+VFM8YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2ZXRp
+Y2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAs
+MCwwKSI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVs
+dmV0aWNhLHNhbnMtc2VyaWYsc2VyaWYsRW1vamlGb250O2ZvbnQtc2l6ZToxMnB0O2NvbG9yOnJn
+YigwLDAsMCkiPjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJp
+YWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYsc2VyaWYsRW1vamlGb250O2ZvbnQtc2l6ZToxMnB0O2Nv
+bG9yOnJnYigwLDAsMCkiPgp0LjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJp
+LEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmLHNlcmlmLEVtb2ppRm9udDtmb250LXNpemU6MTJw
+dDtjb2xvcjpyZ2IoMCwwLDApIj4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
+Q2FsaWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7Zm9udC1z
+aXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+CklhbjwvZGl2PjxiciBjbGVhcj0iYWxsIj48YnI+
+LS0gPGJyPjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJnbWFpbF9zaWduYXR1cmUiPjxkaXYgZGlyPSJs
+dHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXYgZGly
+PSJsdHIiPjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OmFyaWFsO2ZvbnQtc2l6ZTpzbWFsbCI+PGI+
+RHIuIElhbiBPbGl2ZXI8L2I+PGJyPj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT08YnI+
+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6YXJpYWw7Zm9udC1zaXplOnNtYWxsIj5Qcml2
+YWN5IEVuZ2luZWVyaW5nOsKgIDxiPjwvYj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDE3LDE3LDE3
+KTtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxM3B4O2xpbmUtaGVpZ2h0
+OjE5cHgiPjxhIGhyZWY9Imh0dHA6Ly93d3cuYW1hem9uLmNvLnVrL2RwLzE0OTc1Njk3MTAiIHRh
+cmdldD0iX2JsYW5rIj52aWEgQW1hem9uPC9hPjwvc3Bhbj48Yj48YnI+VHdpdHRlcjogQGlfal9v
+bGl2ZXI8L2I+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+
+PC9kaXY+PC9kaXY+PC9kaXY+Cg==
 
-[cid:image001.png(a)01D4E619.3AC002A0]
-
-Could you help?
-
-
-
-Thanks
-
-Songwu
-
-
-
------Original Message-----
-From: Struk, Tadeusz
-Sent: Friday, March 29, 2019 6:37 AM
-To: Shen, Songwu <songwu.shen(a)intel.com<mailto:songwu.shen(a)intel.com>>;=
- tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>; Tricca, Philip B <philip.=
-b.tricca(a)intel.com<mailto:philip.b.tricca(a)intel.com>>
-Subject: Re: Get error 0x99D in function Tss2_Sys_AC_Send() when sending da=
-ta from TPM to AC
-
-
-
-Hello,
-
-On 3/28/19 1:06 AM, Shen, Songwu wrote:
-
-> Under Windows, I encounter an error 0x99D response from the TPM when call=
-ing function Tss2_Sys_AC_Send() to send data from TPM to Attached Component.
-
->
-
-> And searching in the TPM spec, looks like this is the error:
-
-
-
-As far as I can see the 0x99D is a policy check failed.
-
-The spec says that for TPM2_AC_Send the authorization for sendObject is req=
-uired to be a policy session.
-
-Make sure that you setup your authorization correctly.
-
-
-
-Thanks,
-
---
-
-Tadeusz
-
---===============5103902456001310907==--
+--===============2130455286643375970==--
 
