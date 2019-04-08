@@ -1,13 +1,13 @@
-Content-Type: multipart/mixed; boundary="===============4565566413141480938=="
+Content-Type: multipart/mixed; boundary="===============1829983700815616430=="
 MIME-Version: 1.0
 From: Nick Meyer <nimeyer at verizonmedia.com>
 Subject: [tpm2] Policy digest zeroed out after successful TPM2_Sign
-Date: Mon, 08 Apr 2019 10:34:47 -0500
-Message-ID: <CAO6U=OavQOf8KPRcb4HHsNfCdf7Strqf6y83yhH=QoxMY3hoiA@mail.gmail.com>
+Date: Mon, 08 Apr 2019 12:30:24 -0500
+Message-ID: <CAO6U=ObLwki+YXSp+zaCtmEw_cXEVp6Kp8G-GAB68OMss--NTw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4565566413141480938==
+--===============1829983700815616430==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -42,10 +42,11 @@ invalidating the session?
 
 Thanks for your insight.
 
+
 *Nick Meyer*
 Verizon Media
 
---===============4565566413141480938==
+--===============1829983700815616430==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -75,12 +76,12 @@ ZXJlZCB0aGF0IGEgUENSIHdhcyBwb3NzaWJseSBiZWluZyBjaGFuZ2VkIHNvbWVob3csIGludmFs
 aWRhdGluZyB0aGUgUENSIHBvbGljeTsgaG93ZXZlciwgSSB3b3VsZCBleHBlY3QgVFBNX1JDX1BD
 Ul9DSEFOR0VEIHRvIGJlIHJldHVybmVkIGluIHRoaXMgY2FzZSwgbm90IFRQTV9SQ19QT0xJQ1lf
 RkFJTC48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PklzIHRoZXJlIGFub3RoZXIgcmVhc29uIHRo
-YXQgdGhpcyA8aT5zdWNjZXNzZnVsPC9pPsKgc2lnbiBvcGVyYXRpb24gd291bGQgYmUgaW52YWxp
-ZGF0aW5nIHRoZSBzZXNzaW9uPzwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhhbmtzIGZvciB5
-b3VyIGluc2lnaHQuPC9kaXY+PGJyIGNsZWFyPSJhbGwiPjxkaXY+PGRpdiBkaXI9Imx0ciIgY2xh
+YXQgdGhpc8KgPGk+c3VjY2Vzc2Z1bDwvaT7CoHNpZ24gb3BlcmF0aW9uIHdvdWxkIGJlIGludmFs
+aWRhdGluZyB0aGUgc2Vzc2lvbj88L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRoYW5rcyBmb3Ig
+eW91ciBpbnNpZ2h0LjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PGRpdiBkaXI9Imx0ciIgY2xh
 c3M9ImdtYWlsX3NpZ25hdHVyZSIgZGF0YS1zbWFydG1haWw9ImdtYWlsX3NpZ25hdHVyZSI+PGRp
-diBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGI+TmljayBNZXllcjwvYj48ZGl2PlZlcml6b24g
-TWVkaWE8L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4K
+diBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGI+TmljayBNZXllcjxicj48L2I+PC9kaXY+PGRp
+dj5WZXJpem9uIE1lZGlhPC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+Cg==
 
---===============4565566413141480938==--
+--===============1829983700815616430==--
 
