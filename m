@@ -1,58 +1,29 @@
-Content-Type: multipart/mixed; boundary="===============0819037853707217011=="
+Content-Type: multipart/mixed; boundary="===============0041718263066223198=="
 MIME-Version: 1.0
-From: Petr Vandrovec <petr at vmware.com>
-Subject: Re: [tpm2] Policy digest zeroed out after successful TPM2_Sign
-Date: Mon, 08 Apr 2019 19:14:19 +0000
-Message-ID: <0538f6fd-2199-bb87-6190-5b75938046c3@vmware.com>
-In-Reply-To: CAO6U=ObLwki+YXSp+zaCtmEw_cXEVp6Kp8G-GAB68OMss--NTw@mail.gmail.com
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: [tpm2] tpm2-tss 2.1.3-rc0
+Date: Mon, 08 Apr 2019 15:42:27 -0700
+Message-ID: <3ce85914-17f9-94e2-5d5f-4de97c25d03a@intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0819037853707217011==
+--===============0041718263066223198==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Nick Meyer wrote on 4/8/2019 10:30 AM:
-> Hello,
-> =
+Hello,
+A new release candidate for tpm2-tss 2.1.3 is out. It can be found here:
 
-> I'm working on implementing a TPM2_Sign operation protected by a PCR =
+https://github.com/tpm2-software/tpm2-tss/releases/tag/2.1.3_rc0
 
-> policy. I have discovered that the policy digest appears to be zeroed =
+All changes and fixed issues are listed in the CHANGELOG.md file.
+Please give it some testing. Any feedback is appreciated.
 
-> out as part of the sign operation.
+Thanks,
+-- =
 
-Hi,
-   yes, that is correct.  Each policy digest can be used only once.  You =
+Tadeusz
 
-have to redo all TPM2_PolicyXXX calls for second operation.
-
-> Is there another reason that this /successful/=C2=A0sign operation would =
-be =
-
-> invalidating the session?
-
-That is per specification.
-
-Successful sign (or any other) operation resets policy digest back to =
-
-initial state.  Failing sign (or any other) operation leaves policy =
-
-unchanged - you should destruct it yourself to make sure nobody can come =
-
-and reuse it.
-
-All TPM2_Policy* calls should be reasonably fast, so it should not cause =
-
-performance problems to recreate it.  If you are using PolicyAuthorize, =
-
-you can cache result + ticket of signature validation, avoiding most =
-
-expensive calls.
-
-Petr
-
-
---===============0819037853707217011==--
+--===============0041718263066223198==--
 
