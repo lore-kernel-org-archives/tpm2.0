@@ -1,55 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============0839394894210837324=="
+Content-Type: multipart/mixed; boundary="===============1141101025913295629=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] tpm2-totp release candidate v0.1.2-rc0
-Date: Tue, 09 Apr 2019 17:41:00 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0162E94A3B@EXCH2010B.sit.fraunhofer.de>
-In-Reply-To: 875zrnglv8.fsf@dell.be.48ers.dk
+From: Ralf Schlatterbeck <rsc at runtux.com>
+Subject: [tpm2] tpm2-tss-engine
+Date: Wed, 10 Apr 2019 18:27:17 +0200
+Message-ID: <20190410162717.svaoj3go7sh33dqu@runtux.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0839394894210837324==
+--===============1141101025913295629==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Yes I only referred to the rcs...
-Releases will still contain signed tar balls.
+I'm testing with a TPM-2 module for the Raspberry-Pi from Infineon
+running on an Orange-Pi zero (also a single-board computer a little
+smaller than the raspi).
+I've successfully built tpm2-tss-engine and have the following questions:
+- The key generation examples in the README.md create the private key in
+  a file on the local filesystem. Isn't the purpose of a
+  hw-security-module that the key stays inside the device and can't be
+  extracted? Or am I missing something here? Is there a way to create a
+  protected key inside the device in a way that it cannot be extracted?
+- I'm not familiar with the engine concept of OpenSSL, is there a way to
+  use the engine with a software that is not engine-aware? In my case
+  the mosquitto message broker. Or would I have to modify the software?
 
-Cheers,
-Andreas
-________________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Peter Korsgaard [pete=
-r(a)korsgaard.com]
-Sent: Tuesday, April 09, 2019 18:54
-To: Jonas Witschel
-Cc: tpm2(a)lists.01.org
-Subject: Re: [tpm2] tpm2-totp release candidate v0.1.2-rc0
+Thanks
+Ralf Schlatterbeck
+-- =
 
->>>>> "Jonas" =3D=3D Jonas Witschel <diabonas(a)gmx.de> writes:
+Dr. Ralf Schlatterbeck                  Tel:   +43/2243/26465-16
+Open Source Consulting                  www:   http://www.runtux.com
+Reichergasse 131, A-3411 Weidling       email: office(a)runtux.com
 
- > Hi Andreas,
- > On 2019-04-08 12:50, Fuchs, Andreas wrote:
- >> I moved away from providing signed tar balls and only provide signed
- >> tags for release candidates for now.
- >> If you'd desire signed tar balls, please let me know and I'll start the=
-m again.
-
- > Does this apply only to release candidates, or to the final releases as
- > well?
-
-Andreas explictly wrote release candidates, so presumably this not for
-the final releases.
-
-For releases, having real distribution tarballs is also preferable for
-us (Buildroot).
-
---
-Bye, Peter Korsgaard
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org
-https://lists.01.org/mailman/listinfo/tpm2
-
---===============0839394894210837324==--
+--===============1141101025913295629==--
 
