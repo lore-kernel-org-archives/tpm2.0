@@ -1,150 +1,120 @@
-Content-Type: multipart/mixed; boundary="===============7022610363721603744=="
+Content-Type: multipart/mixed; boundary="===============6208262612831191749=="
 MIME-Version: 1.0
-From: David Woodhouse <dwmw2 at infradead.org>
+From: Ralf Schlatterbeck <rsc at runtux.com>
 Subject: Re: [tpm2] tpm2-tss-engine
-Date: Thu, 11 Apr 2019 11:46:30 +0300
-Message-ID: <e92ac69b79ca83157dd2f70c80e975d11c58b8c9.camel@infradead.org>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649D2ADEB@ORSMSX101.amr.corp.intel.com
+Date: Thu, 11 Apr 2019 17:43:57 +0200
+Message-ID: <20190411154357.4tw3ysiicdkviuxq@runtux.com>
+In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0162E973D6@EXCH2010B.sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7022610363721603744==
+--===============6208262612831191749==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-04-10 at 17:44 +0000, Roberts, William C wrote:
+On Wed, Apr 10, 2019 at 05:44:09PM +0000, Roberts, William C wrote:
+> > -----Original Message-----
+> > From: tpm2 On Behalf Of Ralf Schlatterbeck
+> > I'm testing with a TPM-2 module for the Raspberry-Pi from Infineon runn=
+ing on
+> > - The key generation examples in the README.md create the private key in
+> >   a file on the local filesystem. Isn't the purpose of a
+> >   hw-security-module that the key stays inside the device and can't be
+> >   extracted? Or am I missing something here?
+> =
+
+> That blob of data that gets stored on disk is sealed to that TPM. So
+> outside of DOS If someone deletes that keyblob, there's no real way to
+> use it to extract the key material Directly from that blob unless they
+> break the TPMs crypto mechanism used to protect it.
+
+Thanks, the process of key generation looked too much like the normal
+ssl key generation and I didn't look into the key file. It has "BEGIN
+TSS2 PRIVATE KEY" which could have told me something had I looked :-)
+
+Shouldn't that be documented in one or two sentences in the README.md?
+
 > > - I'm not familiar with the engine concept of OpenSSL, is there a way to
-> >    use the engine with a software that is not engine-aware? In my case
-> >    the mosquitto message broker. Or would I have to modify the software?
+> >   use the engine with a software that is not engine-aware? In my case
+> >   the mosquitto message broker. Or would I have to modify the software?
 > =
 
 > I think engines can be loaded via the config file or environment variable=
 s.
 
-The engine can be loaded simply by calling ENGINE_by_id("tpm2"). If
-it's installed properly you shouldn't need to mess with config files
-etc.
+On Wed, Apr 10, 2019 at 06:54:19PM +0000, Fuchs, Andreas wrote:
+> - You can define an openssl.cnf file and env variable. See
+>   https://www.openssl.org/docs/man1.1.0/man5/config.html
 
-(We did fix the engine name to be consistent with the other
-implementation, so that applications don't need to try both, didn't we?
-Otherwise, apps need to try both "tpm2" and "tpm2-tss" engine names.)
+On Thu, Apr 11, 2019 at 11:46:30AM +0300, David Woodhouse wrote:
+> =
 
-For example applications using this, see OpenConnect:
+> The engine can be loaded simply by calling ENGINE_by_id("tpm2"). If
+> it's installed properly you shouldn't need to mess with config files
+> etc.
 
-http://git.infradead.org/users/dwmw2/openconnect.git/blob/HEAD:/openssl.c#l=
-922
+OK I had hoped that simply plugging an engine into the openssl config
+would do the trick for me: Openssl should be smart enough to figure out
+via the key file that it can/should use an engine to do the work. Oh
+well. My naive approach involved configuring the TSS2 PRIVATE KEY file
+as the key-file in mosquitto and setting all the engine stuff (see
+below). But this only gets me the =
 
-Or wpa_supplicant:
+'Error: Unable to load server key file
+"/etc/mosquitto/certs/server.key". Check keyfile.'
 
-https://www.spinics.net/lists/hostap/msg05728.html
+My current /etc/ssl/openssl.cnf looks as follows, so maybe this can be a
+contribution for an example file:
+
+openssl_conf =3D default_conf
+
+[default_conf]
+ssl_conf =3D ssl_sect
+engines  =3D engine_section
+
+[engine_section]
+
+tpm =3D tpm_section
+
+[tpm_section]
+
+engine_id =3D tpm2
+dynamic_path =3D /usr/lib/arm-linux-gnueabihf/engines-1.1/tpm2tss.so
+SET_TCTI =3D device:/dev/tpmrm0
 
 
-It isn't hard. Of course, OpenSSL should make it *easier*, and should
-just Do The Right Thing when it sees a PEM file with the appropriate
------BEGIN TSS2 PRIVATE KEY----- marker.... but that will take a while
-to fix. Perhaps if the engine were to offer an ASN1_METHOD for it?
+So I'm getting correct output:
+root(a)sun8i:/# openssl engine -c -vvvv -t tpm2tss
+(tpm2tss) TPM2-TSS engine for OpenSSL
+ [RSA, RAND]
+     [ available ]
+     SET_OWNERAUTH: Set the password for the owner hierarchy (default none)
+          (input flags): STRING
+     SET_TCTI: Set the TCTI module and options (default none)
+          (input flags): STRING
 
 
+Just some questions here:
+- I take away from this question that I need to modify sourcecode to
+  make an engine work with openssl, is this really the case?
+- My TPM 2.0 module from Infineon does support elliptic curves, is there
+  a way to support this with the engine? Especially in the light of
+  recent ROCA vulnerabilities of Infineon modules I'd like to use EC
+  instead of RSA if possible. (see soon-to-come separate posting about ROCA)
 
+Oh, and a note on performance: My singleboard "computer" is an OrangePi
+zero, 256M RAM, 100M Ethernet, 5x5cm in size (but quad-core :-) so I'm
+not worried about performance here, the goal is a proof-of-concept
+implementation.
 
+Thanks
+Ralf Schlatterbeck
+-- =
 
---===============7022610363721603744==
-Content-Type: application/x-pkcs7-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
+Dr. Ralf Schlatterbeck                  Tel:   +43/2243/26465-16
+Open Source Consulting                  www:   http://www.runtux.com
+Reichergasse 131, A-3411 Weidling       email: office(a)runtux.com
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
-ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
-OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
-RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
-cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
-uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
-Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
-Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
-xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
-YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
-nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
-PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
-7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
-Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
-MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
-NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
-/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
-0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
-vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
-ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
-ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
-CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
-aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
-bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
-LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
-CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
-W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
-vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
-gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
-RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
-jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
-b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
-+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
-WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
-aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
-CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
-u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
-RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
-QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
-b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
-cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
-SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
-0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
-KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
-E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
-M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
-yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
-gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
-R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
-ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkw
-NDExMDg0NjMwWjAvBgkqhkiG9w0BCQQxIgQgoAmSkBUkgCyctD10ay6+TZCbTpPhUUonp6+SDrBX
-1CIwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
-TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
-PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAI5vMsSyjfLpTX87a7xmX6POUwMNah77C8J79GI35iNs36/mUuU+9vas4UO9oXcV
-KmMmaM11UYrWhoF+RKZl1GLly2JRc/L4FZmUbN/6n6VhBWbmnJZ+qyXL2PYl6X7AJ5k/Lps9Gq5k
-obf8SQy0VcGj9xWmDFIU6lu2EB1obP5Amx+OPoMNnmTiL6CElPYDuzbyRHXXE+l7FX6pfT/WVffZ
-v//qhiLbxTw/CziUKiyekW+5lc1+p+KinRZGLphIAVr14cxqZIfZiSXEZUsAq4N53aoUzm1KsZa8
-+rfl3foZZUYxEt9wA6o4VuPrd9bQ46sYkbat1FAAN8lJ+0YS9SAAAAAAAAA=
---===============7022610363721603744==--
+--===============6208262612831191749==--
 
