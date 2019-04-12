@@ -1,14 +1,14 @@
-Content-Type: multipart/mixed; boundary="===============8167972940036154537=="
+Content-Type: multipart/mixed; boundary="===============1791819247060980274=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
 Subject: Re: [tpm2] Issue with tpm2_sign
-Date: Fri, 12 Apr 2019 18:56:24 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D2B68B@ORSMSX101.amr.corp.intel.com>
+Date: Fri, 12 Apr 2019 19:00:28 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D2B69F@ORSMSX101.amr.corp.intel.com>
 In-Reply-To: CAAxBZJsX7sjQUJTkLDhiRq+j5xFyjOt0M_rNAo01EW-yA8c2wg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8167972940036154537==
+--===============1791819247060980274==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -56,6 +56,15 @@ rCode
 
 > ERROR on line: "81" in file: "./lib/log.h": Eys_Sign(0x3E0) -
 > tpm:parameter(3):invalid ticket
+
+So the structure needs to be initialized to 0, and it wasn=E2=80=99t. Thus =
+it was casing the
+validation ticket size to be non-zero and the TPM was trying to use that ga=
+rbage
+value. This should fix it:
+https://github.com/tpm2-software/tpm2-tools/pull/1412
+
+
 > =
 
 > ERROR on line: "171" in file: "tools/tpm2_tool.c": Unable to run tpm2_sign
@@ -109,12 +118,6 @@ appears
 > correct for this command (the man file is different)
 > =
 
-
-Did it get fixed on:
-https://github.com/tpm2-software/tpm2-tools/pull/1410/files#diff-f730b1ecf9=
-eb5a8f6df7466be1360ad8R15
-
-
 > =
 
 >     tpm2_sign -Q -c $handle_signing_key -G $alg_hash -m $file_input_data =
@@ -156,5 +159,5 @@ eb5a8f6df7466be1360ad8R15
 > Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
 > Twitter: @i_j_oliver
 
---===============8167972940036154537==--
+--===============1791819247060980274==--
 
