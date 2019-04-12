@@ -1,14 +1,14 @@
-Content-Type: multipart/mixed; boundary="===============3380518479515317570=="
+Content-Type: multipart/mixed; boundary="===============8167972940036154537=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] ROCA and firmware version
-Date: Fri, 12 Apr 2019 16:32:35 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D2B590@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 20190412074316.vzb2zh6vr2zyk2dj@runtux.com
+Subject: Re: [tpm2] Issue with tpm2_sign
+Date: Fri, 12 Apr 2019 18:56:24 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D2B68B@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAAxBZJsX7sjQUJTkLDhiRq+j5xFyjOt0M_rNAo01EW-yA8c2wg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3380518479515317570==
+--===============8167972940036154537==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -16,69 +16,145 @@ Content-Transfer-Encoding: quoted-printable
 
 
 > -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Ralf Schlatt=
-erbeck
-> Sent: Friday, April 12, 2019 12:43 AM
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Ian Oliver
+> Sent: Monday, April 1, 2019 4:28 AM
 > To: tpm2(a)lists.01.org
-> Subject: Re: [tpm2] ROCA and firmware version
+> Subject: [tpm2] Issue with tpm2_sign
 > =
 
-> On Thu, Apr 11, 2019 at 06:03:44PM +0000, Roberts, William C wrote:
-> > > From: tpm2 On Behalf Of Ralf Schlatterbeck
-> > >
-> > > It has the SLB 9670VQ2.0 or SLB 9670VQ1.2 chips with SPI supported
-> > > by the tpm_tis_spi kernel module.
-> > >
-> > > These modules have/had the ROCA vulnerability
-> > > https://en.wikipedia.org/wiki/ROCA_vulnerability
-> > >
-> > > I'd like to check if mine are affected. Is there
-> > > - a way to find out the firmware version of the module (preferrably
-> > >   using tpm2_tools)
-> >
-> > tools/tpm2_getcap -c properties-fixed
+> Just starting having this issue with the latest master builds of tpm2_too=
+ls ( also
+> latest tss/abrmd )
 > =
 
-> Cool, thanks. I had tried exactly this command with the debian buster ver=
-sion of
-> tpm2-tools which didn't show that info. Then I had to upgrade because deb=
-ian
-> doesn't ship the Openssl engine. And didn't retry. So since there are so =
-many
-> tpm2_ commands I wasn't sure :-)
-
-Debian is very out of date, and we have an open issue in the tools to try a=
-nd
-Work with downstream to correct this.
-https://github.com/tpm2-software/tpm2-tools/issues/1067
+> I have a small file to be signed
+> =
 
 > =
 
-> My module has a firmware from 2016 and is vulnerable.
+> $ls -l hash.file
 > =
 
-> > > - a possibility to upgrade the firmware (provided I can extract one f=
-rom
-> > >   the various upgrades for windows) using tpm2_tools? Or any other wa=
-y?
-> >
-> > I have no idea on this part. I don't think the spec covers this and
-> > upgrade is Manufacture dependent, but don't take my word for it.
+> -rw-r--r-- 1 xxx xxx 64 huhti  1 14:10 hash.file
 > =
 
-> Yes, I thinks this one will be difficult. I check if I can get some info =
-from Infineon.
 > =
 
-> Ralf
+> =
+
+> $tpm2_sign -V -c 0x81010003 -G sha256 -m hash.file -o hash.sig
+> =
+
+> WARNING:esys:src/tss2-esys/api/Esys_Sign.c:340:Esys_Sign_Finish() Received
+> TPM Error
+> =
+
+> ERROR:esys:src/tss2-esys/api/Esys_Sign.c:133:Esys_Sign() Esys Finish Erro=
+rCode
+> (0x000003e0)
+> =
+
+> ERROR on line: "81" in file: "./lib/log.h": Eys_Sign(0x3E0) -
+> tpm:parameter(3):invalid ticket
+> =
+
+> ERROR on line: "171" in file: "tools/tpm2_tool.c": Unable to run tpm2_sign
+> =
+
+> =
+
+> The key at 0x8101003 is a signing key (actually it is the AK)
+> =
+
+> $tpm2_listpersistent
+> <cut....>
+> =
+
+> - handle: 0x81010003
+> =
+
+>   name-alg:
+> =
+
+>     value: sha256
+> =
+
+>     raw: 0xb
+> =
+
+>   attributes:
+> =
+
+>     value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restrict=
+ed|sign
+> =
+
+>     raw: 0x50072
+> =
+
+>   type:
+> =
+
+>     value: rsa
+> =
+
+>     raw: 0x1
+> =
+
+> <cut....>
+> =
+
+> Working from the test file (./test/integration/tests/sign.sh) the syntax =
+appears
+> correct for this command (the man file is different)
+> =
+
+
+Did it get fixed on:
+https://github.com/tpm2-software/tpm2-tools/pull/1410/files#diff-f730b1ecf9=
+eb5a8f6df7466be1360ad8R15
+
+
+> =
+
+>     tpm2_sign -Q -c $handle_signing_key -G $alg_hash -m $file_input_data =
+-o
+> $file_output_data
+> =
+
+> =
+
+> Machine details:
+> =
+
+> $uname -a
+> Linux ioliver-ThinkPad-X1-Carbon-5th 4.15.0-46-generic #49-Ubuntu SMP Wed
+> Feb 6 09:33:07 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux $cat /etc/issue
+> Ubuntu 18.04.2 LTS
+> =
+
+> =
+
+> =
+
+> t.
+> =
+
+> Ian
+> =
+
+> =
+
 > --
-> Dr. Ralf Schlatterbeck                  Tel:   +43/2243/26465-16
-> Open Source Consulting                  www:   http://www.runtux.com
-> Reichergasse 131, A-3411 Weidling       email: office(a)runtux.com
-> _______________________________________________
-> tpm2 mailing list
-> tpm2(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/tpm2
+> =
 
---===============3380518479515317570==--
+> Dr. Ian Oliver
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> =
+
+> Privacy Engineering:  via Amazon <http://www.amazon.co.uk/dp/1497569710>
+> Twitter: @i_j_oliver
+
+--===============8167972940036154537==--
 
