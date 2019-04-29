@@ -1,73 +1,302 @@
-Content-Type: multipart/mixed; boundary="===============7613522959412940222=="
+Content-Type: multipart/mixed; boundary="===============2337944363265216872=="
 MIME-Version: 1.0
-From: Desai, Imran <imran.desai at intel.com>
-Subject: Re: [tpm2] RC 0x99d TPM_RC_POLICY_FAIL causes?
-Date: Mon, 29 Apr 2019 17:50:56 +0000
-Message-ID: <688D07BB9E3A9E4A852BA1336D1910FF83F70636@fmsmsx104.amr.corp.intel.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649D2F9A0@ORSMSX101.amr.corp.intel.com
+From: Nick Meyer <nimeyer at verizonmedia.com>
+Subject: [tpm2] RC 0x084 TPM_RC_VALUE on TPM2_Sign (was Re: RC 0x99d
+ TPM_RC_POLICY_FAIL causes?)
+Date: Mon, 29 Apr 2019 18:48:30 -0500
+Message-ID: <CAO6U=Ob6jcLVOf79o8BZonAkz112QpcJ3PW8-qzQdiLY1FkAGQ@mail.gmail.com>
+In-Reply-To: 688D07BB9E3A9E4A852BA1336D1910FF83F70636@fmsmsx104.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7613522959412940222==
+--===============2337944363265216872==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Looks like the PCRs changed. If that is an expected consequence of firmware=
- updates consider using policy authorize tool to address the PCR brittlenes=
-s. Besides that I would also look into the errors from session handling inc=
-luding whether or not you are starting a real (non-trial) session when tryi=
-ng to satisfy the pcr policy.
+Thank you for taking the time to respond. We were able to determine this
+morning that a change in the host provisioning unrelated to our TPM code
+caused an unintended change to one of the PCR we were locking to, causing
+this error.
 
-Thanks and Regards,
+However, upon remedying that out we were immediately hit with a new issue
+-- the TPM started throwing TPM_RC_VALUE when attempting to sign to sign
+the digests. Nothing at all changed in the code that was performing the
+sign operation so we end up again stumped.
 
-Imran Desai
-________________________________________
-From: Roberts, William C
-Sent: Monday, April 29, 2019 7:29 AM
-To: Nick Meyer; tpm2(a)lists.01.org; Desai, Imran
-Subject: RE: [tpm2] RC 0x99d TPM_RC_POLICY_FAIL causes?
+Double-checking the spec it does not appear any parameters to the sign
+command can throw TPM_RC_VALUE for unmarshaling; the spec seems to indicate
+the only cause of TPM_RC_VALUE is that the digest being passed to sign does
+not match the signature scheme hash algorithm, which is not the case as can
+be seen below.
 
-That error is:
-tpm:session(1):a policy check failed
+We added some debug code to dump the buffer contents immediately before
+transmission to the TPM, and nothing seems out of order.
 
-Imran, any ideas?
+The signing key:
+  - is an RSA 2048-bit key
+  - has a SHA256 name algorithm
+  - has the fixedTPM, fixedParent, sensitiveDataOrigin, adminWithPolicy,
+noDA, decrypt, and sign attributes set
+  - has at authPolicy matching the policy digest in effect at the time of
+attempting the sign
+  - has a null symmetric parameter and a null signature scheme
 
-> -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Nick Meyer
-> Sent: Friday, April 26, 2019 9:56 AM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] RC 0x99d TPM_RC_POLICY_FAIL causes?
+Here is an example output of the sign command and response that we are
+getting:
+
+Tpm2Sign command bytes:
+
+00000000 : 80 02 00 00 00 49 00 00-01 5d 80 00 00 01 00 00
+
+00000010 : 00 09 03 00 00 00 00 00-01 00 00 00 20 bd 4f 9e
+
+00000020 : 98 be b6 8c 6e ad 32 43-b1 b4 c7 fe d7 5f a4 fe
+
+00000030 : aa b1 f8 47 95 cb d8 a9-86 76 a2 a3 75 00 14 00
+
+00000040 : 0b 80 24 40 00 00 07 00-00
+
+
+Tpm2Sign response bytes:
+
+00000000 : 80 01 00 00 00 0a 00 00-00 84
+
+
+Nothing in the command output indicates any issue; the command correctly
+sets the signature scheme as RSASSA with a SHA256 hash, with a null check
+ticket which the spec indicates should also be OK as the signing key is not
+a restricted key.
+
+
+As always, any insight appreciated. Thank you.
+
+<http://www.verizonmedia.com>
+
+Nick Meyer
+
+On Mon, Apr 29, 2019 at 12:50 PM Desai, Imran <imran.desai(a)intel.com> wro=
+te:
+
+> Looks like the PCRs changed. If that is an expected consequence of
+> firmware updates consider using policy authorize tool to address the PCR
+> brittleness. Besides that I would also look into the errors from session
+> handling including whether or not you are starting a real (non-trial)
+> session when trying to satisfy the pcr policy.
 >
-> Hello,
+> Thanks and Regards,
 >
-> We have a set of boxes that use TPM2_Sign() to sign a cryptographic chall=
-enge
-> during a startup process. The signing key is protected by a PCR policy; t=
-his policy is
-> the only policy in the session authorizing the sign. Occasionally, one of=
- these
-> boxes will start returning 0x99d and refuse to sign the challenge, after =
-which it
-> seems to be stuck in this inconsistent state until we generate a new sign=
-ing key.
+> Imran Desai
+> ________________________________________
+> From: Roberts, William C
+> Sent: Monday, April 29, 2019 7:29 AM
+> To: Nick Meyer; tpm2(a)lists.01.org; Desai, Imran
+> Subject: RE: [tpm2] RC 0x99d TPM_RC_POLICY_FAIL causes?
 >
-> We are currently in the process of investigating if the PCRs have changed=
- in these
-> cases; in the meantime, I wanted to ask here if there are any other causes
-> beyond the PCRs changing that could cause this error code, so that we can
-> investigate. We also believe it unlikely that the PCR update counter is a=
-n issue as
-> we would be expecting a TPM_RC_PCR_CHANGED return code in this case.
+> That error is:
+> tpm:session(1):a policy check failed
 >
-> Appreciate any insight you may have.
+> Imran, any ideas?
 >
->  <http://www.verizonmedia.com>
->
->
-> Nick Meyer
->
+> > -----Original Message-----
+> > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Nick Meyer
+> > Sent: Friday, April 26, 2019 9:56 AM
+> > To: tpm2(a)lists.01.org
+> > Subject: [tpm2] RC 0x99d TPM_RC_POLICY_FAIL causes?
+> >
+> > Hello,
+> >
+> > We have a set of boxes that use TPM2_Sign() to sign a cryptographic
+> challenge
+> > during a startup process. The signing key is protected by a PCR policy;
+> this policy is
+> > the only policy in the session authorizing the sign. Occasionally, one
+> of these
+> > boxes will start returning 0x99d and refuse to sign the challenge, after
+> which it
+> > seems to be stuck in this inconsistent state until we generate a new
+> signing key.
+> >
+> > We are currently in the process of investigating if the PCRs have
+> changed in these
+> > cases; in the meantime, I wanted to ask here if there are any other
+> causes
+> > beyond the PCRs changing that could cause this error code, so that we c=
+an
+> > investigate. We also believe it unlikely that the PCR update counter is
+> an issue as
+> > we would be expecting a TPM_RC_PCR_CHANGED return code in this case.
+> >
+> > Appreciate any insight you may have.
+> >
+> >  <http://www.verizonmedia.com>
+> >
+> >
+> > Nick Meyer
+> >
+> >
 >
 
---===============7613522959412940222==--
+--===============2337944363265216872==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0
+ciI+VGhhbmsgeW91IGZvciB0YWtpbmcgdGhlIHRpbWUgdG8gcmVzcG9uZC4gV2Ugd2VyZSBhYmxl
+IHRvIGRldGVybWluZSB0aGlzIG1vcm5pbmcgdGhhdCBhIGNoYW5nZSBpbiB0aGUgaG9zdCBwcm92
+aXNpb25pbmcgdW5yZWxhdGVkIHRvIG91ciBUUE0gY29kZSBjYXVzZWQgYW4gdW5pbnRlbmRlZCBj
+aGFuZ2UgdG8gb25lIG9mIHRoZSBQQ1Igd2Ugd2VyZSBsb2NraW5nIHRvLCBjYXVzaW5nIHRoaXMg
+ZXJyb3IuPC9kaXY+PGRpdiBkaXI9Imx0ciI+PGJyPjwvZGl2PjxkaXY+SG93ZXZlciwgdXBvbiBy
+ZW1lZHlpbmcgdGhhdCBvdXQgd2Ugd2VyZSBpbW1lZGlhdGVseSBoaXQgd2l0aCBhIG5ldyBpc3N1
+ZSAtLSB0aGUgVFBNIHN0YXJ0ZWQgdGhyb3dpbmcgVFBNX1JDX1ZBTFVFIHdoZW4gYXR0ZW1wdGlu
+ZyB0byBzaWduIHRvIHNpZ24gdGhlIGRpZ2VzdHMuIE5vdGhpbmcgYXQgYWxsIGNoYW5nZWQgaW4g
+dGhlIGNvZGUgdGhhdCB3YXMgcGVyZm9ybWluZyB0aGUgc2lnbiBvcGVyYXRpb24gc28gd2UgZW5k
+IHVwIGFnYWluIHN0dW1wZWQuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5Eb3VibGUtY2hlY2tp
+bmcgdGhlIHNwZWMgaXQgZG9lcyBub3QgYXBwZWFyIGFueSBwYXJhbWV0ZXJzIHRvIHRoZSBzaWdu
+IGNvbW1hbmQgY2FuIHRocm93IFRQTV9SQ19WQUxVRSBmb3IgdW5tYXJzaGFsaW5nOyB0aGUgc3Bl
+YyBzZWVtcyB0byBpbmRpY2F0ZSB0aGUgb25seSBjYXVzZSBvZiBUUE1fUkNfVkFMVUUgaXMgdGhh
+dCB0aGUgZGlnZXN0IGJlaW5nIHBhc3NlZCB0byBzaWduIGRvZXMgbm90IG1hdGNoIHRoZSBzaWdu
+YXR1cmUgc2NoZW1lIGhhc2ggYWxnb3JpdGhtLCB3aGljaCBpcyBub3QgdGhlIGNhc2UgYXMgY2Fu
+IGJlIHNlZW4gYmVsb3cuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5XZSBhZGRlZCBzb21lIGRl
+YnVnIGNvZGUgdG8gZHVtcCB0aGUgYnVmZmVyIGNvbnRlbnRzIGltbWVkaWF0ZWx5IGJlZm9yZSB0
+cmFuc21pc3Npb24gdG8gdGhlIFRQTSwgYW5kIG5vdGhpbmcgc2VlbXMgb3V0IG9mIG9yZGVyLjwv
+ZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhlIHNpZ25pbmcga2V5OjwvZGl2PjxkaXY+wqAgLSBp
+cyBhbiBSU0EgMjA0OC1iaXQga2V5PC9kaXY+PGRpdj7CoCAtIGhhcyBhIFNIQTI1NiBuYW1lIGFs
+Z29yaXRobTwvZGl2PjxkaXY+wqAgLSBoYXMgdGhlIGZpeGVkVFBNLCBmaXhlZFBhcmVudCwgc2Vu
+c2l0aXZlRGF0YU9yaWdpbiwgYWRtaW5XaXRoUG9saWN5LCBub0RBLCBkZWNyeXB0LCBhbmQgc2ln
+biBhdHRyaWJ1dGVzIHNldDwvZGl2PjxkaXY+wqAgLSBoYXMgYXQgYXV0aFBvbGljeSBtYXRjaGlu
+ZyB0aGUgcG9saWN5IGRpZ2VzdCBpbiBlZmZlY3QgYXQgdGhlIHRpbWUgb2YgYXR0ZW1wdGluZyB0
+aGUgc2lnbjwvZGl2PjxkaXY+wqAgLSBoYXMgYSBudWxsIHN5bW1ldHJpYyBwYXJhbWV0ZXIgYW5k
+IGEgbnVsbCBzaWduYXR1cmUgc2NoZW1lPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5IZXJlIGlz
+IGFuIGV4YW1wbGUgb3V0cHV0IG9mIHRoZSBzaWduIGNvbW1hbmQgYW5kIHJlc3BvbnNlIHRoYXQg
+d2UgYXJlIGdldHRpbmc6PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj4KCgoKCgo8cCBjbGFzcz0i
+Z21haWwtcDEiIHN0eWxlPSJtYXJnaW46MHB4O2ZvbnQtdmFyaWFudC1udW1lcmljOm5vcm1hbDtm
+b250LXZhcmlhbnQtZWFzdC1hc2lhbjpub3JtYWw7Zm9udC1zdHJldGNoOm5vcm1hbDtsaW5lLWhl
+aWdodDpub3JtYWwiPjxmb250IGNvbG9yPSIjMDAwMDAwIiBmYWNlPSJtb25vc3BhY2UsIG1vbm9z
+cGFjZSIgc2l6ZT0iMSI+PHNwYW4gc3R5bGU9ImZvbnQtdmFyaWFudC1saWdhdHVyZXM6bm8tY29t
+bW9uLWxpZ2F0dXJlcyI+VHBtMlNpZ24gY29tbWFuZCBieXRlczo8L3NwYW4+PC9mb250PjwvcD48
+cCBjbGFzcz0iZ21haWwtcDEiIHN0eWxlPSJtYXJnaW46MHB4O2ZvbnQtdmFyaWFudC1udW1lcmlj
+Om5vcm1hbDtmb250LXZhcmlhbnQtZWFzdC1hc2lhbjpub3JtYWw7Zm9udC1zdHJldGNoOm5vcm1h
+bDtsaW5lLWhlaWdodDpub3JtYWwiPjxmb250IGNvbG9yPSIjMDAwMDAwIiBmYWNlPSJtb25vc3Bh
+Y2UsIG1vbm9zcGFjZSIgc2l6ZT0iMSI+PHNwYW4gc3R5bGU9ImZvbnQtdmFyaWFudC1saWdhdHVy
+ZXM6bm8tY29tbW9uLWxpZ2F0dXJlcyI+MDAwMDAwMDAgOiA4MCAwMiAwMCAwMCAwMCA0OSAwMCAw
+MC0wMSA1ZCA4MCAwMCAwMCAwMSAwMCAwMMKgPC9zcGFuPjwvZm9udD48L3A+PHAgY2xhc3M9Imdt
+YWlsLXAxIiBzdHlsZT0ibWFyZ2luOjBweDtmb250LXZhcmlhbnQtbnVtZXJpYzpub3JtYWw7Zm9u
+dC12YXJpYW50LWVhc3QtYXNpYW46bm9ybWFsO2ZvbnQtc3RyZXRjaDpub3JtYWw7bGluZS1oZWln
+aHQ6bm9ybWFsIj48Zm9udCBjb2xvcj0iIzAwMDAwMCIgZmFjZT0ibW9ub3NwYWNlLCBtb25vc3Bh
+Y2UiIHNpemU9IjEiPjxzcGFuIHN0eWxlPSJmb250LXZhcmlhbnQtbGlnYXR1cmVzOm5vLWNvbW1v
+bi1saWdhdHVyZXMiPjAwMDAwMDEwIDogMDAgMDkgMDMgMDAgMDAgMDAgMDAgMDAtMDEgMDAgMDAg
+MDAgMjAgYmQgNGYgOWXCoDwvc3Bhbj48L2ZvbnQ+PC9wPjxwIGNsYXNzPSJnbWFpbC1wMSIgc3R5
+bGU9Im1hcmdpbjowcHg7Zm9udC12YXJpYW50LW51bWVyaWM6bm9ybWFsO2ZvbnQtdmFyaWFudC1l
+YXN0LWFzaWFuOm5vcm1hbDtmb250LXN0cmV0Y2g6bm9ybWFsO2xpbmUtaGVpZ2h0Om5vcm1hbCI+
+PGZvbnQgY29sb3I9IiMwMDAwMDAiIGZhY2U9Im1vbm9zcGFjZSwgbW9ub3NwYWNlIiBzaXplPSIx
+Ij48c3BhbiBzdHlsZT0iZm9udC12YXJpYW50LWxpZ2F0dXJlczpuby1jb21tb24tbGlnYXR1cmVz
+Ij4wMDAwMDAyMCA6IDk4IGJlIGI2IDhjIDZlIGFkIDMyIDQzLWIxIGI0IGM3IGZlIGQ3IDVmIGE0
+IGZlwqA8L3NwYW4+PC9mb250PjwvcD48cCBjbGFzcz0iZ21haWwtcDEiIHN0eWxlPSJtYXJnaW46
+MHB4O2ZvbnQtdmFyaWFudC1udW1lcmljOm5vcm1hbDtmb250LXZhcmlhbnQtZWFzdC1hc2lhbjpu
+b3JtYWw7Zm9udC1zdHJldGNoOm5vcm1hbDtsaW5lLWhlaWdodDpub3JtYWwiPjxmb250IGNvbG9y
+PSIjMDAwMDAwIiBmYWNlPSJtb25vc3BhY2UsIG1vbm9zcGFjZSIgc2l6ZT0iMSI+PHNwYW4gc3R5
+bGU9ImZvbnQtdmFyaWFudC1saWdhdHVyZXM6bm8tY29tbW9uLWxpZ2F0dXJlcyI+MDAwMDAwMzAg
+OiBhYSBiMSBmOCA0NyA5NSBjYiBkOCBhOS04NiA3NiBhMiBhMyA3NSAwMCAxNCAwMMKgPC9zcGFu
+PjwvZm9udD48L3A+PHAgY2xhc3M9ImdtYWlsLXAxIiBzdHlsZT0ibWFyZ2luOjBweDtmb250LXZh
+cmlhbnQtbnVtZXJpYzpub3JtYWw7Zm9udC12YXJpYW50LWVhc3QtYXNpYW46bm9ybWFsO2ZvbnQt
+c3RyZXRjaDpub3JtYWw7bGluZS1oZWlnaHQ6bm9ybWFsIj48Zm9udCBjb2xvcj0iIzAwMDAwMCIg
+ZmFjZT0ibW9ub3NwYWNlLCBtb25vc3BhY2UiIHNpemU9IjEiPjxzcGFuIHN0eWxlPSJmb250LXZh
+cmlhbnQtbGlnYXR1cmVzOm5vLWNvbW1vbi1saWdhdHVyZXMiPjAwMDAwMDQwIDogMGIgODAgMjQg
+NDAgMDAgMDAgMDcgMDAtMDDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoMKgPC9zcGFu
+PjwvZm9udD48L3A+PHAgY2xhc3M9ImdtYWlsLXAxIiBzdHlsZT0ibWFyZ2luOjBweDtmb250LXZh
+cmlhbnQtbnVtZXJpYzpub3JtYWw7Zm9udC12YXJpYW50LWVhc3QtYXNpYW46bm9ybWFsO2ZvbnQt
+c3RyZXRjaDpub3JtYWw7bGluZS1oZWlnaHQ6bm9ybWFsIj48Zm9udCBjb2xvcj0iIzAwMDAwMCIg
+ZmFjZT0ibW9ub3NwYWNlLCBtb25vc3BhY2UiIHNpemU9IjEiPjxzcGFuIHN0eWxlPSJmb250LXZh
+cmlhbnQtbGlnYXR1cmVzOm5vLWNvbW1vbi1saWdhdHVyZXMiPjxicj48L3NwYW4+PC9mb250Pjwv
+cD48cCBjbGFzcz0iZ21haWwtcDEiIHN0eWxlPSJtYXJnaW46MHB4O2ZvbnQtdmFyaWFudC1udW1l
+cmljOm5vcm1hbDtmb250LXZhcmlhbnQtZWFzdC1hc2lhbjpub3JtYWw7Zm9udC1zdHJldGNoOm5v
+cm1hbDtsaW5lLWhlaWdodDpub3JtYWwiPjxmb250IGNvbG9yPSIjMDAwMDAwIiBmYWNlPSJtb25v
+c3BhY2UsIG1vbm9zcGFjZSIgc2l6ZT0iMSI+PHNwYW4gc3R5bGU9ImZvbnQtdmFyaWFudC1saWdh
+dHVyZXM6bm8tY29tbW9uLWxpZ2F0dXJlcyI+VHBtMlNpZ24gcmVzcG9uc2UgYnl0ZXM6PC9zcGFu
+PjwvZm9udD48L3A+PHAgY2xhc3M9ImdtYWlsLXAxIiBzdHlsZT0ibWFyZ2luOjBweDtmb250LXZh
+cmlhbnQtbnVtZXJpYzpub3JtYWw7Zm9udC12YXJpYW50LWVhc3QtYXNpYW46bm9ybWFsO2ZvbnQt
+c3RyZXRjaDpub3JtYWw7bGluZS1oZWlnaHQ6bm9ybWFsIj48Zm9udCBjb2xvcj0iIzAwMDAwMCIg
+ZmFjZT0ibW9ub3NwYWNlLCBtb25vc3BhY2UiIHNpemU9IjEiPjxzcGFuIHN0eWxlPSJmb250LXZh
+cmlhbnQtbGlnYXR1cmVzOm5vLWNvbW1vbi1saWdhdHVyZXMiPjAwMDAwMDAwIDogODAgMDEgMDAg
+MDAgMDAgMGEgMDAgMDAtMDAgODTCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoDwvc3Bhbj48
+L2ZvbnQ+PHNwYW4gc3R5bGU9ImZvbnQtdmFyaWFudC1saWdhdHVyZXM6bm8tY29tbW9uLWxpZ2F0
+dXJlcztjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2U7Zm9u
+dC1zaXplOngtc21hbGwiPsKgPC9zcGFuPjxicj48L3A+PHAgY2xhc3M9ImdtYWlsLXAxIiBzdHls
+ZT0ibWFyZ2luOjBweDtmb250LXZhcmlhbnQtbnVtZXJpYzpub3JtYWw7Zm9udC12YXJpYW50LWVh
+c3QtYXNpYW46bm9ybWFsO2ZvbnQtc3RyZXRjaDpub3JtYWw7bGluZS1oZWlnaHQ6bm9ybWFsIj48
+YnI+PC9wPjxwIGNsYXNzPSJnbWFpbC1wMSIgc3R5bGU9Im1hcmdpbjowcHg7Zm9udC12YXJpYW50
+LW51bWVyaWM6bm9ybWFsO2ZvbnQtdmFyaWFudC1lYXN0LWFzaWFuOm5vcm1hbDtmb250LXN0cmV0
+Y2g6bm9ybWFsO2xpbmUtaGVpZ2h0Om5vcm1hbCI+Tm90aGluZyBpbiB0aGUgY29tbWFuZCBvdXRw
+dXQgaW5kaWNhdGVzIGFueSBpc3N1ZTsgdGhlIGNvbW1hbmQgY29ycmVjdGx5IHNldHMgdGhlIHNp
+Z25hdHVyZSBzY2hlbWUgYXMgUlNBU1NBIHdpdGggYSBTSEEyNTYgaGFzaCwgd2l0aCBhIG51bGwg
+Y2hlY2sgdGlja2V0IHdoaWNoIHRoZSBzcGVjIGluZGljYXRlcyBzaG91bGQgYWxzbyBiZSBPSyBh
+cyB0aGUgc2lnbmluZyBrZXkgaXMgbm90IGEgcmVzdHJpY3RlZCBrZXkuPGJyPjwvcD48cCBjbGFz
+cz0iZ21haWwtcDEiIHN0eWxlPSJtYXJnaW46MHB4O2ZvbnQtdmFyaWFudC1udW1lcmljOm5vcm1h
+bDtmb250LXZhcmlhbnQtZWFzdC1hc2lhbjpub3JtYWw7Zm9udC1zdHJldGNoOm5vcm1hbDtsaW5l
+LWhlaWdodDpub3JtYWwiPjxicj48L3A+PHAgY2xhc3M9ImdtYWlsLXAxIiBzdHlsZT0ibWFyZ2lu
+OjBweDtmb250LXZhcmlhbnQtbnVtZXJpYzpub3JtYWw7Zm9udC12YXJpYW50LWVhc3QtYXNpYW46
+bm9ybWFsO2ZvbnQtc3RyZXRjaDpub3JtYWw7bGluZS1oZWlnaHQ6bm9ybWFsIj5BcyBhbHdheXMs
+IGFueSBpbnNpZ2h0IGFwcHJlY2lhdGVkLiBUaGFuayB5b3UuPC9wPjwvZGl2PjxkaXYgZGlyPSJs
+dHIiPjxiciBjbGVhcj0iYWxsIj48ZGl2PjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJnbWFpbF9zaWdu
+YXR1cmUiPjxhIGhyZWY9Imh0dHA6Ly93d3cudmVyaXpvbm1lZGlhLmNvbSIgc3R5bGU9InBhZGRp
+bmctYm90dG9tOjFlbTtkaXNwbGF5OmlubGluZS1ibG9jayIgdGFyZ2V0PSJfYmxhbmsiPjxpbWcg
+c3JjPSJodHRwczovL3MueWltZy5jb20vY3YvYXBpdjIvZGVmYXVsdC8yMDE5MDQxNi92ZXJpem9u
+bWVkaWFfZW1haWxzaWdfNDAweDg5LmpwZyIgc3R5bGU9ImhlaWdodDogMzNweDsgd2lkdGg6IDE0
+NXB4OyIgd2lkdGg9IjE0NSIgaGVpZ2h0PSIzMyI+PC9hPjxicj48cCBzdHlsZT0ibWFyZ2luOjBw
+eDtmb250LWZhbWlseTomcXVvdDtWZXJpem9uIE5IRyBEUyZxdW90OyxBcmlhbCxzYW5zLXNlcmlm
+O2ZvbnQtc2l6ZToxZW07dGV4dC1hbGlnbjpsZWZ0O2xpbmUtaGVpZ2h0OjEwMCU7Y29sb3I6Ymxh
+Y2siPjxzcGFuIHN0eWxlPSJmb250LXdlaWdodDpib2xkIj5OaWNrIE1leWVyPC9zcGFuPjxicj48
+YnI+PC9wPjwvZGl2PjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48ZGl2IGRp
+cj0ibHRyIiBjbGFzcz0iZ21haWxfYXR0ciI+T24gTW9uLCBBcHIgMjksIDIwMTkgYXQgMTI6NTAg
+UE0gRGVzYWksIEltcmFuICZsdDs8YSBocmVmPSJtYWlsdG86aW1yYW4uZGVzYWlAaW50ZWwuY29t
+Ij5pbXJhbi5kZXNhaUBpbnRlbC5jb208L2E+Jmd0OyB3cm90ZTo8YnI+PC9kaXY+PGJsb2NrcXVv
+dGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2Jv
+cmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPkxv
+b2tzIGxpa2UgdGhlIFBDUnMgY2hhbmdlZC4gSWYgdGhhdCBpcyBhbiBleHBlY3RlZCBjb25zZXF1
+ZW5jZSBvZiBmaXJtd2FyZSB1cGRhdGVzIGNvbnNpZGVyIHVzaW5nIHBvbGljeSBhdXRob3JpemUg
+dG9vbCB0byBhZGRyZXNzIHRoZSBQQ1IgYnJpdHRsZW5lc3MuIEJlc2lkZXMgdGhhdCBJIHdvdWxk
+IGFsc28gbG9vayBpbnRvIHRoZSBlcnJvcnMgZnJvbSBzZXNzaW9uIGhhbmRsaW5nIGluY2x1ZGlu
+ZyB3aGV0aGVyIG9yIG5vdCB5b3UgYXJlIHN0YXJ0aW5nIGEgcmVhbCAobm9uLXRyaWFsKSBzZXNz
+aW9uIHdoZW4gdHJ5aW5nIHRvIHNhdGlzZnkgdGhlIHBjciBwb2xpY3kuPGJyPgo8YnI+ClRoYW5r
+cyBhbmQgUmVnYXJkcyw8YnI+Cjxicj4KSW1yYW4gRGVzYWk8YnI+Cl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX188YnI+CkZyb206IFJvYmVydHMsIFdpbGxpYW0gQzxicj4K
+U2VudDogTW9uZGF5LCBBcHJpbCAyOSwgMjAxOSA3OjI5IEFNPGJyPgpUbzogTmljayBNZXllcjsg
+PGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayI+dHBtMkBs
+aXN0cy4wMS5vcmc8L2E+OyBEZXNhaSwgSW1yYW48YnI+ClN1YmplY3Q6IFJFOiBbdHBtMl0gUkMg
+MHg5OWQgVFBNX1JDX1BPTElDWV9GQUlMIGNhdXNlcz88YnI+Cjxicj4KVGhhdCBlcnJvciBpczo8
+YnI+CnRwbTpzZXNzaW9uKDEpOmEgcG9saWN5IGNoZWNrIGZhaWxlZDxicj4KPGJyPgpJbXJhbiwg
+YW55IGlkZWFzPzxicj4KPGJyPgomZ3Q7IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tPGJyPgom
+Z3Q7IEZyb206IHRwbTIgW21haWx0bzo8YSBocmVmPSJtYWlsdG86dHBtMi1ib3VuY2VzQGxpc3Rz
+LjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPnRwbTItYm91bmNlc0BsaXN0cy4wMS5vcmc8L2E+XSBP
+biBCZWhhbGYgT2YgTmljayBNZXllcjxicj4KJmd0OyBTZW50OiBGcmlkYXksIEFwcmlsIDI2LCAy
+MDE5IDk6NTYgQU08YnI+CiZndDsgVG86IDxhIGhyZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9y
+ZyIgdGFyZ2V0PSJfYmxhbmsiPnRwbTJAbGlzdHMuMDEub3JnPC9hPjxicj4KJmd0OyBTdWJqZWN0
+OiBbdHBtMl0gUkMgMHg5OWQgVFBNX1JDX1BPTElDWV9GQUlMIGNhdXNlcz88YnI+CiZndDs8YnI+
+CiZndDsgSGVsbG8sPGJyPgomZ3Q7PGJyPgomZ3Q7IFdlIGhhdmUgYSBzZXQgb2YgYm94ZXMgdGhh
+dCB1c2UgVFBNMl9TaWduKCkgdG8gc2lnbiBhIGNyeXB0b2dyYXBoaWMgY2hhbGxlbmdlPGJyPgom
+Z3Q7IGR1cmluZyBhIHN0YXJ0dXAgcHJvY2Vzcy4gVGhlIHNpZ25pbmcga2V5IGlzIHByb3RlY3Rl
+ZCBieSBhIFBDUiBwb2xpY3k7IHRoaXMgcG9saWN5IGlzPGJyPgomZ3Q7IHRoZSBvbmx5IHBvbGlj
+eSBpbiB0aGUgc2Vzc2lvbiBhdXRob3JpemluZyB0aGUgc2lnbi4gT2NjYXNpb25hbGx5LCBvbmUg
+b2YgdGhlc2U8YnI+CiZndDsgYm94ZXMgd2lsbCBzdGFydCByZXR1cm5pbmcgMHg5OWQgYW5kIHJl
+ZnVzZSB0byBzaWduIHRoZSBjaGFsbGVuZ2UsIGFmdGVyIHdoaWNoIGl0PGJyPgomZ3Q7IHNlZW1z
+IHRvIGJlIHN0dWNrIGluIHRoaXMgaW5jb25zaXN0ZW50IHN0YXRlIHVudGlsIHdlIGdlbmVyYXRl
+IGEgbmV3IHNpZ25pbmcga2V5Ljxicj4KJmd0Ozxicj4KJmd0OyBXZSBhcmUgY3VycmVudGx5IGlu
+IHRoZSBwcm9jZXNzIG9mIGludmVzdGlnYXRpbmcgaWYgdGhlIFBDUnMgaGF2ZSBjaGFuZ2VkIGlu
+IHRoZXNlPGJyPgomZ3Q7IGNhc2VzOyBpbiB0aGUgbWVhbnRpbWUsIEkgd2FudGVkIHRvIGFzayBo
+ZXJlIGlmIHRoZXJlIGFyZSBhbnkgb3RoZXIgY2F1c2VzPGJyPgomZ3Q7IGJleW9uZCB0aGUgUENS
+cyBjaGFuZ2luZyB0aGF0IGNvdWxkIGNhdXNlIHRoaXMgZXJyb3IgY29kZSwgc28gdGhhdCB3ZSBj
+YW48YnI+CiZndDsgaW52ZXN0aWdhdGUuIFdlIGFsc28gYmVsaWV2ZSBpdCB1bmxpa2VseSB0aGF0
+IHRoZSBQQ1IgdXBkYXRlIGNvdW50ZXIgaXMgYW4gaXNzdWUgYXM8YnI+CiZndDsgd2Ugd291bGQg
+YmUgZXhwZWN0aW5nIGEgVFBNX1JDX1BDUl9DSEFOR0VEIHJldHVybiBjb2RlIGluIHRoaXMgY2Fz
+ZS48YnI+CiZndDs8YnI+CiZndDsgQXBwcmVjaWF0ZSBhbnkgaW5zaWdodCB5b3UgbWF5IGhhdmUu
+PGJyPgomZ3Q7PGJyPgomZ3Q7wqAgJmx0OzxhIGhyZWY9Imh0dHA6Ly93d3cudmVyaXpvbm1lZGlh
+LmNvbSIgcmVsPSJub3JlZmVycmVyIiB0YXJnZXQ9Il9ibGFuayI+aHR0cDovL3d3dy52ZXJpem9u
+bWVkaWEuY29tPC9hPiZndDs8YnI+CiZndDs8YnI+CiZndDs8YnI+CiZndDsgTmljayBNZXllcjxi
+cj4KJmd0Ozxicj4KJmd0Ozxicj4KPC9ibG9ja3F1b3RlPjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2
+Pgo=
+
+--===============2337944363265216872==--
 
