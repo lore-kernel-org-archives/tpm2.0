@@ -1,59 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============0269610439964990254=="
+Content-Type: multipart/mixed; boundary="===============5761909243025004244=="
 MIME-Version: 1.0
-From: Javier Martinez Canillas <javierm at redhat.com>
-Subject: Re: [tpm2] Creating TPM2 primary key failed!
-Date: Mon, 06 May 2019 13:28:13 +0200
-Message-ID: <6834d9ec-af39-4275-71e1-eb1304c50027@redhat.com>
-In-Reply-To: CACX8e9N=smj_=UDfyLC5roMb=Zw8SfBMhYHqcNGA-wYnuwLGbg@mail.gmail.com
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: Re: [tpm2] Chasing Down a Session Problem
+Date: Mon, 06 May 2019 15:16:26 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909CE50B7F@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649D305FF@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0269610439964990254==
+--===============5761909243025004244==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Shiv,
+I'm willing to bet the cause is your #1 from the list below. Will take a lo=
+ok today.
 
-On 5/6/19 12:56 PM, Shiv Dev wrote:
-> Hi Javier,
-> =
+-----Original Message-----
+From: Roberts, William C =
 
-> Thanks for the response.
-> =
+Sent: 3 May, 2019 18:34
+To: Tricca, Philip B <philip.b.tricca(a)intel.com>; andreas.fuchs(a)sit.fra=
+unhofer.de; Desai, Imran <imran.desai(a)intel.com>; tpm2(a)lists.01.org
+Subject: Chasing Down a Session Problem
 
-> The tpm2_takeownership command output is shown below
-> --
-> [ubuntu(a)localhost ~]$ tpm2_takeownership -c
-> ERROR: Clearing Failed! TPM error code: 0x921
-> ERROR: Unable to run tpm2_takeownership
-> --
-> The error seems to be lockout now.
-> #define TPM2_RC_LOCKOUT            ((TPM2_RC) (TPM2_RC_WARN + 0x021))
-> /* authorizations for objects subject to DA protection are not allowed
-> at this time because the TPM is in DA lockout mode */
-> =
+So I am dealing with a problem using sessions between tools, and the reason=
+ master is working looks like a bug in the tools.
+This is what I am trying to do, with tools + esapi + abrmd and it's not wor=
+king out.
 
-> I tried to clear the dictionary lockout..
-> --
-> [ubuntu(a)localhost luks]$ tpm2_dictionarylockout -c
-> ERROR: 0x921 Error clearing dictionary lockout.
-> ERROR: Unable to run tpm2_dictionarylockout
-> --
+tpm2_startauthsession --policy-session -S session.ctx tpm2_policypassword -=
+S session.ctx -o policy.dat #invoke a policy password event tpm2_encryptdec=
+rypt  -c key.ctx -i enc.txt -o dec.txt -D -p session:session.ctx+testpswd <=
+-- fails on ContextSave with the abrmd saying no object loaded
 
-Yes, I think you need to reset your TPM from the firmware setup.
+This string:
+session:session.ctx+testpswd
 
-> Regards,
-> Shiv
-> =
+turns into tools calling context load on the session.ctx and then using the=
+ testpswd in the auth area for the session data. I verified that getting th=
+e attributes from ESAPI does indeed have the continue session flag set.
+The exact error is:
+Eys_ContextSave(0x910) - tpm:warn(2.0): the 1st handle in the handle area r=
+eferences a transient object or session that is not loaded
 
+On master, this works because of a bug Josh introduced where if there's a p=
+assword, just use the password session for encryptdecrypt command, when I t=
+hink it should have been using the restored session handle.
 
-Best regards,
--- =
+I'm trying to understand why the object is no longer loaded when I call con=
+textsave:
+1. abrmd issue?
+2. continuesession esapi issue?
+3. my understanding of how continue session works, is the session dead afte=
+r the call to encryptdecrypt?
 
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
+Attached you'll find the abrmd logs.
 
---===============0269610439964990254==--
+You can find my branch here: https://github.com/williamcroberts/tpm2.0-tool=
+s/tree/session-as-password-arg
+
+You can replicate it with:
+make -j4 check TESTS=3D'test/integration/tests/tcti/abrmd/policypassword.sh'
+
+Bill
+
+--===============5761909243025004244==--
 
