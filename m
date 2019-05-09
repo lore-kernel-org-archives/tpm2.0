@@ -1,101 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============6564676744929822825=="
+Content-Type: multipart/mixed; boundary="===============0362849563369904767=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] Verifying that session encryption key is the one you
- expected
-Date: Mon, 06 May 2019 17:01:46 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D30AD8@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0162F2C4E9@exch2010c.sit.fraunhofer.de
+Subject: [tpm2] tpm2-tools: Switching BSD-2 to BSD-3
+Date: Thu, 09 May 2019 15:50:24 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D31AB6@ORSMSX101.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6564676744929822825==
+--===============0362849563369904767==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+I would like to switch from BSD2 to BSD3 and be consistent within the tools=
+, however a few files have
+Been marked BSD2 and have external contributors and I need your permission =
+to make this change:
 
+**Please respond to this email to give consent**
 
-> -----Original Message-----
-> From: Fuchs, Andreas [mailto:andreas.fuchs(a)sit.fraunhofer.de]
-> Sent: Monday, May 6, 2019 9:54 AM
-> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.o=
-rg
-> Subject: RE: Verifying that session encryption key is the one you expected
-> =
+Alexander Steffen - Alexander.Steffen(a)infineon.com
+Alon Bar-Lev - alon.barlev(a)gmail.com
+Andreas Fuchs - andreas.fuchs(a)sit.fraunhofer.de
+Carlos Santos - casantos(a)datacom.ind.br
+gilb3rt - github(a)gilb3rt.com
+GlovePuppet - touched.by.his.noodley.appendage(a)gmail.com
+Javier Martinez Canillas - javierm(a)redhat.com
+jetwhiz - charles.munson(a)ll.mit.edu
+Jonas Witschel - diabonas(a)gmx.de
+Peter Huewe - peter.huewe(a)infineon.com
+Liu Qun (liuqun) - qunliu(a)zyhx-group.com
+Safayet N Ahmed - Safayet.Ahmed(a)ge.com
+sebastien le stum - lestums(a)gmail.com
+=D0=94=D0=B8=D0=BB=D1=8F=D0=BD =D0=9F=D0=B0=D0=BB=D0=B0=D1=83=D0=B7=D0=BE=
+=D0=B2 - git-dpa(a)aegee.org
 
-> Raw handles are bad, I agree.
-> =
+Details on Licenses can be found:
+https://opensource.org/licenses/BSD-3-Clause
+https://opensource.org/licenses/BSD-2-Clause
 
-> Easy option:
-> Serialize and deserialize the meta data of the persistent handle.
-> Rational:
-> The attack model for crafting a malicious ESYS_TR metadata on disk is equ=
-al to
-> that of crafting a malicious TPM2B_PUBLIC and TPM2B_PRIVATE (for loading)=
- on
-> disk, right ?
+The only major difference between the two is the attribute clause:
+3. Neither the name of the copyright holder nor the names of its contributo=
+rs may be used to endorse or promote products derived from this software wi=
+thout specific prior written permission.
 
-Yep, that seems like a fair and easy approach. I'll have tpm2_evictcontrol =
-dump an
-ESYS_TR.
-
-> =
-
-> Other options:
-> - StartAuthSession with tpmKey parameter (e.g. use the EK; after checking=
- the EK
-> certificate) and then ReadPublic. That's what FAPI is going to do.
-
-I'd like to leave this choice to the user.
-
-> - StartAuthSession with bindObject parameter (uses the auth value to seed=
- the
-> session key) and then ReadPublic. You could use the ownerAuth or an NV-In=
-dex's
-> auth for this.
-> - Unrelyable ReadPublic of the persistent key, but then StartAuthSession =
-with
-> bindObject to persistent key and readPublic itself.
-> =
-
-> I hope this is enough choices. I can probably come up with more... ;-)
-> =
-
-> Cheers,
-> Andreas
-> =
-
-> ________________________________________
-> From: Roberts, William C [william.c.roberts(a)intel.com]
-> Sent: Monday, May 06, 2019 18:30
-> To: tpm2(a)lists.01.org; Fuchs, Andreas
-> Subject: Verifying that session encryption key is the one you expected
-> =
-
-> I'm wondering if ESAPI does or provides a mechanism to ensure that the ke=
-y I am
-> using to start an encrypted session with is the one I expected.
-> =
-
-> I could obviously check by reading the public structure and verifying aga=
-inst a
-> known good, but I was wondering what ESAPI does for me in this area.
-> =
-
-> Loaded objects can come from 2 sources:
-> 1. persistent handle
-> 2. ContextLoad from TPM
-> =
-
-> ContextLoad would be fine, as you will get the object as expected from the
-> context blob. The persistent handle we would need to check. Should I perh=
-aps
-> serialize the ESYS_TR Handle from evictcontrol and only allow that as inp=
-ut vs raw
-> Persistent handles? It look like anyone can craft a malicious ESYS_TR ser=
-ialized to
-> disk.
-
---===============6564676744929822825==--
+--===============0362849563369904767==--
 
