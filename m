@@ -1,75 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============7444140251009499655=="
+Content-Type: multipart/mixed; boundary="===============5332160809913156319=="
 MIME-Version: 1.0
-From: Desai, Imran <imran.desai at intel.com>
-Subject: Re: [tpm2] tpm2 Digest, Vol 23, Issue 10
-Date: Thu, 23 May 2019 17:50:29 +0000
-Message-ID: <688D07BB9E3A9E4A852BA1336D1910FF83FA3507@fmsmsx104.amr.corp.intel.com>
-In-Reply-To: mailman.23.1558378802.11989.tpm2@lists.01.org
+From: Tommaso Corda <tommasocorda at hotmail.it>
+Subject: [tpm2] Wildcard policies for NVindexes
+Date: Fri, 24 May 2019 08:03:30 +0000
+Message-ID: <AM6PR10MB2134C5728B318FEE1B27A147AE020@AM6PR10MB2134.EURPRD10.PROD.OUTLOOK.COM>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7444140251009499655==
+--===============5332160809913156319==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Narashimman, This information is available in a wiki here: https://githu=
-b.com/tpm2-software/tpm2-tools/wiki/Dependency-Matrix
-Please create an issue to update the wiki if you do not find the informatio=
-n there. Thanks.
-________________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of tpm2-request(a)lists.=
-01.org [tpm2-request(a)lists.01.org]
-Sent: Monday, May 20, 2019 12:00 PM
-To: tpm2(a)lists.01.org
-Subject: tpm2 Digest, Vol 23, Issue 10
-
-Send tpm2 mailing list submissions to
-        tpm2(a)lists.01.org
-
-To subscribe or unsubscribe via the World Wide Web, visit
-        https://lists.01.org/mailman/listinfo/tpm2
-or, via email, send a message with subject or body 'help' to
-        tpm2-request(a)lists.01.org
-
-You can reach the person managing the list at
-        tpm2-owner(a)lists.01.org
-
-When replying, please edit your Subject line so it is more specific
-than "Re: Contents of tpm2 digest..."
+Hello everyone.
+Can anybody explain me how to use wildcard policies to create a NVindex and=
+ how to use a wildcard policy to access that NVindex?
+Thanks.
 
 
-Today's Topics:
 
-   1. Regarding TPM2 tool version (Narashimman Srinivasan)
+--===============5332160809913156319==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
+PGh0bWwgeG1sbnM6bz0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlIiB4
+bWxuczp3PSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkIiB4bWxuczptPSJo
+dHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL29mZmljZS8yMDA0LzEyL29tbWwiIHhtbG5zPSJo
+dHRwOi8vd3d3LnczLm9yZy9UUi9SRUMtaHRtbDQwIj4KPGhlYWQ+CjxtZXRhIGh0dHAtZXF1aXY9
+IkNvbnRlbnQtVHlwZSIgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXVzLWFzY2lpIj4KPG1l
+dGEgbmFtZT0iR2VuZXJhdG9yIiBjb250ZW50PSJNaWNyb3NvZnQgV29yZCAxNSAoZmlsdGVyZWQg
+bWVkaXVtKSI+CjxzdHlsZT48IS0tCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8KQGZvbnQtZmFjZQoJ
+e2ZvbnQtZmFtaWx5OiJDYW1icmlhIE1hdGgiOwoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIg
+NDt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDYWxpYnJpOwoJcGFub3NlLTE6MiAxNSA1IDIg
+MiAyIDQgMyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLwpwLk1zb05vcm1hbCwgbGkuTXNv
+Tm9ybWFsLCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBjbTsKCW1hcmdpbi1ib3R0b206LjAwMDFw
+dDsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9
+CmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xv
+cjpibHVlOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlzaXRlZCwgc3Bhbi5Nc29I
+eXBlcmxpbmtGb2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOiM5NTRGNzI7
+Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30KLk1zb0NocERlZmF1bHQKCXttc28tc3R5bGUt
+dHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30KQHBh
+Z2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo2MTIuMHB0IDc5Mi4wcHQ7CgltYXJnaW46NzAuODVwdCAy
+LjBjbSAyLjBjbSAyLjBjbTt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9
+Ci0tPjwvc3R5bGU+CjwvaGVhZD4KPGJvZHkgbGFuZz0iSVQiIGxpbms9ImJsdWUiIHZsaW5rPSIj
+OTU0RjcyIj4KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+SGVsbG8gZXZlcnlvbmUuPC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5DYW4gYW55Ym9keSBleHBs
+YWluIG1lIGhvdyB0byB1c2Ugd2lsZGNhcmQgcG9saWNpZXMgdG8gY3JlYXRlIGEgTlZpbmRleCBh
+bmQgaG93IHRvIHVzZSBhIHdpbGRjYXJkIHBvbGljeSB0byBhY2Nlc3MgdGhhdCBOVmluZGV4Pzxi
+cj4KVGhhbmtzLjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5
+Pgo8L2h0bWw+Cg==
 
-----------------------------------------------------------------------
-
-Message: 1
-Date: Mon, 20 May 2019 13:31:36 +0530
-From: Narashimman Srinivasan <msrinivasan(a)mvista.com>
-To: tpm2(a)lists.01.org
-Subject: [tpm2] Regarding TPM2 tool version
-Message-ID:
-        <CAMh_iofwBxY+FtJwyX55Gs-nm2fE2G3h523c3HU=3DM2keXW-cOw(a)mail.gmail=
-.com>
-Content-Type: text/plain; charset=3D"utf-8"
-
-Hi
-Planning to use following TPM2 tool version in my Yocto build:
-
-https://github.com/tpm2-software/tpm2-tools/releases/tag/3.1.4
-
-Please let know or where to find dependency versions match information for
-subsequent tools below :
-tpm2-tss - https://github.com/tpm2-software/tpm2-tss.git
-tpm2-abrmd - https://github.com/tpm2-software/tpm2-abrmd.git
-
-Also let me know Linux version  matches for tpm2-tool version :  3.1.4
-
-Thank & Regards
-Manjunatha Srinivasan N
-
---===============7444140251009499655==--
+--===============5332160809913156319==--
 
