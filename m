@@ -1,27 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============0797834539226975756=="
+Content-Type: multipart/mixed; boundary="===============3048921049089080303=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] tpm2-totp stable-RC v.0.1.2-rc1
-Date: Tue, 28 May 2019 12:53:39 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163A51C6D@exch2010c.sit.fraunhofer.de>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] tpm2-tools: 3.2 release
+Date: Thu, 30 May 2019 15:43:33 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D84425@ORSMSX106.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0797834539226975756==
+--===============3048921049089080303==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+I am getting ready to run a 3.2 release with the following changelog:
 
-I just posted a new release candidate for the 0.1.x stable series.
-It can be found here:
+3.2.0 - next
+tpm2_changeauth: Support changing platform hierarchy auth.
+tpm2_flushcontext: Introduce new tool for flushing handles from the TPM.
+tpm2_checkquote: Introduce new tool for checking validity of quotes.
+tpm2_quote: Add ability to output PCR values for quotes.
+tpm2_makecredential: add support for executing tool off-TPM.
+tpm2_pcrreset: introduce new tool for resetting PCRs.
+tpm2_quote: Fix AK auth password not being used.
 
-https://github.com/tpm2-software/tpm2-totp/releases/tag/v0.1.2-rc1
+Does anyone else have anything they *really* need fixed before I start runn=
+ing RC's?
 
-It this release brings some fixes for different compiler warnings.
+Bill
 
-Best regards,
-Andreas
---===============0797834539226975756==--
+--===============3048921049089080303==--
 
