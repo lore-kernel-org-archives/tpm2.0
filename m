@@ -1,33 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============3441773838479457043=="
+Content-Type: multipart/mixed; boundary="===============6341932497687386387=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] tpm2-tools: 3.2.0-rc0
-Date: Mon, 03 Jun 2019 20:18:01 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D852D3@ORSMSX106.amr.corp.intel.com>
+From: Jordan Hand <jordanhand22 at gmail.com>
+Subject: [tpm2] TPM Object Duplication questions
+Date: Wed, 05 Jun 2019 09:38:59 -0700
+Message-ID: <CAEjdKLUMe57kaVezfaugXYntWz8XjHCQvh86xfM1=iC9La5epw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3441773838479457043==
+--===============6341932497687386387==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-New RC0 of tools is available:
+Hello,
 
-CHANGES since 3.1.4:
-- tpm2_changeauth: Support changing platform hierarchy auth.
-- tpm2_flushcontext: Introduce new tool for flushing handles from the TPM.
-- tpm2_checkquote: Introduce new tool for checking validity of quotes.
-- tpm2_quote: Add ability to output PCR values for quotes.
-- tpm2_makecredential: add support for executing tool off-TPM.
-- tpm2_pcrreset: introduce new tool for resetting PCRs.
-- tpm2_quote: Fix AK auth password not being used.
+I am wondering, is it possible to have the TPM duplicate a key without
+adding a policy digest with
+=E2=80=9CEsys_PolicyCommandCode(TPM2_CC_DUPLICATION)=E2=80=9D to the object=
+'s
+authPolicy.
 
-https://github.com/tpm2-software/tpm2-tools/releases/tag/3.2.0-rc0
+Here is why I ask:
 
-----
-Bill
+I have some data that I want to (1) seal to the PCR state on a TPM
+with EK, duplicate,  (2) import/load on the same TPM as a child of the
+EK, and (3) unseal. I do this to test unsealing data that was sealed
+remotely.
 
+For background on why I need to do this: The remote service whose
+behavior I am emulating doesn't use a TPM to do the sealing, it
+implements the same functionality outside the TPM and uses the EK pub
+it gets from the client. But I am not able to run this code in my
+tests.
 
---===============3441773838479457043==--
+The flow I use is:
+* Create and start a trial session
+* call Esys_PolicyCommandCode(TPM2_CC_DUPLICATION) on the session
+* call Esys_PolicyPcr on the session
+* Get the digest of the session
+* Set session digest as inPub.publicArea.authPolicy
+* Esys_CreateObject
+* Esys_Load(createdObject)
+* Start policy session
+* call same Esys_PolicyCommandCode and Esys_PolicyPcr
+* Esys_Duplicate
+
+This works fine. Now the problem is that the created object requires a
+policy that has Esys_PolicyCommandCode and Esys_PolicyPcr set. But the
+caller to Esys_Unseal should be able to unseal with just the PolicyPcr
+session. I need to set PolicyCommandCode to duplicate the object but
+then I don=E2=80=99t want to enforce that policy during Unseal. It seems li=
+ke
+the policy digest from authPolicy needs to match exactly the session
+digest I use when calling Esys_Unseal.
+
+The other option is to create the object outside the TPM and just
+implement all the object creation/sealing myself. But I would rather
+have the TPM do the heavy lifting.
+
+Please let me know if I can clarify anything here.
+
+Thanks,
+
+Jordan
+
+--===============6341932497687386387==--
 
