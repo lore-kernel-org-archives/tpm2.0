@@ -1,90 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============0247177073780654029=="
+Content-Type: multipart/mixed; boundary="===============1355630258701334145=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] TPM Object Duplication questions
-Date: Wed, 05 Jun 2019 20:30:23 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163A8CF74@exch2010c.sit.fraunhofer.de>
-In-Reply-To: CAEjdKLUMe57kaVezfaugXYntWz8XjHCQvh86xfM1=iC9La5epw@mail.gmail.com
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: [tpm2] PKCS#11 3.0 spec up for 30 day public review
+Date: Fri, 07 Jun 2019 17:01:14 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909CE94102@ORSMSX104.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0247177073780654029==
+--===============1355630258701334145==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Duplicate has the "auth role: DUP"
-Roles DUP and ADMIN require a PolicyCommandCode to be present.
-(see section 19.2 of tpm spec part 1)
+Given the interest in tpm2-pkcs11 work I thought some folks on the list wou=
+ld find this interesting: https://www.oasis-open.org/news/announcements/inv=
+itation-to-comment-on-four-pkcs-11-specifications-ends-july-6th
 
-What you want is a PolicyOr with one branch for the PolicyCommandCode(CC_Du=
-plicate) and one without a PolicyCommandCode for the unseal.
 
-Cheers,
-Andreas
+--===============1355630258701334145==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-________________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Jordan Hand [jordanha=
-nd22(a)gmail.com]
-Sent: Wednesday, June 05, 2019 18:38
-To: tpm2(a)lists.01.org
-Subject: [tpm2] TPM Object Duplication questions
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
+ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
+b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
+emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
+cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
+c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
+Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
+b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
+aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
+bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5HaXZlbiB0aGUgaW50ZXJlc3QgaW4gdHBtMi1wa2NzMTEg
+d29yayBJIHRob3VnaHQgc29tZSBmb2xrcyBvbiB0aGUgbGlzdCB3b3VsZCBmaW5kIHRoaXMgaW50
+ZXJlc3Rpbmc6CjxhIGhyZWY9Imh0dHBzOi8vd3d3Lm9hc2lzLW9wZW4ub3JnL25ld3MvYW5ub3Vu
+Y2VtZW50cy9pbnZpdGF0aW9uLXRvLWNvbW1lbnQtb24tZm91ci1wa2NzLTExLXNwZWNpZmljYXRp
+b25zLWVuZHMtanVseS02dGgiPgpodHRwczovL3d3dy5vYXNpcy1vcGVuLm9yZy9uZXdzL2Fubm91
+bmNlbWVudHMvaW52aXRhdGlvbi10by1jb21tZW50LW9uLWZvdXItcGtjcy0xMS1zcGVjaWZpY2F0
+aW9ucy1lbmRzLWp1bHktNnRoPC9hPjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
 
-Hello,
-
-I am wondering, is it possible to have the TPM duplicate a key without
-adding a policy digest with
-=E2=80=9CEsys_PolicyCommandCode(TPM2_CC_DUPLICATION)=E2=80=9D to the object=
-'s
-authPolicy.
-
-Here is why I ask:
-
-I have some data that I want to (1) seal to the PCR state on a TPM
-with EK, duplicate,  (2) import/load on the same TPM as a child of the
-EK, and (3) unseal. I do this to test unsealing data that was sealed
-remotely.
-
-For background on why I need to do this: The remote service whose
-behavior I am emulating doesn't use a TPM to do the sealing, it
-implements the same functionality outside the TPM and uses the EK pub
-it gets from the client. But I am not able to run this code in my
-tests.
-
-The flow I use is:
-* Create and start a trial session
-* call Esys_PolicyCommandCode(TPM2_CC_DUPLICATION) on the session
-* call Esys_PolicyPcr on the session
-* Get the digest of the session
-* Set session digest as inPub.publicArea.authPolicy
-* Esys_CreateObject
-* Esys_Load(createdObject)
-* Start policy session
-* call same Esys_PolicyCommandCode and Esys_PolicyPcr
-* Esys_Duplicate
-
-This works fine. Now the problem is that the created object requires a
-policy that has Esys_PolicyCommandCode and Esys_PolicyPcr set. But the
-caller to Esys_Unseal should be able to unseal with just the PolicyPcr
-session. I need to set PolicyCommandCode to duplicate the object but
-then I don=E2=80=99t want to enforce that policy during Unseal. It seems li=
-ke
-the policy digest from authPolicy needs to match exactly the session
-digest I use when calling Esys_Unseal.
-
-The other option is to create the object outside the TPM and just
-implement all the object creation/sealing myself. But I would rather
-have the TPM do the heavy lifting.
-
-Please let me know if I can clarify anything here.
-
-Thanks,
-
-Jordan
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org
-https://lists.01.org/mailman/listinfo/tpm2
-
---===============0247177073780654029==--
+--===============1355630258701334145==--
 
