@@ -1,63 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============1355630258701334145=="
+Content-Type: multipart/mixed; boundary="===============1392078069484728414=="
 MIME-Version: 1.0
-From: Tricca, Philip B <philip.b.tricca at intel.com>
-Subject: [tpm2] PKCS#11 3.0 spec up for 30 day public review
-Date: Fri, 07 Jun 2019 17:01:14 +0000
-Message-ID: <DB638850A6A2434A93ECADDA0BC838909CE94102@ORSMSX104.amr.corp.intel.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] tpm2-tools: 3.2.0-rc1
+Date: Mon, 10 Jun 2019 16:33:47 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649D9ECB7@ORSMSX101.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1355630258701334145==
+--===============1392078069484728414==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Given the interest in tpm2-pkcs11 work I thought some folks on the list wou=
-ld find this interesting: https://www.oasis-open.org/news/announcements/inv=
-itation-to-comment-on-four-pkcs-11-specifications-ends-july-6th
+New 3.2.0 RC1 of tools is available:
 
+CHANGES since 3.1.4 (all):
 
---===============1355630258701334145==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+RC1:
+- fix configure bug for linking against libmu.
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
-cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
-Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
-b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
-bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5HaXZlbiB0aGUgaW50ZXJlc3QgaW4gdHBtMi1wa2NzMTEg
-d29yayBJIHRob3VnaHQgc29tZSBmb2xrcyBvbiB0aGUgbGlzdCB3b3VsZCBmaW5kIHRoaXMgaW50
-ZXJlc3Rpbmc6CjxhIGhyZWY9Imh0dHBzOi8vd3d3Lm9hc2lzLW9wZW4ub3JnL25ld3MvYW5ub3Vu
-Y2VtZW50cy9pbnZpdGF0aW9uLXRvLWNvbW1lbnQtb24tZm91ci1wa2NzLTExLXNwZWNpZmljYXRp
-b25zLWVuZHMtanVseS02dGgiPgpodHRwczovL3d3dy5vYXNpcy1vcGVuLm9yZy9uZXdzL2Fubm91
-bmNlbWVudHMvaW52aXRhdGlvbi10by1jb21tZW50LW9uLWZvdXItcGtjcy0xMS1zcGVjaWZpY2F0
-aW9ucy1lbmRzLWp1bHktNnRoPC9hPjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+RC0:
+- tpm2_changeauth: Support changing platform hierarchy auth.
+- tpm2_flushcontext: Introduce new tool for flushing handles from the TPM.
+- tpm2_checkquote: Introduce new tool for checking validity of quotes.
+- tpm2_quote: Add ability to output PCR values for quotes.
+- tpm2_makecredential: add support for executing tool off-TPM.
+- tpm2_pcrreset: introduce new tool for resetting PCRs.
+- tpm2_quote: Fix AK auth password not being used.
 
---===============1355630258701334145==--
+https://github.com/tpm2-software/tpm2-tools/releases/tag/3.2.0-rc1
+----
+Bill
+
+--===============1392078069484728414==--
 
