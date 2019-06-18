@@ -1,148 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============2650761479911942918=="
+Content-Type: multipart/mixed; boundary="===============0776422976530463822=="
 MIME-Version: 1.0
-From: Caiqishen <caiqishen at huawei.com>
-Subject: =?utf-8?q?=5Btpm2=5D_How_to_implement_key_distribution_using_tpm2=5Fimpor?=
- =?utf-8?q?t_and_tpm2=5Fload=EF=BC=9F?=
-Date: Tue, 18 Jun 2019 07:10:47 +0000
-Message-ID: <6150E177A208094F9076F5DB74147EE170344218@nkgeml514-mbx.china.huawei.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: =?utf-8?q?Re=3A_=5Btpm2=5D_How_to_implement_key_distribution_using_tpm2?=
+ =?utf-8?q?=5Fimport_and_tpm2=5Fload=EF=BC=9F?=
+Date: Tue, 18 Jun 2019 17:02:24 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DB2806@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 6150E177A208094F9076F5DB74147EE170344218@nkgeml514-mbx.china.huawei.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2650761479911942918==
+--===============0776422976530463822==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In the book, "A Practical Guide to TPM 2.0", there's a process describing k=
-ey distribution which is as the following:
-
-  1.  The central IT system creates an HMAC key using TPM2_GetRandom.
-  2.  The central IT system encrypts the HMAC key with the public portion o=
-f the target client=E2=80=99s storage key.
-  3.  The central IT system signs the encrypted HMAC key with its private s=
-igning key. This is done so the local platform knows that what is being sen=
-t is authorized by IT.
-  4.  The encrypted HMAC key is sent to the client along with a signature t=
-hat proves it came from the central IT system.
-  5.  The client verifies the signature on the encrypted key by loading the=
- central server=E2=80=99s public key. (This can be done with the TPM using =
-TPM2_Load and then using TPM2_VerifySignature, if you like.)
-  6.  The client imports the verified, encrypted HMAC key into its system u=
-sing TPM2_Import, getting out a loadable, encrypted blob containing the HMA=
-C key.
-  7.  The client loads the HMAC key when the user wishes to use it, using T=
-PM2_Load, and uses it as normal. At this point, the local platform has rece=
-ived an HMAC key from the IT central
-  8.  system that has never been decrypted in the local system=E2=80=99s me=
-mory.
-I wonder how to encrypts the HMAC key and how to import it using TPM2_Impor=
-t? How to import a symmetric key encrypted by a rsa public key? Appreciate =
-for any replies, thanks!
 
 
---===============2650761479911942918==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Caiqishen
+> Sent: Tuesday, June 18, 2019 12:11 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] How to implement key distribution using tpm2_import and
+> tpm2_load=EF=BC=9F
+> =
 
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1nYjIzMTIiPgo8bWV0YSBuYW1lPSJHZW5lcmF0b3IiIGNvbnRlbnQ9
-Ik1pY3Jvc29mdCBXb3JkIDE1IChmaWx0ZXJlZCBtZWRpdW0pIj4KPHN0eWxlPjwhLS0KLyogRm9u
-dCBEZWZpbml0aW9ucyAqLwpAZm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6U2ltU3VuOwoJcGFub3Nl
-LTE6MiAxIDYgMCAzIDEgMSAxIDEgMTt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2FtYnJp
-YSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7Zm9u
-dC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KQGZvbnQt
-ZmFjZQoJe2ZvbnQtZmFtaWx5OlNpbVN1bjsKCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7
-fQpAZm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6IlNlZ29lIFVJIjsKCXBhbm9zZS0xOjIgMTEgNSAy
-IDQgMiA0IDIgMiAzO30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1z
-b05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAx
-cHQ7Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7
-fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29s
-b3I6IzA1NjNDMTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4u
-TXNvSHlwZXJsaW5rRm9sbG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0
-RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnAKCXttc28tc3R5bGUtcHJpb3JpdHk6
-OTk7Cgltc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzsKCW1hcmdpbi1yaWdodDowY207Cgltc28tbWFy
-Z2luLWJvdHRvbS1hbHQ6YXV0bzsKCW1hcmdpbi1sZWZ0OjBjbTsKCWZvbnQtc2l6ZToxMi4wcHQ7
-Cglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZjt9CnNwYW4uRW1haWxTdHlsZTE3
-Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJp
-IixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0
-eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9
-CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3NpemU6NjEyLjBwdCA3OTIuMHB0OwoJbWFyZ2luOjcyLjBw
-dCA5MC4wcHQgNzIuMHB0IDkwLjBwdDt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0
-aW9uMTt9Ci8qIExpc3QgRGVmaW5pdGlvbnMgKi8KQGxpc3QgbDAKCXttc28tbGlzdC1pZDoxOTU1
-MTU3MTsKCW1zby1saXN0LXRlbXBsYXRlLWlkczozODA3NjQ0MzY7fQpvbAoJe21hcmdpbi1ib3R0
-b206MGNtO30KdWwKCXttYXJnaW4tYm90dG9tOjBjbTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUg
-bXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYi
-IC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWxh
-eW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286
-c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMi
-IGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24x
-Ij4KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDphdXRvO21h
-cmdpbi1ib3R0b206MTIuMHB0O2JhY2tncm91bmQ6d2hpdGUiPgo8c3BhbiBzdHlsZT0iZm9udC1z
-aXplOjEwLjVwdDtmb250LWZhbWlseTomcXVvdDtTZWdvZSBVSSZxdW90OyxzYW5zLXNlcmlmO2Nv
-bG9yOiMyNDI5MkUiPkluIHRoZSBib29rLCAmcXVvdDtBIFByYWN0aWNhbCBHdWlkZSB0byBUUE0g
-Mi4wJnF1b3Q7LCB0aGVyZSdzIGEgcHJvY2VzcyBkZXNjcmliaW5nIGtleSBkaXN0cmlidXRpb24g
-d2hpY2ggaXMgYXMgdGhlIGZvbGxvd2luZzo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxvbCBzdGFy
-dD0iMSIgdHlwZT0iMSI+CjxsaSBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0iY29sb3I6IzI0Mjky
-RTttc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0bzttc28t
-bGlzdDpsMCBsZXZlbDEgbGZvMTtiYWNrZ3JvdW5kOndoaXRlIj4KPHNwYW4gc3R5bGU9ImZvbnQt
-c2l6ZToxMC41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7U2Vnb2UgVUkmcXVvdDssc2Fucy1zZXJpZiI+
-VGhlIGNlbnRyYWwgSVQgc3lzdGVtIGNyZWF0ZXMgYW4gSE1BQyBrZXkgdXNpbmcgVFBNMl9HZXRS
-YW5kb20uPG86cD48L286cD48L3NwYW4+PC9saT48bGkgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9
-ImNvbG9yOiMyNDI5MkU7bWFyZ2luLXRvcDozLjBwdDttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0
-bzttc28tbGlzdDpsMCBsZXZlbDEgbGZvMTtiYWNrZ3JvdW5kOndoaXRlIj4KPHNwYW4gc3R5bGU9
-ImZvbnQtc2l6ZToxMC41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7U2Vnb2UgVUkmcXVvdDssc2Fucy1z
-ZXJpZiI+VGhlIGNlbnRyYWwgSVQgc3lzdGVtIGVuY3J5cHRzIHRoZSBITUFDIGtleSB3aXRoIHRo
-ZSBwdWJsaWMgcG9ydGlvbiBvZiB0aGUgdGFyZ2V0IGNsaWVudKGvcyBzdG9yYWdlIGtleS48bzpw
-PjwvbzpwPjwvc3Bhbj48L2xpPjxsaSBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0iY29sb3I6IzI0
-MjkyRTttYXJnaW4tdG9wOjMuMHB0O21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvO21zby1saXN0
-OmwwIGxldmVsMSBsZm8xO2JhY2tncm91bmQ6d2hpdGUiPgo8c3BhbiBzdHlsZT0iZm9udC1zaXpl
-OjEwLjVwdDtmb250LWZhbWlseTomcXVvdDtTZWdvZSBVSSZxdW90OyxzYW5zLXNlcmlmIj5UaGUg
-Y2VudHJhbCBJVCBzeXN0ZW0gc2lnbnMgdGhlIGVuY3J5cHRlZCBITUFDIGtleSB3aXRoIGl0cyBw
-cml2YXRlIHNpZ25pbmcga2V5LiBUaGlzIGlzIGRvbmUgc28gdGhlIGxvY2FsIHBsYXRmb3JtIGtu
-b3dzIHRoYXQgd2hhdCBpcyBiZWluZyBzZW50IGlzIGF1dGhvcml6ZWQgYnkgSVQuPG86cD48L286
-cD48L3NwYW4+PC9saT48bGkgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9ImNvbG9yOiMyNDI5MkU7
-bWFyZ2luLXRvcDozLjBwdDttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0bzttc28tbGlzdDpsMCBs
-ZXZlbDEgbGZvMTtiYWNrZ3JvdW5kOndoaXRlIj4KPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC41
-cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7U2Vnb2UgVUkmcXVvdDssc2Fucy1zZXJpZiI+VGhlIGVuY3J5
-cHRlZCBITUFDIGtleSBpcyBzZW50IHRvIHRoZSBjbGllbnQgYWxvbmcgd2l0aCBhIHNpZ25hdHVy
-ZSB0aGF0IHByb3ZlcyBpdCBjYW1lIGZyb20gdGhlIGNlbnRyYWwgSVQgc3lzdGVtLjxvOnA+PC9v
-OnA+PC9zcGFuPjwvbGk+PGxpIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJjb2xvcjojMjQyOTJF
-O21hcmdpbi10b3A6My4wcHQ7bXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG87bXNvLWxpc3Q6bDAg
-bGV2ZWwxIGxmbzE7YmFja2dyb3VuZDp3aGl0ZSI+CjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAu
-NXB0O2ZvbnQtZmFtaWx5OiZxdW90O1NlZ29lIFVJJnF1b3Q7LHNhbnMtc2VyaWYiPlRoZSBjbGll
-bnQgdmVyaWZpZXMgdGhlIHNpZ25hdHVyZSBvbiB0aGUgZW5jcnlwdGVkIGtleSBieSBsb2FkaW5n
-IHRoZSBjZW50cmFsIHNlcnZlcqGvcyBwdWJsaWMga2V5LiAoVGhpcyBjYW4gYmUgZG9uZSB3aXRo
-IHRoZSBUUE0gdXNpbmcgVFBNMl9Mb2FkIGFuZCB0aGVuIHVzaW5nIFRQTTJfVmVyaWZ5U2lnbmF0
-dXJlLCBpZiB5b3UgbGlrZS4pPG86cD48L286cD48L3NwYW4+PC9saT48bGkgY2xhc3M9Ik1zb05v
-cm1hbCIgc3R5bGU9ImNvbG9yOiMyNDI5MkU7bWFyZ2luLXRvcDozLjBwdDttc28tbWFyZ2luLWJv
-dHRvbS1hbHQ6YXV0bzttc28tbGlzdDpsMCBsZXZlbDEgbGZvMTtiYWNrZ3JvdW5kOndoaXRlIj4K
-PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7U2Vnb2UgVUkm
-cXVvdDssc2Fucy1zZXJpZiI+VGhlIGNsaWVudCBpbXBvcnRzIHRoZSB2ZXJpZmllZCwgZW5jcnlw
-dGVkIEhNQUMga2V5IGludG8gaXRzIHN5c3RlbSB1c2luZyBUUE0yX0ltcG9ydCwgZ2V0dGluZyBv
-dXQgYSBsb2FkYWJsZSwgZW5jcnlwdGVkIGJsb2IgY29udGFpbmluZyB0aGUgSE1BQyBrZXkuPG86
-cD48L286cD48L3NwYW4+PC9saT48bGkgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9ImNvbG9yOiMy
-NDI5MkU7bWFyZ2luLXRvcDozLjBwdDttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0bzttc28tbGlz
-dDpsMCBsZXZlbDEgbGZvMTtiYWNrZ3JvdW5kOndoaXRlIj4KPHNwYW4gc3R5bGU9ImZvbnQtc2l6
-ZToxMC41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7U2Vnb2UgVUkmcXVvdDssc2Fucy1zZXJpZiI+VGhl
-IGNsaWVudCBsb2FkcyB0aGUgSE1BQyBrZXkgd2hlbiB0aGUgdXNlciB3aXNoZXMgdG8gdXNlIGl0
-LCB1c2luZyBUUE0yX0xvYWQsIGFuZCB1c2VzIGl0IGFzIG5vcm1hbC4gQXQgdGhpcyBwb2ludCwg
-dGhlIGxvY2FsIHBsYXRmb3JtIGhhcyByZWNlaXZlZCBhbiBITUFDIGtleSBmcm9tIHRoZSBJVCBj
-ZW50cmFsPG86cD48L286cD48L3NwYW4+PC9saT48bGkgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9
-ImNvbG9yOiMyNDI5MkU7bWFyZ2luLXRvcDozLjBwdDttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0
-bzttc28tbGlzdDpsMCBsZXZlbDEgbGZvMTtiYWNrZ3JvdW5kOndoaXRlIj4KPHNwYW4gc3R5bGU9
-ImZvbnQtc2l6ZToxMC41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7U2Vnb2UgVUkmcXVvdDssc2Fucy1z
-ZXJpZiI+c3lzdGVtIHRoYXQgaGFzIG5ldmVyIGJlZW4gZGVjcnlwdGVkIGluIHRoZSBsb2NhbCBz
-eXN0ZW2hr3MgbWVtb3J5LjxvOnA+PC9vOnA+PC9zcGFuPjwvbGk+PC9vbD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvO2JhY2tncm91bmQ6d2hp
-dGUiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuNXB0O2ZvbnQtZmFtaWx5OiZxdW90O1NlZ29l
-IFVJJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzI0MjkyRSI+SSB3b25kZXIgaG93IHRvIGVuY3J5
-cHRzIHRoZSBITUFDIGtleSBhbmQgaG93IHRvIGltcG9ydCBpdCB1c2luZyBUUE0yX0ltcG9ydD8g
-SG93IHRvIGltcG9ydCBhIHN5bW1ldHJpYyBrZXkKIGVuY3J5cHRlZCBieSBhIHJzYSBwdWJsaWMg
-a2V5PyBBcHByZWNpYXRlIGZvciBhbnkgcmVwbGllcywgdGhhbmtzITxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjwvZGl2Pgo8
-L2JvZHk+CjwvaHRtbD4K
+> In the book, "A Practical Guide to TPM 2.0", there's a process describing=
+ key
+> distribution which is as the following:
+> =
 
---===============2650761479911942918==--
+> 1.	The central IT system creates an HMAC key using TPM2_GetRandom.
+> 2.	The central IT system encrypts the HMAC key with the public portion of
+> the target client=E2=80=99s storage key.
+> 3.	The central IT system signs the encrypted HMAC key with its private
+> signing key. This is done so the local platform knows that what is being =
+sent is
+> authorized by IT.
+> 4.	The encrypted HMAC key is sent to the client along with a signature th=
+at
+> proves it came from the central IT system.
+> 5.	The client verifies the signature on the encrypted key by loading the
+> central server=E2=80=99s public key. (This can be done with the TPM using=
+ TPM2_Load and
+> then using TPM2_VerifySignature, if you like.)
+> 6.	The client imports the verified, encrypted HMAC key into its system us=
+ing
+> TPM2_Import, getting out a loadable, encrypted blob containing the HMAC k=
+ey.
+> 7.	The client loads the HMAC key when the user wishes to use it, using
+> TPM2_Load, and uses it as normal. At this point, the local platform has r=
+eceived
+> an HMAC key from the IT central
+> 8.	system that has never been decrypted in the local system=E2=80=99s mem=
+ory.
+> =
+
+> I wonder how to encrypts the HMAC key and how to import it using
+> TPM2_Import? How to import a symmetric key encrypted by a rsa public key?
+> Appreciate for any replies, thanks!
+> =
+
+
+You would reverse the steps:
+1. The receiving application would check that IT signature matches and that=
+ the cert chain is valid. Use normal OSSL.
+2. decrypt the blob (key) with RSA Decrypt using the TPM private key corres=
+ponding with the public portion used for encrypt
+3. Now that you have the plaintext blob (actual symmetric key), call tpm2_i=
+mport.
+
+--===============0776422976530463822==--
 
