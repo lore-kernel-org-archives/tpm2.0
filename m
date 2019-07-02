@@ -1,29 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============0197916400671532285=="
+Content-Type: multipart/mixed; boundary="===============7543668897828308710=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE] tpm2-tools: release 3.2.0
-Date: Wed, 19 Jun 2019 17:45:17 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DB3D84@ORSMSX101.amr.corp.intel.com>
+From: ramyasnair ramyasnair <ramyasnair1996 at gmail.com>
+Subject: [tpm2] Question regarding TPM2.0 lockout
+Date: Tue, 02 Jul 2019 14:49:58 +0530
+Message-ID: <CA+M7zR1V8DxArAcdLwn1w=88vb0JLSOX7-Fg7WUp4Qwou5D1Lw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0197916400671532285==
+--===============7543668897828308710==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Release 3.2.0 is available:
-https://github.com/tpm2-software/tpm2-tools/releases/tag/3.2.0
+Hi,
+My TPM 2.0 got locked out.It is interfaced in Linux environment.I forgot
+the password of owner,endorsement and lockout. Im a beginner and got stuck
+here.Is there any way to clear TPM without knowing the password?
+Waiting for reply,
+Thanks and regards.
+Ramya Nair
 
-Fixes:
-fix configure bug for linking against libmu.
-tpm2_changeauth: Support changing platform hierarchy auth.
-tpm2_flushcontext: Introduce new tool for flushing handles from the TPM.
-tpm2_checkquote: Introduce new tool for checking validity of quotes.
-tpm2_quote: Add ability to output PCR values for quotes.
-tpm2_makecredential: add support for executing tool off-TPM.
-tpm2_pcrreset: introduce new tool for resetting PCRs.
-tpm2_quote: Fix AK auth password not being used.
+--===============7543668897828308710==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
---===============0197916400671532285==--
+PGRpdiBkaXI9ImF1dG8iPkhpLDxkaXYgZGlyPSJhdXRvIj5NeSBUUE0gMi4wIGdvdCBsb2NrZWQg
+b3V0Lkl0IGlzIGludGVyZmFjZWQgaW4gTGludXggZW52aXJvbm1lbnQuSSBmb3Jnb3QgdGhlIHBh
+c3N3b3JkIG9mIG93bmVyLGVuZG9yc2VtZW50IGFuZCBsb2Nrb3V0LiBJbSBhIGJlZ2lubmVyIGFu
+ZCBnb3Qgc3R1Y2sgaGVyZS5JcyB0aGVyZSBhbnkgd2F5IHRvIGNsZWFyIFRQTSB3aXRob3V0IGtu
+b3dpbmcgdGhlIHBhc3N3b3JkPzwvZGl2PjxkaXYgZGlyPSJhdXRvIj5XYWl0aW5nIGZvciByZXBs
+eSw8L2Rpdj48ZGl2IGRpcj0iYXV0byI+VGhhbmtzIGFuZCByZWdhcmRzLjwvZGl2PjxkaXYgZGly
+PSJhdXRvIj5SYW15YSBOYWlyPC9kaXY+PC9kaXY+Cg==
+
+--===============7543668897828308710==--
 
