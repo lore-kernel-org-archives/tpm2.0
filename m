@@ -1,62 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============7389665948537613221=="
+Content-Type: multipart/mixed; boundary="===============1906585338742689635=="
 MIME-Version: 1.0
-From: Tricca, Philip B <philip.b.tricca at intel.com>
-Subject: [tpm2] tpm2-abrmd: 2.2.0_rc0
-Date: Sun, 07 Jul 2019 00:36:18 +0000
-Message-ID: <DB638850A6A2434A93ECADDA0BC838909CEA4421@ORSMSX104.amr.corp.intel.com>
+From: ramyasnair ramyasnair <ramyasnair1996 at gmail.com>
+Subject: Re: [tpm2] Question regarding TPM2.0 lockout
+Date: Mon, 08 Jul 2019 15:51:58 +0530
+Message-ID: <CA+M7zR0fjQwfHQ3d=zjqmqs6e8sJe32me_Ns=of0pyVXyBdbQg@mail.gmail.com>
+In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0163ADF0C1@EXCH2010B.sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7389665948537613221==
+--===============1906585338742689635==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The first release candidate for tpm2-abrmd version 2.2.0 is available here:=
- https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.2.0_rc0.
+Will do, thanks!
 
-Philip
+On Tue 2 Jul, 2019, 4:39 PM Fuchs, Andreas, <andreas.fuchs(a)sit.fraunhofer=
+.de>
+wrote:
 
---===============7389665948537613221==
+> Use the BIOS.
+> There should be a clear option as well.
+> ------------------------------
+> *From:* tpm2 [tpm2-bounces(a)lists.01.org] on behalf of ramyasnair
+> ramyasnair [ramyasnair1996(a)gmail.com]
+> *Sent:* Tuesday, July 02, 2019 11:19
+> *To:* tpm2(a)lists.01.org
+> *Subject:* [tpm2] Question regarding TPM2.0 lockout
+>
+> Hi,
+> My TPM 2.0 got locked out.It is interfaced in Linux environment.I forgot
+> the password of owner,endorsement and lockout. Im a beginner and got stuck
+> here.Is there any way to clear TPM without knowing the password?
+> Waiting for reply,
+> Thanks and regards.
+> Ramya Nair
+>
+
+--===============1906585338742689635==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
-cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
-Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
-b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
-bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGUgZmlyc3QgcmVsZWFzZSBjYW5kaWRhdGUgZm9yIHRw
-bTItYWJybWQgdmVyc2lvbiAyLjIuMCBpcyBhdmFpbGFibGUgaGVyZToKPGEgaHJlZj0iaHR0cHM6
-Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9yZWxlYXNlcy90YWcvMi4yLjBf
-cmMwIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL3JlbGVhc2Vz
-L3RhZy8yLjIuMF9yYzA8L2E+LjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+UGhpbGlwPG86cD48L286
-cD48L3A+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
+PGRpdiBkaXI9ImF1dG8iPldpbGwgZG8sIHRoYW5rcyHCoDwvZGl2Pjxicj48ZGl2IGNsYXNzPSJn
+bWFpbF9xdW90ZSI+PGRpdiBkaXI9Imx0ciIgY2xhc3M9ImdtYWlsX2F0dHIiPk9uIFR1ZSAyIEp1
+bCwgMjAxOSwgNDozOSBQTSBGdWNocywgQW5kcmVhcywgJmx0OzxhIGhyZWY9Im1haWx0bzphbmRy
+ZWFzLmZ1Y2hzQHNpdC5mcmF1bmhvZmVyLmRlIj5hbmRyZWFzLmZ1Y2hzQHNpdC5mcmF1bmhvZmVy
+LmRlPC9hPiZndDsgd3JvdGU6PGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90
+ZSIgc3R5bGU9Im1hcmdpbjowIDAgMCAuOGV4O2JvcmRlci1sZWZ0OjFweCAjY2NjIHNvbGlkO3Bh
+ZGRpbmctbGVmdDoxZXgiPgoKCgoKPGRpdj4KPGRpdiBzdHlsZT0iZGlyZWN0aW9uOmx0cjtmb250
+LWZhbWlseTpUYWhvbWE7Y29sb3I6IzAwMDAwMDtmb250LXNpemU6MTBwdCI+CjxkaXY+VXNlIHRo
+ZSBCSU9TLjwvZGl2Pgo8ZGl2PlRoZXJlIHNob3VsZCBiZSBhIGNsZWFyIG9wdGlvbiBhcyB3ZWxs
+Ljxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OlRpbWVzIE5ldyBSb21hbjtjb2xv
+cjojMDAwMDAwO2ZvbnQtc2l6ZToxNnB4Ij4KPGhyPgo8ZGl2IGlkPSJtXzM1MjU1MzYxNzEzNDMy
+MDIyMzdkaXZScEY5MDM0NjQiIHN0eWxlPSJkaXJlY3Rpb246bHRyIj48Zm9udCBzaXplPSIyIiBm
+YWNlPSJUYWhvbWEiIGNvbG9yPSIjMDAwMDAwIj48Yj5Gcm9tOjwvYj4gdHBtMiBbPGEgaHJlZj0i
+bWFpbHRvOnRwbTItYm91bmNlc0BsaXN0cy4wMS5vcmciIHRhcmdldD0iX2JsYW5rIiByZWw9Im5v
+cmVmZXJyZXIiPnRwbTItYm91bmNlc0BsaXN0cy4wMS5vcmc8L2E+XSBvbiBiZWhhbGYgb2YgcmFt
+eWFzbmFpciByYW15YXNuYWlyIFs8YSBocmVmPSJtYWlsdG86cmFteWFzbmFpcjE5OTZAZ21haWwu
+Y29tIiB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub3JlZmVycmVyIj5yYW15YXNuYWlyMTk5NkBnbWFp
+bC5jb208L2E+XTxicj4KPGI+U2VudDo8L2I+IFR1ZXNkYXksIEp1bHkgMDIsIDIwMTkgMTE6MTk8
+YnI+CjxiPlRvOjwvYj4gPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0YXJnZXQ9
+Il9ibGFuayIgcmVsPSJub3JlZmVycmVyIj50cG0yQGxpc3RzLjAxLm9yZzwvYT48YnI+CjxiPlN1
+YmplY3Q6PC9iPiBbdHBtMl0gUXVlc3Rpb24gcmVnYXJkaW5nIFRQTTIuMCBsb2Nrb3V0PGJyPgo8
+L2ZvbnQ+PGJyPgo8L2Rpdj4KPGRpdj48L2Rpdj4KPGRpdj4KPGRpdiBkaXI9ImF1dG8iPkhpLAo8
+ZGl2IGRpcj0iYXV0byI+TXkgVFBNIDIuMCBnb3QgbG9ja2VkIG91dC5JdCBpcyBpbnRlcmZhY2Vk
+IGluIExpbnV4IGVudmlyb25tZW50LkkgZm9yZ290IHRoZSBwYXNzd29yZCBvZiBvd25lcixlbmRv
+cnNlbWVudCBhbmQgbG9ja291dC4gSW0gYSBiZWdpbm5lciBhbmQgZ290IHN0dWNrIGhlcmUuSXMg
+dGhlcmUgYW55IHdheSB0byBjbGVhciBUUE0gd2l0aG91dCBrbm93aW5nIHRoZSBwYXNzd29yZD88
+L2Rpdj4KPGRpdiBkaXI9ImF1dG8iPldhaXRpbmcgZm9yIHJlcGx5LDwvZGl2Pgo8ZGl2IGRpcj0i
+YXV0byI+VGhhbmtzIGFuZCByZWdhcmRzLjwvZGl2Pgo8ZGl2IGRpcj0iYXV0byI+UmFteWEgTmFp
+cjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+Cgo8L2Jsb2NrcXVvdGU+
+PC9kaXY+Cg==
 
---===============7389665948537613221==--
+--===============1906585338742689635==--
 
