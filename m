@@ -1,87 +1,92 @@
-Content-Type: multipart/mixed; boundary="===============4469253424320348484=="
+Content-Type: multipart/mixed; boundary="===============0296821798016593039=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] Generating a key
-Date: Tue, 09 Jul 2019 20:12:40 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DCBCD1@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649DCBC99@ORSMSX101.amr.corp.intel.com
+From: Andersen, John <john.s.andersen at intel.com>
+Subject: [tpm2] TPM2 TSS Python Bindings: Update, Request for Naming Ideas,
+ Further Abstraction?
+Date: Tue, 09 Jul 2019 15:59:50 -0700
+Message-ID: <20190709225950.GJ11622@johnsa1-desk.jf.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4469253424320348484==
+--===============0296821798016593039==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+TPM2 TSS Python Bindings: Update, Request for Naming Ideas, Further Abstrac=
+tion?
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
+Update
+------
 
-> -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Roberts, Wil=
-liam C
-> Sent: Tuesday, July 9, 2019 3:06 PM
-> To: ramyasnair ramyasnair <ramyasnair1996(a)gmail.com>; tpm2(a)lists.01.o=
-rg
-> Subject: Re: [tpm2] Generating a key
-> =
+We've switched over to using swig (a move that it sounds like @AndreasFuchs=
+SIT
+and @tstruk had discussed, and @tstruk implemented). We've successfully pac=
+kaged
+it into a setuptools package which we can upload to PyPi (Pythons package
+management system).
 
-> You need to create the primary key and mark it persistent if you want tha=
-t key to
-> be available after reboot Without having to re-create the primary key. Pr=
-imary
-> keys are unique in their behavior. Their like a transient Object that alw=
-ays has to
-> be re-created in the same fashion to get the same key.
-> =
+TODO's are still the same as they were, packaging was hard. It sounds like =
+we'll
+be releasing this as a separate repo (tpm2-software/tpm2-pyesys or somethin=
+g,
+I'd like to get ideas and votes on names (below).
 
-> # create a primary key and generate a context file ./tools/tpm2_createpri=
-mary -o
-> primary.ctx
-> =
+We've re-used the CI setup from the tools repo, aka the docker setup. My pl=
+an
+now is to start re-writing some of the integration tests that are present i=
+n the
+TSS repo using the Python bindings.
 
-> # make the primary key persistent so it's available after reboot without =
-recreating
-> it ./tools/tpm2_evictcontrol -a o -c primary.ctx
-> persistent-handle: 0x81000000
-> action: persisted
+Since we're releasing this as a separate repo the name has to get cleared b=
+y our
+legal dept. and we have to go through some other internal processes. So code
+might not be in the open for a bit. But I'll keep you all up to date as thi=
+ngs
+progress.
 
-You can also do this:
-./tools/tpm2_evictcontrol -a o -c primary.ctx -o primary.handle
+TODOs
+~~~~~
+- Add Support for TCTIs (via a libtss2-tcti or libpytpm2tss, depending on
+  what comes first)
+- Add documentation
+- Add more integration and/or unit testing
+- Code review
 
-Which gives you a ESYS_TR serialized to disk. Rather than using the raw han=
-dle to reference
-Your object, which allows for a MITM attack, you can just use that primary.=
-handle file to
-Reference it, and it verifies the object is what you expected thus preventi=
-ng MITM.
+Naming
+------
 
-> =
+Options so far (please add suggestions if you have any):
+- tpm2-pyesys
+- pytss_esys
+- pytpm2tss
 
-> You can control what address the key is persisted at via the -p option to
-> evictcontrol, else It will find the first available slot and use that.
-> =
+Further Abstraction?
+--------------------
 
-> > -----Original Message-----
-> > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of ramyasnair
-> > ramyasnair
-> > Sent: Monday, July 8, 2019 11:10 PM
-> > To: tpm2(a)lists.01.org
-> > Subject: [tpm2] Generating a key
-> >
-> > Hi,
-> > I tried generating a key using tpm2tss-genkey under owner authority.
-> > But the key generated is written to the disk.I want to load the key to
-> > the tpm.I used tpm2_createprimary and tpm2_load commands as well.How
-> > do I verify if I have successfully loaded the key into the TPM and
-> > store it there?I need help since I'm a beginner.
-> >
-> > Thanks and regards
-> > Ramya Nair
-> =
+We need to decide if we want to provide a straight wrapper or abstract into=
+ a
+more pythonic interface (similar to what @AndreasFuchsSIT did with his clas=
+ses
+in PR 1248: https://github.com/tpm2-software/tpm2-tss/blob/1af543f2cc1ba44a=
+f66a6279eca5473864e7bfc9/bindings/python/pytpm2tss/__init__.py#L65-L81).
 
-> _______________________________________________
-> tpm2 mailing list
-> tpm2(a)lists.01.org
-> https://lists.01.org/mailman/listinfo/tpm2
+So, should the API be a 1:1 mapping to the ESYS API in TSS or should we pro=
+vide
+a layer of abstraction above that. We could of course do this after the ini=
+tial
+release of the Python bindings, but we need to decide if we want to, and th=
+en
+when we want to time wise. As that will obviously take more time to impleme=
+nt,
+validate, and agree upon.
 
---===============4469253424320348484==--
+Thanks,
+John
+
+--===============0296821798016593039==--
 
