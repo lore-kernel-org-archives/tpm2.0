@@ -1,120 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============8353188551586063157=="
+Content-Type: multipart/mixed; boundary="===============5781234095551605350=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: Re: [tpm2] TPM2 TSS Python Bindings: Update, Request for Naming Ideas,
- Further Abstraction?
-Date: Wed, 10 Jul 2019 08:05:46 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163AE4592@EXCH2010B.sit.fraunhofer.de>
-In-Reply-To: 20190709225950.GJ11622@johnsa1-desk.jf.intel.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] Loading keys
+Date: Wed, 10 Jul 2019 19:16:27 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DCC012@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CA+M7zR13GB7iLXO=9EK4ocJ97JARx6pF-soi3G-kaOX_XnXJng@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8353188551586063157==
+--===============5781234095551605350==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The ESYS spec was written intentionally with bindings OO-languages in mind.
-That's why we follow the naming convention of GObject for function names
-to begin with. Unfortunately, we had to carry around the context everywhere=
- as
-well, but that can be removed.
-Thus, I'd vode for "more abstract" with classes.
 
-Regarding tcti: I think it should be sufficient to provide bindings for the=
- tctildr
-library. I even wanted to go as far as to included it with names optional p=
-arameters
-directly into the Esys_Initialize call.
 
-Great to see the work be picked up !
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of ramyasnair
+> ramyasnair
+> Sent: Wednesday, July 10, 2019 2:22 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Loading keys
+> =
 
-________________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of Andersen, John [john.=
-s.andersen(a)intel.com]
-Sent: Wednesday, July 10, 2019 00:59
-To: tpm2(a)lists.01.org
-Subject: [tpm2] TPM2 TSS Python Bindings: Update, Request for Naming Ideas,=
- Further Abstraction?
+> Hi,
+> When I try to load keys,the files are getting stored as .pub and .priv. W=
+hy is the
+> private key getting stored in the disk?Even after I load the files also r=
+emains in
+> the disk. The TPM is supposed to store it in the chip itself as far as I =
+understand it.
+> Thanks and regards
+> Ramya
 
-TPM2 TSS Python Bindings: Update, Request for Naming Ideas, Further Abstrac=
-tion?
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
+The TPM has two different types of memory, volatile and non-volatile. By de=
+fault, when you
+create an object, it's in the non-volatile memory as a "transient object". =
+That object goes
+away on generally two conditions:
+1. Tpm reboot
+2. evicted from the tpm via tpm2_evictcotrol.
 
-Update
-------
+Those pub and priv files are sealed to your TPM. Internally, the TPM encryp=
+ts and integrity
+protects those blobs. So in theory, the worst thing an attacker can do if t=
+hey get ahold of
+those blobs is DoS via delete (requires fs permissions). Key use attacks sh=
+ould be thwarted
+by strong policies and DA lockout Protections. You should still protect tho=
+se files with good
+DAC and MAC controls.
 
-We've switched over to using swig (a move that it sounds like @AndreasFuchs=
-SIT
-and @tstruk had discussed, and @tstruk implemented). We've successfully pac=
-kaged
-it into a setuptools package which we can upload to PyPi (Pythons package
-management system).
+When you call tpm2_load with the .pub and .priv files, that command loads t=
+he object into
+Non-volatile memory and gives you back a context file to reference that obj=
+ect from. However,
+You can use tpm2_evictcontrol to persist the object at a non-volatile locat=
+ion and reference
+That object via a raw tpm handle (think of it like a pointer address in C) =
+or an ESYS_TR blob file
+Which provides mechanisms against MITM attacks. It ensures that the object =
+you want to get to
+Via an index into non-volatile memory is the object you expect it to be.
 
-TODO's are still the same as they were, packaging was hard. It sounds like =
-we'll
-be releasing this as a separate repo (tpm2-software/tpm2-pyesys or somethin=
-g,
-I'd like to get ideas and votes on names (below).
+After you have an object loaded and have its context file, which is only go=
+od for that boot of the TPM,
+You can persist it like so:
 
-We've re-used the CI setup from the tools repo, aka the docker setup. My pl=
-an
-now is to start re-writing some of the integration tests that are present i=
-n the
-TSS repo using the Python bindings.
+tpm2_evictcontrol -a o -c key.ctx -o key.handle
 
-Since we're releasing this as a separate repo the name has to get cleared b=
-y our
-legal dept. and we have to go through some other internal processes. So code
-might not be in the open for a bit. But I'll keep you all up to date as thi=
-ngs
-progress.
+You can use the -p command to indicate a specific index to persist the obje=
+ct/key at, or you can just
+Not use -p and it will pick the first open slot. The tool outputs in YAML w=
+hat happened and the
+Index it persisted it at.
 
-TODOs
-~~~~~
-- Add Support for TCTIs (via a libtss2-tcti or libpytpm2tss, depending on
-  what comes first)
-- Add documentation
-- Add more integration and/or unit testing
-- Code review
+Bill
 
-Naming
-------
 
-Options so far (please add suggestions if you have any):
-- tpm2-pyesys
-- pytss_esys
-- pytpm2tss
 
-Further Abstraction?
---------------------
-
-We need to decide if we want to provide a straight wrapper or abstract into=
- a
-more pythonic interface (similar to what @AndreasFuchsSIT did with his clas=
-ses
-in PR 1248: https://github.com/tpm2-software/tpm2-tss/blob/1af543f2cc1ba44a=
-f66a6279eca5473864e7bfc9/bindings/python/pytpm2tss/__init__.py#L65-L81).
-
-So, should the API be a 1:1 mapping to the ESYS API in TSS or should we pro=
-vide
-a layer of abstraction above that. We could of course do this after the ini=
-tial
-release of the Python bindings, but we need to decide if we want to, and th=
-en
-when we want to time wise. As that will obviously take more time to impleme=
-nt,
-validate, and agree upon.
-
-Thanks,
-John
-_______________________________________________
-tpm2 mailing list
-tpm2(a)lists.01.org
-https://lists.01.org/mailman/listinfo/tpm2
-
---===============8353188551586063157==--
+--===============5781234095551605350==--
 
