@@ -1,33 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============8488592508107625007=="
+Content-Type: multipart/mixed; boundary="===============2798921409029279955=="
 MIME-Version: 1.0
-From: Alexander Steffen <Alexander.Steffen at infineon.com>
-Subject: Re: [tpm2] TPM2 TSS Python Bindings: Update, Request for Naming Ideas,
- Further Abstraction?
-Date: Mon, 15 Jul 2019 18:30:27 +0200
-Message-ID: <eb65161c-1002-51cf-4900-9a7e4dde23b9@infineon.com>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0163AE4592@EXCH2010B.sit.fraunhofer.de
+From: Nick Meyer <nimeyer at verizonmedia.com>
+Subject: [tpm2] Read event log in booted Linux
+Date: Mon, 15 Jul 2019 15:04:46 -0500
+Message-ID: <CAO6U=OZu5skEEnBVX2OWA6ue=355jx2Xe8851-SSQxpgySBTGg@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8488592508107625007==
+--===============2798921409029279955==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 10.07.2019 10:05, Fuchs, Andreas wrote:
-> The ESYS spec was written intentionally with bindings OO-languages in min=
-d.
-> That's why we follow the naming convention of GObject for function names
-> to begin with. Unfortunately, we had to carry around the context everywhe=
-re as
-> well, but that can be removed.
-> Thus, I'd vode for "more abstract" with classes.
+Hello all,
 
-Yes, please. As a Python developer, you usually do not want to deal with =
+Is there a way to read the TCG event log in the booted OS on an EFI Linux
+system?
 
-all the complexity of a C API, when you are used to much nicer interfaces :)
+I am trying to confirm some behavior I am seeing between different vendors'
+implementations and how they are handling ExitBootServices().
 
-Alexander
+Thanks,
 
---===============8488592508107625007==--
+Nick Meyer
+Verizon Media
+
+--===============2798921409029279955==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+SGVsbG8gYWxsLDxkaXY+PGJyPjwvZGl2PjxkaXY+SXMgdGhlcmUgYSB3
+YXkgdG8gcmVhZCB0aGUgVENHIGV2ZW50IGxvZyBpbiB0aGUgYm9vdGVkIE9TIG9uIGFuIEVGSSBM
+aW51eCBzeXN0ZW0/PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5JIGFtIHRyeWluZyB0byBjb25m
+aXJtIHNvbWUgYmVoYXZpb3IgSSBhbSBzZWVpbmcgYmV0d2VlbiBkaWZmZXJlbnQgdmVuZG9ycyYj
+Mzk7IGltcGxlbWVudGF0aW9ucyBhbmQgaG93IHRoZXkgYXJlIGhhbmRsaW5nIEV4aXRCb290U2Vy
+dmljZXMoKS48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRoYW5rcyw8L2Rpdj48ZGl2Pjxicj48
+L2Rpdj48ZGl2Pk5pY2sgTWV5ZXI8L2Rpdj48ZGl2PlZlcml6b24gTWVkaWE8L2Rpdj48ZGl2Pjxk
+aXY+PGRpdiBkaXI9Imx0ciIgY2xhc3M9ImdtYWlsX3NpZ25hdHVyZSIgZGF0YS1zbWFydG1haWw9
+ImdtYWlsX3NpZ25hdHVyZSI+PHAgc3R5bGU9Im1hcmdpbjowcHg7Zm9udC1mYW1pbHk6JiMzOTtW
+ZXJpem9uIE5IRyBEUyYjMzk7LEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjFlbTt0ZXh0LWFs
+aWduOmxlZnQ7bGluZS1oZWlnaHQ6MTAwJTtjb2xvcjpibGFjayI+PGJyPjwvcD48L2Rpdj48L2Rp
+dj48L2Rpdj48L2Rpdj4K
+
+--===============2798921409029279955==--
 
