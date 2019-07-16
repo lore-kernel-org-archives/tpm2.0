@@ -1,112 +1,57 @@
-Content-Type: multipart/mixed; boundary="===============3618758549909538931=="
+Content-Type: multipart/mixed; boundary="===============5796540699265896608=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] Question about importing keys into the tpm
-Date: Tue, 16 Jul 2019 15:45:36 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DCE450@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: DM5PR03MB29697C1E181822CE2AFC2128E6CF0@DM5PR03MB2969.namprd03.prod.outlook.com
+From: Oliver, Dario N <dario.n.oliver at intel.com>
+Subject: Re: [tpm2] tpm2 Digest, Vol 25, Issue 9
+Date: Tue, 16 Jul 2019 20:33:06 +0000
+Message-ID: <20A6FE0AC912764FB8B5BC5A1A7CB92B37C904E8@fmsmsx101.amr.corp.intel.com>
+In-Reply-To: mailman.11.1563303602.5925.tpm2@lists.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3618758549909538931==
+--===============5796540699265896608==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-As Andreas pointed out, hmac !=3D aes.
+Hello Nick
 
-There are two ways to get an externally generated key into the TPM:
-1. tpm2_import
-2. tpm2_loadexternal
+The TPM Event Log is usually in /sys/kernel/security/tpm0/binary_boot_measu=
+rements (at least in Fedora distros)
 
-The difference is, whether or not you need/want the object to be protected =
-by the TPM.
-If you import it, it's protected by the parent object. This is usually what=
- people want
-for keys.
+That log is in binary format, following the TCG specification for log event=
+s.
 
-Example for importing an AES128 key:
-tpm2_createprimary -o primary.ctx
-dd if=3D/dev/urandom of=3Drand.key bs=3D1 count=3D16
-tpm2_import -C primary.ctx -G aes -u key.pub -r key.priv -i rand.key
+It can be read in human friendly format with a parser:
+	1. iml2text https://www.mankier.com/8/iml2text
+	2. binary_bios_measurement_parser https://github.com/ValdikSS/binary_bios_=
+measurements_parser
 
-I think there's two issues:
-1. the man page needs corrections.
-2. we don't support hmac keys in import.
-See: https://github.com/tpm2-software/tpm2-tools/issues/1597
-
-> -----Original Message-----
-> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Gallagher, J=
-ames
-> Sent: Monday, July 15, 2019 7:03 AM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] Question about importing keys into the tpm
-> =
-
-> Hello,
-> =
-
-> I am looking to import a premade 128 bit key into a TPM with the intentio=
-n of
-> using it for the tpm2_hmac function. I think the tpm2_import command is w=
-hat I
-> am looking for, but I am having trouble getting it working. The tpm2_impo=
-rt spec
-> sheet has an example to follow but it failed for me. Any help would be gr=
-eatly
-> appreciated.
-> =
-
-> =
-
-> =
-
-> =
-
-> The commands I tried to run:
-> =
-
-> sudo tpm2_createprimary -Grsa2048:aes128cfb -C o -P <password> -o parent.=
-ctx
-> sudo dd if=3D/dev/urandom of=3Drand.key bs=3D1 count=3D16 sudo tpm2_impor=
-t -C
-> parent.ctx -G aes128cfb -i rand.key
-> =
-
-> The output from running tpm2_import:
-> ERROR: Unsupported key type
-> =
-
-> note: also tried " sudo tpm2_import -C parent.ctx -G aes128cfb -i rand.ke=
-y -u
-> key.pub -r key.priv " which returns the same error.
-> =
-
-> =
-
-> additional information:
-> =
-
-> TPM: infineon optiga SLB 9670 tpm2.0 iridium board
-> =
-
-> PC: raspberry pi 3
-> =
-
-> OS: raspbian "buster "
-> =
-
-> =
-
-> =
-
-> =
-
-> Thank you for your time,
-> =
-
-> James Gallagher
+Both parsers are not 100% complete, but they show very useful information. =
 
 
---===============3618758549909538931==--
+----------------------------------------------------------------------
+
+Message: 1
+Date: Mon, 15 Jul 2019 15:04:46 -0500
+From: Nick Meyer <nimeyer(a)verizonmedia.com>
+To: tpm2(a)lists.01.org
+Subject: [tpm2] Read event log in booted Linux
+Message-ID:
+	<CAO6U=3DOZu5skEEnBVX2OWA6ue=3D355jx2Xe8851-SSQxpgySBTGg(a)mail.gmail.com>
+Content-Type: text/plain; charset=3D"utf-8"
+
+Hello all,
+
+Is there a way to read the TCG event log in the booted OS on an EFI Linux s=
+ystem?
+
+I am trying to confirm some behavior I am seeing between different vendors'
+implementations and how they are handling ExitBootServices().
+
+Thanks,
+
+Nick Meyer
+Verizon Media
+
+--===============5796540699265896608==--
 
