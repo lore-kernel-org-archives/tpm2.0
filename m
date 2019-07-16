@@ -1,48 +1,112 @@
-Content-Type: multipart/mixed; boundary="===============2798921409029279955=="
+Content-Type: multipart/mixed; boundary="===============3618758549909538931=="
 MIME-Version: 1.0
-From: Nick Meyer <nimeyer at verizonmedia.com>
-Subject: [tpm2] Read event log in booted Linux
-Date: Mon, 15 Jul 2019 15:04:46 -0500
-Message-ID: <CAO6U=OZu5skEEnBVX2OWA6ue=355jx2Xe8851-SSQxpgySBTGg@mail.gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] Question about importing keys into the tpm
+Date: Tue, 16 Jul 2019 15:45:36 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DCE450@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: DM5PR03MB29697C1E181822CE2AFC2128E6CF0@DM5PR03MB2969.namprd03.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2798921409029279955==
+--===============3618758549909538931==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello all,
+As Andreas pointed out, hmac !=3D aes.
 
-Is there a way to read the TCG event log in the booted OS on an EFI Linux
-system?
+There are two ways to get an externally generated key into the TPM:
+1. tpm2_import
+2. tpm2_loadexternal
 
-I am trying to confirm some behavior I am seeing between different vendors'
-implementations and how they are handling ExitBootServices().
+The difference is, whether or not you need/want the object to be protected =
+by the TPM.
+If you import it, it's protected by the parent object. This is usually what=
+ people want
+for keys.
 
-Thanks,
+Example for importing an AES128 key:
+tpm2_createprimary -o primary.ctx
+dd if=3D/dev/urandom of=3Drand.key bs=3D1 count=3D16
+tpm2_import -C primary.ctx -G aes -u key.pub -r key.priv -i rand.key
 
-Nick Meyer
-Verizon Media
+I think there's two issues:
+1. the man page needs corrections.
+2. we don't support hmac keys in import.
+See: https://github.com/tpm2-software/tpm2-tools/issues/1597
 
---===============2798921409029279955==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Gallagher, J=
+ames
+> Sent: Monday, July 15, 2019 7:03 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Question about importing keys into the tpm
+> =
 
-PGRpdiBkaXI9Imx0ciI+SGVsbG8gYWxsLDxkaXY+PGJyPjwvZGl2PjxkaXY+SXMgdGhlcmUgYSB3
-YXkgdG8gcmVhZCB0aGUgVENHIGV2ZW50IGxvZyBpbiB0aGUgYm9vdGVkIE9TIG9uIGFuIEVGSSBM
-aW51eCBzeXN0ZW0/PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5JIGFtIHRyeWluZyB0byBjb25m
-aXJtIHNvbWUgYmVoYXZpb3IgSSBhbSBzZWVpbmcgYmV0d2VlbiBkaWZmZXJlbnQgdmVuZG9ycyYj
-Mzk7IGltcGxlbWVudGF0aW9ucyBhbmQgaG93IHRoZXkgYXJlIGhhbmRsaW5nIEV4aXRCb290U2Vy
-dmljZXMoKS48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRoYW5rcyw8L2Rpdj48ZGl2Pjxicj48
-L2Rpdj48ZGl2Pk5pY2sgTWV5ZXI8L2Rpdj48ZGl2PlZlcml6b24gTWVkaWE8L2Rpdj48ZGl2Pjxk
-aXY+PGRpdiBkaXI9Imx0ciIgY2xhc3M9ImdtYWlsX3NpZ25hdHVyZSIgZGF0YS1zbWFydG1haWw9
-ImdtYWlsX3NpZ25hdHVyZSI+PHAgc3R5bGU9Im1hcmdpbjowcHg7Zm9udC1mYW1pbHk6JiMzOTtW
-ZXJpem9uIE5IRyBEUyYjMzk7LEFyaWFsLHNhbnMtc2VyaWY7Zm9udC1zaXplOjFlbTt0ZXh0LWFs
-aWduOmxlZnQ7bGluZS1oZWlnaHQ6MTAwJTtjb2xvcjpibGFjayI+PGJyPjwvcD48L2Rpdj48L2Rp
-dj48L2Rpdj48L2Rpdj4K
+> Hello,
+> =
 
---===============2798921409029279955==--
+> I am looking to import a premade 128 bit key into a TPM with the intentio=
+n of
+> using it for the tpm2_hmac function. I think the tpm2_import command is w=
+hat I
+> am looking for, but I am having trouble getting it working. The tpm2_impo=
+rt spec
+> sheet has an example to follow but it failed for me. Any help would be gr=
+eatly
+> appreciated.
+> =
+
+> =
+
+> =
+
+> =
+
+> The commands I tried to run:
+> =
+
+> sudo tpm2_createprimary -Grsa2048:aes128cfb -C o -P <password> -o parent.=
+ctx
+> sudo dd if=3D/dev/urandom of=3Drand.key bs=3D1 count=3D16 sudo tpm2_impor=
+t -C
+> parent.ctx -G aes128cfb -i rand.key
+> =
+
+> The output from running tpm2_import:
+> ERROR: Unsupported key type
+> =
+
+> note: also tried " sudo tpm2_import -C parent.ctx -G aes128cfb -i rand.ke=
+y -u
+> key.pub -r key.priv " which returns the same error.
+> =
+
+> =
+
+> additional information:
+> =
+
+> TPM: infineon optiga SLB 9670 tpm2.0 iridium board
+> =
+
+> PC: raspberry pi 3
+> =
+
+> OS: raspbian "buster "
+> =
+
+> =
+
+> =
+
+> =
+
+> Thank you for your time,
+> =
+
+> James Gallagher
+
+
+--===============3618758549909538931==--
 
