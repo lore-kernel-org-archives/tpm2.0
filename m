@@ -1,202 +1,273 @@
-Content-Type: multipart/mixed; boundary="===============7638508194552760099=="
+Content-Type: multipart/mixed; boundary="===============4911909921256557194=="
 MIME-Version: 1.0
-From: Garrett Fields <ghfields at gmail.com>
+From: Zhu, Bing <bing.zhu at intel.com>
 Subject: Re: [tpm2] PCR Policy enforcement when using nvram
-Date: Mon, 29 Jul 2019 12:17:43 -0400
-Message-ID: <CA++-fmtn+9Z4ssEx3A+ONZTpH-f2OO7UHMR3hZokkvPuf+1=1w@mail.gmail.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649DD3E14@ORSMSX101.amr.corp.intel.com
+Date: Mon, 29 Jul 2019 18:06:42 +0000
+Message-ID: <A3DEEEBB19900C48B49572CB9C2891C9878F5092@SHSMSX108.ccr.corp.intel.com>
+In-Reply-To: CA++-fmtn+9Z4ssEx3A+ONZTpH-f2OO7UHMR3hZokkvPuf+1=1w@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7638508194552760099==
+--===============4911909921256557194==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 29, 2019 at 10:42 AM Roberts, William C <
-william.c.roberts(a)intel.com> wrote:
+For NV index read (or write) access control in TPM2.0, the PPREAD, OWNERREA=
+D, AUTHREAD, or POLICYREAD could be combined and working as OR situation si=
+multaneously. So eventually, which one or combination you expect to use in =
+your product?
+
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Garrett Fields
+Sent: Monday, July 29, 2019 09:18 AM
+To: Roberts, William C <william.c.roberts(a)intel.com>
+Cc: tpm2(a)lists.01.org
+Subject: Re: [tpm2] PCR Policy enforcement when using nvram
+
+
+
+On Mon, Jul 29, 2019 at 10:42 AM Roberts, William C <william.c.roberts(a)in=
+tel.com<mailto:william.c.roberts(a)intel.com>> wrote:
+
+Can't you do tpm2_nvreadlock?
+
+Indeed.  That's the TPM 2.0 way I got this to work.  Set "read_stclear" att=
+ribute and run tpm2_nvreadlock.
+
+Per section 37.2.5 of https://trustedcomputinggroup.org/wp-content/uploads/=
+TPM-Rev-2.0-Part-1-Architecture-01.38.pdf
+TPMA_NV_AUTHREAD allows the Index to be read using the authValue of the Ind=
+ex; and
+TPMA_NV_POLICYREAD allows the Index to be read if the authPolicy of the Ind=
+ex is satisfied.
+---
+
+I think you're ending up in an OR situation, AUTH value OR policy. IIRC, Ja=
+vier hit this issue too, I
+added him to see if he can enlighten us.
+
+FYI you should use tpm2_policyauthorize, locking to PCR values is brittle. =
+If anything changes, you
+can lock yourself out of the object. This way you lock it to a signed polic=
+y and that policy can
+change. Ie PCR values change on update.
+I was trying to avoid the authValue OR authPolicy situation.  I thought tha=
+t only specifying the authValue to unlock and having a policy present would=
+ do an authValue AND authPolicy.  Otherwise it seems pointless to be able t=
+o attach a policy without any policy related attributes.  Since this is aut=
+ounlock of drive encryption, I was hoping to make any system twitch fail th=
+e TPM assisted autounlock and require the user to directly enter the passph=
+rase in a non-tpm prompt.  In order to re-enable the autounlock, the nvram =
+region would be deleted and recreated.  The authPolicy would check the PCRs=
+ while the authValue, since it is the filesystem's GUID, verifies it was cr=
+eated for the correct filesystem and in the event someone is playing around=
+ with disposed equipment with drives removed, recovery of the stored passwo=
+rd in a non-cleared TPM would not be possible.  Later, instead of a GUID, I=
+ could use a usb device or a connection to a server to be present to retrie=
+ve the NVRAM authValue, that unlocks the region.
 
 >
-> Can't you do tpm2_nvreadlock?
+> ------
 >
+> I would really like to incorporate the pcr system check also (kinda the w=
+hole
+> point).  I tried:
+> -----------
+> tpm2_listpcrs --tcti=3Ddevice    #To see current values
+> tpm2_createpolicy -L sha1:0,1,2,3,4,5,6,7 -o ./0-7policy.pol --policy-pcr
+>
+> tpm2_nvdefine -x 0x1000000 -a o -P ownerpass -p indexsecret -L ./0-7polic=
+y.pol -
+> b "authread|authwrite|read_stclear" -s 11
+>
+> echo "hdpassword" | tpm2_nvwrite  -x 0x1000000 -a 0x1000000 -P indexsecret
+>
+> tpm2_nvlist   # Verfiied that 0x1000000 has a "authorization policy"
+> tpm2_nvread -x 0x1000000 -a 0x1000000 -P indexsecret   #Expected to work =
+since
+> PCRs are the same as policy creation
+> tpm2_pcrextend 4:sha1=3Df1d2d2f924e986ac86fdf7b36c94bcdf32beec15
+>
+> tpm2_listpcrs    #Verify pcr4 is different
+> tpm2_nvread -x 0x1000000 -a 0x1000000 -P indexsecret   #Expected to fail
+> -----------
+> The last line I would expect to fail, because of the PCR4 change, but it =
+still
+> produces the password.  Am I missing something on the nvdefine to enable
+> policy enforcement?
 
-Indeed.  That's the TPM 2.0 way I got this to work.  Set "read_stclear"
-attribute and run tpm2_nvreadlock.
+I think if you dropped that password it would fail on both commands. You ne=
+ed
+To ensure that TPMA_NV_POLICYREAD is in there. Looking at 3.X and master
+branch, I don't see us checking if -L is specified and adding TPMA_NV_POLIC=
+YREAD
+so it's something you would have to do via attributes.
+I believe your right.  If I used policyRead only and gave up on policyAuth =
+(and the -P switch), it would have succeeded and failed as expected.  I'm j=
+ust hoping I can get it to get both working simultaneously.
 
->
-> Per section 37.2.5 of
-> https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-1-A=
-rchitecture-01.38.pdf
-> TPMA_NV_AUTHREAD allows the Index to be read using the authValue of the
-> Index; and
-> TPMA_NV_POLICYREAD allows the Index to be read if the authPolicy of the
-> Index is satisfied.
-> ---
->
-> I think you're ending up in an OR situation, AUTH value OR policy. IIRC,
-> Javier hit this issue too, I
-> added him to see if he can enlighten us.
->
-> FYI you should use tpm2_policyauthorize, locking to PCR values is brittle.
-> If anything changes, you
-> can lock yourself out of the object. This way you lock it to a signed
-> policy and that policy can
-> change. Ie PCR values change on update.
->
-> I was trying to avoid the authValue OR authPolicy situation.  I thought
-that only specifying the authValue to unlock and having a policy present
-would do an authValue AND authPolicy.  Otherwise it seems pointless to be
-able to attach a policy without any policy related attributes.  Since this
-is autounlock of drive encryption, I was hoping to make any system twitch
-fail the TPM assisted autounlock and require the user to directly enter the
-passphrase in a non-tpm prompt.  In order to re-enable the autounlock, the
-nvram region would be deleted and recreated.  The authPolicy would check
-the PCRs while the authValue, since it is the filesystem's GUID, verifies
-it was created for the correct filesystem and in the event someone is
-playing around with disposed equipment with drives removed, recovery of the
-stored password in a non-cleared TPM would not be possible.  Later, instead
-of a GUID, I could use a usb device or a connection to a server to be
-present to retrieve the NVRAM authValue, that unlocks the region.
+I really appreciate your response.  I'll play around with object  workflow.=
+  If anyone has tips on making authValue AND authPolicy apply to nvram or h=
+ave a comparable method with objects, I'd love to hear them.
 
->
-> > ------
-> >
-> > I would really like to incorporate the pcr system check also (kinda the
-> whole
-> > point).  I tried:
-> > -----------
-> > tpm2_listpcrs --tcti=3Ddevice    #To see current values
-> > tpm2_createpolicy -L sha1:0,1,2,3,4,5,6,7 -o ./0-7policy.pol --policy-p=
-cr
-> >
-> > tpm2_nvdefine -x 0x1000000 -a o -P ownerpass -p indexsecret -L
-> ./0-7policy.pol -
-> > b "authread|authwrite|read_stclear" -s 11
-> >
-> > echo "hdpassword" | tpm2_nvwrite  -x 0x1000000 -a 0x1000000 -P
-> indexsecret
-> >
-> > tpm2_nvlist   # Verfiied that 0x1000000 has a "authorization policy"
-> > tpm2_nvread -x 0x1000000 -a 0x1000000 -P indexsecret   #Expected to work
-> since
-> > PCRs are the same as policy creation
-> > tpm2_pcrextend 4:sha1=3Df1d2d2f924e986ac86fdf7b36c94bcdf32beec15
-> >
-> > tpm2_listpcrs    #Verify pcr4 is different
-> > tpm2_nvread -x 0x1000000 -a 0x1000000 -P indexsecret   #Expected to fail
-> > -----------
-> > The last line I would expect to fail, because of the PCR4 change, but it
-> still
-> > produces the password.  Am I missing something on the nvdefine to enable
-> > policy enforcement?
->
-> I think if you dropped that password it would fail on both commands. You
-> need
-> To ensure that TPMA_NV_POLICYREAD is in there. Looking at 3.X and master
-> branch, I don't see us checking if -L is specified and adding
-> TPMA_NV_POLICYREAD
-> so it's something you would have to do via attributes.
->
-> I believe your right.  If I used policyRead only and gave up on policyAuth
-(and the -P switch), it would have succeeded and failed as expected.  I'm
-just hoping I can get it to get both working simultaneously.
-
-I really appreciate your response.  I'll play around with object
-workflow.  If anyone has tips on making authValue AND authPolicy apply to
-nvram or have a comparable method with objects, I'd love to hear them.
-
---===============7638508194552760099==
+--===============4911909921256557194==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGJyPjwvZGl2Pjxicj48ZGl2IGNsYXNzPSJn
-bWFpbF9xdW90ZSI+PGRpdiBkaXI9Imx0ciIgY2xhc3M9ImdtYWlsX2F0dHIiPk9uIE1vbiwgSnVs
-IDI5LCAyMDE5IGF0IDEwOjQyIEFNIFJvYmVydHMsIFdpbGxpYW0gQyAmbHQ7PGEgaHJlZj0ibWFp
-bHRvOndpbGxpYW0uYy5yb2JlcnRzQGludGVsLmNvbSI+d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwu
-Y29tPC9hPiZndDsgd3JvdGU6PGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90
-ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQg
-cmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48YnI+CkNhbiYjMzk7dCB5b3UgZG8g
-dHBtMl9udnJlYWRsb2NrPzxicj48L2Jsb2NrcXVvdGU+PGRpdj48YnI+PC9kaXY+PGRpdj5JbmRl
-ZWQuwqAgVGhhdCYjMzk7cyB0aGUgVFBNIDIuMCB3YXkgSSBnb3QgdGhpcyB0byB3b3JrLsKgIFNl
-dCAmcXVvdDtyZWFkX3N0Y2xlYXImcXVvdDsgYXR0cmlidXRlIGFuZCBydW4gdHBtMl9udnJlYWRs
-b2NrLjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjow
-cHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIwNCwyMDQsMjA0KTtw
-YWRkaW5nLWxlZnQ6MWV4Ij48YnI+ClBlciBzZWN0aW9uIDM3LjIuNSBvZiA8YSBocmVmPSJodHRw
-czovL3RydXN0ZWRjb21wdXRpbmdncm91cC5vcmcvd3AtY29udGVudC91cGxvYWRzL1RQTS1SZXYt
-Mi4wLVBhcnQtMS1BcmNoaXRlY3R1cmUtMDEuMzgucGRmIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdl
-dD0iX2JsYW5rIj5odHRwczovL3RydXN0ZWRjb21wdXRpbmdncm91cC5vcmcvd3AtY29udGVudC91
-cGxvYWRzL1RQTS1SZXYtMi4wLVBhcnQtMS1BcmNoaXRlY3R1cmUtMDEuMzgucGRmPC9hPjxicj4K
-VFBNQV9OVl9BVVRIUkVBRCBhbGxvd3MgdGhlIEluZGV4IHRvIGJlIHJlYWQgdXNpbmcgdGhlIGF1
-dGhWYWx1ZSBvZiB0aGUgSW5kZXg7IGFuZDxicj4KVFBNQV9OVl9QT0xJQ1lSRUFEIGFsbG93cyB0
-aGUgSW5kZXggdG8gYmUgcmVhZCBpZiB0aGUgYXV0aFBvbGljeSBvZiB0aGUgSW5kZXggaXMgc2F0
-aXNmaWVkLjxicj4KLS0tPGJyPgo8YnI+CkkgdGhpbmsgeW91JiMzOTtyZSBlbmRpbmcgdXAgaW4g
-YW4gT1Igc2l0dWF0aW9uLCBBVVRIIHZhbHVlIE9SIHBvbGljeS4gSUlSQywgSmF2aWVyIGhpdCB0
-aGlzIGlzc3VlIHRvbywgSTxicj4KYWRkZWQgaGltIHRvIHNlZSBpZiBoZSBjYW4gZW5saWdodGVu
-IHVzLjxicj4KPGJyPgpGWUkgeW91IHNob3VsZCB1c2UgdHBtMl9wb2xpY3lhdXRob3JpemUsIGxv
-Y2tpbmcgdG8gUENSIHZhbHVlcyBpcyBicml0dGxlLiBJZiBhbnl0aGluZyBjaGFuZ2VzLCB5b3U8
-YnI+CmNhbiBsb2NrIHlvdXJzZWxmIG91dCBvZiB0aGUgb2JqZWN0LiBUaGlzIHdheSB5b3UgbG9j
-ayBpdCB0byBhIHNpZ25lZCBwb2xpY3kgYW5kIHRoYXQgcG9saWN5IGNhbjxicj4KY2hhbmdlLiBJ
-ZSBQQ1IgdmFsdWVzIGNoYW5nZSBvbiB1cGRhdGUuPGJyPgo8YnI+PC9ibG9ja3F1b3RlPjxkaXY+
-SSB3YXMgdHJ5aW5nIHRvIGF2b2lkIHRoZSBhdXRoVmFsdWUgT1IgYXV0aFBvbGljeSBzaXR1YXRp
-b24uwqAgSSB0aG91Z2h0IHRoYXQgb25seSBzcGVjaWZ5aW5nIHRoZSBhdXRoVmFsdWUgdG8gdW5s
-b2NrIGFuZCBoYXZpbmcgYSBwb2xpY3kgcHJlc2VudCB3b3VsZCBkbyBhbiBhdXRoVmFsdWUgQU5E
-IGF1dGhQb2xpY3kuwqAgT3RoZXJ3aXNlIGl0IHNlZW1zIHBvaW50bGVzcyB0byBiZSBhYmxlIHRv
-IGF0dGFjaCBhIHBvbGljeSB3aXRob3V0IGFueSBwb2xpY3kgcmVsYXRlZCBhdHRyaWJ1dGVzLsKg
-IFNpbmNlIHRoaXMgaXMgYXV0b3VubG9jayBvZiBkcml2ZSBlbmNyeXB0aW9uLCBJIHdhcyBob3Bp
-bmcgdG8gbWFrZSBhbnkgc3lzdGVtIHR3aXRjaCBmYWlsIHRoZSBUUE0gYXNzaXN0ZWQgYXV0b3Vu
-bG9jayBhbmQgcmVxdWlyZSB0aGUgdXNlciB0byBkaXJlY3RseSBlbnRlciB0aGUgcGFzc3BocmFz
-ZSBpbiBhIG5vbi10cG0gcHJvbXB0LsKgIEluIG9yZGVyIHRvIHJlLWVuYWJsZSB0aGUgYXV0b3Vu
-bG9jaywgdGhlIG52cmFtIHJlZ2lvbiB3b3VsZCBiZSBkZWxldGVkIGFuZCByZWNyZWF0ZWQuwqAg
-VGhlIGF1dGhQb2xpY3kgd291bGQgY2hlY2sgdGhlIFBDUnMgd2hpbGUgdGhlIGF1dGhWYWx1ZSwg
-c2luY2UgaXQgaXMgdGhlIGZpbGVzeXN0ZW0mIzM5O3MgR1VJRCwgdmVyaWZpZXMgaXQgd2FzIGNy
-ZWF0ZWQgZm9yIHRoZSBjb3JyZWN0IGZpbGVzeXN0ZW0gYW5kIGluIHRoZSBldmVudCBzb21lb25l
-IGlzIHBsYXlpbmcgYXJvdW5kIHdpdGggZGlzcG9zZWQgZXF1aXBtZW50IHdpdGggZHJpdmVzIHJl
-bW92ZWQsIHJlY292ZXJ5IG9mIHRoZSBzdG9yZWQgcGFzc3dvcmQgaW4gYSBub24tY2xlYXJlZCBU
-UE0gd291bGQgbm90IGJlIHBvc3NpYmxlLsKgIExhdGVyLCBpbnN0ZWFkIG9mIGEgR1VJRCwgSSBj
-b3VsZCB1c2UgYSB1c2IgZGV2aWNlIG9yIGEgY29ubmVjdGlvbiB0byBhIHNlcnZlciB0byBiZSBw
-cmVzZW50IHRvIHJldHJpZXZlIHRoZSBOVlJBTSBhdXRoVmFsdWUsIHRoYXQgdW5sb2NrcyB0aGUg
-cmVnaW9uLsKgwqA8L2Rpdj48ZGl2Pjxicj48L2Rpdj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxf
-cXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQ6MXB4IHNv
-bGlkIHJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+CiZndDsgPGJyPgomZ3Q7IC0t
-LS0tLTxicj4KJmd0OyA8YnI+CiZndDsgSSB3b3VsZCByZWFsbHkgbGlrZSB0byBpbmNvcnBvcmF0
-ZSB0aGUgcGNyIHN5c3RlbSBjaGVjayBhbHNvIChraW5kYSB0aGUgd2hvbGU8YnI+CiZndDsgcG9p
-bnQpLsKgIEkgdHJpZWQ6PGJyPgomZ3Q7IC0tLS0tLS0tLS0tPGJyPgomZ3Q7IHRwbTJfbGlzdHBj
-cnMgLS10Y3RpPWRldmljZcKgIMKgICNUbyBzZWUgY3VycmVudCB2YWx1ZXM8YnI+CiZndDsgdHBt
-Ml9jcmVhdGVwb2xpY3kgLUwgc2hhMTowLDEsMiwzLDQsNSw2LDcgLW8gLi8wLTdwb2xpY3kucG9s
-IC0tcG9saWN5LXBjcjxicj4KJmd0OyA8YnI+CiZndDsgdHBtMl9udmRlZmluZSAteCAweDEwMDAw
-MDAgLWEgbyAtUCBvd25lcnBhc3MgLXAgaW5kZXhzZWNyZXQgLUwgLi8wLTdwb2xpY3kucG9sIC08
-YnI+CiZndDsgYiAmcXVvdDthdXRocmVhZHxhdXRod3JpdGV8cmVhZF9zdGNsZWFyJnF1b3Q7IC1z
-IDExPGJyPgomZ3Q7IDxicj4KJmd0OyBlY2hvICZxdW90O2hkcGFzc3dvcmQmcXVvdDsgfCB0cG0y
-X252d3JpdGXCoCAteCAweDEwMDAwMDAgLWEgMHgxMDAwMDAwIC1QIGluZGV4c2VjcmV0PGJyPgom
-Z3Q7IDxicj4KJmd0OyB0cG0yX252bGlzdMKgIMKgIyBWZXJmaWllZCB0aGF0IDB4MTAwMDAwMCBo
-YXMgYSAmcXVvdDthdXRob3JpemF0aW9uIHBvbGljeSZxdW90Ozxicj4KJmd0OyB0cG0yX252cmVh
-ZCAteCAweDEwMDAwMDAgLWEgMHgxMDAwMDAwIC1QIGluZGV4c2VjcmV0wqAgwqAjRXhwZWN0ZWQg
-dG8gd29yayBzaW5jZTxicj4KJmd0OyBQQ1JzIGFyZSB0aGUgc2FtZSBhcyBwb2xpY3kgY3JlYXRp
-b248YnI+CiZndDsgdHBtMl9wY3JleHRlbmQgNDpzaGExPWYxZDJkMmY5MjRlOTg2YWM4NmZkZjdi
-MzZjOTRiY2RmMzJiZWVjMTU8YnI+CiZndDsgPGJyPgomZ3Q7IHRwbTJfbGlzdHBjcnPCoCDCoCAj
-VmVyaWZ5IHBjcjQgaXMgZGlmZmVyZW50PGJyPgomZ3Q7IHRwbTJfbnZyZWFkIC14IDB4MTAwMDAw
-MCAtYSAweDEwMDAwMDAgLVAgaW5kZXhzZWNyZXTCoCDCoCNFeHBlY3RlZCB0byBmYWlsPGJyPgom
-Z3Q7IC0tLS0tLS0tLS0tPGJyPgomZ3Q7IFRoZSBsYXN0IGxpbmUgSSB3b3VsZCBleHBlY3QgdG8g
-ZmFpbCwgYmVjYXVzZSBvZiB0aGUgUENSNCBjaGFuZ2UsIGJ1dCBpdCBzdGlsbDxicj4KJmd0OyBw
-cm9kdWNlcyB0aGUgcGFzc3dvcmQuwqAgQW0gSSBtaXNzaW5nIHNvbWV0aGluZyBvbiB0aGUgbnZk
-ZWZpbmUgdG8gZW5hYmxlPGJyPgomZ3Q7IHBvbGljeSBlbmZvcmNlbWVudD88YnI+Cjxicj4KSSB0
-aGluayBpZiB5b3UgZHJvcHBlZCB0aGF0IHBhc3N3b3JkIGl0IHdvdWxkIGZhaWwgb24gYm90aCBj
-b21tYW5kcy4gWW91IG5lZWQ8YnI+ClRvIGVuc3VyZSB0aGF0IFRQTUFfTlZfUE9MSUNZUkVBRCBp
-cyBpbiB0aGVyZS4gTG9va2luZyBhdCAzLlggYW5kIG1hc3Rlcjxicj4KYnJhbmNoLCBJIGRvbiYj
-Mzk7dCBzZWUgdXMgY2hlY2tpbmcgaWYgLUwgaXMgc3BlY2lmaWVkIGFuZCBhZGRpbmcgVFBNQV9O
-Vl9QT0xJQ1lSRUFEPGJyPgpzbyBpdCYjMzk7cyBzb21ldGhpbmcgeW91IHdvdWxkIGhhdmUgdG8g
-ZG8gdmlhIGF0dHJpYnV0ZXMuPGJyPjxicj48L2Jsb2NrcXVvdGU+PGRpdj5JIGJlbGlldmUgeW91
-ciByaWdodC7CoCBJZiBJIHVzZWQgcG9saWN5UmVhZCBvbmx5IGFuZCBnYXZlIHVwIG9uIHBvbGlj
-eUF1dGggKGFuZCB0aGUgLVAgc3dpdGNoKSwgaXQgd291bGQgaGF2ZSBzdWNjZWVkZWQgYW5kIGZh
-aWxlZCBhcyBleHBlY3RlZC7CoCBJJiMzOTttIGp1c3QgaG9waW5nIEkgY2FuIGdldCBpdCB0byBn
-ZXQgYm90aCB3b3JraW5nIHNpbXVsdGFuZW91c2x5LjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+
-SSByZWFsbHkgYXBwcmVjaWF0ZSB5b3VyIHJlc3BvbnNlLsKgIEkmIzM5O2xsIHBsYXkgYXJvdW5k
-IHdpdGggb2JqZWN0wqAgd29ya2Zsb3cuwqAgSWYgYW55b25lIGhhcyB0aXBzIG9uIG1ha2luZyBh
-dXRoVmFsdWUgQU5EIGF1dGhQb2xpY3kgYXBwbHkgdG8gbnZyYW0gb3IgaGF2ZSBhIGNvbXBhcmFi
-bGUgbWV0aG9kIHdpdGggb2JqZWN0cywgSSYjMzk7ZCBsb3ZlIHRvIGhlYXIgdGhlbS48L2Rpdj48
-L2Rpdj48L2Rpdj4K
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+5a6L5L2TOw0KCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQ0KQGZvbnQtZmFjZQ0KCXtm
+b250LWZhbWlseToiQ2FtYnJpYSBNYXRoIjsNCglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMgMiA0
+O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsNCglwYW5vc2UtMToyIDE1IDUg
+MiAyIDIgNCAzIDIgNDt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OiJUcmVidWNoZXQgTVMi
+Ow0KCXBhbm9zZS0xOjIgMTEgNiAzIDIgMiAyIDIgMiA0O30NCkBmb250LWZhY2UNCgl7Zm9udC1m
+YW1pbHk6IlxA5a6L5L2TIjsNCglwYW5vc2UtMToyIDEgNiAwIDMgMSAxIDEgMSAxO30NCkBmb250
+LWZhY2UNCgl7Zm9udC1mYW1pbHk6QXJpYWxNVDsNCglwYW5vc2UtMTowIDAgMCAwIDAgMCAwIDAg
+MCAwO30NCi8qIFN0eWxlIERlZmluaXRpb25zICovDQpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFs
+LCBkaXYuTXNvTm9ybWFsDQoJe21hcmdpbjowaW47DQoJbWFyZ2luLWJvdHRvbTouMDAwMXB0Ow0K
+CWZvbnQtc2l6ZToxMi4wcHQ7DQoJZm9udC1mYW1pbHk6IlRpbWVzIE5ldyBSb21hbiIsc2VyaWY7
+fQ0KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluaw0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJ
+Y29sb3I6Ymx1ZTsNCgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30NCmE6dmlzaXRlZCwgc3Bh
+bi5Nc29IeXBlcmxpbmtGb2xsb3dlZA0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6
+cHVycGxlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0Kc3Bhbi5FbWFpbFN0eWxlMTcN
+Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtcmVwbHk7DQoJZm9udC1mYW1pbHk6IlRyZWJ1Y2hl
+dCBNUyIsc2Fucy1zZXJpZjsNCgljb2xvcjpibHVlO30NCnNwYW4uZm9udHN0eWxlMDENCgl7bXNv
+LXN0eWxlLW5hbWU6Zm9udHN0eWxlMDE7DQoJZm9udC1mYW1pbHk6IkFyaWFsTVQiLHNlcmlmOw0K
+CWNvbG9yOmJsYWNrOw0KCWZvbnQtd2VpZ2h0Om5vcm1hbDsNCglmb250LXN0eWxlOm5vcm1hbDt9
+DQouTXNvQ2hwRGVmYXVsdA0KCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTt9DQpAcGFnZSBX
+b3JkU2VjdGlvbjENCgl7c2l6ZTo4LjVpbiAxMS4waW47DQoJbWFyZ2luOjEuMGluIDEuMjVpbiAx
+LjBpbiAxLjI1aW47fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQot
+LT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4
+dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3Rl
+IG1zbyA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpl
+eHQ9ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+
+DQo8L2hlYWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIgdmxpbms9InB1cnBsZSI+
+DQo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
+Y2xhc3M9ImZvbnRzdHlsZTAxIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdCI+Rm9yIE5W
+IGluZGV4IHJlYWQgKG9yIHdyaXRlKSBhY2Nlc3MgY29udHJvbCBpbiBUUE0yLjAsIHRoZSBQUFJF
+QUQsIE9XTkVSUkVBRCwgQVVUSFJFQUQsIG9yIFBPTElDWVJFQUQgY291bGQgYmUgY29tYmluZWQg
+YW5kIHdvcmtpbmcgYXMgT1Igc2l0dWF0aW9uIHNpbXVsdGFuZW91c2x5LiBTbyBldmVudHVhbGx5
+LA0KIHdoaWNoIG9uZSBvciBjb21iaW5hdGlvbiB5b3UgZXhwZWN0IHRvIHVzZSBpbiB5b3VyIHBy
+b2R1Y3Q/PC9zcGFuPjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZh
+bWlseTomcXVvdDtUcmVidWNoZXQgTVMmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibHVlIj48bzpw
+PjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBuYW1lPSJfTWFpbEVu
+ZENvbXBvc2UiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90
+O1RyZWJ1Y2hldCBNUyZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsdWUiPjxvOnA+Jm5ic3A7PC9v
+OnA+PC9zcGFuPjwvYT48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48YSBuYW1lPSJfX19fX3Jl
+cGx5c2VwYXJhdG9yIj48L2E+PGI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1m
+YW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj5Gcm9tOjwvc3Bhbj48L2I+PHNw
+YW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90
+OyxzYW5zLXNlcmlmIj4gdHBtMiBbbWFpbHRvOnRwbTItYm91bmNlc0BsaXN0cy4wMS5vcmddDQo8
+Yj5PbiBCZWhhbGYgT2YgPC9iPkdhcnJldHQgRmllbGRzPGJyPg0KPGI+U2VudDo8L2I+IE1vbmRh
+eSwgSnVseSAyOSwgMjAxOSAwOToxOCBBTTxicj4NCjxiPlRvOjwvYj4gUm9iZXJ0cywgV2lsbGlh
+bSBDICZsdDt3aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5jb20mZ3Q7PGJyPg0KPGI+Q2M6PC9iPiB0
+cG0yQGxpc3RzLjAxLm9yZzxicj4NCjxiPlN1YmplY3Q6PC9iPiBSZTogW3RwbTJdIFBDUiBQb2xp
+Y3kgZW5mb3JjZW1lbnQgd2hlbiB1c2luZyBudnJhbTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRpdj4NCjxwIGNsYXNz
+PSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij5PbiBNb24sIEp1bCAyOSwgMjAxOSBhdCAxMDo0MiBBTSBSb2JlcnRzLCBXaWxsaWFtIEMgJmx0
+OzxhIGhyZWY9Im1haWx0bzp3aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5jb20iPndpbGxpYW0uYy5y
+b2JlcnRzQGludGVsLmNvbTwvYT4mZ3Q7IHdyb3RlOjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8
+YmxvY2txdW90ZSBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLWxlZnQ6c29saWQgI0NDQ0NDQyAx
+LjBwdDtwYWRkaW5nOjBpbiAwaW4gMGluIDYuMHB0O21hcmdpbi1sZWZ0OjQuOHB0O21hcmdpbi1y
+aWdodDowaW4iPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGJyPg0KQ2FuJ3QgeW91IGRvIHRwbTJf
+bnZyZWFkbG9jaz88bzpwPjwvbzpwPjwvcD4NCjwvYmxvY2txdW90ZT4NCjxkaXY+DQo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPkluZGVlZC4mbmJzcDsgVGhhdCdzIHRoZSBUUE0gMi4wIHdheSBJIGdv
+dCB0aGlzIHRvIHdvcmsuJm5ic3A7IFNldCAmcXVvdDtyZWFkX3N0Y2xlYXImcXVvdDsgYXR0cmli
+dXRlIGFuZCBydW4gdHBtMl9udnJlYWRsb2NrLjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8Ymxv
+Y2txdW90ZSBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLWxlZnQ6c29saWQgI0NDQ0NDQyAxLjBw
+dDtwYWRkaW5nOjBpbiAwaW4gMGluIDYuMHB0O21hcmdpbi1sZWZ0OjQuOHB0O21hcmdpbi1yaWdo
+dDowaW4iPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIuMHB0
+Ij48YnI+DQpQZXIgc2VjdGlvbiAzNy4yLjUgb2YgPGEgaHJlZj0iaHR0cHM6Ly90cnVzdGVkY29t
+cHV0aW5nZ3JvdXAub3JnL3dwLWNvbnRlbnQvdXBsb2Fkcy9UUE0tUmV2LTIuMC1QYXJ0LTEtQXJj
+aGl0ZWN0dXJlLTAxLjM4LnBkZiIgdGFyZ2V0PSJfYmxhbmsiPg0KaHR0cHM6Ly90cnVzdGVkY29t
+cHV0aW5nZ3JvdXAub3JnL3dwLWNvbnRlbnQvdXBsb2Fkcy9UUE0tUmV2LTIuMC1QYXJ0LTEtQXJj
+aGl0ZWN0dXJlLTAxLjM4LnBkZjwvYT48YnI+DQpUUE1BX05WX0FVVEhSRUFEIGFsbG93cyB0aGUg
+SW5kZXggdG8gYmUgcmVhZCB1c2luZyB0aGUgYXV0aFZhbHVlIG9mIHRoZSBJbmRleDsgYW5kPGJy
+Pg0KVFBNQV9OVl9QT0xJQ1lSRUFEIGFsbG93cyB0aGUgSW5kZXggdG8gYmUgcmVhZCBpZiB0aGUg
+YXV0aFBvbGljeSBvZiB0aGUgSW5kZXggaXMgc2F0aXNmaWVkLjxicj4NCi0tLTxicj4NCjxicj4N
+CkkgdGhpbmsgeW91J3JlIGVuZGluZyB1cCBpbiBhbiBPUiBzaXR1YXRpb24sIEFVVEggdmFsdWUg
+T1IgcG9saWN5LiBJSVJDLCBKYXZpZXIgaGl0IHRoaXMgaXNzdWUgdG9vLCBJPGJyPg0KYWRkZWQg
+aGltIHRvIHNlZSBpZiBoZSBjYW4gZW5saWdodGVuIHVzLjxicj4NCjxicj4NCkZZSSB5b3Ugc2hv
+dWxkIHVzZSB0cG0yX3BvbGljeWF1dGhvcml6ZSwgbG9ja2luZyB0byBQQ1IgdmFsdWVzIGlzIGJy
+aXR0bGUuIElmIGFueXRoaW5nIGNoYW5nZXMsIHlvdTxicj4NCmNhbiBsb2NrIHlvdXJzZWxmIG91
+dCBvZiB0aGUgb2JqZWN0LiBUaGlzIHdheSB5b3UgbG9jayBpdCB0byBhIHNpZ25lZCBwb2xpY3kg
+YW5kIHRoYXQgcG9saWN5IGNhbjxicj4NCmNoYW5nZS4gSWUgUENSIHZhbHVlcyBjaGFuZ2Ugb24g
+dXBkYXRlLjxvOnA+PC9vOnA+PC9wPg0KPC9ibG9ja3F1b3RlPg0KPGRpdj4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPkkgd2FzIHRyeWluZyB0byBhdm9pZCB0aGUgYXV0aFZhbHVlIE9SIGF1dGhQb2xp
+Y3kgc2l0dWF0aW9uLiZuYnNwOyBJIHRob3VnaHQgdGhhdCBvbmx5IHNwZWNpZnlpbmcgdGhlIGF1
+dGhWYWx1ZSB0byB1bmxvY2sgYW5kIGhhdmluZyBhIHBvbGljeSBwcmVzZW50IHdvdWxkIGRvIGFu
+IGF1dGhWYWx1ZSBBTkQgYXV0aFBvbGljeS4mbmJzcDsgT3RoZXJ3aXNlIGl0IHNlZW1zIHBvaW50
+bGVzcyB0byBiZSBhYmxlIHRvIGF0dGFjaCBhDQogcG9saWN5IHdpdGhvdXQgYW55IHBvbGljeSBy
+ZWxhdGVkIGF0dHJpYnV0ZXMuJm5ic3A7IFNpbmNlIHRoaXMgaXMgYXV0b3VubG9jayBvZiBkcml2
+ZSBlbmNyeXB0aW9uLCBJIHdhcyBob3BpbmcgdG8gbWFrZSBhbnkgc3lzdGVtIHR3aXRjaCBmYWls
+IHRoZSBUUE0gYXNzaXN0ZWQgYXV0b3VubG9jayBhbmQgcmVxdWlyZSB0aGUgdXNlciB0byBkaXJl
+Y3RseSBlbnRlciB0aGUgcGFzc3BocmFzZSBpbiBhIG5vbi10cG0gcHJvbXB0LiZuYnNwOyBJbiBv
+cmRlciB0byByZS1lbmFibGUNCiB0aGUgYXV0b3VubG9jaywgdGhlIG52cmFtIHJlZ2lvbiB3b3Vs
+ZCBiZSBkZWxldGVkIGFuZCByZWNyZWF0ZWQuJm5ic3A7IFRoZSBhdXRoUG9saWN5IHdvdWxkIGNo
+ZWNrIHRoZSBQQ1JzIHdoaWxlIHRoZSBhdXRoVmFsdWUsIHNpbmNlIGl0IGlzIHRoZSBmaWxlc3lz
+dGVtJ3MgR1VJRCwgdmVyaWZpZXMgaXQgd2FzIGNyZWF0ZWQgZm9yIHRoZSBjb3JyZWN0IGZpbGVz
+eXN0ZW0gYW5kIGluIHRoZSBldmVudCBzb21lb25lIGlzIHBsYXlpbmcgYXJvdW5kIHdpdGgNCiBk
+aXNwb3NlZCBlcXVpcG1lbnQgd2l0aCBkcml2ZXMgcmVtb3ZlZCwgcmVjb3Zlcnkgb2YgdGhlIHN0
+b3JlZCBwYXNzd29yZCBpbiBhIG5vbi1jbGVhcmVkIFRQTSB3b3VsZCBub3QgYmUgcG9zc2libGUu
+Jm5ic3A7IExhdGVyLCBpbnN0ZWFkIG9mIGEgR1VJRCwgSSBjb3VsZCB1c2UgYSB1c2IgZGV2aWNl
+IG9yIGEgY29ubmVjdGlvbiB0byBhIHNlcnZlciB0byBiZSBwcmVzZW50IHRvIHJldHJpZXZlIHRo
+ZSBOVlJBTSBhdXRoVmFsdWUsIHRoYXQgdW5sb2Nrcw0KIHRoZSByZWdpb24uJm5ic3A7Jm5ic3A7
+PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpw
+PiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGJsb2NrcXVvdGUgc3R5bGU9ImJvcmRlcjpub25l
+O2JvcmRlci1sZWZ0OnNvbGlkICNDQ0NDQ0MgMS4wcHQ7cGFkZGluZzowaW4gMGluIDBpbiA2LjBw
+dDttYXJnaW4tbGVmdDo0LjhwdDttYXJnaW4tcmlnaHQ6MGluIj4NCjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+Jmd0OyA8YnI+DQomZ3Q7IC0tLS0tLTxi
+cj4NCiZndDsgPGJyPg0KJmd0OyBJIHdvdWxkIHJlYWxseSBsaWtlIHRvIGluY29ycG9yYXRlIHRo
+ZSBwY3Igc3lzdGVtIGNoZWNrIGFsc28gKGtpbmRhIHRoZSB3aG9sZTxicj4NCiZndDsgcG9pbnQp
+LiZuYnNwOyBJIHRyaWVkOjxicj4NCiZndDsgLS0tLS0tLS0tLS08YnI+DQomZ3Q7IHRwbTJfbGlz
+dHBjcnMgLS10Y3RpPWRldmljZSZuYnNwOyAmbmJzcDsgI1RvIHNlZSBjdXJyZW50IHZhbHVlczxi
+cj4NCiZndDsgdHBtMl9jcmVhdGVwb2xpY3kgLUwgc2hhMTowLDEsMiwzLDQsNSw2LDcgLW8gLi8w
+LTdwb2xpY3kucG9sIC0tcG9saWN5LXBjcjxicj4NCiZndDsgPGJyPg0KJmd0OyB0cG0yX252ZGVm
+aW5lIC14IDB4MTAwMDAwMCAtYSBvIC1QIG93bmVycGFzcyAtcCBpbmRleHNlY3JldCAtTCAuLzAt
+N3BvbGljeS5wb2wgLTxicj4NCiZndDsgYiAmcXVvdDthdXRocmVhZHxhdXRod3JpdGV8cmVhZF9z
+dGNsZWFyJnF1b3Q7IC1zIDExPGJyPg0KJmd0OyA8YnI+DQomZ3Q7IGVjaG8gJnF1b3Q7aGRwYXNz
+d29yZCZxdW90OyB8IHRwbTJfbnZ3cml0ZSZuYnNwOyAteCAweDEwMDAwMDAgLWEgMHgxMDAwMDAw
+IC1QIGluZGV4c2VjcmV0PGJyPg0KJmd0OyA8YnI+DQomZ3Q7IHRwbTJfbnZsaXN0Jm5ic3A7ICZu
+YnNwOyMgVmVyZmlpZWQgdGhhdCAweDEwMDAwMDAgaGFzIGEgJnF1b3Q7YXV0aG9yaXphdGlvbiBw
+b2xpY3kmcXVvdDs8YnI+DQomZ3Q7IHRwbTJfbnZyZWFkIC14IDB4MTAwMDAwMCAtYSAweDEwMDAw
+MDAgLVAgaW5kZXhzZWNyZXQmbmJzcDsgJm5ic3A7I0V4cGVjdGVkIHRvIHdvcmsgc2luY2U8YnI+
+DQomZ3Q7IFBDUnMgYXJlIHRoZSBzYW1lIGFzIHBvbGljeSBjcmVhdGlvbjxicj4NCiZndDsgdHBt
+Ml9wY3JleHRlbmQgNDpzaGExPWYxZDJkMmY5MjRlOTg2YWM4NmZkZjdiMzZjOTRiY2RmMzJiZWVj
+MTU8YnI+DQomZ3Q7IDxicj4NCiZndDsgdHBtMl9saXN0cGNycyZuYnNwOyAmbmJzcDsgI1Zlcmlm
+eSBwY3I0IGlzIGRpZmZlcmVudDxicj4NCiZndDsgdHBtMl9udnJlYWQgLXggMHgxMDAwMDAwIC1h
+IDB4MTAwMDAwMCAtUCBpbmRleHNlY3JldCZuYnNwOyAmbmJzcDsjRXhwZWN0ZWQgdG8gZmFpbDxi
+cj4NCiZndDsgLS0tLS0tLS0tLS08YnI+DQomZ3Q7IFRoZSBsYXN0IGxpbmUgSSB3b3VsZCBleHBl
+Y3QgdG8gZmFpbCwgYmVjYXVzZSBvZiB0aGUgUENSNCBjaGFuZ2UsIGJ1dCBpdCBzdGlsbDxicj4N
+CiZndDsgcHJvZHVjZXMgdGhlIHBhc3N3b3JkLiZuYnNwOyBBbSBJIG1pc3Npbmcgc29tZXRoaW5n
+IG9uIHRoZSBudmRlZmluZSB0byBlbmFibGU8YnI+DQomZ3Q7IHBvbGljeSBlbmZvcmNlbWVudD88
+YnI+DQo8YnI+DQpJIHRoaW5rIGlmIHlvdSBkcm9wcGVkIHRoYXQgcGFzc3dvcmQgaXQgd291bGQg
+ZmFpbCBvbiBib3RoIGNvbW1hbmRzLiBZb3UgbmVlZDxicj4NClRvIGVuc3VyZSB0aGF0IFRQTUFf
+TlZfUE9MSUNZUkVBRCBpcyBpbiB0aGVyZS4gTG9va2luZyBhdCAzLlggYW5kIG1hc3Rlcjxicj4N
+CmJyYW5jaCwgSSBkb24ndCBzZWUgdXMgY2hlY2tpbmcgaWYgLUwgaXMgc3BlY2lmaWVkIGFuZCBh
+ZGRpbmcgVFBNQV9OVl9QT0xJQ1lSRUFEPGJyPg0Kc28gaXQncyBzb21ldGhpbmcgeW91IHdvdWxk
+IGhhdmUgdG8gZG8gdmlhIGF0dHJpYnV0ZXMuPG86cD48L286cD48L3A+DQo8L2Jsb2NrcXVvdGU+
+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSBiZWxpZXZlIHlvdXIgcmlnaHQuJm5ic3A7
+IElmIEkgdXNlZCBwb2xpY3lSZWFkIG9ubHkgYW5kIGdhdmUgdXAgb24gcG9saWN5QXV0aCAoYW5k
+IHRoZSAtUCBzd2l0Y2gpLCBpdCB3b3VsZCBoYXZlIHN1Y2NlZWRlZCBhbmQgZmFpbGVkIGFzIGV4
+cGVjdGVkLiZuYnNwOyBJJ20ganVzdCBob3BpbmcgSSBjYW4gZ2V0IGl0IHRvIGdldCBib3RoIHdv
+cmtpbmcgc2ltdWx0YW5lb3VzbHkuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+SSByZWFsbHkgYXBwcmVjaWF0ZSB5b3VyIHJlc3BvbnNlLiZuYnNwOyBJJ2xs
+IHBsYXkgYXJvdW5kIHdpdGggb2JqZWN0Jm5ic3A7IHdvcmtmbG93LiZuYnNwOyBJZiBhbnlvbmUg
+aGFzIHRpcHMgb24gbWFraW5nIGF1dGhWYWx1ZSBBTkQgYXV0aFBvbGljeSBhcHBseSB0byBudnJh
+bSBvciBoYXZlIGEgY29tcGFyYWJsZSBtZXRob2Qgd2l0aCBvYmplY3RzLCBJJ2QgbG92ZSB0byBo
+ZWFyIHRoZW0uPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjwvYm9keT4NCjwvaHRtbD4NCg==
 
---===============7638508194552760099==--
+--===============4911909921256557194==--
 
