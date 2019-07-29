@@ -1,72 +1,200 @@
-Content-Type: multipart/mixed; boundary="===============7297142765041425030=="
+Content-Type: multipart/mixed; boundary="===============2094693511471954308=="
 MIME-Version: 1.0
-From: Garrett Fields <ghfields at gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: Re: [tpm2] PCR Policy enforcement when using nvram
-Date: Mon, 29 Jul 2019 15:37:33 -0400
-Message-ID: <CA++-fmt20BzOekDa5eGOyASoAO4Mj=624v-nekLsky9d6dnOSQ@mail.gmail.com>
-In-Reply-To: A3DEEEBB19900C48B49572CB9C2891C9878F5092@SHSMSX108.ccr.corp.intel.com
+Date: Mon, 29 Jul 2019 20:59:16 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DD3F13@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CA++-fmtn+9Z4ssEx3A+ONZTpH-f2OO7UHMR3hZokkvPuf+1=1w@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7297142765041425030==
+--===============2094693511471954308==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I was hoping to need to pass both authread and policyread before it could
-read the nvram.  Either / or seems pretty straightforward.
-
-This is how I did it in TPM 1.2:
-----------------------------
-
-# Release the tpm nvram index, if already used
-tpm_nvrelease -i$index -o$tpmownerpw
-# Create the tpm nvram index with certain permissions, pcr checks, and area
-password
-tpm_nvdefine -i$index -s${#datasetpw} -p"OWNERWRITE|AUTHREAD|READ_STCLEAR"
--r0 -r1 -r2 -r3 -r4 -r5 -r6 -r7 -a$nvrampw  -o$tpmownerpw
-# Write the dataset password value into the tpm nvram index
-tpm_nvwrite -i $index -d$datasetpw -p$tpmownerpw
-# Retrieve Password
-tpm_nvread -i $tpmindex -p$rootguid
-# Lock from further reading until after reboot
-tpm_nvread -i $tpmindex -s 0 -p$rootguid
-
-------------------------------
 
 
-I can't find much information on ppread though.  While "Requires Physical
-Presence" is an understandable concept, I don't know how it evaluates the
-location of the requester.
+> -----Original Message-----
+> From: Garrett Fields [mailto:ghfields(a)gmail.com]
+> Sent: Monday, July 29, 2019 11:18 AM
+> To: Roberts, William C <william.c.roberts(a)intel.com>
+> Cc: tpm2(a)lists.01.org; Javier Martinez Canillas <javierm(a)redhat.com>
+> Subject: Re: [tpm2] PCR Policy enforcement when using nvram
+> =
 
---===============7297142765041425030==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> =
 
-PGRpdiBkaXI9Imx0ciI+SSB3YXMgaG9waW5nIHRvIG5lZWQgdG8gcGFzcyBib3RoIGF1dGhyZWFk
-IGFuZCBwb2xpY3lyZWFkIGJlZm9yZSBpdCBjb3VsZCByZWFkIHRoZSBudnJhbS7CoCBFaXRoZXIg
-LyBvciBzZWVtcyBwcmV0dHkgc3RyYWlnaHRmb3J3YXJkLjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhp
-cyBpcyBob3cgSSBkaWQgaXQgaW4gVFBNIDEuMjo8L2Rpdj48ZGl2Pi0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS08L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PiMgUmVsZWFzZSB0aGUgdHBtIG52
-cmFtIGluZGV4LCBpZiBhbHJlYWR5IHVzZWQ8YnI+dHBtX252cmVsZWFzZSAtaSRpbmRleCAtbyR0
-cG1vd25lcnB3PGJyPiMgQ3JlYXRlIHRoZSB0cG0gbnZyYW0gaW5kZXggd2l0aCBjZXJ0YWluIHBl
-cm1pc3Npb25zLCBwY3IgY2hlY2tzLCBhbmQgYXJlYSBwYXNzd29yZDxicj50cG1fbnZkZWZpbmUg
-LWkkaW5kZXggLXMkeyNkYXRhc2V0cHd9IC1wJnF1b3Q7T1dORVJXUklURXxBVVRIUkVBRHxSRUFE
-X1NUQ0xFQVImcXVvdDsgLXIwIC1yMSAtcjIgLXIzIC1yNCAtcjUgLXI2IC1yNyAtYSRudnJhbXB3
-IMKgLW8kdHBtb3duZXJwdzxicj4jIFdyaXRlIHRoZSBkYXRhc2V0IHBhc3N3b3JkIHZhbHVlIGlu
-dG8gdGhlIHRwbSBudnJhbSBpbmRleDxicj50cG1fbnZ3cml0ZSAtaSAkaW5kZXggLWQkZGF0YXNl
-dHB3IC1wJHRwbW93bmVycHc8YnI+PC9kaXY+PGRpdj4jIFJldHJpZXZlIFBhc3N3b3JkPC9kaXY+
-PGRpdj50cG1fbnZyZWFkIC1pICR0cG1pbmRleCAtcCRyb290Z3VpZDxicj48L2Rpdj48ZGl2PiMg
-TG9jayBmcm9tIGZ1cnRoZXIgcmVhZGluZyB1bnRpbCBhZnRlciByZWJvb3Q8L2Rpdj48ZGl2PnRw
-bV9udnJlYWQgLWkgJHRwbWluZGV4IC1zIDAgLXAkcm9vdGd1aWQ8YnI+PC9kaXY+PGRpdj48YnI+
-PC9kaXY+PGRpdj4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS08L2Rpdj48ZGl2Pjxicj48
-L2Rpdj48ZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+SSBjYW4mIzM5O3QgZmluZCBtdWNoIGluZm9y
-bWF0aW9uIG9uIHBwcmVhZCB0aG91Z2guwqAgV2hpbGUgJnF1b3Q7UmVxdWlyZXMgUGh5c2ljYWwg
-UHJlc2VuY2UmcXVvdDsgaXMgYW4gdW5kZXJzdGFuZGFibGUgY29uY2VwdCwgSSBkb24mIzM5O3Qg
-a25vdyBob3cgaXQgZXZhbHVhdGVzIHRoZSBsb2NhdGlvbiBvZiB0aGUgcmVxdWVzdGVyLjwvZGl2
-PjwvZGl2PjwvZGl2Pgo=
+> =
 
---===============7297142765041425030==--
+> On Mon, Jul 29, 2019 at 10:42 AM Roberts, William C <william.c.roberts(a)=
+intel.com
+> <mailto:william.c.roberts(a)intel.com> > wrote:
+> =
+
+> =
+
+> =
+
+> 	Can't you do tpm2_nvreadlock?
+> =
+
+> =
+
+> =
+
+> Indeed.  That's the TPM 2.0 way I got this to work.  Set "read_stclear" a=
+ttribute
+> and run tpm2_nvreadlock.
+> =
+
+> =
+
+> 	Per section 37.2.5 of https://trustedcomputinggroup.org/wp-
+> content/uploads/TPM-Rev-2.0-Part-1-Architecture-01.38.pdf
+> 	TPMA_NV_AUTHREAD allows the Index to be read using the authValue
+> of the Index; and
+> 	TPMA_NV_POLICYREAD allows the Index to be read if the authPolicy of
+> the Index is satisfied.
+> 	---
+> =
+
+> 	I think you're ending up in an OR situation, AUTH value OR policy. IIRC,
+> Javier hit this issue too, I
+> 	added him to see if he can enlighten us.
+> =
+
+> 	FYI you should use tpm2_policyauthorize, locking to PCR values is brittl=
+e.
+> If anything changes, you
+> 	can lock yourself out of the object. This way you lock it to a signed po=
+licy
+> and that policy can
+> 	change. Ie PCR values change on update.
+> =
+
+> =
+
+> =
+
+> I was trying to avoid the authValue OR authPolicy situation.  I thought t=
+hat only
+> specifying the authValue to unlock and having a policy present would do an
+> authValue AND authPolicy.  Otherwise it seems pointless to be able to att=
+ach a
+> policy without any policy related attributes.  Since this is autounlock o=
+f drive
+> encryption, I was hoping to make any system twitch fail the TPM assisted
+> autounlock and require the user to directly enter the passphrase in a non=
+-tpm
+
+In the nvread command fon't specify the authvalue and specify the policy an=
+d you
+Will get that behavior.
+
+This snippet of the spec (37.2.5) is important:
+
+Read access to an NV Index is provided with TPM2_NV_Read(), TPM2_NV_Certify=
+(), and
+TPM2_PolicyNV(). For all of these commands, read authorization is required.=
+ The attributes of the Index
+determine what authorizations are allowed. TPMA_NV_PPREAD allows the Index =
+to be read using
+Platform Authorization; TPMA_NV_OWNERREAD allows the Index to be read using=
+ Owner Authorization;
+TPMA_NV_AUTHREAD allows the Index to be read using the authValue of the Ind=
+ex; and
+TPMA_NV_POLICYREAD allows the Index to be read if the authPolicy of the Ind=
+ex is satisfied.
+At least one of TPMA_NV_PPREAD, TPMA_NV_OWNERREAD, TPMA_NV_AUTHREAD or
+TPMA_NV_POLICYREAD needs to be SET or the TPM will not allocate the Index.
+
+-- end --
+
+This is all an OR proposition. So you would try satisfying via a PCR policy=
+ and if
+That fails, prompt for authorization value, which could be set up for owner
+hierarchy passphrase or the index authorization value.
+
+> prompt.  In order to re-enable the autounlock, the nvram region would be
+> deleted and recreated.  The authPolicy would check the PCRs while the
+> authValue, since it is the filesystem's GUID, verifies it was created for=
+ the correct
+> filesystem and in the event someone is playing around with disposed equip=
+ment
+> with drives removed, recovery of the stored password in a non-cleared TPM
+> would not be possible.  Later, instead of a GUID, I could use a usb devic=
+e or a
+> connection to a server to be present to retrieve the NVRAM authValue, that
+> unlocks the region.
+> =
+
+> =
+
+> 	>
+> 	> ------
+> 	>
+> 	> I would really like to incorporate the pcr system check also (kinda the
+> whole
+> 	> point).  I tried:
+> 	> -----------
+> 	> tpm2_listpcrs --tcti=3Ddevice    #To see current values
+> 	> tpm2_createpolicy -L sha1:0,1,2,3,4,5,6,7 -o ./0-7policy.pol --policy-=
+pcr
+> 	>
+> 	> tpm2_nvdefine -x 0x1000000 -a o -P ownerpass -p indexsecret -L ./0-
+> 7policy.pol -
+> 	> b "authread|authwrite|read_stclear" -s 11
+> 	>
+> 	> echo "hdpassword" | tpm2_nvwrite  -x 0x1000000 -a 0x1000000 -P
+> indexsecret
+> 	>
+> 	> tpm2_nvlist   # Verfiied that 0x1000000 has a "authorization policy"
+> 	> tpm2_nvread -x 0x1000000 -a 0x1000000 -P indexsecret   #Expected to
+> work since
+> 	> PCRs are the same as policy creation
+> 	> tpm2_pcrextend 4:sha1=3Df1d2d2f924e986ac86fdf7b36c94bcdf32beec15
+> 	>
+> 	> tpm2_listpcrs    #Verify pcr4 is different
+> 	> tpm2_nvread -x 0x1000000 -a 0x1000000 -P indexsecret   #Expected to
+> fail
+> 	> -----------
+> 	> The last line I would expect to fail, because of the PCR4 change, but =
+it
+> still
+> 	> produces the password.  Am I missing something on the nvdefine to
+> enable
+> 	> policy enforcement?
+
+That snippet of spec I think clarifies it, let me know if it doesn't.
+
+> =
+
+> 	I think if you dropped that password it would fail on both commands. You
+> need
+> 	To ensure that TPMA_NV_POLICYREAD is in there. Looking at 3.X and
+> master
+> 	branch, I don't see us checking if -L is specified and adding
+> TPMA_NV_POLICYREAD
+> 	so it's something you would have to do via attributes.
+> =
+
+> =
+
+> =
+
+> I believe your right.  If I used policyRead only and gave up on policyAut=
+h (and the
+> -P switch), it would have succeeded and failed as expected.  I'm just hop=
+ing I can
+> get it to get both working simultaneously.
+> =
+
+> I really appreciate your response.  I'll play around with object  workflo=
+w.  If
+> anyone has tips on making authValue AND authPolicy apply to nvram or have=
+ a
+> comparable method with objects, I'd love to hear them.
+
+--===============2094693511471954308==--
 
