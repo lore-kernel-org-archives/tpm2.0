@@ -1,16 +1,27 @@
-Content-Type: multipart/mixed; boundary="===============2939004149002452180=="
+Content-Type: multipart/mixed; boundary="===============7157780682166338242=="
 MIME-Version: 1.0
-From: ramyasnair ramyasnair <ramyasnair1996 at gmail.com>
-Subject: [tpm2] NV index
-Date: Wed, 07 Aug 2019 12:24:45 +0530
-Message-ID: <CA+M7zR22MnA+TDWyC3Z2Qf7XWLA=bdpe9WsD0V1-OkabH3Z4ww@mail.gmail.com>
+From: Zhu, Bing <bing.zhu at intel.com>
+Subject: Re: [tpm2] NV index
+Date: Wed, 07 Aug 2019 20:38:15 +0000
+Message-ID: <A3DEEEBB19900C48B49572CB9C2891C98790CB32@SHSMSX108.ccr.corp.intel.com>
+In-Reply-To: CA+M7zR22MnA+TDWyC3Z2Qf7XWLA=bdpe9WsD0V1-OkabH3Z4ww@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2939004149002452180==
+--===============7157780682166338242==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+Ramya, Can you explain a little bit more about your questions? TPM 2.0 prov=
+ides a few APIs to allow you to define NVIndex and use them with access con=
+trol..
+
+From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of ramyasnair ram=
+yasnair
+Sent: Tuesday, August 6, 2019 23:55 PM
+To: tpm2(a)lists.01.org
+Subject: [tpm2] NV index
 
 Hi,
 How to define  NVIndex using command and explanation on NVRAM uses?
@@ -18,16 +29,71 @@ How to define  NVIndex using command and explanation on NVRAM uses?
 Regards
 Ramya
 
---===============2939004149002452180==
+--===============7157780682166338242==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9ImF1dG8iPkhpLDxkaXYgZGlyPSJhdXRvIj5Ib3cgdG8gZGVmaW5lwqAgTlZJbmRl
-eCB1c2luZyBjb21tYW5kIGFuZCBleHBsYW5hdGlvbiBvbiBOVlJBTSB1c2VzPzwvZGl2PjxkaXYg
-ZGlyPSJhdXRvIj48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iPlJlZ2FyZHM8L2Rpdj48ZGl2IGRp
-cj0iYXV0byI+UmFteWE8L2Rpdj48L2Rpdj4K
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+5a6L5L2TOw0KCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQ0KQGZvbnQtZmFjZQ0KCXtm
+b250LWZhbWlseToiQ2FtYnJpYSBNYXRoIjsNCglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMgMiA0
+O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsNCglwYW5vc2UtMToyIDE1IDUg
+MiAyIDIgNCAzIDIgNDt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OiJcQOWui+S9kyI7DQoJ
+cGFub3NlLTE6MiAxIDYgMCAzIDEgMSAxIDEgMTt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5
+OiJUcmVidWNoZXQgTVMiOw0KCXBhbm9zZS0xOjIgMTEgNiAzIDIgMiAyIDIgMiA0O30NCi8qIFN0
+eWxlIERlZmluaXRpb25zICovDQpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9y
+bWFsDQoJe21hcmdpbjowaW47DQoJbWFyZ2luLWJvdHRvbTouMDAwMXB0Ow0KCWZvbnQtc2l6ZTox
+Mi4wcHQ7DQoJZm9udC1mYW1pbHk6IlRpbWVzIE5ldyBSb21hbiIsc2VyaWY7fQ0KYTpsaW5rLCBz
+cGFuLk1zb0h5cGVybGluaw0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6IzA1NjND
+MTsNCgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30NCmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBl
+cmxpbmtGb2xsb3dlZA0KCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6Izk1NEY3MjsN
+Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30NCnNwYW4uRW1haWxTdHlsZTE3DQoJe21zby1z
+dHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJUcmVidWNoZXQgTVMiLHNh
+bnMtc2VyaWY7DQoJY29sb3I6Ymx1ZTt9DQouTXNvQ2hwRGVmYXVsdA0KCXttc28tc3R5bGUtdHlw
+ZTpleHBvcnQtb25seTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQpAcGFn
+ZSBXb3JkU2VjdGlvbjENCgl7c2l6ZTo4LjVpbiAxMS4waW47DQoJbWFyZ2luOjEuMGluIDEuMjVp
+biAxLjBpbiAxLjI1aW47fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9
+DQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2
+OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYg
+Z3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAg
+djpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZd
+LS0+DQo8L2hlYWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5
+NTRGNzIiPg0KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1RyZWJ1Y2hl
+dCBNUyZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsdWUiPlJhbXlhLCBDYW4geW91IGV4cGxhaW4g
+YSBsaXR0bGUgYml0IG1vcmUgYWJvdXQgeW91ciBxdWVzdGlvbnM/IFRQTSAyLjAgcHJvdmlkZXMg
+YSBmZXcgQVBJcyB0byBhbGxvdyB5b3UgdG8gZGVmaW5lIE5WSW5kZXggYW5kIHVzZSB0aGVtIHdp
+dGggYWNjZXNzIGNvbnRyb2wuLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPjxhIG5hbWU9Il9NYWlsRW5kQ29tcG9zZSI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTox
+MS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7VHJlYnVjaGV0IE1TJnF1b3Q7LHNhbnMtc2VyaWY7Y29s
+b3I6Ymx1ZSI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9hPjwvcD4NCjxkaXYgc3R5bGU9ImJv
+cmRlcjpub25lO2JvcmRlci1sZWZ0OnNvbGlkIGJsdWUgMS41cHQ7cGFkZGluZzowaW4gMGluIDBp
+biA0LjBwdCI+DQo8ZGl2Pg0KPGRpdiBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLXRvcDpzb2xp
+ZCAjRTFFMUUxIDEuMHB0O3BhZGRpbmc6My4wcHQgMGluIDBpbiAwaW4iPg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PGEgbmFtZT0iX19fX19yZXBseXNlcGFyYXRvciI+PC9hPjxiPjxzcGFuIHN0eWxl
+PSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1z
+ZXJpZiI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQt
+ZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+IHRwbTIgW21haWx0bzp0cG0y
+LWJvdW5jZXNAbGlzdHMuMDEub3JnXQ0KPGI+T24gQmVoYWxmIE9mIDwvYj5yYW15YXNuYWlyIHJh
+bXlhc25haXI8YnI+DQo8Yj5TZW50OjwvYj4gVHVlc2RheSwgQXVndXN0IDYsIDIwMTkgMjM6NTUg
+UE08YnI+DQo8Yj5Ubzo8L2I+IHRwbTJAbGlzdHMuMDEub3JnPGJyPg0KPGI+U3ViamVjdDo8L2I+
+IFt0cG0yXSBOViBpbmRleDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxkaXY+DQo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj5IaSw8bzpwPjwvbzpwPjwvcD4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5Ib3cgdG8gZGVmaW5lJm5ic3A7IE5WSW5kZXggdXNpbmcgY29tbWFuZCBhbmQgZXhwbGFu
+YXRpb24gb24gTlZSQU0gdXNlcz88bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+UmVnYXJkczxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+UmFteWE8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPC9kaXY+
+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
 
---===============2939004149002452180==--
+--===============7157780682166338242==--
 
