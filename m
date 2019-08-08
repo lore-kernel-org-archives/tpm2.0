@@ -1,60 +1,121 @@
-Content-Type: multipart/mixed; boundary="===============2343194735542536936=="
+Content-Type: multipart/mixed; boundary="===============6148372025705547209=="
 MIME-Version: 1.0
-From: Zhu, Bing <bing.zhu at intel.com>
-Subject: [tpm2] how to upgrade the TPM access control policy when a particular
- PCR is changed.
-Date: Thu, 08 Aug 2019 05:49:26 +0000
-Message-ID: <A3DEEEBB19900C48B49572CB9C2891C98791046B@SHSMSX108.ccr.corp.intel.com>
+From: Gael GUEGAN <Gael.Guegan at non.se.com>
+Subject: [tpm2] [tpm2-driver] Error at boot : A TPM error (256) occurred
+ continue selftest
+Date: Thu, 08 Aug 2019 08:34:55 +0000
+Message-ID: <DBBPR04MB6123C606D3A97FA0538D57DFDCD70@DBBPR04MB6123.eurprd04.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2343194735542536936==
+--===============6148372025705547209==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello all,
 
-I have a use case like this: =
+I am working with the linux kernel version 4.9 on an embedded target.
+And I am having the following error message from the TPM driver at boot :
 
+> $  dmesg | grep TPM
+[    2.946137] tpm_tis_spi spi32766.0: 2.0 TPM (device-id 0x0, rev-id 78)
+[    2.975824] tpm tpm0: A TPM error (256) occurred continue selftest
 
-We create a TPM2.0 NV index, provision a secret into that NV index in TPM, =
-and gate its access control with PCR[7] policy, which means that only when =
-PCR[7] value matches the expected value, the read access to this NV index i=
-s allowed. =
+So I have seen that this error 256 correspond to TPM2_RC_INITIALIZE =3D 0x0=
+100,  and that it is thrown  from this function<https://github.com/torvalds=
+/linux/blob/v4.9/drivers/char/tpm/tpm-interface.c#L422> (be32_to_cpu() when=
+ executing a tpm_transmit_cmd()).
 
-
-In a PC compliant machine, PCR[7] is used by BIOS to extend Secure Boot pol=
-icies/configurations, and verification public key db settings (PK, KEK, DB/=
-DBx). The reason that we do it like this because we would like to set acces=
-s control to the secret value stored in that NV index. When someone (attack=
-er) is going to disable secure boot, then PCR[7] value changes and doesn't =
-match the value that the original policy was created on that NV index, then=
- accessing to that secret value will be denied. This is expected behavior t=
-hat I want.
-
-Now the problem is that when secure boot configurations (like DB/DBx) are c=
-hanged due to OS software upgrade, the PCR[7] will be changed too, then acc=
-ess to that secret in NV index will be denied too. =
+However can someone explain why I am having this error ? Is it possible tha=
+t it is because I am trying to access to the TPM during its initialization =
+phase / selftest phase ?
+Can I ignore this error without worry ?
 
 
-So we'd like to figure out how to upgrade the associated PCR[7] policy on t=
-hat NV Index, in order to make sure the access to this NV index is still be=
- available after upgrade (because this is a legitimate upgrade usage).
-
-we don't know how exactly to do that although I'm aware of that the API TPM=
-2_PolicyAuthorize() would probably do this. However, I didn't see anyone wh=
-o ever did this before somewhere. =
+Thank for your help,
 
 
-So is this possible for someone to implement this as a sample in TPM usage?=
- Just give me a clue to do that, then we can contribute it.
+Gael GUEGAN
 
-Any comment is appreciated! Thanks.
+--===============6148372025705547209==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgltc28tZmFyZWFzdC1sYW5n
+dWFnZTpFTi1VUzt9CmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3Jp
+dHk6OTk7Cgljb2xvcjojMDU2M0MxOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlz
+aXRlZCwgc3Bhbi5Nc29IeXBlcmxpbmtGb2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsK
+CWNvbG9yOiM5NTRGNzI7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30KcC5Nc29MaXN0UGFy
+YWdyYXBoLCBsaS5Nc29MaXN0UGFyYWdyYXBoLCBkaXYuTXNvTGlzdFBhcmFncmFwaAoJe21zby1z
+dHlsZS1wcmlvcml0eTozNDsKCW1hcmdpbi10b3A6MGNtOwoJbWFyZ2luLXJpZ2h0OjBjbTsKCW1h
+cmdpbi1ib3R0b206MGNtOwoJbWFyZ2luLWxlZnQ6MzYuMHB0OwoJbWFyZ2luLWJvdHRvbTouMDAw
+MXB0OwoJZm9udC1zaXplOjExLjBwdDsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlm
+OwoJbXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVM7fQpzcGFuLkVtYWlsU3R5bGUxNwoJe21zby1z
+dHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1z
+ZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7fQpzcGFuLnBsLWMxCgl7bXNvLXN0eWxlLW5hbWU6cGwt
+YzE7fQpzcGFuLnBsLWMKCXttc28tc3R5bGUtbmFtZTpwbC1jO30KLk1zb0NocERlZmF1bHQKCXtt
+c28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNl
+cmlmOwoJbXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVM7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtz
+aXplOjYxMi4wcHQgNzkyLjBwdDsKCW1hcmdpbjo3MC44NXB0IDcwLjg1cHQgNzAuODVwdCA3MC44
+NXB0O30KZGl2LldvcmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48
+IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3Bp
+ZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+
+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9
+IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBs
+YW5nPSJGUiIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3Jk
+U2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbyBhbGwsPG86cD48L286cD48L3A+
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+SSBhbSB3b3JraW5nIHdpdGggdGhlIGxpbnV4IGtl
+cm5lbCB2ZXJzaW9uIDQuOSBvbiBhbiBlbWJlZGRlZCB0YXJnZXQuPG86cD48L286cD48L3NwYW4+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+QW5kIEkgYW0gaGF2
+aW5nIHRoZSBmb2xsb3dpbmcgZXJyb3IgbWVzc2FnZSBmcm9tIHRoZSBUUE0gZHJpdmVyIGF0IGJv
+b3QgOgo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxh
+bmc9IkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxpPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7ICQgJm5ic3A7ZG1lc2cgfCBncmVwIFRQTTxv
+OnA+PC9vOnA+PC9zcGFuPjwvaT48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxpPjxzcGFuIGxh
+bmc9IkVOLVVTIj5bJm5ic3A7Jm5ic3A7Jm5ic3A7IDIuOTQ2MTM3XSB0cG1fdGlzX3NwaSBzcGkz
+Mjc2Ni4wOiAyLjAgVFBNIChkZXZpY2UtaWQgMHgwLCByZXYtaWQgNzgpPG86cD48L286cD48L3Nw
+YW4+PC9pPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGk+PHNwYW4gbGFuZz0iRU4tVVMiPlsm
+bmJzcDsmbmJzcDsmbmJzcDsgMi45NzU4MjRdIHRwbSB0cG0wOiBBIFRQTSBlcnJvciAoMjU2KSBv
+Y2N1cnJlZCBjb250aW51ZSBzZWxmdGVzdDxvOnA+PC9vOnA+PC9zcGFuPjwvaT48L3A+CjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxpPjxzcGFuIGxhbmc9IkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwv
+c3Bhbj48L2k+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+U28g
+SSBoYXZlIHNlZW4gdGhhdCB0aGlzIGVycm9yIDI1NiBjb3JyZXNwb25kIHRvIFRQTTJfUkNfSU5J
+VElBTElaRSA9CjxzcGFuIGNsYXNzPSJwbC1jMSI+MHgwMTAwPC9zcGFuPiwgJm5ic3A7YW5kIHRo
+YXQgaXQgaXMgdGhyb3duICZuYnNwO2Zyb20gdGhpcyA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5j
+b20vdG9ydmFsZHMvbGludXgvYmxvYi92NC45L2RyaXZlcnMvY2hhci90cG0vdHBtLWludGVyZmFj
+ZS5jI0w0MjIiPgpmdW5jdGlvbjwvYT4gKGJlMzJfdG9fY3B1KCkgd2hlbiBleGVjdXRpbmcgYSB0
+cG1fdHJhbnNtaXRfY21kKCkpLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPkhvd2V2ZXIgY2FuIHNvbWVvbmUg
+ZXhwbGFpbiB3aHkgSSBhbSBoYXZpbmcgdGhpcyBlcnJvciA/IElzIGl0IHBvc3NpYmxlIHRoYXQg
+aXQgaXMgYmVjYXVzZSBJIGFtIHRyeWluZyB0byBhY2Nlc3MgdG8gdGhlIFRQTSBkdXJpbmcgaXRz
+IGluaXRpYWxpemF0aW9uIHBoYXNlIC8gc2VsZnRlc3QgcGhhc2UgPzxvOnA+PC9vOnA+PC9zcGFu
+PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPkNhbiBJIGlnbm9y
+ZSB0aGlzIGVycm9yIHdpdGhvdXQgd29ycnkgPzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFu
+PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7
+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMi
+PlRoYW5rIGZvciB5b3VyIGhlbHAsPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+PG86cD4mbmJzcDs8L286cD48
+L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+R2FlbCBH
+VUVHQU48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
 
-Bing
-
-
---===============2343194735542536936==--
+--===============6148372025705547209==--
 
