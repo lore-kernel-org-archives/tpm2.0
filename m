@@ -1,126 +1,158 @@
-Content-Type: multipart/mixed; boundary="===============6907038140438155057=="
+Content-Type: multipart/mixed; boundary="===============6786893435692180318=="
 MIME-Version: 1.0
-From: Matthew Dempsky <matthew at dempsky.org>
-Subject: Re: [tpm2] OpenSSL Compatibility in tpm2_MakeCredential
-Date: Fri, 16 Aug 2019 14:35:11 -0700
-Message-ID: <CANKkrzG1ssJ6RtZq-j9_M0c8vGv3AD9UTJKWM_ix+p-y2FH6RA@mail.gmail.com>
-In-Reply-To: CAP3jAwT0xBrQj_-vhpzERd=Nwv=wjwZG_pKfHCmG=P-tziJdFg@mail.gmail.com
+From: Timothy Le <leti at vmware.com>
+Subject: [tpm2] Memory Leak stemming from Esys_Initialize
+Date: Fri, 16 Aug 2019 22:33:07 +0000
+Message-ID: <4F12017E-B957-4DB4-A070-EFC4182B6A3B@vmware.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6907038140438155057==
+--===============6786893435692180318==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 16, 2019 at 2:04 PM Rahul Hardikar <rahulhardikar(a)gmail.com>
-wrote:
+Hello,
 
-> I copied the code on my server but it seems that mine supports 1.0.2n and
-> my manager said that they will not upgrade to newer versions until next
-> year.
->
-
-It's unclear to me exactly what code you're referring to here. For example,
-your compiler logs below mention "tpm2_common.c", but as far as I can tell,
-no such file has ever existed within the tpm2-tools Git repo.
-
-*tpm2_common.c:894:5: warning: implicit declaration of function
-> =E2=80=98RSA_padding_add_PKCS1_OAEP_mgf1=E2=80=99 [-Wimplicit-function-de=
-claration]*
-> *tpm2_common.c:1194:5: warning: implicit declaration of function
-> =E2=80=98tpm_alg_to_ossl=E2=80=99 [-Wimplicit-function-declaration]*
->
-
-These two warnings are about static functions that are declared within
-lib/tpm2_identity_util.c. Are you maybe trying to just concatenate
-tpm2-tools's source files into a single compilation unit?
-
-*tpm2_common.c:1441:5: error: incompatible type for argument 1 of
-> =E2=80=98EVP_DigestUpdate=E2=80=99*
-> *     return EVP_DigestUpdate(ctx->md_ctx, data, len);*
-> *     ^*
->
-
-The string "md_ctx" doesn't appear anywhere in the tpm2-tools Git repo
-either, as far as I can tell.
-
-Is this a line of code that you wrote? If so, it should probably be
-"&ctx->md_ctx" instead of just "ctx->md_ctx".
+I am working on a program that involves using Esys_Initialize. After callin=
+g Esys_Initialize and running the rest of the program, I call Esys_Finalize=
+. However, I have the following output from valgrind:
 
 
-> 1.0.2 does not seem to have it or arguments are different!
->
+=3D=3D14825=3D=3D 24 bytes in 1 blocks are still reachable in loss record 5=
+18 of 545
 
-I don't think EVP_DigestUpdate or EVP_DigestFinal_ex have changed in a long
-time. For example, here's the OpenBSD man page from 2004, which shows them
-taking an "EVP_MD_CTX*" parameter:
-http://man.openbsd.org/OpenBSD-3.6/EVP_DigestUpdate
+=3D=3D14825=3D=3D    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_m=
+emcheck-amd64-linux.so)
 
-I think your problem is unrelated to OpenSSL version.
+=3D=3D14825=3D=3D    by 0x5969E77: CRYPTO_malloc (in /lib/x86_64-linux-gnu/=
+libcrypto.so.1.0.0)
 
---===============6907038140438155057==
+=3D=3D14825=3D=3D    by 0x5A21F85: lh_insert (in /lib/x86_64-linux-gnu/libc=
+rypto.so.1.0.0)
+
+=3D=3D14825=3D=3D    by 0x596CC54: OBJ_NAME_add (in /lib/x86_64-linux-gnu/l=
+ibcrypto.so.1.0.0)
+
+=3D=3D14825=3D=3D    by 0x5A2C565: EVP_add_digest (in /lib/x86_64-linux-gnu=
+/libcrypto.so.1.0.0)
+
+=3D=3D14825=3D=3D    by 0x5A30F4A: OpenSSL_add_all_digests (in /lib/x86_64-=
+linux-gnu/libcrypto.so.1.0.0)
+
+=3D=3D14825=3D=3D    by 0x50CC9FE: iesys_cryptossl_init (esys_crypto_ossl.c=
+:1118)
+
+=3D=3D14825=3D=3D    by 0x50BDE5B: iesys_initialize_crypto (esys_crypto.c:5=
+37)
+
+=3D=3D14825=3D=3D    by 0x50BB474: Esys_Initialize (esys_context.c:81)
+
+It seems that there is memory getting allocated in CRYPO_malloc that Esys_F=
+inalize is not freeing. I have traced the code, but I don=E2=80=99t have ac=
+cess to EVP_add_digest and the other inner function calls. Would someone be=
+ able to give me advice on how to free this memory?
+
+Thank you
+
+Timothy
+
+--===============6786893435692180318==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+T24gRnJpLCBBdWcgMTYsIDIwMTkgYXQgMjow
-NCBQTSBSYWh1bCBIYXJkaWthciAmbHQ7PGEgaHJlZj0ibWFpbHRvOnJhaHVsaGFyZGlrYXJAZ21h
-aWwuY29tIj5yYWh1bGhhcmRpa2FyQGdtYWlsLmNvbTwvYT4mZ3Q7IHdyb3RlOjxicj48L2Rpdj48
-ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBz
-dHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2Io
-MjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgZGlyPSJsdHIiPjxkaXYgZGlyPSJs
-dHIiPjxkaXYgZGlyPSJsdHIiPjxkaXY+SSBjb3BpZWQgdGhlIGNvZGUgb24gbXkgc2VydmVyIGJ1
-dCBpdCBzZWVtcyB0aGF0IG1pbmUgc3VwcG9ydHMgMS4wLjJuIGFuZCBteSBtYW5hZ2VyIHNhaWQg
-dGhhdCB0aGV5IHdpbGwgbm90IHVwZ3JhZGUgdG8gbmV3ZXIgdmVyc2lvbnMgdW50aWwgbmV4dCB5
-ZWFyLjxicj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Jsb2NrcXVvdGU+PGRpdj48YnI+PC9k
-aXY+PGRpdj5JdCYjMzk7cyB1bmNsZWFyIHRvIG1lIGV4YWN0bHkgd2hhdCBjb2RlIHlvdSYjMzk7
-cmXCoHJlZmVycmluZyB0byBoZXJlLiBGb3IgZXhhbXBsZSwgeW91ciBjb21waWxlciBsb2dzIGJl
-bG93IG1lbnRpb24gJnF1b3Q7dHBtMl9jb21tb24uYyZxdW90OywgYnV0IGFzIGZhciBhcyBJIGNh
-biB0ZWxsLCBubyBzdWNoIGZpbGUgaGFzIGV2ZXIgZXhpc3RlZCB3aXRoaW4gdGhlIHRwbTItdG9v
-bHMgR2l0IHJlcG8uPC9kaXY+PGRpdj48YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWls
-X3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBz
-b2xpZCByZ2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgZGlyPSJsdHIiPjxk
-aXYgZGlyPSJsdHIiPjxkaXYgZGlyPSJsdHIiPjxkaXY+PGk+PGZvbnQgY29sb3I9IiMwMDAwZmYi
-PnRwbTJfY29tbW9uLmM6ODk0OjU6IHdhcm5pbmc6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1
-bmN0aW9uIOKAmFJTQV9wYWRkaW5nX2FkZF9QS0NTMV9PQUVQX21nZjHigJkgWy1XaW1wbGljaXQt
-ZnVuY3Rpb24tZGVjbGFyYXRpb25dPC9mb250PjwvaT48YnI+PC9kaXY+PGRpdj48ZGl2PjxpPjxm
-b250IGNvbG9yPSIjMDAwMGZmIj50cG0yX2NvbW1vbi5jOjExOTQ6NTogd2FybmluZzogaW1wbGlj
-aXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24g4oCYdHBtX2FsZ190b19vc3Ns4oCZIFstV2ltcGxp
-Y2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXTwvZm9udD48L2k+PC9kaXY+PC9kaXY+PC9kaXY+PC9k
-aXY+PC9kaXY+PC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhlc2UgdHdvIHdhcm5p
-bmdzIGFyZSBhYm91dCBzdGF0aWMgZnVuY3Rpb25zIHRoYXQgYXJlIGRlY2xhcmVkIHdpdGhpbiBs
-aWIvdHBtMl9pZGVudGl0eV91dGlsLmMuIEFyZSB5b3UgbWF5YmUgdHJ5aW5nIHRvIGp1c3QgY29u
-Y2F0ZW5hdGUgdHBtMi10b29scyYjMzk7cyBzb3VyY2UgZmlsZXMgaW50byBhIHNpbmdsZSBjb21w
-aWxhdGlvbiB1bml0PzwvZGl2PjxkaXY+PGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFp
-bF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHgg
-c29saWQgcmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2IGRpcj0ibHRyIj48
-ZGl2IGRpcj0ibHRyIj48ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXY+PGk+PGZvbnQgY29sb3I9IiMw
-MDAwZmYiPnRwbTJfY29tbW9uLmM6MTQ0MTo1OiBlcnJvcjogaW5jb21wYXRpYmxlIHR5cGUgZm9y
-IGFyZ3VtZW50IDEgb2Yg4oCYRVZQX0RpZ2VzdFVwZGF0ZeKAmTwvZm9udD48L2k+PGJyPjwvZGl2
-PjwvZGl2PjxkaXY+PGRpdj48aT48Zm9udCBjb2xvcj0iIzAwMDBmZiI+wqAgwqAgwqByZXR1cm4g
-RVZQX0RpZ2VzdFVwZGF0ZShjdHgtJmd0O21kX2N0eCwgZGF0YSwgbGVuKTs8L2ZvbnQ+PC9pPjwv
-ZGl2PjxkaXY+PGk+PGZvbnQgY29sb3I9IiMwMDAwZmYiPsKgIMKgIMKgXjwvZm9udD48L2k+PC9k
-aXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+PC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2Pjxk
-aXY+VGhlIHN0cmluZyAmcXVvdDttZF9jdHgmcXVvdDsgZG9lc24mIzM5O3QgYXBwZWFyIGFueXdo
-ZXJlIGluIHRoZSB0cG0yLXRvb2xzIEdpdCByZXBvIGVpdGhlciwgYXMgZmFyIGFzIEkgY2FuIHRl
-bGwuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5JcyB0aGlzIGEgbGluZSBvZiBjb2RlIHRoYXQg
-eW91IHdyb3RlPyBJZiBzbywgaXQgc2hvdWxkIHByb2JhYmx5IGJlICZxdW90OyZhbXA7Y3R4LSZn
-dDttZF9jdHgmcXVvdDsgaW5zdGVhZCBvZiBqdXN0ICZxdW90O2N0eC0mZ3Q7bWRfY3R4JnF1b3Q7
-LjwvZGl2PjxkaXY+wqA8L2Rpdj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxl
-PSJtYXJnaW46MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQ6MXB4IHNvbGlkIHJnYigyMDQs
-MjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+
-PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2PjEuMC4yIGRvZXMgbm90IHNlZW0gdG8gaGF2ZSBpdCBv
-ciBhcmd1bWVudHMgYXJlIGRpZmZlcmVudCE8L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48
-L2Jsb2NrcXVvdGU+PGRpdj48YnI+PC9kaXY+PGRpdj5JIGRvbiYjMzk7dCB0aGluayBFVlBfRGln
-ZXN0VXBkYXRlIG9yIEVWUF9EaWdlc3RGaW5hbF9leCBoYXZlIGNoYW5nZWQgaW4gYSBsb25nIHRp
-bWUuIEZvciBleGFtcGxlLCBoZXJlJiMzOTtzIHRoZSBPcGVuQlNEIG1hbiBwYWdlIGZyb20gMjAw
-NCwgd2hpY2ggc2hvd3MgdGhlbSB0YWtpbmcgYW4gJnF1b3Q7RVZQX01EX0NUWComcXVvdDsgcGFy
-YW1ldGVyOsKgPGEgaHJlZj0iaHR0cDovL21hbi5vcGVuYnNkLm9yZy9PcGVuQlNELTMuNi9FVlBf
-RGlnZXN0VXBkYXRlIj5odHRwOi8vbWFuLm9wZW5ic2Qub3JnL09wZW5CU0QtMy42L0VWUF9EaWdl
-c3RVcGRhdGU8L2E+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5JIHRoaW5rIHlvdXIgcHJvYmxl
-bSBpcyB1bnJlbGF0ZWQgdG8gT3BlblNTTCB2ZXJzaW9uLjwvZGl2PjwvZGl2PjwvZGl2Pgo=
+PGh0bWwgeG1sbnM6bz0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlIiB4
+bWxuczp3PSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkIiB4bWxuczptPSJo
+dHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL29mZmljZS8yMDA0LzEyL29tbWwiIHhtbG5zPSJo
+dHRwOi8vd3d3LnczLm9yZy9UUi9SRUMtaHRtbDQwIj4NCjxoZWFkPg0KPG1ldGEgaHR0cC1lcXVp
+dj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPg0KPG1l
+dGEgbmFtZT0iR2VuZXJhdG9yIiBjb250ZW50PSJNaWNyb3NvZnQgV29yZCAxNSAoZmlsdGVyZWQg
+bWVkaXVtKSI+DQo8c3R5bGU+PCEtLQ0KLyogRm9udCBEZWZpbml0aW9ucyAqLw0KQGZvbnQtZmFj
+ZQ0KCXtmb250LWZhbWlseToiQ2FtYnJpYSBNYXRoIjsNCglwYW5vc2UtMToyIDQgNSAzIDUgNCA2
+IDMgMiA0O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsNCglwYW5vc2UtMToy
+IDE1IDUgMiAyIDIgNCAzIDIgNDt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5Ok1lbmxvOw0K
+CXBhbm9zZS0xOjIgMTEgNiA5IDMgOCA0IDIgMiA0O30NCi8qIFN0eWxlIERlZmluaXRpb25zICov
+DQpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsDQoJe21hcmdpbjowaW47
+DQoJbWFyZ2luLWJvdHRvbTouMDAwMXB0Ow0KCWZvbnQtc2l6ZToxMi4wcHQ7DQoJZm9udC1mYW1p
+bHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQ0KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluaw0KCXtt
+c28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6IzA1NjNDMTsNCgl0ZXh0LWRlY29yYXRpb246
+dW5kZXJsaW5lO30NCmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBlcmxpbmtGb2xsb3dlZA0KCXttc28t
+c3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6Izk1NEY3MjsNCgl0ZXh0LWRlY29yYXRpb246dW5k
+ZXJsaW5lO30NCnAubXNvbm9ybWFsMCwgbGkubXNvbm9ybWFsMCwgZGl2Lm1zb25vcm1hbDANCgl7
+bXNvLXN0eWxlLW5hbWU6bXNvbm9ybWFsOw0KCW1zby1tYXJnaW4tdG9wLWFsdDphdXRvOw0KCW1h
+cmdpbi1yaWdodDowaW47DQoJbXNvLW1hcmdpbi1ib3R0b20tYWx0OmF1dG87DQoJbWFyZ2luLWxl
+ZnQ6MGluOw0KCWZvbnQtc2l6ZToxMS4wcHQ7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMt
+c2VyaWY7fQ0KcC5wMSwgbGkucDEsIGRpdi5wMQ0KCXttc28tc3R5bGUtbmFtZTpwMTsNCgltYXJn
+aW46MGluOw0KCW1hcmdpbi1ib3R0b206LjAwMDFwdDsNCglmb250LXNpemU6MTEuNXB0Ow0KCWZv
+bnQtZmFtaWx5Ok1lbmxvOw0KCWNvbG9yOmJsYWNrO30NCnNwYW4uRW1haWxTdHlsZTE5DQoJe21z
+by1zdHlsZS10eXBlOnBlcnNvbmFsOw0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlm
+Ow0KCWNvbG9yOndpbmRvd3RleHQ7fQ0Kc3Bhbi5zMQ0KCXttc28tc3R5bGUtbmFtZTpzMTt9DQpz
+cGFuLmFwcGxlLWNvbnZlcnRlZC1zcGFjZQ0KCXttc28tc3R5bGUtbmFtZTphcHBsZS1jb252ZXJ0
+ZWQtc3BhY2U7fQ0KLk1zb0NocERlZmF1bHQNCgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7
+DQoJZm9udC1zaXplOjEwLjBwdDt9DQpAcGFnZSBXb3JkU2VjdGlvbjENCgl7c2l6ZTo4LjVpbiAx
+MS4waW47DQoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30NCmRpdi5Xb3JkU2VjdGlv
+bjENCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQ0KLS0+PC9zdHlsZT4NCjwvaGVhZD4NCjxib2R5IGxh
+bmc9IkVOLVVTIiBsaW5rPSIjMDU2M0MxIiB2bGluaz0iIzk1NEY3MiI+DQo8ZGl2IGNsYXNzPSJX
+b3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
+ZToxMS4wcHQiPkhlbGxvLDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bh
+bj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBw
+dCI+SSBhbSB3b3JraW5nIG9uIGEgcHJvZ3JhbSB0aGF0IGludm9sdmVzIHVzaW5nIEVzeXNfSW5p
+dGlhbGl6ZS4gQWZ0ZXIgY2FsbGluZyBFc3lzX0luaXRpYWxpemUgYW5kIHJ1bm5pbmcgdGhlIHJl
+c3Qgb2YgdGhlIHByb2dyYW0sIEkgY2FsbCBFc3lzX0ZpbmFsaXplLiBIb3dldmVyLCBJIGhhdmUg
+dGhlIGZvbGxvd2luZyBvdXRwdXQgZnJvbSB2YWxncmluZDo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+
+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdCI+PG86
+cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9InAxIj48c3BhbiBjbGFzcz0iczEi
+Pj09MTQ4MjU9PSAyNCBieXRlcyBpbiAxIGJsb2NrcyBhcmUgc3RpbGwgcmVhY2hhYmxlIGluIGxv
+c3MgcmVjb3JkIDUxOCBvZiA1NDU8L3NwYW4+PC9wPg0KPHAgY2xhc3M9InAxIj48c3BhbiBjbGFz
+cz0iczEiPj09MTQ4MjU9PTwvc3Bhbj48c3BhbiBjbGFzcz0iYXBwbGUtY29udmVydGVkLXNwYWNl
+Ij4mbmJzcDsgJm5ic3A7DQo8L3NwYW4+PHNwYW4gY2xhc3M9InMxIj5hdCAweDRDMkRCOEY6IG1h
+bGxvYyAoaW4gL3Vzci9saWIvdmFsZ3JpbmQvdmdwcmVsb2FkX21lbWNoZWNrLWFtZDY0LWxpbnV4
+LnNvKTwvc3Bhbj48L3A+DQo8cCBjbGFzcz0icDEiPjxzcGFuIGNsYXNzPSJzMSI+PT0xNDgyNT09
+PC9zcGFuPjxzcGFuIGNsYXNzPSJhcHBsZS1jb252ZXJ0ZWQtc3BhY2UiPiZuYnNwOyAmbmJzcDsN
+Cjwvc3Bhbj48c3BhbiBjbGFzcz0iczEiPmJ5IDB4NTk2OUU3NzogQ1JZUFRPX21hbGxvYyAoaW4g
+L2xpYi94ODZfNjQtbGludXgtZ251L2xpYmNyeXB0by5zby4xLjAuMCk8L3NwYW4+PC9wPg0KPHAg
+Y2xhc3M9InAxIj48c3BhbiBjbGFzcz0iczEiPj09MTQ4MjU9PTwvc3Bhbj48c3BhbiBjbGFzcz0i
+YXBwbGUtY29udmVydGVkLXNwYWNlIj4mbmJzcDsgJm5ic3A7DQo8L3NwYW4+PHNwYW4gY2xhc3M9
+InMxIj5ieSAweDVBMjFGODU6IGxoX2luc2VydCAoaW4gL2xpYi94ODZfNjQtbGludXgtZ251L2xp
+YmNyeXB0by5zby4xLjAuMCk8L3NwYW4+PC9wPg0KPHAgY2xhc3M9InAxIj48c3BhbiBjbGFzcz0i
+czEiPj09MTQ4MjU9PTwvc3Bhbj48c3BhbiBjbGFzcz0iYXBwbGUtY29udmVydGVkLXNwYWNlIj4m
+bmJzcDsgJm5ic3A7DQo8L3NwYW4+PHNwYW4gY2xhc3M9InMxIj5ieSAweDU5NkNDNTQ6IE9CSl9O
+QU1FX2FkZCAoaW4gL2xpYi94ODZfNjQtbGludXgtZ251L2xpYmNyeXB0by5zby4xLjAuMCk8L3Nw
+YW4+PC9wPg0KPHAgY2xhc3M9InAxIj48c3BhbiBjbGFzcz0iczEiPj09MTQ4MjU9PTwvc3Bhbj48
+c3BhbiBjbGFzcz0iYXBwbGUtY29udmVydGVkLXNwYWNlIj4mbmJzcDsgJm5ic3A7DQo8L3NwYW4+
+PHNwYW4gY2xhc3M9InMxIj5ieSAweDVBMkM1NjU6IEVWUF9hZGRfZGlnZXN0IChpbiAvbGliL3g4
+Nl82NC1saW51eC1nbnUvbGliY3J5cHRvLnNvLjEuMC4wKTwvc3Bhbj48L3A+DQo8cCBjbGFzcz0i
+cDEiPjxzcGFuIGNsYXNzPSJzMSI+PT0xNDgyNT09PC9zcGFuPjxzcGFuIGNsYXNzPSJhcHBsZS1j
+b252ZXJ0ZWQtc3BhY2UiPiZuYnNwOyAmbmJzcDsNCjwvc3Bhbj48c3BhbiBjbGFzcz0iczEiPmJ5
+IDB4NUEzMEY0QTogT3BlblNTTF9hZGRfYWxsX2RpZ2VzdHMgKGluIC9saWIveDg2XzY0LWxpbnV4
+LWdudS9saWJjcnlwdG8uc28uMS4wLjApPC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJwMSI+PHNwYW4g
+Y2xhc3M9InMxIj49PTE0ODI1PT08L3NwYW4+PHNwYW4gY2xhc3M9ImFwcGxlLWNvbnZlcnRlZC1z
+cGFjZSI+Jm5ic3A7ICZuYnNwOw0KPC9zcGFuPjxzcGFuIGNsYXNzPSJzMSI+YnkgMHg1MENDOUZF
+OiBpZXN5c19jcnlwdG9zc2xfaW5pdCAoZXN5c19jcnlwdG9fb3NzbC5jOjExMTgpPC9zcGFuPjwv
+cD4NCjxwIGNsYXNzPSJwMSI+PHNwYW4gY2xhc3M9InMxIj49PTE0ODI1PT08L3NwYW4+PHNwYW4g
+Y2xhc3M9ImFwcGxlLWNvbnZlcnRlZC1zcGFjZSI+Jm5ic3A7ICZuYnNwOw0KPC9zcGFuPjxzcGFu
+IGNsYXNzPSJzMSI+YnkgMHg1MEJERTVCOiBpZXN5c19pbml0aWFsaXplX2NyeXB0byAoZXN5c19j
+cnlwdG8uYzo1MzcpPC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJwMSI+PHNwYW4gY2xhc3M9InMxIj49
+PTE0ODI1PT08L3NwYW4+PHNwYW4gY2xhc3M9ImFwcGxlLWNvbnZlcnRlZC1zcGFjZSI+Jm5ic3A7
+ICZuYnNwOw0KPC9zcGFuPjxzcGFuIGNsYXNzPSJzMSI+YnkgMHg1MEJCNDc0OiBFc3lzX0luaXRp
+YWxpemUgKGVzeXNfY29udGV4dC5jOjgxKTwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+
+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQi
+Pkl0IHNlZW1zIHRoYXQgdGhlcmUgaXMgbWVtb3J5IGdldHRpbmcgYWxsb2NhdGVkIGluIENSWVBP
+X21hbGxvYyB0aGF0IEVzeXNfRmluYWxpemUgaXMgbm90IGZyZWVpbmcuIEkgaGF2ZSB0cmFjZWQg
+dGhlIGNvZGUsIGJ1dCBJIGRvbuKAmXQgaGF2ZSBhY2Nlc3MgdG8gRVZQX2FkZF9kaWdlc3QgYW5k
+IHRoZSBvdGhlciBpbm5lciBmdW5jdGlvbiBjYWxscy4gV291bGQNCiBzb21lb25lIGJlIGFibGUg
+dG8gZ2l2ZSBtZSBhZHZpY2Ugb24gaG93IHRvIGZyZWUgdGhpcyBtZW1vcnk/PG86cD48L286cD48
+L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTox
+MS4wcHQiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0Ij5UaGFuayB5b3U8bzpwPjwvbzpwPjwvc3Bh
+bj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBw
+dCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
+YW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQiPlRpbW90aHk8bzpwPjwvbzpwPjwvc3Bhbj48L3A+
+DQo8L2Rpdj4NCjwvYm9keT4NCjwvaHRtbD4NCg==
 
---===============6907038140438155057==--
+--===============6786893435692180318==--
 
