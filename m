@@ -1,29 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============8122443619383986005=="
+Content-Type: multipart/mixed; boundary="===============8846315369725986767=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-tools 4.0-rc0
-Date: Mon, 19 Aug 2019 18:04:24 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DD8677@ORSMSX101.amr.corp.intel.com>
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: Re: [tpm2] Memory Leak stemming from Esys_Initialize
+Date: Mon, 19 Aug 2019 11:19:44 -0700
+Message-ID: <0136ddaa-ebf0-9ef2-c8b7-86f22ef880c0@intel.com>
+In-Reply-To: 4F12017E-B957-4DB4-A070-EFC4182B6A3B@vmware.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8122443619383986005==
+--===============8846315369725986767==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Timothy,
+On 8/16/19 3:33 PM, Timothy Le wrote:
+> It seems that there is memory getting allocated in CRYPO_malloc that Esys=
+_Finalize is not freeing. I have traced the code, but I don=E2=80=99t have =
+access to EVP_add_digest and the other inner function calls. Would someone =
+be able to give me advice on how to free this memory?
 
-I am pleased to announce the tpm2.0-tools 4.0-rc0. This is a very large rel=
-ease that incorporates many bug fixes, new features and tools. Please see t=
-he changelog
-for details. =
-
-
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.0-rc0
+Could you specify what version of TSS are you using?
+There was number of fixes merged in recently to fix these leaks.
 
 Thanks,
-Bill
+-- =
 
---===============8122443619383986005==--
+Tadeusz
+
+--===============8846315369725986767==--
 
