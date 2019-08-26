@@ -1,197 +1,95 @@
-Content-Type: multipart/mixed; boundary="===============0869989440613237878=="
+Content-Type: multipart/mixed; boundary="===============2318476744340720719=="
 MIME-Version: 1.0
-From: Zhu, Bing <bing.zhu at intel.com>
-Subject: Re: [tpm2] how to upgrade the TPM access control policy when a
- particular PCR is changed.
-Date: Mon, 26 Aug 2019 17:38:03 +0000
-Message-ID: <A3DEEEBB19900C48B49572CB9C2891C987938484@SHSMSX108.ccr.corp.intel.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649DEEBE1@ORSMSX101.amr.corp.intel.com
+From: =?utf-8?q?Iratxe_Gonz=C3=A1lez_Garrido_=3Ciratxe=2Eggarrido_at_gmail=2Eco?=
+ =?utf-8?q?m=3E?=
+Subject: [tpm2] [tpm2-tools] tools error while compiling
+Date: Mon, 26 Aug 2019 19:38:41 +0200
+Message-ID: <CAPSVqM1c2k5tgCQvK+vTU=QNk-uhT934FEMsADJ-3Mk=6yURgg@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0869989440613237878==
+--===============2318476744340720719==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello:
 
+I am trying to update my tpm2-tools to version 4 but I get this error
+message:
 
-> -----Original Message-----
-> From: Roberts, William C
-> Sent: Monday, August 26, 2019 08:24 AM
-> To: Zhao, Shirley <shirley.zhao(a)intel.com>; Zhu, Bing <bing.zhu(a)intel=
-.com>;
-> Desai, Imran <imran.desai(a)intel.com>
-> Cc: Chen, Luhai <luhai.chen(a)intel.com>; Feng, Roger <roger.feng(a)intel=
-.com>;
-> tpm2(a)lists.01.org
-> Subject: RE: how to upgrade the TPM access control policy when a particul=
-ar PCR
-> is changed.
-> =
+pi(a)iotacar:~/tpm2-tools $ make -j5
+  CC       lib/lib_libcommon_a-files.o
+  CC       lib/lib_libcommon_a-log.o
+  CC       lib/lib_libcommon_a-object.o
+  CC       lib/lib_libcommon_a-pcr.o
+  CC       lib/lib_libcommon_a-tpm2.o
+  CC       lib/lib_libcommon_a-tpm2_alg_util.o
+  CC       lib/lib_libcommon_a-tpm2_attr_util.o
+lib/tpm2_alg_util.c: In function =E2=80=98tpm2_alg_util_for_each_alg=E2=80=
+=99:
+lib/tpm2_alg_util.c:66:33: error: =E2=80=98TPM2_ALG_CMAC=E2=80=99 undeclare=
+d (first use in
+this function)
+         { .name =3D "cmac", .id =3D TPM2_ALG_CMAC, .flags =3D
+tpm2_alg_util_flags_sig },
+                                 ^~~~~~~~~~~~~
+lib/tpm2_alg_util.c:66:33: note: each undeclared identifier is reported
+only once for each function it appears in
+Makefile:2618: recipe for target 'lib/lib_libcommon_a-tpm2_alg_util.o'
+failed
+make: *** [lib/lib_libcommon_a-tpm2_alg_util.o] Error 1
+make: *** Waiting for unfinished jobs....
 
-> =
+I've tried uninstalling and reinstalling everything but I get the same
+error. I installed it yesterday in another raspberry pi from scratch and it
+works without problems, therefore I think I have some legacy files from the
+previous installation, but I don't know what to delete. I have not
+encountered any problems while installing tpms2-tss, tom2-abrmd or the TPM
+simulator, just with tpm2-tools
+Can anyone help me?
 
-> =
+Thanks in advance
 
-> > -----Original Message-----
-> > From: Zhao, Shirley
-> > Sent: Saturday, August 24, 2019 4:18 AM
-> > To: Roberts, William C <william.c.roberts(a)intel.com>; Zhu, Bing
-> > <bing.zhu(a)intel.com>; Desai, Imran <imran.desai(a)intel.com>
-> > Cc: Chen, Luhai <luhai.chen(a)intel.com>; Feng, Roger
-> > <roger.feng(a)intel.com>; tpm2(a)lists.01.org
-> > Subject: RE: how to upgrade the TPM access control policy when a
-> > particular PCR is changed.
-> >
-> > Yes, I have tried nvdefine/nvread/nvwrite.
-> > It works, using nvdefine to create a NV index with policywrite/policyre=
-ad.
-> > Using tpm2_policyauthorize to update the policy.
-> >
-> > The problem here is tpm2_policyauthorize need to save a signature to
-> > verify the policy is valid.
-> > If there is no place to save the signature, it can't work.
-> =
+--===============2318476744340720719==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-> I don't understand, you don't have anywhere to save the signature output?
-> =
+PGRpdiBkaXI9Imx0ciI+PGRpdj5IZWxsbzo8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkkgYW0g
+dHJ5aW5nIHRvIHVwZGF0ZSBteSB0cG0yLXRvb2xzIHRvIHZlcnNpb24gNCBidXQgSSBnZXQgdGhp
+cyBlcnJvciBtZXNzYWdlOjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImZv
+bnQtZmFtaWx5Om1vbm9zcGFjZSI+cGlAaW90YWNhcjp+L3RwbTItdG9vbHMgJCBtYWtlIC1qNTxi
+cj7CoCBDQyDCoCDCoCDCoCBsaWIvbGliX2xpYmNvbW1vbl9hLWZpbGVzLm88YnI+wqAgQ0MgwqAg
+wqAgwqAgbGliL2xpYl9saWJjb21tb25fYS1sb2cubzxicj7CoCBDQyDCoCDCoCDCoCBsaWIvbGli
+X2xpYmNvbW1vbl9hLW9iamVjdC5vPGJyPsKgIENDIMKgIMKgIMKgIGxpYi9saWJfbGliY29tbW9u
+X2EtcGNyLm88YnI+wqAgQ0MgwqAgwqAgwqAgbGliL2xpYl9saWJjb21tb25fYS10cG0yLm88YnI+
+wqAgQ0MgwqAgwqAgwqAgbGliL2xpYl9saWJjb21tb25fYS10cG0yX2FsZ191dGlsLm88YnI+wqAg
+Q0MgwqAgwqAgwqAgbGliL2xpYl9saWJjb21tb25fYS10cG0yX2F0dHJfdXRpbC5vPGJyPmxpYi90
+cG0yX2FsZ191dGlsLmM6IEluIGZ1bmN0aW9uIOKAmHRwbTJfYWxnX3V0aWxfZm9yX2VhY2hfYWxn
+4oCZOjxicj5saWIvdHBtMl9hbGdfdXRpbC5jOjY2OjMzOiBlcnJvcjog4oCYVFBNMl9BTEdfQ01B
+Q+KAmSB1bmRlY2xhcmVkIChmaXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlvbik8YnI+wqAgwqAgwqAg
+wqAgwqB7IC5uYW1lID0gJnF1b3Q7Y21hYyZxdW90OywgLmlkID0gVFBNMl9BTEdfQ01BQywgLmZs
+YWdzID0gdHBtMl9hbGdfdXRpbF9mbGFnc19zaWcgfSw8YnI+wqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBefn5+fn5+fn5+fn5+PGJyPmxpYi90cG0yX2Fs
+Z191dGlsLmM6NjY6MzM6IG5vdGU6IGVhY2ggdW5kZWNsYXJlZCBpZGVudGlmaWVyIGlzIHJlcG9y
+dGVkIG9ubHkgb25jZSBmb3IgZWFjaCBmdW5jdGlvbiBpdCBhcHBlYXJzIGluPGJyPk1ha2VmaWxl
+OjI2MTg6IHJlY2lwZSBmb3IgdGFyZ2V0ICYjMzk7bGliL2xpYl9saWJjb21tb25fYS10cG0yX2Fs
+Z191dGlsLm8mIzM5OyBmYWlsZWQ8YnI+bWFrZTogKioqIFtsaWIvbGliX2xpYmNvbW1vbl9hLXRw
+bTJfYWxnX3V0aWwub10gRXJyb3IgMTxicj5tYWtlOiAqKiogV2FpdGluZyBmb3IgdW5maW5pc2hl
+ZCBqb2JzLi4uLjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTptb25v
+c3BhY2UiPjxicj48L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6bW9u
+b3NwYWNlIj48L3NwYW4+SSYjMzk7dmUgdHJpZWQgdW5pbnN0YWxsaW5nIGFuZCByZWluc3RhbGxp
+bmcgZXZlcnl0aGluZyBidXQgSSBnZXQgdGhlIHNhbWUgZXJyb3IuIEkgaW5zdGFsbGVkIGl0IHll
+c3RlcmRheSBpbiBhbm90aGVyIHJhc3BiZXJyeSBwaSBmcm9tIHNjcmF0Y2ggYW5kIGl0IHdvcmtz
+IHdpdGhvdXQgcHJvYmxlbXMsIHRoZXJlZm9yZSBJIHRoaW5rIEkgaGF2ZSBzb21lIGxlZ2FjeSBm
+aWxlcyBmcm9tIHRoZSBwcmV2aW91cyBpbnN0YWxsYXRpb24sIGJ1dCBJIGRvbiYjMzk7dCBrbm93
+IHdoYXQgdG8gZGVsZXRlLiBJIGhhdmUgbm90IGVuY291bnRlcmVkIGFueSBwcm9ibGVtcyB3aGls
+ZSBpbnN0YWxsaW5nIHRwbXMyLXRzcywgdG9tMi1hYnJtZCBvciB0aGUgVFBNIHNpbXVsYXRvciwg
+anVzdCB3aXRoIHRwbTItdG9vbHM8YnI+PC9kaXY+PGRpdj5DYW4gYW55b25lIGhlbHAgbWU/PC9k
+aXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFua3MgaW4gYWR2YW5jZTwvZGl2PjxkaXY+PGJyPjwv
+ZGl2PjwvZGl2Pgo=
 
-> > And the second problem is all the policy signed with the key can work,
-> > which can't make the old policy unusable.
-> =
-
-> You need to create a more complex policy. You can include an nv index cou=
-nter
-> In the policy, and when you switch policies increment the nv index. Any p=
-olicy
-> with older values of nv index wont work.
-
-Looks like this is going to be more complicated when considering TPM NV cou=
-nter power failure issue which results in a "leap over" increment. (but thi=
-s happens very rarely)  =
-
-
-> >
-> >
-> > - Shirley
-> >
-> > -----Original Message-----
-> > From: Roberts, William C
-> > Sent: Saturday, August 24, 2019 1:34 AM
-> > To: Zhu, Bing <bing.zhu(a)intel.com>; Desai, Imran
-> > <imran.desai(a)intel.com>; Zhao, Shirley <shirley.zhao(a)intel.com>
-> > Cc: Chen, Luhai <luhai.chen(a)intel.com>; Feng, Roger
-> > <roger.feng(a)intel.com>; tpm2(a)lists.01.org
-> > Subject: RE: how to upgrade the TPM access control policy when a
-> > particular PCR is changed.
-> >
-> >
-> >
-> > > -----Original Message-----
-> > > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Zhu, Bing
-> > > Sent: Thursday, August 8, 2019 11:24 AM
-> > > To: Desai, Imran <imran.desai(a)intel.com>; Zhao, Shirley
-> > > <shirley.zhao(a)intel.com>
-> > > Cc: Chen, Luhai <luhai.chen(a)intel.com>; Feng, Roger
-> > > <roger.feng(a)intel.com>; tpm2(a)lists.01.org
-> > > Subject: Re: [tpm2] how to upgrade the TPM access control policy
-> > > when a particular PCR is changed.
-> > >
-> > > Thanks Imran, yes we did a test based on your sample, however, it
-> > > seems that this is not what we expected.
-> >
-> > What's not expected? Policyauthorize lets you tether a policy rooted
-> > by a signing entity so you can change the policy so long as its signed =
-with the
-> trustworthy key.
-> >
-> > That example in the manpage is for creating a transient object via
-> > tpm2_create, however that policy Could be used for tpm2_nvdefine as
-> > well. The steps to satisfy the policy are the same, however you Would
-> > use nvread rather than unseal to get to the data.
-> >
-> > >
-> > >
-> > >
-> > > Shirley (in to list) can tell more details on that.
-> > >
-> > >
-> > >
-> > > Bing
-> > >
-> > >
-> > >
-> > > From: Desai, Imran
-> > > Sent: Thursday, August 8, 2019 07:27 AM
-> > > To: Zhu, Bing <bing.zhu(a)intel.com>
-> > > Cc: tpm2(a)lists.01.org; Zhao, Shirley <shirley.zhao(a)intel.com>; Ch=
-en,
-> > > Luhai <luhai.chen(a)intel.com>; Feng, Roger <roger.feng(a)intel.com>
-> > > Subject: Re: how to upgrade the TPM access control policy when a
-> > > particular PCR is changed.
-> > >
-> > >
-> > >
-> > > Hi Bing, refer the example section in man page
-> > >
-> > >
-> > >
-> > > https://github.com/tpm2-software/tpm2-
-> > > tools/blob/master/man/tpm2_policyauthorize.1.md
-> > >
-> > >
-> > >
-> > >
-> > > On Aug 7, 2019, at 10:49 PM, Zhu, Bing <bing.zhu(a)intel.com
-> > > <mailto:bing.zhu(a)intel.com> > wrote:
-> > >
-> > > 	Hi,
-> > >
-> > > 	I have a use case like this:
-> > >
-> > > 	We create a TPM2.0 NV index, provision a secret into that NV index
-> > > in TPM, and gate its access control with PCR[7] policy, which means
-> > > that only when PCR[7] value matches the expected value, the read
-> > > access to this NV index is allowed.
-> > >
-> > > 	In a PC compliant machine, PCR[7] is used by BIOS to extend Secure
-> > > Boot policies/configurations, and verification public key db
-> > > settings (PK, KEK,
-> > DB/DBx).
-> > > The reason that we do it like this because we would like to set
-> > > access control to the secret value stored in that NV index. When
-> > > someone
-> > > (attacker) is going to disable secure boot, then PCR[7] value
-> > > changes and doesn't match the value that the original policy was
-> > > created on that NV index, then accessing to that secret value will
-> > > be denied. This is
-> > expected behavior that I want.
-> > >
-> > > 	Now the problem is that when secure boot configurations (like
-> > > DB/DBx) are changed due to OS software upgrade, the PCR[7] will be
-> > > changed too, then access to that secret in NV index will be denied to=
-o.
-> > >
-> > > 	So we'd like to figure out how to upgrade the associated PCR[7]
-> > > policy on that NV Index, in order to make sure the access to this NV
-> > > index is still be available after upgrade (because this is a
-> > > legitimate upgrade
-> > usage).
-> > >
-> > > 	we don't know how exactly to do that although I'm aware of that the
-> > > API
-> > > TPM2_PolicyAuthorize() would probably do this. However, I didn't see
-> > > anyone who ever did this before somewhere.
-> > >
-> > > 	So is this possible for someone to implement this as a sample in
-> > > TPM usage? Just give me a clue to do that, then we can contribute it.
-> > >
-> > > 	Any comment is appreciated! Thanks.
-> > >
-> > >
-> > > 	Bing
-
-
---===============0869989440613237878==--
+--===============2318476744340720719==--
 
