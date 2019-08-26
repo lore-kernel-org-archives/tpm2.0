@@ -1,63 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============4086642883695243249=="
+Content-Type: multipart/mixed; boundary="===============1016708757071155233=="
 MIME-Version: 1.0
-From: Zhao, Shirley <shirley.zhao at intel.com>
-Subject: Re: [tpm2] [Help] what the default parameter of tpm2-tools
-Date: Sat, 24 Aug 2019 09:33:27 +0000
-Message-ID: <A888B25CD99C1141B7C254171A953E8E49068226@shsmsx102.ccr.corp.intel.com>
-In-Reply-To: 15833d16-f422-0066-0c4d-131b0d3a36f9@intel.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] Is the session encryption and bind key in
+ tpm2_startauthsession 4.0 used to pass in salt?
+Date: Mon, 26 Aug 2019 15:21:40 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DEE9F2@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAOCvsSkT2f-TjZ+Jw1gBbt2TatVkTj8TaGFrVfYbtHPr4iNxMA@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4086642883695243249==
+--===============1016708757071155233==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Tadeusz, =
-
-
-Still can't work after create the link =
-
-$ ln -s /usr/local/lib/libtss2-tcti-mssim.so /usr/local/lib/libtss2-tcti-de=
-fault.so. =
-
-
-Does it have version requirement? =
-
-I use the version of 2.1.0. =
-
-
-- Shirley =
-
-
-
------Original Message-----
-From: Struk, Tadeusz =
-
-Sent: Saturday, August 24, 2019 1:45 AM
-To: Zhao, Shirley <shirley.zhao(a)intel.com>; tpm2(a)lists.01.org
-Subject: Re: [tpm2] [Help] what the default parameter of tpm2-tools
-
-On 8/15/19 2:14 AM, Zhao, Shirley wrote:
-> Previously, run tpm2_tool command can connect to simulator directly.
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Steven Clark
+> Sent: Friday, August 23, 2019 4:46 PM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Is the session encryption and bind key in tpm2_startauths=
+ession
+> 4.0 used to pass in salt?
 > =
 
-> But this time, I got error like.
-> =
+> The -c,--keycontext parameter in the 4.0 rc version of tpm2_startauthsess=
+ion is
+> documented as being the "session encryption and bind key".  My applicatio=
+n isn't
+> using password auths anywhere so I don't expect to get much useful entropy
+> from a bound session.  Is this key being used to pass in a random salt wh=
+ich would
+> give me a usefully secure session key?  I've already got everything worki=
+ng with
+> an older pull from master before the ESAPI integration but getting free b=
+us
+> encryption on sensitive items would be a nice bonus for upgrading to rele=
+ase.
+
+The initial nonceCaller is set by ESAPI when it's NULL. So the tools just p=
+ass NULL
+and let ESAPI handle it.
+
+This can be seen in the code here:
+https://github.com/tpm2-software/tpm2-tss/blob/master/src/tss2-esys/api/Esy=
+s_StartAuthSession.c#L228
 
 
-Hi,
-Have you uninstalled (make uninstall) the previous versions of the software=
- before installing the more recent versions?
-You can make the tools talking directly to the simulator by creating a link=
- libtss2-tcti-default.so pointing to libtss2-tcti-mssim.so:
 
-$ unlink /usr/local/lib/libtss2-tcti-default.so
-$ ln -s /usr/local/lib/libtss2-tcti-mssim.so /usr/local/lib/libtss2-tcti-de=
-fault.so
-
---
-Tadeusz
-
---===============4086642883695243249==--
+--===============1016708757071155233==--
 
