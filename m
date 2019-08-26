@@ -1,69 +1,100 @@
-Content-Type: multipart/mixed; boundary="===============5078442840939570618=="
+Content-Type: multipart/mixed; boundary="===============9084735446618160070=="
 MIME-Version: 1.0
-From: Desai, Imran <imran.desai at intel.com>
-Subject: [tpm2] Release candidate tpm2-tools-4.0-rc1
-Date: Mon, 26 Aug 2019 19:17:39 +0000
-Message-ID: <688D07BB9E3A9E4A852BA1336D1910FF90786942@fmsmsx104.amr.corp.intel.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: Re: [tpm2] [tpm2-tools] tools error while compiling
+Date: Mon, 26 Aug 2019 20:51:39 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DEED12@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAPSVqM1c2k5tgCQvK+vTU=QNk-uhT934FEMsADJ-3Mk=6yURgg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5078442840939570618==
+--===============9084735446618160070==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+You must not be on TSS 2.3 or greater.
 
-I am pleased to announce the tpm2.0-tools 4.0-rc1.
-This is a very large release that incorporates many bug fixes, new features=
- and tools.
-In addition to 4.0-rc0, there were couple other bug fixes and man page upda=
-tes.
-Please see the changelog for details.
+That commit came in 45c9c79 which is on tag 2.3.0:
+$ git tag --contains 45c9c790273f1ea6d5e51bac86fbcf2983f035f2
+2.3.0
 
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.0-rc1
+On the tools is ca me in as 0d88935be88e9:
+
+$ git tag --contains 0d88935be88e9
+4.0-rc0
+4.0-rc1
+As well as being on master...
+
+The configure script should be verifying that
+ESYS is version 2.3.0 or higher:
+PKG_CHECK_MODULES([TSS2_ESYS], [tss2-esys >=3D 2.3.0])
+
+Is the version your building against the one you built. Did you install
+The newer TSS before configuring?
+
+Seems like it's getting passed configure but building against old headers.
 
 
-Thanks,
-Imran Desai
+> -----Original Message-----
+> From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Iratxe Gonz=
+=C3=A1lez
+> Garrido
+> Sent: Monday, August 26, 2019 12:39 PM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] [tpm2-tools] tools error while compiling
+> =
 
---===============5078442840939570618==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> Hello:
+> =
 
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjxzdHlsZSB0eXBlPSJ0ZXh0
-L2NzcyIgaWQ9Im93YVBhcmFTdHlsZSI+PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBmcHN0eWxlPSIx
-IiBvY3NpPSIwIj4KPGRpdiBzdHlsZT0iZGlyZWN0aW9uOiBsdHI7Zm9udC1mYW1pbHk6IFRhaG9t
-YTtjb2xvcjogIzAwMDAwMDtmb250LXNpemU6IDEwcHQ7Ij5IZWxsbywKPGRpdj48YnIgc3R5bGU9
-ImZvbnQtZmFtaWx5OiAmcXVvdDtTZWdvZSBVSSZxdW90OywgSGVsdmV0aWNhLCBBcmlhbCwgc2Fu
-cy1zZXJpZjsiPgo8c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6ICZxdW90O1NlZ29lIFVJJnF1b3Q7
-LCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmOyI+SSBhbSBwbGVhc2VkIHRvIGFubm91bmNl
-IHRoZSB0cG0yLjAtdG9vbHMgNC4wLXJjMS48L3NwYW4+PC9kaXY+CjxkaXY+PHNwYW4gc3R5bGU9
-ImZvbnQtZmFtaWx5OiAmcXVvdDtTZWdvZSBVSSZxdW90OywgSGVsdmV0aWNhLCBBcmlhbCwgc2Fu
-cy1zZXJpZjsiPlRoaXMgaXMgYSB2ZXJ5IGxhcmdlIHJlbGVhc2UgdGhhdCBpbmNvcnBvcmF0ZXMg
-bWFueSBidWcgZml4ZXMsIG5ldyBmZWF0dXJlcyBhbmQgdG9vbHMuPC9zcGFuPjwvZGl2Pgo8ZGl2
-PjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogJnF1b3Q7U2Vnb2UgVUkmcXVvdDssIEhlbHZldGlj
-YSwgQXJpYWwsIHNhbnMtc2VyaWY7Ij5JbiBhZGRpdGlvbiB0byA0LjAtcmMwLCB0aGVyZSB3ZXJl
-IGNvdXBsZSBvdGhlciBidWcgZml4ZXMgYW5kIG1hbiBwYWdlIHVwZGF0ZXMuPC9zcGFuPjwvZGl2
-Pgo8ZGl2PjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogJnF1b3Q7U2Vnb2UgVUkmcXVvdDssIEhl
-bHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7Ij5QbGVhc2Ugc2VlIHRoZSBjaGFuZ2Vsb2cmbmJz
-cDs8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiAmcXVvdDtTZWdvZSBVSSZxdW90Oywg
-SGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjsiPmZvciBkZXRhaWxzLiZuYnNwOzwvc3Bhbj48
-YnIgc3R5bGU9ImZvbnQtZmFtaWx5OiAmcXVvdDtTZWdvZSBVSSZxdW90OywgSGVsdmV0aWNhLCBB
-cmlhbCwgc2Fucy1zZXJpZjsiPgo8YnIgc3R5bGU9ImZvbnQtZmFtaWx5OiAmcXVvdDtTZWdvZSBV
-SSZxdW90OywgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjsiPgo8YSBocmVmPSJodHRwczov
-L2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL3JlbGVhc2VzL3RhZy80LjAtcmMx
-IiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10
-b29scy9yZWxlYXNlcy90YWcvNC4wLXJjMTwvYT48L2Rpdj4KPGRpdj48YnI+CjxiciBzdHlsZT0i
-Zm9udC1mYW1pbHk6ICZxdW90O1NlZ29lIFVJJnF1b3Q7LCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5z
-LXNlcmlmOyI+CjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogJnF1b3Q7U2Vnb2UgVUkmcXVvdDss
-IEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7Ij5UaGFua3MsPC9zcGFuPjxiciBzdHlsZT0i
-Zm9udC1mYW1pbHk6ICZxdW90O1NlZ29lIFVJJnF1b3Q7LCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5z
-LXNlcmlmOyI+Cjxmb250IGZhY2U9IlNlZ29lIFVJLCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNl
-cmlmIj5JbXJhbiBEZXNhaTwvZm9udD48L2Rpdj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+> I am trying to update my tpm2-tools to version 4 but I get this error mes=
+sage:
+> =
 
---===============5078442840939570618==--
+> pi(a)iotacar:~/tpm2-tools $ make -j5
+>   CC       lib/lib_libcommon_a-files.o
+>   CC       lib/lib_libcommon_a-log.o
+>   CC       lib/lib_libcommon_a-object.o
+>   CC       lib/lib_libcommon_a-pcr.o
+>   CC       lib/lib_libcommon_a-tpm2.o
+>   CC       lib/lib_libcommon_a-tpm2_alg_util.o
+>   CC       lib/lib_libcommon_a-tpm2_attr_util.o
+> lib/tpm2_alg_util.c: In function =E2=80=98tpm2_alg_util_for_each_alg=E2=
+=80=99:
+> lib/tpm2_alg_util.c:66:33: error: =E2=80=98TPM2_ALG_CMAC=E2=80=99 undecla=
+red (first use in this
+> function)
+>          { .name =3D "cmac", .id =3D TPM2_ALG_CMAC, .flags =3D tpm2_alg_u=
+til_flags_sig },
+>                                  ^~~~~~~~~~~~~
+> lib/tpm2_alg_util.c:66:33: note: each undeclared identifier is reported o=
+nly once
+> for each function it appears in
+> Makefile:2618: recipe for target 'lib/lib_libcommon_a-tpm2_alg_util.o' fa=
+iled
+> make: *** [lib/lib_libcommon_a-tpm2_alg_util.o] Error 1
+> make: *** Waiting for unfinished jobs....
+> =
+
+> =
+
+> I've tried uninstalling and reinstalling everything but I get the same er=
+ror. I
+> installed it yesterday in another raspberry pi from scratch and it works =
+without
+> problems, therefore I think I have some legacy files from the previous
+> installation, but I don't know what to delete. I have not encountered any
+> problems while installing tpms2-tss, tom2-abrmd or the TPM simulator, jus=
+t with
+> tpm2-tools
+> =
+
+> Can anyone help me?
+> =
+
+> Thanks in advance
+
+
+--===============9084735446618160070==--
 
