@@ -1,218 +1,181 @@
-Content-Type: multipart/mixed; boundary="===============3792010668734935044=="
+Content-Type: multipart/mixed; boundary="===============8372309128303246609=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] tpm2 Digest, Vol 26, Issue 12
-Date: Mon, 26 Aug 2019 21:56:04 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DEED8B@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 2C563F0B-739B-4117-AF81-BA5548F2695D@vmware.com
+From: =?utf-8?q?Iratxe_Gonz=C3=A1lez_Garrido_=3Ciratxe=2Eggarrido_at_gmail=2Eco?=
+ =?utf-8?q?m=3E?=
+Subject: Re: [tpm2] [tpm2-tools] tools error while compiling
+Date: Tue, 27 Aug 2019 13:07:00 +0200
+Message-ID: <CAPSVqM2sWjdUwiG7uKoSVUEeuG+x6Lc0ebSDVGUB0RcLyNGXpQ@mail.gmail.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649DEED12@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3792010668734935044==
+--===============8372309128303246609==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-> Hi Robert,
-> Thank you for the link, as calling those functions resolved my leaks.
+Hi,
 
-+ list the question here is if the ESAPI Esys_Finalize() call should
-be doing this?
+I download everything from scratch, so TSS must be the newer version. But I
+think your are right in the sense that the is building against old headers,
+that is why I am trying to remove all the files the old version installed,
+but till now I had no luck.
 
-I would say yes, what do you say Andreas?
+Thanks for your help
 
-> =
+El lun., 26 ago. 2019 a las 22:51, Roberts, William C (<
+william.c.roberts(a)intel.com>) escribi=C3=B3:
 
-> Timothy
-> =
+> You must not be on TSS 2.3 or greater.
+>
+> That commit came in 45c9c79 which is on tag 2.3.0:
+> $ git tag --contains 45c9c790273f1ea6d5e51bac86fbcf2983f035f2
+> 2.3.0
+>
+> On the tools is ca me in as 0d88935be88e9:
+>
+> $ git tag --contains 0d88935be88e9
+> 4.0-rc0
+> 4.0-rc1
+> As well as being on master...
+>
+> The configure script should be verifying that
+> ESYS is version 2.3.0 or higher:
+> PKG_CHECK_MODULES([TSS2_ESYS], [tss2-esys >=3D 2.3.0])
+>
+> Is the version your building against the one you built. Did you install
+> The newer TSS before configuring?
+>
+> Seems like it's getting passed configure but building against old headers.
+>
+>
+> > -----Original Message-----
+> > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Iratxe
+> Gonz=C3=A1lez
+> > Garrido
+> > Sent: Monday, August 26, 2019 12:39 PM
+> > To: tpm2(a)lists.01.org
+> > Subject: [tpm2] [tpm2-tools] tools error while compiling
+> >
+> > Hello:
+> >
+> > I am trying to update my tpm2-tools to version 4 but I get this error
+> message:
+> >
+> > pi(a)iotacar:~/tpm2-tools $ make -j5
+> >   CC       lib/lib_libcommon_a-files.o
+> >   CC       lib/lib_libcommon_a-log.o
+> >   CC       lib/lib_libcommon_a-object.o
+> >   CC       lib/lib_libcommon_a-pcr.o
+> >   CC       lib/lib_libcommon_a-tpm2.o
+> >   CC       lib/lib_libcommon_a-tpm2_alg_util.o
+> >   CC       lib/lib_libcommon_a-tpm2_attr_util.o
+> > lib/tpm2_alg_util.c: In function =E2=80=98tpm2_alg_util_for_each_alg=E2=
+=80=99:
+> > lib/tpm2_alg_util.c:66:33: error: =E2=80=98TPM2_ALG_CMAC=E2=80=99 undec=
+lared (first use
+> in this
+> > function)
+> >          { .name =3D "cmac", .id =3D TPM2_ALG_CMAC, .flags =3D
+> tpm2_alg_util_flags_sig },
+> >                                  ^~~~~~~~~~~~~
+> > lib/tpm2_alg_util.c:66:33: note: each undeclared identifier is reported
+> only once
+> > for each function it appears in
+> > Makefile:2618: recipe for target 'lib/lib_libcommon_a-tpm2_alg_util.o'
+> failed
+> > make: *** [lib/lib_libcommon_a-tpm2_alg_util.o] Error 1
+> > make: *** Waiting for unfinished jobs....
+> >
+> >
+> > I've tried uninstalling and reinstalling everything but I get the same
+> error. I
+> > installed it yesterday in another raspberry pi from scratch and it works
+> without
+> > problems, therefore I think I have some legacy files from the previous
+> > installation, but I don't know what to delete. I have not encountered a=
+ny
+> > problems while installing tpms2-tss, tom2-abrmd or the TPM simulator,
+> just with
+> > tpm2-tools
+> >
+> > Can anyone help me?
+> >
+> > Thanks in advance
+>
+>
 
-> =EF=BB=BFOn 8/23/19, 10:47 AM, "Roberts, William C" <william.c.roberts(a)=
-intel.com> wrote:
-> =
+--===============8372309128303246609==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
->     I haven't seen that one, however it's well described here:
-> =
+PGRpdiBkaXI9Imx0ciI+SGksPGRpdj48YnI+PC9kaXY+PGRpdj5JIGRvd25sb2FkIGV2ZXJ5dGhp
+bmcgZnJvbSBzY3JhdGNoLCBzbyBUU1MgbXVzdCBiZSB0aGUgbmV3ZXIgdmVyc2lvbi4gQnV0IEkg
+dGhpbmsgeW91ciBhcmUgcmlnaHQgaW4gdGhlIHNlbnNlIHRoYXQgdGhlIGlzIGJ1aWxkaW5nIGFn
+YWluc3Qgb2xkIGhlYWRlcnMsIHRoYXQgaXMgd2h5IEkgYW0gdHJ5aW5nIHRvIHJlbW92ZSBhbGwg
+dGhlIGZpbGVzIHRoZSBvbGQgdmVyc2lvbiBpbnN0YWxsZWQsIGJ1dCB0aWxsIG5vdyBJIGhhZCBu
+byBsdWNrLjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhhbmtzIGZvciB5b3VyIGhlbHA8L2Rp
+dj48L2Rpdj48YnI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxkaXYgZGlyPSJsdHIiIGNsYXNz
+PSJnbWFpbF9hdHRyIj5FbCBsdW4uLCAyNiBhZ28uIDIwMTkgYSBsYXMgMjI6NTEsIFJvYmVydHMs
+IFdpbGxpYW0gQyAoJmx0OzxhIGhyZWY9Im1haWx0bzp3aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5j
+b20iPndpbGxpYW0uYy5yb2JlcnRzQGludGVsLmNvbTwvYT4mZ3Q7KSBlc2NyaWJpw7M6PGJyPjwv
+ZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4
+IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5n
+LWxlZnQ6MWV4Ij5Zb3UgbXVzdCBub3QgYmUgb24gVFNTIDIuMyBvciBncmVhdGVyLjxicj4KPGJy
+PgpUaGF0IGNvbW1pdCBjYW1lIGluIDQ1YzljNzkgd2hpY2ggaXMgb24gdGFnIDIuMy4wOjxicj4K
+JCBnaXQgdGFnIC0tY29udGFpbnMgNDVjOWM3OTAyNzNmMWVhNmQ1ZTUxYmFjODZmYmNmMjk4M2Yw
+MzVmMjxicj4KMi4zLjA8YnI+Cjxicj4KT24gdGhlIHRvb2xzIGlzIGNhIG1lIGluIGFzIDBkODg5
+MzViZTg4ZTk6PGJyPgo8YnI+CiQgZ2l0IHRhZyAtLWNvbnRhaW5zIDBkODg5MzViZTg4ZTk8YnI+
+CjQuMC1yYzA8YnI+CjQuMC1yYzE8YnI+CkFzIHdlbGwgYXMgYmVpbmcgb24gbWFzdGVyLi4uPGJy
+Pgo8YnI+ClRoZSBjb25maWd1cmUgc2NyaXB0IHNob3VsZCBiZSB2ZXJpZnlpbmcgdGhhdDxicj4K
+RVNZUyBpcyB2ZXJzaW9uIDIuMy4wIG9yIGhpZ2hlcjo8YnI+ClBLR19DSEVDS19NT0RVTEVTKFtU
+U1MyX0VTWVNdLCBbdHNzMi1lc3lzICZndDs9IDIuMy4wXSk8YnI+Cjxicj4KSXMgdGhlIHZlcnNp
+b24geW91ciBidWlsZGluZyBhZ2FpbnN0IHRoZSBvbmUgeW91IGJ1aWx0LiBEaWQgeW91IGluc3Rh
+bGw8YnI+ClRoZSBuZXdlciBUU1MgYmVmb3JlIGNvbmZpZ3VyaW5nPzxicj4KPGJyPgpTZWVtcyBs
+aWtlIGl0JiMzOTtzIGdldHRpbmcgcGFzc2VkIGNvbmZpZ3VyZSBidXQgYnVpbGRpbmcgYWdhaW5z
+dCBvbGQgaGVhZGVycy48YnI+Cjxicj4KPGJyPgomZ3Q7IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tPGJyPgomZ3Q7IEZyb206IHRwbTIgW21haWx0bzo8YSBocmVmPSJtYWlsdG86dHBtMi1ib3Vu
+Y2VzQGxpc3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPnRwbTItYm91bmNlc0BsaXN0cy4wMS5v
+cmc8L2E+XSBPbiBCZWhhbGYgT2YgSXJhdHhlIEdvbnrDoWxlejxicj4KJmd0OyBHYXJyaWRvPGJy
+PgomZ3Q7IFNlbnQ6IE1vbmRheSwgQXVndXN0IDI2LCAyMDE5IDEyOjM5IFBNPGJyPgomZ3Q7IFRv
+OiA8YSBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciIHRhcmdldD0iX2JsYW5rIj50cG0y
+QGxpc3RzLjAxLm9yZzwvYT48YnI+CiZndDsgU3ViamVjdDogW3RwbTJdIFt0cG0yLXRvb2xzXSB0
+b29scyBlcnJvciB3aGlsZSBjb21waWxpbmc8YnI+CiZndDsgPGJyPgomZ3Q7IEhlbGxvOjxicj4K
+Jmd0OyA8YnI+CiZndDsgSSBhbSB0cnlpbmcgdG8gdXBkYXRlIG15IHRwbTItdG9vbHMgdG8gdmVy
+c2lvbiA0IGJ1dCBJIGdldCB0aGlzIGVycm9yIG1lc3NhZ2U6PGJyPgomZ3Q7IDxicj4KJmd0OyBw
+aUBpb3RhY2FyOn4vdHBtMi10b29scyAkIG1ha2UgLWo1PGJyPgomZ3Q7wqAgwqBDQ8KgIMKgIMKg
+IMKgbGliL2xpYl9saWJjb21tb25fYS1maWxlcy5vPGJyPgomZ3Q7wqAgwqBDQ8KgIMKgIMKgIMKg
+bGliL2xpYl9saWJjb21tb25fYS1sb2cubzxicj4KJmd0O8KgIMKgQ0PCoCDCoCDCoCDCoGxpYi9s
+aWJfbGliY29tbW9uX2Etb2JqZWN0Lm88YnI+CiZndDvCoCDCoENDwqAgwqAgwqAgwqBsaWIvbGli
+X2xpYmNvbW1vbl9hLXBjci5vPGJyPgomZ3Q7wqAgwqBDQ8KgIMKgIMKgIMKgbGliL2xpYl9saWJj
+b21tb25fYS10cG0yLm88YnI+CiZndDvCoCDCoENDwqAgwqAgwqAgwqBsaWIvbGliX2xpYmNvbW1v
+bl9hLXRwbTJfYWxnX3V0aWwubzxicj4KJmd0O8KgIMKgQ0PCoCDCoCDCoCDCoGxpYi9saWJfbGli
+Y29tbW9uX2EtdHBtMl9hdHRyX3V0aWwubzxicj4KJmd0OyBsaWIvdHBtMl9hbGdfdXRpbC5jOiBJ
+biBmdW5jdGlvbiDigJh0cG0yX2FsZ191dGlsX2Zvcl9lYWNoX2FsZ+KAmTo8YnI+CiZndDsgbGli
+L3RwbTJfYWxnX3V0aWwuYzo2NjozMzogZXJyb3I6IOKAmFRQTTJfQUxHX0NNQUPigJkgdW5kZWNs
+YXJlZCAoZmlyc3QgdXNlIGluIHRoaXM8YnI+CiZndDsgZnVuY3Rpb24pPGJyPgomZ3Q7wqAgwqAg
+wqAgwqAgwqAgeyAubmFtZSA9ICZxdW90O2NtYWMmcXVvdDssIC5pZCA9IFRQTTJfQUxHX0NNQUMs
+IC5mbGFncyA9IHRwbTJfYWxnX3V0aWxfZmxhZ3Nfc2lnIH0sPGJyPgomZ3Q7wqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgXn5+fn5+fn5+fn5+fjxicj4K
+Jmd0OyBsaWIvdHBtMl9hbGdfdXRpbC5jOjY2OjMzOiBub3RlOiBlYWNoIHVuZGVjbGFyZWQgaWRl
+bnRpZmllciBpcyByZXBvcnRlZCBvbmx5IG9uY2U8YnI+CiZndDsgZm9yIGVhY2ggZnVuY3Rpb24g
+aXQgYXBwZWFycyBpbjxicj4KJmd0OyBNYWtlZmlsZToyNjE4OiByZWNpcGUgZm9yIHRhcmdldCAm
+IzM5O2xpYi9saWJfbGliY29tbW9uX2EtdHBtMl9hbGdfdXRpbC5vJiMzOTsgZmFpbGVkPGJyPgom
+Z3Q7IG1ha2U6ICoqKiBbbGliL2xpYl9saWJjb21tb25fYS10cG0yX2FsZ191dGlsLm9dIEVycm9y
+IDE8YnI+CiZndDsgbWFrZTogKioqIFdhaXRpbmcgZm9yIHVuZmluaXNoZWQgam9icy4uLi48YnI+
+CiZndDsgPGJyPgomZ3Q7IDxicj4KJmd0OyBJJiMzOTt2ZSB0cmllZCB1bmluc3RhbGxpbmcgYW5k
+IHJlaW5zdGFsbGluZyBldmVyeXRoaW5nIGJ1dCBJIGdldCB0aGUgc2FtZSBlcnJvci4gSTxicj4K
+Jmd0OyBpbnN0YWxsZWQgaXQgeWVzdGVyZGF5IGluIGFub3RoZXIgcmFzcGJlcnJ5IHBpIGZyb20g
+c2NyYXRjaCBhbmQgaXQgd29ya3Mgd2l0aG91dDxicj4KJmd0OyBwcm9ibGVtcywgdGhlcmVmb3Jl
+IEkgdGhpbmsgSSBoYXZlIHNvbWUgbGVnYWN5IGZpbGVzIGZyb20gdGhlIHByZXZpb3VzPGJyPgom
+Z3Q7IGluc3RhbGxhdGlvbiwgYnV0IEkgZG9uJiMzOTt0IGtub3cgd2hhdCB0byBkZWxldGUuIEkg
+aGF2ZSBub3QgZW5jb3VudGVyZWQgYW55PGJyPgomZ3Q7IHByb2JsZW1zIHdoaWxlIGluc3RhbGxp
+bmcgdHBtczItdHNzLCB0b20yLWFicm1kIG9yIHRoZSBUUE0gc2ltdWxhdG9yLCBqdXN0IHdpdGg8
+YnI+CiZndDsgdHBtMi10b29sczxicj4KJmd0OyA8YnI+CiZndDsgQ2FuIGFueW9uZSBoZWxwIG1l
+Pzxicj4KJmd0OyA8YnI+CiZndDsgVGhhbmtzIGluIGFkdmFuY2U8YnI+Cjxicj4KPC9ibG9ja3F1
+b3RlPjwvZGl2Pgo=
 
-> https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwiki.=
-ope
-> nssl.org%2Findex.php%2FLibrary_Initialization&amp;data=3D02%7C01%7Cleti%4=
-0v
-> mware.com%7Cabe28bc870f24e301f0808d727f1eaec%7Cb39138ca3cee4b4aa4d6
-> cd83d9dd62f0%7C0%7C0%7C637021792310174248&amp;sdata=3D00apxqzEEjUKrov
-> mkRcS3gzQmnBcmJAIeCmxDKgT2zQ%3D&amp;reserved=3D0
-> =
-
->     I'm not seeing any calls to ENGINE_cleanup() or other OSSL teardowns,
->     So on program exit you may see these.
-> =
-
->     I can say with ASAN, I don't see them when running the tools. All the=
- tests
->     are run asan enabled and run cleanly and the tools use ESYS.
-> =
-
->     Bill
-> =
-
->     > -----Original Message-----
->     > From: tpm2 [mailto:tpm2-bounces(a)lists.01.org] On Behalf Of Timoth=
-y Le
->     > Sent: Friday, August 23, 2019 12:38 PM
->     > To: tpm2(a)lists.01.org
->     > Subject: Re: [tpm2] tpm2 Digest, Vol 26, Issue 12
->     >
->     > Hi,
->     > Sorry to bother, but just following up if anyone has encountered th=
-is memory
->     > leak. For reference, the valgrind output is:
->     >
->     > =3D=3D14825=3D=3D 24 bytes in 1 blocks are still reachable in loss =
-record 518 of 545
->     > =3D=3D14825=3D=3D    at 0x4C2DB8F: malloc (in
-> /usr/lib/valgrind/vgpreload_memcheck-
->     > amd64-linux.so)
->     > =3D=3D14825=3D=3D    by 0x5969E77: CRYPTO_malloc (in /lib/x86_64-li=
-nux-
->     > gnu/libcrypto.so.1.0.0)
->     > =3D=3D14825=3D=3D    by 0x5A21F85: lh_insert (in /lib/x86_64-linux-
-> gnu/libcrypto.so.1.0.0)
->     > =3D=3D14825=3D=3D    by 0x596CC54: OBJ_NAME_add (in /lib/x86_64-lin=
-ux-
->     > gnu/libcrypto.so.1.0.0)
->     > =3D=3D14825=3D=3D    by 0x5A2C565: EVP_add_digest (in /lib/x86_64-l=
-inux-
->     > gnu/libcrypto.so.1.0.0)
->     > =3D=3D14825=3D=3D    by 0x5A30F4A: OpenSSL_add_all_digests (in /lib=
-/x86_64-linux-
->     > gnu/libcrypto.so.1.0.0)
->     > =3D=3D14825=3D=3D    by 0x50CC9FE: iesys_cryptossl_init (esys_crypt=
-o_ossl.c:1118)
->     > =3D=3D14825=3D=3D    by 0x50BDE5B: iesys_initialize_crypto (esys_cr=
-ypto.c:537)
->     > =3D=3D14825=3D=3D    by 0x50BB474: Esys_Initialize (esys_context.c:=
-81)
->     >
->     > Thank you
->     >
->     > On 8/21/19, 2:58 PM, "tpm2 on behalf of tpm2-request(a)lists.01.org=
-" <tpm2-
->     > bounces(a)lists.01.org on behalf of tpm2-request(a)lists.01.org> wr=
-ote:
->     >
->     >     Send tpm2 mailing list submissions to
->     >     	tpm2(a)lists.01.org
->     >
->     >     To subscribe or unsubscribe via the World Wide Web, visit
->     >
->     > 	https://li
->     >
-> sts.01.org%2Fmailman%2Flistinfo%2Ftpm2&amp;data=3D02%7C01%7Cleti%40vmwa
->     >
-> re.com%7C9cb480a4de6e4c05043208d726699d5e%7Cb39138ca3cee4b4aa4d6cd83
->     >
-> d9dd62f0%7C0%7C0%7C637020107371945259&amp;sdata=3DqYKbiICh35iXw%2FLFlT
->     > DebE0csVwZEJ9CaibN0VBCMRI%3D&amp;reserved=3D0
->     >     or, via email, send a message with subject or body 'help' to
->     >     	tpm2-request(a)lists.01.org
->     >
->     >     You can reach the person managing the list at
->     >     	tpm2-owner(a)lists.01.org
->     >
->     >     When replying, please edit your Subject line so it is more spec=
-ific
->     >     than "Re: Contents of tpm2 digest..."
->     >
->     >
->     >     Today's Topics:
->     >
->     >        1. Re: Memory Leak stemming from Esys_Initialize (Timothy Le)
->     >
->     >
->     >     ---------------------------------------------------------------=
--------
->     >
->     >     Message: 1
->     >     Date: Wed, 21 Aug 2019 17:08:52 +0000
->     >     From: Timothy Le <leti(a)vmware.com>
->     >     To: Tadeusz Struk <tadeusz.struk(a)intel.com>, "tpm2(a)lists.01=
-.org"
->     >     	<tpm2(a)lists.01.org>
->     >     Subject: Re: [tpm2] Memory Leak stemming from Esys_Initialize
->     >     Message-ID: <23296169-2F17-4F42-90D3-557623F3BE22(a)vmware.com>
->     >     Content-Type: text/plain; charset=3D"utf-8"
->     >
->     >     Hi,
->     >     Thank you for your e-mail. I have the most recent version of TS=
-S, including
-> the
->     > changes to the test made yesterday. I still have the same leak (mem=
-ory
-> allocated
->     > in CRYPTO_malloc and also CRYPTO_REALLOC) are not freed.
->     >
->     >
->     >
->     >     ?On 8/19/19, 11:19 AM, "Tadeusz Struk" <tadeusz.struk(a)intel.c=
-om> wrote:
->     >
->     >         Hi Timothy,
->     >         On 8/16/19 3:33 PM, Timothy Le wrote:
->     >         > It seems that there is memory getting allocated in CRYPO_=
-malloc that
->     > Esys_Finalize is not freeing. I have traced the code, but I don?t h=
-ave access to
->     > EVP_add_digest and the other inner function calls. Would someone be=
- able
-> to
->     > give me advice on how to free this memory?
->     >
->     >         Could you specify what version of TSS are you using?
->     >         There was number of fixes merged in recently to fix these l=
-eaks.
->     >
->     >         Thanks,
->     >         --
->     >         Tadeusz
->     >
->     >
->     >
->     >     ------------------------------
->     >
->     >     Subject: Digest Footer
->     >
->     >     _______________________________________________
->     >     tpm2 mailing list
->     >     tpm2(a)lists.01.org
->     >
->     > https://lists.01.o
->     >
-> rg%2Fmailman%2Flistinfo%2Ftpm2&amp;data=3D02%7C01%7Cleti%40vmware.com
->     >
-> %7C9cb480a4de6e4c05043208d726699d5e%7Cb39138ca3cee4b4aa4d6cd83d9dd6
->     >
-> 2f0%7C0%7C0%7C637020107371945259&amp;sdata=3DqYKbiICh35iXw%2FLFlTDebE0
->     > csVwZEJ9CaibN0VBCMRI%3D&amp;reserved=3D0
->     >
->     >
->     >     ------------------------------
->     >
->     >     End of tpm2 Digest, Vol 26, Issue 12
->     >     ************************************
->     >
->     >
->     > _______________________________________________
->     > tpm2 mailing list
->     > tpm2(a)lists.01.org
->     >
-> https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flists=
-.01.o
-> rg%2Fmailman%2Flistinfo%2Ftpm2&amp;data=3D02%7C01%7Cleti%40vmware.com
-> %7Cabe28bc870f24e301f0808d727f1eaec%7Cb39138ca3cee4b4aa4d6cd83d9dd62f
-> 0%7C0%7C0%7C637021792310174248&amp;sdata=3Dn41btLwOcpu7wQGZXbgY8veX
-> zx0I78lIjFnoDs%2FS72U%3D&amp;reserved=3D0
-> =
-
-
-
---===============3792010668734935044==--
+--===============8372309128303246609==--
 
