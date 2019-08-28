@@ -1,74 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============5798998721370734292=="
+Content-Type: multipart/mixed; boundary="===============6566388869188307380=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: Re: [tpm2] Docker Images
-Date: Wed, 28 Aug 2019 22:26:35 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649DEF8F3@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 20190828210511.GF14525@johnsa1-desk.jf.intel.com
+From: Roberto Carvalho <roberto.nogueira.rc at gmail.com>
+Subject: [tpm2] Remote Attestation
+Date: Wed, 28 Aug 2019 20:00:25 -0300
+Message-ID: <CAMCD9MvqBL4jwmA+dVaFrHz32mxVu=_K2qdNJ+VydumO0d-nuQ@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5798998721370734292==
+--===============6566388869188307380==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello, I have a server that receives a .CSR from a machine with TPM, I
+would like to know the best way to ensure the attestation of this machine,
+which is a genuine machine with TPM, I read about using the CA authority of
+Infenion which is the manufacturer, and then apply a cryptographic
+challenge using a nonce using the ek and ak public keys, but I'm having
+difficulty applying using tpm2_tools, any help?
+Att.
+Roberto
 
+--===============6566388869188307380==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-> -----Original Message-----
-> From: Andersen, John S
-> Sent: Wednesday, August 28, 2019 4:05 PM
-> To: Roberts, William C <william.c.roberts(a)intel.com>
-> Cc: tpm2(a)lists.01.org
-> Subject: Re: [tpm2] Docker Images
-> =
+PGRpdiBkaXI9ImF1dG8iPjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1z
+aXplOjEyLjhweCIgZGlyPSJhdXRvIj48ZGl2IHN0eWxlPSJ3aWR0aDozMjhweDttYXJnaW46MTZw
+eCAwcHgiPjxkaXY+PGRpdiBkaXI9ImF1dG8iPkhlbGxvLCBJIGhhdmUgYSBzZXJ2ZXIgdGhhdCBy
+ZWNlaXZlcyBhIC5DU1IgZnJvbSBhIG1hY2hpbmUgd2l0aCBUUE0sIEkgd291bGQgbGlrZSB0byBr
+bm93IHRoZSBiZXN0IHdheSB0byBlbnN1cmUgdGhlIGF0dGVzdGF0aW9uIG9mIHRoaXMgbWFjaGlu
+ZSwgd2hpY2ggaXMgYSBnZW51aW5lIG1hY2hpbmUgd2l0aCBUUE0sIEkgcmVhZCBhYm91dCB1c2lu
+ZyB0aGUgQ0EgYXV0aG9yaXR5IG9mIEluZmVuaW9uIHdoaWNoIGlzIHRoZSBtYW51ZmFjdHVyZXIs
+IGFuZCB0aGVuIGFwcGx5IGEgY3J5cHRvZ3JhcGhpYyBjaGFsbGVuZ2UgdXNpbmcgYSBub25jZSB1
+c2luZyB0aGUgZWsgYW5kIGFrIHB1YmxpYyBrZXlzLCBidXQgSSYjMzk7bSBoYXZpbmcgZGlmZmlj
+dWx0eSBhcHBseWluZyB1c2luZyB0cG0yX3Rvb2xzLCBhbnkgaGVscD88L2Rpdj48L2Rpdj48L2Rp
+dj48ZGl2IHN0eWxlPSJoZWlnaHQ6MHB4Ij48L2Rpdj48L2Rpdj5BdHQuPGRpdiBkaXI9ImF1dG8i
+PlJvYmVydG88L2Rpdj48L2Rpdj4K
 
-> On Wed, Aug 28, 2019 at 08:19:29PM +0000, Roberts, William C wrote:
-> > Currently the
-> > https://github.com/tpm2-software/tpm2-software-container/pulls
-> > Docker build file has one branch and one Dockerfile. The Dockerhub is
-> > configured To build the contents of branch master and tag as the latest.
-> >
-> > If we want to utilize dockerhub to build multiple images and extend
-> > our build coverage, This seems limited. Dockerhub has the ability to fo=
-llow any
-> branch and associate a tag.
-> > I'm thinking that we create branches for each base image, like:
-> >   - branch: ubuntu-16.04
-> >   - ubuntu-18.04
-> >   - fedora-29
-> >   - fedora-30
-> >   - opensuse-tumbleweed
-> >   - opensuse-leap
-> >   - etc
-> >
-> > Those branches can be mapped in the Docker build UI to build a similarl=
-y named
-> file.
-> > The base image that our dockerfile extends is the image in the tag
-> > name. Ie branch ubuntu-18.04's Dockerfile starts with FROM ubuntu:18.04.
-> >
-> > And then in a travis build file, just specify the matrix of images to t=
-est against.
-> >
-> > Thoughts, ideas objections are welcome. I am **not** a Docker expert.
-> >
-> > Thanks,
-> > Bill
-> >
-> =
-
-> Sounds like a great plan to me.
-
-Another nice part is that I can "extend" the base image and have another la=
-yer
-In a branch called ubuntu-18.04-tools that would be built with a docker fil=
-e that
-satisfies the TSS and ABRMD dependencies (tied to a stable release of them).
-
-Probably will be a tad bit faster than cloning and building on each travis =
-run. At least
-Simplify our CI scripts.
-
---===============5798998721370734292==--
+--===============6566388869188307380==--
 
