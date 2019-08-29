@@ -1,97 +1,154 @@
-Content-Type: multipart/mixed; boundary="===============3211719557602779377=="
+Content-Type: multipart/mixed; boundary="===============3696218884941610035=="
 MIME-Version: 1.0
 From: Matthew Dempsky <matthew at dempsky.org>
-Subject: Re: [tpm2] Docker Images
-Date: Wed, 28 Aug 2019 16:36:11 -0700
-Message-ID: <CANKkrzG0y9xdOaVFDoW-smReSiM+wWrt8QJnw+n7nQe8etUb=Q@mail.gmail.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649DEF841@ORSMSX101.amr.corp.intel.com
+Subject: Re: [tpm2] Remote Attestation
+Date: Wed, 28 Aug 2019 18:00:15 -0700
+Message-ID: <CANKkrzF3QaAE4PFtoccPPeLnSPr0kQd5mNFiyVFg54XHRj8HSA@mail.gmail.com>
+In-Reply-To: CAMCD9MvqBL4jwmA+dVaFrHz32mxVu=_K2qdNJ+VydumO0d-nuQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3211719557602779377==
+--===============3696218884941610035==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 28, 2019 at 1:19 PM Roberts, William C <
-william.c.roberts(a)intel.com> wrote:
+Unfortunately, I don't think the complete end-to-end tooling is there yet
+in tpm2-tools to make trivial to do remote attestation. There's still a bit
+that's going to require manually handling of TPM2 data structures.
 
-> If we want to utilize dockerhub to build multiple images and extend our
-> build coverage,
->
-This seems limited. Dockerhub has the ability to follow any branch and
-> associate a tag.
-> I'm thinking that we create branches for each base image, like:
->   - branch: ubuntu-16.04
->   - ubuntu-18.04
->   - fedora-29
->   - fedora-30
->   - opensuse-tumbleweed
->   - opensuse-leap
->   - etc
->
+In the simplistic case that you just want to verify that the client's key
+securely resides in a real TPM2, what you'll need to do is:
 
-If I understand you correctly, you're suggesting to create a separate Git
-branch for each supported OS, and each Git branch has a single Dockerfile?
+1. On the client, generate the Endorsement Key (e.g., tpm2_createek -c
+ek.ctx -u ek.pub) and get the corresponding EK certificate (typically
+tpm2_nvread -o ek.crt 0x1c00002, for an RSA EK).
+2. Get the "public" data structure corresponding to your secret key (e.g.,
+use tpm2_readpublic -c my-key.ctx -o my-key.pub).
+3. Send ek.pub, ek.crt, and my-key.pub to the server.
 
-That seems like it might lead to a lot of extra busy work. E.g., if you
-want to add a new dependency, you'll have to do N commits touching N files
-across N branches.
+4. On the server, validate ek.crt against your TPM CA root store, and that
+ek.crt and ek.pub's public keys match.
+5. Validate that my-key.pub is acceptable (e.g., that fixedtpm and
+sensitivedataorigin are set), and that it matches the CSR's public key.
+6. Convert the ak.pub into ak.name (this is SHA-256 of ak.pub, skipping the
+first two bytes, and then prefixing hex "000b" to the result).
+7. Use "tpm2_makecredential -e ek.pub -n `cat ak.name` -s secret.plain -o
+secret.encrypted" to encrypt some secret (up to 32 bytes).
+8. Send secret.encrypted to the client.
 
-I'd think you could configure Docker Hub to build multiple Dockerfiles
-(e.g., stored within separate subdirectories, or "build contexts" in Docker
-lingo?
-<https://docs.docker.com/docker-hub/builds/#set-the-build-context-and-docke=
-rfile-location>)
-within a single branch. Then if you need to make sweeping updates, that's
-only 1 commit touching N files across 1 branch.
+9. Back on the client, use the example steps in
+tpm2-tools/man/tpm2_activatecredential
+<https://github.com/tpm2-software/tpm2-tools/blob/master/man/tpm2_activatec=
+redential.1.md#examples>
+(in
+particular, the four commands involving "session.ctx") to decrypt
+secret.encrypted back into secret.plain.
 
-Thoughts, ideas objections are welcome. I am **not** a Docker expert.
->
 
-Caveat: I'm certainly not either.
+Protocol wise, from the server's point of view:
+  (1) By verifying ek.crt, you know it corresponds to a real TPM; and
+  (2) Because of how real TPMs work, you know if the client successfully
+used tpm2_activatecredential to decrypt secret.encrypted, then that same
+TPM has a secret key that matches my-key.pub.
 
---===============3211719557602779377==
+The best way I've thought of utilizing this is to generate a 32-byte random
+nonce, encrypt using tpm2_makecredential, send it to the client to decrypt
+as a challenge, and have them echo it back. If they're able to do so
+successfully, you can now sign the CSR and issue them the X.509 certificate
+knowing my-key.pub is valid.
+
+
+The other option is to just issue the X.509 certificate, but encrypt it
+using a random 32-byte key, and seal the key using tpm2_makecredential. But
+this means the server doesn't know whether the certificate is actually
+going to be used. If you want to keep a log of all issued certificates,
+this seems undesirable.
+
+
+Finally, this is the simplest approach to attestation. If you want to be
+able to do more complex attestation (e.g., checking timestamps, PCR or NV
+index values, or proving that the key was freshly generated), you'll need
+to instead use the above steps to validate an Attestation Key (that is, a
+key with the "restricted" and "signing" attributes set in its "public" data
+file). And then the client can use the AK to with TPM2_Certify, TPM2_Quote,
+etc.
+
+
+Hopefully that helps somewhat. If any particular steps are unclear, let me
+know.
+
+--===============3696218884941610035==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+T24gV2VkLCBBdWcgMjgsIDIwMTkgYXQgMTox
-OSBQTSBSb2JlcnRzLCBXaWxsaWFtIEMgJmx0OzxhIGhyZWY9Im1haWx0bzp3aWxsaWFtLmMucm9i
-ZXJ0c0BpbnRlbC5jb20iPndpbGxpYW0uYy5yb2JlcnRzQGludGVsLmNvbTwvYT4mZ3Q7IHdyb3Rl
-Ojxicj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGJsb2NrcXVvdGUgY2xhc3M9Imdt
-YWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFw
-eCBzb2xpZCByZ2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPklmIHdlIHdhbnQgdG8g
-dXRpbGl6ZSBkb2NrZXJodWIgdG8gYnVpbGQgbXVsdGlwbGUgaW1hZ2VzIGFuZCBleHRlbmQgb3Vy
-IGJ1aWxkIGNvdmVyYWdlLDxicj48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWls
-X3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBz
-b2xpZCByZ2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPgpUaGlzIHNlZW1zIGxpbWl0
-ZWQuIERvY2tlcmh1YiBoYXMgdGhlIGFiaWxpdHkgdG8gZm9sbG93IGFueSBicmFuY2ggYW5kIGFz
-c29jaWF0ZSBhIHRhZy48YnI+CkkmIzM5O20gdGhpbmtpbmcgdGhhdCB3ZSBjcmVhdGUgYnJhbmNo
-ZXMgZm9yIGVhY2ggYmFzZSBpbWFnZSwgbGlrZTo8YnI+CsKgIC0gYnJhbmNoOiB1YnVudHUtMTYu
-MDQ8YnI+CsKgIC0gdWJ1bnR1LTE4LjA0IDxicj4KwqAgLSBmZWRvcmEtMjk8YnI+CsKgIC0gZmVk
-b3JhLTMwPGJyPgrCoCAtIG9wZW5zdXNlLXR1bWJsZXdlZWQ8YnI+CsKgIC0gb3BlbnN1c2UtbGVh
-cDxicj4KwqAgLSBldGM8YnI+PC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2PjxkaXY+SWYgSSB1
-bmRlcnN0YW5kIHlvdSBjb3JyZWN0bHksIHlvdSYjMzk7cmUgc3VnZ2VzdGluZyB0byBjcmVhdGUg
-YSBzZXBhcmF0ZSBHaXQgYnJhbmNoIGZvciBlYWNoIHN1cHBvcnRlZCBPUywgYW5kIGVhY2ggR2l0
-IGJyYW5jaCBoYXMgYSBzaW5nbGUgRG9ja2VyZmlsZT88L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2
-PlRoYXQgc2VlbXMgbGlrZSBpdCBtaWdodCBsZWFkIHRvIGEgbG90IG9mIGV4dHJhIGJ1c3kgd29y
-ay4gRS5nLiwgaWYgeW91IHdhbnQgdG8gYWRkIGEgbmV3IGRlcGVuZGVuY3ksIHlvdSYjMzk7bGwg
-aGF2ZSB0byBkbyBOIGNvbW1pdHMgdG91Y2hpbmcgTiBmaWxlcyBhY3Jvc3MgTiBicmFuY2hlcy48
-L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkkmIzM5O2QgdGhpbmsgeW91IGNvdWxkIGNvbmZpZ3Vy
-ZSBEb2NrZXIgSHViIHRvIGJ1aWxkIG11bHRpcGxlIERvY2tlcmZpbGVzIChlLmcuLCBzdG9yZWQg
-d2l0aGluIHNlcGFyYXRlIHN1YmRpcmVjdG9yaWVzLCBvciA8YSBocmVmPSJodHRwczovL2RvY3Mu
-ZG9ja2VyLmNvbS9kb2NrZXItaHViL2J1aWxkcy8jc2V0LXRoZS1idWlsZC1jb250ZXh0LWFuZC1k
-b2NrZXJmaWxlLWxvY2F0aW9uIj4mcXVvdDtidWlsZCBjb250ZXh0cyZxdW90OyBpbiBEb2NrZXIg
-bGluZ28/PC9hPikgd2l0aGluIGEgc2luZ2xlIGJyYW5jaC4gVGhlbiBpZiB5b3UgbmVlZCB0byBt
-YWtlIHN3ZWVwaW5nIHVwZGF0ZXMsIHRoYXQmIzM5O3Mgb25seSAxIGNvbW1pdCB0b3VjaGluZyBO
-IGZpbGVzIGFjcm9zcyAxIGJyYW5jaC48L2Rpdj48ZGl2Pjxicj48L2Rpdj48YmxvY2txdW90ZSBj
-bGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVy
-LWxlZnQ6MXB4IHNvbGlkIHJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+ClRob3Vn
-aHRzLCBpZGVhcyBvYmplY3Rpb25zIGFyZSB3ZWxjb21lLiBJIGFtICoqbm90KiogYSBEb2NrZXIg
-ZXhwZXJ0LiA8YnI+PC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2PjxkaXY+Q2F2ZWF0OiBJJiMz
-OTttIGNlcnRhaW5seSBub3QgZWl0aGVyLjwvZGl2PjwvZGl2PjwvZGl2Pgo=
+PGRpdiBkaXI9Imx0ciI+VW5mb3J0dW5hdGVseSwgSSBkb24mIzM5O3QgdGhpbmsgdGhlIGNvbXBs
+ZXRlIGVuZC10by1lbmQgdG9vbGluZyBpcyB0aGVyZSB5ZXQgaW4gdHBtMi10b29scyB0byBtYWtl
+IHRyaXZpYWwgdG8gZG8gcmVtb3RlIGF0dGVzdGF0aW9uLiBUaGVyZSYjMzk7cyBzdGlsbCBhIGJp
+dCB0aGF0JiMzOTtzIGdvaW5nIHRvIHJlcXVpcmUgbWFudWFsbHkgaGFuZGxpbmcgb2YgVFBNMiBk
+YXRhIHN0cnVjdHVyZXMuPGRpdj48YnI+PC9kaXY+PGRpdj5JbiB0aGUgc2ltcGxpc3RpYyBjYXNl
+IHRoYXQgeW91IGp1c3Qgd2FudCB0byB2ZXJpZnkgdGhhdCB0aGUgY2xpZW50JiMzOTtzIGtleSBz
+ZWN1cmVseSByZXNpZGVzIGluIGEgcmVhbCBUUE0yLCB3aGF0IHlvdSYjMzk7bGwgbmVlZCB0byBk
+byBpczo8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PjEuIE9uIHRoZSBjbGllbnQsIGdlbmVyYXRl
+IHRoZSBFbmRvcnNlbWVudCBLZXkgKGUuZy4sIHRwbTJfY3JlYXRlZWsgLWMgZWsuY3R4IC11IGVr
+LnB1YikgYW5kIGdldCB0aGUgY29ycmVzcG9uZGluZyBFSyBjZXJ0aWZpY2F0ZSAodHlwaWNhbGx5
+IHRwbTJfbnZyZWFkIC1vIGVrLmNydCAweDFjMDAwMDIsIGZvciBhbiBSU0EgRUspLjwvZGl2Pjxk
+aXY+Mi4gR2V0IHRoZSAmcXVvdDtwdWJsaWMmcXVvdDsgZGF0YSBzdHJ1Y3R1cmUgY29ycmVzcG9u
+ZGluZyB0byB5b3VyIHNlY3JldCBrZXkgKGUuZy4sIHVzZSB0cG0yX3JlYWRwdWJsaWMgLWMgbXkt
+a2V5LmN0eCAtbyBteS1rZXkucHViKS48L2Rpdj48ZGl2PjMuIFNlbmQgZWsucHViLCBlay5jcnQs
+IGFuZCBteS1rZXkucHViIHRvIHRoZSBzZXJ2ZXIuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj40
+LiBPbiB0aGUgc2VydmVyLCB2YWxpZGF0ZSBlay5jcnQgYWdhaW5zdCB5b3VyIFRQTSBDQSByb290
+IHN0b3JlLCBhbmQgdGhhdCBlay5jcnQgYW5kIGVrLnB1YiYjMzk7cyBwdWJsaWMga2V5cyBtYXRj
+aC48L2Rpdj48ZGl2PjUuIFZhbGlkYXRlIHRoYXQgbXkta2V5LnB1YiBpcyBhY2NlcHRhYmxlIChl
+LmcuLCB0aGF0IGZpeGVkdHBtIGFuZCBzZW5zaXRpdmVkYXRhb3JpZ2luIGFyZSBzZXQpLCBhbmQg
+dGhhdCBpdCBtYXRjaGVzIHRoZSBDU1ImIzM5O3MgcHVibGljIGtleS48L2Rpdj48ZGl2PjYuIENv
+bnZlcnQgdGhlIGFrLnB1YiBpbnRvIDxhIGhyZWY9Imh0dHA6Ly9hay5uYW1lIj5hay5uYW1lPC9h
+PiAodGhpcyBpcyBTSEEtMjU2IG9mIGFrLnB1Yiwgc2tpcHBpbmcgdGhlIGZpcnN0IHR3byBieXRl
+cywgYW5kIHRoZW4gcHJlZml4aW5nIGhleCAmcXVvdDswMDBiJnF1b3Q7IHRvIHRoZSByZXN1bHQp
+LjwvZGl2PjxkaXY+Ny4gVXNlICZxdW90O3RwbTJfbWFrZWNyZWRlbnRpYWwgLWUgZWsucHViIC1u
+IGBjYXQgPGEgaHJlZj0iaHR0cDovL2FrLm5hbWUiPmFrLm5hbWU8L2E+YCAtcyBzZWNyZXQucGxh
+aW4gLW8gc2VjcmV0LmVuY3J5cHRlZCZxdW90OyB0byBlbmNyeXB0IHNvbWUgc2VjcmV0ICh1cCB0
+byAzMiBieXRlcykuPGJyPjwvZGl2PjxkaXY+OC4gU2VuZCBzZWNyZXQuZW5jcnlwdGVkIHRvIHRo
+ZSBjbGllbnQuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj45LiBCYWNrIG9uIHRoZSBjbGllbnQs
+IHVzZSB0aGUgPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10
+b29scy9ibG9iL21hc3Rlci9tYW4vdHBtMl9hY3RpdmF0ZWNyZWRlbnRpYWwuMS5tZCNleGFtcGxl
+cyI+ZXhhbXBsZSBzdGVwcyBpbiB0cG0yLXRvb2xzL21hbi90cG0yX2FjdGl2YXRlY3JlZGVudGlh
+bDwvYT7CoChpbiBwYXJ0aWN1bGFyLCB0aGUgZm91ciBjb21tYW5kcyBpbnZvbHZpbmcgJnF1b3Q7
+c2Vzc2lvbi5jdHgmcXVvdDspIHRvIGRlY3J5cHQgc2VjcmV0LmVuY3J5cHRlZCBiYWNrIGludG8g
+c2VjcmV0LnBsYWluLjxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2
+PlByb3RvY29sIHdpc2UsIGZyb20gdGhlIHNlcnZlciYjMzk7cyBwb2ludCBvZiB2aWV3OjwvZGl2
+PjxkaXY+wqAgKDEpIEJ5IHZlcmlmeWluZyBlay5jcnQsIHlvdSBrbm93IGl0IGNvcnJlc3BvbmRz
+IHRvIGEgcmVhbCBUUE07IGFuZDwvZGl2PjxkaXY+wqAgKDIpIEJlY2F1c2Ugb2YgaG93IHJlYWwg
+VFBNcyB3b3JrLCB5b3Uga25vdyBpZiB0aGUgY2xpZW50IHN1Y2Nlc3NmdWxseSB1c2VkIHRwbTJf
+YWN0aXZhdGVjcmVkZW50aWFsIHRvIGRlY3J5cHQgc2VjcmV0LmVuY3J5cHRlZCwgdGhlbiB0aGF0
+IHNhbWUgVFBNIGhhcyBhIHNlY3JldCBrZXkgdGhhdCBtYXRjaGVzIG15LWtleS5wdWIuPC9kaXY+
+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGUgYmVzdCB3YXkgSSYjMzk7dmUgdGhvdWdodCBvZiB1dGls
+aXppbmcgdGhpcyBpcyB0byBnZW5lcmF0ZSBhIDMyLWJ5dGUgcmFuZG9tIG5vbmNlLCBlbmNyeXB0
+IHVzaW5nIHRwbTJfbWFrZWNyZWRlbnRpYWwsIHNlbmQgaXQgdG8gdGhlIGNsaWVudCB0byBkZWNy
+eXB0IGFzIGEgY2hhbGxlbmdlLCBhbmQgaGF2ZSB0aGVtIGVjaG8gaXQgYmFjay4gSWYgdGhleSYj
+Mzk7cmUgYWJsZSB0byBkbyBzbyBzdWNjZXNzZnVsbHksIHlvdSBjYW4gbm93IHNpZ24gdGhlIENT
+UiBhbmQgaXNzdWUgdGhlbSB0aGUgWC41MDkgY2VydGlmaWNhdGUga25vd2luZyBteS1rZXkucHVi
+IGlzIHZhbGlkLjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhlIG90
+aGVyIG9wdGlvbiBpcyB0byBqdXN0IGlzc3VlIHRoZSBYLjUwOSBjZXJ0aWZpY2F0ZSwgYnV0IGVu
+Y3J5cHQgaXQgdXNpbmcgYSByYW5kb20gMzItYnl0ZSBrZXksIGFuZCBzZWFsIHRoZSBrZXkgdXNp
+bmcgdHBtMl9tYWtlY3JlZGVudGlhbC4gQnV0IHRoaXMgbWVhbnMgdGhlIHNlcnZlciBkb2VzbiYj
+Mzk7dCBrbm93IHdoZXRoZXIgdGhlIGNlcnRpZmljYXRlIGlzIGFjdHVhbGx5IGdvaW5nIHRvIGJl
+IHVzZWQuIElmIHlvdSB3YW50IHRvIGtlZXAgYSBsb2cgb2YgYWxsIGlzc3VlZCBjZXJ0aWZpY2F0
+ZXMsIHRoaXMgc2VlbXMgdW5kZXNpcmFibGUuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj48YnI+
+PC9kaXY+PGRpdj5GaW5hbGx5LCB0aGlzIGlzIHRoZSBzaW1wbGVzdCBhcHByb2FjaCB0byBhdHRl
+c3RhdGlvbi4gSWYgeW91IHdhbnQgdG8gYmUgYWJsZSB0byBkbyBtb3JlIGNvbXBsZXggYXR0ZXN0
+YXRpb24gKGUuZy4sIGNoZWNraW5nIHRpbWVzdGFtcHMsIFBDUiBvciBOViBpbmRleCB2YWx1ZXMs
+IG9yIHByb3ZpbmcgdGhhdCB0aGUga2V5IHdhcyBmcmVzaGx5IGdlbmVyYXRlZCksIHlvdSYjMzk7
+bGwgbmVlZCB0byBpbnN0ZWFkIHVzZSB0aGUgYWJvdmUgc3RlcHMgdG8gdmFsaWRhdGUgYW4gQXR0
+ZXN0YXRpb24gS2V5ICh0aGF0IGlzLCBhIGtleSB3aXRoIHRoZSAmcXVvdDtyZXN0cmljdGVkJnF1
+b3Q7IGFuZCAmcXVvdDtzaWduaW5nJnF1b3Q7IGF0dHJpYnV0ZXMgc2V0IGluIGl0cyAmcXVvdDtw
+dWJsaWMmcXVvdDsgZGF0YSBmaWxlKS4gQW5kIHRoZW4gdGhlIGNsaWVudCBjYW4gdXNlIHRoZSBB
+SyB0byB3aXRoIFRQTTJfQ2VydGlmeSwgVFBNMl9RdW90ZSwgZXRjLjwvZGl2PjxkaXY+PGJyPjwv
+ZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+SG9wZWZ1bGx5IHRoYXQgaGVscHMgc29tZXdoYXQuIElm
+IGFueSBwYXJ0aWN1bGFyIHN0ZXBzIGFyZSB1bmNsZWFyLCBsZXQgbWUga25vdy48L2Rpdj48L2Rp
+dj4K
 
---===============3211719557602779377==--
+--===============3696218884941610035==--
 
