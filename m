@@ -1,41 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============7190490587302307667=="
+Content-Type: multipart/mixed; boundary="===============1474015051287693593=="
 MIME-Version: 1.0
 From: Andersen, John <john.s.andersen at intel.com>
-Subject: Re: [tpm2] [HELP WANTED] CI Coverage
-Date: Thu, 05 Sep 2019 11:26:23 -0700
-Message-ID: <20190905182623.GB28464@johnsa1-desk.jf.intel.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649DF3046@ORSMSX101.amr.corp.intel.com
+Subject: [tpm2] Create repos tpm2-swig and tpm2-pytss
+Date: Thu, 05 Sep 2019 13:36:54 -0700
+Message-ID: <20190905203654.GD28464@johnsa1-desk.jf.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7190490587302307667==
+--===============1474015051287693593==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 05, 2019 at 06:16:09PM +0000, Roberts, William C wrote:
-> As you know I am taking for some time away. I started some work on increa=
-sing our TSS coverage on
-> Distros, adding fedora-30, opensuse-leap and ubutnu-18.04 on top of Ubunt=
-u-16.04.
-> =
+Hi All,
 
-> I didn't know if anyone wanted to step up and pull this across the finish=
- line in my absence?
-> =
+We're almost ready to release the SWIG interface files and the Python bindi=
+ngs.
+Nothing too exciting right now. But we're excited to get people poking arou=
+nd
+and seeing what doesn't work.
 
-> I think it's pretty close, the last build off of it only fedora-30 and th=
-e 2 "extra builds" were failing.
-> =
+I need whoever has permissions to please create the repos (and give Tadeusz=
+ and
+I access to push to them):
 
-> https://github.com/tpm2-software/tpm2-tss/pull/1510
-> =
+- https://github.com/tpm2-software/tpm2-swig
+- https://github.com/tpm2-software/tpm2-pytss
 
-> Bill
+Thank you!
+- John
 
-I'll take a look :) I'll be gone monday-wednesday next week but otherwise I=
-'m
-around.
-
---===============7190490587302307667==--
+--===============1474015051287693593==--
 
