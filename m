@@ -1,141 +1,148 @@
-Content-Type: multipart/mixed; boundary="===============0999654494618376344=="
+Content-Type: multipart/mixed; boundary="===============2948185248872709133=="
 MIME-Version: 1.0
-From: Desai, Imran <imran.desai at intel.com>
-Subject: Re: [tpm2] Using TPM to protect private key
-Date: Wed, 11 Sep 2019 16:45:12 +0000
-Message-ID: <688D07BB9E3A9E4A852BA1336D1910FF907A19B1@fmsmsx104.amr.corp.intel.com>
+From: Rahul Hardikar <rahulhardikar at gmail.com>
+Subject: Re: [tpm2] Creating a TPM EK Public object at the server
+Date: Wed, 11 Sep 2019 11:07:32 -0700
+Message-ID: <CAP3jAwRmTNfMfaHCjDKWr09QFJK-CsaL_gOk5eLE7ZK+ELhhPA@mail.gmail.com>
+In-Reply-To: CANKkrzHiVuL7mT6dURSbkx+htZd7rqoY8s5YPBFRR_Nne3csaQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0999654494618376344==
+--===============2948185248872709133==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Ashok, for what you are doing, tpm2-tss-engine may be more suitable. It is =
-available here: https://github.com/tpm2-software/tpm2-tss-engine.
-The readme has an example of how to create a self signed certificate with t=
-he private key generated and protected by the TPM.
-
-If you are planning to do it the tpm2-tools way instead, There are two ways=
- the key can reside as a TPM2 object.
-1. Create the key using the tpm2_create command
-2. Import an existing key to the TPM2 using tpm2_import or tpm2_loadexterna=
-l. (Existing key may be generated with openssl etc.)
-
-In general there is an auth/ passphrase associated with the key. Being root=
- does not give you exclusive access to the tpm2 key. So long as the passphr=
-ase or auth is satisfied the key is accessible.
-
-Man pages for the tools is the best place to find examples and explanations=
- for the tools.
-
-All the necessary packages and dependencies information can be found here h=
-ttps://github.com/tpm2-software/tpm2-tools/wiki/Dependency-Matrix
-
-Yes we use the IBM simulator for the testing.
-
-You may choose any distribution and install the necessary dependencies. All=
- projects tpm2-software are built with autotools which will hint you on mis=
-sing dependencies for your distribution/ installation.
-
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of tpm2-request(a)lists.=
-01.org [tpm2-request(a)lists.01.org]
-Sent: Wednesday, September 11, 2019 4:34 AM
-To: tpm2(a)lists.01.org
-Subject: tpm2 Digest, Vol 27, Issue 10
-
-Send tpm2 mailing list submissions to
-        tpm2(a)lists.01.org
-
-To subscribe or unsubscribe via the World Wide Web, visit
-        https://lists.01.org/mailman/listinfo/tpm2
-or, via email, send a message with subject or body 'help' to
-        tpm2-request(a)lists.01.org
-
-You can reach the person managing the list at
-        tpm2-owner(a)lists.01.org
-
-When replying, please edit your Subject line so it is more specific
-than "Re: Contents of tpm2 digest..."
-
-
-Today's Topics:
-
-   1. Re: Creating a TPM EK Public object at the server (Rahul Hardikar)
-   2. Re: Creating a TPM EK Public object at the server
-      (Matthew Dempsky)
-   3. Re: Windows Visual Studio 2017: Trying to use
-      Tss2_TctiLdr_Initialize (Philip Tricca)
-   4. Using TPM to protect private key (Ashok Kumar)
-
-
-----------------------------------------------------------------------
-
-Message: 1
-Date: Tue, 10 Sep 2019 23:51:57 -0700
-From: Rahul Hardikar <rahulhardikar(a)gmail.com>
-To: Matthew Dempsky <matthew(a)dempsky.org>
-Cc: "Roberts, William C" <william.c.roberts(a)intel.com>,
-        "tpm2(a)lists.01.org" <tpm2(a)lists.01.org>
-Subject: Re: [tpm2] Creating a TPM EK Public object at the server
-Message-ID:
-        <CAP3jAwQc2rJEbD8oBfcW38vG1oFay_B1m8TBd2VsLO+QTs97Kw(a)mail.gmail.c=
-om>
-Content-Type: text/plain; charset=3D"utf-8"
-
-My confusion is , since my goal is to make sure the (a) TPM is genuine and
-(b) the platform actually owns the TPM , technically I don't need the AK
-Certificate Signing Request i.e I'm not doing the whole attestation CA
-since i don't have any use for the AK Certificate, but my server
-application  is going to run the challenge-response protocol to confirm the
-client indeed owns the TPM, i.e the platform hardware is legit.
-With this in mind, I didn't think it was necessary to send the AK
-credentials at all , I just send the AK name to the server so that it can
-run Make Credential!  Is that enough? Or am I expected to send AK Public
-Object and the server will create AK name by hashing it and then use that
-for Make Credential?
+Hi Matthew,
+It does but on the server side (no TPM access) I also have a file of all
+pairs of hardware serial number and TPM EK certificate serial number, so I
+know that they match but i need to validate it, it is more of allowing my
+client on that device to get into the secure circle of communication , i.e.
+server is talking to a legit device, once that's done the server-client
+continue with other operations
 
 Thanks,
 Rahul
 
-
-On Tue, Sep 10, 2019 at 10:17 PM Matthew Dempsky <matthew(a)dempsky.org>
+On Wed, Sep 11, 2019 at 12:26 AM Matthew Dempsky <matthew(a)dempsky.org>
 wrote:
 
-> On Tue, Sep 10, 2019 at 9:33 PM Rahul Hardikar <rahulhardikar(a)gmail.com>
+> On Tue, Sep 10, 2019 at 11:52 PM Rahul Hardikar <rahulhardikar(a)gmail.co=
+m>
 > wrote:
 >
->> In TPM2.0, do we have to do the same, i.e.
->> - send AK public object along with the AK Cert signed  or
+>> My confusion is , since my goal is to make sure the (a) TPM is genuine
+>> and (b) the platform actually owns the TPM , technically I don't need the
+>> AK Certificate Signing Request i.e I'm not doing the whole attestation CA
+>> since i don't have any use for the AK Certificate, but my server
+>> application  is going to run the challenge-response protocol to confirm =
+the
+>> client indeed owns the TPM, i.e the platform hardware is legit.
+>> With this in mind, I didn't think it was necessary to send the AK
+>> credentials at all , I just send the AK name to the server so that it can
+>> run Make Credential!  Is that enough? Or am I expected to send AK Public
+>> Object and the server will create AK name by hashing it and then use that
+>> for Make Credential?
 >>
 >
-> Do you mean "AK certificate signing request" here? If so, yes, this is
-> probably the best option.
+> If I understand you correctly, you're saying all you care about is (1)
+> that the client has a genuine TPM and (2) that they're able to demonstrate
+> that they're able to use it? In particular, it sounds like you *don't* ca=
+re
+> about the client using an AK to attest anything (e.g., you don't plan on
+> validating signatures generated by TPM2_Certify, TPM2_Quote, etc.)?
 >
->
->> - would sending the AK name suffice since it is cryptographically linked
->> to EK or
->>
->
-> TPM2_ActivateCredential doesn't care what sort of object "name" refers to,
-> as long as the TPM has a secret area loaded for it.
->
-> So sending the AK name is not sufficient. The server should check the AK's
-> public data for suitability as an AK. E.g., you probably want to verify
-> that "restricted", "fixedTPM", "fixedParent", "sensitiveDataOrigin", and
-> "sign" are set, and "decrypt" is clear.
->
-> - do we just send back the credential blob and secret that Make_credential
->> created and since we already have the EK and AK keys loaded in the TPM, =
-we
->> don't have to do anything else other than pass the 2 outputs of
->> MakeCredential?
->>
->
-> Correct.
+> That sounds unusual to me. But if that accurately describes your use case,
+> then it sounds like sending just the "AK" name might be sufficient. You c=
+an
+> use TPM2_MakeCredential to encrypt 32 bytes of data to a certified EK, and
+> be confident those 32 bytes can only be decrypted by the corresponding TP=
+M.
 >
 >>
 
---===============0999654494618376344==--
+--===============2948185248872709133==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+SGkgTWF0dGhldyw8ZGl2Pkl0IGRvZXMgYnV0IG9uIHRoZSBzZXJ2ZXIg
+c2lkZSAobm8gVFBNIGFjY2VzcykgSSBhbHNvIGhhdmUgYSBmaWxlIG9mIGFsbCBwYWlycyBvZiBo
+YXJkd2FyZSBzZXJpYWwgbnVtYmVyIGFuZCBUUE0gRUsgY2VydGlmaWNhdGUgc2VyaWFsIG51bWJl
+ciwgc28gSSBrbm93IHRoYXQgdGhleSBtYXRjaCBidXQgaSBuZWVkIHRvIHZhbGlkYXRlwqBpdCwg
+aXQgaXMgbW9yZSBvZiBhbGxvd2luZyBteSBjbGllbnQgb24gdGhhdCBkZXZpY2UgdG8gZ2V0IGlu
+dG8gdGhlIHNlY3VyZSBjaXJjbGUgb2YgY29tbXVuaWNhdGlvbiAsIGkuZS4gc2VydmVyIGlzIHRh
+bGtpbmcgdG8gYSBsZWdpdCBkZXZpY2UsIG9uY2UgdGhhdCYjMzk7cyBkb25lIHRoZSBzZXJ2ZXIt
+Y2xpZW50IGNvbnRpbnVlIHdpdGggb3RoZXIgb3BlcmF0aW9uczwvZGl2PjxkaXY+PGJyPjwvZGl2
+PjxkaXY+VGhhbmtzLDwvZGl2PjxkaXY+UmFodWw8L2Rpdj48L2Rpdj48YnI+PGRpdiBjbGFzcz0i
+Z21haWxfcXVvdGUiPjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJnbWFpbF9hdHRyIj5PbiBXZWQsIFNl
+cCAxMSwgMjAxOSBhdCAxMjoyNiBBTSBNYXR0aGV3IERlbXBza3kgJmx0OzxhIGhyZWY9Im1haWx0
+bzptYXR0aGV3QGRlbXBza3kub3JnIj5tYXR0aGV3QGRlbXBza3kub3JnPC9hPiZndDsgd3JvdGU6
+PGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjow
+cHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdC13aWR0aDoxcHg7Ym9yZGVyLWxlZnQtc3R5bGU6
+c29saWQ7Ym9yZGVyLWxlZnQtY29sb3I6cmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4
+Ij48ZGl2IGRpcj0ibHRyIj48ZGl2IGRpcj0ibHRyIj5PbiBUdWUsIFNlcCAxMCwgMjAxOSBhdCAx
+MTo1MiBQTSBSYWh1bCBIYXJkaWthciAmbHQ7PGEgaHJlZj0ibWFpbHRvOnJhaHVsaGFyZGlrYXJA
+Z21haWwuY29tIiB0YXJnZXQ9Il9ibGFuayI+cmFodWxoYXJkaWthckBnbWFpbC5jb208L2E+Jmd0
+OyB3cm90ZTo8YnI+PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxibG9ja3F1b3RlIGNs
+YXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXIt
+bGVmdC13aWR0aDoxcHg7Ym9yZGVyLWxlZnQtc3R5bGU6c29saWQ7Ym9yZGVyLWxlZnQtY29sb3I6
+cmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2IGRpcj0ibHRyIj5NeSBjb25m
+dXNpb24gaXMgLCBzaW5jZSBteSBnb2FsIGlzIHRvIG1ha2Ugc3VyZSB0aGUgKGEpIFRQTSBpcyBn
+ZW51aW5lIGFuZCAoYikgdGhlIHBsYXRmb3JtIGFjdHVhbGx5IG93bnMgdGhlIFRQTSAsIHRlY2hu
+aWNhbGx5IEkgZG9uJiMzOTt0IG5lZWQgdGhlIEFLIENlcnRpZmljYXRlIFNpZ25pbmcgUmVxdWVz
+dCBpLmUgSSYjMzk7bSBub3QgZG9pbmcgdGhlIHdob2xlIGF0dGVzdGF0aW9uIENBIHNpbmNlIGkg
+ZG9uJiMzOTt0IGhhdmUgYW55IHVzZSBmb3IgdGhlIEFLIENlcnRpZmljYXRlLCBidXQgbXkgc2Vy
+dmVyIGFwcGxpY2F0aW9uIMKgaXMgZ29pbmcgdG8gcnVuIHRoZSBjaGFsbGVuZ2UtcmVzcG9uc2Ug
+cHJvdG9jb2wgdG8gY29uZmlybSB0aGUgY2xpZW50IGluZGVlZCBvd25zIHRoZSBUUE0sIGkuZSB0
+aGUgcGxhdGZvcm0gaGFyZHdhcmUgaXMgbGVnaXQuwqA8ZGl2PldpdGggdGhpcyBpbiBtaW5kLCBJ
+IGRpZG4mIzM5O3QgdGhpbmsgaXQgd2FzIG5lY2Vzc2FyeSB0byBzZW5kIHRoZSBBSyBjcmVkZW50
+aWFscyBhdCBhbGwgLCBJIGp1c3Qgc2VuZCB0aGUgQUsgbmFtZSB0byB0aGUgc2VydmVyIHNvIHRo
+YXQgaXQgY2FuIHJ1biBNYWtlIENyZWRlbnRpYWwhwqAgSXMgdGhhdCBlbm91Z2g/IE9yIGFtIEkg
+ZXhwZWN0ZWQgdG8gc2VuZCBBSyBQdWJsaWMgT2JqZWN0IGFuZCB0aGUgc2VydmVyIHdpbGwgY3Jl
+YXRlIEFLIG5hbWUgYnkgaGFzaGluZyBpdCBhbmQgdGhlbiB1c2UgdGhhdCBmb3IgTWFrZSBDcmVk
+ZW50aWFsPzwvZGl2PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rpdj48ZGl2PklmIEkg
+dW5kZXJzdGFuZCB5b3UgY29ycmVjdGx5LCB5b3UmIzM5O3JlIHNheWluZyBhbGwgeW91IGNhcmUg
+YWJvdXQgaXMgKDEpIHRoYXQgdGhlIGNsaWVudCBoYXMgYSBnZW51aW5lIFRQTSBhbmQgKDIpIHRo
+YXQgdGhleSYjMzk7cmUgYWJsZSB0byBkZW1vbnN0cmF0ZSB0aGF0IHRoZXkmIzM5O3JlIGFibGUg
+dG8gdXNlIGl0PyBJbiBwYXJ0aWN1bGFyLCBpdCBzb3VuZHMgbGlrZSB5b3UgPGk+ZG9uJiMzOTt0
+PC9pPsKgY2FyZSBhYm91dCB0aGUgY2xpZW50IHVzaW5nIGFuIEFLIHRvIGF0dGVzdCBhbnl0aGlu
+ZyAoZS5nLiwgeW91IGRvbiYjMzk7dCBwbGFuIG9uIHZhbGlkYXRpbmcgc2lnbmF0dXJlcyBnZW5l
+cmF0ZWQgYnkgVFBNMl9DZXJ0aWZ5LCBUUE0yX1F1b3RlLCBldGMuKT88L2Rpdj48ZGl2Pjxicj48
+L2Rpdj48ZGl2PlRoYXQgc291bmRzIHVudXN1YWwgdG8gbWUuIEJ1dCBpZiB0aGF0IGFjY3VyYXRl
+bHkgZGVzY3JpYmVzIHlvdXIgdXNlIGNhc2UsIHRoZW4gaXQgc291bmRzIGxpa2Ugc2VuZGluZyBq
+dXN0IHRoZSAmcXVvdDtBSyZxdW90OyBuYW1lIG1pZ2h0IGJlIHN1ZmZpY2llbnQuIFlvdSBjYW4g
+dXNlIFRQTTJfTWFrZUNyZWRlbnRpYWwgdG8gZW5jcnlwdCAzMiBieXRlcyBvZiBkYXRhIHRvIGEg
+Y2VydGlmaWVkIEVLLCBhbmQgYmUgY29uZmlkZW50IHRob3NlIDMyIGJ5dGVzIGNhbiBvbmx5IGJl
+IGRlY3J5cHRlZCBieSB0aGUgY29ycmVzcG9uZGluZyBUUE0uPC9kaXY+PGJsb2NrcXVvdGUgY2xh
+c3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1s
+ZWZ0LXdpZHRoOjFweDtib3JkZXItbGVmdC1zdHlsZTpzb2xpZDtib3JkZXItbGVmdC1jb2xvcjpy
+Z2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3Rl
+Ij48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAw
+cHggMC44ZXg7Ym9yZGVyLWxlZnQtd2lkdGg6MXB4O2JvcmRlci1sZWZ0LXN0eWxlOnNvbGlkO2Jv
+cmRlci1sZWZ0LWNvbG9yOnJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+PGRpdiBk
+aXI9Imx0ciI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFp
+bF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdC13aWR0
+aDoxcHg7Ym9yZGVyLWxlZnQtc3R5bGU6c29saWQ7Ym9yZGVyLWxlZnQtY29sb3I6cmdiKDIwNCwy
+MDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGJsb2Nr
+cXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4
+O2JvcmRlci1sZWZ0LXdpZHRoOjFweDtib3JkZXItbGVmdC1zdHlsZTpzb2xpZDtib3JkZXItbGVm
+dC1jb2xvcjpyZ2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgY2xhc3M9Imdt
+YWlsX3F1b3RlIj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46
+MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQtd2lkdGg6MXB4O2JvcmRlci1sZWZ0LXN0eWxl
+OnNvbGlkO2JvcmRlci1sZWZ0LWNvbG9yOnJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFl
+eCI+PGRpdiBkaXI9Imx0ciI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxibG9ja3F1b3RlIGNs
+YXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXIt
+bGVmdC13aWR0aDoxcHg7Ym9yZGVyLWxlZnQtc3R5bGU6c29saWQ7Ym9yZGVyLWxlZnQtY29sb3I6
+cmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2IGNsYXNzPSJnbWFpbF9xdW90
+ZSI+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAwcHgg
+MHB4IDAuOGV4O2JvcmRlci1sZWZ0LXdpZHRoOjFweDtib3JkZXItbGVmdC1zdHlsZTpzb2xpZDti
+b3JkZXItbGVmdC1jb2xvcjpyZ2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPgo8L2Js
+b2NrcXVvdGU+PC9kaXY+CjwvYmxvY2txdW90ZT48L2Rpdj48L2Rpdj4KPC9ibG9ja3F1b3RlPjwv
+ZGl2Pgo8L2Jsb2NrcXVvdGU+PC9kaXY+CjwvYmxvY2txdW90ZT48L2Rpdj48L2Rpdj4KPC9ibG9j
+a3F1b3RlPjwvZGl2Pgo8L2Jsb2NrcXVvdGU+PC9kaXY+PC9kaXY+CjwvYmxvY2txdW90ZT48L2Rp
+dj4K
+
+--===============2948185248872709133==--
 
