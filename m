@@ -1,104 +1,152 @@
-Content-Type: multipart/mixed; boundary="===============5568006605933078906=="
+Content-Type: multipart/mixed; boundary="===============1744645824539347096=="
 MIME-Version: 1.0
-From: Matthew Dempsky <matthew at dempsky.org>
+From: Rahul Hardikar <rahulhardikar at gmail.com>
 Subject: Re: [tpm2] Creating a TPM EK Public object at the server
-Date: Tue, 10 Sep 2019 22:17:40 -0700
-Message-ID: <CANKkrzF4Ajc+o6KjO3o31yLL-VPTcoKxmDBX-C9A+gagMmNhdQ@mail.gmail.com>
-In-Reply-To: CAP3jAwQQcSiebPVrtVtatdhp-DfxUv4DRCi0LPyb+OG9AMGzCA@mail.gmail.com
+Date: Tue, 10 Sep 2019 23:51:57 -0700
+Message-ID: <CAP3jAwQc2rJEbD8oBfcW38vG1oFay_B1m8TBd2VsLO+QTs97Kw@mail.gmail.com>
+In-Reply-To: CANKkrzF4Ajc+o6KjO3o31yLL-VPTcoKxmDBX-C9A+gagMmNhdQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5568006605933078906==
+--===============1744645824539347096==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 10, 2019 at 9:33 PM Rahul Hardikar <rahulhardikar(a)gmail.com>
+My confusion is , since my goal is to make sure the (a) TPM is genuine and
+(b) the platform actually owns the TPM , technically I don't need the AK
+Certificate Signing Request i.e I'm not doing the whole attestation CA
+since i don't have any use for the AK Certificate, but my server
+application  is going to run the challenge-response protocol to confirm the
+client indeed owns the TPM, i.e the platform hardware is legit.
+With this in mind, I didn't think it was necessary to send the AK
+credentials at all , I just send the AK name to the server so that it can
+run Make Credential!  Is that enough? Or am I expected to send AK Public
+Object and the server will create AK name by hashing it and then use that
+for Make Credential?
+
+Thanks,
+Rahul
+
+
+On Tue, Sep 10, 2019 at 10:17 PM Matthew Dempsky <matthew(a)dempsky.org>
 wrote:
 
-> In TPM2.0, do we have to do the same, i.e.
-> - send AK public object along with the AK Cert signed  or
+> On Tue, Sep 10, 2019 at 9:33 PM Rahul Hardikar <rahulhardikar(a)gmail.com>
+> wrote:
 >
-
-Do you mean "AK certificate signing request" here? If so, yes, this is
-probably the best option.
-
-
-> - would sending the AK name suffice since it is cryptographically linked
-> to EK or
+>> In TPM2.0, do we have to do the same, i.e.
+>> - send AK public object along with the AK Cert signed  or
+>>
 >
-
-TPM2_ActivateCredential doesn't care what sort of object "name" refers to,
-as long as the TPM has a secret area loaded for it.
-
-So sending the AK name is not sufficient. The server should check the AK's
-public data for suitability as an AK. E.g., you probably want to verify
-that "restricted", "fixedTPM", "fixedParent", "sensitiveDataOrigin", and
-"sign" are set, and "decrypt" is clear.
-
-- do we just send back the credential blob and secret that Make_credential
-> created and since we already have the EK and AK keys loaded in the TPM, we
-> don't have to do anything else other than pass the 2 outputs of
-> MakeCredential?
+> Do you mean "AK certificate signing request" here? If so, yes, this is
+> probably the best option.
 >
-
-Correct.
-
 >
+>> - would sending the AK name suffice since it is cryptographically linked
+>> to EK or
+>>
+>
+> TPM2_ActivateCredential doesn't care what sort of object "name" refers to,
+> as long as the TPM has a secret area loaded for it.
+>
+> So sending the AK name is not sufficient. The server should check the AK's
+> public data for suitability as an AK. E.g., you probably want to verify
+> that "restricted", "fixedTPM", "fixedParent", "sensitiveDataOrigin", and
+> "sign" are set, and "decrypt" is clear.
+>
+> - do we just send back the credential blob and secret that Make_credential
+>> created and since we already have the EK and AK keys loaded in the TPM, =
+we
+>> don't have to do anything else other than pass the 2 outputs of
+>> MakeCredential?
+>>
+>
+> Correct.
+>
+>>
 
---===============5568006605933078906==
+--===============1744645824539347096==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+T24gVHVlLCBTZXAgMTAsIDIwMTkgYXQgOToz
-MyBQTSBSYWh1bCBIYXJkaWthciAmbHQ7PGEgaHJlZj0ibWFpbHRvOnJhaHVsaGFyZGlrYXJAZ21h
-aWwuY29tIj5yYWh1bGhhcmRpa2FyQGdtYWlsLmNvbTwvYT4mZ3Q7IHdyb3RlOjxicj48L2Rpdj48
-ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBz
-dHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2Io
-MjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgZGlyPSJsdHIiPjxkaXY+SW4gVFBN
-Mi4wLCBkbyB3ZSBoYXZlIHRvIGRvIHRoZSBzYW1lLCBpLmUuPC9kaXY+PGRpdj4tIHNlbmQgQUsg
-cHVibGljIG9iamVjdCBhbG9uZyB3aXRoIHRoZSBBSyBDZXJ0IHNpZ25lZCDCoG9ywqA8L2Rpdj48
-L2Rpdj48L2Jsb2NrcXVvdGU+PGRpdj48YnI+PC9kaXY+PGRpdj5EbyB5b3UgbWVhbiAmcXVvdDtB
-SyBjZXJ0aWZpY2F0ZSBzaWduaW5nIHJlcXVlc3QmcXVvdDsgaGVyZT8gSWYgc28sIHllcywgdGhp
-cyBpcyBwcm9iYWJseSB0aGUgYmVzdCBvcHRpb24uPC9kaXY+PGRpdj48L2Rpdj48ZGl2PsKgPC9k
-aXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAwcHgg
-MHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0LDIwNCwyMDQpO3BhZGRpbmct
-bGVmdDoxZXgiPjxkaXYgZGlyPSJsdHIiPjxkaXY+LSB3b3VsZCBzZW5kaW5nIHRoZSBBSyBuYW1l
-IHN1ZmZpY2Ugc2luY2UgaXQgaXMgY3J5cHRvZ3JhcGhpY2FsbHkgbGlua2VkIHRvIEVLIG9ywqA8
-L2Rpdj48L2Rpdj48L2Jsb2NrcXVvdGU+PGRpdj48YnI+PC9kaXY+PGRpdj5UUE0yX0FjdGl2YXRl
-Q3JlZGVudGlhbCBkb2VzbiYjMzk7dCBjYXJlIHdoYXQgc29ydCBvZiBvYmplY3QgJnF1b3Q7bmFt
-ZSZxdW90OyByZWZlcnMgdG8sIGFzIGxvbmcgYXMgdGhlIFRQTSBoYXMgYSBzZWNyZXQgYXJlYSBs
-b2FkZWQgZm9yIGl0LjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+U28gc2VuZGluZyB0aGUgQUsg
-bmFtZSBpcyBub3Qgc3VmZmljaWVudC4gVGhlIHNlcnZlciBzaG91bGQgY2hlY2sgdGhlIEFLJiMz
-OTtzIHB1YmxpYyBkYXRhIGZvciBzdWl0YWJpbGl0eSBhcyBhbiBBSy4gRS5nLiwgeW91IHByb2Jh
-Ymx5IHdhbnQgdG8gdmVyaWZ5IHRoYXQgJnF1b3Q7cmVzdHJpY3RlZCZxdW90OywgJnF1b3Q7Zml4
-ZWRUUE0mcXVvdDssICZxdW90O2ZpeGVkUGFyZW50JnF1b3Q7LCAmcXVvdDtzZW5zaXRpdmVEYXRh
-T3JpZ2luJnF1b3Q7LCBhbmQgJnF1b3Q7c2lnbiZxdW90OyBhcmUgc2V0LCBhbmQgJnF1b3Q7ZGVj
-cnlwdCZxdW90OyBpcyBjbGVhci48L2Rpdj48ZGl2Pjxicj48L2Rpdj48YmxvY2txdW90ZSBjbGFz
-cz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxl
-ZnQ6MXB4IHNvbGlkIHJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+PGRpdiBkaXI9
-Imx0ciI+PGRpdj4tIGRvIHdlIGp1c3Qgc2VuZCBiYWNrIHRoZSBjcmVkZW50aWFsIGJsb2IgYW5k
-IHNlY3JldCB0aGF0IE1ha2VfY3JlZGVudGlhbCBjcmVhdGVkIGFuZCBzaW5jZSB3ZSBhbHJlYWR5
-IGhhdmUgdGhlIEVLIGFuZCBBSyBrZXlzIGxvYWRlZCBpbiB0aGUgVFBNLCB3ZSBkb24mIzM5O3Qg
-aGF2ZSB0byBkbyBhbnl0aGluZyBlbHNlIG90aGVyIHRoYW4gcGFzcyB0aGUgMiBvdXRwdXRzIG9m
-IE1ha2VDcmVkZW50aWFsPzwvZGl2PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rpdj48
-ZGl2PkNvcnJlY3QuPC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0i
-bWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0LDIw
-NCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48YmxvY2tx
-dW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAwcHggMC44ZXg7
-Ym9yZGVyLWxlZnQ6MXB4IHNvbGlkIHJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+
-PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIg
-c3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdi
-KDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2IGRpcj0ibHRyIj48ZGl2IGNsYXNz
-PSJnbWFpbF9xdW90ZSI+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFy
-Z2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0LDIwNCwy
-MDQpO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48YmxvY2txdW90
-ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAwcHggMC44ZXg7Ym9y
-ZGVyLWxlZnQ6MXB4IHNvbGlkIHJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+Cjwv
-YmxvY2txdW90ZT48L2Rpdj4KPC9ibG9ja3F1b3RlPjwvZGl2PjwvZGl2Pgo8L2Jsb2NrcXVvdGU+
-PC9kaXY+CjwvYmxvY2txdW90ZT48L2Rpdj4KPC9ibG9ja3F1b3RlPjwvZGl2PjwvZGl2Pgo=
+PGRpdiBkaXI9Imx0ciI+TXkgY29uZnVzaW9uIGlzICwgc2luY2UgbXkgZ29hbCBpcyB0byBtYWtl
+IHN1cmUgdGhlIChhKSBUUE0gaXMgZ2VudWluZSBhbmQgKGIpIHRoZSBwbGF0Zm9ybSBhY3R1YWxs
+eSBvd25zIHRoZSBUUE0gLCB0ZWNobmljYWxseSBJIGRvbiYjMzk7dCBuZWVkIHRoZSBBSyBDZXJ0
+aWZpY2F0ZSBTaWduaW5nIFJlcXVlc3QgaS5lIEkmIzM5O20gbm90IGRvaW5nIHRoZSB3aG9sZSBh
+dHRlc3RhdGlvbiBDQSBzaW5jZSBpIGRvbiYjMzk7dCBoYXZlIGFueSB1c2UgZm9yIHRoZSBBSyBD
+ZXJ0aWZpY2F0ZSwgYnV0IG15IHNlcnZlciBhcHBsaWNhdGlvbiDCoGlzIGdvaW5nIHRvIHJ1biB0
+aGUgY2hhbGxlbmdlLXJlc3BvbnNlIHByb3RvY29sIHRvIGNvbmZpcm0gdGhlIGNsaWVudCBpbmRl
+ZWQgb3ducyB0aGUgVFBNLCBpLmUgdGhlIHBsYXRmb3JtIGhhcmR3YXJlIGlzIGxlZ2l0LsKgPGRp
+dj5XaXRoIHRoaXMgaW4gbWluZCwgSSBkaWRuJiMzOTt0IHRoaW5rIGl0IHdhcyBuZWNlc3Nhcnkg
+dG8gc2VuZCB0aGUgQUsgY3JlZGVudGlhbHMgYXQgYWxsICwgSSBqdXN0IHNlbmQgdGhlIEFLIG5h
+bWUgdG8gdGhlIHNlcnZlciBzbyB0aGF0IGl0IGNhbiBydW4gTWFrZSBDcmVkZW50aWFsIcKgIElz
+IHRoYXQgZW5vdWdoPyBPciBhbSBJIGV4cGVjdGVkIHRvIHNlbmQgQUsgUHVibGljIE9iamVjdCBh
+bmQgdGhlIHNlcnZlciB3aWxsIGNyZWF0ZSBBSyBuYW1lIGJ5IGhhc2hpbmcgaXQgYW5kIHRoZW4g
+dXNlIHRoYXQgZm9yIE1ha2UgQ3JlZGVudGlhbD88L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRo
+YW5rcyw8L2Rpdj48ZGl2PlJhaHVsPGJyPjxkaXY+PGJyPjwvZGl2PjwvZGl2PjwvZGl2Pjxicj48
+ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGRpdiBkaXI9Imx0ciIgY2xhc3M9ImdtYWlsX2F0dHIi
+Pk9uIFR1ZSwgU2VwIDEwLCAyMDE5IGF0IDEwOjE3IFBNIE1hdHRoZXcgRGVtcHNreSAmbHQ7PGEg
+aHJlZj0ibWFpbHRvOm1hdHRoZXdAZGVtcHNreS5vcmciPm1hdHRoZXdAZGVtcHNreS5vcmc8L2E+
+Jmd0OyB3cm90ZTo8YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHls
+ZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0LXdpZHRoOjFweDtib3JkZXIt
+bGVmdC1zdHlsZTpzb2xpZDtib3JkZXItbGVmdC1jb2xvcjpyZ2IoMjA0LDIwNCwyMDQpO3BhZGRp
+bmctbGVmdDoxZXgiPjxkaXYgZGlyPSJsdHIiPjxkaXYgZGlyPSJsdHIiPk9uIFR1ZSwgU2VwIDEw
+LCAyMDE5IGF0IDk6MzMgUE0gUmFodWwgSGFyZGlrYXIgJmx0OzxhIGhyZWY9Im1haWx0bzpyYWh1
+bGhhcmRpa2FyQGdtYWlsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiPnJhaHVsaGFyZGlrYXJAZ21haWwu
+Y29tPC9hPiZndDsgd3JvdGU6PGJyPjwvZGl2PjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48Ymxv
+Y2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAwcHggMC44
+ZXg7Ym9yZGVyLWxlZnQtd2lkdGg6MXB4O2JvcmRlci1sZWZ0LXN0eWxlOnNvbGlkO2JvcmRlci1s
+ZWZ0LWNvbG9yOnJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+PGRpdiBkaXI9Imx0
+ciI+PGRpdj5JbiBUUE0yLjAsIGRvIHdlIGhhdmUgdG8gZG8gdGhlIHNhbWUsIGkuZS48L2Rpdj48
+ZGl2Pi0gc2VuZCBBSyBwdWJsaWMgb2JqZWN0IGFsb25nIHdpdGggdGhlIEFLIENlcnQgc2lnbmVk
+IMKgb3LCoDwvZGl2PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rpdj48ZGl2PkRvIHlv
+dSBtZWFuICZxdW90O0FLIGNlcnRpZmljYXRlIHNpZ25pbmcgcmVxdWVzdCZxdW90OyBoZXJlPyBJ
+ZiBzbywgeWVzLCB0aGlzIGlzIHByb2JhYmx5IHRoZSBiZXN0IG9wdGlvbi48L2Rpdj48ZGl2Pjwv
+ZGl2PjxkaXY+wqA8L2Rpdj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJt
+YXJnaW46MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQtd2lkdGg6MXB4O2JvcmRlci1sZWZ0
+LXN0eWxlOnNvbGlkO2JvcmRlci1sZWZ0LWNvbG9yOnJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1s
+ZWZ0OjFleCI+PGRpdiBkaXI9Imx0ciI+PGRpdj4tIHdvdWxkIHNlbmRpbmcgdGhlIEFLIG5hbWUg
+c3VmZmljZSBzaW5jZSBpdCBpcyBjcnlwdG9ncmFwaGljYWxseSBsaW5rZWQgdG8gRUsgb3LCoDwv
+ZGl2PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rpdj48ZGl2PlRQTTJfQWN0aXZhdGVD
+cmVkZW50aWFsIGRvZXNuJiMzOTt0IGNhcmUgd2hhdCBzb3J0IG9mIG9iamVjdCAmcXVvdDtuYW1l
+JnF1b3Q7IHJlZmVycyB0bywgYXMgbG9uZyBhcyB0aGUgVFBNIGhhcyBhIHNlY3JldCBhcmVhIGxv
+YWRlZCBmb3IgaXQuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5TbyBzZW5kaW5nIHRoZSBBSyBu
+YW1lIGlzIG5vdCBzdWZmaWNpZW50LiBUaGUgc2VydmVyIHNob3VsZCBjaGVjayB0aGUgQUsmIzM5
+O3MgcHVibGljIGRhdGEgZm9yIHN1aXRhYmlsaXR5IGFzIGFuIEFLLiBFLmcuLCB5b3UgcHJvYmFi
+bHkgd2FudCB0byB2ZXJpZnkgdGhhdCAmcXVvdDtyZXN0cmljdGVkJnF1b3Q7LCAmcXVvdDtmaXhl
+ZFRQTSZxdW90OywgJnF1b3Q7Zml4ZWRQYXJlbnQmcXVvdDssICZxdW90O3NlbnNpdGl2ZURhdGFP
+cmlnaW4mcXVvdDssIGFuZCAmcXVvdDtzaWduJnF1b3Q7IGFyZSBzZXQsIGFuZCAmcXVvdDtkZWNy
+eXB0JnF1b3Q7IGlzIGNsZWFyLjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNz
+PSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVm
+dC13aWR0aDoxcHg7Ym9yZGVyLWxlZnQtc3R5bGU6c29saWQ7Ym9yZGVyLWxlZnQtY29sb3I6cmdi
+KDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2IGRpcj0ibHRyIj48ZGl2Pi0gZG8g
+d2UganVzdCBzZW5kIGJhY2sgdGhlIGNyZWRlbnRpYWwgYmxvYiBhbmQgc2VjcmV0IHRoYXQgTWFr
+ZV9jcmVkZW50aWFsIGNyZWF0ZWQgYW5kIHNpbmNlIHdlIGFscmVhZHkgaGF2ZSB0aGUgRUsgYW5k
+IEFLIGtleXMgbG9hZGVkIGluIHRoZSBUUE0sIHdlIGRvbiYjMzk7dCBoYXZlIHRvIGRvIGFueXRo
+aW5nIGVsc2Ugb3RoZXIgdGhhbiBwYXNzIHRoZSAyIG91dHB1dHMgb2YgTWFrZUNyZWRlbnRpYWw/
+PC9kaXY+PC9kaXY+PC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2PjxkaXY+Q29ycmVjdC48L2Rp
+dj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAw
+cHggMC44ZXg7Ym9yZGVyLWxlZnQtd2lkdGg6MXB4O2JvcmRlci1sZWZ0LXN0eWxlOnNvbGlkO2Jv
+cmRlci1sZWZ0LWNvbG9yOnJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+PGRpdiBj
+bGFzcz0iZ21haWxfcXVvdGUiPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9
+Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdC13aWR0aDoxcHg7Ym9yZGVyLWxl
+ZnQtc3R5bGU6c29saWQ7Ym9yZGVyLWxlZnQtY29sb3I6cmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5n
+LWxlZnQ6MWV4Ij48ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGJsb2NrcXVvdGUgY2xhc3M9Imdt
+YWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0LXdp
+ZHRoOjFweDtib3JkZXItbGVmdC1zdHlsZTpzb2xpZDtib3JkZXItbGVmdC1jb2xvcjpyZ2IoMjA0
+LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxkaXYgZGlyPSJsdHIiPjxkaXYgY2xhc3M9Imdt
+YWlsX3F1b3RlIj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46
+MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQtd2lkdGg6MXB4O2JvcmRlci1sZWZ0LXN0eWxl
+OnNvbGlkO2JvcmRlci1sZWZ0LWNvbG9yOnJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFl
+eCI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90
+ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdC13aWR0aDoxcHg7
+Ym9yZGVyLWxlZnQtc3R5bGU6c29saWQ7Ym9yZGVyLWxlZnQtY29sb3I6cmdiKDIwNCwyMDQsMjA0
+KTtwYWRkaW5nLWxlZnQ6MWV4Ij4KPC9ibG9ja3F1b3RlPjwvZGl2Pgo8L2Jsb2NrcXVvdGU+PC9k
+aXY+PC9kaXY+CjwvYmxvY2txdW90ZT48L2Rpdj4KPC9ibG9ja3F1b3RlPjwvZGl2Pgo8L2Jsb2Nr
+cXVvdGU+PC9kaXY+PC9kaXY+CjwvYmxvY2txdW90ZT48L2Rpdj4K
 
---===============5568006605933078906==--
+--===============1744645824539347096==--
 
