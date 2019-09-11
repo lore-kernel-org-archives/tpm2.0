@@ -1,84 +1,221 @@
-Content-Type: multipart/mixed; boundary="===============1059841143825490220=="
+Content-Type: multipart/mixed; boundary="===============1770464469134902578=="
 MIME-Version: 1.0
-From: Desai, Imran <imran.desai at intel.com>
-Subject: Re: [tpm2] tpm2 Digest, Vol 27, Issue 7
-Date: Mon, 09 Sep 2019 19:08:15 +0000
-Message-ID: <688D07BB9E3A9E4A852BA1336D1910FF90792A24@fmsmsx104.amr.corp.intel.com>
-In-Reply-To: mailman.13.1568055602.17618.tpm2@lists.01.org
+From: Timothy Le <leti at vmware.com>
+Subject: [tpm2] Windows Visual Studio 2017: Trying to use
+ Tss2_TctiLdr_Initialize
+Date: Wed, 11 Sep 2019 01:27:04 +0000
+Message-ID: <49E6E769-7641-476A-A13F-736B9567868B@vmware.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1059841143825490220==
+--===============1770464469134902578==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi,
 
-I am pleased to announce tpm2-tools v4.0 release.
-This is a very large release that incorporates many bug fixes, new features=
- and tools.
-Please see the changelog for details.
+I am trying to use the tpm2-tss library on Windows Visual Studio 2017 with =
+the Universal Windows Platform Development.
+I have been able to build the solution successfully, and I am now creating =
+a C++ projec within the solution. I am trying to use the function =E2=80=9C=
+Tss2_TctiLdr_Initialize=E2=80=9D. I have added the additional include folde=
+r in Project > Properties > C/C++ > General, the required Additional Librar=
+y Directory in Project > Properties > Linker > General, and the path to tss=
+2-tctildr.lib file in Project > Properties > Linker > Input.
 
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.0
-
-
-Thanks and Regards,
-
-Imran Desai
-________________________________________
-From: tpm2 [tpm2-bounces(a)lists.01.org] on behalf of tpm2-request(a)lists.=
-01.org [tpm2-request(a)lists.01.org]
-Sent: Monday, September 09, 2019 12:00 PM
-To: tpm2(a)lists.01.org
-Subject: tpm2 Digest, Vol 27, Issue 7
-
-Send tpm2 mailing list submissions to
-        tpm2(a)lists.01.org
-
-To subscribe or unsubscribe via the World Wide Web, visit
-        https://lists.01.org/mailman/listinfo/tpm2
-or, via email, send a message with subject or body 'help' to
-        tpm2-request(a)lists.01.org
-
-You can reach the person managing the list at
-        tpm2-owner(a)lists.01.org
-
-When replying, please edit your Subject line so it is more specific
-than "Re: Contents of tpm2 digest..."
+However, when building, I receive the following error:
 
 
-Today's Topics:
+Severity
 
-   1. tpm2-tools v4.0 release (Desai, Imran)
+Code
+
+Description
+
+Project
+
+File
+
+Line
+
+Suppression State
+
+Error
+
+LNK2019
+
+unresolved external symbol "unsigned int __cdecl Tss2_TctiLdr_Initialize(ch=
+ar const *,struct TSS2_TCTI_OPAQUE_CONTEXT_BLOB * *)" (?Tss2_TctiLdr_Initia=
+lize@@YAIPEBDPEAPEAUTSS2_TCTI_OPAQUE_CONTEXT_BLOB@@@Z) referenced in functi=
+on main
+
+fs_store
+
+C:\Users\Administrator\Desktop\tpm2-tss\fs_store\Source.obj
+
+1
+
+I have followed the same corresponding steps to build Esys_Initialize witho=
+ut any build errors, so this issue is occurring only with the TctiLdr funct=
+ions.
+
+Are there any missing steps, or is there another way to use this TctiLdr fu=
+nction? I have also copied the tss2-tctildr.dll file in the directory of th=
+e project, but this made no difference, so I have removed it.
+
+Thank you for any help
+
+Timothy
 
 
-----------------------------------------------------------------------
-
-Message: 1
-Date: Mon, 9 Sep 2019 18:39:11 +0000
-From: "Desai, Imran" <imran.desai(a)intel.com>
-To: "tpm2(a)lists.01.org" <tpm2(a)lists.01.org>
-Subject: [tpm2] tpm2-tools v4.0 release
-Message-ID:
-        <688D07BB9E3A9E4A852BA1336D1910FF9079296F(a)fmsmsx104.amr.corp.inte=
-l.com>
-
-Content-Type: text/plain; charset=3D"iso-8859-1"
-
-Hello,
-
-I am pleased to announce tpm2-tools v4.0 release.
-This is a very large release that incorporates many bug fixes, new features=
- and tools.
-Please see the changelog for details.
-
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.0
 
 
-Thanks and Regards,
+--===============1770464469134902578==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-Imran Desai
+PGh0bWwgeG1sbnM6bz0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlIiB4
+bWxuczp3PSJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkIiB4bWxuczptPSJo
+dHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL29mZmljZS8yMDA0LzEyL29tbWwiIHhtbG5zPSJo
+dHRwOi8vd3d3LnczLm9yZy9UUi9SRUMtaHRtbDQwIj4NCjxoZWFkPg0KPG1ldGEgaHR0cC1lcXVp
+dj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPg0KPG1l
+dGEgbmFtZT0iR2VuZXJhdG9yIiBjb250ZW50PSJNaWNyb3NvZnQgV29yZCAxNSAoZmlsdGVyZWQg
+bWVkaXVtKSI+DQo8c3R5bGU+PCEtLQ0KLyogRm9udCBEZWZpbml0aW9ucyAqLw0KQGZvbnQtZmFj
+ZQ0KCXtmb250LWZhbWlseTpIZWx2ZXRpY2E7DQoJcGFub3NlLTE6MCAwIDAgMCAwIDAgMCAwIDAg
+MDt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OiJDYW1icmlhIE1hdGgiOw0KCXBhbm9zZS0x
+OjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpDYWxpYnJp
+Ow0KCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30NCi8qIFN0eWxlIERlZmluaXRpb25z
+ICovDQpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsDQoJe21hcmdpbjow
+aW47DQoJbWFyZ2luLWJvdHRvbTouMDAwMXB0Ow0KCWZvbnQtc2l6ZToxMS4wcHQ7DQoJZm9udC1m
+YW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQ0KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluaw0K
+CXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6IzA1NjNDMTsNCgl0ZXh0LWRlY29yYXRp
+b246dW5kZXJsaW5lO30NCmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBlcmxpbmtGb2xsb3dlZA0KCXtt
+c28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6Izk1NEY3MjsNCgl0ZXh0LWRlY29yYXRpb246
+dW5kZXJsaW5lO30NCnNwYW4uRW1haWxTdHlsZTE3DQoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFs
+LWNvbXBvc2U7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7DQoJY29sb3I6d2lu
+ZG93dGV4dDt9DQpzcGFuLmMtbWVzc2FnZWVkaXRlZGxhYmVsDQoJe21zby1zdHlsZS1uYW1lOmMt
+bWVzc2FnZV9fZWRpdGVkX2xhYmVsO30NCnAucDEsIGxpLnAxLCBkaXYucDENCgl7bXNvLXN0eWxl
+LW5hbWU6cDE7DQoJbWFyZ2luOjBpbjsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJZm9udC1z
+aXplOjcuMHB0Ow0KCWZvbnQtZmFtaWx5OkhlbHZldGljYTt9DQpwLnAyLCBsaS5wMiwgZGl2LnAy
+DQoJe21zby1zdHlsZS1uYW1lOnAyOw0KCW1hcmdpbjowaW47DQoJbWFyZ2luLWJvdHRvbTouMDAw
+MXB0Ow0KCWZvbnQtc2l6ZTo3LjBwdDsNCglmb250LWZhbWlseTpIZWx2ZXRpY2E7fQ0KLk1zb0No
+cERlZmF1bHQNCgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7DQoJZm9udC1mYW1pbHk6IkNh
+bGlicmkiLHNhbnMtc2VyaWY7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3NpemU6OC41aW4gMTEu
+MGluOw0KCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9DQpkaXYuV29yZFNlY3Rpb24x
+DQoJe3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+DQo8L2hlYWQ+DQo8Ym9keSBsYW5n
+PSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPg0KPGRpdiBjbGFzcz0iV29y
+ZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkhpLDxvOnA+PC9vOnA+PC9wPg0KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5JIGFtIHRyeWluZyB0byB1c2UgdGhlIHRwbTItdHNzIGxpYnJhcnkgb24gV2luZG93cyBW
+aXN1YWwgU3R1ZGlvIDIwMTcgd2l0aCB0aGUNCjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuNXB0
+O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6YmxhY2s7YmFj
+a2dyb3VuZDojRjhGOEY4Ij4NClVuaXZlcnNhbCBXaW5kb3dzIFBsYXRmb3JtIERldmVsb3BtZW50
+PC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0Fy
+aWFsJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6YmxhY2s7YmFja2dyb3VuZDojRjhGOEY4Ij4uDQo8
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0i
+Zm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlm
+O2NvbG9yOmJsYWNrO2JhY2tncm91bmQ6I0Y4RjhGOCI+SSBoYXZlIGJlZW4gYWJsZSB0byBidWls
+ZCB0aGUgc29sdXRpb24gc3VjY2Vzc2Z1bGx5LCBhbmQgSSBhbSBub3cgY3JlYXRpbmcgYSBDJiM0
+MzsmIzQzOyBwcm9qZWMgd2l0aGluIHRoZSBzb2x1dGlvbi4gSSBhbSB0cnlpbmcgdG8gdXNlIHRo
+ZSBmdW5jdGlvbiDigJxUc3MyX1RjdGlMZHJfSW5pdGlhbGl6ZeKAnS4NCiBJIGhhdmUgYWRkZWQg
+dGhlIGFkZGl0aW9uYWwgaW5jbHVkZSBmb2xkZXIgaW4gUHJvamVjdCAmZ3Q7IFByb3BlcnRpZXMg
+Jmd0OyBDL0MmIzQzOyYjNDM7ICZndDsgR2VuZXJhbCwgdGhlIHJlcXVpcmVkIEFkZGl0aW9uYWwg
+TGlicmFyeSBEaXJlY3RvcnkgaW4gUHJvamVjdCAmZ3Q7IFByb3BlcnRpZXMgJmd0OyBMaW5rZXIg
+Jmd0OyBHZW5lcmFsLCBhbmQgdGhlIHBhdGggdG8gdHNzMi10Y3RpbGRyLmxpYiBmaWxlIGluIFBy
+b2plY3QgJmd0OyBQcm9wZXJ0aWVzICZndDsgTGlua2VyICZndDsgSW5wdXQuPG86cD48L286cD48
+L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTox
+MC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibGFj
+aztiYWNrZ3JvdW5kOiNGOEY4RjgiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5
+OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6YmxhY2s7YmFja2dyb3VuZDojRjhG
+OEY4Ij5Ib3dldmVyLCB3aGVuIGJ1aWxkaW5nLCBJIHJlY2VpdmUgdGhlIGZvbGxvd2luZyBlcnJv
+cjo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHls
+ZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNl
+cmlmO2NvbG9yOmJsYWNrO2JhY2tncm91bmQ6I0Y4RjhGOCI+PG86cD4mbmJzcDs8L286cD48L3Nw
+YW4+PC9wPg0KPHRhYmxlIGNsYXNzPSJNc29Ob3JtYWxUYWJsZSIgYm9yZGVyPSIxIiBjZWxsc3Bh
+Y2luZz0iMCIgY2VsbHBhZGRpbmc9IjAiIHN0eWxlPSJib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7
+Ym9yZGVyOm5vbmUiPg0KPHRib2R5Pg0KPHRyPg0KPHRkIHN0eWxlPSJib3JkZXI6c29saWQgIzdG
+N0Y3RiAxLjBwdDtwYWRkaW5nOjBpbiAzLjc1cHQgMGluIDMuNzVwdCI+DQo8cCBjbGFzcz0icDEi
+PlNldmVyaXR5PG86cD48L286cD48L3A+DQo8L3RkPg0KPHRkIHN0eWxlPSJib3JkZXI6c29saWQg
+IzdGN0Y3RiAxLjBwdDtib3JkZXItbGVmdDpub25lO3BhZGRpbmc6MGluIDMuNzVwdCAwaW4gMy43
+NXB0Ij4NCjxwIGNsYXNzPSJwMSI+Q29kZTxvOnA+PC9vOnA+PC9wPg0KPC90ZD4NCjx0ZCBzdHls
+ZT0iYm9yZGVyOnNvbGlkICM3RjdGN0YgMS4wcHQ7Ym9yZGVyLWxlZnQ6bm9uZTtwYWRkaW5nOjBp
+biAzLjc1cHQgMGluIDMuNzVwdCI+DQo8cCBjbGFzcz0icDEiPkRlc2NyaXB0aW9uPG86cD48L286
+cD48L3A+DQo8L3RkPg0KPHRkIHN0eWxlPSJib3JkZXI6c29saWQgIzdGN0Y3RiAxLjBwdDtib3Jk
+ZXItbGVmdDpub25lO3BhZGRpbmc6MGluIDMuNzVwdCAwaW4gMy43NXB0Ij4NCjxwIGNsYXNzPSJw
+MSI+UHJvamVjdDxvOnA+PC9vOnA+PC9wPg0KPC90ZD4NCjx0ZCBzdHlsZT0iYm9yZGVyOnNvbGlk
+ICM3RjdGN0YgMS4wcHQ7Ym9yZGVyLWxlZnQ6bm9uZTtwYWRkaW5nOjBpbiAzLjc1cHQgMGluIDMu
+NzVwdCI+DQo8cCBjbGFzcz0icDEiPkZpbGU8bzpwPjwvbzpwPjwvcD4NCjwvdGQ+DQo8dGQgc3R5
+bGU9ImJvcmRlcjpzb2xpZCAjN0Y3RjdGIDEuMHB0O2JvcmRlci1sZWZ0Om5vbmU7cGFkZGluZzow
+aW4gMy43NXB0IDBpbiAzLjc1cHQiPg0KPHAgY2xhc3M9InAxIj5MaW5lPG86cD48L286cD48L3A+
+DQo8L3RkPg0KPHRkIHN0eWxlPSJib3JkZXI6c29saWQgIzdGN0Y3RiAxLjBwdDtib3JkZXItbGVm
+dDpub25lO3BhZGRpbmc6MGluIDMuNzVwdCAwaW4gMy43NXB0Ij4NCjxwIGNsYXNzPSJwMSI+U3Vw
+cHJlc3Npb24gU3RhdGU8bzpwPjwvbzpwPjwvcD4NCjwvdGQ+DQo8L3RyPg0KPHRyPg0KPHRkIHN0
+eWxlPSJib3JkZXI6c29saWQgIzdGN0Y3RiAxLjBwdDtib3JkZXItdG9wOm5vbmU7cGFkZGluZzow
+aW4gMy43NXB0IDBpbiAzLjc1cHQiPg0KPHAgY2xhc3M9InAxIj5FcnJvcjxvOnA+PC9vOnA+PC9w
+Pg0KPC90ZD4NCjx0ZCBzdHlsZT0iYm9yZGVyLXRvcDpub25lO2JvcmRlci1sZWZ0Om5vbmU7Ym9y
+ZGVyLWJvdHRvbTpzb2xpZCAjN0Y3RjdGIDEuMHB0O2JvcmRlci1yaWdodDpzb2xpZCAjN0Y3RjdG
+IDEuMHB0O3BhZGRpbmc6MGluIDMuNzVwdCAwaW4gMy43NXB0Ij4NCjxwIGNsYXNzPSJwMSI+TE5L
+MjAxOTxvOnA+PC9vOnA+PC9wPg0KPC90ZD4NCjx0ZCBzdHlsZT0iYm9yZGVyLXRvcDpub25lO2Jv
+cmRlci1sZWZ0Om5vbmU7Ym9yZGVyLWJvdHRvbTpzb2xpZCAjN0Y3RjdGIDEuMHB0O2JvcmRlci1y
+aWdodDpzb2xpZCAjN0Y3RjdGIDEuMHB0O3BhZGRpbmc6MGluIDMuNzVwdCAwaW4gMy43NXB0Ij4N
+CjxwIGNsYXNzPSJwMSI+dW5yZXNvbHZlZCBleHRlcm5hbCBzeW1ib2wgJnF1b3Q7dW5zaWduZWQg
+aW50IF9fY2RlY2wgVHNzMl9UY3RpTGRyX0luaXRpYWxpemUoY2hhciBjb25zdCAqLHN0cnVjdCBU
+U1MyX1RDVElfT1BBUVVFX0NPTlRFWFRfQkxPQiAqICopJnF1b3Q7ICg/VHNzMl9UY3RpTGRyX0lu
+aXRpYWxpemVAQFlBSVBFQkRQRUFQRUFVVFNTMl9UQ1RJX09QQVFVRV9DT05URVhUX0JMT0JAQEBa
+KSByZWZlcmVuY2VkIGluIGZ1bmN0aW9uIG1haW48bzpwPjwvbzpwPjwvcD4NCjwvdGQ+DQo8dGQg
+c3R5bGU9ImJvcmRlci10b3A6bm9uZTtib3JkZXItbGVmdDpub25lO2JvcmRlci1ib3R0b206c29s
+aWQgIzdGN0Y3RiAxLjBwdDtib3JkZXItcmlnaHQ6c29saWQgIzdGN0Y3RiAxLjBwdDtwYWRkaW5n
+OjBpbiAzLjc1cHQgMGluIDMuNzVwdCI+DQo8cCBjbGFzcz0icDEiPmZzX3N0b3JlPG86cD48L286
+cD48L3A+DQo8L3RkPg0KPHRkIHN0eWxlPSJib3JkZXItdG9wOm5vbmU7Ym9yZGVyLWxlZnQ6bm9u
+ZTtib3JkZXItYm90dG9tOnNvbGlkICM3RjdGN0YgMS4wcHQ7Ym9yZGVyLXJpZ2h0OnNvbGlkICM3
+RjdGN0YgMS4wcHQ7cGFkZGluZzowaW4gMy43NXB0IDBpbiAzLjc1cHQiPg0KPHAgY2xhc3M9InAx
+Ij5DOlxVc2Vyc1xBZG1pbmlzdHJhdG9yXERlc2t0b3BcdHBtMi10c3NcZnNfc3RvcmVcU291cmNl
+Lm9iajxvOnA+PC9vOnA+PC9wPg0KPC90ZD4NCjx0ZCBzdHlsZT0iYm9yZGVyLXRvcDpub25lO2Jv
+cmRlci1sZWZ0Om5vbmU7Ym9yZGVyLWJvdHRvbTpzb2xpZCAjN0Y3RjdGIDEuMHB0O2JvcmRlci1y
+aWdodDpzb2xpZCAjN0Y3RjdGIDEuMHB0O3BhZGRpbmc6MGluIDMuNzVwdCAwaW4gMy43NXB0Ij4N
+CjxwIGNsYXNzPSJwMSI+MTxvOnA+PC9vOnA+PC9wPg0KPC90ZD4NCjx0ZCBzdHlsZT0iYm9yZGVy
+LXRvcDpub25lO2JvcmRlci1sZWZ0Om5vbmU7Ym9yZGVyLWJvdHRvbTpzb2xpZCAjN0Y3RjdGIDEu
+MHB0O2JvcmRlci1yaWdodDpzb2xpZCAjN0Y3RjdGIDEuMHB0O3BhZGRpbmc6MGluIDMuNzVwdCAw
+aW4gMy43NXB0Ij4NCjwvdGQ+DQo8L3RyPg0KPC90Ym9keT4NCjwvdGFibGU+DQo8cCBjbGFzcz0i
+TXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVv
+dDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsYWNrO2JhY2tncm91bmQ6I0Y4RjhGOCI+
+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
+c3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fu
+cy1zZXJpZjtjb2xvcjpibGFjaztiYWNrZ3JvdW5kOiNGOEY4RjgiPkkgaGF2ZSBmb2xsb3dlZCB0
+aGUgc2FtZSBjb3JyZXNwb25kaW5nIHN0ZXBzIHRvIGJ1aWxkIEVzeXNfSW5pdGlhbGl6ZSB3aXRo
+b3V0IGFueSBidWlsZCBlcnJvcnMsIHNvIHRoaXMgaXNzdWUgaXMgb2NjdXJyaW5nIG9ubHkgd2l0
+aCB0aGUgVGN0aUxkcg0KIGZ1bmN0aW9ucy48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTom
+cXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsYWNrO2JhY2tncm91bmQ6I0Y4RjhG
+OCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
+YW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDss
+c2Fucy1zZXJpZjtjb2xvcjpibGFjaztiYWNrZ3JvdW5kOiNGOEY4RjgiPkFyZSB0aGVyZSBhbnkg
+bWlzc2luZyBzdGVwcywgb3IgaXMgdGhlcmUgYW5vdGhlciB3YXkgdG8gdXNlIHRoaXMgVGN0aUxk
+ciBmdW5jdGlvbj8gSSBoYXZlIGFsc28gY29waWVkIHRoZSB0c3MyLXRjdGlsZHIuZGxsIGZpbGUg
+aW4gdGhlIGRpcmVjdG9yeQ0KIG9mIHRoZSBwcm9qZWN0LCBidXQgdGhpcyBtYWRlIG5vIGRpZmZl
+cmVuY2UsIHNvIEkgaGF2ZSByZW1vdmVkIGl0LjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5
+OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6YmxhY2s7YmFja2dyb3VuZDojRjhG
+OEY4Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
+c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90
+OyxzYW5zLXNlcmlmO2NvbG9yOmJsYWNrO2JhY2tncm91bmQ6I0Y4RjhGOCI+VGhhbmsgeW91IGZv
+ciBhbnkgaGVscDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxz
+cGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7
+LHNhbnMtc2VyaWY7Y29sb3I6YmxhY2s7YmFja2dyb3VuZDojRjhGOEY4Ij48bzpwPiZuYnNwOzwv
+bzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1z
+aXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmO2NvbG9y
+OmJsYWNrO2JhY2tncm91bmQ6I0Y4RjhGOCI+VGltb3RoeTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4N
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQt
+ZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6YmxhY2s7YmFja2dyb3Vu
+ZDojRjhGOEY4Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlh
+bCZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsYWNrO2JhY2tncm91bmQ6I0Y4RjhGOCI+PG86cD4m
+bmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8
+L286cD48L3A+DQo8L2Rpdj4NCjwvYm9keT4NCjwvaHRtbD4NCg==
 
---===============1059841143825490220==--
+--===============1770464469134902578==--
 
