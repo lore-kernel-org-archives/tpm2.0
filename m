@@ -1,129 +1,118 @@
-Content-Type: multipart/mixed; boundary="===============7868123796629411278=="
+Content-Type: multipart/mixed; boundary="===============2474899973653649337=="
 MIME-Version: 1.0
-From: Oliver, Dario N <dario.n.oliver at intel.com>
-Subject: Re: [tpm2] Incomplete TPM event log on Linux
-Date: Wed, 18 Sep 2019 16:58:55 +0000
-Message-ID: <20A6FE0AC912764FB8B5BC5A1A7CB92B3BBFDBE8@fmsmsx101.amr.corp.intel.com>
+From: Matthew Dempsky <matthew at dempsky.org>
+Subject: Re: [tpm2] Incomplete TPM event log on Linux?
+Date: Wed, 18 Sep 2019 10:20:53 -0700
+Message-ID: <CANKkrzH5Amhgp+J=xAuMMye+FGLmWPVqCvzXTiQzR2+i21YM7w@mail.gmail.com>
+In-Reply-To: CAKrSGQTKxgGJv_Cc6w7dL_sgGpj85-8sFrVvmzT5McbDZnCvBg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7868123796629411278==
+--===============2474899973653649337==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Matthew,
+On Wed, Sep 18, 2019 at 4:21 AM Luke Hinds <lhinds(a)redhat.com> wrote:
 
-I had some problems before related to discrepancies between the TPM Event L=
-og and the actual PCR values.
-For my case, it was with Fedora and the PCR-9, "Missing TPM Event Log entry=
- for initramfs measurement" (https://bugzilla.redhat.com/show_bug.cgi?id=3D=
-1730785)
+> PCR 7 is various components of secure boo in the context of the shim:
+>
+>
+> https://github.com/rhboot/shim/blob/a4a1fbe728c9545fc5647129df0cf1593b953=
+bec/README.tpm#L9-L20
+>
 
-What solved the issue was, apparently, a fedora kernel update. I was initia=
-lly using a 5.0.16 kernel when I found the issue, and it was solved in the =
-kernel 5.1.17
+Thanks, I'm aware of that. I pointed out in my email, there's an event log
+entry from Shim within binary_bios_measurements (seemingly originating from
+here
+<https://github.com/rhboot/shim/blob/a4a1fbe728c9545fc5647129df0cf1593b953b=
+ec/shim.c#L1114>
+).
 
-You have existing parsers as well that will tell which is the measured comp=
-onent (and maybe if something is missing): iml2text, and https://github.com=
-/ValdikSS/binary_bios_measurements_parser
-
-Which version of the debian provided kernel are you using? =
-
-Maybe for your case, a kernel update could help too.
-
-------------------------------
-
-Message: 2
-Date: Wed, 18 Sep 2019 03:14:57 -0700
-From: Matthew Dempsky <matthew(a)dempsky.org>
-To: tpm2(a)lists.01.org
-Subject: [tpm2] Incomplete TPM event log on Linux?
-Message-ID:
-	<CANKkrzEDDXdGVFRA8QCpP_p-0XnHf10mTjJ+LW-tAtSH=3Dsv2Mg(a)mail.gmail.com>
-Content-Type: text/plain; charset=3D"utf-8"
-
-I'm trying to validate the PCR values computed by my TPM. They're mostly ok=
-ay, but PCR 7 is giving me a weird value. I'm wondering if I'm missing some=
-thing.
-
-I'm running Debian 10.1 on an X1 Carbon (gen 6). I don't believe I have any=
- system software installed and configured to use the TPM. (E.g., I have ful=
-l disk encryption enabled, but it's currently using a password rather than =
-the TPM.)
-
-When I run tpm2_pcrread to read the PCRs, I get:
-
-$ sudo tpm2_pcrread | head -9
-sha1:
-  0 : 0x2365D6AB190CC51FD04911A36A6620578F5A15B7
-  1 : 0x90CDA14DCFA4B62CDE2898625606298C71A94F7C
-  2 : 0xB2A83B0EBF2F8374299A5B2BDFC31EA955AD7236
-  3 : 0xB2A83B0EBF2F8374299A5B2BDFC31EA955AD7236
-  4 : 0x9C27A66C20926B86EA3120FA36CC75D0EE870E0D
-  5 : 0xA842C2C96B7D8813837174751AEADB5314316ACB
-  6 : 0xB2A83B0EBF2F8374299A5B2BDFC31EA955AD7236
-  7 : 0xDB9CFC01DCC5C88ACBE9C6E2DB0E6BC4EA231AC6
+Also, as far as I can tell, Shim's tpm_log_event_raw function
+<https://github.com/rhboot/shim/blob/a4a1fbe728c9545fc5647129df0cf1593b953b=
+ec/tpm.c#L111>
+is the choke point for all PCR extend operations, and it's a combined
+extend+log command. So I would expect that if Shim is performing multiple
+extend operations, then either all of them or none of them would appear in
+the log.
 
 
-And when I replay the event log from
-/sys/kernel/security/tpm0/binary_bios_measurements, I get:
+However, that confidence is a little weakened now that I've just discovered
+these two commits:
 
-$ python sum.py < binary_bios_measurements
-0 2365D6AB190CC51FD04911A36A6620578F5A15B7
-1 90CDA14DCFA4B62CDE2898625606298C71A94F7C
-2 B2A83B0EBF2F8374299A5B2BDFC31EA955AD7236
-3 B2A83B0EBF2F8374299A5B2BDFC31EA955AD7236
-4 9C27A66C20926B86EA3120FA36CC75D0EE870E0D
-5 A842C2C96B7D8813837174751AEADB5314316ACB
-6 B2A83B0EBF2F8374299A5B2BDFC31EA955AD7236
-7 37A1A97D5F0BE67FBD544A1604C843BCEE4EE3B2
+https://github.com/rhboot/shim/commit/fd7c3bd920ba39082cb7c619afb7203d150a4=
+cd3
+https://github.com/torvalds/linux/commit/166a2809d65b282272c474835ec22c882a=
+39ca1b
 
-
-[I've attached the binary_bios_measurement file, and I've also included my =
-sum.py script below.]
-
-Note that PCRs 0 through 6 match, but PCR 7 has a different value. I haven'=
-t manually written anything into PCR 7, and I get the same mismatched resul=
-ts even after rebooting.
-
-I noticed that Shim is generating malformed event log entries (see
-https://github.com/rhboot/shim/issues/184 for details), but even my attempt=
-s to correct for that don't seem to resolve the discrepancy (not that I'd e=
-xpect them to anyway---I'm just running out of ideas).
-
-My best guess is that *something* (Shim? Grub? The Linux kernel? Some Debia=
-n userspace program?) is writing to PCR 7, but not recording a log entry (o=
-r logging somewhere other than binary_bios_measurements). However, I'm at a=
- loss for what that might be, or how to track it down.
-
-Any recommendations would be greatly appreciated.
-
-Thanks,
-Matthew
+Apparently there's both a "boot services event log" and a "final event
+log", and the kernel is responsible for deduplicating them? That makes me
+wonder if the Linux kernel I'm using is trying to deduplicate entries and
+accidentally throwing away some non-duplicates.
 
 
-# sum.py
-import hashlib
-import struct
-import sys
+Finally, after sending my email last night, I tried booting into single
+user mode, and confirmed that tpm2_pcrread reports the same value for PCR 7
+as for normal boot. So the discrepancy doesn't seem to be from userspace.
+Or at least, if it is, then it's from something very early in boot.
 
-pcrs =3D ['\x00' * 20] * 8
+>
 
-def extend(pcr, digest):
-    h =3D hashlib.sha1()
-    h.update(pcrs[pcr])
-    h.update(digest)
-    pcrs[pcr] =3D h.digest()
+--===============2474899973653649337==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-events =3D sys.stdin.read()
-while events:
-    pcr, kind, digest, size =3D struct.unpack("<II20sI", events[:32])
-    events =3D events[32 + size:]
-    extend(pcr, digest)
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+T24gV2VkLCBTZXAgMTgsIDIwMTkgYXQgNDoy
+MSBBTSBMdWtlIEhpbmRzICZsdDs8YSBocmVmPSJtYWlsdG86bGhpbmRzQHJlZGhhdC5jb20iIHRh
+cmdldD0iX2JsYW5rIj5saGluZHNAcmVkaGF0LmNvbTwvYT4mZ3Q7IHdyb3RlOjwvZGl2PjxkaXYg
+Y2xhc3M9ImdtYWlsX3F1b3RlIj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxl
+PSJtYXJnaW46MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQ6MXB4IHNvbGlkIHJnYigyMDQs
+MjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+PGRpdiBkaXI9Imx0ciI+PGRpdj5QQ1IgNyBpcyB2
+YXJpb3VzIGNvbXBvbmVudHMgb2Ygc2VjdXJlIGJvbyBpbiB0aGUgY29udGV4dCBvZiB0aGUgc2hp
+bTo8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS9y
+aGJvb3Qvc2hpbS9ibG9iL2E0YTFmYmU3MjhjOTU0NWZjNTY0NzEyOWRmMGNmMTU5M2I5NTNiZWMv
+UkVBRE1FLnRwbSNMOS1MMjAiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL2dpdGh1Yi5jb20vcmhi
+b290L3NoaW0vYmxvYi9hNGExZmJlNzI4Yzk1NDVmYzU2NDcxMjlkZjBjZjE1OTNiOTUzYmVjL1JF
+QURNRS50cG0jTDktTDIwPC9hPjwvZGl2PjwvZGl2PjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rp
+dj48ZGl2PlRoYW5rcywgSSYjMzk7bSBhd2FyZSBvZiB0aGF0LiBJIHBvaW50ZWQgb3V0IGluIG15
+IGVtYWlsLCB0aGVyZSYjMzk7cyBhbiBldmVudCBsb2cgZW50cnkgZnJvbSBTaGltIHdpdGhpbiBi
+aW5hcnlfYmlvc19tZWFzdXJlbWVudHMgKHNlZW1pbmdseSBvcmlnaW5hdGluZyBmcm9tIDxhIGhy
+ZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS9yaGJvb3Qvc2hpbS9ibG9iL2E0YTFmYmU3MjhjOTU0NWZj
+NTY0NzEyOWRmMGNmMTU5M2I5NTNiZWMvc2hpbS5jI0wxMTE0Ij5oZXJlPC9hPikuPC9kaXY+PGRp
+dj48YnI+PC9kaXY+PGRpdj5BbHNvLCBhcyBmYXIgYXMgSSBjYW4gdGVsbCwgU2hpbSYjMzk7cyA8
+YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vcmhib290L3NoaW0vYmxvYi9hNGExZmJlNzI4Yzk1
+NDVmYzU2NDcxMjlkZjBjZjE1OTNiOTUzYmVjL3RwbS5jI0wxMTEiPnRwbV9sb2dfZXZlbnRfcmF3
+IGZ1bmN0aW9uPC9hPiBpcyB0aGUgY2hva2UgcG9pbnQgZm9yIGFsbCBQQ1IgZXh0ZW5kIG9wZXJh
+dGlvbnMsIGFuZCBpdCYjMzk7cyBhIGNvbWJpbmVkIGV4dGVuZCtsb2cgY29tbWFuZC4gU28gSSB3
+b3VsZCBleHBlY3QgdGhhdCBpZiBTaGltIGlzIHBlcmZvcm1pbmcgbXVsdGlwbGUgZXh0ZW5kIG9w
+ZXJhdGlvbnMsIHRoZW4gZWl0aGVyIGFsbCBvZiB0aGVtIG9yIG5vbmUgb2YgdGhlbSB3b3VsZCBh
+cHBlYXIgaW4gdGhlIGxvZy48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2
+Pkhvd2V2ZXIsIHRoYXQgY29uZmlkZW5jZSBpcyBhIGxpdHRsZSB3ZWFrZW5lZCBub3cgdGhhdCBJ
+JiMzOTt2ZSBqdXN0IGRpc2NvdmVyZWQgdGhlc2UgdHdvIGNvbW1pdHM6PC9kaXY+PGRpdj48YnI+
+PC9kaXY+PGRpdj48YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vcmhib290L3NoaW0vY29tbWl0
+L2ZkN2MzYmQ5MjBiYTM5MDgyY2I3YzYxOWFmYjcyMDNkMTUwYTRjZDMiPmh0dHBzOi8vZ2l0aHVi
+LmNvbS9yaGJvb3Qvc2hpbS9jb21taXQvZmQ3YzNiZDkyMGJhMzkwODJjYjdjNjE5YWZiNzIwM2Qx
+NTBhNGNkMzwvYT48YnI+PC9kaXY+PGRpdj48YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdG9y
+dmFsZHMvbGludXgvY29tbWl0LzE2NmEyODA5ZDY1YjI4MjI3MmM0NzQ4MzVlYzIyYzg4MmEzOWNh
+MWIiPmh0dHBzOi8vZ2l0aHViLmNvbS90b3J2YWxkcy9saW51eC9jb21taXQvMTY2YTI4MDlkNjVi
+MjgyMjcyYzQ3NDgzNWVjMjJjODgyYTM5Y2ExYjwvYT48YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+
+PGRpdj5BcHBhcmVudGx5IHRoZXJlJiMzOTtzIGJvdGggYSAmcXVvdDtib290IHNlcnZpY2VzIGV2
+ZW50IGxvZyZxdW90OyBhbmQgYSAmcXVvdDtmaW5hbCBldmVudCBsb2cmcXVvdDssIGFuZCB0aGUg
+a2VybmVsIGlzIHJlc3BvbnNpYmxlIGZvciBkZWR1cGxpY2F0aW5nIHRoZW0/IFRoYXQgbWFrZXMg
+bWUgd29uZGVyIGlmIHRoZSBMaW51eCBrZXJuZWwgSSYjMzk7bSB1c2luZyBpcyB0cnlpbmcgdG8g
+ZGVkdXBsaWNhdGUgZW50cmllcyBhbmQgYWNjaWRlbnRhbGx5IHRocm93aW5nIGF3YXkgc29tZSBu
+b24tZHVwbGljYXRlcy48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkZp
+bmFsbHksIGFmdGVyIHNlbmRpbmcgbXkgZW1haWwgbGFzdCBuaWdodCwgSSB0cmllZCBib290aW5n
+IGludG8gc2luZ2xlIHVzZXIgbW9kZSwgYW5kIGNvbmZpcm1lZCB0aGF0IHRwbTJfcGNycmVhZCBy
+ZXBvcnRzIHRoZSBzYW1lIHZhbHVlIGZvciBQQ1IgNyBhcyBmb3Igbm9ybWFsIGJvb3QuIFNvIHRo
+ZSBkaXNjcmVwYW5jeSBkb2VzbiYjMzk7dCBzZWVtIHRvIGJlIGZyb20gdXNlcnNwYWNlLiBPciBh
+dCBsZWFzdCwgaWYgaXQgaXMsIHRoZW4gaXQmIzM5O3MgZnJvbSBzb21ldGhpbmcgdmVyeSBlYXJs
+eSBpbiBib290LjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1h
+cmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIwNCwyMDQs
+MjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij4KPC9ibG9ja3F1b3RlPjwvZGl2PjwvZGl2Pgo=
 
-for i, pcr in enumerate(pcrs):
-    print i, pcr.encode('hex').upper()
-
---===============7868123796629411278==--
+--===============2474899973653649337==--
 
