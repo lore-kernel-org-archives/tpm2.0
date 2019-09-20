@@ -1,152 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============7393892451093726762=="
+Content-Type: multipart/mixed; boundary="===============7557610057720008186=="
 MIME-Version: 1.0
-From: Trey Weaver <treyweaver at fastmail.net>
-Subject: [tpm2] Putting a persistant string into the tpm2 using tpm2_tools.
-Date: Fri, 20 Sep 2019 10:34:51 -0400
-Message-ID: <62b22807-115d-444b-af44-b1c0ab16daf9@www.fastmail.com>
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: Re: [tpm2] Putting a persistant string into the tpm2 using tpm2_tools.
+Date: Fri, 20 Sep 2019 09:29:17 -0700
+Message-ID: <14285882-804e-1b18-7a5a-fe77a051401f@intel.com>
+In-Reply-To: 62b22807-115d-444b-af44-b1c0ab16daf9@www.fastmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7393892451093726762==
+--===============7557610057720008186==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I want to put a small string into the TPM2 and be able to recall it over re=
-starts. Here is what I have tried:
+On 9/20/19 7:34 AM, Trey Weaver wrote:
+> I want to put a small string into the TPM2 and be able to recall it over =
+restarts.=C2=A0 Here is what I have tried:
 
-# put data in file that is to be sealed
-echo "my sealed data" > seal.dat
+To make an object persistent you need to use tpm2_evictcontrol command.
 
-# create a primary key
-tpm2_createprimary -c primary.ctx
+After step:
+$ tpm2_load -C primary.ctx -u obj.pub -r obj.priv -c key.ctx
 
-# create a child key in public and private parts
-tpm2_create -C primary.ctx -u obj.pub -r obj.priv
+try:
+$ tpm2_evictcontrol -C o -c key.ctx
 
-# create a sealed object
-tpm2_create -C primary.ctx -i seal.dat -u obj.pub -r obj.priv
+-- =
 
-# load the private and public portions into the TPM
-tpm2_load -C primary.ctx -u obj.pub -r obj.priv -c key.ctx
+Tadeusz
 
-# unseal the data
-tpm2_unseal -c key.ctx
-
-But after a power cycle if I run '*tpm2_unseal -c key.ctx*' I get this erro=
-r:
-
-*WARNING:esys:src/tss2-esys/api/Esys_ContextLoad.c:279:Esys_ContextLoad_Fin=
-ish() Received TPM Error ERROR:esys:src/tss2-esys/api/Esys_ContextLoad.c:93=
-:Esys_ContextLoad() Esys Finish ErrorCode (0x000001df) ERROR: Esys_ContextL=
-oad(0x1DF) - tpm:parameter(1):integrity check failed ERROR: Invalid item ha=
-ndle authorization ERROR: Unable to run tpm2_unseal*
-
-I am using the tpm_server (emulator) if that makes any difference.
-
-So what is the best way to load a small string into the tpm2 and be able to=
- pull it out anytime in the future, even after power loss. =
-
-
-
-Thanks
-
-
---===============7393892451093726762==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
-
-PCFET0NUWVBFIGh0bWw+PGh0bWw+PGhlYWQ+PHRpdGxlPjwvdGl0bGU+PHN0eWxlIHR5cGU9InRl
-eHQvY3NzIj5wLk1zb05vcm1hbCxwLk1zb05vU3BhY2luZ3ttYXJnaW46MH08L3N0eWxlPjwvaGVh
-ZD48Ym9keT48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPkkgd2FudCB0byBwdXQgYSBz
-bWFsbCBzdHJpbmcgaW50byB0aGUgVFBNMiBhbmQgYmUgYWJsZSB0byByZWNhbGwgaXQgb3ZlciBy
-ZXN0YXJ0cy4mbmJzcDsgSGVyZSBpcyB3aGF0IEkgaGF2ZSB0cmllZDo8YnI+PC9kaXY+PGRpdiBz
-dHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1p
-bHk6QXJpYWw7Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IG1lbmxvLCBjb25zb2xhcywgbW9u
-b3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xhc3M9ImZvbnQiPiMgcHV0IGRhdGEgaW4gZmlsZSB0aGF0
-IGlzIHRvIGJlIHNlYWxlZDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IG1lbmxvLCBj
-b25zb2xhcywgbW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xhc3M9ImZvbnQiPjxicj48L3NwYW4+
-PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48c3BhbiBzdHlsZT0iZm9udC1m
-YW1pbHk6IG1lbmxvLCBjb25zb2xhcywgbW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xhc3M9ImZv
-bnQiPmVjaG8gIm15IHNlYWxlZCBkYXRhIiAmZ3Q7IHNlYWwuZGF0PC9zcGFuPjxzcGFuIHN0eWxl
-PSJmb250LWZhbWlseTogbWVubG8sIGNvbnNvbGFzLCBtb25vc3BhY2UsIHNhbnMtc2VyaWY7IiBj
-bGFzcz0iZm9udCI+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlh
-bDsiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogbWVubG8sIGNvbnNvbGFzLCBtb25vc3BhY2Us
-IHNhbnMtc2VyaWY7IiBjbGFzcz0iZm9udCI+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2IHN0eWxlPSJm
-b250LWZhbWlseTpBcmlhbDsiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogbWVubG8sIGNvbnNv
-bGFzLCBtb25vc3BhY2UsIHNhbnMtc2VyaWY7IiBjbGFzcz0iZm9udCI+IyBjcmVhdGUgYSBwcmlt
-YXJ5IGtleTwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IG1lbmxvLCBjb25zb2xhcywg
-bW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xhc3M9ImZvbnQiPjxicj48L3NwYW4+PC9kaXY+PGRp
-diBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IG1l
-bmxvLCBjb25zb2xhcywgbW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xhc3M9ImZvbnQiPnRwbTJf
-Y3JlYXRlcHJpbWFyeSAtYyBwcmltYXJ5LmN0eDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1p
-bHk6IG1lbmxvLCBjb25zb2xhcywgbW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xhc3M9ImZvbnQi
-Pjxicj48L3NwYW4+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48c3BhbiBz
-dHlsZT0iZm9udC1mYW1pbHk6IG1lbmxvLCBjb25zb2xhcywgbW9ub3NwYWNlLCBzYW5zLXNlcmlm
-OyIgY2xhc3M9ImZvbnQiPjxicj48L3NwYW4+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
-QXJpYWw7Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IG1lbmxvLCBjb25zb2xhcywgbW9ub3Nw
-YWNlLCBzYW5zLXNlcmlmOyIgY2xhc3M9ImZvbnQiPiMgY3JlYXRlIGEgY2hpbGQga2V5IGluIHB1
-YmxpYyBhbmQgcHJpdmF0ZSBwYXJ0czwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IG1l
-bmxvLCBjb25zb2xhcywgbW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xhc3M9ImZvbnQiPjxicj48
-L3NwYW4+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48c3BhbiBzdHlsZT0i
-Zm9udC1mYW1pbHk6IG1lbmxvLCBjb25zb2xhcywgbW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xh
-c3M9ImZvbnQiPnRwbTJfY3JlYXRlIC1DIHByaW1hcnkuY3R4IC11IG9iai5wdWIgLXIgb2JqLnBy
-aXY8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiBtZW5sbywgY29uc29sYXMsIG1vbm9z
-cGFjZSwgc2Fucy1zZXJpZjsiIGNsYXNzPSJmb250Ij48YnI+PC9zcGFuPjwvZGl2PjxkaXYgc3R5
-bGU9ImZvbnQtZmFtaWx5OkFyaWFsOyI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiBtZW5sbywg
-Y29uc29sYXMsIG1vbm9zcGFjZSwgc2Fucy1zZXJpZjsiIGNsYXNzPSJmb250Ij48YnI+PC9zcGFu
-PjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsOyI+PHNwYW4gc3R5bGU9ImZvbnQt
-ZmFtaWx5OiBtZW5sbywgY29uc29sYXMsIG1vbm9zcGFjZSwgc2Fucy1zZXJpZjsiIGNsYXNzPSJm
-b250Ij4jIGNyZWF0ZSBhIHNlYWxlZCBvYmplY3Q8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtZmFt
-aWx5OiBtZW5sbywgY29uc29sYXMsIG1vbm9zcGFjZSwgc2Fucy1zZXJpZjsiIGNsYXNzPSJmb250
-Ij48YnI+PC9zcGFuPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsOyI+PHNwYW4g
-c3R5bGU9ImZvbnQtZmFtaWx5OiBtZW5sbywgY29uc29sYXMsIG1vbm9zcGFjZSwgc2Fucy1zZXJp
-ZjsiIGNsYXNzPSJmb250Ij50cG0yX2NyZWF0ZSAtQyBwcmltYXJ5LmN0eCAtaSBzZWFsLmRhdCAt
-dSBvYmoucHViIC1yIG9iai5wcml2PC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogbWVu
-bG8sIGNvbnNvbGFzLCBtb25vc3BhY2UsIHNhbnMtc2VyaWY7IiBjbGFzcz0iZm9udCI+PGJyPjwv
-c3Bhbj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPjxzcGFuIHN0eWxlPSJm
-b250LWZhbWlseTogbWVubG8sIGNvbnNvbGFzLCBtb25vc3BhY2UsIHNhbnMtc2VyaWY7IiBjbGFz
-cz0iZm9udCI+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsi
-PjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogbWVubG8sIGNvbnNvbGFzLCBtb25vc3BhY2UsIHNh
-bnMtc2VyaWY7IiBjbGFzcz0iZm9udCI+IyBsb2FkIHRoZSBwcml2YXRlIGFuZCBwdWJsaWMgcG9y
-dGlvbnMgaW50byB0aGUgVFBNPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogbWVubG8s
-IGNvbnNvbGFzLCBtb25vc3BhY2UsIHNhbnMtc2VyaWY7IiBjbGFzcz0iZm9udCI+PGJyPjwvc3Bh
-bj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPjxzcGFuIHN0eWxlPSJmb250
-LWZhbWlseTogbWVubG8sIGNvbnNvbGFzLCBtb25vc3BhY2UsIHNhbnMtc2VyaWY7IiBjbGFzcz0i
-Zm9udCI+dHBtMl9sb2FkIC1DIHByaW1hcnkuY3R4IC11IG9iai5wdWIgLXIgb2JqLnByaXYgLWMg
-a2V5LmN0eDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IG1lbmxvLCBjb25zb2xhcywg
-bW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xhc3M9ImZvbnQiPjxicj48L3NwYW4+PC9kaXY+PGRp
-diBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IG1l
-bmxvLCBjb25zb2xhcywgbW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xhc3M9ImZvbnQiPjxicj48
-L3NwYW4+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48c3BhbiBzdHlsZT0i
-Zm9udC1mYW1pbHk6IG1lbmxvLCBjb25zb2xhcywgbW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xh
-c3M9ImZvbnQiPiMgdW5zZWFsIHRoZSBkYXRhPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWls
-eTogbWVubG8sIGNvbnNvbGFzLCBtb25vc3BhY2UsIHNhbnMtc2VyaWY7IiBjbGFzcz0iZm9udCI+
-PGJyPjwvc3Bhbj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPjxzcGFuIHN0
-eWxlPSJmb250LWZhbWlseTogbWVubG8sIGNvbnNvbGFzLCBtb25vc3BhY2UsIHNhbnMtc2VyaWY7
-IiBjbGFzcz0iZm9udCI+dHBtMl91bnNlYWwgLWMga2V5LmN0eDwvc3Bhbj48c3BhbiBzdHlsZT0i
-Zm9udC1mYW1pbHk6IG1lbmxvLCBjb25zb2xhcywgbW9ub3NwYWNlLCBzYW5zLXNlcmlmOyIgY2xh
-c3M9ImZvbnQiPjxicj48L3NwYW4+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7
-Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij5CdXQgYWZ0ZXIgYSBw
-b3dlciBjeWNsZSBpZiBJIHJ1biAnPGk+dHBtMl91bnNlYWwgLWMga2V5LmN0eDwvaT4nIEkgZ2V0
-IHRoaXMgZXJyb3I6PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsOyI+PGJy
-PjwvZGl2PjxwPjxpPldBUk5JTkc6ZXN5czpzcmMvdHNzMi1lc3lzL2FwaS9Fc3lzX0NvbnRleHRM
-b2FkLmM6Mjc5OkVzeXNfQ29udGV4dExvYWRfRmluaXNoKCkgUmVjZWl2ZWQgVFBNIEVycm9yIApF
-UlJPUjplc3lzOnNyYy90c3MyLWVzeXMvYXBpL0VzeXNfQ29udGV4dExvYWQuYzo5MzpFc3lzX0Nv
-bnRleHRMb2FkKCkgRXN5cyBGaW5pc2ggRXJyb3JDb2RlICgweDAwMDAwMWRmKSAKRVJST1I6IEVz
-eXNfQ29udGV4dExvYWQoMHgxREYpIC0gdHBtOnBhcmFtZXRlcigxKTppbnRlZ3JpdHkgY2hlY2sg
-ZmFpbGVkCkVSUk9SOiBJbnZhbGlkIGl0ZW0gaGFuZGxlIGF1dGhvcml6YXRpb24KRVJST1I6IFVu
-YWJsZSB0byBydW4gdHBtMl91bnNlYWw8L2k+PGJyPjwvcD48cD5JIGFtIHVzaW5nIHRoZSB0cG1f
-c2VydmVyIChlbXVsYXRvcikgaWYgdGhhdCBtYWtlcyBhbnkgZGlmZmVyZW5jZS48YnI+PC9wPjxw
-PlNvIHdoYXQgaXMgdGhlIGJlc3Qgd2F5IHRvIGxvYWQgYSBzbWFsbCBzdHJpbmcgaW50byB0aGUg
-dHBtMiBhbmQgYmUgYWJsZSB0byBwdWxsIGl0IG91dCBhbnl0aW1lIGluIHRoZSBmdXR1cmUsIGV2
-ZW4gYWZ0ZXIgcG93ZXIgbG9zcy4gPGJyPjwvcD48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlh
-bDsiPjxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPlRoYW5rczxicj48
-L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPjxkaXYgc3R5bGU9ImZvbnQtZmFt
-aWx5OkFyaWFsOyI+PC9kaXY+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48
-YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48YnI+PC9kaXY+PC9ib2R5
-PjwvaHRtbD4=
---===============7393892451093726762==--
+--===============7557610057720008186==--
 
