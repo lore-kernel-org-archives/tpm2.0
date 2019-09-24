@@ -1,136 +1,153 @@
-Content-Type: multipart/mixed; boundary="===============5761552405280483100=="
+Content-Type: multipart/mixed; boundary="===============5424101327478666497=="
 MIME-Version: 1.0
-From: Trey Weaver <treyweaver at fastmail.net>
-Subject: Re: [tpm2] tpm2 Digest, Vol 27, Issue 23
-Date: Fri, 20 Sep 2019 19:46:45 -0400
-Message-ID: <00bfec8a-3fbc-4ca7-940f-be8b7930cdfe@www.fastmail.com>
-In-Reply-To: mailman.9.1569006001.7204.tpm2@lists.01.org
+From: ZhengYu Tsai <kalohomulder at gmail.com>
+Subject: [tpm2] How to generate the statically linked executable
+Date: Tue, 24 Sep 2019 16:50:32 +0800
+Message-ID: <CAAG8Em0RUDcgh+dqexdrFY2KHJo95OQOpEnVj7anSSVrVTePRQ@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5761552405280483100==
+--===============5424101327478666497==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-It looked like the command worked OK.  It gave me a handle of 0x800000 or s=
-omething.  Then I rebooted my machine and tried the command "tpm2_unseal -c=
- key.ctx" and I got this error:
+Hi everyone,
 
-WARNING:esys:src/tss2-esys/api/Esys_ContextLoad.c:279:Esys_ContextLoad_Fini=
-sh() Received TPM Error =
+May i ask does anyone know or fixed similar issue as below ?
 
-ERROR:esys:src/tss2-esys/api/Esys_ContextLoad.c:93:Esys_ContextLoad() Esys =
-Finish ErrorCode (0x000001df) =
+Thanks for your reply
 
-ERROR: Esys_ContextLoad(0x1DF) - tpm:parameter(1):integrity check failed
-ERROR: Invalid item handle authorization
-ERROR: Unable to run tpm2_unseal
+Context
 
-Do I need to do anything before I call the unseal after the power cycle?
+   - Hardware:
+   i686
+   - Operating system :
+   Ubuntu 16.04.6 LTS
 
-Thanks.
+Bug Report
 
+   - Expected Behavior
+   Builds the statically linked executables in tpm2-tools/tools
 
-On Fri, Sep 20, 2019, at 3:00 PM, tpm2-request(a)lists.01.org wrote:
-> Send tpm2 mailing list submissions to
-> 	tpm2(a)lists.01.org
-> =
+derek(a)ubuntu:~/workdir/tpm2-tools$ file tools/tpm2_*
+tools/tpm2_activatecredential: ELF 32-bit LSB executable, Intel 80386,
+version 1 (GNU/Linux), statically linked, for GNU/Linux 2.6.32,
+BuildID[sha1]=3D91a0834f96856f15537fb75b1d6f822e31b07995, not stripped
 
-> To subscribe or unsubscribe via the World Wide Web, visit
-> 	https://lists.01.org/mailman/listinfo/tpm2
-> or, via email, send a message with subject or body 'help' to
-> 	tpm2-request(a)lists.01.org
-> =
+   - Actual Behavior
+   Can't compile completely
 
-> You can reach the person managing the list at
-> 	tpm2-owner(a)lists.01.org
-> =
+/usr/bin/ld: attempted static link of dynamic object
+`/usr/lib/i386-linux-gnu/libcurl-gnutls.so'
+collect2: error: ld returned 1 exit status
+Makefile:2170: recipe for target 'tools/tpm2_getekcertificate' failed
+make: *** [tools/tpm2_getekcertificate] Error 1
 
-> When replying, please edit your Subject line so it is more specific
-> than "Re: Contents of tpm2 digest..."
-> =
+   -
 
-> =
+   Steps to Reproduce
+   // install tpm2-tss
+   ./configure "CFLAGS=3D--static" --enable-shared=3Dno
+   make
+   sudo make install
+   // Install tpm2-tools
+   ./configure "CFLAGS=3D--static" --enable-shared=3Dno --disable-hardening
+   make
+   -
 
-> Today's Topics:
-> =
+   Possible Solution
+   ./configure --parameter
+   or
+   modify Makefile
 
->    1. Putting a persistant string into the tpm2 using tpm2_tools.
->       (Trey Weaver)
->    2. Re: Putting a persistant string into the tpm2 using
->       tpm2_tools. (Tadeusz Struk)
-> =
+--===============5424101327478666497==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-> =
+PGRpdiBkaXI9Imx0ciI+SGkgZXZlcnlvbmUsPGRpdj48YnI+PC9kaXY+PGRpdj5NYXkgaSBhc2sg
+ZG9lcyBhbnlvbmUga25vdyBvciBmaXhlZCBzaW1pbGFyIGlzc3VlIGFzIGJlbG93ID88L2Rpdj48
+ZGl2Pjxicj48L2Rpdj48ZGl2PlRoYW5rcyBmb3IgeW91ciByZXBseTwvZGl2PjxkaXY+PGJyPjwv
+ZGl2PjxkaXY+PGgxIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2luOjBweCAwcHgg
+MTZweDtsaW5lLWhlaWdodDoxLjI1O3BhZGRpbmctYm90dG9tOjAuM2VtO2JvcmRlci1ib3R0b206
+MXB4IHNvbGlkIHJnYigyMzQsMjM2LDIzOSk7Y29sb3I6cmdiKDM2LDQxLDQ2KTtmb250LWZhbWls
+eTotYXBwbGUtc3lzdGVtLEJsaW5rTWFjU3lzdGVtRm9udCwmcXVvdDtTZWdvZSBVSSZxdW90OyxI
+ZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiwmcXVvdDtBcHBsZSBDb2xvciBFbW9qaSZxdW90Oywm
+cXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90OyI+Q29udGV4dDwvaDE+PHVsIHN0eWxlPSJib3gtc2l6
+aW5nOmJvcmRlci1ib3g7cGFkZGluZy1sZWZ0OjJlbTttYXJnaW4tdG9wOjBweDttYXJnaW4tYm90
+dG9tOjE2cHg7Y29sb3I6cmdiKDM2LDQxLDQ2KTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLEJs
+aW5rTWFjU3lzdGVtRm9udCwmcXVvdDtTZWdvZSBVSSZxdW90OyxIZWx2ZXRpY2EsQXJpYWwsc2Fu
+cy1zZXJpZiwmcXVvdDtBcHBsZSBDb2xvciBFbW9qaSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9q
+aSZxdW90Oztmb250LXNpemU6MTRweCI+PGxpIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7
+bWFyZ2luLWxlZnQ6MHB4Ij5IYXJkd2FyZTo8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJv
+eCI+aTY4NjwvbGk+PGxpIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2luLXRvcDow
+LjI1ZW07bWFyZ2luLWxlZnQ6MHB4Ij5PcGVyYXRpbmcgc3lzdGVtIDo8YnIgc3R5bGU9ImJveC1z
+aXppbmc6Ym9yZGVyLWJveCI+VWJ1bnR1IDE2LjA0LjYgTFRTPC9saT48L3VsPjxoMSBzdHlsZT0i
+Ym94LXNpemluZzpib3JkZXItYm94O21hcmdpbjoyNHB4IDBweCAxNnB4O2xpbmUtaGVpZ2h0OjEu
+MjU7cGFkZGluZy1ib3R0b206MC4zZW07Ym9yZGVyLWJvdHRvbToxcHggc29saWQgcmdiKDIzNCwy
+MzYsMjM5KTtjb2xvcjpyZ2IoMzYsNDEsNDYpO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxp
+bmtNYWNTeXN0ZW1Gb250LCZxdW90O1NlZ29lIFVJJnF1b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5z
+LXNlcmlmLCZxdW90O0FwcGxlIENvbG9yIEVtb2ppJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2pp
+JnF1b3Q7Ij5CdWcgUmVwb3J0PC9oMT48dWwgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDtw
+YWRkaW5nLWxlZnQ6MmVtO21hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MTZweDtjb2xvcjpy
+Z2IoMzYsNDEsNDYpO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0ZW1Gb250
+LCZxdW90O1NlZ29lIFVJJnF1b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmLCZxdW90O0Fw
+cGxlIENvbG9yIEVtb2ppJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7O2ZvbnQtc2l6
+ZToxNHB4Ij48bGkgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4tbGVmdDowcHgi
+PkV4cGVjdGVkIEJlaGF2aW9yPGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3giPkJ1aWxk
+cyB0aGUgc3RhdGljYWxseSBsaW5rZWQgZXhlY3V0YWJsZXMgaW4gdHBtMi10b29scy90b29sczwv
+bGk+PC91bD48cCBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94O21hcmdpbi10b3A6MHB4O21h
+cmdpbi1ib3R0b206MTZweDtjb2xvcjpyZ2IoMzYsNDEsNDYpO2ZvbnQtZmFtaWx5Oi1hcHBsZS1z
+eXN0ZW0sQmxpbmtNYWNTeXN0ZW1Gb250LCZxdW90O1NlZ29lIFVJJnF1b3Q7LEhlbHZldGljYSxB
+cmlhbCxzYW5zLXNlcmlmLCZxdW90O0FwcGxlIENvbG9yIEVtb2ppJnF1b3Q7LCZxdW90O1NlZ29l
+IFVJIEVtb2ppJnF1b3Q7O2ZvbnQtc2l6ZToxNHB4Ij5kZXJla0B1YnVudHU6fi93b3JrZGlyL3Rw
+bTItdG9vbHMkIGZpbGUgdG9vbHMvdHBtMl8qPGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1i
+b3giPnRvb2xzL3RwbTJfYWN0aXZhdGVjcmVkZW50aWFsOiBFTEYgMzItYml0IExTQiBleGVjdXRh
+YmxlLCBJbnRlbCA4MDM4NiwgdmVyc2lvbiAxIChHTlUvTGludXgpLMKgPHNwYW4gc3R5bGU9ImJv
+eC1zaXppbmc6Ym9yZGVyLWJveDtmb250LXdlaWdodDo2MDAiPnN0YXRpY2FsbHkgbGlua2VkPC9z
+cGFuPiwgZm9yIEdOVS9MaW51eCAyLjYuMzIsIEJ1aWxkSURbc2hhMV09OTFhMDgzNGY5Njg1NmYx
+NTUzN2ZiNzViMWQ2ZjgyMmUzMWIwNzk5NSwgbm90IHN0cmlwcGVkPC9wPjx1bCBzdHlsZT0iYm94
+LXNpemluZzpib3JkZXItYm94O3BhZGRpbmctbGVmdDoyZW07bWFyZ2luLXRvcDowcHg7bWFyZ2lu
+LWJvdHRvbToxNnB4O2NvbG9yOnJnYigzNiw0MSw0Nik7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3Rl
+bSxCbGlua01hY1N5c3RlbUZvbnQsJnF1b3Q7U2Vnb2UgVUkmcXVvdDssSGVsdmV0aWNhLEFyaWFs
+LHNhbnMtc2VyaWYsJnF1b3Q7QXBwbGUgQ29sb3IgRW1vamkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkg
+RW1vamkmcXVvdDs7Zm9udC1zaXplOjE0cHgiPjxsaSBzdHlsZT0iYm94LXNpemluZzpib3JkZXIt
+Ym94O21hcmdpbi1sZWZ0OjBweCI+QWN0dWFsIEJlaGF2aW9yPGJyIHN0eWxlPSJib3gtc2l6aW5n
+OmJvcmRlci1ib3giPkNhbiYjMzk7dCBjb21waWxlIGNvbXBsZXRlbHk8L2xpPjwvdWw+PHAgc3R5
+bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjE2
+cHg7Y29sb3I6cmdiKDM2LDQxLDQ2KTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLEJsaW5rTWFj
+U3lzdGVtRm9udCwmcXVvdDtTZWdvZSBVSSZxdW90OyxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJp
+ZiwmcXVvdDtBcHBsZSBDb2xvciBFbW9qaSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90
+Oztmb250LXNpemU6MTRweCI+L3Vzci9iaW4vbGQ6IGF0dGVtcHRlZCBzdGF0aWMgbGluayBvZiBk
+eW5hbWljIG9iamVjdCBgL3Vzci9saWIvaTM4Ni1saW51eC1nbnUvbGliY3VybC1nbnV0bHMuc28m
+IzM5OzxiciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5jb2xsZWN0MjogZXJyb3I6IGxk
+IHJldHVybmVkIDEgZXhpdCBzdGF0dXM8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+
+TWFrZWZpbGU6MjE3MDogcmVjaXBlIGZvciB0YXJnZXQgJiMzOTt0b29scy90cG0yX2dldGVrY2Vy
+dGlmaWNhdGUmIzM5OyBmYWlsZWQ8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+bWFr
+ZTogKioqIFt0b29scy90cG0yX2dldGVrY2VydGlmaWNhdGVdIEVycm9yIDE8L3A+PHVsIHN0eWxl
+PSJib3gtc2l6aW5nOmJvcmRlci1ib3g7cGFkZGluZy1sZWZ0OjJlbTttYXJnaW4tdG9wOjBweDtj
+b2xvcjpyZ2IoMzYsNDEsNDYpO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0
+ZW1Gb250LCZxdW90O1NlZ29lIFVJJnF1b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmLCZx
+dW90O0FwcGxlIENvbG9yIEVtb2ppJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7O2Zv
+bnQtc2l6ZToxNHB4O21hcmdpbi1ib3R0b206MHB4Ij48bGkgc3R5bGU9ImJveC1zaXppbmc6Ym9y
+ZGVyLWJveDttYXJnaW4tbGVmdDowcHgiPjxwIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7
+bWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbToxNnB4Ij5TdGVwcyB0byBSZXByb2R1Y2U8YnIg
+c3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+Ly8gaW5zdGFsbCB0cG0yLXRzczxiciBzdHls
+ZT0iYm94LXNpemluZzpib3JkZXItYm94Ij4uL2NvbmZpZ3VyZSAmcXVvdDtDRkxBR1M9LS1zdGF0
+aWMmcXVvdDsgLS1lbmFibGUtc2hhcmVkPW5vPGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1i
+b3giPm1ha2U8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+c3VkbyBtYWtlIGluc3Rh
+bGw8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+Ly8gSW5zdGFsbCB0cG0yLXRvb2xz
+PGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3giPi4vY29uZmlndXJlICZxdW90O0NGTEFH
+Uz0tLXN0YXRpYyZxdW90OyAtLWVuYWJsZS1zaGFyZWQ9bm8gLS1kaXNhYmxlLWhhcmRlbmluZzxi
+ciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5tYWtlPC9wPjwvbGk+PGxpIHN0eWxlPSJi
+b3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2luLXRvcDowLjI1ZW07bWFyZ2luLWxlZnQ6MHB4Ij48
+cCBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94O21hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0
+b206MTZweCI+UG9zc2libGUgU29sdXRpb248YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJv
+eCI+Li9jb25maWd1cmUgLS1wYXJhbWV0ZXI8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJv
+eCI+b3I8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+bW9kaWZ5IE1ha2VmaWxlPC9w
+PjwvbGk+PC91bD48L2Rpdj48L2Rpdj4K
 
-> ----------------------------------------------------------------------
-> =
-
-> Message: 1
-> Date: Fri, 20 Sep 2019 10:34:51 -0400
-> From: "Trey Weaver" <treyweaver(a)fastmail.net>
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] Putting a persistant string into the tpm2 using
-> 	tpm2_tools.
-> Message-ID: <62b22807-115d-444b-af44-b1c0ab16daf9(a)www.fastmail.com>
-> Content-Type: text/plain; charset=3D"us-ascii"
-> =
-
-> I want to put a small string into the TPM2 and be able to recall it =
-
-> over restarts. Here is what I have tried:
-> =
-
-> # put data in file that is to be sealed
-> echo "my sealed data" > seal.dat
-> =
-
-> # create a primary key
-> tpm2_createprimary -c primary.ctx
-> =
-
-> # create a child key in public and private parts
-> tpm2_create -C primary.ctx -u obj.pub -r obj.priv
-> =
-
-> # create a sealed object
-> tpm2_create -C primary.ctx -i seal.dat -u obj.pub -r obj.priv
-> =
-
-> # load the private and public portions into the TPM
-> tpm2_load -C primary.ctx -u obj.pub -r obj.priv -c key.ctx
-> =
-
-> # unseal the data
-> tpm2_unseal -c key.ctx
-> =
-
-> But after a power cycle if I run '*tpm2_unseal -c key.ctx*' I get this er=
-ror:
-> =
-
-> *WARNING:esys:src/tss2-esys/api/Esys_ContextLoad.c:279:Esys_ContextLoad_F=
-inish() Received TPM Error ERROR:esys:src/tss2-esys/api/Esys_ContextLoad.c:=
-93:Esys_ContextLoad() Esys Finish ErrorCode (0x000001df) ERROR: Esys_Contex=
-tLoad(0x1DF) - tpm:parameter(1):integrity check failed ERROR: Invalid item =
-handle authorization ERROR: Unable to run tpm2_unseal*
-> =
-
-> I am using the tpm_server (emulator) if that makes any difference.
-> =
-
-> So what is the best way to load a small string into the tpm2 and be =
-
-> able to pull it out anytime in the future, even after power loss. =
-
-> =
-
-> =
-
-> Thanks
-> =
-
->=20
---===============5761552405280483100==--
+--===============5424101327478666497==--
 
