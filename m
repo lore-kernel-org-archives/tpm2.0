@@ -1,152 +1,160 @@
-Content-Type: multipart/mixed; boundary="===============6819661563270903019=="
+Content-Type: multipart/mixed; boundary="===============6061156190289317541=="
 MIME-Version: 1.0
-From: ZhengYu Tsai <kalohomulder at gmail.com>
-Subject: Re: [tpm2] How to generate the statically linked executable
-Date: Thu, 26 Sep 2019 09:40:32 +0800
-Message-ID: <CAAG8Em3Y1OajU5gDiYZSn6vnVs=WLPCHX0naNyeuEj7LSqpPOw@mail.gmail.com>
-In-Reply-To: 7a67cb43-69cb-785c-259c-7d908a0d773e@intel.com
+From: Zhao, Shirley <shirley.zhao at intel.com>
+Subject: [tpm2] [TPM][tpm2_tools] Why tpm2_nvreadlock can't work normally with
+ the attribute "policyread|policywrite|read_stclear"?
+Date: Thu, 26 Sep 2019 07:39:26 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E490765B6@shsmsx102.ccr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6819661563270903019==
+--===============6061156190289317541==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Tadeusz :
-Thanks for your reply.
+Hi, all,
 
-*./configure "LDFLAGS=3D--static" --disable-shared *
-it will hang at :
-checking whether the linker accepts -shared... yes
-checking whether C compiler accepts -fPIE... yes
-checking whether the linker accepts -pie... no
-configure: error: Cannot enable -pie, consider configuring with
---disable-hardening
+I want to define a NV index with attribute "policyread|policywrite|read_stc=
+lear", but get error when tpm2_nvreadlock.
+Only set the attribute as "policyread|policywrite|ownerwrite|ownerread|read=
+_stclear", tpm2_nvreadlock can work normally.
 
-so I adjusted it :
-* ./configure "LDFLAGS=3D--static" --disable-shared --disable-hardening ;
-make*
-The problem is the same as before :
-/home/derek/workdir/tpm2-tss/src/tss2-tcti/tctildr-dl.c:84: warning: Using
-'dlopen' in statically linked applications requires at runtime the shared
-libraries from the glibc version used for linking
-  CC       tools/tools_tpm2_getekcertificate-tpm2_getekcertificate.o
-  CC       tools/tools_tpm2_getekcertificate-tpm2_tool.o
-  CCLD     tools/tpm2_getekcertificate
-/usr/local/lib/libtss2-esys.a(src_tss2_esys_libtss2_esys_la-tctildr-dl.o):
-In function `handle_from_name':
-/home/derek/workdir/tpm2-tss/src/tss2-tcti/tctildr-dl.c:84: warning: Using
-'dlopen' in statically linked applications requires at runtime the shared
-libraries from the glibc version used for linking
-/usr/bin/ld: attempted static link of dynamic object
-`/usr/lib/i386-linux-gnu/libcurl-gnutls.so'
-collect2: error: ld returned 1 exit status
-Makefile:2170: recipe for target 'tools/tpm2_getekcertificate' failed
-make: *** [tools/tpm2_getekcertificate] Error 1
+The following is the steps:
+$ tpm2_nvdefine -x 0x1500018 -a 0x40000001 -s 64 -L pcr.policy -t "policyre=
+ad|policywrite|read_stclear"
+$ tpm2_nvwrite -x 0x1500018 -a 0x1500018 -L sha256:7 -o 0 test.bin
+$ tpm2_nvread -x 0x1500018 -a 0x1500018 -L sha256:7
 
-I also found the tpm2-tss configure *--enable-shared=3Dno,*
-This option is necessary, it will affect the compilation tpm2-tools.
+$ tpm2_nvreadlock -x 0x1500018 -a 0x1500018
+ERROR on line: "82" in file: "tools/tpm2_nvreadlock.c": Failed to lock NVRA=
+M area at index 0x1500018
+ERROR on line: "81" in file: "./lib/log.h": Tss2_Sys_NV_ReadLock(0x12F) - t=
+pm:error(2.0): authValue or authPolicy is not available for selected entity
+ERROR on line: "166" in file: "tools/tpm2_tool.c": Unable to run tpm2_nvrea=
+dlock
+
+Seems tpm2_nvreadlock can't accept the policy option, right?
+If so, is there any plan to support policy?
+
+Thanks a lot.
 
 
+-        Shirley
 
-Tadeusz Struk <tadeusz.struk(a)intel.com> =E6=96=BC 2019=E5=B9=B49=E6=9C=88=
-26=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=884:55=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-
-> On 9/24/19 1:50 AM, ZhengYu Tsai wrote:
->
-> > /usr/bin/ld: attempted static link of dynamic object
-> `/usr/lib/i386-linux-gnu/libcurl-gnutls.so'
-> > collect2: error: ld returned 1 exit status
-> > Makefile:2170: recipe for target 'tools/tpm2_getekcertificate' failed
-> > make: *** [tools/tpm2_getekcertificate] Error 1
-> >
-> >   *
-> >
-> >     Steps to Reproduce
-> >     // install tpm2-tss
-> >     ./configure "CFLAGS=3D--static" --enable-shared=3Dno
-> >     make
-> >     sudo make install
-> >     // Install tpm2-tools
-> >     ./configure "CFLAGS=3D--static" --enable-shared=3Dno --disable-hard=
-ening
->
-> Don't you need to set LDFLAGS instead of CFLAGS:
->
-> ./configure "LDFLAGS=3D--static" --disable-shared
->
-> Thanks,
-> --
-> Tadeusz
->
-
---===============6819661563270903019==
+--===============6061156190289317541==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGZvbnQgY29sb3I9IiMwMDAwZmYiPkhpIFRh
-ZGV1c3ogOjwvZm9udD48ZGl2Pjxmb250IGNvbG9yPSIjMDAwMGZmIj5UaGFua3MgZm9yIHlvdXLC
-oHJlcGx5LjwvZm9udD48L2Rpdj48ZGl2PjxiPjxicj48L2I+PC9kaXY+PGRpdj48Yj4uL2NvbmZp
-Z3VyZSAmcXVvdDtMREZMQUdTPS0tc3RhdGljJnF1b3Q7IC0tZGlzYWJsZS1zaGFyZWTCoDwvYj48
-L2Rpdj48ZGl2Pjxmb250IGNvbG9yPSIjMDAwMGZmIj5pdCB3aWxsIGhhbmcgYXQgOjwvZm9udD48
-L2Rpdj48ZGl2PmNoZWNraW5nIHdoZXRoZXIgdGhlIGxpbmtlciBhY2NlcHRzIC1zaGFyZWQuLi4g
-eWVzPGJyPmNoZWNraW5nIHdoZXRoZXIgQyBjb21waWxlciBhY2NlcHRzIC1mUElFLi4uIHllczxi
-cj5jaGVja2luZyB3aGV0aGVyIHRoZSBsaW5rZXIgYWNjZXB0cyAtcGllLi4uIG5vPGJyPmNvbmZp
-Z3VyZTogZXJyb3I6IENhbm5vdCBlbmFibGUgLXBpZSwgY29uc2lkZXIgY29uZmlndXJpbmcgd2l0
-aCAtLWRpc2FibGUtaGFyZGVuaW5nPGJyPjwvZGl2PjxkaXY+wqA8YnI+PC9kaXY+PC9kaXY+PGZv
-bnQgY29sb3I9IiMwMDAwZmYiPnNvIEkgYWRqdXN0ZWQgaXQgOjwvZm9udD48ZGl2PjxiPgoKLi9j
-b25maWd1cmUgJnF1b3Q7TERGTEFHUz0tLXN0YXRpYyZxdW90OyAtLWRpc2FibGUtc2hhcmVkIC0t
-ZGlzYWJsZS1oYXJkZW5pbmcgOyBtYWtlPC9iPjwvZGl2PjxkaXY+PGZvbnQgY29sb3I9IiMwMDAw
-ZmYiPlRoZSBwcm9ibGVtIGlzIHRoZSBzYW1lIGFzIGJlZm9yZSA6PC9mb250Pjxicj48L2Rpdj48
-ZGl2Pi9ob21lL2RlcmVrL3dvcmtkaXIvdHBtMi10c3Mvc3JjL3RzczItdGN0aS90Y3RpbGRyLWRs
-LmM6ODQ6IHdhcm5pbmc6IFVzaW5nICYjMzk7ZGxvcGVuJiMzOTsgaW4gc3RhdGljYWxseSBsaW5r
-ZWQgYXBwbGljYXRpb25zIHJlcXVpcmVzIGF0IHJ1bnRpbWUgdGhlIHNoYXJlZCBsaWJyYXJpZXMg
-ZnJvbSB0aGUgZ2xpYmMgdmVyc2lvbiB1c2VkIGZvciBsaW5raW5nPGJyPsKgIENDIMKgIMKgIMKg
-IHRvb2xzL3Rvb2xzX3RwbTJfZ2V0ZWtjZXJ0aWZpY2F0ZS10cG0yX2dldGVrY2VydGlmaWNhdGUu
-bzxicj7CoCBDQyDCoCDCoCDCoCB0b29scy90b29sc190cG0yX2dldGVrY2VydGlmaWNhdGUtdHBt
-Ml90b29sLm88YnI+wqAgQ0NMRCDCoCDCoCB0b29scy90cG0yX2dldGVrY2VydGlmaWNhdGU8YnI+
-L3Vzci9sb2NhbC9saWIvbGlidHNzMi1lc3lzLmEoc3JjX3RzczJfZXN5c19saWJ0c3MyX2VzeXNf
-bGEtdGN0aWxkci1kbC5vKTogSW4gZnVuY3Rpb24gYGhhbmRsZV9mcm9tX25hbWUmIzM5Ozo8YnI+
-L2hvbWUvZGVyZWsvd29ya2Rpci90cG0yLXRzcy9zcmMvdHNzMi10Y3RpL3RjdGlsZHItZGwuYzo4
-NDogd2FybmluZzogVXNpbmcgJiMzOTtkbG9wZW4mIzM5OyBpbiBzdGF0aWNhbGx5IGxpbmtlZCBh
-cHBsaWNhdGlvbnMgcmVxdWlyZXMgYXQgcnVudGltZSB0aGUgc2hhcmVkIGxpYnJhcmllcyBmcm9t
-IHRoZSBnbGliYyB2ZXJzaW9uIHVzZWQgZm9yIGxpbmtpbmc8YnI+L3Vzci9iaW4vbGQ6IGF0dGVt
-cHRlZCBzdGF0aWMgbGluayBvZiBkeW5hbWljIG9iamVjdCBgL3Vzci9saWIvaTM4Ni1saW51eC1n
-bnUvbGliY3VybC1nbnV0bHMuc28mIzM5Ozxicj5jb2xsZWN0MjogZXJyb3I6IGxkIHJldHVybmVk
-IDEgZXhpdCBzdGF0dXM8YnI+TWFrZWZpbGU6MjE3MDogcmVjaXBlIGZvciB0YXJnZXQgJiMzOTt0
-b29scy90cG0yX2dldGVrY2VydGlmaWNhdGUmIzM5OyBmYWlsZWQ8YnI+bWFrZTogKioqIFt0b29s
-cy90cG0yX2dldGVrY2VydGlmaWNhdGVdIEVycm9yIDE8YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+
-PGRpdj48Zm9udCBjb2xvcj0iIzAwMDBmZiI+SSBhbHNvIGZvdW5kIHRoZSB0cG0yLXRzcyBjb25m
-aWd1cmXCoDxiPi0tZW5hYmxlLXNoYXJlZD1ubyw8L2I+PC9mb250PjwvZGl2PjxkaXY+PGZvbnQg
-Y29sb3I9IiMwMDAwZmYiPlRoaXMgb3B0aW9uIGlzIG5lY2Vzc2FyeSwgaXQgd2lsbCBhZmZlY3Qg
-dGhlIGNvbXBpbGF0aW9uIHRwbTItdG9vbHMuPC9mb250PjwvZGl2PjxkaXY+PGJyPjwvZGl2Pjxk
-aXY+PGJyPjwvZGl2PjxkaXY+PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0i
-bHRyIiBjbGFzcz0iZ21haWxfYXR0ciI+VGFkZXVzeiBTdHJ1ayAmbHQ7PGEgaHJlZj0ibWFpbHRv
-OnRhZGV1c3ouc3RydWtAaW50ZWwuY29tIj50YWRldXN6LnN0cnVrQGludGVsLmNvbTwvYT4mZ3Q7
-IOaWvCAyMDE55bm0OeaciDI25pelIOmAseWbmyDkuIrljYg0OjU15a+r6YGT77yaPGJyPjwvZGl2
-PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBw
-eCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxl
-ZnQ6MWV4Ij5PbiA5LzI0LzE5IDE6NTAgQU0sIFpoZW5nWXUgVHNhaSB3cm90ZTo8YnI+Cjxicj4K
-Jmd0OyAvdXNyL2Jpbi9sZDogYXR0ZW1wdGVkIHN0YXRpYyBsaW5rIG9mIGR5bmFtaWMgb2JqZWN0
-IGAvdXNyL2xpYi9pMzg2LWxpbnV4LWdudS9saWJjdXJsLWdudXRscy5zbyYjMzk7PGJyPgomZ3Q7
-IGNvbGxlY3QyOiBlcnJvcjogbGQgcmV0dXJuZWQgMSBleGl0IHN0YXR1czxicj4KJmd0OyBNYWtl
-ZmlsZToyMTcwOiByZWNpcGUgZm9yIHRhcmdldCAmIzM5O3Rvb2xzL3RwbTJfZ2V0ZWtjZXJ0aWZp
-Y2F0ZSYjMzk7IGZhaWxlZDxicj4KJmd0OyBtYWtlOiAqKiogW3Rvb2xzL3RwbTJfZ2V0ZWtjZXJ0
-aWZpY2F0ZV0gRXJyb3IgMTxicj4KJmd0OyA8YnI+CiZndDvCoCDCoCo8YnI+CiZndDsgPGJyPgom
-Z3Q7wqAgwqAgwqBTdGVwcyB0byBSZXByb2R1Y2U8YnI+CiZndDvCoCDCoCDCoC8vIGluc3RhbGwg
-dHBtMi10c3M8YnI+CiZndDvCoCDCoCDCoC4vY29uZmlndXJlICZxdW90O0NGTEFHUz0tLXN0YXRp
-YyZxdW90OyAtLWVuYWJsZS1zaGFyZWQ9bm88YnI+CiZndDvCoCDCoCDCoG1ha2U8YnI+CiZndDvC
-oCDCoCDCoHN1ZG8gbWFrZSBpbnN0YWxsPGJyPgomZ3Q7wqAgwqAgwqAvLyBJbnN0YWxsIHRwbTIt
-dG9vbHM8YnI+CiZndDvCoCDCoCDCoC4vY29uZmlndXJlICZxdW90O0NGTEFHUz0tLXN0YXRpYyZx
-dW90OyAtLWVuYWJsZS1zaGFyZWQ9bm8gLS1kaXNhYmxlLWhhcmRlbmluZzxicj4KPGJyPgpEb24m
-IzM5O3QgeW91IG5lZWQgdG8gc2V0IExERkxBR1MgaW5zdGVhZCBvZiBDRkxBR1M6PGJyPgo8YnI+
-Ci4vY29uZmlndXJlICZxdW90O0xERkxBR1M9LS1zdGF0aWMmcXVvdDsgLS1kaXNhYmxlLXNoYXJl
-ZDxicj4KPGJyPgpUaGFua3MsPGJyPgotLSA8YnI+ClRhZGV1c3o8YnI+CjwvYmxvY2txdW90ZT48
-L2Rpdj48L2Rpdj48L2Rpdj4K
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpXaW5n
+ZGluZ3M7CglwYW5vc2UtMTo1IDAgMCAwIDAgMCAwIDAgMCAwO30KQGZvbnQtZmFjZQoJe2ZvbnQt
+ZmFtaWx5OlNpbVN1bjsKCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQpAZm9udC1mYWNl
+Cgl7Zm9udC1mYW1pbHk6IkNhbWJyaWEgTWF0aCI7CglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMg
+MiA0O30KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7CglwYW5vc2UtMToyIDE1IDUg
+MiAyIDIgNCAzIDIgNDt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpTaW1TdW47CglwYW5vc2Ut
+MToyIDEgNiAwIDMgMSAxIDEgMSAxO30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3Jt
+YWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90
+dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNh
+bnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5
+Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0
+ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cglj
+b2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnAuTXNvTGlzdFBhcmFn
+cmFwaCwgbGkuTXNvTGlzdFBhcmFncmFwaCwgZGl2Lk1zb0xpc3RQYXJhZ3JhcGgKCXttc28tc3R5
+bGUtcHJpb3JpdHk6MzQ7CgltYXJnaW4tdG9wOjBpbjsKCW1hcmdpbi1yaWdodDowaW47CgltYXJn
+aW4tYm90dG9tOjBpbjsKCW1hcmdpbi1sZWZ0Oi41aW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7
+Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpz
+cGFuLkVtYWlsU3R5bGUxNwoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7Cglmb250
+LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7fQouTXNvQ2hw
+RGVmYXVsdAoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5OwoJZm9udC1mYW1pbHk6IkNhbGli
+cmkiLHNhbnMtc2VyaWY7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsK
+CW1hcmdpbjoxLjBpbiAxLjI1aW4gMS4waW4gMS4yNWluO30KZGl2LldvcmRTZWN0aW9uMQoJe3Bh
+Z2U6V29yZFNlY3Rpb24xO30KLyogTGlzdCBEZWZpbml0aW9ucyAqLwpAbGlzdCBsMAoJe21zby1s
+aXN0LWlkOjIxMjM1NDgzMTsKCW1zby1saXN0LXR5cGU6aHlicmlkOwoJbXNvLWxpc3QtdGVtcGxh
+dGUtaWRzOjE1MDUwMTU0MzQgLTc2MDU4MzM4NCA2NzY5ODY5MSA2NzY5ODY5MyA2NzY5ODY4OSA2
+NzY5ODY5MSA2NzY5ODY5MyA2NzY5ODY4OSA2NzY5ODY5MSA2NzY5ODY5Mzt9CkBsaXN0IGwwOmxl
+dmVsMQoJe21zby1sZXZlbC1zdGFydC1hdDozOwoJbXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVs
+bGV0OwoJbXNvLWxldmVsLXRleHQ6LTsKCW1zby1sZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxl
+dmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1p
+bHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgltc28tZmFyZWFzdC1mb250LWZhbWlseTpTaW1TdW47
+fQpAbGlzdCBsMDpsZXZlbDIKCXttc28tbGV2ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cgltc28t
+bGV2ZWwtdGV4dDpvOwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVy
+LXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseToiQ291cmll
+ciBOZXciO30KQGxpc3QgbDA6bGV2ZWwzCgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0
+OwoJbXNvLWxldmVsLXRleHQ6XEYwQTc7Cgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1s
+ZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsKCXRleHQtaW5kZW50Oi0uMjVpbjsKCWZvbnQtZmFt
+aWx5OldpbmdkaW5nczt9CkBsaXN0IGwwOmxldmVsNAoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0
+OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7
+Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglm
+b250LWZhbWlseTpTeW1ib2w7fQpAbGlzdCBsMDpsZXZlbDUKCXttc28tbGV2ZWwtbnVtYmVyLWZv
+cm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpvOwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7
+Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglm
+b250LWZhbWlseToiQ291cmllciBOZXciO30KQGxpc3QgbDA6bGV2ZWw2Cgl7bXNvLWxldmVsLW51
+bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6XEYwQTc7Cgltc28tbGV2ZWwtdGFi
+LXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsKCXRleHQtaW5kZW50
+Oi0uMjVpbjsKCWZvbnQtZmFtaWx5OldpbmdkaW5nczt9CkBsaXN0IGwwOmxldmVsNwoJe21zby1s
+ZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJbXNvLWxl
+dmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0
+LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseTpTeW1ib2w7fQpAbGlzdCBsMDpsZXZlbDgKCXtt
+c28tbGV2ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpvOwoJbXNvLWxl
+dmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0
+LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseToiQ291cmllciBOZXciO30KQGxpc3QgbDA6bGV2
+ZWw5Cgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6XEYw
+QTc7Cgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246
+bGVmdDsKCXRleHQtaW5kZW50Oi0uMjVpbjsKCWZvbnQtZmFtaWx5OldpbmdkaW5nczt9Cm9sCgl7
+bWFyZ2luLWJvdHRvbTowaW47fQp1bAoJe21hcmdpbi1ib3R0b206MGluO30KLS0+PC9zdHlsZT48
+IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3Bp
+ZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+
+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9
+IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBs
+YW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJX
+b3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IaSwgYWxsLCA8bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPkkgd2FudCB0byBkZWZpbmUgYSBOViBpbmRleCB3aXRoIGF0dHJpYnV0ZSAmcXVv
+dDtwb2xpY3lyZWFkfHBvbGljeXdyaXRlfHJlYWRfc3RjbGVhciZxdW90OywgYnV0IGdldCBlcnJv
+ciB3aGVuIHRwbTJfbnZyZWFkbG9jay4KPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPk9ubHkgc2V0IHRoZSBhdHRyaWJ1dGUgYXMgJnF1b3Q7cG9saWN5cmVhZHxwb2xpY3l3cml0
+ZXxvd25lcndyaXRlfG93bmVycmVhZHxyZWFkX3N0Y2xlYXImcXVvdDssIHRwbTJfbnZyZWFkbG9j
+ayBjYW4gd29yayBub3JtYWxseS4KPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGUgZm9sbG93aW5n
+IGlzIHRoZSBzdGVwczo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+JCB0cG0y
+X252ZGVmaW5lIC14IDB4MTUwMDAxOCAtYSAweDQwMDAwMDAxIC1zIDY0IC1MIHBjci5wb2xpY3kg
+LXQgJnF1b3Q7cG9saWN5cmVhZHxwb2xpY3l3cml0ZXxyZWFkX3N0Y2xlYXImcXVvdDs8bzpwPjwv
+bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+JCB0cG0yX252d3JpdGUgLXggMHgxNTAwMDE4
+IC1hIDB4MTUwMDAxOCAtTCBzaGEyNTY6NyAtbyAwIHRlc3QuYmluPG86cD48L286cD48L3A+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPiQgdHBtMl9udnJlYWQgLXggMHgxNTAwMDE4IC1hIDB4MTUwMDAx
+OCAtTCBzaGEyNTY6NzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZu
+YnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+JCB0cG0yX252cmVhZGxvY2sgLXgg
+MHgxNTAwMDE4IC1hIDB4MTUwMDAxODxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij5FUlJPUiBvbiBsaW5lOiAmcXVvdDs4MiZxdW90OyBpbiBmaWxlOiAmcXVvdDt0b29scy90cG0y
+X252cmVhZGxvY2suYyZxdW90OzogRmFpbGVkIHRvIGxvY2sgTlZSQU0gYXJlYSBhdCBpbmRleCAw
+eDE1MDAwMTg8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RVJST1Igb24gbGlu
+ZTogJnF1b3Q7ODEmcXVvdDsgaW4gZmlsZTogJnF1b3Q7Li9saWIvbG9nLmgmcXVvdDs6IFRzczJf
+U3lzX05WX1JlYWRMb2NrKDB4MTJGKSAtIHRwbTplcnJvcigyLjApOiBhdXRoVmFsdWUgb3IgYXV0
+aFBvbGljeSBpcyBub3QgYXZhaWxhYmxlIGZvciBzZWxlY3RlZCBlbnRpdHk8bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RVJST1Igb24gbGluZTogJnF1b3Q7MTY2JnF1b3Q7IGlu
+IGZpbGU6ICZxdW90O3Rvb2xzL3RwbTJfdG9vbC5jJnF1b3Q7OiBVbmFibGUgdG8gcnVuIHRwbTJf
+bnZyZWFkbG9jazxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
+OzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+U2VlbXMgdHBtMl9udnJlYWRsb2NrIGNh
+biYjODIxNzt0IGFjY2VwdCB0aGUgcG9saWN5IG9wdGlvbiwgcmlnaHQ/CjxvOnA+PC9vOnA+PC9w
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JZiBzbywgaXMgdGhlcmUgYW55IHBsYW4gdG8gc3VwcG9y
+dCBwb2xpY3k/IDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
+OzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhhbmtzIGEgbG90LiA8bzpwPjwvbzpw
+PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNz
+PSJNc29MaXN0UGFyYWdyYXBoIiBzdHlsZT0idGV4dC1pbmRlbnQ6LS4yNWluO21zby1saXN0Omww
+IGxldmVsMSBsZm8xIj48IVtpZiAhc3VwcG9ydExpc3RzXT48c3BhbiBzdHlsZT0ibXNvLWxpc3Q6
+SWdub3JlIj4tPHNwYW4gc3R5bGU9ImZvbnQ6Ny4wcHQgJnF1b3Q7VGltZXMgTmV3IFJvbWFuJnF1
+b3Q7Ij4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsKPC9zcGFuPjwv
+c3Bhbj48IVtlbmRpZl0+U2hpcmxleSA8bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9o
+dG1sPgo=
 
---===============6819661563270903019==--
+--===============6061156190289317541==--
 
