@@ -1,286 +1,176 @@
-Content-Type: multipart/mixed; boundary="===============3970959294378524331=="
+Content-Type: multipart/mixed; boundary="===============7674546229255340523=="
 MIME-Version: 1.0
 From: ZhengYu Tsai <kalohomulder at gmail.com>
 Subject: Re: [tpm2] How to generate the statically linked executable
-Date: Fri, 27 Sep 2019 09:10:17 +0800
-Message-ID: <CAAG8Em13B-SuTfP-Ckkjco4r9FbE4k84UD_=XXxFqpPuw6X=Yw@mail.gmail.com>
-In-Reply-To: 6901331d-e7cf-6922-381d-787a7fd83358@intel.com
+Date: Fri, 27 Sep 2019 09:16:44 +0800
+Message-ID: <CAAG8Em3m7MrNcotZCts1DhtsNpiOaV7OrR-B5zjfxOngdvvC6w@mail.gmail.com>
+In-Reply-To: CAAG8Em0RUDcgh+dqexdrFY2KHJo95OQOpEnVj7anSSVrVTePRQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3970959294378524331==
+--===============7674546229255340523==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Tadeusz :
-when i build tpm2-tss used
-*./configure --enable-shared=3Dno --enable-nodl && make && sudo make instal=
-l*
+Hi ,
+Has anyone done this static compilation?
+Thanks for your reply, sorry to bother.
 
-I get responding in build tpm2-tools as below :
-*./configure "CFLAGS=3D--static -lidn -lrt" --enable-shared=3Dno
---disable-hardening*
-or
-*./configure "CFLAGS=3D--static" --enable-shared=3Dno --disable-hardening*
+regards
 
-derek(a)ubuntu:~/workdir/tpm2-tools$ make
-  CC       lib/lib_libcommon_a-files.o
-  CC       lib/lib_libcommon_a-log.o
-  CC       lib/lib_libcommon_a-object.o
-  CC       lib/lib_libcommon_a-pcr.o
-  CC       lib/lib_libcommon_a-tool_rc.o
-  CC       lib/lib_libcommon_a-tpm2.o
-  CC       lib/lib_libcommon_a-tpm2_alg_util.o
-  CC       lib/lib_libcommon_a-tpm2_attr_util.o
-  CC       lib/lib_libcommon_a-tpm2_auth_util.o
-  CC       lib/lib_libcommon_a-tpm2_capability.o
-  CC       lib/lib_libcommon_a-tpm2_cc_util.o
-  CC       lib/lib_libcommon_a-tpm2_convert.o
-  CC       lib/lib_libcommon_a-tpm2_ctx_mgmt.o
-  CC       lib/lib_libcommon_a-tpm2_errata.o
-  CC       lib/lib_libcommon_a-tpm2_hash.o
-  CC       lib/lib_libcommon_a-tpm2_hierarchy.o
-  CC       lib/lib_libcommon_a-tpm2_identity_util.o
-  CC       lib/lib_libcommon_a-tpm2_kdfa.o
-  CC       lib/lib_libcommon_a-tpm2_kdfe.o
-  CC       lib/lib_libcommon_a-tpm2_openssl.o
-  CC       lib/lib_libcommon_a-tpm2_options.o
-  CC       lib/lib_libcommon_a-tpm2_policy.o
-  CC       lib/lib_libcommon_a-tpm2_session.o
-  CC       lib/lib_libcommon_a-tpm2_util.o
-  AR       lib/libcommon.a
-ar: `u' modifier ignored since `D' is the default (see `U')
-  CC       tools/misc/tpm2_checkquote.o
-  CC       tools/tpm2_tool.o
-  CCLD     tools/misc/tpm2_checkquote
-/usr/local/lib/libtss2-tcti-mssim.a(tcti-mssim.o):(.data.rel.ro+0x0):
-multiple definition of `tss2_tcti_info'
-/usr/local/lib/libtss2-tcti-device.a(tcti-device.o):(.data.rel.ro+0x0):
-first defined here
-/usr/local/lib/libtss2-tcti-mssim.a(tcti-mssim.o): In function
-`Tss2_Tcti_Info':
-/home/derek/workdir/tpm2-tss/src/tss2-tcti/tcti-mssim.c:601: multiple
-definition of `Tss2_Tcti_Info'
-/usr/local/lib/libtss2-tcti-device.a(tcti-device.o):/home/derek/workdir/tpm=
-2-tss/src/tss2-tcti/tcti-device.c:458:
-first defined here
-/usr/local/lib/libtss2-tcti-device.a(io.o): In function `socket_connect':
-/home/derek/workdir/tpm2-tss/src/util/io.c:216: warning: Using
-'getaddrinfo' in statically linked applications requires at runtime the
-shared libraries from the glibc version used for linking
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_globallookup':
-(.text+0xa): undefined reference to `dlopen'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_globallookup':
-(.text+0x20): undefined reference to `dlsym'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_globallookup':
-(.text+0x2a): undefined reference to `dlclose'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_bind_func':
-(.text+0x32d): undefined reference to `dlsym'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_bind_func':
-(.text+0x3ad): undefined reference to `dlerror'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_bind_var':
-(.text+0x42d): undefined reference to `dlsym'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_bind_var':
-(.text+0x4ad): undefined reference to `dlerror'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_load':
-(.text+0x518): undefined reference to `dlopen'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_load':
-(.text+0x575): undefined reference to `dlclose'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_load':
-(.text+0x5ae): undefined reference to `dlerror'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_pathbyaddr':
-(.text+0x641): undefined reference to `dladdr'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_pathbyaddr':
-(.text+0x6a1): undefined reference to `dlerror'
-/usr/lib/gcc/i686-linux-gnu/5/../../../i386-linux-gnu/libcrypto.a(dso_dlfcn=
-.o):
-In function `dlfcn_unload':
-(.text+0x70b): undefined reference to `dlclose'
-collect2: error: ld returned 1 exit status
-Makefile:2054: recipe for target 'tools/misc/tpm2_checkquote' failed
-make: *** [tools/misc/tpm2_checkquote] Error 1
+ZhengYu Tsai <kalohomulder(a)gmail.com> =E6=96=BC 2019=E5=B9=B49=E6=9C=8824=
+=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:50=E5=AF=AB=E9=81=93=EF=BC=
+=9A
 
-
-Tadeusz Struk <tadeusz.struk(a)intel.com> =E6=96=BC 2019=E5=B9=B49=E6=9C=88=
-27=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=8812:44=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-
-> On 9/25/19 6:40 PM, ZhengYu Tsai wrote:
-> >
-> /usr/local/lib/libtss2-esys.a(src_tss2_esys_libtss2_esys_la-tctildr-dl.o):
-> In function `handle_from_name':
-> > /home/derek/workdir/tpm2-tss/src/tss2-tcti/tctildr-dl.c:84: warning:
-> Using 'dlopen' in statically linked applications requires at runtime the
-> shared libraries from the glibc version used for linking
-> > /usr/bin/ld: attempted static link of dynamic object
+> Hi everyone,
+>
+> May i ask does anyone know or fixed similar issue as below ?
+>
+> Thanks for your reply
+>
+> Context
+>
+>    - Hardware:
+>    i686
+>    - Operating system :
+>    Ubuntu 16.04.6 LTS
+>
+> Bug Report
+>
+>    - Expected Behavior
+>    Builds the statically linked executables in tpm2-tools/tools
+>
+> derek(a)ubuntu:~/workdir/tpm2-tools$ file tools/tpm2_*
+> tools/tpm2_activatecredential: ELF 32-bit LSB executable, Intel 80386,
+> version 1 (GNU/Linux), statically linked, for GNU/Linux 2.6.32,
+> BuildID[sha1]=3D91a0834f96856f15537fb75b1d6f822e31b07995, not stripped
+>
+>    - Actual Behavior
+>    Can't compile completely
+>
+> /usr/bin/ld: attempted static link of dynamic object
 > `/usr/lib/i386-linux-gnu/libcurl-gnutls.so'
-> > collect2: error: ld returned 1 exit status
-> > Makefile:2170: recipe for target 'tools/tpm2_getekcertificate' failed
-> > make: *** [tools/tpm2_getekcertificate] Error 1
-> >
-> > I also found the tpm2-tss configure *--enable-shared=3Dno,*
-> > This option is necessary, it will affect the compilation tpm2-tools.
+> collect2: error: ld returned 1 exit status
+> Makefile:2170: recipe for target 'tools/tpm2_getekcertificate' failed
+> make: *** [tools/tpm2_getekcertificate] Error 1
 >
-> Right, you also need to use --enable_nodl configure option when you build
-> tss.
+>    -
 >
-> --
-> Tadeusz
+>    Steps to Reproduce
+>    // install tpm2-tss
+>    ./configure "CFLAGS=3D--static" --enable-shared=3Dno
+>    make
+>    sudo make install
+>    // Install tpm2-tools
+>    ./configure "CFLAGS=3D--static" --enable-shared=3Dno --disable-hardeni=
+ng
+>    make
+>    -
+>
+>    Possible Solution
+>    ./configure --parameter
+>    or
+>    modify Makefile
+>
 >
 
---===============3970959294378524331==
+--===============7674546229255340523==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGZvbnQgY29sb3I9IiMwMDAwZmYiPkhpIFRhZGV1c3ogOjwvZm9udD48
-ZGl2Pjxmb250IGNvbG9yPSIjMDAwMGZmIj53aGVuIGkgYnVpbGQgdHBtMi10c3MgdXNlZDwvZm9u
-dD7CoDwvZGl2PjxkaXY+PGI+Li9jb25maWd1cmUgLS1lbmFibGUtc2hhcmVkPW5vIDxmb250IGNv
-bG9yPSIjMDAwMDAwIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwwKSI+LS1l
-bmFibGUtbm9kbDwvZm9udD48Zm9udCBjb2xvcj0iIzAwMDAwMCIgc3R5bGU9ImJhY2tncm91bmQt
-Y29sb3I6cmdiKDI1NSwyNTUsMjU1KSI+ICZhbXA7JmFtcDsgbWFrZSAmYW1wOyZhbXA7IHN1ZG8g
-bWFrZSBpbnN0YWxsPC9mb250PjwvYj48L2Rpdj48ZGl2Pjxmb250IGNvbG9yPSIjMDAwMGZmIj48
-YnI+PC9mb250PjwvZGl2PjxkaXY+PGZvbnQgY29sb3I9IiMwMDAwZmYiPkkgZ2V0wqByZXNwb25k
-aW5nIGluIGJ1aWxkIHRwbTItdG9vbHMgYXMgYmVsb3cgOjwvZm9udD48L2Rpdj48ZGl2PjxiPi4v
-Y29uZmlndXJlICZxdW90O0NGTEFHUz0tLXN0YXRpYyA8c3BhbiBzdHlsZT0iYmFja2dyb3VuZC1j
-b2xvcjpyZ2IoMjU1LDI1NSwwKSI+LWxpZG4gLWxydDwvc3Bhbj4mcXVvdDsgLS1lbmFibGUtc2hh
-cmVkPW5vIC0tZGlzYWJsZS1oYXJkZW5pbmc8L2I+PGJyPjwvZGl2PjxkaXY+b3I8L2Rpdj48ZGl2
-PjxiPi4vY29uZmlndXJlICZxdW90O0NGTEFHUz0tLXN0YXRpYyZxdW90OyAtLWVuYWJsZS1zaGFy
-ZWQ9bm8gLS1kaXNhYmxlLWhhcmRlbmluZzwvYj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PmRl
-cmVrQHVidW50dTp+L3dvcmtkaXIvdHBtMi10b29scyQgbWFrZTxicj7CoCBDQyDCoCDCoCDCoCBs
-aWIvbGliX2xpYmNvbW1vbl9hLWZpbGVzLm88YnI+wqAgQ0MgwqAgwqAgwqAgbGliL2xpYl9saWJj
-b21tb25fYS1sb2cubzxicj7CoCBDQyDCoCDCoCDCoCBsaWIvbGliX2xpYmNvbW1vbl9hLW9iamVj
-dC5vPGJyPsKgIENDIMKgIMKgIMKgIGxpYi9saWJfbGliY29tbW9uX2EtcGNyLm88YnI+wqAgQ0Mg
-wqAgwqAgwqAgbGliL2xpYl9saWJjb21tb25fYS10b29sX3JjLm88YnI+wqAgQ0MgwqAgwqAgwqAg
-bGliL2xpYl9saWJjb21tb25fYS10cG0yLm88YnI+wqAgQ0MgwqAgwqAgwqAgbGliL2xpYl9saWJj
-b21tb25fYS10cG0yX2FsZ191dGlsLm88YnI+wqAgQ0MgwqAgwqAgwqAgbGliL2xpYl9saWJjb21t
-b25fYS10cG0yX2F0dHJfdXRpbC5vPGJyPsKgIENDIMKgIMKgIMKgIGxpYi9saWJfbGliY29tbW9u
-X2EtdHBtMl9hdXRoX3V0aWwubzxicj7CoCBDQyDCoCDCoCDCoCBsaWIvbGliX2xpYmNvbW1vbl9h
-LXRwbTJfY2FwYWJpbGl0eS5vPGJyPsKgIENDIMKgIMKgIMKgIGxpYi9saWJfbGliY29tbW9uX2Et
-dHBtMl9jY191dGlsLm88YnI+wqAgQ0MgwqAgwqAgwqAgbGliL2xpYl9saWJjb21tb25fYS10cG0y
-X2NvbnZlcnQubzxicj7CoCBDQyDCoCDCoCDCoCBsaWIvbGliX2xpYmNvbW1vbl9hLXRwbTJfY3R4
-X21nbXQubzxicj7CoCBDQyDCoCDCoCDCoCBsaWIvbGliX2xpYmNvbW1vbl9hLXRwbTJfZXJyYXRh
-Lm88YnI+wqAgQ0MgwqAgwqAgwqAgbGliL2xpYl9saWJjb21tb25fYS10cG0yX2hhc2gubzxicj7C
-oCBDQyDCoCDCoCDCoCBsaWIvbGliX2xpYmNvbW1vbl9hLXRwbTJfaGllcmFyY2h5Lm88YnI+wqAg
-Q0MgwqAgwqAgwqAgbGliL2xpYl9saWJjb21tb25fYS10cG0yX2lkZW50aXR5X3V0aWwubzxicj7C
-oCBDQyDCoCDCoCDCoCBsaWIvbGliX2xpYmNvbW1vbl9hLXRwbTJfa2RmYS5vPGJyPsKgIENDIMKg
-IMKgIMKgIGxpYi9saWJfbGliY29tbW9uX2EtdHBtMl9rZGZlLm88YnI+wqAgQ0MgwqAgwqAgwqAg
-bGliL2xpYl9saWJjb21tb25fYS10cG0yX29wZW5zc2wubzxicj7CoCBDQyDCoCDCoCDCoCBsaWIv
-bGliX2xpYmNvbW1vbl9hLXRwbTJfb3B0aW9ucy5vPGJyPsKgIENDIMKgIMKgIMKgIGxpYi9saWJf
-bGliY29tbW9uX2EtdHBtMl9wb2xpY3kubzxicj7CoCBDQyDCoCDCoCDCoCBsaWIvbGliX2xpYmNv
-bW1vbl9hLXRwbTJfc2Vzc2lvbi5vPGJyPsKgIENDIMKgIMKgIMKgIGxpYi9saWJfbGliY29tbW9u
-X2EtdHBtMl91dGlsLm88YnI+wqAgQVIgwqAgwqAgwqAgbGliL2xpYmNvbW1vbi5hPGJyPmFyOiBg
-dSYjMzk7IG1vZGlmaWVyIGlnbm9yZWQgc2luY2UgYEQmIzM5OyBpcyB0aGUgZGVmYXVsdCAoc2Vl
-IGBVJiMzOTspPGJyPsKgIENDIMKgIMKgIMKgIHRvb2xzL21pc2MvdHBtMl9jaGVja3F1b3RlLm88
-YnI+wqAgQ0MgwqAgwqAgwqAgdG9vbHMvdHBtMl90b29sLm88YnI+wqAgQ0NMRCDCoCDCoCB0b29s
-cy9taXNjL3RwbTJfY2hlY2txdW90ZTxicj4vdXNyL2xvY2FsL2xpYi9saWJ0c3MyLXRjdGktbXNz
-aW0uYSh0Y3RpLW1zc2ltLm8pOiguPGEgaHJlZj0iaHR0cDovL2RhdGEucmVsLnJvIj5kYXRhLnJl
-bC5ybzwvYT4rMHgwKTogbXVsdGlwbGUgZGVmaW5pdGlvbiBvZiBgdHNzMl90Y3RpX2luZm8mIzM5
-Ozxicj4vdXNyL2xvY2FsL2xpYi9saWJ0c3MyLXRjdGktZGV2aWNlLmEodGN0aS1kZXZpY2Uubyk6
-KC48YSBocmVmPSJodHRwOi8vZGF0YS5yZWwucm8iPmRhdGEucmVsLnJvPC9hPisweDApOiBmaXJz
-dCBkZWZpbmVkIGhlcmU8YnI+L3Vzci9sb2NhbC9saWIvbGlidHNzMi10Y3RpLW1zc2ltLmEodGN0
-aS1tc3NpbS5vKTogSW4gZnVuY3Rpb24gYFRzczJfVGN0aV9JbmZvJiMzOTs6PGJyPi9ob21lL2Rl
-cmVrL3dvcmtkaXIvdHBtMi10c3Mvc3JjL3RzczItdGN0aS90Y3RpLW1zc2ltLmM6NjAxOiBtdWx0
-aXBsZSBkZWZpbml0aW9uIG9mIGBUc3MyX1RjdGlfSW5mbyYjMzk7PGJyPi91c3IvbG9jYWwvbGli
-L2xpYnRzczItdGN0aS1kZXZpY2UuYSh0Y3RpLWRldmljZS5vKTovaG9tZS9kZXJlay93b3JrZGly
-L3RwbTItdHNzL3NyYy90c3MyLXRjdGkvdGN0aS1kZXZpY2UuYzo0NTg6IGZpcnN0IGRlZmluZWQg
-aGVyZTxicj4vdXNyL2xvY2FsL2xpYi9saWJ0c3MyLXRjdGktZGV2aWNlLmEoaW8ubyk6IEluIGZ1
-bmN0aW9uIGBzb2NrZXRfY29ubmVjdCYjMzk7Ojxicj4vaG9tZS9kZXJlay93b3JrZGlyL3RwbTIt
-dHNzL3NyYy91dGlsL2lvLmM6MjE2OiB3YXJuaW5nOiBVc2luZyAmIzM5O2dldGFkZHJpbmZvJiMz
-OTsgaW4gc3RhdGljYWxseSBsaW5rZWQgYXBwbGljYXRpb25zIHJlcXVpcmVzIGF0IHJ1bnRpbWUg
-dGhlIHNoYXJlZCBsaWJyYXJpZXMgZnJvbSB0aGUgZ2xpYmMgdmVyc2lvbiB1c2VkIGZvciBsaW5r
-aW5nPGJyPi91c3IvbGliL2djYy9pNjg2LWxpbnV4LWdudS81Ly4uLy4uLy4uL2kzODYtbGludXgt
-Z251L2xpYmNyeXB0by5hKGRzb19kbGZjbi5vKTogSW4gZnVuY3Rpb24gYGRsZmNuX2dsb2JhbGxv
-b2t1cCYjMzk7Ojxicj4oLnRleHQrMHhhKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgZGxvcGVu
-JiMzOTs8YnI+L3Vzci9saWIvZ2NjL2k2ODYtbGludXgtZ251LzUvLi4vLi4vLi4vaTM4Ni1saW51
-eC1nbnUvbGliY3J5cHRvLmEoZHNvX2RsZmNuLm8pOiBJbiBmdW5jdGlvbiBgZGxmY25fZ2xvYmFs
-bG9va3VwJiMzOTs6PGJyPigudGV4dCsweDIwKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgZGxz
-eW0mIzM5Ozxicj4vdXNyL2xpYi9nY2MvaTY4Ni1saW51eC1nbnUvNS8uLi8uLi8uLi9pMzg2LWxp
-bnV4LWdudS9saWJjcnlwdG8uYShkc29fZGxmY24ubyk6IEluIGZ1bmN0aW9uIGBkbGZjbl9nbG9i
-YWxsb29rdXAmIzM5Ozo8YnI+KC50ZXh0KzB4MmEpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBk
-bGNsb3NlJiMzOTs8YnI+L3Vzci9saWIvZ2NjL2k2ODYtbGludXgtZ251LzUvLi4vLi4vLi4vaTM4
-Ni1saW51eC1nbnUvbGliY3J5cHRvLmEoZHNvX2RsZmNuLm8pOiBJbiBmdW5jdGlvbiBgZGxmY25f
-YmluZF9mdW5jJiMzOTs6PGJyPigudGV4dCsweDMyZCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8g
-YGRsc3ltJiMzOTs8YnI+L3Vzci9saWIvZ2NjL2k2ODYtbGludXgtZ251LzUvLi4vLi4vLi4vaTM4
-Ni1saW51eC1nbnUvbGliY3J5cHRvLmEoZHNvX2RsZmNuLm8pOiBJbiBmdW5jdGlvbiBgZGxmY25f
-YmluZF9mdW5jJiMzOTs6PGJyPigudGV4dCsweDNhZCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8g
-YGRsZXJyb3ImIzM5Ozxicj4vdXNyL2xpYi9nY2MvaTY4Ni1saW51eC1nbnUvNS8uLi8uLi8uLi9p
-Mzg2LWxpbnV4LWdudS9saWJjcnlwdG8uYShkc29fZGxmY24ubyk6IEluIGZ1bmN0aW9uIGBkbGZj
-bl9iaW5kX3ZhciYjMzk7Ojxicj4oLnRleHQrMHg0MmQpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRv
-IGBkbHN5bSYjMzk7PGJyPi91c3IvbGliL2djYy9pNjg2LWxpbnV4LWdudS81Ly4uLy4uLy4uL2kz
-ODYtbGludXgtZ251L2xpYmNyeXB0by5hKGRzb19kbGZjbi5vKTogSW4gZnVuY3Rpb24gYGRsZmNu
-X2JpbmRfdmFyJiMzOTs6PGJyPigudGV4dCsweDRhZCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8g
-YGRsZXJyb3ImIzM5Ozxicj4vdXNyL2xpYi9nY2MvaTY4Ni1saW51eC1nbnUvNS8uLi8uLi8uLi9p
-Mzg2LWxpbnV4LWdudS9saWJjcnlwdG8uYShkc29fZGxmY24ubyk6IEluIGZ1bmN0aW9uIGBkbGZj
-bl9sb2FkJiMzOTs6PGJyPigudGV4dCsweDUxOCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYGRs
-b3BlbiYjMzk7PGJyPi91c3IvbGliL2djYy9pNjg2LWxpbnV4LWdudS81Ly4uLy4uLy4uL2kzODYt
-bGludXgtZ251L2xpYmNyeXB0by5hKGRzb19kbGZjbi5vKTogSW4gZnVuY3Rpb24gYGRsZmNuX2xv
-YWQmIzM5Ozo8YnI+KC50ZXh0KzB4NTc1KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgZGxjbG9z
-ZSYjMzk7PGJyPi91c3IvbGliL2djYy9pNjg2LWxpbnV4LWdudS81Ly4uLy4uLy4uL2kzODYtbGlu
-dXgtZ251L2xpYmNyeXB0by5hKGRzb19kbGZjbi5vKTogSW4gZnVuY3Rpb24gYGRsZmNuX2xvYWQm
-IzM5Ozo8YnI+KC50ZXh0KzB4NWFlKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgZGxlcnJvciYj
-Mzk7PGJyPi91c3IvbGliL2djYy9pNjg2LWxpbnV4LWdudS81Ly4uLy4uLy4uL2kzODYtbGludXgt
-Z251L2xpYmNyeXB0by5hKGRzb19kbGZjbi5vKTogSW4gZnVuY3Rpb24gYGRsZmNuX3BhdGhieWFk
-ZHImIzM5Ozo8YnI+KC50ZXh0KzB4NjQxKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgZGxhZGRy
-JiMzOTs8YnI+L3Vzci9saWIvZ2NjL2k2ODYtbGludXgtZ251LzUvLi4vLi4vLi4vaTM4Ni1saW51
-eC1nbnUvbGliY3J5cHRvLmEoZHNvX2RsZmNuLm8pOiBJbiBmdW5jdGlvbiBgZGxmY25fcGF0aGJ5
-YWRkciYjMzk7Ojxicj4oLnRleHQrMHg2YTEpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBkbGVy
-cm9yJiMzOTs8YnI+L3Vzci9saWIvZ2NjL2k2ODYtbGludXgtZ251LzUvLi4vLi4vLi4vaTM4Ni1s
-aW51eC1nbnUvbGliY3J5cHRvLmEoZHNvX2RsZmNuLm8pOiBJbiBmdW5jdGlvbiBgZGxmY25fdW5s
-b2FkJiMzOTs6PGJyPigudGV4dCsweDcwYik6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYGRsY2xv
-c2UmIzM5Ozxicj5jb2xsZWN0MjogZXJyb3I6IGxkIHJldHVybmVkIDEgZXhpdCBzdGF0dXM8YnI+
-TWFrZWZpbGU6MjA1NDogcmVjaXBlIGZvciB0YXJnZXQgJiMzOTt0b29scy9taXNjL3RwbTJfY2hl
-Y2txdW90ZSYjMzk7IGZhaWxlZDxicj5tYWtlOiAqKiogW3Rvb2xzL21pc2MvdHBtMl9jaGVja3F1
-b3RlXSBFcnJvciAxPGJyPjxicj48L2Rpdj48L2Rpdj48YnI+PGRpdiBjbGFzcz0iZ21haWxfcXVv
-dGUiPjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJnbWFpbF9hdHRyIj5UYWRldXN6IFN0cnVrICZsdDs8
-YSBocmVmPSJtYWlsdG86dGFkZXVzei5zdHJ1a0BpbnRlbC5jb20iPnRhZGV1c3ouc3RydWtAaW50
-ZWwuY29tPC9hPiZndDsg5pa8IDIwMTnlubQ55pyIMjfml6Ug6YCx5LqUIOS4iuWNiDEyOjQ05a+r
-6YGT77yaPGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1h
-cmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIwNCwyMDQs
-MjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij5PbiA5LzI1LzE5IDY6NDAgUE0sIFpoZW5nWXUgVHNhaSB3
-cm90ZTo8YnI+CiZndDsgL3Vzci9sb2NhbC9saWIvbGlidHNzMi1lc3lzLmEoc3JjX3RzczJfZXN5
-c19saWJ0c3MyX2VzeXNfbGEtdGN0aWxkci1kbC5vKTogSW4gZnVuY3Rpb24gYGhhbmRsZV9mcm9t
-X25hbWUmIzM5Ozo8YnI+CiZndDsgL2hvbWUvZGVyZWsvd29ya2Rpci90cG0yLXRzcy9zcmMvdHNz
-Mi10Y3RpL3RjdGlsZHItZGwuYzo4NDogd2FybmluZzogVXNpbmcgJiMzOTtkbG9wZW4mIzM5OyBp
-biBzdGF0aWNhbGx5IGxpbmtlZCBhcHBsaWNhdGlvbnMgcmVxdWlyZXMgYXQgcnVudGltZSB0aGUg
-c2hhcmVkIGxpYnJhcmllcyBmcm9tIHRoZSBnbGliYyB2ZXJzaW9uIHVzZWQgZm9yIGxpbmtpbmc8
-YnI+CiZndDsgL3Vzci9iaW4vbGQ6IGF0dGVtcHRlZCBzdGF0aWMgbGluayBvZiBkeW5hbWljIG9i
-amVjdCBgL3Vzci9saWIvaTM4Ni1saW51eC1nbnUvbGliY3VybC1nbnV0bHMuc28mIzM5Ozxicj4K
-Jmd0OyBjb2xsZWN0MjogZXJyb3I6IGxkIHJldHVybmVkIDEgZXhpdCBzdGF0dXM8YnI+CiZndDsg
-TWFrZWZpbGU6MjE3MDogcmVjaXBlIGZvciB0YXJnZXQgJiMzOTt0b29scy90cG0yX2dldGVrY2Vy
-dGlmaWNhdGUmIzM5OyBmYWlsZWQ8YnI+CiZndDsgbWFrZTogKioqIFt0b29scy90cG0yX2dldGVr
-Y2VydGlmaWNhdGVdIEVycm9yIDE8YnI+CiZndDsgPGJyPgomZ3Q7IEkgYWxzbyBmb3VuZCB0aGUg
-dHBtMi10c3MgY29uZmlndXJlwqAqLS1lbmFibGUtc2hhcmVkPW5vLCo8YnI+CiZndDsgVGhpcyBv
-cHRpb24gaXMgbmVjZXNzYXJ5LCBpdCB3aWxsIGFmZmVjdCB0aGUgY29tcGlsYXRpb24gdHBtMi10
-b29scy48YnI+Cjxicj4KUmlnaHQsIHlvdSBhbHNvIG5lZWQgdG8gdXNlIC0tZW5hYmxlX25vZGwg
-Y29uZmlndXJlIG9wdGlvbiB3aGVuIHlvdSBidWlsZCB0c3MuPGJyPgo8YnI+Ci0tIDxicj4KVGFk
-ZXVzejxicj4KPC9ibG9ja3F1b3RlPjwvZGl2Pgo=
+PGRpdiBkaXI9Imx0ciI+SGkgLDxkaXY+SGFzIGFueW9uZSBkb25lIHRoaXMgc3RhdGljIGNvbXBp
+bGF0aW9uPzxicj5UaGFua3MgZm9yIHlvdXIgcmVwbHksIHNvcnJ5IHRvIGJvdGhlci48YnI+PC9k
+aXY+PGRpdj48YnI+PC9kaXY+PGRpdj5yZWdhcmRzPC9kaXY+PC9kaXY+PGJyPjxkaXYgY2xhc3M9
+ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0ibHRyIiBjbGFzcz0iZ21haWxfYXR0ciI+WmhlbmdZdSBU
+c2FpICZsdDs8YSBocmVmPSJtYWlsdG86a2Fsb2hvbXVsZGVyQGdtYWlsLmNvbSI+a2Fsb2hvbXVs
+ZGVyQGdtYWlsLmNvbTwvYT4mZ3Q7IOaWvCAyMDE55bm0OeaciDI05pelIOmAseS6jCDkuIvljYg0
+OjUw5a+r6YGT77yaPGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5
+bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIw
+NCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2IGRpcj0ibHRyIj5IaSBldmVyeW9uZSw8
+ZGl2Pjxicj48L2Rpdj48ZGl2Pk1heSBpIGFzayBkb2VzIGFueW9uZSBrbm93IG9yIGZpeGVkIHNp
+bWlsYXIgaXNzdWUgYXMgYmVsb3cgPzwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhhbmtzIGZv
+ciB5b3VyIHJlcGx5PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj48aDEgc3R5bGU9ImJveC1zaXpp
+bmc6Ym9yZGVyLWJveDttYXJnaW46MHB4IDBweCAxNnB4O2xpbmUtaGVpZ2h0OjEuMjU7cGFkZGlu
+Zy1ib3R0b206MC4zZW07Ym9yZGVyLWJvdHRvbToxcHggc29saWQgcmdiKDIzNCwyMzYsMjM5KTtj
+b2xvcjpyZ2IoMzYsNDEsNDYpO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0
+ZW1Gb250LCZxdW90O1NlZ29lIFVJJnF1b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmLCZx
+dW90O0FwcGxlIENvbG9yIEVtb2ppJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7Ij5D
+b250ZXh0PC9oMT48dWwgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDtwYWRkaW5nLWxlZnQ6
+MmVtO21hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MTZweDtjb2xvcjpyZ2IoMzYsNDEsNDYp
+O2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0ZW1Gb250LCZxdW90O1NlZ29l
+IFVJJnF1b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmLCZxdW90O0FwcGxlIENvbG9yIEVt
+b2ppJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7O2ZvbnQtc2l6ZToxNHB4Ij48bGkg
+c3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4tbGVmdDowcHgiPkhhcmR3YXJlOjxi
+ciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5pNjg2PC9saT48bGkgc3R5bGU9ImJveC1z
+aXppbmc6Ym9yZGVyLWJveDttYXJnaW4tdG9wOjAuMjVlbTttYXJnaW4tbGVmdDowcHgiPk9wZXJh
+dGluZyBzeXN0ZW0gOjxiciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5VYnVudHUgMTYu
+MDQuNiBMVFM8L2xpPjwvdWw+PGgxIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2lu
+OjI0cHggMHB4IDE2cHg7bGluZS1oZWlnaHQ6MS4yNTtwYWRkaW5nLWJvdHRvbTowLjNlbTtib3Jk
+ZXItYm90dG9tOjFweCBzb2xpZCByZ2IoMjM0LDIzNiwyMzkpO2NvbG9yOnJnYigzNiw0MSw0Nik7
+Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJnF1b3Q7U2Vnb2Ug
+VUkmcXVvdDssSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJnF1b3Q7QXBwbGUgQ29sb3IgRW1v
+amkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDsiPkJ1ZyBSZXBvcnQ8L2gxPjx1bCBz
+dHlsZT0iYm94LXNpemluZzpib3JkZXItYm94O3BhZGRpbmctbGVmdDoyZW07bWFyZ2luLXRvcDow
+cHg7bWFyZ2luLWJvdHRvbToxNnB4O2NvbG9yOnJnYigzNiw0MSw0Nik7Zm9udC1mYW1pbHk6LWFw
+cGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJnF1b3Q7U2Vnb2UgVUkmcXVvdDssSGVsdmV0
+aWNhLEFyaWFsLHNhbnMtc2VyaWYsJnF1b3Q7QXBwbGUgQ29sb3IgRW1vamkmcXVvdDssJnF1b3Q7
+U2Vnb2UgVUkgRW1vamkmcXVvdDs7Zm9udC1zaXplOjE0cHgiPjxsaSBzdHlsZT0iYm94LXNpemlu
+Zzpib3JkZXItYm94O21hcmdpbi1sZWZ0OjBweCI+RXhwZWN0ZWQgQmVoYXZpb3I8YnIgc3R5bGU9
+ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+QnVpbGRzIHRoZSBzdGF0aWNhbGx5IGxpbmtlZCBleGVj
+dXRhYmxlcyBpbiB0cG0yLXRvb2xzL3Rvb2xzPC9saT48L3VsPjxwIHN0eWxlPSJib3gtc2l6aW5n
+OmJvcmRlci1ib3g7bWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbToxNnB4O2NvbG9yOnJnYigz
+Niw0MSw0Nik7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJnF1
+b3Q7U2Vnb2UgVUkmcXVvdDssSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJnF1b3Q7QXBwbGUg
+Q29sb3IgRW1vamkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDs7Zm9udC1zaXplOjE0
+cHgiPmRlcmVrQHVidW50dTp+L3dvcmtkaXIvdHBtMi10b29scyQgZmlsZSB0b29scy90cG0yXyo8
+YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+dG9vbHMvdHBtMl9hY3RpdmF0ZWNyZWRl
+bnRpYWw6IEVMRiAzMi1iaXQgTFNCIGV4ZWN1dGFibGUsIEludGVsIDgwMzg2LCB2ZXJzaW9uIDEg
+KEdOVS9MaW51eCkswqA8c3BhbiBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94O2ZvbnQtd2Vp
+Z2h0OjYwMCI+c3RhdGljYWxseSBsaW5rZWQ8L3NwYW4+LCBmb3IgR05VL0xpbnV4IDIuNi4zMiwg
+QnVpbGRJRFtzaGExXT05MWEwODM0Zjk2ODU2ZjE1NTM3ZmI3NWIxZDZmODIyZTMxYjA3OTk1LCBu
+b3Qgc3RyaXBwZWQ8L3A+PHVsIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7cGFkZGluZy1s
+ZWZ0OjJlbTttYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjE2cHg7Y29sb3I6cmdiKDM2LDQx
+LDQ2KTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLEJsaW5rTWFjU3lzdGVtRm9udCwmcXVvdDtT
+ZWdvZSBVSSZxdW90OyxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiwmcXVvdDtBcHBsZSBDb2xv
+ciBFbW9qaSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90Oztmb250LXNpemU6MTRweCI+
+PGxpIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2luLWxlZnQ6MHB4Ij5BY3R1YWwg
+QmVoYXZpb3I8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+Q2FuJiMzOTt0IGNvbXBp
+bGUgY29tcGxldGVseTwvbGk+PC91bD48cCBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94O21h
+cmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MTZweDtjb2xvcjpyZ2IoMzYsNDEsNDYpO2ZvbnQt
+ZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0ZW1Gb250LCZxdW90O1NlZ29lIFVJJnF1
+b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmLCZxdW90O0FwcGxlIENvbG9yIEVtb2ppJnF1
+b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7O2ZvbnQtc2l6ZToxNHB4Ij4vdXNyL2Jpbi9s
+ZDogYXR0ZW1wdGVkIHN0YXRpYyBsaW5rIG9mIGR5bmFtaWMgb2JqZWN0IGAvdXNyL2xpYi9pMzg2
+LWxpbnV4LWdudS9saWJjdXJsLWdudXRscy5zbyYjMzk7PGJyIHN0eWxlPSJib3gtc2l6aW5nOmJv
+cmRlci1ib3giPmNvbGxlY3QyOiBlcnJvcjogbGQgcmV0dXJuZWQgMSBleGl0IHN0YXR1czxiciBz
+dHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5NYWtlZmlsZToyMTcwOiByZWNpcGUgZm9yIHRh
+cmdldCAmIzM5O3Rvb2xzL3RwbTJfZ2V0ZWtjZXJ0aWZpY2F0ZSYjMzk7IGZhaWxlZDxiciBzdHls
+ZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5tYWtlOiAqKiogW3Rvb2xzL3RwbTJfZ2V0ZWtjZXJ0
+aWZpY2F0ZV0gRXJyb3IgMTwvcD48dWwgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDtwYWRk
+aW5nLWxlZnQ6MmVtO21hcmdpbi10b3A6MHB4O2NvbG9yOnJnYigzNiw0MSw0Nik7Zm9udC1mYW1p
+bHk6LWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJnF1b3Q7U2Vnb2UgVUkmcXVvdDss
+SGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJnF1b3Q7QXBwbGUgQ29sb3IgRW1vamkmcXVvdDss
+JnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDs7Zm9udC1zaXplOjE0cHg7bWFyZ2luLWJvdHRvbTow
+cHgiPjxsaSBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94O21hcmdpbi1sZWZ0OjBweCI+PHAg
+c3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9t
+OjE2cHgiPlN0ZXBzIHRvIFJlcHJvZHVjZTxiciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94
+Ij4vLyBpbnN0YWxsIHRwbTItdHNzPGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3giPi4v
+Y29uZmlndXJlICZxdW90O0NGTEFHUz0tLXN0YXRpYyZxdW90OyAtLWVuYWJsZS1zaGFyZWQ9bm88
+YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+bWFrZTxiciBzdHlsZT0iYm94LXNpemlu
+Zzpib3JkZXItYm94Ij5zdWRvIG1ha2UgaW5zdGFsbDxiciBzdHlsZT0iYm94LXNpemluZzpib3Jk
+ZXItYm94Ij4vLyBJbnN0YWxsIHRwbTItdG9vbHM8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVy
+LWJveCI+Li9jb25maWd1cmUgJnF1b3Q7Q0ZMQUdTPS0tc3RhdGljJnF1b3Q7IC0tZW5hYmxlLXNo
+YXJlZD1ubyAtLWRpc2FibGUtaGFyZGVuaW5nPGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1i
+b3giPm1ha2U8L3A+PC9saT48bGkgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4t
+dG9wOjAuMjVlbTttYXJnaW4tbGVmdDowcHgiPjxwIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1i
+b3g7bWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbToxNnB4Ij5Qb3NzaWJsZSBTb2x1dGlvbjxi
+ciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij4uL2NvbmZpZ3VyZSAtLXBhcmFtZXRlcjxi
+ciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5vcjxiciBzdHlsZT0iYm94LXNpemluZzpi
+b3JkZXItYm94Ij5tb2RpZnkgTWFrZWZpbGU8L3A+PC9saT48L3VsPjwvZGl2PjwvZGl2Pgo8L2Js
+b2NrcXVvdGU+PC9kaXY+Cg==
 
---===============3970959294378524331==--
+--===============7674546229255340523==--
 
