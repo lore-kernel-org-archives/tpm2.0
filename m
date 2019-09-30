@@ -1,176 +1,104 @@
-Content-Type: multipart/mixed; boundary="===============7674546229255340523=="
+Content-Type: multipart/mixed; boundary="===============0687331587187714425=="
 MIME-Version: 1.0
-From: ZhengYu Tsai <kalohomulder at gmail.com>
-Subject: Re: [tpm2] How to generate the statically linked executable
-Date: Fri, 27 Sep 2019 09:16:44 +0800
-Message-ID: <CAAG8Em3m7MrNcotZCts1DhtsNpiOaV7OrR-B5zjfxOngdvvC6w@mail.gmail.com>
-In-Reply-To: CAAG8Em0RUDcgh+dqexdrFY2KHJo95OQOpEnVj7anSSVrVTePRQ@mail.gmail.com
+From: Arun Sudhir <arunsudhir19 at gmail.com>
+Subject: [tpm2] Error Running tpm2-tools in windows against MSSIM
+Date: Mon, 30 Sep 2019 10:28:16 -0700
+Message-ID: <CAJLNp_Wv6xuh-bQBa3REuzw9vD9PA_s2h+MFrk4+NWqWT6+W4g@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7674546229255340523==
+--===============0687331587187714425==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi ,
-Has anyone done this static compilation?
-Thanks for your reply, sorry to bother.
+Hi,
 
-regards
+I have managed to compile and run the tpm simulator on Windows as well as
+build tpm2-tss and build and run tpm2-tools  (after quite a bit if work) on
+Windows 10.  I looked at the makefile and on windows, created a project for
+every tool. IT worked well and built everything. I also got the server up
+on port 2321 and set the environment variable TPM2TOOLS_TCTI to
+"mssim:host=3Dlocalhost,port=3D2321"
 
-ZhengYu Tsai <kalohomulder(a)gmail.com> =E6=96=BC 2019=E5=B9=B49=E6=9C=8824=
-=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:50=E5=AF=AB=E9=81=93=EF=BC=
-=9A
+I was following instructions listed in
+https://github.com/tpm2-software/tpm2-tools/wiki/Getting-Started#introducti=
+on
+and
+also did not build abrmd.
 
-> Hi everyone,
->
-> May i ask does anyone know or fixed similar issue as below ?
->
-> Thanks for your reply
->
-> Context
->
->    - Hardware:
->    i686
->    - Operating system :
->    Ubuntu 16.04.6 LTS
->
-> Bug Report
->
->    - Expected Behavior
->    Builds the statically linked executables in tpm2-tools/tools
->
-> derek(a)ubuntu:~/workdir/tpm2-tools$ file tools/tpm2_*
-> tools/tpm2_activatecredential: ELF 32-bit LSB executable, Intel 80386,
-> version 1 (GNU/Linux), statically linked, for GNU/Linux 2.6.32,
-> BuildID[sha1]=3D91a0834f96856f15537fb75b1d6f822e31b07995, not stripped
->
->    - Actual Behavior
->    Can't compile completely
->
-> /usr/bin/ld: attempted static link of dynamic object
-> `/usr/lib/i386-linux-gnu/libcurl-gnutls.so'
-> collect2: error: ld returned 1 exit status
-> Makefile:2170: recipe for target 'tools/tpm2_getekcertificate' failed
-> make: *** [tools/tpm2_getekcertificate] Error 1
->
->    -
->
->    Steps to Reproduce
->    // install tpm2-tss
->    ./configure "CFLAGS=3D--static" --enable-shared=3Dno
->    make
->    sudo make install
->    // Install tpm2-tools
->    ./configure "CFLAGS=3D--static" --enable-shared=3Dno --disable-hardeni=
-ng
->    make
->    -
->
->    Possible Solution
->    ./configure --parameter
->    or
->    modify Makefile
->
->
+Since i cannot do tpm2_pcrlist (Unix system command), I decided to do a
+tpm2_getrandom as listed here:
+https://github.com/tpm2-software/tpm2-tools/wiki/How-to-use-tpm2-tools.
 
---===============7674546229255340523==
+When i executed against the hardware tpm (by default it first executes
+against the hardware tpm using tcti-tbs on windows), it worked well for:
+*tpm2_getrandom -o random.out 20*
+
+Next, i really wanted to try out a few things, so i set the env
+variable TPM2TOOLS_TCTI to mssim:host=3D127.0.0.1,port=3D2321 ( i tried
+localhost, that failed with a socket connect because it was not resolving
+to 127.0.0.1). Now i get this error:
+
+WARNING:esys:api\Esys_GetCapability.c:303:Esys_GetCapability_Finish()
+Received TPM Error
+ERROR:esys:api\Esys_GetCapability.c:107:Esys_GetCapability() Esys Finish
+ErrorCode (0x00000100)
+ERROR: Esys_GetCapability(0x100) - tpm:error(2.0): TPM not initialized by
+TPM2_Startup or already initialized
+ERROR: Unable to run
+C:\Users\arunsu\source\repos\tpm2-tools-4.0\vstudio\x64\Debug\tpm2-getrando=
+m.exe
+
+This is only for MSSIM. Anyone knows why ??
+
+--===============0687331587187714425==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+SGkgLDxkaXY+SGFzIGFueW9uZSBkb25lIHRoaXMgc3RhdGljIGNvbXBp
-bGF0aW9uPzxicj5UaGFua3MgZm9yIHlvdXIgcmVwbHksIHNvcnJ5IHRvIGJvdGhlci48YnI+PC9k
-aXY+PGRpdj48YnI+PC9kaXY+PGRpdj5yZWdhcmRzPC9kaXY+PC9kaXY+PGJyPjxkaXYgY2xhc3M9
-ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0ibHRyIiBjbGFzcz0iZ21haWxfYXR0ciI+WmhlbmdZdSBU
-c2FpICZsdDs8YSBocmVmPSJtYWlsdG86a2Fsb2hvbXVsZGVyQGdtYWlsLmNvbSI+a2Fsb2hvbXVs
-ZGVyQGdtYWlsLmNvbTwvYT4mZ3Q7IOaWvCAyMDE55bm0OeaciDI05pelIOmAseS6jCDkuIvljYg0
-OjUw5a+r6YGT77yaPGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5
-bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIw
-NCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48ZGl2IGRpcj0ibHRyIj5IaSBldmVyeW9uZSw8
-ZGl2Pjxicj48L2Rpdj48ZGl2Pk1heSBpIGFzayBkb2VzIGFueW9uZSBrbm93IG9yIGZpeGVkIHNp
-bWlsYXIgaXNzdWUgYXMgYmVsb3cgPzwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhhbmtzIGZv
-ciB5b3VyIHJlcGx5PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj48aDEgc3R5bGU9ImJveC1zaXpp
-bmc6Ym9yZGVyLWJveDttYXJnaW46MHB4IDBweCAxNnB4O2xpbmUtaGVpZ2h0OjEuMjU7cGFkZGlu
-Zy1ib3R0b206MC4zZW07Ym9yZGVyLWJvdHRvbToxcHggc29saWQgcmdiKDIzNCwyMzYsMjM5KTtj
-b2xvcjpyZ2IoMzYsNDEsNDYpO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0
-ZW1Gb250LCZxdW90O1NlZ29lIFVJJnF1b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmLCZx
-dW90O0FwcGxlIENvbG9yIEVtb2ppJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7Ij5D
-b250ZXh0PC9oMT48dWwgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDtwYWRkaW5nLWxlZnQ6
-MmVtO21hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MTZweDtjb2xvcjpyZ2IoMzYsNDEsNDYp
-O2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0ZW1Gb250LCZxdW90O1NlZ29l
-IFVJJnF1b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmLCZxdW90O0FwcGxlIENvbG9yIEVt
-b2ppJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7O2ZvbnQtc2l6ZToxNHB4Ij48bGkg
-c3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4tbGVmdDowcHgiPkhhcmR3YXJlOjxi
-ciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5pNjg2PC9saT48bGkgc3R5bGU9ImJveC1z
-aXppbmc6Ym9yZGVyLWJveDttYXJnaW4tdG9wOjAuMjVlbTttYXJnaW4tbGVmdDowcHgiPk9wZXJh
-dGluZyBzeXN0ZW0gOjxiciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5VYnVudHUgMTYu
-MDQuNiBMVFM8L2xpPjwvdWw+PGgxIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2lu
-OjI0cHggMHB4IDE2cHg7bGluZS1oZWlnaHQ6MS4yNTtwYWRkaW5nLWJvdHRvbTowLjNlbTtib3Jk
-ZXItYm90dG9tOjFweCBzb2xpZCByZ2IoMjM0LDIzNiwyMzkpO2NvbG9yOnJnYigzNiw0MSw0Nik7
-Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJnF1b3Q7U2Vnb2Ug
-VUkmcXVvdDssSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJnF1b3Q7QXBwbGUgQ29sb3IgRW1v
-amkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDsiPkJ1ZyBSZXBvcnQ8L2gxPjx1bCBz
-dHlsZT0iYm94LXNpemluZzpib3JkZXItYm94O3BhZGRpbmctbGVmdDoyZW07bWFyZ2luLXRvcDow
-cHg7bWFyZ2luLWJvdHRvbToxNnB4O2NvbG9yOnJnYigzNiw0MSw0Nik7Zm9udC1mYW1pbHk6LWFw
-cGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJnF1b3Q7U2Vnb2UgVUkmcXVvdDssSGVsdmV0
-aWNhLEFyaWFsLHNhbnMtc2VyaWYsJnF1b3Q7QXBwbGUgQ29sb3IgRW1vamkmcXVvdDssJnF1b3Q7
-U2Vnb2UgVUkgRW1vamkmcXVvdDs7Zm9udC1zaXplOjE0cHgiPjxsaSBzdHlsZT0iYm94LXNpemlu
-Zzpib3JkZXItYm94O21hcmdpbi1sZWZ0OjBweCI+RXhwZWN0ZWQgQmVoYXZpb3I8YnIgc3R5bGU9
-ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+QnVpbGRzIHRoZSBzdGF0aWNhbGx5IGxpbmtlZCBleGVj
-dXRhYmxlcyBpbiB0cG0yLXRvb2xzL3Rvb2xzPC9saT48L3VsPjxwIHN0eWxlPSJib3gtc2l6aW5n
-OmJvcmRlci1ib3g7bWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbToxNnB4O2NvbG9yOnJnYigz
-Niw0MSw0Nik7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJnF1
-b3Q7U2Vnb2UgVUkmcXVvdDssSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJnF1b3Q7QXBwbGUg
-Q29sb3IgRW1vamkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDs7Zm9udC1zaXplOjE0
-cHgiPmRlcmVrQHVidW50dTp+L3dvcmtkaXIvdHBtMi10b29scyQgZmlsZSB0b29scy90cG0yXyo8
-YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+dG9vbHMvdHBtMl9hY3RpdmF0ZWNyZWRl
-bnRpYWw6IEVMRiAzMi1iaXQgTFNCIGV4ZWN1dGFibGUsIEludGVsIDgwMzg2LCB2ZXJzaW9uIDEg
-KEdOVS9MaW51eCkswqA8c3BhbiBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94O2ZvbnQtd2Vp
-Z2h0OjYwMCI+c3RhdGljYWxseSBsaW5rZWQ8L3NwYW4+LCBmb3IgR05VL0xpbnV4IDIuNi4zMiwg
-QnVpbGRJRFtzaGExXT05MWEwODM0Zjk2ODU2ZjE1NTM3ZmI3NWIxZDZmODIyZTMxYjA3OTk1LCBu
-b3Qgc3RyaXBwZWQ8L3A+PHVsIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7cGFkZGluZy1s
-ZWZ0OjJlbTttYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9tOjE2cHg7Y29sb3I6cmdiKDM2LDQx
-LDQ2KTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLEJsaW5rTWFjU3lzdGVtRm9udCwmcXVvdDtT
-ZWdvZSBVSSZxdW90OyxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiwmcXVvdDtBcHBsZSBDb2xv
-ciBFbW9qaSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90Oztmb250LXNpemU6MTRweCI+
-PGxpIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2luLWxlZnQ6MHB4Ij5BY3R1YWwg
-QmVoYXZpb3I8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+Q2FuJiMzOTt0IGNvbXBp
-bGUgY29tcGxldGVseTwvbGk+PC91bD48cCBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94O21h
-cmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MTZweDtjb2xvcjpyZ2IoMzYsNDEsNDYpO2ZvbnQt
-ZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0ZW1Gb250LCZxdW90O1NlZ29lIFVJJnF1
-b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmLCZxdW90O0FwcGxlIENvbG9yIEVtb2ppJnF1
-b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7O2ZvbnQtc2l6ZToxNHB4Ij4vdXNyL2Jpbi9s
-ZDogYXR0ZW1wdGVkIHN0YXRpYyBsaW5rIG9mIGR5bmFtaWMgb2JqZWN0IGAvdXNyL2xpYi9pMzg2
-LWxpbnV4LWdudS9saWJjdXJsLWdudXRscy5zbyYjMzk7PGJyIHN0eWxlPSJib3gtc2l6aW5nOmJv
-cmRlci1ib3giPmNvbGxlY3QyOiBlcnJvcjogbGQgcmV0dXJuZWQgMSBleGl0IHN0YXR1czxiciBz
-dHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5NYWtlZmlsZToyMTcwOiByZWNpcGUgZm9yIHRh
-cmdldCAmIzM5O3Rvb2xzL3RwbTJfZ2V0ZWtjZXJ0aWZpY2F0ZSYjMzk7IGZhaWxlZDxiciBzdHls
-ZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5tYWtlOiAqKiogW3Rvb2xzL3RwbTJfZ2V0ZWtjZXJ0
-aWZpY2F0ZV0gRXJyb3IgMTwvcD48dWwgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDtwYWRk
-aW5nLWxlZnQ6MmVtO21hcmdpbi10b3A6MHB4O2NvbG9yOnJnYigzNiw0MSw0Nik7Zm9udC1mYW1p
-bHk6LWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJnF1b3Q7U2Vnb2UgVUkmcXVvdDss
-SGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJnF1b3Q7QXBwbGUgQ29sb3IgRW1vamkmcXVvdDss
-JnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDs7Zm9udC1zaXplOjE0cHg7bWFyZ2luLWJvdHRvbTow
-cHgiPjxsaSBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94O21hcmdpbi1sZWZ0OjBweCI+PHAg
-c3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4tdG9wOjBweDttYXJnaW4tYm90dG9t
-OjE2cHgiPlN0ZXBzIHRvIFJlcHJvZHVjZTxiciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94
-Ij4vLyBpbnN0YWxsIHRwbTItdHNzPGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3giPi4v
-Y29uZmlndXJlICZxdW90O0NGTEFHUz0tLXN0YXRpYyZxdW90OyAtLWVuYWJsZS1zaGFyZWQ9bm88
-YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+bWFrZTxiciBzdHlsZT0iYm94LXNpemlu
-Zzpib3JkZXItYm94Ij5zdWRvIG1ha2UgaW5zdGFsbDxiciBzdHlsZT0iYm94LXNpemluZzpib3Jk
-ZXItYm94Ij4vLyBJbnN0YWxsIHRwbTItdG9vbHM8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVy
-LWJveCI+Li9jb25maWd1cmUgJnF1b3Q7Q0ZMQUdTPS0tc3RhdGljJnF1b3Q7IC0tZW5hYmxlLXNo
-YXJlZD1ubyAtLWRpc2FibGUtaGFyZGVuaW5nPGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1i
-b3giPm1ha2U8L3A+PC9saT48bGkgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4t
-dG9wOjAuMjVlbTttYXJnaW4tbGVmdDowcHgiPjxwIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1i
-b3g7bWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbToxNnB4Ij5Qb3NzaWJsZSBTb2x1dGlvbjxi
-ciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij4uL2NvbmZpZ3VyZSAtLXBhcmFtZXRlcjxi
-ciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5vcjxiciBzdHlsZT0iYm94LXNpemluZzpi
-b3JkZXItYm94Ij5tb2RpZnkgTWFrZWZpbGU8L3A+PC9saT48L3VsPjwvZGl2PjwvZGl2Pgo8L2Js
-b2NrcXVvdGU+PC9kaXY+Cg==
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9ImF1dG8iPkhpLDxkaXYgZGlyPSJhdXRvIj48YnI+PC9k
+aXY+PGRpdiBkaXI9ImF1dG8iPkkgaGF2ZSBtYW5hZ2VkIHRvIGNvbXBpbGUgYW5kIHJ1biB0aGUg
+dHBtIHNpbXVsYXRvciBvbiBXaW5kb3dzIGFzIHdlbGwgYXMgYnVpbGQgdHBtMi10c3MgYW5kICBi
+dWlsZCBhbmQgcnVuIHRwbTItdG9vbHPCoAoKKGFmdGVyIHF1aXRlIGEgYml0IGlmIHdvcmspCgog
+b24gV2luZG93cyAxMC7CoCBJIGxvb2tlZCBhdCB0aGUgbWFrZWZpbGUgYW5kIG9uIHdpbmRvd3Ms
+IGNyZWF0ZWQgYSBwcm9qZWN0IGZvciBldmVyeSB0b29sLiBJVCB3b3JrZWQgd2VsbCBhbmQgYnVp
+bHQgZXZlcnl0aGluZy4gSSBhbHNvIGdvdCB0aGUgc2VydmVyIHVwIG9uIHBvcnQgMjMyMSBhbmQg
+c2V0IHRoZSBlbnZpcm9ubWVudCB2YXJpYWJsZSBUUE0yVE9PTFNfVENUSSB0byAmcXVvdDttc3Np
+bTpob3N0PWxvY2FsaG9zdCxwb3J0PTIzMjEmcXVvdDs8L2Rpdj48ZGl2IGRpcj0iYXV0byI+PGJy
+PjwvZGl2PjxkaXY+SSB3YXMgZm9sbG93aW5nIGluc3RydWN0aW9ucyBsaXN0ZWQgaW7CoDxhIGhy
+ZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvd2lraS9HZXR0
+aW5nLVN0YXJ0ZWQjaW50cm9kdWN0aW9uIiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly9naXRodWIu
+Y29tL3RwbTItc29mdHdhcmUvdHBtMi10b29scy93aWtpL0dldHRpbmctU3RhcnRlZCNpbnRyb2R1
+Y3Rpb248L2E+wqBhbmQgYWxzbyBkaWQgbm90IGJ1aWxkIGFicm1kLsKgPC9kaXY+PGRpdj48YnI+
+PC9kaXY+PGRpdj5TaW5jZSBpIGNhbm5vdCBkb8KgPHNwYW4gc3R5bGU9ImJhY2tncm91bmQtY29s
+b3I6cmdiYSgyNywzMSwzNSwwLjA1KTtjb2xvcjpyZ2IoMzYsNDEsNDYpO2ZvbnQtZmFtaWx5OlNG
+TW9uby1SZWd1bGFyLENvbnNvbGFzLCZxdW90O0xpYmVyYXRpb24gTW9ubyZxdW90OyxNZW5sbyxt
+b25vc3BhY2U7Zm9udC1zaXplOjEzLjZweCI+dHBtMl9wY3JsaXN0IChVbml4IHN5c3RlbSBjb21t
+YW5kKSwgSSBkZWNpZGVkIHRvIGRvIGEgdHBtMl9nZXRyYW5kb20gYXMgbGlzdGVkIGhlcmU6wqA8
+L3NwYW4+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10b29s
+cy93aWtpL0hvdy10by11c2UtdHBtMi10b29scyIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBzOi8vZ2l0
+aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvd2lraS9Ib3ctdG8tdXNlLXRwbTItdG9v
+bHM8L2E+LsKgPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5XaGVuIGkgZXhlY3V0ZWQgYWdhaW5z
+dCB0aGUgaGFyZHdhcmUgdHBtIChieSBkZWZhdWx0IGl0IGZpcnN0IGV4ZWN1dGVzIGFnYWluc3Qg
+dGhlIGhhcmR3YXJlIHRwbSB1c2luZyB0Y3RpLXRicyBvbiB3aW5kb3dzKSwgaXQgd29ya2VkIHdl
+bGwgZm9yOjwvZGl2PjxkaXY+PGk+dHBtMl9nZXRyYW5kb20gLW8gcmFuZG9tLm91dCAyMDwvaT48
+YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5OZXh0LCBpIHJlYWxseSB3YW50ZWQgdG8gdHJ5
+IG91dCBhIGZldyB0aGluZ3MsIHNvIGkgc2V0IHRoZSBlbnYgdmFyaWFibGXCoFRQTTJUT09MU19U
+Q1RJIHRvwqBtc3NpbTpob3N0PTEyNy4wLjAuMSxwb3J0PTIzMjEgKCBpIHRyaWVkIGxvY2FsaG9z
+dCwgdGhhdCBmYWlsZWQgd2l0aCBhIHNvY2tldCBjb25uZWN0IGJlY2F1c2UgaXQgd2FzIG5vdCBy
+ZXNvbHZpbmcgdG8gMTI3LjAuMC4xKS4gTm93IGkgZ2V0IHRoaXMgZXJyb3I6PC9kaXY+PGRpdj48
+YnI+PC9kaXY+PGRpdj5XQVJOSU5HOmVzeXM6YXBpXEVzeXNfR2V0Q2FwYWJpbGl0eS5jOjMwMzpF
+c3lzX0dldENhcGFiaWxpdHlfRmluaXNoKCkgUmVjZWl2ZWQgVFBNIEVycm9yPGJyPkVSUk9SOmVz
+eXM6YXBpXEVzeXNfR2V0Q2FwYWJpbGl0eS5jOjEwNzpFc3lzX0dldENhcGFiaWxpdHkoKSBFc3lz
+IEZpbmlzaCBFcnJvckNvZGUgKDB4MDAwMDAxMDApPGJyPkVSUk9SOiBFc3lzX0dldENhcGFiaWxp
+dHkoMHgxMDApIC0gdHBtOmVycm9yKDIuMCk6IFRQTSBub3QgaW5pdGlhbGl6ZWQgYnkgVFBNMl9T
+dGFydHVwIG9yIGFscmVhZHkgaW5pdGlhbGl6ZWQ8YnI+RVJST1I6IFVuYWJsZSB0byBydW4gQzpc
+VXNlcnNcYXJ1bnN1XHNvdXJjZVxyZXBvc1x0cG0yLXRvb2xzLTQuMFx2c3R1ZGlvXHg2NFxEZWJ1
+Z1x0cG0yLWdldHJhbmRvbS5leGU8YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGlzIGlz
+IG9ubHkgZm9yIE1TU0lNLiBBbnlvbmUga25vd3Mgd2h5ID8/PC9kaXY+PGRpdj48YnI+PC9kaXY+
+PGRpdj48YnI+PC9kaXY+PC9kaXY+CjwvZGl2Pgo=
 
---===============7674546229255340523==--
+--===============0687331587187714425==--
 
