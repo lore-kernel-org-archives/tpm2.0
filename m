@@ -1,72 +1,109 @@
-Content-Type: multipart/mixed; boundary="===============2562773830172265069=="
+Content-Type: multipart/mixed; boundary="===============7445787290653013121=="
 MIME-Version: 1.0
-From: Jonas Witschel <diabonas at gmx.de>
-Subject: [tpm2] Re: Cannot build tpm2-tss@2.2.3 and tpm2-abrmd@2.0.3 with
- Automake 1.6
-Date: Tue, 01 Oct 2019 19:29:14 +0200
-Message-ID: <65510ab5-fa9c-9ae5-7d2b-e13de955d035@gmx.de>
-In-Reply-To: 20A6FE0AC912764FB8B5BC5A1A7CB92B4255A062@FMSMSX103.amr.corp.intel.com
+From: Luke Hinds <lhinds at redhat.com>
+Subject: [tpm2] tpm2_nvread Error:0x9a2
+Date: Tue, 01 Oct 2019 12:11:38 +0100
+Message-ID: <CAKrSGQRr0ZoP5hq9KFtgD45HbpT3dhBF6umG2-cZ73FC8YcEGQ@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2562773830172265069==
+--===============7445787290653013121==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On 2019-10-01 19:10, Oliver, Dario N wrote:
-> I just noticed that I am no longer able to build tpm2-tss and tpm-abrmd (=
-the specified versions) with the latest automake 1.6.
-> [...]
-> This is caused by automake 1.6, there are several other persons having th=
-e same problem because of broken compatibility, i.e. https://gitlab.gnome.o=
-rg/GNOME/libgdata/issues/24
-> The latest versions of tss, abrmd and tools works fine. Maybe there is a =
-fix in those version that you could consider porting to the older versions?
-> [...]
-> Versions that do not work with automake 1.6:
-> =
+Apologies, that might be hardware specific. but thought it might be worth
+asking here, in case anyone has seen the same.
 
-> 	- TPM2_TSS_VERSION=3D2.2.3
-> 	- TPM2_ABRMD_VERSION=3D2.0.3
-> 	- TPM2_TOOLS_VERSION=3D3.2.0 ?
+My Intel Nuc 7i7DNHE with an Infineon SLB9665VQ2.0 TPM is no longer
+allowing me to read the NV index.
 
-these build failures are most probably caused by a breaking change in
-Autoconf Archive 2019.01.06, see the following pull requests for the
-fixes incorporated in the most recent versions:
+This is after clearing the TPM by removing the yellow jumper and selecting
+4 to clear on first boot (and then placing the jumper back into position)
 
-- tpm2-tss: https://github.com/tpm2-software/tpm2-tss/pull/1238, fixed
-by https://github.com/tpm2-software/tpm2-tss/pull/1256
-- tpm2-abrmd: https://github.com/tpm2-software/tpm2-abrmd/pull/574
-- tpm2-tools: https://github.com/tpm2-software/tpm2-tools/pull/1292
+I can run tpm2_takeownership -c with no issues, but not 'tpm2_nvread'
 
-Best,
-Jonas
+0x1c00002:
+  hash algorithm:
+    friendly: sha256
+    value: 0xB
+  attributes:
+    friendly:
+ppwrite|writedefine|ppread|ownerread|authread|no_da|written|platformcreate
+    value: 0x1200762
+  size: 1177
 
+tpm2_nvread -x 0x1c00002 -s 1171 -f outfile.out
+ERROR: Failed to read NVRAM area at index 0x1c00002 (29360130). Error:0x9a2
+ERROR: Unable to run tpm2_nvread
 
---===============2562773830172265069==
-Content-Type: application/pgp-signature
+tpm2_rc_decode 0x9a2
+error layer
+  hex: 0x0
+  identifier: TSS2_TPM_RC_LAYER
+  description: Error produced by the TPM
+format 1 error code
+  hex: 0x22
+  identifier: TPM2_RC_BAD_AUTH
+  description: authorization failure without DA implications
+session
+  hex: 0x100
+  identifier: TPM2_RC_1
+  description:  (null)
+
+Does this ring any bells for anyone?
+
+-- =
+
+Luke Hinds
+
+--===============7445787290653013121==
+Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="signature.asc"
+Content-Disposition: attachment; filename="attachment.html"
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSXpCQUVCQ2dBZEZpRUUwWkduanhpQjg0
-UjFQSlorYUdzR09zUzhEc2tGQWwyVGpQTUFDZ2tRYUdzR09zUzgKRHNrZW1CQUFwdUJmZ3REZVda
-elU1WE14NHpNeS9hazV4UHorQUZWd05DZUZVRitIRElTK1Y3UWpNV3lvYkg0WAppS0xQbWdHeXNT
-WmFYemRlK3VUcmtRQk5mOVQ5UzdXdWgxeFNsbkE1dGtJcjBmdks0TktxaEZWZ3ZuWnU4K2VpCmRF
-M2hMWDRBS3ZrTUpiRTlCcGQvV1puRmFNdVJGN3JTR2tscmljUjFndVFZUFBkQkMydERiTU96T2RT
-MjlWU3AKVmlaSEpndkorcXF4MVJTNzlPQ2hYTW5LVlhUTmxlWFlybDdNSVJqb1lwZ1paMUs2d3hR
-Smc1VUI3bmQ3SkRoOQpKZGJTNEtNSDFWSWRRenI1MmlrcXU4SzhSYzE1dTRpbmtNUC83ellhRG9Q
-RWFvVEplMUFibEZEQUJhS3VheGd2CkxsaHJOYXBkVFk5TUQ5UmtKbXFRdUVnWjdGNi9WTzNxdEFt
-YjYxSWNGbnZ3Y0tFWm5BSm82RkdLSFloaVhoYTcKM1oxNXBLZTNBZytYeUhZcWZneWpIeDZlYUE3
-cDJuR2U0OHAxUWV0dnJpazZoVzN4WW50VDRQYmJVNmRwL0dMTwpudmcvNWwyK1lldFYxYnNiQkhQ
-Q2hDSG8wSUlrQ3lHRG9TdlBydlVYbTE4MzNsSlBQN2s3MWxrTHBSbFp0bUlSCnM5RmFnbE4vUFVq
-aHQ1eDUxWUIwc2Fkb2dnRE5ENFZ0aGloY2NSRHJjMEQrQUQwbzR3akNianNzT0dNNHZrcmQKb0lF
-QU5KRkNmWWgwME00M0Y5QmFQcGtJODVJSitUVDlEMzBSZUZZS1FHdXlFRkhyYnVqT3NRWi9TR2E3
-Nk1SSQo3MVhxRHhHc1RkcjFsSHV3cG9yeUQvN2FkZU9hTFdFU2pmSWlXUkNGNXVYdERyb3lqMFk9
-Cj1LemRjCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
+PGRpdiBkaXI9Imx0ciI+PGRpdj5IaSw8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkFwb2xvZ2ll
+cywgdGhhdCBtaWdodCBiZSBoYXJkd2FyZSBzcGVjaWZpYy4gYnV0IHRob3VnaHQgaXQgbWlnaHQg
+YmUgd29ydGggYXNraW5nIGhlcmUsIGluIGNhc2UgYW55b25lIGhhcyBzZWVuIHRoZSBzYW1lLjxi
+cj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pk15IDxzcGFuIGNsYXNzPSJnbWFpbC1pbCI+SW50
+ZWw8L3NwYW4+IDxzcGFuIGNsYXNzPSJnbWFpbC1pbCI+TnVjPC9zcGFuPiA3aTdETkhFIHdpdGgg
+PHNwYW4gY2xhc3M9ImdtYWlsLXN0Ij5hbiBJbmZpbmVvbiBTTEI5NjY1VlEyLjAgVFBNIGlzIG5v
+IGxvbmdlciBhbGxvd2luZyBtZSB0byByZWFkIHRoZSBOViBpbmRleC48YnI+PC9zcGFuPjwvZGl2
+PjxkaXY+PHNwYW4gY2xhc3M9ImdtYWlsLXN0Ij48YnI+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4g
+Y2xhc3M9ImdtYWlsLXN0Ij5UaGlzIGlzIGFmdGVyIGNsZWFyaW5nIHRoZSBUUE0gYnkgcmVtb3Zp
+bmcgdGhlIHllbGxvdyBqdW1wZXIgYW5kIHNlbGVjdGluZyA0IHRvIGNsZWFyIG9uIGZpcnN0IGJv
+b3QgKGFuZCB0aGVuIHBsYWNpbmcgdGhlIGp1bXBlciBiYWNrIGludG8gcG9zaXRpb24pPGJyPjwv
+c3Bhbj48L2Rpdj48ZGl2PjxzcGFuIGNsYXNzPSJnbWFpbC1zdCI+PGJyPjwvc3Bhbj48L2Rpdj48
+ZGl2PjxzcGFuIGNsYXNzPSJnbWFpbC1zdCI+SSBjYW4gcnVuIHRwbTJfdGFrZW93bmVyc2hpcCAt
+YyB3aXRoIG5vIGlzc3VlcywgYnV0IG5vdCAmIzM5OzxzcGFuIGNsYXNzPSJnbWFpbC1zdCI+dHBt
+Ml9udnJlYWQmIzM5Ozwvc3Bhbj48L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBjbGFzcz0iZ21haWwt
+c3QiPjxicj48L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBjbGFzcz0iZ21haWwtc3QiPjB4MWMwMDAw
+Mjo8YnI+wqAgaGFzaCBhbGdvcml0aG06PGJyPsKgIMKgIGZyaWVuZGx5OiBzaGEyNTY8YnI+wqAg
+wqAgdmFsdWU6IDB4Qjxicj7CoCBhdHRyaWJ1dGVzOjxicj7CoCDCoCBmcmllbmRseTogcHB3cml0
+ZXx3cml0ZWRlZmluZXxwcHJlYWR8b3duZXJyZWFkfGF1dGhyZWFkfG5vX2RhfHdyaXR0ZW58cGxh
+dGZvcm1jcmVhdGU8YnI+wqAgwqAgdmFsdWU6IDB4MTIwMDc2Mjxicj7CoCBzaXplOiAxMTc3PGJy
+Pjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIGNsYXNzPSJnbWFpbC1zdCI+PGJyPjwvc3Bhbj48L2Rp
+dj48ZGl2PjxzcGFuIGNsYXNzPSJnbWFpbC1zdCI+dHBtMl9udnJlYWQgLXggMHgxYzAwMDAyIC1z
+IDExNzEgLWYgb3V0ZmlsZS5vdXQ8YnI+RVJST1I6IEZhaWxlZCB0byByZWFkIE5WUkFNIGFyZWEg
+YXQgaW5kZXggMHgxYzAwMDAyICgyOTM2MDEzMCkuIEVycm9yOjB4OWEyPGJyPkVSUk9SOiBVbmFi
+bGUgdG8gcnVuIHRwbTJfbnZyZWFkPGJyPjwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2
+PnRwbTJfcmNfZGVjb2RlIDB4OWEyIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIDxicj5lcnJvciBsYXllcjxicj7CoCBoZXg6IDB4MDxi
+cj7CoCBpZGVudGlmaWVyOiBUU1MyX1RQTV9SQ19MQVlFUjxicj7CoCBkZXNjcmlwdGlvbjogRXJy
+b3IgcHJvZHVjZWQgYnkgdGhlIFRQTTxicj5mb3JtYXQgMSBlcnJvciBjb2RlPGJyPsKgIGhleDog
+MHgyMjxicj7CoCBpZGVudGlmaWVyOiBUUE0yX1JDX0JBRF9BVVRIPGJyPsKgIGRlc2NyaXB0aW9u
+OiBhdXRob3JpemF0aW9uIGZhaWx1cmUgd2l0aG91dCBEQSBpbXBsaWNhdGlvbnM8YnI+c2Vzc2lv
+bjxicj7CoCBoZXg6IDB4MTAwPGJyPsKgIGlkZW50aWZpZXI6IFRQTTJfUkNfMTxicj7CoCBkZXNj
+cmlwdGlvbjogwqAobnVsbCk8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkRvZXMgdGhpcyByaW5n
+IGFueSBiZWxscyBmb3IgYW55b25lPzxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj4tLSA8YnI+PGRp
+diBkaXI9Imx0ciIgY2xhc3M9ImdtYWlsX3NpZ25hdHVyZSIgZGF0YS1zbWFydG1haWw9ImdtYWls
+X3NpZ25hdHVyZSI+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGRpcj0ibHRyIj48ZGl2PjxkaXYg
+ZGlyPSJsdHIiPjxkaXY+PGRpdiBkaXI9Imx0ciI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMi44
+cHgiPkx1a2UgSGluZHM8L3NwYW4+PGJyIHN0eWxlPSJmb250LXNpemU6MTIuOHB4Ij48L2Rpdj48
+L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4K
 
---===============2562773830172265069==--
+--===============7445787290653013121==--
 
