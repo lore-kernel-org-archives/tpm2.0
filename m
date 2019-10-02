@@ -1,51 +1,29 @@
-Content-Type: multipart/mixed; boundary="===============6766578104203358872=="
+Content-Type: multipart/mixed; boundary="===============8007932179212629085=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] Re: Error running tpm2_create: magic does not match!
-Date: Wed, 02 Oct 2019 08:56:19 -0700
-Message-ID: <7ce75601-b3d5-7d64-a720-50d798aae9e3@intel.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E0FDBA@ORSMSX101.amr.corp.intel.com
+From: Roberto Carvalho <roberto.nogueira.rc at gmail.com>
+Subject: [tpm2] tpm2-tools in windows x64
+Date: Wed, 02 Oct 2019 14:59:21 -0300
+Message-ID: <CAMCD9MsQT1FPOiKaokXXVq6u6KrMDdhQn5Pqq85eT4iH_etLHg@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6766578104203358872==
+--===============8007932179212629085==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 10/2/19 7:16 AM, Roberts, William C wrote:
->> wait.. i should be doing "negmagic" and not -negmagic in the function ca=
-ll! Maybe
->> that the cause of the bug!
-> Yeah -- would make it positive and you would seek too far.
-> =
+Is there any walkthrough or tutorial for installing tpm2-tools on windows
+x64 using visual studio 2017?
 
-> I'm not sure though why you have some unsigned issue on windows, fseek ta=
-kes a long which is signed.
+--===============8007932179212629085==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-To avoid dealing with a negative offset you could do something like this:
+PGRpdiBkaXI9Imx0ciI+SXMgdGhlcmUgYW55IHdhbGt0aHJvdWdoIG9yIHR1dG9yaWFsIGZvciBp
+bnN0YWxsaW5nIHRwbTItdG9vbHMgb24gd2luZG93cyB4NjQgdXNpbmcgdmlzdWFsIHN0dWRpbyAy
+MDE3Pzxicj48L2Rpdj4K
 
-diff --git a/lib/files.c b/lib/files.c
-index d45ead87..9da1543a 100644
---- a/lib/files.c
-+++ b/lib/files.c
-@@ -335,7 +335,7 @@ static bool check_magic(FILE *fstream, bool seek_reset)=
- {
-     bool match =3D magic =3D=3D MAGIC;
- =
-
-     if (seek_reset) {
--        int rc =3D fseek(fstream, -sizeof(magic), SEEK_CUR);
-+        int rc =3D fseek(fstream, ftell(fstream) - sizeof(magic), SEEK_SET=
-);
-         if (rc !=3D 0) {
-             LOG_ERR("fseek failed: %s", strerror(errno));
-             return false;
-  =
-
-
--- =
-
-Tadeusz
---===============6766578104203358872==--
+--===============8007932179212629085==--
 
