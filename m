@@ -1,26 +1,143 @@
-Content-Type: multipart/mixed; boundary="===============0012882759124924600=="
+Content-Type: multipart/mixed; boundary="===============0722570937556673838=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RC] tpm2-tools 3.2.1-rc1
-Date: Wed, 02 Oct 2019 14:18:06 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E0FDCA@ORSMSX101.amr.corp.intel.com>
+From: Roberto Carvalho <roberto.nogueira.rc at gmail.com>
+Subject: [tpm2] Try Decrypt using EK and AIK
+Date: Wed, 02 Oct 2019 12:38:43 -0300
+Message-ID: <CAMCD9Msi=FFY=mg4kfrSWf7ukAVrbEjguonDPee0yk=R8ksn1Q@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0012882759124924600==
+--===============0722570937556673838==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-A new RC is available for tpm2-tools project. 3.2.1-rc1 is now available.
-Sorry for the delay between RC's, it got lost in the noise of the 4.0 relea=
-se.
+I'm trying to encrypt a file using openssl and decrypt using AIK and EK
+keys, but it's not working:
 
-https://github.com/tpm2-software/tpm2-tools/releases/tag/3.2.1-rc1
+Create EK
+tpm2_createek -Q -c 0x81010009 -G rsa -u ek_pub.pem -f pem
+tpm2_readpublic -Q -c 0x81010009 -o ek.pub
 
-I'm planning a release on Oct 9 unless I hear of a blocking bug.
+Create AK
+tpm2_createak -Q -C 0x81010009 -c ak.ctx -G rsa -g sha256 -s rsassa -u
+ak_pub.pem -f pem -n ak_pub.name
+tpm2_readpublic -Q -c ak.ctx -o ak.pub
 
-Thanks,
-Bill
---===============0012882759124924600==--
+Trying using EK
+echo 12345678 > test.txt
+openssl rsautl -in test.txt -out dados.enc -pubin -inkey ek_pub.pem -encrypt
+
+tpm2_rsadecrypt -c 0x81010009 -o decrypt.txt dados.enc
+WARNING:esys:src/tss2-esys/api/Esys_RSA_Decrypt.c:301:Esys_RSA_Decrypt_Fini=
+sh()
+Received TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_RSA_Decrypt.c:102:Esys_RSA_Decrypt() Esys
+Finish ErrorCode (0x0000012f)
+ERROR: Esys_RSA_Decrypt(0x12F) - tpm:error(2.0): authValue or authPolicy is
+not available for selected entity
+ERROR: Unable to run tpm2_rsadecrypt
+
+If I try using AK:
+openssl rsautl -in test.txt -out testeak.enc -pubin -inkey ak_pub.pem
+-encrypt
+
+tpm2_rsadecrypt -c ak.ctx -o decrypt.txt testeak.enc
+WARNING:esys:src/tss2-esys/api/Esys_RSA_Decrypt.c:301:Esys_RSA_Decrypt_Fini=
+sh()
+Received TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_RSA_Decrypt.c:102:Esys_RSA_Decrypt() Esys
+Finish ErrorCode (0x00000182)
+ERROR: Esys_RSA_Decrypt(0x182) - tpm:handle(1):inconsistent attributes
+ERROR: Unable to run tpm2_rsadecrypt
+
+Is it possible to decrypt using these keys?
+
+--===============0722570937556673838==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGRpdiBkaXI9Imx0ciI+PHAgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4tYm90
+dG9tOjE2cHg7Y29sb3I6cmdiKDM2LDQxLDQ2KTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLEJs
+aW5rTWFjU3lzdGVtRm9udCwmcXVvdDtTZWdvZSBVSSZxdW90OyxIZWx2ZXRpY2EsQXJpYWwsc2Fu
+cy1zZXJpZiwmcXVvdDtBcHBsZSBDb2xvciBFbW9qaSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9q
+aSZxdW90Oztmb250LXNpemU6MTRweDttYXJnaW4tdG9wOjBweCI+SSYjMzk7bSB0cnlpbmcgdG8g
+ZW5jcnlwdCBhIGZpbGUgdXNpbmfCoDxzcGFuIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7
+Zm9udC13ZWlnaHQ6NjAwIj5vcGVuc3NsPC9zcGFuPsKgYW5kIGRlY3J5cHQgdXNpbmcgQUlLIGFu
+ZCBFSyBrZXlzLCBidXQgaXQmIzM5O3Mgbm90IHdvcmtpbmc6PC9wPjxwIHN0eWxlPSJib3gtc2l6
+aW5nOmJvcmRlci1ib3g7bWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbToxNnB4O2NvbG9yOnJn
+YigzNiw0MSw0Nik7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQs
+JnF1b3Q7U2Vnb2UgVUkmcXVvdDssSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJnF1b3Q7QXBw
+bGUgQ29sb3IgRW1vamkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDs7Zm9udC1zaXpl
+OjE0cHgiPjxzcGFuIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7Zm9udC13ZWlnaHQ6NjAw
+Ij5DcmVhdGUgRUs8L3NwYW4+PGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3giPnRwbTJf
+Y3JlYXRlZWsgLVEgLWMgMHg4MTAxMDAwOSAtRyByc2EgLXUgZWtfcHViLnBlbSAtZiBwZW08YnIg
+c3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+dHBtMl9yZWFkcHVibGljIC1RIC1jIDB4ODEw
+MTAwMDkgLW8gZWsucHViPC9wPjxwIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2lu
+LXRvcDowcHg7bWFyZ2luLWJvdHRvbToxNnB4O2NvbG9yOnJnYigzNiw0MSw0Nik7Zm9udC1mYW1p
+bHk6LWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJnF1b3Q7U2Vnb2UgVUkmcXVvdDss
+SGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJnF1b3Q7QXBwbGUgQ29sb3IgRW1vamkmcXVvdDss
+JnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDs7Zm9udC1zaXplOjE0cHgiPjxzcGFuIHN0eWxlPSJi
+b3gtc2l6aW5nOmJvcmRlci1ib3g7Zm9udC13ZWlnaHQ6NjAwIj5DcmVhdGUgQUs8L3NwYW4+PGJy
+IHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3giPnRwbTJfY3JlYXRlYWsgLVEgLUMgMHg4MTAx
+MDAwOSAtYyBhay5jdHggLUcgcnNhIC1nIHNoYTI1NiAtcyByc2Fzc2EgLXUgYWtfcHViLnBlbSAt
+ZiBwZW0gLW4gPGEgaHJlZj0iaHR0cDovL2FrX3B1Yi5uYW1lIj5ha19wdWIubmFtZTwvYT48YnIg
+c3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+dHBtMl9yZWFkcHVibGljIC1RIC1jIGFrLmN0
+eCAtbyBhay5wdWI8L3A+PHAgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4tdG9w
+OjBweDttYXJnaW4tYm90dG9tOjE2cHg7Y29sb3I6cmdiKDM2LDQxLDQ2KTtmb250LWZhbWlseTot
+YXBwbGUtc3lzdGVtLEJsaW5rTWFjU3lzdGVtRm9udCwmcXVvdDtTZWdvZSBVSSZxdW90OyxIZWx2
+ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiwmcXVvdDtBcHBsZSBDb2xvciBFbW9qaSZxdW90OywmcXVv
+dDtTZWdvZSBVSSBFbW9qaSZxdW90Oztmb250LXNpemU6MTRweCI+PHNwYW4gc3R5bGU9ImJveC1z
+aXppbmc6Ym9yZGVyLWJveDtmb250LXdlaWdodDo2MDAiPlRyeWluZyB1c2luZyBFSzwvc3Bhbj48
+YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+ZWNobyAxMjM0NTY3OCAmZ3Q7IHRlc3Qu
+dHh0PGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3giPm9wZW5zc2wgcnNhdXRsIC1pbiB0
+ZXN0LnR4dCAtb3V0IGRhZG9zLmVuYyAtcHViaW4gLWlua2V5IGVrX3B1Yi5wZW0gLWVuY3J5cHQ8
+L3A+PHAgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveDttYXJnaW4tdG9wOjBweDttYXJnaW4t
+Ym90dG9tOjE2cHg7Y29sb3I6cmdiKDM2LDQxLDQ2KTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVt
+LEJsaW5rTWFjU3lzdGVtRm9udCwmcXVvdDtTZWdvZSBVSSZxdW90OyxIZWx2ZXRpY2EsQXJpYWws
+c2Fucy1zZXJpZiwmcXVvdDtBcHBsZSBDb2xvciBFbW9qaSZxdW90OywmcXVvdDtTZWdvZSBVSSBF
+bW9qaSZxdW90Oztmb250LXNpemU6MTRweCI+dHBtMl9yc2FkZWNyeXB0IC1jIDB4ODEwMTAwMDkg
+LW8gZGVjcnlwdC50eHQgZGFkb3MuZW5jPGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3gi
+PjxzcGFuIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7Zm9udC13ZWlnaHQ6NjAwIj5XQVJO
+SU5HOmVzeXM6c3JjL3RzczItZXN5cy9hcGkvRXN5c19SU0FfRGVjcnlwdC5jOjMwMTpFc3lzX1JT
+QV9EZWNyeXB0X0ZpbmlzaCgpIFJlY2VpdmVkIFRQTSBFcnJvcjxiciBzdHlsZT0iYm94LXNpemlu
+Zzpib3JkZXItYm94Ij5FUlJPUjplc3lzOnNyYy90c3MyLWVzeXMvYXBpL0VzeXNfUlNBX0RlY3J5
+cHQuYzoxMDI6RXN5c19SU0FfRGVjcnlwdCgpIEVzeXMgRmluaXNoIEVycm9yQ29kZSAoMHgwMDAw
+MDEyZik8YnIgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+RVJST1I6IEVzeXNfUlNBX0Rl
+Y3J5cHQoMHgxMkYpIC0gdHBtOmVycm9yKDIuMCk6IGF1dGhWYWx1ZSBvciBhdXRoUG9saWN5IGlz
+IG5vdCBhdmFpbGFibGUgZm9yIHNlbGVjdGVkIGVudGl0eTxiciBzdHlsZT0iYm94LXNpemluZzpi
+b3JkZXItYm94Ij5FUlJPUjogVW5hYmxlIHRvIHJ1biB0cG0yX3JzYWRlY3J5cHQ8L3NwYW4+PC9w
+PjxwIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2luLXRvcDowcHg7bWFyZ2luLWJv
+dHRvbToxNnB4O2NvbG9yOnJnYigzNiw0MSw0Nik7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSxC
+bGlua01hY1N5c3RlbUZvbnQsJnF1b3Q7U2Vnb2UgVUkmcXVvdDssSGVsdmV0aWNhLEFyaWFsLHNh
+bnMtc2VyaWYsJnF1b3Q7QXBwbGUgQ29sb3IgRW1vamkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1v
+amkmcXVvdDs7Zm9udC1zaXplOjE0cHgiPjxzcGFuIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1i
+b3g7Zm9udC13ZWlnaHQ6NjAwIj5JZiBJIHRyeSB1c2luZyBBSzo8L3NwYW4+PGJyIHN0eWxlPSJi
+b3gtc2l6aW5nOmJvcmRlci1ib3giPm9wZW5zc2wgcnNhdXRsIC1pbiB0ZXN0LnR4dCAtb3V0IHRl
+c3RlYWsuZW5jIC1wdWJpbiAtaW5rZXkgYWtfcHViLnBlbSAtZW5jcnlwdDwvcD48cCBzdHlsZT0i
+Ym94LXNpemluZzpib3JkZXItYm94O21hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MTZweDtj
+b2xvcjpyZ2IoMzYsNDEsNDYpO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0
+ZW1Gb250LCZxdW90O1NlZ29lIFVJJnF1b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmLCZx
+dW90O0FwcGxlIENvbG9yIEVtb2ppJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7O2Zv
+bnQtc2l6ZToxNHB4Ij50cG0yX3JzYWRlY3J5cHQgLWMgYWsuY3R4IC1vIGRlY3J5cHQudHh0IHRl
+c3RlYWsuZW5jPGJyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3giPjxzcGFuIHN0eWxlPSJi
+b3gtc2l6aW5nOmJvcmRlci1ib3g7Zm9udC13ZWlnaHQ6NjAwIj5XQVJOSU5HOmVzeXM6c3JjL3Rz
+czItZXN5cy9hcGkvRXN5c19SU0FfRGVjcnlwdC5jOjMwMTpFc3lzX1JTQV9EZWNyeXB0X0Zpbmlz
+aCgpIFJlY2VpdmVkIFRQTSBFcnJvcjxiciBzdHlsZT0iYm94LXNpemluZzpib3JkZXItYm94Ij5F
+UlJPUjplc3lzOnNyYy90c3MyLWVzeXMvYXBpL0VzeXNfUlNBX0RlY3J5cHQuYzoxMDI6RXN5c19S
+U0FfRGVjcnlwdCgpIEVzeXMgRmluaXNoIEVycm9yQ29kZSAoMHgwMDAwMDE4Mik8YnIgc3R5bGU9
+ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+RVJST1I6IEVzeXNfUlNBX0RlY3J5cHQoMHgxODIpIC0g
+dHBtOmhhbmRsZSgxKTppbmNvbnNpc3RlbnQgYXR0cmlidXRlczxiciBzdHlsZT0iYm94LXNpemlu
+Zzpib3JkZXItYm94Ij5FUlJPUjogVW5hYmxlIHRvIHJ1biB0cG0yX3JzYWRlY3J5cHQ8L3NwYW4+
+PC9wPjxwIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2luLXRvcDowcHg7Y29sb3I6
+cmdiKDM2LDQxLDQ2KTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLEJsaW5rTWFjU3lzdGVtRm9u
+dCwmcXVvdDtTZWdvZSBVSSZxdW90OyxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiwmcXVvdDtB
+cHBsZSBDb2xvciBFbW9qaSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90Oztmb250LXNp
+emU6MTRweDttYXJnaW4tYm90dG9tOjBweCI+PHNwYW4gc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVy
+LWJveDtmb250LXdlaWdodDo2MDAiPklzIGl0IHBvc3NpYmxlIHRvIGRlY3J5cHQgdXNpbmcgdGhl
+c2Uga2V5cz88L3NwYW4+PC9wPjwvZGl2Pgo=
+
+--===============0722570937556673838==--
 
