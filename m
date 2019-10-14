@@ -1,41 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============7659744617739060271=="
+Content-Type: multipart/mixed; boundary="===============4050683583882085620=="
 MIME-Version: 1.0
-From: mohammed.aitbendaoud at gmail.com
+From: Tadeusz Struk <tadeusz.struk at intel.com>
 Subject: [tpm2] Re: tpm2_createprimary command
-Date: Mon, 14 Oct 2019 09:05:43 +0000
-Message-ID: <20191014090543.2603.52642@new-ml01.vlan13.01.org>
-In-Reply-To: a7790d21-be82-2e8a-4638-afa8f6cfed26@intel.com
+Date: Mon, 14 Oct 2019 10:52:52 -0700
+Message-ID: <d5d5b92f-2f7a-7efe-7ee4-8aa31051ae23@intel.com>
+In-Reply-To: 20191014090543.2603.52642@new-ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7659744617739060271==
+--===============4050683583882085620==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thank you for your reply.
-It's clear.
+On 10/14/19 2:05 AM, mohammed.aitbendaoud(a)gmail.com wrote:
+>      tpm2_create -H 0x80000000 -g sha256 -G aes -u key.pub -r AESkey.priv =
 
-I have another somes questions in this regard, at the tpm2_create level thi=
-s time :
+> =
 
-     tpm2_create -H 0x80000000 -g sha256 -G symcipher -u key.pub -r AESkey.=
-priv =
+> when I put aes in parameter it returns me an error : type algorithm not s=
+upport 0x6
+> =
 
+>  2- Why the tpm2-tools does not support aes while the hardware chip of th=
+e TPM supports it ?
 
- 1- I need to create a symmetric private key AES, why in the function we ha=
-ve to specify -u and -r ? if no it does not work !
+The create tool does support aes algorithm. The error code doesn't look rig=
+ht.
+To create a symmetric aes key please follow the example on:
 
-     tpm2_create -H 0x80000000 -g sha256 -G aes -u key.pub -r AESkey.priv =
+https://github.com/tpm2-software/tpm2-tools/wiki/Creating-Objects
 
+Thanks,
+-- =
 
-when I put aes in parameter it returns me an error : type algorithm not sup=
-port 0x6
-
- 2- Why the tpm2-tools does not support aes while the hardware chip of the =
-TPM supports it ?
-
-
-Thank you
---===============7659744617739060271==--
+Tadeusz
+--===============4050683583882085620==--
 
