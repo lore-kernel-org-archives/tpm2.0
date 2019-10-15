@@ -1,136 +1,186 @@
-Content-Type: multipart/mixed; boundary="===============9052151475667992440=="
+Content-Type: multipart/mixed; boundary="===============5381340375294761788=="
 MIME-Version: 1.0
-From: Trey Weaver <treyweaver at fastmail.net>
-Subject: [tpm2] Error on TPM2 and Ubuntu 19.04
-Date: Tue, 15 Oct 2019 14:56:11 -0400
-Message-ID: <e7667319-4b47-4e22-8efd-4280c1ff7725@www.fastmail.com>
+From: Steven Clark <davolfman at gmail.com>
+Subject: [tpm2] Persisted primary key not usable, tpm2-tools 4.0.0
+Date: Tue, 15 Oct 2019 15:06:02 -0700
+Message-ID: <CAOCvsSmFvwnigBXB3zHBpX9eD8HoNEPhuxB+CKUxy552J5Abkg@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9052151475667992440==
+--===============5381340375294761788==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Here is final goal is to have a compatible version of tpm2_tools and clevis=
- on my Linux machine. The use clevis to automatically unlock my hard drive =
-on boot.
+I've got my new recipes building for tpm2-tools 4.0.0, tpm2-tss 2.3.1 and
+tpm2-abrmd 2.2.0.  Mostly my work seems to port over (from an old nightly)
+fine but I just tried to persist a new SRK and seal with it and I ran into
+a problem.  I can create a new primary and store it to a context blob, from
+which I can read the public portion.  And tpm2_evictcontrol runs
+successfully when asked to persist it.  The handle even shows up in
+tpm2_getcap handles-persistent.  But I can't run a tpm2_readpublic on the
+handle, use it as the parent for another object, or use evict-control to
+remove it.  It just sits there.
 
-So I download the latest copy of ubuntu 19.04 installed all of the tpm2_too=
-ls on it and all the latest clevis tools using apt. Ran sudo tpm2-abrmd -o =
-and then ran the simple command to test clevis and I get this error:
+root(a)localhost:~# tpm2_clear
 
-**root(a)jps-TB116C-AN:~# echo foo | clevis encrypt tpm2 '{}' > text.enc****
-**
-**ERROR:****
-**
-**CreatePrimary Failed ! ErrorCode: 0x9a2****
-**
-**
-**
-**ERROR: Unable to run tpm2_createprimary****
-**
-**Creating TPM2 primary key failed!**
+root(a)localhost:~# tpm2_createprimary -C o -G rsa -c prim.ctx
+name-alg:
+  value: sha256
+  raw: 0xb
+attributes:
+  value:
+fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|decrypt
+  raw: 0x30072
+type:
+  value: rsa
+  raw: 0x1
+exponent: 0x0
+bits: 2048
+scheme:
+  value: null
+  raw: 0x10
+scheme-halg:
+  value: (null)
+  raw: 0x0
+sym-alg:
+  value: aes
+  raw: 0x6
+sym-mode:
+  value: cfb
+  raw: 0x43
+sym-keybits: 128
+rsa:
+d94ae68bd5f2d5037c862e85b1bd18e05a988784611679b27cddc93499ae16bb77ff9826a22=
+c40d07d922aa0f87fcaf485f5098dc09ad431c9c579523c5788277c0793e16c4b58e2d82084=
+f9afbe46daac4329101457e029ce3dbc0f2ade9035982dba6efae036c4af155b4956c6f0ce8=
+0d851879d93bdbc9c809b5d194c940ba63529f7ae109f707749bf1fa2b50ddd5a9c7c601524=
+5b7628e967696ff0470774d4f933ce310f1fb19661c21f32abe7b764e0b382b626efd40dd4f=
+2644965d6bd49b3b7266d4bc59fb1db6c9c82a1f9660b6b45eaf1e9b6539675033090b0647f=
+5735c7f351b0e18ca571fc70a620194f181ca8474af849b4ffa395529c6fad
 
-So then I go to tpm-tools and run this command and I get this error:
+root(a)localhost:~# tpm2_evictcontrol -C o -c prim.ctx 0x81000001
+persistent-handle: 0x81000001
+action: persisted
 
-**tpm2_createprimary -V -H o -g sha256 -G ecc -C primary2.ctx****
-**
-**ObjectAttribute: 0x00030072****
-**
-**ERROR on line: "182" in file: "tools/tpm2_createprimary.c":****
-**
-**CreatePrimary Failed ! ErrorCode: 0x9a2**
+root(a)localhost:~# tpm2_readpublic -c 0x81000001
+WARNING:esys:../tpm2-tss/src/tss2-esys/api/Esys_ReadPublic.c:320:Esys_ReadP=
+ublic_Finish()
+Received TPM Error
+ERROR:esys:../tpm2-tss/src/tss2-esys/api/Esys_ReadPublic.c:104:Esys_ReadPub=
+lic()
+Esys Finish ErrorCode (0x0000018b)
+ERROR: Esys_ReadPublic(0x18B) - tpm:handle(1):the handle is not correct for
+the use
+ERROR: Unable to run tpm2_readpublic
 
-This command is from the example in the man "tpm2_createprimary" manual pag=
-e!
+root(a)localhost:~# tpm2_readpublic -c prim.ctx
+name: 000bdac8ee72f2c6cb0b1821e3d16af63cf9bbc642cfb1ed9f7eb00e1271063f07f3
+qualified name:
+000be7f403a999591dd1dc26a1812bccd9256eee1c7c9eae4f4fd1849181cf5e95a3
+name-alg:
+  value: sha256
+  raw: 0xb
+attributes:
+  value:
+fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|decrypt
+  raw: 0x30072
+type:
+  value: rsa
+  raw: 0x1
+exponent: 0x0
+bits: 2048
+scheme:
+  value: null
+  raw: 0x10
+scheme-halg:
+  value: (null)
+  raw: 0x0
+sym-alg:
+  value: aes
+  raw: 0x6
+sym-mode:
+  value: cfb
+  raw: 0x43
+sym-keybits: 128
+rsa:
+d94ae68bd5f2d5037c862e85b1bd18e05a988784611679b27cddc93499ae16bb77ff9826a22=
+c40d07d922aa0f87fcaf485f5098dc09ad431c9c579523c5788277c0793e16c4b58e2d82084=
+f9afbe46daac4329101457e029ce3dbc0f2ade9035982dba6efae036c4af155b4956c6f0ce8=
+0d851879d93bdbc9c809b5d194c940ba63529f7ae109f707749bf1fa2b50ddd5a9c7c601524=
+5b7628e967696ff0470774d4f933ce310f1fb19661c21f32abe7b764e0b382b626efd40dd4f=
+2644965d6bd49b3b7266d4bc59fb1db6c9c82a1f9660b6b45eaf1e9b6539675033090b0647f=
+5735c7f351b0e18ca571fc70a620194f181ca8474af849b4ffa395529c6fad
 
-So at this point I could download the latest from GitHub and compile/instal=
-l the latest tools, but then I would get the error from clevis saying the v=
-ersion number of the tools is wrong. Downloading the clevis does not solve =
-this problem. I spent a couple of days doing this.
-
-I am sure I have TPM2 setup correctly because things like tpm2_getrandom wo=
-rk fine.
-
-tpm2_createprimary is version 3.1.3
-
-What can I do? =
-
-Is there another tool beside clevis to auto unlock my drive that works bett=
-er?
-Is there such a thing as a matched pair of tpm2-tool and clevis that I can =
-get a package for? =
-
-
-You would think if I got the latest packages from Ubuntu they would work to=
-gether.
-
-
---===============9052151475667992440==
+--===============5381340375294761788==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PCFET0NUWVBFIGh0bWw+PGh0bWw+PGhlYWQ+PHRpdGxlPjwvdGl0bGU+PHN0eWxlIHR5cGU9InRl
-eHQvY3NzIj5wLk1zb05vcm1hbCxwLk1zb05vU3BhY2luZ3ttYXJnaW46MH08L3N0eWxlPjwvaGVh
-ZD48Ym9keT48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPkhlcmUgaXMgZmluYWwgZ29h
-bCBpcyB0byBoYXZlIGEgY29tcGF0aWJsZSB2ZXJzaW9uIG9mIHRwbTJfdG9vbHMgYW5kIGNsZXZp
-cyBvbiBteSBMaW51eCBtYWNoaW5lLiZuYnNwOyBUaGUgdXNlIGNsZXZpcyB0byBhdXRvbWF0aWNh
-bGx5IHVubG9jayBteSBoYXJkIGRyaXZlIG9uIGJvb3QuPGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZv
-bnQtZmFtaWx5OkFyaWFsOyI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFs
-OyI+U28gSSBkb3dubG9hZCB0aGUgbGF0ZXN0IGNvcHkgb2YgdWJ1bnR1IDE5LjA0IGluc3RhbGxl
-ZCBhbGwgb2YgdGhlIHRwbTJfdG9vbHMgb24gaXQgYW5kIGFsbCB0aGUgbGF0ZXN0IGNsZXZpcyB0
-b29scyB1c2luZyBhcHQuJm5ic3A7IFJhbiBzdWRvIHRwbTItYWJybWQgLW8gYW5kIHRoZW4gcmFu
-IHRoZSBzaW1wbGUgY29tbWFuZCB0byB0ZXN0IGNsZXZpcyBhbmQgSSBnZXQgdGhpcyBlcnJvcjo8
-YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48YnI+PC9kaXY+PGRpdiBz
-dHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48aT48Yj5yb290QGpwcy1UQjExNkMtQU46fiMgZWNo
-byBmb28gfCBjbGV2aXMgZW5jcnlwdCB0cG0yICd7fScgJmd0OyB0ZXh0LmVuYzwvYj48L2k+PGk+
-PGI+PGJyPjwvYj48L2k+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48aT48
-Yj5FUlJPUjo8L2I+PC9pPjxpPjxiPjxicj48L2I+PC9pPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQt
-ZmFtaWx5OkFyaWFsOyI+PGk+PGI+Q3JlYXRlUHJpbWFyeSBGYWlsZWQgISBFcnJvckNvZGU6IDB4
-OWEyPC9iPjwvaT48aT48Yj48YnI+PC9iPjwvaT48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWls
-eTpBcmlhbDsiPjxpPjxiPjxicj48L2I+PC9pPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5
-OkFyaWFsOyI+PGk+PGI+RVJST1I6IFVuYWJsZSB0byBydW4gdHBtMl9jcmVhdGVwcmltYXJ5PC9i
-PjwvaT48aT48Yj48YnI+PC9iPjwvaT48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlh
-bDsiPjxpPjxiPkNyZWF0aW5nIFRQTTIgcHJpbWFyeSBrZXkgZmFpbGVkITwvYj48L2k+PGJyPjwv
-ZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsOyI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9
-ImZvbnQtZmFtaWx5OkFyaWFsOyI+U28gdGhlbiBJIGdvIHRvIHRwbS10b29scyBhbmQgcnVuIHRo
-aXMgY29tbWFuZCBhbmQgSSBnZXQgdGhpcyBlcnJvcjo8YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9u
-dC1mYW1pbHk6QXJpYWw7Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7
-Ij48aT48Yj50cG0yX2NyZWF0ZXByaW1hcnkgLVYgLUggbyAtZyBzaGEyNTYgLUcgZWNjIC1DIHBy
-aW1hcnkyLmN0eDwvYj48L2k+PGk+PGI+PGJyPjwvYj48L2k+PC9kaXY+PGRpdiBzdHlsZT0iZm9u
-dC1mYW1pbHk6QXJpYWw7Ij48aT48Yj5PYmplY3RBdHRyaWJ1dGU6IDB4MDAwMzAwNzI8L2I+PC9p
-PjxpPjxiPjxicj48L2I+PC9pPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsOyI+
-PGk+PGI+RVJST1Igb24gbGluZTogIjE4MiIgaW4gZmlsZTogInRvb2xzL3RwbTJfY3JlYXRlcHJp
-bWFyeS5jIjo8L2I+PC9pPjxpPjxiPjxicj48L2I+PC9pPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQt
-ZmFtaWx5OkFyaWFsOyI+PGk+PGI+Q3JlYXRlUHJpbWFyeSBGYWlsZWQgISBFcnJvckNvZGU6IDB4
-OWEyPC9iPjwvaT48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48YnI+
-PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij5UaGlzIGNvbW1hbmQgaXMgZnJv
-bSB0aGUgZXhhbXBsZSBpbiB0aGUgbWFuICJ0cG0yX2NyZWF0ZXByaW1hcnkiIG1hbnVhbCBwYWdl
-ITxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPjxicj48L2Rpdj48ZGl2
-IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPlNvIGF0IHRoaXMgcG9pbnQgSSBjb3VsZCBkb3du
-bG9hZCB0aGUgbGF0ZXN0IGZyb20gR2l0SHViIGFuZCBjb21waWxlL2luc3RhbGwgdGhlIGxhdGVz
-dCB0b29scywgYnV0IHRoZW4gSSB3b3VsZCBnZXQgdGhlIGVycm9yIGZyb20gY2xldmlzIHNheWlu
-ZyB0aGUgdmVyc2lvbiBudW1iZXIgb2YgdGhlIHRvb2xzIGlzIHdyb25nLiZuYnNwOyBEb3dubG9h
-ZGluZyB0aGUgY2xldmlzIGRvZXMgbm90IHNvbHZlIHRoaXMgcHJvYmxlbS4mbmJzcDsgSSBzcGVu
-dCBhIGNvdXBsZSBvZiBkYXlzIGRvaW5nIHRoaXMuPGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQt
-ZmFtaWx5OkFyaWFsOyI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsOyI+
-SSBhbSBzdXJlIEkgaGF2ZSBUUE0yIHNldHVwIGNvcnJlY3RseSBiZWNhdXNlIHRoaW5ncyBsaWtl
-IHRwbTJfZ2V0cmFuZG9tIHdvcmsgZmluZS48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1p
-bHk6QXJpYWw7Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij50cG0y
-X2NyZWF0ZXByaW1hcnkgaXMgdmVyc2lvbiAzLjEuMzxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250
-LWZhbWlseTpBcmlhbDsiPjxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsi
-PldoYXQgY2FuIEkgZG8/Jm5ic3A7IDxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpB
-cmlhbDsiPklzIHRoZXJlIGFub3RoZXIgdG9vbCBiZXNpZGUgY2xldmlzIHRvIGF1dG8gdW5sb2Nr
-IG15IGRyaXZlIHRoYXQgd29ya3MgYmV0dGVyPzxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZh
-bWlseTpBcmlhbDsiPklzIHRoZXJlIHN1Y2ggYSB0aGluZyBhcyBhIG1hdGNoZWQgcGFpciBvZiB0
-cG0yLXRvb2wgYW5kIGNsZXZpcyB0aGF0IEkgY2FuIGdldCBhIHBhY2thZ2UgZm9yPyZuYnNwOyA8
-YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48YnI+PC9kaXY+PGRpdiBz
-dHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij5Zb3Ugd291bGQgdGhpbmsgaWYgSSBnb3QgdGhlIGxh
-dGVzdCBwYWNrYWdlcyBmcm9tIFVidW50dSB0aGV5IHdvdWxkIHdvcmsgdG9nZXRoZXIuPGJyPjwv
-ZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsOyI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9
-ImZvbnQtZmFtaWx5OkFyaWFsOyI+PGJyPjwvZGl2PjwvYm9keT48L2h0bWw+
---===============9052151475667992440==--
+PGRpdiBkaXI9Imx0ciI+SSYjMzk7dmUgZ290IG15IG5ldyByZWNpcGVzIGJ1aWxkaW5nIGZvciB0
+cG0yLXRvb2xzIDQuMC4wLCB0cG0yLXRzcyAyLjMuMSBhbmQgdHBtMi1hYnJtZCAyLjIuMC7CoCBN
+b3N0bHkgbXkgd29yayBzZWVtcyB0byBwb3J0IG92ZXIgKGZyb20gYW4gb2xkIG5pZ2h0bHkpIGZp
+bmUgYnV0IEkganVzdCB0cmllZCB0byBwZXJzaXN0IGEgbmV3IFNSSyBhbmQgc2VhbCB3aXRoIGl0
+IGFuZCBJIHJhbiBpbnRvIGEgcHJvYmxlbS7CoCBJIGNhbiBjcmVhdGUgYSBuZXcgcHJpbWFyeSBh
+bmQgc3RvcmUgaXQgdG8gYSBjb250ZXh0IGJsb2IsIGZyb20gd2hpY2ggSSBjYW4gcmVhZCB0aGUg
+cHVibGljIHBvcnRpb24uwqAgQW5kIHRwbTJfZXZpY3Rjb250cm9sIHJ1bnMgc3VjY2Vzc2Z1bGx5
+IHdoZW4gYXNrZWQgdG8gcGVyc2lzdCBpdC7CoCBUaGUgaGFuZGxlIGV2ZW4gc2hvd3MgdXAgaW4g
+dHBtMl9nZXRjYXAgaGFuZGxlcy1wZXJzaXN0ZW50LsKgIEJ1dCBJIGNhbiYjMzk7dCBydW4gYSB0
+cG0yX3JlYWRwdWJsaWMgb24gdGhlIGhhbmRsZSwgdXNlIGl0IGFzIHRoZSBwYXJlbnQgZm9yIGFu
+b3RoZXIgb2JqZWN0LCBvciB1c2UgZXZpY3QtY29udHJvbCB0byByZW1vdmUgaXQuwqAgSXQganVz
+dCBzaXRzIHRoZXJlLjxkaXY+PGJyPjwvZGl2PjxkaXY+cm9vdEBsb2NhbGhvc3Q6fiMgdHBtMl9j
+bGVhcjwvZGl2PjxkaXY+PGJyPjwvZGl2PnJvb3RAbG9jYWxob3N0On4jIHRwbTJfY3JlYXRlcHJp
+bWFyeSAtQyBvIC1HIHJzYSAtYyBwcmltLmN0eDxicj5uYW1lLWFsZzo8YnI+wqAgdmFsdWU6IHNo
+YTI1Njxicj7CoCByYXc6IDB4Yjxicj5hdHRyaWJ1dGVzOjxicj7CoCB2YWx1ZTogZml4ZWR0cG18
+Zml4ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8cmVzdHJpY3RlZHxk
+ZWNyeXB0PGJyPsKgIHJhdzogMHgzMDA3Mjxicj50eXBlOjxicj7CoCB2YWx1ZTogcnNhPGJyPsKg
+IHJhdzogMHgxPGJyPmV4cG9uZW50OiAweDA8YnI+Yml0czogMjA0ODxicj5zY2hlbWU6PGJyPsKg
+IHZhbHVlOiBudWxsPGJyPsKgIHJhdzogMHgxMDxicj5zY2hlbWUtaGFsZzo8YnI+wqAgdmFsdWU6
+IChudWxsKTxicj7CoCByYXc6IDB4MDxicj5zeW0tYWxnOjxicj7CoCB2YWx1ZTogYWVzPGJyPsKg
+IHJhdzogMHg2PGJyPnN5bS1tb2RlOjxicj7CoCB2YWx1ZTogY2ZiPGJyPsKgIHJhdzogMHg0Mzxi
+cj5zeW0ta2V5Yml0czogMTI4PGJyPnJzYTogZDk0YWU2OGJkNWYyZDUwMzdjODYyZTg1YjFiZDE4
+ZTA1YTk4ODc4NDYxMTY3OWIyN2NkZGM5MzQ5OWFlMTZiYjc3ZmY5ODI2YTIyYzQwZDA3ZDkyMmFh
+MGY4N2ZjYWY0ODVmNTA5OGRjMDlhZDQzMWM5YzU3OTUyM2M1Nzg4Mjc3YzA3OTNlMTZjNGI1OGUy
+ZDgyMDg0ZjlhZmJlNDZkYWFjNDMyOTEwMTQ1N2UwMjljZTNkYmMwZjJhZGU5MDM1OTgyZGJhNmVm
+YWUwMzZjNGFmMTU1YjQ5NTZjNmYwY2U4MGQ4NTE4NzlkOTNiZGJjOWM4MDliNWQxOTRjOTQwYmE2
+MzUyOWY3YWUxMDlmNzA3NzQ5YmYxZmEyYjUwZGRkNWE5YzdjNjAxNTI0NWI3NjI4ZTk2NzY5NmZm
+MDQ3MDc3NGQ0ZjkzM2NlMzEwZjFmYjE5NjYxYzIxZjMyYWJlN2I3NjRlMGIzODJiNjI2ZWZkNDBk
+ZDRmMjY0NDk2NWQ2YmQ0OWIzYjcyNjZkNGJjNTlmYjFkYjZjOWM4MmExZjk2NjBiNmI0NWVhZjFl
+OWI2NTM5Njc1MDMzMDkwYjA2NDdmNTczNWM3ZjM1MWIwZTE4Y2E1NzFmYzcwYTYyMDE5NGYxODFj
+YTg0NzRhZjg0OWI0ZmZhMzk1NTI5YzZmYWQ8ZGl2Pjxicj48ZGl2PnJvb3RAbG9jYWxob3N0On4j
+IHRwbTJfZXZpY3Rjb250cm9sIC1DIG8gLWMgcHJpbS5jdHggMHg4MTAwMDAwMTxicj5wZXJzaXN0
+ZW50LWhhbmRsZTogMHg4MTAwMDAwMTxicj5hY3Rpb246IHBlcnNpc3RlZDxicj48L2Rpdj48ZGl2
+Pjxicj48L2Rpdj48ZGl2PgoKcm9vdEBsb2NhbGhvc3Q6fiMKCnRwbTJfcmVhZHB1YmxpYyAtYyAw
+eDgxMDAwMDAxPGJyPldBUk5JTkc6ZXN5czouLi90cG0yLXRzcy9zcmMvdHNzMi1lc3lzL2FwaS9F
+c3lzX1JlYWRQdWJsaWMuYzozMjA6RXN5c19SZWFkUHVibGljX0ZpbmlzaCgpIFJlY2VpdmVkIFRQ
+TSBFcnJvcjxicj5FUlJPUjplc3lzOi4uL3RwbTItdHNzL3NyYy90c3MyLWVzeXMvYXBpL0VzeXNf
+UmVhZFB1YmxpYy5jOjEwNDpFc3lzX1JlYWRQdWJsaWMoKSBFc3lzIEZpbmlzaCBFcnJvckNvZGUg
+KDB4MDAwMDAxOGIpPGJyPkVSUk9SOiBFc3lzX1JlYWRQdWJsaWMoMHgxOEIpIC0gdHBtOmhhbmRs
+ZSgxKTp0aGUgaGFuZGxlIGlzIG5vdCBjb3JyZWN0IGZvciB0aGUgdXNlPGJyPkVSUk9SOiBVbmFi
+bGUgdG8gcnVuIHRwbTJfcmVhZHB1YmxpYzxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PnJv
+b3RAbG9jYWxob3N0On4jCgp0cG0yX3JlYWRwdWJsaWMgLWMgcHJpbS5jdHg8YnI+bmFtZTogMDAw
+YmRhYzhlZTcyZjJjNmNiMGIxODIxZTNkMTZhZjYzY2Y5YmJjNjQyY2ZiMWVkOWY3ZWIwMGUxMjcx
+MDYzZjA3ZjM8YnI+cXVhbGlmaWVkIG5hbWU6IDAwMGJlN2Y0MDNhOTk5NTkxZGQxZGMyNmExODEy
+YmNjZDkyNTZlZWUxYzdjOWVhZTRmNGZkMTg0OTE4MWNmNWU5NWEzPGJyPm5hbWUtYWxnOjxicj7C
+oCB2YWx1ZTogc2hhMjU2PGJyPsKgIHJhdzogMHhiPGJyPmF0dHJpYnV0ZXM6PGJyPsKgIHZhbHVl
+OiBmaXhlZHRwbXxmaXhlZHBhcmVudHxzZW5zaXRpdmVkYXRhb3JpZ2lufHVzZXJ3aXRoYXV0aHxy
+ZXN0cmljdGVkfGRlY3J5cHQ8YnI+wqAgcmF3OiAweDMwMDcyPGJyPnR5cGU6PGJyPsKgIHZhbHVl
+OiByc2E8YnI+wqAgcmF3OiAweDE8YnI+ZXhwb25lbnQ6IDB4MDxicj5iaXRzOiAyMDQ4PGJyPnNj
+aGVtZTo8YnI+wqAgdmFsdWU6IG51bGw8YnI+wqAgcmF3OiAweDEwPGJyPnNjaGVtZS1oYWxnOjxi
+cj7CoCB2YWx1ZTogKG51bGwpPGJyPsKgIHJhdzogMHgwPGJyPnN5bS1hbGc6PGJyPsKgIHZhbHVl
+OiBhZXM8YnI+wqAgcmF3OiAweDY8YnI+c3ltLW1vZGU6PGJyPsKgIHZhbHVlOiBjZmI8YnI+wqAg
+cmF3OiAweDQzPGJyPnN5bS1rZXliaXRzOiAxMjg8YnI+cnNhOiBkOTRhZTY4YmQ1ZjJkNTAzN2M4
+NjJlODViMWJkMThlMDVhOTg4Nzg0NjExNjc5YjI3Y2RkYzkzNDk5YWUxNmJiNzdmZjk4MjZhMjJj
+NDBkMDdkOTIyYWEwZjg3ZmNhZjQ4NWY1MDk4ZGMwOWFkNDMxYzljNTc5NTIzYzU3ODgyNzdjMDc5
+M2UxNmM0YjU4ZTJkODIwODRmOWFmYmU0NmRhYWM0MzI5MTAxNDU3ZTAyOWNlM2RiYzBmMmFkZTkw
+MzU5ODJkYmE2ZWZhZTAzNmM0YWYxNTViNDk1NmM2ZjBjZTgwZDg1MTg3OWQ5M2JkYmM5YzgwOWI1
+ZDE5NGM5NDBiYTYzNTI5ZjdhZTEwOWY3MDc3NDliZjFmYTJiNTBkZGQ1YTljN2M2MDE1MjQ1Yjc2
+MjhlOTY3Njk2ZmYwNDcwNzc0ZDRmOTMzY2UzMTBmMWZiMTk2NjFjMjFmMzJhYmU3Yjc2NGUwYjM4
+MmI2MjZlZmQ0MGRkNGYyNjQ0OTY1ZDZiZDQ5YjNiNzI2NmQ0YmM1OWZiMWRiNmM5YzgyYTFmOTY2
+MGI2YjQ1ZWFmMWU5YjY1Mzk2NzUwMzMwOTBiMDY0N2Y1NzM1YzdmMzUxYjBlMThjYTU3MWZjNzBh
+NjIwMTk0ZjE4MWNhODQ3NGFmODQ5YjRmZmEzOTU1MjljNmZhZDxicj48L2Rpdj48L2Rpdj48L2Rp
+dj4K
+
+--===============5381340375294761788==--
 
