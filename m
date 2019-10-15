@@ -1,186 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============5381340375294761788=="
+Content-Type: multipart/mixed; boundary="===============3054900196303663381=="
 MIME-Version: 1.0
 From: Steven Clark <davolfman at gmail.com>
-Subject: [tpm2] Persisted primary key not usable, tpm2-tools 4.0.0
-Date: Tue, 15 Oct 2019 15:06:02 -0700
-Message-ID: <CAOCvsSmFvwnigBXB3zHBpX9eD8HoNEPhuxB+CKUxy552J5Abkg@mail.gmail.com>
+Subject: [tpm2] Re: Error on TPM2 and Ubuntu 19.04
+Date: Tue, 15 Oct 2019 16:07:09 -0700
+Message-ID: <CAOCvsSmuZ-dx35cbgQZAR1XFbGGAgwjTnGQuAJy7_Bhb7COeng@mail.gmail.com>
+In-Reply-To: f95ab11d-d6df-43fd-b0ca-739a64f60e4a@www.fastmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5381340375294761788==
+--===============3054900196303663381==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I've got my new recipes building for tpm2-tools 4.0.0, tpm2-tss 2.3.1 and
-tpm2-abrmd 2.2.0.  Mostly my work seems to port over (from an old nightly)
-fine but I just tried to persist a new SRK and seal with it and I ran into
-a problem.  I can create a new primary and store it to a context blob, from
-which I can read the public portion.  And tpm2_evictcontrol runs
-successfully when asked to persist it.  The handle even shows up in
-tpm2_getcap handles-persistent.  But I can't run a tpm2_readpublic on the
-handle, use it as the parent for another object, or use evict-control to
-remove it.  It just sits there.
+I don't know anywhere near enough about your setup to safely answer that.
+I think using the TPM with disk encryption is still uncommon in end user
+Linux systems.  If you're prompted for a password there's a good chance the
+TPM is not used by your drive encryption but it's still possible.  If you
+run a list persistent and there's no handles that makes it much more likely
+the TPM was just locked before shipping.
 
-root(a)localhost:~# tpm2_clear
-
-root(a)localhost:~# tpm2_createprimary -C o -G rsa -c prim.ctx
-name-alg:
-  value: sha256
-  raw: 0xb
-attributes:
-  value:
-fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|decrypt
-  raw: 0x30072
-type:
-  value: rsa
-  raw: 0x1
-exponent: 0x0
-bits: 2048
-scheme:
-  value: null
-  raw: 0x10
-scheme-halg:
-  value: (null)
-  raw: 0x0
-sym-alg:
-  value: aes
-  raw: 0x6
-sym-mode:
-  value: cfb
-  raw: 0x43
-sym-keybits: 128
-rsa:
-d94ae68bd5f2d5037c862e85b1bd18e05a988784611679b27cddc93499ae16bb77ff9826a22=
-c40d07d922aa0f87fcaf485f5098dc09ad431c9c579523c5788277c0793e16c4b58e2d82084=
-f9afbe46daac4329101457e029ce3dbc0f2ade9035982dba6efae036c4af155b4956c6f0ce8=
-0d851879d93bdbc9c809b5d194c940ba63529f7ae109f707749bf1fa2b50ddd5a9c7c601524=
-5b7628e967696ff0470774d4f933ce310f1fb19661c21f32abe7b764e0b382b626efd40dd4f=
-2644965d6bd49b3b7266d4bc59fb1db6c9c82a1f9660b6b45eaf1e9b6539675033090b0647f=
-5735c7f351b0e18ca571fc70a620194f181ca8474af849b4ffa395529c6fad
-
-root(a)localhost:~# tpm2_evictcontrol -C o -c prim.ctx 0x81000001
-persistent-handle: 0x81000001
-action: persisted
-
-root(a)localhost:~# tpm2_readpublic -c 0x81000001
-WARNING:esys:../tpm2-tss/src/tss2-esys/api/Esys_ReadPublic.c:320:Esys_ReadP=
-ublic_Finish()
-Received TPM Error
-ERROR:esys:../tpm2-tss/src/tss2-esys/api/Esys_ReadPublic.c:104:Esys_ReadPub=
-lic()
-Esys Finish ErrorCode (0x0000018b)
-ERROR: Esys_ReadPublic(0x18B) - tpm:handle(1):the handle is not correct for
-the use
-ERROR: Unable to run tpm2_readpublic
-
-root(a)localhost:~# tpm2_readpublic -c prim.ctx
-name: 000bdac8ee72f2c6cb0b1821e3d16af63cf9bbc642cfb1ed9f7eb00e1271063f07f3
-qualified name:
-000be7f403a999591dd1dc26a1812bccd9256eee1c7c9eae4f4fd1849181cf5e95a3
-name-alg:
-  value: sha256
-  raw: 0xb
-attributes:
-  value:
-fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|decrypt
-  raw: 0x30072
-type:
-  value: rsa
-  raw: 0x1
-exponent: 0x0
-bits: 2048
-scheme:
-  value: null
-  raw: 0x10
-scheme-halg:
-  value: (null)
-  raw: 0x0
-sym-alg:
-  value: aes
-  raw: 0x6
-sym-mode:
-  value: cfb
-  raw: 0x43
-sym-keybits: 128
-rsa:
-d94ae68bd5f2d5037c862e85b1bd18e05a988784611679b27cddc93499ae16bb77ff9826a22=
-c40d07d922aa0f87fcaf485f5098dc09ad431c9c579523c5788277c0793e16c4b58e2d82084=
-f9afbe46daac4329101457e029ce3dbc0f2ade9035982dba6efae036c4af155b4956c6f0ce8=
-0d851879d93bdbc9c809b5d194c940ba63529f7ae109f707749bf1fa2b50ddd5a9c7c601524=
-5b7628e967696ff0470774d4f933ce310f1fb19661c21f32abe7b764e0b382b626efd40dd4f=
-2644965d6bd49b3b7266d4bc59fb1db6c9c82a1f9660b6b45eaf1e9b6539675033090b0647f=
-5735c7f351b0e18ca571fc70a620194f181ca8474af849b4ffa395529c6fad
-
---===============5381340375294761788==
+--===============3054900196303663381==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+SSYjMzk7dmUgZ290IG15IG5ldyByZWNpcGVzIGJ1aWxkaW5nIGZvciB0
-cG0yLXRvb2xzIDQuMC4wLCB0cG0yLXRzcyAyLjMuMSBhbmQgdHBtMi1hYnJtZCAyLjIuMC7CoCBN
-b3N0bHkgbXkgd29yayBzZWVtcyB0byBwb3J0IG92ZXIgKGZyb20gYW4gb2xkIG5pZ2h0bHkpIGZp
-bmUgYnV0IEkganVzdCB0cmllZCB0byBwZXJzaXN0IGEgbmV3IFNSSyBhbmQgc2VhbCB3aXRoIGl0
-IGFuZCBJIHJhbiBpbnRvIGEgcHJvYmxlbS7CoCBJIGNhbiBjcmVhdGUgYSBuZXcgcHJpbWFyeSBh
-bmQgc3RvcmUgaXQgdG8gYSBjb250ZXh0IGJsb2IsIGZyb20gd2hpY2ggSSBjYW4gcmVhZCB0aGUg
-cHVibGljIHBvcnRpb24uwqAgQW5kIHRwbTJfZXZpY3Rjb250cm9sIHJ1bnMgc3VjY2Vzc2Z1bGx5
-IHdoZW4gYXNrZWQgdG8gcGVyc2lzdCBpdC7CoCBUaGUgaGFuZGxlIGV2ZW4gc2hvd3MgdXAgaW4g
-dHBtMl9nZXRjYXAgaGFuZGxlcy1wZXJzaXN0ZW50LsKgIEJ1dCBJIGNhbiYjMzk7dCBydW4gYSB0
-cG0yX3JlYWRwdWJsaWMgb24gdGhlIGhhbmRsZSwgdXNlIGl0IGFzIHRoZSBwYXJlbnQgZm9yIGFu
-b3RoZXIgb2JqZWN0LCBvciB1c2UgZXZpY3QtY29udHJvbCB0byByZW1vdmUgaXQuwqAgSXQganVz
-dCBzaXRzIHRoZXJlLjxkaXY+PGJyPjwvZGl2PjxkaXY+cm9vdEBsb2NhbGhvc3Q6fiMgdHBtMl9j
-bGVhcjwvZGl2PjxkaXY+PGJyPjwvZGl2PnJvb3RAbG9jYWxob3N0On4jIHRwbTJfY3JlYXRlcHJp
-bWFyeSAtQyBvIC1HIHJzYSAtYyBwcmltLmN0eDxicj5uYW1lLWFsZzo8YnI+wqAgdmFsdWU6IHNo
-YTI1Njxicj7CoCByYXc6IDB4Yjxicj5hdHRyaWJ1dGVzOjxicj7CoCB2YWx1ZTogZml4ZWR0cG18
-Zml4ZWRwYXJlbnR8c2Vuc2l0aXZlZGF0YW9yaWdpbnx1c2Vyd2l0aGF1dGh8cmVzdHJpY3RlZHxk
-ZWNyeXB0PGJyPsKgIHJhdzogMHgzMDA3Mjxicj50eXBlOjxicj7CoCB2YWx1ZTogcnNhPGJyPsKg
-IHJhdzogMHgxPGJyPmV4cG9uZW50OiAweDA8YnI+Yml0czogMjA0ODxicj5zY2hlbWU6PGJyPsKg
-IHZhbHVlOiBudWxsPGJyPsKgIHJhdzogMHgxMDxicj5zY2hlbWUtaGFsZzo8YnI+wqAgdmFsdWU6
-IChudWxsKTxicj7CoCByYXc6IDB4MDxicj5zeW0tYWxnOjxicj7CoCB2YWx1ZTogYWVzPGJyPsKg
-IHJhdzogMHg2PGJyPnN5bS1tb2RlOjxicj7CoCB2YWx1ZTogY2ZiPGJyPsKgIHJhdzogMHg0Mzxi
-cj5zeW0ta2V5Yml0czogMTI4PGJyPnJzYTogZDk0YWU2OGJkNWYyZDUwMzdjODYyZTg1YjFiZDE4
-ZTA1YTk4ODc4NDYxMTY3OWIyN2NkZGM5MzQ5OWFlMTZiYjc3ZmY5ODI2YTIyYzQwZDA3ZDkyMmFh
-MGY4N2ZjYWY0ODVmNTA5OGRjMDlhZDQzMWM5YzU3OTUyM2M1Nzg4Mjc3YzA3OTNlMTZjNGI1OGUy
-ZDgyMDg0ZjlhZmJlNDZkYWFjNDMyOTEwMTQ1N2UwMjljZTNkYmMwZjJhZGU5MDM1OTgyZGJhNmVm
-YWUwMzZjNGFmMTU1YjQ5NTZjNmYwY2U4MGQ4NTE4NzlkOTNiZGJjOWM4MDliNWQxOTRjOTQwYmE2
-MzUyOWY3YWUxMDlmNzA3NzQ5YmYxZmEyYjUwZGRkNWE5YzdjNjAxNTI0NWI3NjI4ZTk2NzY5NmZm
-MDQ3MDc3NGQ0ZjkzM2NlMzEwZjFmYjE5NjYxYzIxZjMyYWJlN2I3NjRlMGIzODJiNjI2ZWZkNDBk
-ZDRmMjY0NDk2NWQ2YmQ0OWIzYjcyNjZkNGJjNTlmYjFkYjZjOWM4MmExZjk2NjBiNmI0NWVhZjFl
-OWI2NTM5Njc1MDMzMDkwYjA2NDdmNTczNWM3ZjM1MWIwZTE4Y2E1NzFmYzcwYTYyMDE5NGYxODFj
-YTg0NzRhZjg0OWI0ZmZhMzk1NTI5YzZmYWQ8ZGl2Pjxicj48ZGl2PnJvb3RAbG9jYWxob3N0On4j
-IHRwbTJfZXZpY3Rjb250cm9sIC1DIG8gLWMgcHJpbS5jdHggMHg4MTAwMDAwMTxicj5wZXJzaXN0
-ZW50LWhhbmRsZTogMHg4MTAwMDAwMTxicj5hY3Rpb246IHBlcnNpc3RlZDxicj48L2Rpdj48ZGl2
-Pjxicj48L2Rpdj48ZGl2PgoKcm9vdEBsb2NhbGhvc3Q6fiMKCnRwbTJfcmVhZHB1YmxpYyAtYyAw
-eDgxMDAwMDAxPGJyPldBUk5JTkc6ZXN5czouLi90cG0yLXRzcy9zcmMvdHNzMi1lc3lzL2FwaS9F
-c3lzX1JlYWRQdWJsaWMuYzozMjA6RXN5c19SZWFkUHVibGljX0ZpbmlzaCgpIFJlY2VpdmVkIFRQ
-TSBFcnJvcjxicj5FUlJPUjplc3lzOi4uL3RwbTItdHNzL3NyYy90c3MyLWVzeXMvYXBpL0VzeXNf
-UmVhZFB1YmxpYy5jOjEwNDpFc3lzX1JlYWRQdWJsaWMoKSBFc3lzIEZpbmlzaCBFcnJvckNvZGUg
-KDB4MDAwMDAxOGIpPGJyPkVSUk9SOiBFc3lzX1JlYWRQdWJsaWMoMHgxOEIpIC0gdHBtOmhhbmRs
-ZSgxKTp0aGUgaGFuZGxlIGlzIG5vdCBjb3JyZWN0IGZvciB0aGUgdXNlPGJyPkVSUk9SOiBVbmFi
-bGUgdG8gcnVuIHRwbTJfcmVhZHB1YmxpYzxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PnJv
-b3RAbG9jYWxob3N0On4jCgp0cG0yX3JlYWRwdWJsaWMgLWMgcHJpbS5jdHg8YnI+bmFtZTogMDAw
-YmRhYzhlZTcyZjJjNmNiMGIxODIxZTNkMTZhZjYzY2Y5YmJjNjQyY2ZiMWVkOWY3ZWIwMGUxMjcx
-MDYzZjA3ZjM8YnI+cXVhbGlmaWVkIG5hbWU6IDAwMGJlN2Y0MDNhOTk5NTkxZGQxZGMyNmExODEy
-YmNjZDkyNTZlZWUxYzdjOWVhZTRmNGZkMTg0OTE4MWNmNWU5NWEzPGJyPm5hbWUtYWxnOjxicj7C
-oCB2YWx1ZTogc2hhMjU2PGJyPsKgIHJhdzogMHhiPGJyPmF0dHJpYnV0ZXM6PGJyPsKgIHZhbHVl
-OiBmaXhlZHRwbXxmaXhlZHBhcmVudHxzZW5zaXRpdmVkYXRhb3JpZ2lufHVzZXJ3aXRoYXV0aHxy
-ZXN0cmljdGVkfGRlY3J5cHQ8YnI+wqAgcmF3OiAweDMwMDcyPGJyPnR5cGU6PGJyPsKgIHZhbHVl
-OiByc2E8YnI+wqAgcmF3OiAweDE8YnI+ZXhwb25lbnQ6IDB4MDxicj5iaXRzOiAyMDQ4PGJyPnNj
-aGVtZTo8YnI+wqAgdmFsdWU6IG51bGw8YnI+wqAgcmF3OiAweDEwPGJyPnNjaGVtZS1oYWxnOjxi
-cj7CoCB2YWx1ZTogKG51bGwpPGJyPsKgIHJhdzogMHgwPGJyPnN5bS1hbGc6PGJyPsKgIHZhbHVl
-OiBhZXM8YnI+wqAgcmF3OiAweDY8YnI+c3ltLW1vZGU6PGJyPsKgIHZhbHVlOiBjZmI8YnI+wqAg
-cmF3OiAweDQzPGJyPnN5bS1rZXliaXRzOiAxMjg8YnI+cnNhOiBkOTRhZTY4YmQ1ZjJkNTAzN2M4
-NjJlODViMWJkMThlMDVhOTg4Nzg0NjExNjc5YjI3Y2RkYzkzNDk5YWUxNmJiNzdmZjk4MjZhMjJj
-NDBkMDdkOTIyYWEwZjg3ZmNhZjQ4NWY1MDk4ZGMwOWFkNDMxYzljNTc5NTIzYzU3ODgyNzdjMDc5
-M2UxNmM0YjU4ZTJkODIwODRmOWFmYmU0NmRhYWM0MzI5MTAxNDU3ZTAyOWNlM2RiYzBmMmFkZTkw
-MzU5ODJkYmE2ZWZhZTAzNmM0YWYxNTViNDk1NmM2ZjBjZTgwZDg1MTg3OWQ5M2JkYmM5YzgwOWI1
-ZDE5NGM5NDBiYTYzNTI5ZjdhZTEwOWY3MDc3NDliZjFmYTJiNTBkZGQ1YTljN2M2MDE1MjQ1Yjc2
-MjhlOTY3Njk2ZmYwNDcwNzc0ZDRmOTMzY2UzMTBmMWZiMTk2NjFjMjFmMzJhYmU3Yjc2NGUwYjM4
-MmI2MjZlZmQ0MGRkNGYyNjQ0OTY1ZDZiZDQ5YjNiNzI2NmQ0YmM1OWZiMWRiNmM5YzgyYTFmOTY2
-MGI2YjQ1ZWFmMWU5YjY1Mzk2NzUwMzMwOTBiMDY0N2Y1NzM1YzdmMzUxYjBlMThjYTU3MWZjNzBh
-NjIwMTk0ZjE4MWNhODQ3NGFmODQ5YjRmZmEzOTU1MjljNmZhZDxicj48L2Rpdj48L2Rpdj48L2Rp
-dj4K
+PGRpdiBkaXI9ImF1dG8iPkkgZG9uJiMzOTt0IGtub3cgYW55d2hlcmUgbmVhciBlbm91Z2ggYWJv
+dXQgeW91ciBzZXR1cCB0byBzYWZlbHkgYW5zd2VyIHRoYXQuwqAgSSB0aGluayB1c2luZyB0aGUg
+VFBNIHdpdGggZGlzayBlbmNyeXB0aW9uIGlzIHN0aWxsIHVuY29tbW9uIGluIGVuZCB1c2VyIExp
+bnV4IHN5c3RlbXMuwqAgSWYgeW91JiMzOTtyZSBwcm9tcHRlZCBmb3IgYSBwYXNzd29yZCB0aGVy
+ZSYjMzk7cyBhIGdvb2QgY2hhbmNlIHRoZSBUUE0gaXMgbm90IHVzZWQgYnkgeW91ciBkcml2ZSBl
+bmNyeXB0aW9uIGJ1dCBpdCYjMzk7cyBzdGlsbCBwb3NzaWJsZS7CoCBJZiB5b3UgcnVuIGEgbGlz
+dCBwZXJzaXN0ZW50IGFuZCB0aGVyZSYjMzk7cyBubyBoYW5kbGVzIHRoYXQgbWFrZXMgaXQgbXVj
+aCBtb3JlIGxpa2VseSB0aGUgVFBNIHdhcyBqdXN0IGxvY2tlZCBiZWZvcmUgc2hpcHBpbmcuPC9k
+aXY+Cg==
 
---===============5381340375294761788==--
+--===============3054900196303663381==--
 
