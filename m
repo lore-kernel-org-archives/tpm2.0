@@ -1,59 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============1233854302726300481=="
+Content-Type: multipart/mixed; boundary="===============7217702964099207483=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] Re: Error on TPM2 and Ubuntu 19.04
-Date: Fri, 18 Oct 2019 11:25:46 -0700
-Message-ID: <e423eaa2-cf2e-6b3f-dff6-61726cb5c0bf@intel.com>
-In-Reply-To: e7667319-4b47-4e22-8efd-4280c1ff7725@www.fastmail.com
+From: Trey Weaver <treyweaver at fastmail.net>
+Subject: [tpm2] tpm2_rsadecrypt to stdout
+Date: Fri, 18 Oct 2019 14:58:03 -0400
+Message-ID: <00d567dc-40c6-47da-be4c-702751e3c122@www.fastmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1233854302726300481==
+--===============7217702964099207483==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 10/15/19 11:56 AM, Trey Weaver wrote:
-> /*tpm2_createprimary -V -H o -g sha256 -G ecc -C primary2.ctx*//*
-> */
-> /*ObjectAttribute: 0x00030072*//*
-> */
-> /*ERROR on line: "182" in file: "tools/tpm2_createprimary.c":*//*
-> */
-> /*CreatePrimary Failed ! ErrorCode: 0x9a2*/
+I know there has to be an easy answer for this.
 
-0x9a2 error means that the authorization failed. Seems like there is a
-auth (password) setup for the owner hierarchy and by default clevis and
-tpm2_createprimary use an empty auth. You can change the auth to an
-empty one:
+You use to be able to call tpm2_rsadecrypt and not give an output file and =
+the result would go to stdout.
 
-$ tpm2_changeauth -c o -p <OLD_PASS> ""
+But on version 3.1.3 it gives an error if you do not use the -o filename pa=
+rameter.
 
-("") -means empty pass
+And if you do something like **-o /dev/stdout** or **-o >(/dev/stdout)** it=
+ give you an error that the file already exist.
 
-and after that both the tpm2_createprimary and clevis encrypt tpm2
-should work with the default.
+I do not want to put the encrypted data into a file and then read it becaus=
+e even if it is erased it still can be recovered and it has the decrypted m=
+aterial in it.
 
-> I am sure I have TPM2 setup correctly because things like tpm2_getrandom
-> work fine.
-
-tpm2_getrandom tool doesn't use the owner hierarchy thus it doesn't need
-any authorization.
-
-> =
-
-> tpm2_createprimary is version 3.1.3
-> =
-
-> What can I do?=C2=A0
-> Is there another tool beside clevis to auto unlock my drive that works
-> better?
-> Is there such a thing as a matched pair of tpm2-tool and clevis that I
-> can get a package for? =
+So what is the solution to get the result of tpm2_rsadecrypt to the stdout?
 
 
-I would follow what the clevis says. It looks like it requires tools v3
---
-Tadeusz
---===============1233854302726300481==--
+--===============7217702964099207483==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PCFET0NUWVBFIGh0bWw+PGh0bWw+PGhlYWQ+PHRpdGxlPjwvdGl0bGU+PHN0eWxlIHR5cGU9InRl
+eHQvY3NzIj5wLk1zb05vcm1hbCxwLk1zb05vU3BhY2luZ3ttYXJnaW46MH08L3N0eWxlPjwvaGVh
+ZD48Ym9keT48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPkkga25vdyB0aGVyZSBoYXMg
+dG8gYmUgYW4gZWFzeSBhbnN3ZXIgZm9yIHRoaXMuPGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OkFyaWFsOyI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsOyI+
+WW91IHVzZSB0byBiZSBhYmxlIHRvIGNhbGwgdHBtMl9yc2FkZWNyeXB0IGFuZCBub3QgZ2l2ZSBh
+biBvdXRwdXQgZmlsZSBhbmQgdGhlIHJlc3VsdCB3b3VsZCBnbyB0byBzdGRvdXQuPGJyPjwvZGl2
+PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsOyI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImZv
+bnQtZmFtaWx5OkFyaWFsOyI+QnV0IG9uIHZlcnNpb24gMy4xLjMgaXQgZ2l2ZXMgYW4gZXJyb3Ig
+aWYgeW91IGRvIG5vdCB1c2UgdGhlIC1vIGZpbGVuYW1lIHBhcmFtZXRlci48YnI+PC9kaXY+PGRp
+diBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1m
+YW1pbHk6QXJpYWw7Ij5BbmQgaWYgeW91IGRvIHNvbWV0aGluZyBsaWtlIDxpPjxiPi1vIC9kZXYv
+c3Rkb3V0PC9iPjwvaT4gb3ImbmJzcDs8aT48Yj4tbyAmZ3Q7KC9kZXYvc3Rkb3V0KTwvYj48L2k+
+IGl0IGdpdmUgeW91IGFuIGVycm9yIHRoYXQgdGhlIGZpbGUgYWxyZWFkeSBleGlzdC48YnI+PC9k
+aXY+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6QXJpYWw7Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0i
+Zm9udC1mYW1pbHk6QXJpYWw7Ij5JIGRvIG5vdCB3YW50IHRvIHB1dCB0aGUgZW5jcnlwdGVkIGRh
+dGEgaW50byBhIGZpbGUgYW5kIHRoZW4gcmVhZCBpdCBiZWNhdXNlIGV2ZW4gaWYgaXQgaXMgZXJh
+c2VkIGl0IHN0aWxsIGNhbiBiZSByZWNvdmVyZWQgYW5kIGl0IGhhcyB0aGUgZGVjcnlwdGVkIG1h
+dGVyaWFsIGluIGl0Ljxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPjxi
+cj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPlNvIHdoYXQgaXMgdGhlIHNv
+bHV0aW9uIHRvIGdldCB0aGUgcmVzdWx0IG9mIHRwbTJfcnNhZGVjcnlwdCB0byB0aGUgc3Rkb3V0
+Pzxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPjxicj48L2Rpdj48ZGl2
+IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbDsiPjxicj48L2Rpdj48L2JvZHk+PC9odG1sPg==
+--===============7217702964099207483==--
 
