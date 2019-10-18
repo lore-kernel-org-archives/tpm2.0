@@ -1,70 +1,43 @@
-Content-Type: multipart/mixed; boundary="===============3159564112084677370=="
+Content-Type: multipart/mixed; boundary="===============2236535954544265751=="
 MIME-Version: 1.0
-From: Oliver, Dario N <dario.n.oliver at intel.com>
-Subject: [tpm2] Re: Error on TPM2 and Ubuntu 19.04 
-Date: Wed, 16 Oct 2019 16:18:17 +0000
-Message-ID: <20A6FE0AC912764FB8B5BC5A1A7CB92B44D194FF@FMSMSX103.amr.corp.intel.com>
+From: =?utf-8?q?Max_Halld=C3=A9n_=3Cmax=2Ehallden_at_wisi=2Ese=3E?=
+Subject: [tpm2] Protecting TPM objects
+Date: Fri, 18 Oct 2019 10:27:37 +0000
+Message-ID: <4b287a95-ace4-836c-4d51-42510e8e4980@wisi.se>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3159564112084677370==
+--===============2236535954544265751==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Trey,
+Hi all,
 
-I made Clevis work in Ubuntu 18.04 some time ago, this are my steps to get =
-everything installed and working (with /dev/sdb1 as example):
+I'm a bit confused about the different authorizations and if anyone
+could help me clear some things up that would be a great help.
 
-	sudo apt install clevis clevis-luks clevis-tpm2
-	cryptsetup -y -v luksFormat /dev/sdb1
-	clevis luks bind -d /dev/sdb1 tpm2 '{"pcr_bank":"sha256","pcr_ids":"0,1,2,=
-3,4,5,6,7"}'
-	clevis luks unlock -d /dev/sdb1 -n c1
-	mkfs.ext4 /dev/mapper/c1
-	mount /dev/mapper/c1 /home/encrypted	=
+The platform authorization seems to be reset on each reboot which
+makes sense in a way that it is up for grabs by whatever boots first.
 
+But if I create an object under the owner or endorsement hierarchies,
+does this mean it can never be accessed without the password for those
+hierarchies? Even by someone with platform authorization?
 
-you can customize the PCR Policy configuration (remove it, or select a subs=
-et of the PCRS but no more than 8, otherwise you can run into this https://=
-github.com/tpm2-software/tpm2-tools/issues/1632)
+If I also create it with a password or any other kind of
+authorization, can it also not be accessed by someone with
+authorization for that hierarchy? For example, is a primary key
+created with password protection unique to that password or can it be
+recreated by someone with access to that hierarchy?
 
-The clevis-tpm2 package is needed. And it will install tpm2-tools as a depe=
-ndency.
-You should not need the tpm2-abrmd component, given that this works with th=
-e /dev/tpmrm0 resource manager.
+To be a bit more specific, I'm trying to figure out in what cases a
+password protected decryption key can't be accessed by anyone without
+access to the password (but could otherwise have full access to the
+TPM hardware).
 
-I had some problems making this work in Ubuntu 18.04, explained here https:=
-//github.com/latchset/clevis/issues/106, but should work in 19.04
-
-You can use the tpm2_rc_decode tool to get a little more information about =
-the error code 0x9a2
-
-	tpm2_rc_decode 0x9a2
-	=
-
-	error layer
-		hex: 0x0
-		identifier: TSS2_TPM_RC_LAYER
-		description: Error produced by the TPM
-	format 1 error code
-		hex: 0x22
-		identifier: TPM2_RC_BAD_AUTH
-		description: authorization failure without DA implications
-	session:
-		hex: 0x100
-		identifier: TPM2_RC_1
-		description: (null)
-
-Whenever I run into this 0x9a2 issue, it is a problem with the TPM, not the=
- tools. =
-
-My "solution" is to go into the BIOS, and clear the TPM. This will delete e=
-verything stored in it. Be careful!
-
-Hope this helps!
+Regards,
+Max
 
 
---===============3159564112084677370==--
+--===============2236535954544265751==--
 
