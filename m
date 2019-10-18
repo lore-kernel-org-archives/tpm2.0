@@ -1,40 +1,59 @@
-Content-Type: multipart/mixed; boundary="===============0256238876980791420=="
+Content-Type: multipart/mixed; boundary="===============1233854302726300481=="
 MIME-Version: 1.0
 From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] Re: Persisted primary key not usable, tpm2-tools 4.0.0
-Date: Fri, 18 Oct 2019 10:52:11 -0700
-Message-ID: <ab0095c1-bf1b-61c0-0601-d531d8d1fe5f@intel.com>
-In-Reply-To: CAOCvsSmFvwnigBXB3zHBpX9eD8HoNEPhuxB+CKUxy552J5Abkg@mail.gmail.com
+Subject: [tpm2] Re: Error on TPM2 and Ubuntu 19.04
+Date: Fri, 18 Oct 2019 11:25:46 -0700
+Message-ID: <e423eaa2-cf2e-6b3f-dff6-61726cb5c0bf@intel.com>
+In-Reply-To: e7667319-4b47-4e22-8efd-4280c1ff7725@www.fastmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0256238876980791420==
+--===============1233854302726300481==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 10/15/19 3:06 PM, Steven Clark wrote:
-> root(a)localhost:~# tpm2_evictcontrol -C o -c prim.ctx 0x81000001
-> persistent-handle: 0x81000001
-> action: persisted
+On 10/15/19 11:56 AM, Trey Weaver wrote:
+> /*tpm2_createprimary -V -H o -g sha256 -G ecc -C primary2.ctx*//*
+> */
+> /*ObjectAttribute: 0x00030072*//*
+> */
+> /*ERROR on line: "182" in file: "tools/tpm2_createprimary.c":*//*
+> */
+> /*CreatePrimary Failed ! ErrorCode: 0x9a2*/
+
+0x9a2 error means that the authorization failed. Seems like there is a
+auth (password) setup for the owner hierarchy and by default clevis and
+tpm2_createprimary use an empty auth. You can change the auth to an
+empty one:
+
+$ tpm2_changeauth -c o -p <OLD_PASS> ""
+
+("") -means empty pass
+
+and after that both the tpm2_createprimary and clevis encrypt tpm2
+should work with the default.
+
+> I am sure I have TPM2 setup correctly because things like tpm2_getrandom
+> work fine.
+
+tpm2_getrandom tool doesn't use the owner hierarchy thus it doesn't need
+any authorization.
+
 > =
 
-> root(a)localhost:~# tpm2_readpublic -c 0x81000001
-> WARNING:esys:../tpm2-tss/src/tss2-esys/api/Esys_ReadPublic.c:320:Esys_Rea=
-dPublic_Finish()
-> Received TPM Error
-> ERROR:esys:../tpm2-tss/src/tss2-esys/api/Esys_ReadPublic.c:104:Esys_ReadP=
-ublic()
-> Esys Finish ErrorCode (0x0000018b)
-> ERROR: Esys_ReadPublic(0x18B) - tpm:handle(1):the handle is not correct
-> for the use
-> ERROR: Unable to run tpm2_readpublic
+> tpm2_createprimary is version 3.1.3
+> =
 
-That looks quite strange. Could you try to list the handles with
-tpm2_getcap handles-persistent and tpm2_getcap handles-transient
-after evictcontrol command to see if it really worked.
+> What can I do?=C2=A0
+> Is there another tool beside clevis to auto unlock my drive that works
+> better?
+> Is there such a thing as a matched pair of tpm2-tool and clevis that I
+> can get a package for? =
 
+
+I would follow what the clevis says. It looks like it requires tools v3
 --
 Tadeusz
---===============0256238876980791420==--
+--===============1233854302726300481==--
 
