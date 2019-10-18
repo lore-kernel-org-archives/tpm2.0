@@ -1,43 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============2236535954544265751=="
+Content-Type: multipart/mixed; boundary="===============3967309691994394588=="
 MIME-Version: 1.0
-From: =?utf-8?q?Max_Halld=C3=A9n_=3Cmax=2Ehallden_at_wisi=2Ese=3E?=
-Subject: [tpm2] Protecting TPM objects
-Date: Fri, 18 Oct 2019 10:27:37 +0000
-Message-ID: <4b287a95-ace4-836c-4d51-42510e8e4980@wisi.se>
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: [tpm2] Re: tpm2_createprimary command
+Date: Fri, 18 Oct 2019 09:51:57 -0700
+Message-ID: <114ce654-1b31-e41b-bec8-b0f69666e64e@intel.com>
+In-Reply-To: 20191015080300.2603.85237@new-ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2236535954544265751==
+--===============3967309691994394588==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 10/15/19 1:03 AM, mohammed.aitbendaoud(a)gmail.com wrote:
+> Thank you for ur reply.
+> I have already followed this tutorial but the commands do not work.
+> I am under embedded linux and i installed the tpm2-tools.
+> =
 
-I'm a bit confused about the different authorizations and if anyone
-could help me clear some things up that would be a great help.
+> For exmaple : =
 
-The platform authorization seems to be reset on each reboot which
-makes sense in a way that it is up for grabs by whatever boots first.
+> tpm2_createprimary -o primary.ctx =
 
-But if I create an object under the owner or endorsement hierarchies,
-does this mean it can never be accessed without the password for those
-hierarchies? Even by someone with platform authorization?
-
-If I also create it with a password or any other kind of
-authorization, can it also not be accessed by someone with
-authorization for that hierarchy? For example, is a primary key
-created with password protection unique to that password or can it be
-recreated by someone with access to that hierarchy?
-
-To be a bit more specific, I'm trying to figure out in what cases a
-password protected decryption key can't be accessed by anyone without
-access to the password (but could otherwise have full access to the
-TPM hardware).
-
-Regards,
-Max
+> give me error like ---> tpm2_createprimary : invalide option -- 'o' =
 
 
---===============2236535954544265751==--
+Because -o is indeed an invalid option. What you want is -c. See:
+https://github.com/tpm2-software/tpm2-tools/blob/master/man/tpm2_createprim=
+ary.1.md
+
+--
+Tadeusz
+--===============3967309691994394588==--
 
