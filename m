@@ -1,67 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============1018679729024428367=="
+Content-Type: multipart/mixed; boundary="===============6951999668514406077=="
 MIME-Version: 1.0
-From: Arun Sudhir <arunsudhir19 at gmail.com>
-Subject: [tpm2] Implementing a TPM EA Policy with Fingerprints
-Date: Tue, 22 Oct 2019 11:33:15 -0700
-Message-ID: <CAJLNp_Wj9Ke=5yHhHVxzG6rc4Uyh+5r0gmfECjWV1JRuQeuzwA@mail.gmail.com>
+From: Jonas Witschel <diabonas at gmx.de>
+Subject: [tpm2] Re: Persistance Not working
+Date: Tue, 22 Oct 2019 20:37:41 +0200
+Message-ID: <e8d6b501-cbdc-463e-6d90-fe9a3af77da7@gmx.de>
+In-Reply-To: a548eb26-42c7-4775-b3b1-834f3851ae7f@www.fastmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1018679729024428367==
+--===============6951999668514406077==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 2019-10-22 20:29, Trey Weaver wrote:
+> Moving to version 4 of the tools is not an option for me because I need t=
+o use Clevis for other things and it won't run on version 4 of the tpm2-too=
+ls.
 
-I have read about EA Policies in the book "A Practical Guide to TPM 2.0". I
-understand the theoritical part of how everything works with EA policies.
-My question is regarding how to implement an EA policy with a fingerprint
-authentication attached to it in Windows.
+If you build Clevis from master it will work with tpm2-tools 4, support
+for the new version has been added in
+https://github.com/latchset/clevis/pull/114
 
-How does communication work between the TPM and the fingerprint reader if
-someone tries to access an object attached to such a policy? I read in the
-TPM Software Stack chapter on the same book that policies can have
-callbacks. So does the policy have a callback function to code that we
-write - which , in turn, shows up the fingerprint dialog, captures the
-fingerprint and then hashes a string "Arun's fingerprint" (say) if the
-fingerprint matches "Arun". If that is the case, what stops someone some
-swapping out that function to just supplying a hash of that string (and
-skip the fingerprint altogether)?
+Best,
+Jonas
 
-If there is someone who has done this, i'd really appreciate tips or even
-sample code on how it is done.
 
-Thanks
-Arun
-
---===============1018679729024428367==
-Content-Type: text/html
+--===============6951999668514406077==
+Content-Type: application/pgp-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+Content-Disposition: attachment; filename="signature.asc"
 
-PGRpdiBkaXI9Imx0ciI+SGksPGRpdj48YnI+PC9kaXY+PGRpdj5JIGhhdmUgcmVhZCBhYm91dCBF
-QSBQb2xpY2llcyBpbiB0aGUgYm9vayAmcXVvdDtBIFByYWN0aWNhbCBHdWlkZSB0byBUUE0gMi4w
-JnF1b3Q7LiBJIHVuZGVyc3RhbmQgdGhlIHRoZW9yaXRpY2FsIHBhcnQgb2YgaG93IGV2ZXJ5dGhp
-bmcgd29ya3Mgd2l0aCBFQSBwb2xpY2llcy4gTXkgcXVlc3Rpb24gaXMgcmVnYXJkaW5nIGhvdyB0
-byBpbXBsZW1lbnQgYW4gRUEgcG9saWN5IHdpdGggYSBmaW5nZXJwcmludCBhdXRoZW50aWNhdGlv
-biBhdHRhY2hlZCB0byBpdCBpbiBXaW5kb3dzLjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+SG93
-IGRvZXMgY29tbXVuaWNhdGlvbiB3b3JrIGJldHdlZW4gdGhlIFRQTSBhbmQgdGhlIGZpbmdlcnBy
-aW50IHJlYWRlciBpZiBzb21lb25lIHRyaWVzIHRvIGFjY2VzcyBhbiBvYmplY3QgYXR0YWNoZWQg
-dG8gc3VjaCBhIHBvbGljeT8gSSByZWFkIGluIHRoZSBUUE0gU29mdHdhcmUgU3RhY2sgY2hhcHRl
-ciBvbiB0aGUgc2FtZSBib29rIHRoYXQgcG9saWNpZXMgY2FuIGhhdmUgY2FsbGJhY2tzLiBTbyBk
-b2VzIHRoZSBwb2xpY3kgaGF2ZSBhIGNhbGxiYWNrIGZ1bmN0aW9uIHRvIGNvZGUgdGhhdCB3ZSB3
-cml0ZSAtIHdoaWNoICwgaW4gdHVybiwgc2hvd3MgdXAgdGhlIGZpbmdlcnByaW50IGRpYWxvZywg
-Y2FwdHVyZXMgdGhlIGZpbmdlcnByaW50IGFuZCB0aGVuIGhhc2hlcyBhIHN0cmluZyAmcXVvdDtB
-cnVuJiMzOTtzIGZpbmdlcnByaW50JnF1b3Q7IChzYXkpIGlmIHRoZSBmaW5nZXJwcmludCBtYXRj
-aGVzICZxdW90O0FydW4mcXVvdDsuIElmIHRoYXQgaXMgdGhlIGNhc2UsIHdoYXQgc3RvcHMgc29t
-ZW9uZSBzb21lIHN3YXBwaW5nIG91dCB0aGF0IGZ1bmN0aW9uIHRvIGp1c3Qgc3VwcGx5aW5nIGEg
-aGFzaCBvZiB0aGF0IHN0cmluZyAoYW5kIHNraXAgdGhlIGZpbmdlcnByaW50IGFsdG9nZXRoZXIp
-PzwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+SWYgdGhlcmUgaXMgc29tZW9uZSB3aG8gaGFzIGRv
-bmUgdGhpcywgaSYjMzk7ZCByZWFsbHkgYXBwcmVjaWF0ZSB0aXBzIG9yIGV2ZW4gc2FtcGxlIGNv
-ZGUgb24gaG93IGl0IGlzIGRvbmUuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFua3M8L2Rp
-dj48ZGl2PkFydW48L2Rpdj48L2Rpdj4K
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSXpCQUVCQ2dBZEZpRUUwWkduanhpQjg0
+UjFQSlorYUdzR09zUzhEc2tGQWwydlRIWUFDZ2tRYUdzR09zUzgKRHNrMFVnLzdCeVNrdUwzaVFX
+VTNhSkNmZHlFaDh6OG1Qc2NEUm1tSW96WVNSTDU3T3FrczlWV2ZPTktNa3dQcgpwVHRQZy9WK3FD
+Q0pXVFhWV25idFRoWkZvR2pTbHhqbXc5NlNtSWM2dDZyOXdlQmtiK3BjSEcyUjhpRFEzU0NLCjdi
+cEh4elRzVkpFSVViZTJDN2M4OUc4aFUrRDZzdU43bEN4K0FLblVCRkNxd3V0MGwxZmtDR2lreUZG
+RHlPVjMKYTJkU0RZM2ZEZmp2SUtULzZib1NPamdDc1Z6aVc0Zm96cGxsYVR0cDRTc29CTHpETExr
+ay93bHB0dldsV0ZadQp1ZTNmRUFQSHkvMFpTU2xyMC9Xck1OOWh3MERlT1pDNlowVzJ5dmxCdTNi
+dS9VeWJVazNSenhTOC94Wk41Rng2Cko2SHY0V3gvb1JrTEVXZzBJZUVseUVwTWhRNWgzU2dURDMz
+ODVaVlZqN0E5MHZFcEsrVElnSENRczhiV2tYN3IKUkJueGVlNm5jQmlLRTJHWCt5bWk0OGdPUGQy
+MUE5YUdaQnZnNHlBU0p6dWIvcndoejVFTTltMkRYeWNQc09lawpEYVI4NCtCeWRBTkE5Y01pNi9u
+di9ZM1dZaE5pSUIyeVpUeUpaQ2JWa0dSdkxvYk5obmdLQ2QzN3NGTENuNTNXCnduQ25nUWp0amw3
+TkF1MDlCazRWNWF2Y0hCejU3MEZzQXJSc2NpNzROWStmbmlWbXFiRXdoNFlldWR1WVhxZDQKUENn
+Y2xiUUlsdk4wbGVoTEpaM1NadHBub0RXeDlyS28zUW82WFVySjlMRm4vSzg3c1c0Y3paNUlGRlVC
+MGZ5RgpwcSt4ZkN1RmI2RlA4cDBDcXA1bnFuMVdtVGwvQ0sveWFHbTZFaVdXMEdkdTlTRzNMcVk9
+Cj1SV1p3Ci0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
 
---===============1018679729024428367==--
+--===============6951999668514406077==--
 
