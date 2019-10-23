@@ -1,52 +1,127 @@
-Content-Type: multipart/mixed; boundary="===============6951999668514406077=="
+Content-Type: multipart/mixed; boundary="===============8975658553217628890=="
 MIME-Version: 1.0
-From: Jonas Witschel <diabonas at gmx.de>
-Subject: [tpm2] Re: Persistance Not working
-Date: Tue, 22 Oct 2019 20:37:41 +0200
-Message-ID: <e8d6b501-cbdc-463e-6d90-fe9a3af77da7@gmx.de>
-In-Reply-To: a548eb26-42c7-4775-b3b1-834f3851ae7f@www.fastmail.com
+From: Zhu, Bing <bing.zhu at intel.com>
+Subject: [tpm2] Re: Protecting TPM objects
+Date: Wed, 23 Oct 2019 06:16:02 +0000
+Message-ID: <A3DEEEBB19900C48B49572CB9C2891C9879CDA6C@SHSMSX108.ccr.corp.intel.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E29EFA@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6951999668514406077==
+--===============8975658553217628890==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 2019-10-22 20:29, Trey Weaver wrote:
-> Moving to version 4 of the tools is not an option for me because I need t=
-o use Clevis for other things and it won't run on version 4 of the tpm2-too=
-ls.
-
-If you build Clevis from master it will work with tpm2-tools 4, support
-for the new version has been added in
-https://github.com/latchset/clevis/pull/114
-
-Best,
-Jonas
+There is a very good site for understanding/testing that key generation:
+https://google.github.io/tpm-js/#pg_keys =
 
 
---===============6951999668514406077==
-Content-Type: application/pgp-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="signature.asc"
+if you change the primary seed, then you will get different one. TPM uses d=
+eterministic key derivation function to derive the primary keys.
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSXpCQUVCQ2dBZEZpRUUwWkduanhpQjg0
-UjFQSlorYUdzR09zUzhEc2tGQWwydlRIWUFDZ2tRYUdzR09zUzgKRHNrMFVnLzdCeVNrdUwzaVFX
-VTNhSkNmZHlFaDh6OG1Qc2NEUm1tSW96WVNSTDU3T3FrczlWV2ZPTktNa3dQcgpwVHRQZy9WK3FD
-Q0pXVFhWV25idFRoWkZvR2pTbHhqbXc5NlNtSWM2dDZyOXdlQmtiK3BjSEcyUjhpRFEzU0NLCjdi
-cEh4elRzVkpFSVViZTJDN2M4OUc4aFUrRDZzdU43bEN4K0FLblVCRkNxd3V0MGwxZmtDR2lreUZG
-RHlPVjMKYTJkU0RZM2ZEZmp2SUtULzZib1NPamdDc1Z6aVc0Zm96cGxsYVR0cDRTc29CTHpETExr
-ay93bHB0dldsV0ZadQp1ZTNmRUFQSHkvMFpTU2xyMC9Xck1OOWh3MERlT1pDNlowVzJ5dmxCdTNi
-dS9VeWJVazNSenhTOC94Wk41Rng2Cko2SHY0V3gvb1JrTEVXZzBJZUVseUVwTWhRNWgzU2dURDMz
-ODVaVlZqN0E5MHZFcEsrVElnSENRczhiV2tYN3IKUkJueGVlNm5jQmlLRTJHWCt5bWk0OGdPUGQy
-MUE5YUdaQnZnNHlBU0p6dWIvcndoejVFTTltMkRYeWNQc09lawpEYVI4NCtCeWRBTkE5Y01pNi9u
-di9ZM1dZaE5pSUIyeVpUeUpaQ2JWa0dSdkxvYk5obmdLQ2QzN3NGTENuNTNXCnduQ25nUWp0amw3
-TkF1MDlCazRWNWF2Y0hCejU3MEZzQXJSc2NpNzROWStmbmlWbXFiRXdoNFlldWR1WVhxZDQKUENn
-Y2xiUUlsdk4wbGVoTEpaM1NadHBub0RXeDlyS28zUW82WFVySjlMRm4vSzg3c1c0Y3paNUlGRlVC
-MGZ5RgpwcSt4ZkN1RmI2RlA4cDBDcXA1bnFuMVdtVGwvQ0sveWFHbTZFaVdXMEdkdTlTRzNMcVk9
-Cj1SV1p3Ci0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
+Bing
 
---===============6951999668514406077==--
+> -----Original Message-----
+> From: Roberts, William C <william.c.roberts(a)intel.com>
+> Sent: Tuesday, October 22, 2019 22:22 PM
+> To: Max Halld=C3=A9n <max.hallden(a)wisi.se>; Zhu, Bing <bing.zhu(a)intel=
+.com>;
+> tpm2(a)lists.01.org
+> Subject: RE: Protecting TPM objects
+> =
+
+> =
+
+> =
+
+> > -----Original Message-----
+> > From: Max Halld=C3=A9n [mailto:max.hallden(a)wisi.se]
+> > Sent: Monday, October 21, 2019 3:50 AM
+> > To: Zhu, Bing <bing.zhu(a)intel.com>; tpm2(a)lists.01.org
+> > Subject: [tpm2] Re: Protecting TPM objects
+> >
+> > Thank you for the answer! It sounds like it behaves how I expect, but
+> > I have one follow-up question:
+> >
+> > When you say you can delete and re-create it, if this is a primary key
+> > will this result in the same key as before?
+> =
+
+> Yes. Unless the root seed for the hierarchy changes, if you feed
+> tpm2_createprimary The same inputs, you get the same key back everytime.
+> =
+
+> >
+> > Regards,
+> > Max
+> >
+> > On 2019-10-21 04:43, Zhu, Bing wrote:
+> > > Each authorization Hierarchy has its own authvalue, by default, the
+> > > authvalue is
+> > empty. But you can change this authvalue to a high entropy secret.
+> > >
+> > > For platform authorization, its authvalue will be reset to empty
+> > > after each
+> > power cycle. typically BIOS/FW should change it to a high entropy
+> > secret after using at boot time, then discard this secret or disable
+> > platform authorization before handoff to bootloader/OS. So that nobody
+> > else in OS can use platform authorization.
+> > >
+> > > Take TPM NV storage as example, you can configure different policy
+> > > to gate
+> > access control to the secret stored in NV storage. e.g. you can
+> > configure a password-only access so that even if you have owner
+> > hierarchy authvalue, you cannot even access it. (but you can delete it
+> > and re-create it with your owner hierarchy authvalue).
+> > >
+> > > Bing
+> > >
+> > >> -----Original Message-----
+> > >> From: Max Halld=C3=A9n <max.hallden(a)wisi.se>
+> > >> Sent: Friday, October 18, 2019 18:28 PM
+> > >> To: tpm2(a)lists.01.org
+> > >> Subject: [tpm2] Protecting TPM objects
+> > >>
+> > >> Hi all,
+> > >>
+> > >> I'm a bit confused about the different authorizations and if anyone
+> > >> could help me clear some things up that would be a great help.
+> > >>
+> > >> The platform authorization seems to be reset on each reboot which
+> > >> makes sense in a way that it is up for grabs by whatever boots first.
+> > >>
+> > >> But if I create an object under the owner or endorsement
+> > >> hierarchies, does this mean it can never be accessed without the
+> > >> password for those hierarchies? Even by someone with platform
+> authorization?
+> > >>
+> > >> If I also create it with a password or any other kind of
+> > >> authorization, can it also not be accessed by someone with
+> > >> authorization for that hierarchy? For example, is a primary key
+> > >> created with password protection unique to that password or can it
+> > >> be
+> > recreated by someone with access to that hierarchy?
+> > >>
+> > >> To be a bit more specific, I'm trying to figure out in what cases a
+> > >> password protected decryption key can't be accessed by anyone
+> > >> without access to the password (but could otherwise have full
+> > >> access to the TPM
+> > hardware).
+> > >>
+> > >> Regards,
+> > >> Max
+> > >>
+> > >> _______________________________________________
+> > >> tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email
+> > >> to tpm2- leave(a)lists.01.org
+> > >> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+> >
+> >
+> > _______________________________________________
+> > tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email to
+> > tpm2-leave(a)lists.01.org
+> > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============8975658553217628890==--
 
