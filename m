@@ -1,25 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============0926941275983216585=="
+Content-Type: multipart/mixed; boundary="===============7107842003600288837=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] tpm2-tools: 4.0.1 release
-Date: Mon, 28 Oct 2019 13:38:59 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E2BF12@ORSMSX101.amr.corp.intel.com>
+From: Peter Huewe <PeterHuewe at gmx.de>
+Subject: [tpm2] Re: Open Source Summit Europe / Linux Security Summit Europe
+ 2019
+Date: Mon, 28 Oct 2019 17:02:37 +0100
+Message-ID: <trinity-8a0bfea0-14f2-4869-b61e-dc88289f0324-1572278557337@msvc-mesg-gmx123>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0926941275983216585==
+--===============7107842003600288837==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
 
-A new release of tpm2-tools 4.0.1 is available that fixes a YAML formatting=
- issue in tpm2_quote command output.
+--===============7107842003600288837==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.0.1
-
-Thanks,
-Bill
---===============0926941275983216585==--
+PGh0bWw+PGJvZHk+PGh0bWw+PGhlYWQ+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9Indp
+ZHRoPWRldmljZS13aWR0aCIgLz48bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
+bnQ9InRleHQvdm5kLnVpLmluc2VjdXJlK2h0bWw7Y2hhcnNldD11dGYtOCIgLz48L2hlYWQ+PGJv
+ZHkgc3R5bGU9Im92ZXJmbG93LXdyYXA6YnJlYWstd29yZDsgd29yZC1icmVhazogYnJlYWstd29y
+ZDsiPjxkaXYgY2xhc3M9Im1haWxfYW5kcm9pZF9tZXNzYWdlIiBzdHlsZT0ibGluZS1oZWlnaHQ6
+IDE7IHBhZGRpbmc6IDAuNWVtIj5UaGUgZ29vZCBuZXdzIGlzIEFuZHJlYXMgd2lsbCBwcm9iYWJs
+eSB0YWtlIG92ZXIgbXkgdGFsayE8YnI+ClRoYW5rcyBzbyBtdWNoITxicj4KUGV0ZXI8YnI+Ci0t
+IDxicj4KRGllc2UgTmFjaHJpY2h0IHd1cmRlIHZvbiBtZWluZW0gQW5kcm9pZCBNb2JpbHRlbGVm
+b24gbWl0IEdNWCBNYWlsIGdlc2VuZGV0LjwvZGl2PjxkaXYgY2xhc3M9Im1haWxfYW5kcm9pZF9x
+dW90ZSIgc3R5bGU9ImxpbmUtaGVpZ2h0OiAxOyBwYWRkaW5nOiAwLjNlbSI+QW0gMjguMTAuMTks
+IDA4OjE0LCBQZXRlciBIdWV3ZSAmbHQ7UGV0ZXJIdWV3ZUBnbXguZGUmZ3Q7IHNjaHJpZWI6PGJs
+b2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOiAwLjhleCAwcHQgMHB0
+IDAuOGV4OyBib3JkZXItbGVmdDogMXB4IHNvbGlkIHJnYigyMDQsIDIwNCwgMjA0KTsgcGFkZGlu
+Zy1sZWZ0OiAxZXg7Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmlj
+ZS13aWR0aCIgLz48ZGl2IGNsYXNzPSJtYWlsX2FuZHJvaWRfbWVzc2FnZSIgc3R5bGU9ImxpbmUt
+aGVpZ2h0OiAxOyBwYWRkaW5nOiAwLjVlbSI+SGksPGJyIC8+CjxiciAvPgpJJmFwb3M7bSByZWFs
+bHksIHJlYWxseSBzb3JyeSwgYnV0IHNvbWV0aGluZyBpbXBvcnRhbnQgY2FtZSB1cCBhbmQgSSBo
+YXZlIHRvIGNhbmNlbCBteSB0YWxrIGFuZCBhdHRlbmRhbmNlIGF0IG9zc2UvZWxjZS9sc3NlIHRo
+aXMgeWVhci4gOi88YnIgLz4KPGJyIC8+Ckkgd2FzIHJlYWxseSBsb29raW5nIGZvcndhcmQgdG8g
+bWVldGluZyB5b3UgaW4gcGVyc29uIGFuZCBzcHJlYWQgdGhlIHdvcmQgYWJvdXQgb3VyIG5pY2Ug
+cHJvamVjdCwgYnV0IEkgY2Fubm90IGNoYW5nZSBpdC4gPGJyIC8+CjxiciAvPgpJIGFtIGFscmVh
+ZHkgaW4gTHlvbiBidXQgSSZhcG9zO2xsIGhhdmUgdG8gbGVhdmUgaW4gdGhlIGVhcmx5IGFmdGVy
+bm9vbiwgc28gbm90IG11Y2ggY2hhbmNlIHRvIGNhdGNoIHVwIDovPGJyIC8+CkkgZXZlbiBwaWNr
+ZWQgdXAgbXkgc3BlYWtlciBiYWRnZSB5ZXN0ZXJkYXkuIDxiciAvPgo8YnIgLz4KSWYgc29tZW9u
+ZSB3YW50cyB0byBmaWxsIG15IHNwZWFraW5nIHNsb3QgKG9uIGFueSB0b3BpYyBpIGd1ZXNzKSAs
+IHBsZWFzZSBnZXQgaW4gdG91Y2ggYW5kIEkmYXBvcztsbCBmb3J3YXJkIHlvdXIgZGV0YWlscyB0
+byB0aGUgZXZlbnQgdGVhbS4gPGJyIC8+CjxiciAvPgpSZWFsbHkgc29ycnksPGJyIC8+ClBldGVy
+PGJyIC8+Ci0tIDxiciAvPgpEaWVzZSBOYWNocmljaHQgd3VyZGUgdm9uIG1laW5lbSBBbmRyb2lk
+IE1vYmlsdGVsZWZvbiBtaXQgR01YIE1haWwgZ2VzZW5kZXQuPC9kaXY+PGRpdiBjbGFzcz0ibWFp
+bF9hbmRyb2lkX3F1b3RlIiBzdHlsZT0ibGluZS1oZWlnaHQ6IDE7IHBhZGRpbmc6IDAuM2VtIj5B
+bSAyNC4xMC4xOSwgMTc6MDQsIFBldGVyIEh1ZXdlICZsdDtQZXRlckh1ZXdlQGdteC5kZSZndDsg
+c2NocmllYjo8YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46IDAu
+OGV4IDBwdCAwcHQgMC44ZXg7IGJvcmRlci1sZWZ0OiAxcHggc29saWQgcmdiKDIwNCwgMjA0LCAy
+MDQpOyBwYWRkaW5nLWxlZnQ6IDFleDsiPgpIaSw8YnIgLz4KPGJyIC8+Ckkgd2FzIHdvbmRlcmlu
+ZyBpZiBhbnlvbmUgd2lsbCBiZSBhdCBPcGVuIFNvdXJjZSBTdW1taXQgb3IgTGludXggU2VjdXJp
+dHkgU3VtbWl0IGluIEx5b24gbmV4dCB3ZWVrPzxiciAvPgpJJ2xsIGJlIGdpdmluZyBteSBwcmVz
+ZW50YXRpb24gYWJvdXQgdHBtMi1zb2Z0d2FyZS5naXRodWIuaW8gb24gMzB0aCA8YnIgLz4KPGJy
+IC8+ClRoYW5rcyw8YnIgLz4KUGV0ZXI8L2Jsb2NrcXVvdGU+PC9kaXY+PC9ibG9ja3F1b3RlPjwv
+ZGl2PjwvYm9keT48L2h0bWw+PC9ib2R5PjwvaHRtbD4=
+--===============7107842003600288837==--
 
