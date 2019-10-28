@@ -1,30 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============5463790000836926720=="
+Content-Type: multipart/mixed; boundary="===============3201041004242917924=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] Re: sending commands to simulator
-Date: Fri, 25 Oct 2019 15:10:53 -0700
-Message-ID: <a5a92112-ae79-e7c5-2064-49a8b0f7d323@intel.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E2BA30@ORSMSX101.amr.corp.intel.com
+From: Peter Huewe <PeterHuewe at gmx.de>
+Subject: [tpm2] Re: Open Source Summit Europe / Linux Security Summit Europe
+ 2019
+Date: Mon, 28 Oct 2019 08:14:08 +0100
+Message-ID: <trinity-42c32157-7924-4552-9196-4e024cb544d7-1572246848791@msvc-mesg-gmx024>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5463790000836926720==
+--===============3201041004242917924==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 10/25/19 12:19 PM, Roberts, William C wrote:
->   if [ "$raw" =3D=3D "yes" ]; then
->     echo -n "$cmd" | nc -N "$ip" "$port"
->   else
->     echo -n "$cmd" | xxd -p -r | nc -N "$ip" "$port"
->   fi
 
-Looks good. Would be even better if we make sure that the response from
-the mssim (4 bytes) is 0x00 00 00 00 (success) and print an error msg
-otherwise.
+--===============3201041004242917924==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
---
-Tadeusz
---===============5463790000836926720==--
+PGh0bWw+PGJvZHk+PGh0bWw+PGhlYWQ+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9Indp
+ZHRoPWRldmljZS13aWR0aCIgLz48bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
+bnQ9InRleHQvdm5kLnVpLmluc2VjdXJlK2h0bWw7Y2hhcnNldD11dGYtOCIgLz48L2hlYWQ+PGJv
+ZHkgc3R5bGU9Im92ZXJmbG93LXdyYXA6YnJlYWstd29yZDsgd29yZC1icmVhazogYnJlYWstd29y
+ZDsiPjxkaXYgY2xhc3M9Im1haWxfYW5kcm9pZF9tZXNzYWdlIiBzdHlsZT0ibGluZS1oZWlnaHQ6
+IDE7IHBhZGRpbmc6IDAuNWVtIj5IaSw8YnI+Cjxicj4KSSYjMzk7bSByZWFsbHksIHJlYWxseSBz
+b3JyeSwgYnV0IHNvbWV0aGluZyBpbXBvcnRhbnQgY2FtZSB1cCBhbmQgSSBoYXZlIHRvIGNhbmNl
+bCBteSB0YWxrIGFuZCBhdHRlbmRhbmNlIGF0IG9zc2UvZWxjZS9sc3NlIHRoaXMgeWVhci4gOi88
+YnI+Cjxicj4KSSB3YXMgcmVhbGx5IGxvb2tpbmcgZm9yd2FyZCB0byBtZWV0aW5nIHlvdSBpbiBw
+ZXJzb24gYW5kIHNwcmVhZCB0aGUgd29yZCBhYm91dCBvdXIgbmljZSBwcm9qZWN0LCBidXQgSSBj
+YW5ub3QgY2hhbmdlIGl0LiA8YnI+Cjxicj4KSSBhbSBhbHJlYWR5IGluIEx5b24gYnV0IEkmIzM5
+O2xsIGhhdmUgdG8gbGVhdmUgaW4gdGhlIGVhcmx5IGFmdGVybm9vbiwgc28gbm90IG11Y2ggY2hh
+bmNlIHRvIGNhdGNoIHVwIDovPGJyPgpJIGV2ZW4gcGlja2VkIHVwIG15IHNwZWFrZXIgYmFkZ2Ug
+eWVzdGVyZGF5LiA8YnI+Cjxicj4KSWYgc29tZW9uZSB3YW50cyB0byBmaWxsIG15IHNwZWFraW5n
+IHNsb3QgKG9uIGFueSB0b3BpYyBpIGd1ZXNzKSAsIHBsZWFzZSBnZXQgaW4gdG91Y2ggYW5kIEkm
+IzM5O2xsIGZvcndhcmQgeW91ciBkZXRhaWxzIHRvIHRoZSBldmVudCB0ZWFtLiA8YnI+Cjxicj4K
+UmVhbGx5IHNvcnJ5LDxicj4KUGV0ZXI8YnI+Ci0tIDxicj4KRGllc2UgTmFjaHJpY2h0IHd1cmRl
+IHZvbiBtZWluZW0gQW5kcm9pZCBNb2JpbHRlbGVmb24gbWl0IEdNWCBNYWlsIGdlc2VuZGV0Ljwv
+ZGl2PjxkaXYgY2xhc3M9Im1haWxfYW5kcm9pZF9xdW90ZSIgc3R5bGU9ImxpbmUtaGVpZ2h0OiAx
+OyBwYWRkaW5nOiAwLjNlbSI+QW0gMjQuMTAuMTksIDE3OjA0LCBQZXRlciBIdWV3ZSAmbHQ7UGV0
+ZXJIdWV3ZUBnbXguZGUmZ3Q7IHNjaHJpZWI6PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3Rl
+IiBzdHlsZT0ibWFyZ2luOiAwLjhleCAwcHQgMHB0IDAuOGV4OyBib3JkZXItbGVmdDogMXB4IHNv
+bGlkIHJnYigyMDQsIDIwNCwgMjA0KTsgcGFkZGluZy1sZWZ0OiAxZXg7Ij4KSGksPGJyIC8+Cjxi
+ciAvPgpJIHdhcyB3b25kZXJpbmcgaWYgYW55b25lIHdpbGwgYmUgYXQgT3BlbiBTb3VyY2UgU3Vt
+bWl0IG9yIExpbnV4IFNlY3VyaXR5IFN1bW1pdCBpbiBMeW9uIG5leHQgd2Vlaz88YnIgLz4KSSZh
+cG9zO2xsIGJlIGdpdmluZyBteSBwcmVzZW50YXRpb24gYWJvdXQgdHBtMi1zb2Z0d2FyZS5naXRo
+dWIuaW8gb24gMzB0aCA8YnIgLz4KPGJyIC8+ClRoYW5rcyw8YnIgLz4KUGV0ZXI8L2Jsb2NrcXVv
+dGU+PC9kaXY+PC9ib2R5PjwvaHRtbD48L2JvZHk+PC9odG1sPg==
+--===============3201041004242917924==--
 
