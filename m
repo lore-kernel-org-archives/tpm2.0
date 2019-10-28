@@ -1,29 +1,24 @@
-Content-Type: multipart/mixed; boundary="===============3564724522734149402=="
+Content-Type: multipart/mixed; boundary="===============8241851690796447790=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] ESYS_TR to TPM2_HANDLE
-Date: Mon, 28 Oct 2019 16:40:29 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E2BFC8@ORSMSX101.amr.corp.intel.com>
+From: Steven Clark <davolfman at gmail.com>
+Subject: [tpm2] Re: Persisted primary key not usable, tpm2-tools 4.0.0
+Date: Mon, 28 Oct 2019 15:57:21 -0700
+Message-ID: <CAOCvsSkX7xrZ6OO9tpDVGQc7NGAjsDuyQz3hRqDc00knoBB3AA@mail.gmail.com>
+In-Reply-To: CAOCvsSkPHJkMNLm+_9DPqKo-Bwu14As9CH=4sdrd3moch6YoZA@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3564724522734149402==
+--===============8241851690796447790==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In tpm2_evictcontrol, I can load a serialized ESYS_TR object. The tool outp=
-ut, which I must keep stable, uses a TPM2_HANDLE in the output and whether =
-or not that handle
-was persisted or evicted. In the case of persisted, that is simple, I know =
-it. In the case of evicted, I cannot know it. Is there a way to get the TPM=
-2_HANDLE for that =
-
-ESYS_TR? I see ESAPI knows it... The other option I have considered is just=
- to print out a 0 or some other dummy value for the handle on evict, but I =
-am not super
-fond of that.
-
-Bill
---===============3564724522734149402==--
+I installed the 32-bit versions of my packages on a relevant system
+and I'm able to read the public portion of a persisted primary object
+with the ABRMD running.  I remember having to force install my
+packages on the first test system due to a dependency/version snarl I
+inflicted upon myself.  For the time being my problem is probably not
+a problem and if it re-appears stands a good chance of being a build
+system recipe problem instead of a code problem.
+--===============8241851690796447790==--
 
