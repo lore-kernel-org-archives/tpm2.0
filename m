@@ -1,99 +1,120 @@
-Content-Type: multipart/mixed; boundary="===============1974719609170878578=="
+Content-Type: multipart/mixed; boundary="===============8271502874056133664=="
 MIME-Version: 1.0
-From: Desai, Imran <imran.desai at intel.com>
-Subject: [tpm2] Release notice: tpm2-tools 4.1-rc0 
-Date: Tue, 05 Nov 2019 20:17:09 +0000
-Message-ID: <688D07BB9E3A9E4A852BA1336D1910FF967EEAE9@fmsmsx104.amr.corp.intel.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: ESYS_TR to TPM2_HANDLE
+Date: Tue, 05 Nov 2019 20:27:05 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E2FFD0@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E2E1C2@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1974719609170878578==
+--===============8271502874056133664==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+I just hit another case. If I wanted to see if a handle is persistent, I ch=
+eck
+The result of a getcap  query for persistent handles. That returns raw TPM
+Handles, so if I had an ESYS_TR I wouldn't be able to verify that its persi=
+stent,
+Or is there a better way to do it?
 
-tpm2-tools release candidate version 4.1-rc0 is published.
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.1-rc0
+> -----Original Message-----
+> From: Roberts, William C [mailto:william.c.roberts(a)intel.com]
+> Sent: Thursday, October 31, 2019 9:28 AM
+> To: Fuchs, Andreas <andreas.fuchs(a)sit.fraunhofer.de>; tpm2(a)lists.01.o=
+rg
+> Cc: Struk, Tadeusz <tadeusz.struk(a)intel.com>
+> Subject: [tpm2] Re: ESYS_TR to TPM2_HANDLE
+> =
 
-Please provide your feedback for the release candidate.
+> So because of the way evictcontrol works, it can either persist or evict =
+an object
+> from NV.
+> =
 
-Some highlights for the release:
+> In tpm2_evictcontrol the tool hasoutput like:
+> action: evicted|persisted
+> handle: 0x12345678
+> =
 
-* New tools added to support commands:
-TPM2_CertifyCreation, TPM2_ChangeEPS, TPM2_ChangePPS, TPM2_ClockRateAdjust,
-TPM2_GetTime, TPM2_NV_Certify, TPM2_NV_Extend, TPM2_NV_Setbits,
-TPM2_NV_UndefineSpaceSpecial, TPM2_NV_Writelock, TPM2_PolicyAuthorizeNV,
-TPM2_PolicyAuthValue, TPM2_PolicyCounterTimer, TPM2_PolicyNameHash,
-TPM2_PolicyNV, TPM2_NV_Written, TPM2_PolicySigned, TPM2_PolicyTemplate,
-TPM2_PolicyTicket, TPM2_ReadClock, TPM2_ClockSet, TPM2_SetPrimaryPolicy,
-TPM2_Shutdown.
+> On the persist case, it's easy, because I have the raw TPM2_HANDLE they w=
+ant to
+> persist at, at which point the ESYS_TR can be serialized as output to a f=
+ile.
+> =
 
-* Bug fixes and additional options to existing tools.
-1. tpm2_checkquote: Fix YAML bug
-2. tpm2_policysecret: Add options to specify expiration, ticket, timeout,
-   qualification data.
-3. tpm2_create/ tpm2_createprimary: Add options to specify creation-data,
-   creation-ticket, creation-hash, outside-info, pcr-list
+> In the evict case, someone presents that serialized ESYS_TR, and the tool=
+ evicts
+> it...my output becomes:
+> action: evicted
+> handle: xxx
+> =
 
-* Misc:
-1. Skip/notify of action that man pages will not install if pandoc is missi=
-ng.
-2. Support "tpmt" as public key output format that saves the TPMT structure.
-3. Add support for specifying NV index type when specifying NV attributes.
-4. Fixed routine files_load_bytes_from_buffer_or_file_or_stdin where it can
-   read one short of a UINT16 and overflow when buffer isn't a UINT16.
+> Where I need to know what xxx is. I could do something like "?" or "<unkn=
+own>"
+> but I'd like to not alter this interface, as technically it would not be =
+backwards
+> compatible. I didn't realize it, but this broke on the switch to ESAPI.
+> =
 
-Thanks and Regards.
+> So I need to get the actual TPM2_HANDLE from the ESYS_TR. I could just po=
+ke
+> into the blob directly to get the handle (it appears to be the first 32 b=
+its), but I
+> don't like doing things like that.
+> =
 
---===============1974719609170878578==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> I think it would be a nice addition to be able to get a TPM2_HANDLE from =
+an
+> ESYS_TR. Especially if we go the Route of exposing a SAPI_CONTEXT from ES=
+API,
+> without a raw TPM2_HANDLE, there isn't much you Could do with the SAPI
+> context.
+> =
 
-PGh0bWwgZGlyPSJsdHIiIGNsYXNzPSJncl9fb3V0bG9va19pbnRlbF9jb20iPgo8aGVhZD4KPG1l
-dGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9
-aXNvLTg4NTktMSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgaWQ9Im93YVBhcmFTdHlsZSI+PC9z
-dHlsZT4KPC9oZWFkPgo8Ym9keSBkYXRhLWdyLWMtcy1sb2FkZWQ9InRydWUiIGZwc3R5bGU9IjEi
-IG9jc2k9IjAiPgo8ZGl2IHN0eWxlPSJkaXJlY3Rpb246IGx0cjtmb250LWZhbWlseTogVGFob21h
-O2NvbG9yOiAjMDAwMDAwO2ZvbnQtc2l6ZTogMTBwdDsiPgo8ZGl2PkhlbGxvLDwvZGl2Pgo8ZGl2
-Pjxicj4KPC9kaXY+CjxkaXY+dHBtMi10b29scyByZWxlYXNlIGNhbmRpZGF0ZSB2ZXJzaW9uIDQu
-MS1yYzAgaXMgcHVibGlzaGVkLjwvZGl2Pgo8ZGl2PjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNv
-bS90cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvcmVsZWFzZXMvdGFnLzQuMS1yYzAiIHRhcmdldD0i
-X2JsYW5rIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL3JlbGVh
-c2VzL3RhZy80LjEtcmMwPC9hPjwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+UGxlYXNlIHBy
-b3ZpZGUgeW91ciBmZWVkYmFjayBmb3IgdGhlIHJlbGVhc2UgY2FuZGlkYXRlLjwvZGl2Pgo8ZGl2
-Pjxicj4KPC9kaXY+CjxkaXY+U29tZSBoaWdobGlnaHRzIGZvciB0aGUgcmVsZWFzZTo8L2Rpdj4K
-PGRpdj48YnI+CjwvZGl2Pgo8ZGl2PiogTmV3IHRvb2xzIGFkZGVkIHRvIHN1cHBvcnQgY29tbWFu
-ZHM6PC9kaXY+CjxkaXY+VFBNMl9DZXJ0aWZ5Q3JlYXRpb24sIFRQTTJfQ2hhbmdlRVBTLCBUUE0y
-X0NoYW5nZVBQUywgVFBNMl9DbG9ja1JhdGVBZGp1c3QsPC9kaXY+CjxkaXY+VFBNMl9HZXRUaW1l
-LCBUUE0yX05WX0NlcnRpZnksIFRQTTJfTlZfRXh0ZW5kLCBUUE0yX05WX1NldGJpdHMsPC9kaXY+
-CjxkaXY+VFBNMl9OVl9VbmRlZmluZVNwYWNlU3BlY2lhbCwgVFBNMl9OVl9Xcml0ZWxvY2ssIFRQ
-TTJfUG9saWN5QXV0aG9yaXplTlYsPC9kaXY+CjxkaXY+VFBNMl9Qb2xpY3lBdXRoVmFsdWUsIFRQ
-TTJfUG9saWN5Q291bnRlclRpbWVyLCBUUE0yX1BvbGljeU5hbWVIYXNoLDwvZGl2Pgo8ZGl2PlRQ
-TTJfUG9saWN5TlYsIFRQTTJfTlZfV3JpdHRlbiwgVFBNMl9Qb2xpY3lTaWduZWQsIFRQTTJfUG9s
-aWN5VGVtcGxhdGUsPC9kaXY+CjxkaXY+VFBNMl9Qb2xpY3lUaWNrZXQsIFRQTTJfUmVhZENsb2Nr
-LCBUUE0yX0Nsb2NrU2V0LCBUUE0yX1NldFByaW1hcnlQb2xpY3ksPC9kaXY+CjxkaXY+VFBNMl9T
-aHV0ZG93bi48L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2PiogQnVnIGZpeGVzIGFuZCBhZGRp
-dGlvbmFsIG9wdGlvbnMgdG8gZXhpc3RpbmcgdG9vbHMuPC9kaXY+CjxkaXY+MS4gdHBtMl9jaGVj
-a3F1b3RlOiBGaXggWUFNTCBidWc8L2Rpdj4KPGRpdj4yLiB0cG0yX3BvbGljeXNlY3JldDogQWRk
-IG9wdGlvbnMgdG8gc3BlY2lmeSBleHBpcmF0aW9uLCB0aWNrZXQsIHRpbWVvdXQsPC9kaXY+Cjxk
-aXY+Jm5ic3A7ICZuYnNwO3F1YWxpZmljYXRpb24gZGF0YS48L2Rpdj4KPGRpdj4zLiB0cG0yX2Ny
-ZWF0ZS8gdHBtMl9jcmVhdGVwcmltYXJ5OiBBZGQgb3B0aW9ucyB0byBzcGVjaWZ5IGNyZWF0aW9u
-LWRhdGEsPC9kaXY+CjxkaXY+Jm5ic3A7ICZuYnNwO2NyZWF0aW9uLXRpY2tldCwgY3JlYXRpb24t
-aGFzaCwgb3V0c2lkZS1pbmZvLCBwY3ItbGlzdDwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+
-KiBNaXNjOjwvZGl2Pgo8ZGl2PjEuIFNraXAvbm90aWZ5IG9mIGFjdGlvbiB0aGF0IG1hbiBwYWdl
-cyB3aWxsIG5vdCBpbnN0YWxsIGlmIHBhbmRvYyBpcyBtaXNzaW5nLjwvZGl2Pgo8ZGl2PjIuIFN1
-cHBvcnQgJnF1b3Q7dHBtdCZxdW90OyBhcyBwdWJsaWMga2V5IG91dHB1dCBmb3JtYXQgdGhhdCBz
-YXZlcyB0aGUgVFBNVCBzdHJ1Y3R1cmUuPC9kaXY+CjxkaXY+My4gQWRkIHN1cHBvcnQgZm9yIHNw
-ZWNpZnlpbmcgTlYgaW5kZXggdHlwZSB3aGVuIHNwZWNpZnlpbmcgTlYgYXR0cmlidXRlcy48L2Rp
-dj4KPGRpdj40LiBGaXhlZCByb3V0aW5lIGZpbGVzX2xvYWRfYnl0ZXNfZnJvbV9idWZmZXJfb3Jf
-ZmlsZV9vcl9zdGRpbiB3aGVyZSBpdCBjYW48L2Rpdj4KPGRpdj4mbmJzcDsgJm5ic3A7cmVhZCBv
-bmUgc2hvcnQgb2YgYSBVSU5UMTYgYW5kIG92ZXJmbG93IHdoZW4gYnVmZmVyIGlzbid0IGEgVUlO
-VDE2LjwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+VGhhbmtzIGFuZCBSZWdhcmRzLjwvZGl2
-Pgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+> Bill
+> =
 
---===============1974719609170878578==--
+> > -----Original Message-----
+> > From: Fuchs, Andreas [mailto:andreas.fuchs(a)sit.fraunhofer.de]
+> > Sent: Thursday, October 31, 2019 4:09 AM
+> > To: Roberts, William C <william.c.roberts(a)intel.com>;
+> > tpm2(a)lists.01.org
+> > Cc: Struk, Tadeusz <tadeusz.struk(a)intel.com>
+> > Subject: RE: ESYS_TR to TPM2_HANDLE
+> >
+> > I don't know if I get it.
+> >
+> > I though you would present the persistent-handle in either case and
+> > then say if you persistent to this persistent-handle or if you evicted =
+this
+> peristent-handle ?
+> >
+> > Andreas
+> >
+> > ________________________________________
+> > From: Roberts, William C [william.c.roberts(a)intel.com]
+> > Sent: Monday, October 28, 2019 17:40
+> > To: tpm2(a)lists.01.org
+> > Cc: Struk, Tadeusz; Fuchs, Andreas
+> > Subject: ESYS_TR to TPM2_HANDLE
+> >
+> > In tpm2_evictcontrol, I can load a serialized ESYS_TR object. The tool
+> > output, which I must keep stable, uses a TPM2_HANDLE in the output and
+> > whether or not that handle was persisted or evicted. In the case of
+> > persisted, that is simple, I know it. In the case of evicted, I cannot
+> > know it. Is there a way to get the TPM2_HANDLE for that ESYS_TR? I see
+> > ESAPI knows it... The other option I have considered is just to print
+> > out a 0 or some other dummy value for the handle on evict, but I am not=
+ super
+> fond of that.
+> >
+> > Bill
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+--===============8271502874056133664==--
 
