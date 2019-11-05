@@ -1,56 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============4623213649722843181=="
+Content-Type: multipart/mixed; boundary="===============5883311498710009646=="
 MIME-Version: 1.0
-From: Niklas Andersson <niklas.andersson at fredenheim.se>
-Subject: [tpm2] Is there a TCG document called "TPM Keys for Platform DevID
- for TPM2.0." ?
-Date: Tue, 05 Nov 2019 15:18:49 +0100
-Message-ID: <CAJ8N_u8im+X9NAwOvXcyjEpifbGzuJw-hqvJNe3K2QRmQ_Kabg@mail.gmail.com>
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: [tpm2] tpm2-abrmd 2.3.0-rc0
+Date: Tue, 05 Nov 2019 18:44:37 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909CED49D3@ORSMSX104.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4623213649722843181==
+--===============5883311498710009646==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-I'm desperately looking for a document referred to as "TPM Keys for
-Platform DevID for TPM2.0.". Supposedly there was a draft in 2017 according
-to [1]. That document points to a non-existent link inside TCG. I created
-an account in order to look around, but couldn't find anything.
+I've just tagged the first release candidate for version 2.3.0 of the user-=
+space resource manager (aka tpm2-abrmd). The draft changelog and tag can be=
+ found here: https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.3.0=
+-rc0
 
-Anybody has a clue? I'm looking into how to best enroll a TPM 2.0 chip with
-a Microsoft CA.
+Please provide whatever feedback you may have in the issue tracker.
 
-[1]
-https://trustedcomputinggroup.org/wp-content/uploads/TCG_Guidance_for_Secur=
-ing_NetEq_1_0r26b_Public-Review.pdf
+Regards,
+Philip
 
-Best regards,
-Niklas
 
---===============4623213649722843181==
+--===============5883311498710009646==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdj5IaSw8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PkkmIzM5O20g
-ZGVzcGVyYXRlbHkgbG9va2luZyBmb3IgYSBkb2N1bWVudCByZWZlcnJlZCB0byBhcyAmcXVvdDtU
-UE0gS2V5cyBmb3IgUGxhdGZvcm0gRGV2SUQgZm9yIFRQTTIuMC4mcXVvdDsuIFN1cHBvc2VkbHkg
-dGhlcmUgd2FzIGEgZHJhZnQgaW4gMjAxNyBhY2NvcmRpbmcgdG8gWzFdLiBUaGF0IGRvY3VtZW50
-IHBvaW50cyB0byBhIG5vbi1leGlzdGVudCBsaW5rIGluc2lkZSBUQ0cuIEkgY3JlYXRlZCBhbiBh
-Y2NvdW50IGluIG9yZGVyIHRvIGxvb2sgYXJvdW5kLCBidXQgY291bGRuJiMzOTt0IGZpbmQgYW55
-dGhpbmcuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5Bbnlib2R5IGhhcyBhIGNsdWU/IEkmIzM5
-O20gbG9va2luZyBpbnRvIGhvdyB0byBiZXN0IGVucm9sbCBhIFRQTSAyLjAgY2hpcCB3aXRoIGEg
-TWljcm9zb2Z0IENBLjxicj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlsxXSA8YSBocmVmPSJo
-dHRwczovL3RydXN0ZWRjb21wdXRpbmdncm91cC5vcmcvd3AtY29udGVudC91cGxvYWRzL1RDR19H
-dWlkYW5jZV9mb3JfU2VjdXJpbmdfTmV0RXFfMV8wcjI2Yl9QdWJsaWMtUmV2aWV3LnBkZiI+aHR0
-cHM6Ly90cnVzdGVkY29tcHV0aW5nZ3JvdXAub3JnL3dwLWNvbnRlbnQvdXBsb2Fkcy9UQ0dfR3Vp
-ZGFuY2VfZm9yX1NlY3VyaW5nX05ldEVxXzFfMHIyNmJfUHVibGljLVJldmlldy5wZGY8L2E+PC9k
-aXY+PGRpdj48YnI+PC9kaXY+PGRpdj5CZXN0IHJlZ2FyZHMsPC9kaXY+PGRpdj5OaWtsYXM8YnI+
-IDwvZGl2PjwvZGl2Pgo=
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
+ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
+b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
+emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
+cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
+c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
+Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
+b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
+aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
+bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbyw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkmIzgy
+MTc7dmUganVzdCB0YWdnZWQgdGhlIGZpcnN0IHJlbGVhc2UgY2FuZGlkYXRlIGZvciB2ZXJzaW9u
+IDIuMy4wIG9mIHRoZSB1c2VyLXNwYWNlIHJlc291cmNlIG1hbmFnZXIgKGFrYSB0cG0yLWFicm1k
+KS4gVGhlIGRyYWZ0IGNoYW5nZWxvZyBhbmQgdGFnIGNhbiBiZSBmb3VuZCBoZXJlOgo8YSBocmVm
+PSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL3JlbGVhc2VzL3Rh
+Zy8yLjMuMC1yYzAiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQv
+cmVsZWFzZXMvdGFnLzIuMy4wLXJjMDwvYT48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlBsZWFzZSBw
+cm92aWRlIHdoYXRldmVyIGZlZWRiYWNrIHlvdSBtYXkgaGF2ZSBpbiB0aGUgaXNzdWUgdHJhY2tl
+ci48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48
+L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlJlZ2FyZHMsPG86cD48L286cD48L3A+CjxwIGNsYXNz
+PSJNc29Ob3JtYWwiPlBoaWxpcDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
+bzpwPiZuYnNwOzwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
 
---===============4623213649722843181==--
+--===============5883311498710009646==--
 
