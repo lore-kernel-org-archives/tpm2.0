@@ -1,17 +1,26 @@
-Content-Type: multipart/mixed; boundary="===============8271502874056133664=="
+Content-Type: multipart/mixed; boundary="===============3460262952092155013=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
 Subject: [tpm2] Re: ESYS_TR to TPM2_HANDLE
-Date: Tue, 05 Nov 2019 20:27:05 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E2FFD0@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E2E1C2@ORSMSX101.amr.corp.intel.com
+Date: Wed, 06 Nov 2019 09:29:03 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163B95E67@EXCH2010B.sit.fraunhofer.de>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E2FFD0@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8271502874056133664==
+--===============3460262952092155013==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+I guess not.
+Let's add it then...
+________________________________________
+From: Roberts, William C [william.c.roberts(a)intel.com]
+Sent: Tuesday, November 05, 2019 21:27
+To: Roberts, William C; Fuchs, Andreas; tpm2(a)lists.01.org
+Cc: Struk, Tadeusz
+Subject: RE: ESYS_TR to TPM2_HANDLE
 
 I just hit another case. If I wanted to see if a handle is persistent, I ch=
 eck
@@ -27,56 +36,47 @@ Or is there a better way to do it?
 rg
 > Cc: Struk, Tadeusz <tadeusz.struk(a)intel.com>
 > Subject: [tpm2] Re: ESYS_TR to TPM2_HANDLE
-> =
-
+>
 > So because of the way evictcontrol works, it can either persist or evict =
 an object
 > from NV.
-> =
-
+>
 > In tpm2_evictcontrol the tool hasoutput like:
 > action: evicted|persisted
 > handle: 0x12345678
-> =
-
+>
 > On the persist case, it's easy, because I have the raw TPM2_HANDLE they w=
 ant to
 > persist at, at which point the ESYS_TR can be serialized as output to a f=
 ile.
-> =
-
+>
 > In the evict case, someone presents that serialized ESYS_TR, and the tool=
  evicts
 > it...my output becomes:
 > action: evicted
 > handle: xxx
-> =
-
+>
 > Where I need to know what xxx is. I could do something like "?" or "<unkn=
 own>"
 > but I'd like to not alter this interface, as technically it would not be =
 backwards
 > compatible. I didn't realize it, but this broke on the switch to ESAPI.
-> =
-
+>
 > So I need to get the actual TPM2_HANDLE from the ESYS_TR. I could just po=
 ke
 > into the blob directly to get the handle (it appears to be the first 32 b=
 its), but I
 > don't like doing things like that.
-> =
-
+>
 > I think it would be a nice addition to be able to get a TPM2_HANDLE from =
 an
 > ESYS_TR. Especially if we go the Route of exposing a SAPI_CONTEXT from ES=
 API,
 > without a raw TPM2_HANDLE, there isn't much you Could do with the SAPI
 > context.
-> =
-
+>
 > Bill
-> =
-
+>
 > > -----Original Message-----
 > > From: Fuchs, Andreas [mailto:andreas.fuchs(a)sit.fraunhofer.de]
 > > Sent: Thursday, October 31, 2019 4:09 AM
@@ -116,5 +116,6 @@ this
 > tpm2 mailing list -- tpm2(a)lists.01.org
 > To unsubscribe send an email to tpm2-leave(a)lists.01.org
 > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============8271502874056133664==--
+
+--===============3460262952092155013==--
 
