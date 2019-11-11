@@ -1,22 +1,22 @@
-Content-Type: multipart/mixed; boundary="===============1058622174513001175=="
+Content-Type: multipart/mixed; boundary="===============7918478971176182860=="
 MIME-Version: 1.0
-From: Imran Desai <imran.desai at intel.com>
-Subject: [tpm2] Re: tpm2_rsadecrypt to stdout
-Date: Mon, 11 Nov 2019 14:33:55 +0000
-Message-ID: <20191111143355.2696.31591@new-ml01.vlan13.01.org>
-In-Reply-To: 00d567dc-40c6-47da-be4c-702751e3c122@www.fastmail.com
+From: Steven Clark <davolfman at gmail.com>
+Subject: [tpm2] Re: Release notice: tpm2-tools 4.1-rc0
+Date: Mon, 11 Nov 2019 09:28:07 -0800
+Message-ID: <CAOCvsSmgFnC9P6spmSR+_o=2qJdTobVzfJxBG+yz+Z1jwjMoXQ@mail.gmail.com>
+In-Reply-To: 20191111142051.2696.12744@new-ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1058622174513001175==
+--===============7918478971176182860==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The option to output to stdout exists. https://github.com/tpm2-software/tpm=
-2-tools/blob/76a880355c905ddb1a48621b1f92ab6405bf2db1/tools/tpm2_rsadecrypt=
-.c#L42
-
-You can do this by not specifying -o and it should send it to stdout
---===============1058622174513001175==--
+Using printf or translating with xxd doesn't make a difference.  Also,
+presence or absence of a newline doesn't make a difference.  In a
+trial session authorization shouldn't make a difference if I read the
+spec right (I'm guessing it might make the policy unfulfillable but
+I'm just prototyping right now), but I fixed it anyway to no effect.
+--===============7918478971176182860==--
 
