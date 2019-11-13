@@ -1,39 +1,101 @@
-Content-Type: multipart/mixed; boundary="===============5842125179874080140=="
+Content-Type: multipart/mixed; boundary="===============0880854792067427671=="
 MIME-Version: 1.0
-From: Steven Clark <davolfman at gmail.com>
-Subject: [tpm2] tpm2_startauthsession 4.x is using getrandom and I need to
- stop that.
-Date: Wed, 13 Nov 2019 10:30:04 -0800
-Message-ID: <CAOCvsS=RhdQy2Oyt06TUX1C3EdkZwDG6-hQj_2OKtbNnJ08GmQ@mail.gmail.com>
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: [tpm2] Re: tpm2-abrmd 2.3.0-rc0
+Date: Wed, 13 Nov 2019 18:46:08 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909CEE0590@ORSMSX104.amr.corp.intel.com>
+In-Reply-To: DB638850A6A2434A93ECADDA0BC838909CED49D3@ORSMSX104.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5842125179874080140==
+--===============0880854792067427671==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We developed our boot scripts using a nightly build of tpm2-tools from
-before the conversion to ESAPI.  We now have multiple layers of
-storage encryption that depend on policy authorization in our future
-production configuration.  After taking the time to upgrade to the
-stable release and rewrite all our commands across the tree the system
-now hangs on boot.
+The 2.3.0 release is now up: https://github.com/tpm2-software/tpm2-abrmd/re=
+leases/tag/2.3.0
 
-Somewhere in the call stack tpm2_startauthsession is now asking for
-random numbers using the getrandom() syscall and hanging.  Thanks to
-kernel patches from a recent CVE getrandom() now blocks in the early
-boot before about 4000 interrupts have happened.  Its going to be up
-to me to fix this, very quickly.
+From: Tricca, Philip B [mailto:philip.b.tricca(a)intel.com]
+Sent: 5 November, 2019 10:45
+To: tpm2(a)lists.01.org
+Subject: [tpm2] tpm2-abrmd 2.3.0-rc0
 
-I'd like for whatever patch to be as high level as possible, and
-hopefully it's an oversight that could be integrated back into the
-project, but I don't see any smoking guns yet in
-tpm2_startauthsession.c and there's a lot of time pressure. If anyone
-has any suggestions where to start looking it would be nice.
+Hello,
 
-Disabling the possibility of encryption for communication on a local
-bus may be a much easier sell to the bosses than trusting all HWRNGs
-on the system explicitly.
---===============5842125179874080140==--
+I've just tagged the first release candidate for version 2.3.0 of the user-=
+space resource manager (aka tpm2-abrmd). The draft changelog and tag can be=
+ found here: https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.3.0=
+-rc0
+
+Please provide whatever feedback you may have in the issue tracker.
+
+Regards,
+Philip
+
+
+--===============0880854792067427671==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWw7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7
+fQpzcGFuLkVtYWlsU3R5bGUxOAoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5OwoJZm9u
+dC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgljb2xvcjojMUY0OTdEO30KLk1zb0NocERl
+ZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtc2l6ZToxMC4wcHQ7fQpA
+cGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsKCW1hcmdpbjoxLjBpbiAxLjBp
+biAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0t
+Pjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9
+ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1z
+byA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJl
+ZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVh
+ZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRp
+diBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9
+ImNvbG9yOiMxRjQ5N0QiPlRoZSAyLjMuMCByZWxlYXNlIGlzIG5vdyB1cDogPC9zcGFuPgo8YSBo
+cmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL3JlbGVhc2Vz
+L3RhZy8yLjMuMCI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1hYnJtZC9y
+ZWxlYXNlcy90YWcvMi4zLjA8L2E+PHNwYW4gc3R5bGU9ImNvbG9yOiMxRjQ5N0QiPjxvOnA+PC9v
+OnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGEgbmFtZT0iX01haWxFbmRDb21w
+b3NlIj48c3BhbiBzdHlsZT0iY29sb3I6IzFGNDk3RCI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+
+PC9hPjwvcD4KPGRpdj4KPGRpdiBzdHlsZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLXRvcDpzb2xpZCAj
+RTFFMUUxIDEuMHB0O3BhZGRpbmc6My4wcHQgMGluIDBpbiAwaW4iPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48YSBuYW1lPSJfX19fX3JlcGx5c2VwYXJhdG9yIj48L2E+PGI+RnJvbTo8L2I+IFRyaWNj
+YSwgUGhpbGlwIEIgW21haWx0bzpwaGlsaXAuYi50cmljY2FAaW50ZWwuY29tXQo8YnI+CjxiPlNl
+bnQ6PC9iPiA1IE5vdmVtYmVyLCAyMDE5IDEwOjQ1PGJyPgo8Yj5Ubzo8L2I+IHRwbTJAbGlzdHMu
+MDEub3JnPGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIHRwbTItYWJybWQgMi4zLjAtcmMwPG86
+cD48L286cD48L3A+CjwvZGl2Pgo8L2Rpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJz
+cDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkhlbGxvLDxvOnA+PC9vOnA+PC9wPgo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+SSYjODIxNzt2ZSBqdXN0IHRhZ2dlZCB0aGUgZmlyc3QgcmVsZWFzZSBjYW5kaWRhdGUg
+Zm9yIHZlcnNpb24gMi4zLjAgb2YgdGhlIHVzZXItc3BhY2UgcmVzb3VyY2UgbWFuYWdlciAoYWth
+IHRwbTItYWJybWQpLiBUaGUgZHJhZnQgY2hhbmdlbG9nIGFuZCB0YWcgY2FuIGJlIGZvdW5kIGhl
+cmU6CjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItYWJybWQv
+cmVsZWFzZXMvdGFnLzIuMy4wLXJjMCI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUv
+dHBtMi1hYnJtZC9yZWxlYXNlcy90YWcvMi4zLjAtcmMwPC9hPjxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+UGxlYXNlIHByb3ZpZGUgd2hhdGV2ZXIgZmVlZGJhY2sgeW91IG1heSBoYXZlIGluIHRoZSBp
+c3N1ZSB0cmFja2VyLjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZu
+YnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+UmVnYXJkcyw8bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+UGhpbGlwPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============0880854792067427671==--
 
