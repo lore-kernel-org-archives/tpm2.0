@@ -1,16 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============4077129174032786737=="
+Content-Type: multipart/mixed; boundary="===============8309062818783451434=="
 MIME-Version: 1.0
-From: Steven Clark <davolfman at gmail.com>
-Subject: [tpm2] Any suggestions on how to lock a TPM without passwords?
-Date: Thu, 14 Nov 2019 15:58:16 -0800
-Message-ID: <CAOCvsSnCkn45EOTxzubDM3Q34NC2hPzzCsf17haBjVGvxn8hWg@mail.gmail.com>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: [tpm2] Re: Any suggestions on how to lock a TPM without passwords?
+Date: Fri, 15 Nov 2019 09:04:11 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163BDD45C@EXCH2010B.sit.fraunhofer.de>
+In-Reply-To: CAOCvsSnCkn45EOTxzubDM3Q34NC2hPzzCsf17haBjVGvxn8hWg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4077129174032786737==
+--===============8309062818783451434==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+I think you have gotten to the base:
+No SH-password, no lockdown (of persistent keys and NV and such).
+
+Some additions:
+- You can call Esys_ClearControl to disallow a TPM Clear by the storage hie=
+rarchy.
+- For NV you can set a policy such that SH-auth cannot delete the index
+- If SH-Auth is set; you can make a remote connection to the device and cal=
+culate
+the HMAC on a different machine (with keyboard or DB). You just need a netw=
+orked
+TCTI implementation.
+- You can set a Policy for SH with PolicyAuthorize in it to auth certain co=
+mmands
+
+But I guess that's it...
+Drop me a note if you want to come up and contribute any of this in code or=
+ learn more.
+
+Cheers,
+Andreas
+________________________________________
+From: Steven Clark [davolfman(a)gmail.com]
+Sent: Friday, November 15, 2019 00:58
+To: tpm2(a)lists.01.org
+Subject: [tpm2] Any suggestions on how to lock a TPM without passwords?
 
 For now our security is simply based on tampering with the TPM
 NV/persistents breaking policies instead of satisfying them.  It would
@@ -46,5 +74,10 @@ set of conditions, but not have those conditions be normally satisfied
 if you aren't depending on magic files or password strings?
 
 Are there any interesting solutions out there I just haven't heard about?
---===============4077129174032786737==--
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============8309062818783451434==--
 
