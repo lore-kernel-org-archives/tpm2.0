@@ -1,69 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============8728998097390226460=="
+Content-Type: multipart/mixed; boundary="===============8423530294695443302=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: raspi tpm in lockdown
-Date: Tue, 19 Nov 2019 14:40:09 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E45687@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 123f9fb5-0ae1-0810-56b9-c394b04da637@gmx.net
+Subject: [tpm2] Re: Any suggestions on how to lock a TPM without passwords?
+Date: Tue, 19 Nov 2019 14:46:06 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E4569B@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAOCvsSn5gYap6ZmX_dOtMdPPdsoZuZbie-TS-x+tXB94me3Nsw@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8728998097390226460==
+--===============8423530294695443302==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I always recommend that you use tpm2-tools >=3D 4.0, versions < 4.0 are leg=
-acy at this point.
 
-Eventually, depending on configuration, the lockout mode should expire. You=
- should
-Be able to run tpm2_getcap -c properties-variable | grep LOCKOUT
-TPM2_PT_LOCKOUT_COUNTER: 0x0
-TPM2_PT_LOCKOUT_INTERVAL: 0x3E8
-TPM2_PT_LOCKOUT_RECOVERY: 0x3E8
-
-Should tell you how long you need to wait.
-
-I remember their being all sorts of issues with tpm2_takeownership, dependi=
-ng
-On version where it was running all the changeauth commands even when the o=
-ther
-hierarchies were not specified.
-
-On PC's the bios usually has a reset option for the tpm. On raspberry pi, I=
- am not sure
-how you would reset it. @idsea any idea?
-
-Bill
 
 > -----Original Message-----
-> From: Dennis Knorr [mailto:dennis.knorr(a)gmx.net]
-> Sent: Saturday, November 16, 2019 2:09 PM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] raspi tpm in lockdown
+> From: Steven Clark [mailto:davolfman(a)gmail.com]
+> Sent: Monday, November 18, 2019 3:51 PM
+> To: Zhu, Bing <bing.zhu(a)intel.com>
+> Cc: tpm2(a)lists.01.org
+> Subject: [tpm2] Re: Any suggestions on how to lock a TPM without password=
+s?
 > =
 
-> Hi,
-> i tried to play with an tpm from letstrust.de. i played around a bit, but=
- now it
-> seems to be in lockdown:
-> https://pastebin.com/S59y4tQk
+> I've done my experimenting with writelocking using a tools 4.1 rc0 build =
+I've got
+> kicking around and some more spec reading.
+> tpm2_nvwritelock isn't enough to actually secure an index against tamperi=
+ng until
+> the next reboot.  The problem is it doesn't block undefine calls.
+> There is an NV attribute which would allow control of deletion behavior
+> TPMA_NV_POLICY_DELETE but according to the standard Vol 1 section
+> 37.2.22 : "If the Index to be created has its TPMA_NV_POLICY_DELETE attri=
+bute
+> SET, then platform authorization is required for allocation."
+> This is said to be necessary to prevent a user from shooting themselves i=
+n the
+> foot with an undeleteable-by-default object that can only be removed by t=
+he
+> platform.  But thanks to the PPI I ~can~ reliably get the platform to del=
+ete this.
 > =
 
-> but i am SURE that i have the correct password. Any Idea what i did wrong?
-> anything i can do? i could remove the tpm chip from the raspberry? would =
-that
-> help
-> =
+> Is NV Write Lock with owner authorization even useful?
 
-> i hope you can help me.
-> =
+What exactly are you looking for? An NV index that only the "nv index owner=
+" can
+modify including delete?
 
-> Dennis
+Revision 131 made this note:
+Noted that TPMA_NV_POLICY_DELETE with a policy that cannot be satisfied def=
+ines an Index that can
+never be deleted.
+
+-- That seems very dangerous though --
+You would always need to go into some side-channel mode, like through bios,=
+ to clear
+a TPM. Maybe if you need something like this, that a transient object you s=
+eal data to
+would be better for the threat model your facing.
+
+
 > _______________________________________________
 > tpm2 mailing list -- tpm2(a)lists.01.org
 > To unsubscribe send an email to tpm2-leave(a)lists.01.org
 > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============8728998097390226460==--
+--===============8423530294695443302==--
 
