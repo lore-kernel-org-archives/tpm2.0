@@ -1,17 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============1110575262893560251=="
+Content-Type: multipart/mixed; boundary="===============3370001475860752376=="
 MIME-Version: 1.0
-From: Frederick Gotham <cauldwell.thomas at gmail.com>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
 Subject: [tpm2] Re: Approaching 100 hours of troubleshooting
-Date: Mon, 25 Nov 2019 10:12:53 +0000
-Message-ID: <CALtZhhPkrTRLUVD5+gcOo8SS=wxjuFJ5GVQ0BrDVvk0K03CVTQ@mail.gmail.com>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0163C08E63@EXCH2010B.sit.fraunhofer.de
+Date: Mon, 25 Nov 2019 10:15:20 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163C08E9E@EXCH2010B.sit.fraunhofer.de>
+In-Reply-To: CALtZhhPkrTRLUVD5+gcOo8SS=wxjuFJ5GVQ0BrDVvk0K03CVTQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1110575262893560251==
+--===============3370001475860752376==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+No, the TPM will not do AES encryption on a key you load in with
+a custom mode.
+
+You can store up to 100 bytes into such a "KeyedHash" object, which
+is basically an object for arbitrary data, that the TPM will AES encrypt
+using the parent key.
+With TPM2_Unseal this data gets decrypted.
+
+The cipher mode used is CFP I think, but not sure.
+________________________________________
+From: Frederick Gotham [cauldwell.thomas(a)gmail.com]
+Sent: Monday, November 25, 2019 11:12
+To: Fuchs, Andreas
+Cc: Zhu, Bing; tpm2(a)lists.01.org
+Subject: Re: [tpm2] Re: Approaching 100 hours of troubleshooting
 
 Thank you for this, Andreas.
 
@@ -115,5 +131,6 @@ ons
 > tpm2-leave(a)lists.01.org<mailto:tpm2-leave(a)lists.01.org>
 > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 >
---===============1110575262893560251==--
+
+--===============3370001475860752376==--
 
