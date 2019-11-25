@@ -1,22 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============9041660332991515908=="
+Content-Type: multipart/mixed; boundary="===============1249911728976199814=="
 MIME-Version: 1.0
 From: Frederick Gotham <cauldwell.thomas at gmail.com>
 Subject: [tpm2] Re: Approaching 100 hours of troubleshooting
-Date: Mon, 25 Nov 2019 10:20:47 +0000
-Message-ID: <CALtZhhNA5bgQxa3+zZBpYBnh0bX0Q7s29gQ+pHf8P+1g6Bzu=w@mail.gmail.com>
+Date: Mon, 25 Nov 2019 12:04:34 +0000
+Message-ID: <CALtZhhO6MEYAF+58vw+Ua=FHx2VSdTvuhNBbHvmt22cH-giWTQ@mail.gmail.com>
 In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0163C08E9E@EXCH2010B.sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9041660332991515908==
+--===============1249911728976199814==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-You said 99% of TPM2 chips can't do symmetric bulk encryption.
+By the way I'm searching the web for a TPM2 chip that can do symmetric
+encryption but I haven't found one yet. Do you know of one? I sent an
+email to Infineon to ask them.
 
-With regard to the other 1%, can those chips do symmetric bulk
-encryption whereby I can load a 128-Bit AES key and IV into the chip?
+
 
 On 11/25/19, Fuchs, Andreas <andreas.fuchs(a)sit.fraunhofer.de> wrote:
 > No, the TPM will not do AES encryption on a key you load in with
@@ -142,5 +143,5 @@ ee
 >> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 >>
 >
---===============9041660332991515908==--
+--===============1249911728976199814==--
 
