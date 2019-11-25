@@ -1,17 +1,27 @@
-Content-Type: multipart/mixed; boundary="===============1249911728976199814=="
+Content-Type: multipart/mixed; boundary="===============3891376542343226484=="
 MIME-Version: 1.0
-From: Frederick Gotham <cauldwell.thomas at gmail.com>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
 Subject: [tpm2] Re: Approaching 100 hours of troubleshooting
-Date: Mon, 25 Nov 2019 12:04:34 +0000
-Message-ID: <CALtZhhO6MEYAF+58vw+Ua=FHx2VSdTvuhNBbHvmt22cH-giWTQ@mail.gmail.com>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0163C08E9E@EXCH2010B.sit.fraunhofer.de
+Date: Mon, 25 Nov 2019 12:36:42 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163C09053@EXCH2010B.sit.fraunhofer.de>
+In-Reply-To: CALtZhhO6MEYAF+58vw+Ua=FHx2VSdTvuhNBbHvmt22cH-giWTQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1249911728976199814==
+--===============3891376542343226484==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+Frankly, no, I don't know one.
+99% was my attempt to say; I haven't seen any and don't think there are
+but cannot be sure...
+________________________________________
+From: Frederick Gotham [cauldwell.thomas(a)gmail.com]
+Sent: Monday, November 25, 2019 13:04
+To: Fuchs, Andreas
+Cc: Zhu, Bing; tpm2(a)lists.01.org
+Subject: Re: [tpm2] Re: Approaching 100 hours of troubleshooting
 
 By the way I'm searching the web for a TPM2 chip that can do symmetric
 encryption but I haven't found one yet. Do you know of one? I sent an
@@ -143,5 +153,6 @@ ee
 >> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 >>
 >
---===============1249911728976199814==--
+
+--===============3891376542343226484==--
 
