@@ -1,28 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============6659273160309715268=="
+Content-Type: multipart/mixed; boundary="===============1753277082636190951=="
 MIME-Version: 1.0
-From: Ignacio Jaureguiberry <ignaciox.jaureguiberry at intel.com>
-Subject: [tpm2] Re: wpa_supplicant fails to use tpm2_pkcs11 key
-Date: Thu, 28 Nov 2019 17:53:50 +0000
-Message-ID: <20191128175350.2967.39835@new-ml01.vlan13.01.org>
-In-Reply-To: CAJ8N_u_uhXpof_H+gGcJzQTxXVDnkZgSpiH-QorsS5JAwfeEvQ@mail.gmail.com
+From: Frederick Gotham <cauldwell.thomas at gmail.com>
+Subject: [tpm2] RSA encryption - tpm2_getpubak
+Date: Fri, 29 Nov 2019 13:12:29 +0000
+Message-ID: <CALtZhhO9YKA9aivBrZAdHeZSwot8HQa-knVT4C1a1+jxAeHusw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6659273160309715268==
+--===============1753277082636190951==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I've ran wpa_supplicant through gdb (./configure --enable-debug on tpm2-pkc=
-s11) and reached this point:
+I'm using the latest version of 'tmp2-tools' and I'm trying to follow
+an example I found online of doing RSA encryption/decryption inside
+the TPM2 chip.
 
-The function return CKR_MECHANISM_INVALID is common_init (src/lib/sign.c:21=
-2), called from C_SignInit (src/pkcs11.c:550). common_init calls is_mech_su=
-pported (src/lib/sign.c:95) with a CK_MECHANISM_TYPE=3D=3D3 (CKM_RSA_X_509)=
-, but is_mech_supported returns false. Apparently, supported mechanism are:=
- CKM_RSA_PKCS, CKM_SHA1_RSA_PKCS, CKM_SHA256_RSA_PKCS, CKM_SHA384_RSA_PKCS,=
- CKM_SHA512_RSA_PKCS, CKM_AES_CBC, CKM_ECDSA, CKM_ECDSA_SHA1.
+The example uses "tpm2_getpubek" and "tpm2_getpubak".
 
-Any idea what else to try?
---===============6659273160309715268==--
+As these tools no longer exist, what has replaced them?
+--===============1753277082636190951==--
 
