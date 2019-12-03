@@ -1,25 +1,28 @@
-Content-Type: multipart/mixed; boundary="===============5808469411901410083=="
+Content-Type: multipart/mixed; boundary="===============5731913351223973893=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] Re: RSA key pairs are gone when I reboot
-Date: Tue, 03 Dec 2019 08:59:21 -0800
-Message-ID: <bd59db4e-54b1-1c9e-e665-e3b2307073d1@intel.com>
-In-Reply-To: CALtZhhN1mypXuHrt1ydFS0c1aL5zmO3FnOqWQt74-pg6h+5ghQ@mail.gmail.com
+From: Ignacio Jaureguiberry <ignaciox.jaureguiberry at intel.com>
+Subject: [tpm2] Re: wpa_supplicant fails to use tpm2_pkcs11 key
+Date: Tue, 03 Dec 2019 18:29:14 +0000
+Message-ID: <20191203182914.2967.21962@new-ml01.vlan13.01.org>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E4B50E@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5808469411901410083==
+--===============5731913351223973893==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 12/3/19 7:54 AM, Frederick Gotham wrote:
-> How do I store an RSA key pair persistently/permanently inside the TPM2 c=
-hip?
+I created two scripts to reproduce the bugs, using openssl s_server and s_c=
+lient as recommended by David.
+I forked tpm2-pkcs11 and added everything to a directory in the test/integr=
+ation path in a new issue335_testcase branch.
+I'm not sure what's the preferred way to share this, should I ask a pull re=
+quest for it?
 
-You can use tpm2_evictcontrol tool to make the key persistent.
+https://github.com/ijaureguiberry/tpm2-pkcs11/tree/issue335_testcase/test/i=
+ntegration/issue335
 
---
-Tadeusz
---===============5808469411901410083==--
+See the README.md for more details...
+--===============5731913351223973893==--
 
