@@ -1,31 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============1017377069902489989=="
+Content-Type: multipart/mixed; boundary="===============3839577382659816343=="
 MIME-Version: 1.0
-From: Steven Clark <davolfman at gmail.com>
-Subject: [tpm2] Re: [tpm2][tpm2-abrmd]tpm2-abrmd.service may run before udev
- rule.
-Date: Mon, 02 Dec 2019 13:19:11 -0800
-Message-ID: <CAOCvsSnV93zkxNYkdCSxnomzvQRHZKdpHZ8qF43WAjEO=HYB+Q@mail.gmail.com>
-In-Reply-To: DB638850A6A2434A93ECADDA0BC838909CEE341D@ORSMSX104.amr.corp.intel.com
+From: Frederick Gotham <cauldwell.thomas at gmail.com>
+Subject: [tpm2] RSA key pairs are gone when I reboot
+Date: Tue, 03 Dec 2019 15:54:03 +0000
+Message-ID: <CALtZhhN1mypXuHrt1ydFS0c1aL5zmO3FnOqWQt74-pg6h+5ghQ@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1017377069902489989==
+--===============3839577382659816343==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-It would be largely unrelated to the project's actual source control,
-but I could manufacture one, given a day or two, if you want.  It
-might even be from HEAD and tested if I can find the time.  I've been
-using my personal account for interaction with the mailing list until
-there's an SOP for contributing back from work.
+I use OpenSSL to generate an RSA key pair:
 
-This patch could probably use a little outside review, honestly.
-Systemd ordering cycles have mostly non-deterministic failure
-behavior, as part of the spec.  If someone out there is performing TPM
-operations in a systemd-based initramfs (maybe Dracut) and could check
-they don't end up with any cycles in their graph it would be nice.
-This has only been tested with a manual init system and no ABRMD in
-the initramfs in my case.
---===============1017377069902489989==--
+    openssl genrsa -out private.pem 2048
+
+I then use the utility "tpm2_ptool" to load the key pair into the TPM2 chip:
+
+    tpm2_ptool init
+    tpm2_ptool addtoken --pid=3D1 --sopin=3Dmysopin --userpin=3D123456 --la=
+bel monkey
+    tpm2_ptool import --userpin 123456 --privkey private.pem --label
+monkey --algorithm rsa
+
+I am able to confirm that the key pair is inside the TPM2 chip by
+using ssh-keygen:
+
+    ssh-keygen -D libtpm2_pkcs11.so
+
+The output from ssh-keygen confirms that the keys are in there.
+
+Next. . . I reboot my device, and the keypair is gone. It's no longer
+in there. So it appears that the key was only in RAM and then it gets
+wiped upon reboot.
+
+How do I store an RSA key pair persistently/permanently inside the TPM2 chi=
+p?
+--===============3839577382659816343==--
 
