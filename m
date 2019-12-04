@@ -1,91 +1,1480 @@
-Content-Type: multipart/mixed; boundary="===============2882589392230764020=="
+Content-Type: multipart/mixed; boundary="===============8434163128295721777=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Trying to make a script to store keys
-Date: Wed, 04 Dec 2019 14:21:26 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E4BDD0@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CALtZhhNBB-nm5df5k_aVp7CFKViNA=Lard1CL_ftkEgvyXVj3g@mail.gmail.com
+Subject: [tpm2] Re: Mysterious Keys -- where are they?
+Date: Wed, 04 Dec 2019 14:23:34 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E4BDE2@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CALtZhhM5LpYy7-kPwm6T6sygw5npyBnNdtYycQ1CiJ8h=d3+pg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2882589392230764020==
+--===============8434163128295721777==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+tpm2_getcap handles-persistent
 
+Should show at least one persistent object that gets used to store everythi=
+ng under
+For tpm2-pkcs11. Not sure why that's empty.
+
+The transient objects are loaded as needed, the RM should handle flushing t=
+hem
+When an application is done.
 
 > -----Original Message-----
 > From: Frederick Gotham [mailto:cauldwell.thomas(a)gmail.com]
-> Sent: Wednesday, December 4, 2019 3:38 AM
-> To: tpm2 <tpm2(a)lists.01.org>
-> Subject: [tpm2] Trying to make a script to store keys
+> Sent: Wednesday, December 4, 2019 4:03 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Mysterious Keys -- where are they?
 > =
 
-> Here's what I've got in my script so far;
+> I run the following at the command line:
 > =
 
-> - - - - - - - - Begin Script - - - - - - - - #!/bin/sh
+>     ssh-keygen -D libtpm2_pkcs11.so
 > =
 
-> ABC_LABEL=3D`uuidgen -r`
-> export TPM2_PKCS11_TCTI=3Ddevice:/dev/tpmrm0
+> And here's the output I get:
 > =
 
-> rm /root/private.pem > /dev/null 2>&1
-> =
-
-> openssl genrsa -out /root/private.pem 2048
-> =
-
-> # Not sure what the next line does but I'll do it anyway tpm2_clear
-> =
-
-> # Clear out the objects in the TPM2's RAM tpm2_flushcontext -t
-> tpm2_flushcontext -l tpm2_flushcontext -s
-> =
-
-> # Clear out all persistent objects in cold storage tpm2_getcap handles-pe=
-rsistent
-> | xargs -r -t -n1 tpm2_evictcontrol -c
-> =
-
-> # We may as well clear it again (not sure what this does) tpm2_clear
-> =
-
-> init() {
->    ./tpm2_ptool init | rev | cut -d ' ' -f 1 | rev }
-> =
-
-> ABC_PID=3D"$(init)"
-> =
-
-> ./tpm2_ptool addtoken --pid=3D${ABC_PID} --sopin=3Dmysopin
-> --userpin=3D123456 --label ${ABC_LABEL}
-> =
-
-> ./tpm2_ptool import --userpin 123456 --privkey /root/private.pem --label
-> ${ABC_LABEL} --algorithm rsa
-> =
-
-> ssh-keygen -D libtpm2_pkcs11.so
-> - - - - - - - - - End Script - - - - - - - - -
+> ssh-rsa
+> AAAAB3NzaC1yc2EAAAADAQABAAABAQCrxtObHB3IwZi4HB5+DX2Cvc1P/2ttZqRP
+> 5rFzcpEdAjR7/sqjSWGEzldnxA1l1xygqkKYBUkCleo+LPbylBFrinahmxVpSemT/Vk75
+> gwAwGeUdfshrnl03kyneRWgF/0jkpK98hqXTNBEamuCRdKnpNAjXP4EqYyKUwLO
+> ewq29l5aaIsYo1XGdl2MDdt3xlVzQ/3QVKxPI0Kx1bWrtyLM1yc6hz2bwDC/mhlIagL
+> QJp5fChHblhfrqk0yY0s6PvZKeC2lY+11s4Ytg4ab4xjTaKH6CY43/Ihnjhm9QqJ4v2+9V
+> mPHi/s4LjyVMTnUBVdrmPnGguKSZz1QjGXTUtP9
+> ssh-rsa
+> AAAAB3NzaC1yc2EAAAADAQABAAABAQCjDU0id40tF8/h5NtkuxCTEaUhy38ZMM
+> cHOlRUtCRkiZyZeAJ9guuhO49DkLBtc24p5VWMVg52irodqTLRvDKbq8o+CP5m7eX
+> MJX+LtNaHogRH0y7n2T1mCZlFxC+IqfXcTJQG1RDQjXsyaWvsEwQrzPGXGv7ij0vO
+> NYOSLMVNk84vn3VaB/jtDwJs0bjymQW1ulNYryCG0P/XyK10E9A7eP9rT7JZh8P6La
+> zTt2+1KuzEwfb299zV3E8U49AyzLRHq2L3cbsCcG94oIMAJsXWQJxqP4IfK3no57zLp
+> SpPaSWGjuVOLP6fG/xCjjhPjA3kXgrhKgsMeqVypdZzn4vH
+> ssh-rsa
+> AAAAB3NzaC1yc2EAAAADAQABAAABAQC4bsueeBzYNAa5gIzt9Q3qk3rzpFqvayZ
+> w8hWEHVfVpCW+MMervLVSeAq9tapm+vwt3kH2CINAB5uUQeq3pxt1BB72isfw
+> GAFJBvfXRNC+6Pvu+6jiYqDBMWQ+2TjF7bLPPHA+GYacol/eiQUmhT6pGoSJk0Gu
+> H83fmfV8dD8Zz5mKZbQlkdW4fvKpCtlf9kvN9rUkLEL0zSkYL1vZ5KUqtO9Aae6dgbi
+> uocKgrDdfPPgxNvKUvUGLFTEbALgSGHEWZGAoi2O0MkyS9CxhyfRsNmOOMA+i8
+> AfVNlYTwreyOD0qAOGzBdczVUM9207nwGvXHDkO8t8QHRslXvNWGanl
+> ssh-rsa
+> AAAAB3NzaC1yc2EAAAADAQABAAABAQDfBbPT1ARqFc9QGGNIW9wZoXYnYl5ty
+> W1UwrOWosF18GEc1AUcq/qIauqIvZTXbhD3wz0h3ZJXaTU59Mno33hH0yJzOMxE
+> VO8QQwjE+q+PB58mdn4odZbq3hiAH9I+IX9Q3ZvmzG3i54MLeckbFX4FIie7x5Yz9E
+> 6y6ZQPsJUc+qO2PVg1FL375GJa+clPpI9eGCA7gwrQNq6EMHa0D07Nkn5ZoSGYl1p
+> Y/4DV8k1+WEtyVE629H0GAzsvppQwOxpaAjmGnZCl8KwkT+uylPIn3qc38o8NicMc
+> ojuFGTRynmYjrbTC9p0ehTBuYOYZpZZ9h5QmArgdIPlv+XUDkA3V
+> ssh-rsa
+> AAAAB3NzaC1yc2EAAAADAQABAAABAQDCT0TSE2zcxcQ/asJxHfxbCS/jJPyitrDhln
+> NJ8sNV4Q5FKoSx1gjPbOpjZ035JInBIR17VeMpBzvBD6d1ylebDAkFuuCaUTaGbxw
+> MRa2grg0nuBfA0V1wvOH9NetXjTNDdREUvi4JJGVOyi4D6pErSjf8CO5Ph6WPdT3Tt
+> OZAzh+7TsE3lbf/cqgK960N+qtoyTulGXQIu7vI+w8SAvWGDDugM7gZFP6H8yrsVpl
+> 6UkQdOKfhkx75y698tYSBQUgyXkrNB5oKl4qINfI2DWT8woME0n8H7Le3r2WTZESp
+> p6ntPR6duiqcs6WY+R/4sn2bi7Sm5KSuV+4khNTVbzwJ
 > =
 
 > =
 
-> The first problem I'm having here is that "flushcontext" isn't working. I=
-f I call it
-> three times with three different argument (t,l,s), and then call ssh-keyg=
-en
-> immediately afterward, then it shows that those transient keys are still =
-in there.
+> So it looks like there's 5 keys inside my TPM2 chip somewhere. I wish I k=
+new
+> were.
+> =
 
-Are you not using a resource manager? Pkcs11 is designed for use with an RM.
+> So now I try to get a list of all keys, by calling "tpm2_getcap" with eve=
+ry kind of
+> parameter, as follows:
+> =
 
+>     tpm2_getcap --list | cut -d ' ' -f 2 | xargs -n1 -r -t tpm2_getcap
+> =
+
+> The output I get from this command shows that there are no transient,
+> persistent, loaded session, or saved session keys. If this is true then w=
+here are
+> my 5 keys?
+> =
+
+> And here's the ENTIRE output I get:
+> =
+
+> tpm2_getcap algorithms
+> rsa:
+>   value:      0x1
+>   asymmetric: 1
+>   symmetric:  0
+>   hash:       0
+>   object:     1
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 0
+>   method:     0
+> sha1:
+>   value:      0x4
+>   asymmetric: 0
+>   symmetric:  0
+>   hash:       1
+>   object:     0
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 0
+>   method:     0
+> hmac:
+>   value:      0x5
+>   asymmetric: 0
+>   symmetric:  0
+>   hash:       1
+>   object:     0
+>   reserved:   0x0
+>   signing:    1
+>   encrypting: 0
+>   method:     0
+> aes:
+>   value:      0x6
+>   asymmetric: 0
+>   symmetric:  1
+>   hash:       0
+>   object:     0
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 0
+>   method:     0
+> keyedhash:
+>   value:      0x8
+>   asymmetric: 0
+>   symmetric:  0
+>   hash:       1
+>   object:     1
+>   reserved:   0x0
+>   signing:    1
+>   encrypting: 1
+>   method:     0
+> xor:
+>   value:      0xA
+>   asymmetric: 0
+>   symmetric:  1
+>   hash:       1
+>   object:     0
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 0
+>   method:     0
+> sha256:
+>   value:      0xB
+>   asymmetric: 0
+>   symmetric:  0
+>   hash:       1
+>   object:     0
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 0
+>   method:     0
+> rsassa:
+>   value:      0x14
+>   asymmetric: 1
+>   symmetric:  0
+>   hash:       0
+>   object:     0
+>   reserved:   0x0
+>   signing:    1
+>   encrypting: 0
+>   method:     0
+> rsaes:
+>   value:      0x15
+>   asymmetric: 1
+>   symmetric:  0
+>   hash:       0
+>   object:     0
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 1
+>   method:     0
+> rsapss:
+>   value:      0x16
+>   asymmetric: 1
+>   symmetric:  0
+>   hash:       0
+>   object:     0
+>   reserved:   0x0
+>   signing:    1
+>   encrypting: 0
+>   method:     0
+> oaep:
+>   value:      0x17
+>   asymmetric: 1
+>   symmetric:  0
+>   hash:       0
+>   object:     0
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 1
+>   method:     0
+> ecdsa:
+>   value:      0x18
+>   asymmetric: 1
+>   symmetric:  0
+>   hash:       0
+>   object:     0
+>   reserved:   0x0
+>   signing:    1
+>   encrypting: 0
+>   method:     1
+> ecdh:
+>   value:      0x19
+>   asymmetric: 1
+>   symmetric:  0
+>   hash:       0
+>   object:     0
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 0
+>   method:     1
+> ecdaa:
+>   value:      0x1A
+>   asymmetric: 1
+>   symmetric:  0
+>   hash:       0
+>   object:     0
+>   reserved:   0x0
+>   signing:    1
+>   encrypting: 0
+>   method:     0
+> kdf1_sp800_56a:
+>   value:      0x20
+>   asymmetric: 0
+>   symmetric:  0
+>   hash:       1
+>   object:     0
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 0
+>   method:     1
+> kdf1_sp800_108:
+>   value:      0x22
+>   asymmetric: 0
+>   symmetric:  0
+>   hash:       1
+>   object:     0
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 0
+>   method:     1
+> ecc:
+>   value:      0x23
+>   asymmetric: 1
+>   symmetric:  0
+>   hash:       0
+>   object:     1
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 0
+>   method:     0
+> symcipher:
+>   value:      0x25
+>   asymmetric: 0
+>   symmetric:  0
+>   hash:       0
+>   object:     1
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 0
+>   method:     0
+> cfb:
+>   value:      0x43
+>   asymmetric: 0
+>   symmetric:  1
+>   hash:       0
+>   object:     0
+>   reserved:   0x0
+>   signing:    0
+>   encrypting: 1
+>   method:     0
+> tpm2_getcap commands
+> TPM2_CC_NV_UndefineSpaceSpecial:
+>   value: 0x440011F
+>   commandIndex: 0x11f
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_EvictControl:
+>   value: 0x4400120
+>   commandIndex: 0x120
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_HierarchyControl:
+>   value: 0x2C00121
+>   commandIndex: 0x121
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    1
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_UndefineSpace:
+>   value: 0x4400122
+>   commandIndex: 0x122
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Clear:
+>   value: 0x2C00126
+>   commandIndex: 0x126
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    1
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ClearControl:
+>   value: 0x2400127
+>   commandIndex: 0x127
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ClockSet:
+>   value: 0x2400128
+>   commandIndex: 0x128
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_HierarchyChangeAuth:
+>   value: 0x2400129
+>   commandIndex: 0x129
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_DefineSpace:
+>   value: 0x240012A
+>   commandIndex: 0x12a
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PCR_Allocate:
+>   value: 0x240012B
+>   commandIndex: 0x12b
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_SetPrimaryPolicy:
+>   value: 0x240012E
+>   commandIndex: 0x12e
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ClockRateAdjust:
+>   value: 0x2000130
+>   commandIndex: 0x130
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_CreatePrimary:
+>   value: 0x12000131
+>   commandIndex: 0x131
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      1
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_Increment:
+>   value: 0x4400134
+>   commandIndex: 0x134
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_SetBits:
+>   value: 0x4400135
+>   commandIndex: 0x135
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_Extend:
+>   value: 0x4400136
+>   commandIndex: 0x136
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_Write:
+>   value: 0x4400137
+>   commandIndex: 0x137
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_WriteLock:
+>   value: 0x4400138
+>   commandIndex: 0x138
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_DictionaryAttackLockReset:
+>   value: 0x2400139
+>   commandIndex: 0x139
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_DictionaryAttackParameters:
+>   value: 0x240013A
+>   commandIndex: 0x13a
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_ChangeAuth:
+>   value: 0x240013B
+>   commandIndex: 0x13b
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PCR_Event:
+>   value: 0x240013C
+>   commandIndex: 0x13c
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PCR_Reset:
+>   value: 0x240013D
+>   commandIndex: 0x13d
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_SequenceComplete:
+>   value: 0x300013E
+>   commandIndex: 0x13e
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      1
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_IncrementalSelfTest:
+>   value: 0x400142
+>   commandIndex: 0x142
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_SelfTest:
+>   value: 0x400143
+>   commandIndex: 0x143
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Startup:
+>   value: 0x400144
+>   commandIndex: 0x144
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Shutdown:
+>   value: 0x400145
+>   commandIndex: 0x145
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_StirRandom:
+>   value: 0x400146
+>   commandIndex: 0x146
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ActivateCredential:
+>   value: 0x4000147
+>   commandIndex: 0x147
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Certify:
+>   value: 0x4000148
+>   commandIndex: 0x148
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyNV:
+>   value: 0x6000149
+>   commandIndex: 0x149
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x3
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_CertifyCreation:
+>   value: 0x400014A
+>   commandIndex: 0x14a
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Duplicate:
+>   value: 0x400014B
+>   commandIndex: 0x14b
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_GetSessionAuditDigest:
+>   value: 0x600014D
+>   commandIndex: 0x14d
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x3
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_Read:
+>   value: 0x400014E
+>   commandIndex: 0x14e
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_ReadLock:
+>   value: 0x400014F
+>   commandIndex: 0x14f
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ObjectChangeAuth:
+>   value: 0x4000150
+>   commandIndex: 0x150
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicySecret:
+>   value: 0x4000151
+>   commandIndex: 0x151
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Create:
+>   value: 0x2000153
+>   commandIndex: 0x153
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ECDH_ZGen:
+>   value: 0x2000154
+>   commandIndex: 0x154
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_HMAC:
+>   value: 0x2000155
+>   commandIndex: 0x155
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Import:
+>   value: 0x2000156
+>   commandIndex: 0x156
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Load:
+>   value: 0x12000157
+>   commandIndex: 0x157
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      1
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Quote:
+>   value: 0x2000158
+>   commandIndex: 0x158
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_RSA_Decrypt:
+>   value: 0x2000159
+>   commandIndex: 0x159
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_HMAC_Start:
+>   value: 0x1200015B
+>   commandIndex: 0x15b
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      1
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_SequenceUpdate:
+>   value: 0x200015C
+>   commandIndex: 0x15c
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Sign:
+>   value: 0x200015D
+>   commandIndex: 0x15d
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Unseal:
+>   value: 0x200015E
+>   commandIndex: 0x15e
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicySigned:
+>   value: 0x4000160
+>   commandIndex: 0x160
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ContextLoad:
+>   value: 0x10000161
+>   commandIndex: 0x161
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      1
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ContextSave:
+>   value: 0x2000162
+>   commandIndex: 0x162
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ECDH_KeyGen:
+>   value: 0x2000163
+>   commandIndex: 0x163
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_FlushContext:
+>   value: 0x165
+>   commandIndex: 0x165
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_LoadExternal:
+>   value: 0x10000167
+>   commandIndex: 0x167
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      1
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_MakeCredential:
+>   value: 0x2000168
+>   commandIndex: 0x168
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_NV_ReadPublic:
+>   value: 0x2000169
+>   commandIndex: 0x169
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyAuthorize:
+>   value: 0x200016A
+>   commandIndex: 0x16a
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyAuthValue:
+>   value: 0x200016B
+>   commandIndex: 0x16b
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyCommandCode:
+>   value: 0x200016C
+>   commandIndex: 0x16c
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyCounterTimer:
+>   value: 0x200016D
+>   commandIndex: 0x16d
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyCpHash:
+>   value: 0x200016E
+>   commandIndex: 0x16e
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyLocality:
+>   value: 0x200016F
+>   commandIndex: 0x16f
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyNameHash:
+>   value: 0x2000170
+>   commandIndex: 0x170
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyOR:
+>   value: 0x2000171
+>   commandIndex: 0x171
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyTicket:
+>   value: 0x2000172
+>   commandIndex: 0x172
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ReadPublic:
+>   value: 0x2000173
+>   commandIndex: 0x173
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_RSA_Encrypt:
+>   value: 0x2000174
+>   commandIndex: 0x174
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_StartAuthSession:
+>   value: 0x14000176
+>   commandIndex: 0x176
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x2
+>   rHandle:      1
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_VerifySignature:
+>   value: 0x2000177
+>   commandIndex: 0x177
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ECC_Parameters:
+>   value: 0x178
+>   commandIndex: 0x178
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_GetCapability:
+>   value: 0x17A
+>   commandIndex: 0x17a
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_GetRandom:
+>   value: 0x17B
+>   commandIndex: 0x17b
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_GetTestResult:
+>   value: 0x17C
+>   commandIndex: 0x17c
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Hash:
+>   value: 0x17D
+>   commandIndex: 0x17d
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PCR_Read:
+>   value: 0x17E
+>   commandIndex: 0x17e
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyPCR:
+>   value: 0x200017F
+>   commandIndex: 0x17f
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyRestart:
+>   value: 0x2000180
+>   commandIndex: 0x180
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_ReadClock:
+>   value: 0x181
+>   commandIndex: 0x181
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PCR_Extend:
+>   value: 0x2400182
+>   commandIndex: 0x182
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_EventSequenceComplete:
+>   value: 0x5400185
+>   commandIndex: 0x185
+>   reserved1:    0x0
+>   nv:           1
+>   extensive:    0
+>   flushed:      1
+>   cHandles:     0x2
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_HashSequenceStart:
+>   value: 0x10000186
+>   commandIndex: 0x186
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      1
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyDuplicationSelect:
+>   value: 0x2000188
+>   commandIndex: 0x188
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyGetDigest:
+>   value: 0x2000189
+>   commandIndex: 0x189
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_TestParms:
+>   value: 0x18A
+>   commandIndex: 0x18a
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x0
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_Commit:
+>   value: 0x200018B
+>   commandIndex: 0x18b
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyPassword:
+>   value: 0x200018C
+>   commandIndex: 0x18c
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_PolicyNvWritten:
+>   value: 0x200018F
+>   commandIndex: 0x18f
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            0
+>   Res:          0x0
+> TPM2_CC_FieldUpgradeStart:
+>   value: 0x2200012F
+>   commandIndex: 0x12f
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            1
+>   Res:          0x0
+> 0x22000400:
+>   value: 0x22000400
+>   commandIndex: 0x400
+>   reserved1:    0x0
+>   nv:           0
+>   extensive:    0
+>   flushed:      0
+>   cHandles:     0x1
+>   rHandle:      0
+>   V:            1
+>   Res:          0x0
+> tpm2_getcap pcrs
+> selected-pcrs:
+>   - sha1: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,=
+ 18, 19, 20, 21, 22, 23 ]
+>   - sha256: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1=
+7, 18, 19, 20, 21, 22,
+> 23 ] tpm2_getcap properties-fixed
+> TPM2_PT_FAMILY_INDICATOR:
+>   raw: 0x322E3000
+>   value: "2.0"
+> TPM2_PT_LEVEL:
+>   raw: 0
+> TPM2_PT_REVISION:
+>   value: 1.16
+> TPM2_PT_DAY_OF_YEAR:
+>   raw: 0xF
+> TPM2_PT_YEAR:
+>   raw: 0x7E0
+> TPM2_PT_MANUFACTURER:
+>   raw: 0x49465800
+>   value: "IFX"
+> TPM2_PT_VENDOR_STRING_1:
+>   raw: 0x534C4239
+>   value: "SLB9"
+> TPM2_PT_VENDOR_STRING_2:
+>   raw: 0x36363500
+>   value: "665"
+> TPM2_PT_VENDOR_STRING_3:
+>   raw: 0x0
+>   value: ""
+> TPM2_PT_VENDOR_STRING_4:
+>   raw: 0x0
+>   value: ""
+> TPM2_PT_VENDOR_TPM_TYPE:
+>   raw: 0x0
+> TPM2_PT_FIRMWARE_VERSION_1:
+>   raw: 0x5003E
+> TPM2_PT_FIRMWARE_VERSION_2:
+>   raw: 0xC3600
+> TPM2_PT_INPUT_BUFFER:
+>   raw: 0x400
+> TPM2_PT_HR_TRANSIENT_MIN:
+>   raw: 0x3
+> TPM2_PT_HR_PERSISTENT_MIN:
+>   raw: 0x7
+> TPM2_PT_HR_LOADED_MIN:
+>   raw: 0x3
+> TPM2_PT_ACTIVE_SESSIONS_MAX:
+>   raw: 0x40
+> TPM2_PT_PCR_COUNT:
+>   raw: 0x18
+> TPM2_PT_PCR_SELECT_MIN:
+>   raw: 0x3
+> TPM2_PT_CONTEXT_GAP_MAX:
+>   raw: 0xFFFF
+> TPM2_PT_NV_COUNTERS_MAX:
+>   raw: 0x8
+> TPM2_PT_NV_INDEX_MAX:
+>   raw: 0x680
+> TPM2_PT_MEMORY:
+>   raw: 0x6
+> TPM2_PT_CLOCK_UPDATE:
+>   raw: 0x80000
+> TPM2_PT_CONTEXT_HASH:
+>   raw: 0xB
+> TPM2_PT_CONTEXT_SYM:
+>   raw: 0x6
+> TPM2_PT_CONTEXT_SYM_SIZE:
+>   raw: 0x80
+> TPM2_PT_ORDERLY_COUNT:
+>   raw: 0xFF
+> TPM2_PT_MAX_COMMAND_SIZE:
+>   raw: 0x500
+> TPM2_PT_MAX_RESPONSE_SIZE:
+>   raw: 0x500
+> TPM2_PT_MAX_DIGEST:
+>   raw: 0x20
+> TPM2_PT_MAX_OBJECT_CONTEXT:
+>   raw: 0x3B8
+> TPM2_PT_MAX_SESSION_CONTEXT:
+>   raw: 0xEB
+> TPM2_PT_PS_FAMILY_INDICATOR:
+>   raw: 0x1
+> TPM2_PT_PS_LEVEL:
+>   raw: 0x0
+> TPM2_PT_PS_REVISION:
+>   raw: 0x100
+> TPM2_PT_PS_DAY_OF_YEAR:
+>   raw: 0x0
+> TPM2_PT_PS_YEAR:
+>   raw: 0x0
+> TPM2_PT_SPLIT_MAX:
+>   raw: 0x80
+> TPM2_PT_TOTAL_COMMANDS:
+>   raw: 0x5B
+> TPM2_PT_LIBRARY_COMMANDS:
+>   raw: 0x59
+> TPM2_PT_VENDOR_COMMANDS:
+>   raw: 0x2
+> TPM2_PT_NV_BUFFER_MAX:
+>   raw: 0x300
+> tpm2_getcap properties-variable
+> TPM2_PT_PERSISTENT:
+>   ownerAuthSet:              0
+>   endorsementAuthSet:        0
+>   lockoutAuthSet:            0
+>   reserved1:                 0
+>   disableClear:              0
+>   inLockout:                 0
+>   tpmGeneratedEPS:           0
+>   reserved2:                 0
+> TPM2_PT_STARTUP_CLEAR:
+>   phEnable:                  1
+>   shEnable:                  1
+>   ehEnable:                  1
+>   phEnableNV:                1
+>   reserved1:                 0
+>   orderly:                   1
+> TPM2_PT_HR_NV_INDEX: 0x2
+> TPM2_PT_HR_LOADED: 0x0
+> TPM2_PT_HR_LOADED_AVAIL: 0x3
+> TPM2_PT_HR_ACTIVE: 0x0
+> TPM2_PT_HR_ACTIVE_AVAIL: 0x40
+> TPM2_PT_HR_TRANSIENT_AVAIL: 0x3
+> TPM2_PT_HR_PERSISTENT: 0x0
+> TPM2_PT_HR_PERSISTENT_AVAIL: 0x12
+> TPM2_PT_NV_COUNTERS: 0x0
+> TPM2_PT_NV_COUNTERS_AVAIL: 0xD
+> TPM2_PT_ALGORITHM_SET: 0x0
+> TPM2_PT_LOADED_CURVES: 0x2
+> TPM2_PT_LOCKOUT_COUNTER: 0x0
+> TPM2_PT_MAX_AUTH_FAIL: 0x20
+> TPM2_PT_LOCKOUT_INTERVAL: 0x1C20
+> TPM2_PT_LOCKOUT_RECOVERY: 0x15180
+> TPM2_PT_AUDIT_COUNTER_0: 0x0
+> TPM2_PT_AUDIT_COUNTER_1: 0x0
+> tpm2_getcap ecc-curves
+> TPM2_ECC_NIST_P256: 0x3
+> TPM2_ECC_BN_P256: 0x10
+> tpm2_getcap handles-transient
+> tpm2_getcap handles-persistent
+> tpm2_getcap handles-permanent
+> - 0x40000001
+> - 0x40000007
+> - 0x40000009
+> - 0x4000000A
+> - 0x4000000B
+> - 0x4000000C
+> - 0x4000000D
+> tpm2_getcap handles-pcr
+> - 0x0
+> - 0x1
+> - 0x2
+> - 0x3
+> - 0x4
+> - 0x5
+> - 0x6
+> - 0x7
+> - 0x8
+> - 0x9
+> - 0xA
+> - 0xB
+> - 0xC
+> - 0xD
+> - 0xE
+> - 0xF
+> - 0x10
+> - 0x11
+> - 0x12
+> - 0x13
+> - 0x14
+> - 0x15
+> - 0x16
+> - 0x17
+> tpm2_getcap handles-nv-index
+> - 0x1C00002
+> - 0x1C0000A
+> tpm2_getcap handles-loaded-session
+> tpm2_getcap handles-saved-session
 > _______________________________________________
 > tpm2 mailing list -- tpm2(a)lists.01.org
 > To unsubscribe send an email to tpm2-leave(a)lists.01.org
 > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============2882589392230764020==--
+--===============8434163128295721777==--
 
