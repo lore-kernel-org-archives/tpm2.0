@@ -1,128 +1,90 @@
-Content-Type: multipart/mixed; boundary="===============3486836278945420360=="
+Content-Type: multipart/mixed; boundary="===============2068019319081702539=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Check to see if signature is okay, then reboot
-Date: Wed, 04 Dec 2019 14:33:36 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E4BE0F@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CALtZhhPUgMQX7UQUAY1dXKOeML9X_RzUkmezAnwMkU7J0svj7A@mail.gmail.com
+From: Philip Tricca <flihp at twobit.org>
+Subject: [tpm2] Re: ./configure error for tpm2-abrmd Centos 7
+Date: Wed, 04 Dec 2019 09:28:27 -0800
+Message-ID: <a8d1ad52-f57d-cedf-fd07-8d46468f7109@twobit.org>
+In-Reply-To: 20191204002914.2967.59017@new-ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3486836278945420360==
+--===============2068019319081702539==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-
-
-> -----Original Message-----
-> From: Frederick Gotham [mailto:cauldwell.thomas(a)gmail.com]
-> Sent: Wednesday, December 4, 2019 7:41 AM
-> To: tpm2 <tpm2(a)lists.01.org>
-> Subject: [tpm2] Check to see if signature is okay, then reboot
+On 12/3/19 4:29 PM, pneumiller(a)directstream.com wrote:
+> I am using the instructions found in the INSTALL.md found at the tpm2-too=
+ls git repo.  Any ideas/help would be greatly appreciated.
 > =
 
-> I'm trying to use the TPM2 check to verify a signature. Here's what I'm d=
-oing:
+> ./configure error for tpm2-abrmd using the Dockerfile below.
 > =
 
->     # 1 : Generate a key pair
->     openssl genrsa -out rsa.private 2048
->     openssl rsa -in rsa.private -out rsa.public -pubout -outform PEM
+> checking for TSS2_SYS... no
+> configure: error: Package requirements (tss2-sys >=3D 2.0.0) were not met:
 > =
 
->     # 2 : Create two firmware files, the real one and the hacked one
->     echo "this is our actual   firmware yeah" > rootfs.tar
->     echo "this it our hacked  firmware yeah" > rootfs_hacked.tar
+> No package 'tss2-sys' found
 > =
 
->     # 3 : Create a signature file
->     openssl dgst -sha256 -sign rsa.private -out signature_file rootfs.tar
+> Consider adjusting the PKG_CONFIG_PATH environment variable if you
+> installed software in a non-standard prefix.
 > =
 
->     # 4 : Use the TPM2 chip to verify the signature
+> Alternatively, you may set the environment variables TSS2_SYS_CFLAGS
+> and TSS2_SYS_LIBS to avoid the need to call pkg-config.
+> See the pkg-config man page for more details.
 
-Verifying a signature with the TPM doesn't really provide much for
-guarantees directly over software verification. Especially when it's
-an externally sourced public key. Unless you're in an environment where
-OSSL doesn't exist, and your just using it as an offload mechanism.
+This error indicates that pkgconfig isn't able to find the .pc file for
+libtss2-sys. pkgconfig has a few standard places that it searches and
+also the PKG_CONFIG_PATH (which you're using below).
 
->     tpm2_loadexternal -G rsa -u rsa.public -c key_context_file_for_tpm2
->     tpm2_verifysignature -Q -c key_context_file_for_tpm2 -g sha256 -m
-> rootfs_hacked.tar -f rsassa -s signature_file
+> FROM centos:7
+>   =
+
+> # install build dependencies
+> RUN yum clean all
+> RUN yum install -y git make autoconf autoconf-archive automake libtool gc=
+c gcc-c++ glibc-headers pkgconfig openssl-devel curl-devel epel-release pan=
+doc doxygen cmake flex bison dbus
+> RUN rm -rf /var/cache/yum
+> RUN yum -y update && yum -y install automake libtool \
+> autoconf autoconf-archive libstdc++-devel gcc pkg-config \
+> uriparser-devel libgcrypt-devel dbus-devel glib2-devel \
+> compat-openssl10-devel libcurl-devel PyYAML
+> # Install tpm2-tss
+> WORKDIR /root
+> RUN git clone https://github.com/tpm2-software/tpm2-tss
+> WORKdIR /root/tpm2-tss
+> RUN ./bootstrap
+> RUN ./configure --prefix=3D/usr  --disable-doxygen-doc
+> RUN make -j5
+> RUN make install
+> RUN export LD_LIBRARY_PATH=3D/usr/lib
+> RUN ldconfig
+> RUN PKG_CONFIG_PATH=3D/usr/lib/pkgconfig
+
+I don't know much about the details w/r/t `ENV` vs `RUN export` in
+Docker but it looks like you're missing the 'export' part when you set
+PKG_CONFIG_PATH here. This is a guess based on what you've done a few
+lines earlier with `LD_LIBRARY_PATH`.
+
+Philip
+
+> My Dockerfile
 > =
 
->     return_code=3D$?
->     echo The returned code was: ${return_code}
-> =
-
->     case $return_code in
->             0) echo 0 means success;;
->             1) echo 1 means general error;;
->             2) echo 2 means options handling error;;
->             3) echo 3 means authentication error;;
->             4) echo 4 means tcti error;;
->             5) echo 5 means unsupported scheme;;
->     esac
-> =
-
-> =
-
-> This works fine. But of course then I reboot, and I try to verify the sig=
-nature again
-> with this one line:
-> =
-
->     tpm2_verifysignature -Q -c key_context_file_for_tpm2 -g sha256 -m
-> rootfs_hacked.tar -f rsassa -s signature_file
-> =
-
-> This fails. . . presumably because the key was in volatile memory the las=
-t time
-> around (and so it got wiped upon reboot).
-
-You need to call tpm2_loadexternal again to load the public portion of the =
-key into
-The TPM or you need to mark the pubic object persistent with tpm2_evictcont=
-rol.
-However, I would urge against that. Just load the object when you need it. =
-A RM
-Should take care of flushing "transient" objects when your don't with them,=
- or if
-Using the TPM directly, tpm2_flushcontext.
-
-Those files used in the -C and -c options are context files. Between comman=
-d invocations
-The tools save the object context for re-use during, essentially, that boot=
- of the TPM.
-After reboot, you need to re-get a context file, in your case tpm2_loadexte=
-rnal will
-provide it.
-
-
-> =
-
-> So I load the public key back in again, and this time around I want to ma=
-ke it
-> persistent. So after I load it in, I get a list of all handles with these=
- four commands:
-> =
-
->     tpm2_getcap handles-transient
->     tpm2_getcap handles-persistent
->     tpm2_getcap handles-loaded-session
->     tpm2_getcap handles-saved-session
-> =
-
-> All of these four commands return nothing. If I haven't got a handle then=
- I can't
-> make it persistent.
-> =
-
-> Any ideas?
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============3486836278945420360==--
+> # Install tpm2-abrmd
+> WORKDIR /root
+> RUN git clone https://github.com/tpm2-software/tpm2-abrmd
+> WORKDIR /root/tpm2-abrmd
+> RUN ./bootstrap
+> RUN ./configure --with-dbuspolicydir=3D/etc/dbus-1/system.d \
+> --with-udevrulesdir=3D/usr/lib/udev/rules.d \
+> --with-systemdsystemunitdir=3D/usr/lib/systemd/system \
+> --libdir=3D/usr/lib64 --prefix=3D/usr
+> RUN make -j5
+> RUN make install
+--===============2068019319081702539==--
 
