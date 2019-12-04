@@ -1,71 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============0789260732495944383=="
+Content-Type: multipart/mixed; boundary="===============2940557916428744533=="
 MIME-Version: 1.0
-From: pneumiller at directstream.com
-Subject: [tpm2] ./configure error for tpm2-abrmd Centos 7
-Date: Wed, 04 Dec 2019 00:29:14 +0000
-Message-ID: <20191204002914.2967.59017@new-ml01.vlan13.01.org>
+From: Frederick Gotham <cauldwell.thomas at gmail.com>
+Subject: [tpm2] Trying to make a script to store keys
+Date: Wed, 04 Dec 2019 09:37:57 +0000
+Message-ID: <CALtZhhNBB-nm5df5k_aVp7CFKViNA=Lard1CL_ftkEgvyXVj3g@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0789260732495944383==
+--===============2940557916428744533==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I am using the instructions found in the INSTALL.md found at the tpm2-tools=
- git repo.  Any ideas/help would be greatly appreciated.
+Here's what I've got in my script so far;
 
-./configure error for tpm2-abrmd using the Dockerfile below.
+- - - - - - - - Begin Script - - - - - - - -
+#!/bin/sh
 
-checking for TSS2_SYS... no
-configure: error: Package requirements (tss2-sys >=3D 2.0.0) were not met:
+ABC_LABEL=3D`uuidgen -r`
+export TPM2_PKCS11_TCTI=3Ddevice:/dev/tpmrm0
 
-No package 'tss2-sys' found
+rm /root/private.pem > /dev/null 2>&1
 
-Consider adjusting the PKG_CONFIG_PATH environment variable if you
-installed software in a non-standard prefix.
+openssl genrsa -out /root/private.pem 2048
 
-Alternatively, you may set the environment variables TSS2_SYS_CFLAGS
-and TSS2_SYS_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details.
+# Not sure what the next line does but I'll do it anyway
+tpm2_clear
 
-FROM centos:7
-  =
+# Clear out the objects in the TPM2's RAM
+tpm2_flushcontext -t
+tpm2_flushcontext -l
+tpm2_flushcontext -s
 
-# install build dependencies
-RUN yum clean all
-RUN yum install -y git make autoconf autoconf-archive automake libtool gcc =
-gcc-c++ glibc-headers pkgconfig openssl-devel curl-devel epel-release pando=
-c doxygen cmake flex bison dbus
-RUN rm -rf /var/cache/yum
-RUN yum -y update && yum -y install automake libtool \
-autoconf autoconf-archive libstdc++-devel gcc pkg-config \
-uriparser-devel libgcrypt-devel dbus-devel glib2-devel \
-compat-openssl10-devel libcurl-devel PyYAML
-# Install tpm2-tss
-WORKDIR /root
-RUN git clone https://github.com/tpm2-software/tpm2-tss
-WORKdIR /root/tpm2-tss
-RUN ./bootstrap
-RUN ./configure --prefix=3D/usr  --disable-doxygen-doc
-RUN make -j5
-RUN make install
-RUN export LD_LIBRARY_PATH=3D/usr/lib
-RUN ldconfig
-RUN PKG_CONFIG_PATH=3D/usr/lib/pkgconfig
+# Clear out all persistent objects in cold storage
+tpm2_getcap handles-persistent | xargs -r -t -n1 tpm2_evictcontrol -c
 
-My Dockerfile
+# We may as well clear it again (not sure what this does)
+tpm2_clear
 
-# Install tpm2-abrmd
-WORKDIR /root
-RUN git clone https://github.com/tpm2-software/tpm2-abrmd
-WORKDIR /root/tpm2-abrmd
-RUN ./bootstrap
-RUN ./configure --with-dbuspolicydir=3D/etc/dbus-1/system.d \
---with-udevrulesdir=3D/usr/lib/udev/rules.d \
---with-systemdsystemunitdir=3D/usr/lib/systemd/system \
---libdir=3D/usr/lib64 --prefix=3D/usr
-RUN make -j5
-RUN make install
---===============0789260732495944383==--
+init() {
+   ./tpm2_ptool init | rev | cut -d ' ' -f 1 | rev
+}
+
+ABC_PID=3D"$(init)"
+
+./tpm2_ptool addtoken --pid=3D${ABC_PID} --sopin=3Dmysopin
+--userpin=3D123456 --label ${ABC_LABEL}
+
+./tpm2_ptool import --userpin 123456 --privkey /root/private.pem
+--label ${ABC_LABEL} --algorithm rsa
+
+ssh-keygen -D libtpm2_pkcs11.so
+- - - - - - - - - End Script - - - - - - - - -
+
+
+The first problem I'm having here is that "flushcontext" isn't
+working. If I call it three times with three different argument
+(t,l,s), and then call ssh-keygen immediately afterward, then it shows
+that those transient keys are still in there.
+--===============2940557916428744533==--
 
