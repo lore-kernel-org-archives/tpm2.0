@@ -1,90 +1,62 @@
-Content-Type: multipart/mixed; boundary="===============2068019319081702539=="
+Content-Type: multipart/mixed; boundary="===============4955128659907072414=="
 MIME-Version: 1.0
-From: Philip Tricca <flihp at twobit.org>
-Subject: [tpm2] Re: ./configure error for tpm2-abrmd Centos 7
-Date: Wed, 04 Dec 2019 09:28:27 -0800
-Message-ID: <a8d1ad52-f57d-cedf-fd07-8d46468f7109@twobit.org>
-In-Reply-To: 20191204002914.2967.59017@new-ml01.vlan13.01.org
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: [tpm2] Re: [tpm2][tpm2-abrmd]tpm2-abrmd.service may run before udev
+ rule.
+Date: Wed, 04 Dec 2019 17:56:50 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909CEE3A6B@ORSMSX104.amr.corp.intel.com>
+In-Reply-To: CAOCvsS=0y0JSzqWOCdNHX+hUnb+iXBnTjFS9UD-0A_0QJi=WXw@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2068019319081702539==
+--===============4955128659907072414==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 12/3/19 4:29 PM, pneumiller(a)directstream.com wrote:
-> I am using the instructions found in the INSTALL.md found at the tpm2-too=
-ls git repo.  Any ideas/help would be greatly appreciated.
-> =
+Sorry to do this to you Steven but I need a 'signed-off-by' line to meet DC=
+O requirements. Can you please update?
 
-> ./configure error for tpm2-abrmd using the Dockerfile below.
-> =
-
-> checking for TSS2_SYS... no
-> configure: error: Package requirements (tss2-sys >=3D 2.0.0) were not met:
-> =
-
-> No package 'tss2-sys' found
-> =
-
-> Consider adjusting the PKG_CONFIG_PATH environment variable if you
-> installed software in a non-standard prefix.
-> =
-
-> Alternatively, you may set the environment variables TSS2_SYS_CFLAGS
-> and TSS2_SYS_LIBS to avoid the need to call pkg-config.
-> See the pkg-config man page for more details.
-
-This error indicates that pkgconfig isn't able to find the .pc file for
-libtss2-sys. pkgconfig has a few standard places that it searches and
-also the PKG_CONFIG_PATH (which you're using below).
-
-> FROM centos:7
->   =
-
-> # install build dependencies
-> RUN yum clean all
-> RUN yum install -y git make autoconf autoconf-archive automake libtool gc=
-c gcc-c++ glibc-headers pkgconfig openssl-devel curl-devel epel-release pan=
-doc doxygen cmake flex bison dbus
-> RUN rm -rf /var/cache/yum
-> RUN yum -y update && yum -y install automake libtool \
-> autoconf autoconf-archive libstdc++-devel gcc pkg-config \
-> uriparser-devel libgcrypt-devel dbus-devel glib2-devel \
-> compat-openssl10-devel libcurl-devel PyYAML
-> # Install tpm2-tss
-> WORKDIR /root
-> RUN git clone https://github.com/tpm2-software/tpm2-tss
-> WORKdIR /root/tpm2-tss
-> RUN ./bootstrap
-> RUN ./configure --prefix=3D/usr  --disable-doxygen-doc
-> RUN make -j5
-> RUN make install
-> RUN export LD_LIBRARY_PATH=3D/usr/lib
-> RUN ldconfig
-> RUN PKG_CONFIG_PATH=3D/usr/lib/pkgconfig
-
-I don't know much about the details w/r/t `ENV` vs `RUN export` in
-Docker but it looks like you're missing the 'export' part when you set
-PKG_CONFIG_PATH here. This is a guess based on what you've done a few
-lines earlier with `LD_LIBRARY_PATH`.
-
+Thanks,
 Philip
 
-> My Dockerfile
-> =
+-----Original Message-----
+From: Steven Clark [mailto:davolfman(a)gmail.com] =
 
-> # Install tpm2-abrmd
-> WORKDIR /root
-> RUN git clone https://github.com/tpm2-software/tpm2-abrmd
-> WORKDIR /root/tpm2-abrmd
-> RUN ./bootstrap
-> RUN ./configure --with-dbuspolicydir=3D/etc/dbus-1/system.d \
-> --with-udevrulesdir=3D/usr/lib/udev/rules.d \
-> --with-systemdsystemunitdir=3D/usr/lib/systemd/system \
-> --libdir=3D/usr/lib64 --prefix=3D/usr
-> RUN make -j5
-> RUN make install
---===============2068019319081702539==--
+Sent: 3 December, 2019 10:39
+To: Tricca, Philip B <philip.b.tricca(a)intel.com>
+Cc: tpm2(a)lists.01.org
+Subject: Re: [tpm2] [tpm2][tpm2-abrmd]tpm2-abrmd.service may run before ude=
+v rule.
+
+Here's a full patch against 2.3.0, I decided against uploading to github fo=
+r now:
+
+From c75d97443efadb8495087a777d06f3c0f5f43e87 Mon Sep 17 00:00:00 2001
+From: Steven Clark <davolfman(a)gmail.com>
+Date: Tue, 3 Dec 2019 01:39:28 +0000
+Subject: [PATCH] Hold Resource Manager until tpm is accessible
+
+In testing in an unusual boot scenario it was discovered that tpm2-abrmd.se=
+rvice was starting before udev had changed ownership of the TPM device from=
+ root to TSS.  This patch changes the Systemd unit file to force a udev set=
+tle before starting the resource manager service.
+---
+ dist/tpm2-abrmd.service.in | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/dist/tpm2-abrmd.service.in b/dist/tpm2-abrmd.service.in index =
+00aa031..4300cb3 100644
+--- a/dist/tpm2-abrmd.service.in
++++ b/dist/tpm2-abrmd.service.in
+@@ -1,5 +1,7 @@
+ [Unit]
+ Description=3DTPM2 Access Broker and Resource Management Daemon
++After=3Dsystemd-udev-settle.service
++Requires=3Dsystemd-udev-settle.service
+
+ [Service]
+ Type=3Ddbus
+
+--===============4955128659907072414==--
 
