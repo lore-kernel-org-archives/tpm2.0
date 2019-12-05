@@ -1,16 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============2292010823680608340=="
+Content-Type: multipart/mixed; boundary="===============6435128822981104512=="
 MIME-Version: 1.0
-From: Frederick Gotham <cauldwell.thomas at gmail.com>
-Subject: [tpm2] How Is This Possible If There Are No Keys ? ? ?
-Date: Thu, 05 Dec 2019 09:16:09 +0000
-Message-ID: <CALtZhhNwpNLBcYXjwY+z8DL1SGzdEocQC+s-8Dr37y7_wvCJ+Q@mail.gmail.com>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: [tpm2] Re: How Is This Possible If There Are No Keys ? ? ?
+Date: Thu, 05 Dec 2019 09:29:12 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163C1D074@exch2010c.sit.fraunhofer.de>
+In-Reply-To: CALtZhhNwpNLBcYXjwY+z8DL1SGzdEocQC+s-8Dr37y7_wvCJ+Q@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2292010823680608340==
+--===============6435128822981104512==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+The key is inside key_context_file_for_tpm2
+
+It's stored in there protected by a TPM-internal second key.
+
+When you call the command, it gets loaded into the TPM, used
+to verify the signature and then flushed from the TPM again.
+
+If you are interested in the concept behind, look at the TPM specification
+under the keywords TPM2_ContextSave and TPM2_ContextLoad.
+
+________________________________________
+From: Frederick Gotham [cauldwell.thomas(a)gmail.com]
+Sent: Thursday, December 05, 2019 10:16
+To: tpm2
+Subject: [tpm2] How Is This Possible If There Are No Keys ? ? ?
 
 In previous messages I mentioned that I was using tpm2-pkcs11. I am no
 longer using tpm2-pkcs11. I am using tpm2-tools at the command line,
@@ -43,5 +60,10 @@ Immediately after I check that signature, I run 4 commands:
 
 All four of these commands return nothing. So if there's no keys
 inside the TPM2 chip, then how is the signature verification working?
---===============2292010823680608340==--
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============6435128822981104512==--
 
