@@ -1,55 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============5073487138361892078=="
+Content-Type: multipart/mixed; boundary="===============2173393580935539650=="
 MIME-Version: 1.0
-From: Frederick Gotham <cauldwell.thomas at gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: Check to see if signature is okay, then reboot
-Date: Thu, 05 Dec 2019 18:14:25 +0000
-Message-ID: <CALtZhhPDzuOtMY45JbacHpUe+4rribj5pOxE0rUBnS-R1Krs6A@mail.gmail.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E4C232@ORSMSX101.amr.corp.intel.com
+Date: Thu, 05 Dec 2019 22:34:09 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E4C7F7@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CALtZhhPDzuOtMY45JbacHpUe+4rribj5pOxE0rUBnS-R1Krs6A@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5073487138361892078==
+--===============2173393580935539650==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-> But anyways, you can use nvram to store it,
-> and then use the key externally with openssl
-> or call tpm2_loadexternal again.
 
 
-First I will try to load a keypair into the TMP2, such that the private
-part is garbage but the public part is correct.
+> -----Original Message-----
+> From: Frederick Gotham [mailto:cauldwell.thomas(a)gmail.com]
+> Sent: Thursday, December 5, 2019 12:14 PM
+> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2 <tpm2(a)list=
+s.01.org>
+> Subject: Re: Check to see if signature is okay, then reboot
+> =
 
-To achieve this, I will first try to zero out parts of the private key
-before I load it in. I'm not sure if this will work. (It works with openssl
-anyway).
+> > But anyways, you can use nvram to store it, and then use the key
+> > externally with openssl or call tpm2_loadexternal again.
+> =
 
---===============5073487138361892078==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> =
 
-PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigzNCwzNCwzNCk7Zm9udC1zaXplOjE0cHgiPiZndDsgQnV0
-IGFueXdheXMsIHlvdSBjYW7CoDwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDM0LDM0LDM0
-KTtmb250LXNpemU6MTRweCI+dXNlIG52cmFtIHRvIHN0b3JlIGl0LDwvc3Bhbj48ZGl2PjxzcGFu
-IHN0eWxlPSJjb2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtc2l6ZToxNHB4Ij4mZ3Q7IGFuZCB0aGVu
-IHVzZSB0aGUga2V5IGV4dGVybmFsbHkgd2l0aCBvcGVuc3NsPC9zcGFuPjwvZGl2PjxkaXY+PHNw
-YW4gc3R5bGU9ImNvbG9yOnJnYigzNCwzNCwzNCk7Zm9udC1zaXplOjE0cHgiPiZndDsgb3IgY2Fs
-bCB0cG0yX2xvYWRleHRlcm5hbCBhPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMzQsMzQs
-MzQpO2ZvbnQtc2l6ZToxNHB4Ij5nYWluLjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJj
-b2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtc2l6ZToxNHB4Ij48YnI+PC9zcGFuPjwvZGl2PjxkaXY+
-PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigzNCwzNCwzNCk7Zm9udC1zaXplOjE0cHgiPjxicj48L3Nw
-YW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDM0LDM0LDM0KTtmb250LXNpemU6
-MTRweCI+Rmlyc3QgSSB3aWxsIHRyeSB0byBsb2FkIGEga2V5cGFpciBpbnRvIHRoZSBUTVAyLCBz
-dWNoIHRoYXQgdGhlIHByaXZhdGUgcGFydCBpcyBnYXJiYWdlIGJ1dCB0aGUgcHVibGljIHBhcnQg
-aXMgY29ycmVjdC48L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDM0LDM0
-LDM0KTtmb250LXNpemU6MTRweCI+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJj
-b2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtc2l6ZToxNHB4Ij5UbyBhY2hpZXZlIHRoaXMsIEkgd2ls
-bCBmaXJzdCB0cnkgdG8gemVybyBvdXQgcGFydHMgb2YgdGhlIHByaXZhdGUga2V5IGJlZm9yZSBJ
-IGxvYWQgaXQgaW4uIEkmIzM5O20gbm90IHN1cmUgaWYgdGhpcyB3aWxsIHdvcmsuIChJdCB3b3Jr
-cyB3aXRoIG9wZW5zc2wgYW55d2F5KS48L3NwYW4+PC9kaXY+Cg==
+> =
 
---===============5073487138361892078==--
+> =
+
+> First I will try to load a keypair into the TMP2, such that the private p=
+art is garbage
+> but the public part is correct.
+
+That only works for the null hierarchy, which get you back to tpm2_evictcon=
+trol error.
+Per spec of tpm2_loadexternal:
+Load of a public external object area allows the object be associated with =
+a hierarchy so that the correct
+algorithms may be used when creating tickets. The hierarchy parameter provi=
+des this association. If the
+public and sensitive portions of the object are loaded, hierarchy is requir=
+ed to be TPM_RH_NULL.
+
+I would also be surprised if the tpm2_loadexternal tool's interface would b=
+e flexible enough to allow this easily.
+
+Even if you got this to work, you bump back into the evictcontrol issue:
+If objectHandle references a Transient Object:
+The TPM shall return TPM_RC_ATTRIBUTES if
+1) it is in the hierarchy of TPM_RH_NULL,
+2) only the public portion of the object is loaded, or
+3) the stClear is SET in the object or in an ancestor key.
+
+
+> =
+
+> =
+
+> To achieve this, I will first try to zero out parts of the private key be=
+fore I load it in.
+> I'm not sure if this will work. (It works with openssl anyway).
+
+--===============2173393580935539650==--
 
