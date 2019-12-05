@@ -1,89 +1,55 @@
-Content-Type: multipart/mixed; boundary="===============1609130058749066314=="
+Content-Type: multipart/mixed; boundary="===============5073487138361892078=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: How Is This Possible If There Are No Keys ? ? ?
-Date: Thu, 05 Dec 2019 17:55:59 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E4C709@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0163C1D4D1@exch2010c.sit.fraunhofer.de
+From: Frederick Gotham <cauldwell.thomas at gmail.com>
+Subject: [tpm2] Re: Check to see if signature is okay, then reboot
+Date: Thu, 05 Dec 2019 18:14:25 +0000
+Message-ID: <CALtZhhPDzuOtMY45JbacHpUe+4rribj5pOxE0rUBnS-R1Krs6A@mail.gmail.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E4C232@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1609130058749066314==
+--===============5073487138361892078==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+> But anyways, you can use nvram to store it,
+> and then use the key externally with openssl
+> or call tpm2_loadexternal again.
 
 
-> -----Original Message-----
-> From: Fuchs, Andreas [mailto:andreas.fuchs(a)sit.fraunhofer.de]
-> Sent: Thursday, December 5, 2019 8:17 AM
-> To: cauldwell.thomas(a)gmail.com; tpm2 <tpm2(a)lists.01.org>
-> Subject: [tpm2] Re: How Is This Possible If There Are No Keys ? ? ?
-> =
+First I will try to load a keypair into the TMP2, such that the private
+part is garbage but the public part is correct.
 
-> try 0x81000002
-> 0x81010000 and following are endorsement hierarchy handles...
-> if that's not enough, try specifying the owner hierarchy via parameter
-> =
+To achieve this, I will first try to zero out parts of the private key
+before I load it in. I'm not sure if this will work. (It works with openssl
+anyway).
 
-> see https://github.com/tpm2-software/tpm2-tss-
-> engine/blob/8acc6181f27c1b60263ab9ad5e28f4638e0460ed/test/rsasign_persiste
-> nt.sh#L33
-> for a working example...
+--===============5073487138361892078==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-You can't persist a public only object, from the commands spec for TPM2_Loa=
-dExternal:
-If objectHandle references a Transient Object:
-The TPM shall return TPM_RC_ATTRIBUTES if
-1) it is in the hierarchy of TPM_RH_NULL,
-2) only the public portion of the object is loaded, or
-3) the stClear is SET in the object or in an ancestor key.
+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigzNCwzNCwzNCk7Zm9udC1zaXplOjE0cHgiPiZndDsgQnV0
+IGFueXdheXMsIHlvdSBjYW7CoDwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDM0LDM0LDM0
+KTtmb250LXNpemU6MTRweCI+dXNlIG52cmFtIHRvIHN0b3JlIGl0LDwvc3Bhbj48ZGl2PjxzcGFu
+IHN0eWxlPSJjb2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtc2l6ZToxNHB4Ij4mZ3Q7IGFuZCB0aGVu
+IHVzZSB0aGUga2V5IGV4dGVybmFsbHkgd2l0aCBvcGVuc3NsPC9zcGFuPjwvZGl2PjxkaXY+PHNw
+YW4gc3R5bGU9ImNvbG9yOnJnYigzNCwzNCwzNCk7Zm9udC1zaXplOjE0cHgiPiZndDsgb3IgY2Fs
+bCB0cG0yX2xvYWRleHRlcm5hbCBhPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMzQsMzQs
+MzQpO2ZvbnQtc2l6ZToxNHB4Ij5nYWluLjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJj
+b2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtc2l6ZToxNHB4Ij48YnI+PC9zcGFuPjwvZGl2PjxkaXY+
+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigzNCwzNCwzNCk7Zm9udC1zaXplOjE0cHgiPjxicj48L3Nw
+YW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDM0LDM0LDM0KTtmb250LXNpemU6
+MTRweCI+Rmlyc3QgSSB3aWxsIHRyeSB0byBsb2FkIGEga2V5cGFpciBpbnRvIHRoZSBUTVAyLCBz
+dWNoIHRoYXQgdGhlIHByaXZhdGUgcGFydCBpcyBnYXJiYWdlIGJ1dCB0aGUgcHVibGljIHBhcnQg
+aXMgY29ycmVjdC48L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDM0LDM0
+LDM0KTtmb250LXNpemU6MTRweCI+PGJyPjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJj
+b2xvcjpyZ2IoMzQsMzQsMzQpO2ZvbnQtc2l6ZToxNHB4Ij5UbyBhY2hpZXZlIHRoaXMsIEkgd2ls
+bCBmaXJzdCB0cnkgdG8gemVybyBvdXQgcGFydHMgb2YgdGhlIHByaXZhdGUga2V5IGJlZm9yZSBJ
+IGxvYWQgaXQgaW4uIEkmIzM5O20gbm90IHN1cmUgaWYgdGhpcyB3aWxsIHdvcmsuIChJdCB3b3Jr
+cyB3aXRoIG9wZW5zc2wgYW55d2F5KS48L3NwYW4+PC9kaXY+Cg==
 
-> ________________________________________
-> From: Frederick Gotham [cauldwell.thomas(a)gmail.com]
-> Sent: Thursday, December 05, 2019 15:11
-> To: Fuchs, Andreas; tpm2
-> Subject: Re: [tpm2] How Is This Possible If There Are No Keys ? ? ?
-> =
-
-> On 12/5/19, Fuchs, Andreas <andreas.fuchs(a)sit.fraunhofer.de> wrote:
-> > No, you take your object context file and _choose_ the persistent
-> > handle to store it under.
-> =
-
-> =
-
-> I tried this:
-> =
-
->     tpm2_loadexternal -G rsa -u public.pem -c key_context_file_for_tpm2
->     tpm2_evictcontrol -c key_context_file_for_tpm2 0x81010002
-> =
-
-> And here's how the output I got:
-> =
-
->     WARNING:esys:src/tss2-
-> esys/api/Esys_EvictControl.c:326:Esys_EvictControl_Finish()
-> Received TPM Error
->     ERROR:esys:src/tss2-esys/api/Esys_EvictControl.c:114:Esys_EvictContro=
-l()
-> Esys Finish ErrorCode (0x00000282)
->     ERROR: Esys_EvictControl(0x282) - tpm:handle(2):inconsistent attribut=
-es
->     ERROR:esys:src/tss2-esys/esys_tr.c:357:Esys_TR_Close() Error: Esys ha=
-ndle
-> does not exist (70018).
->     ERROR: Esys_TR_Close(0x70018) - esapi:0x18
->     ERROR: Unable to run tpm2_evictcontrol
-> =
-
-> I've tried leaving out the "0x81010002" at the end but I get the same err=
-or output.
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============1609130058749066314==--
+--===============5073487138361892078==--
 
