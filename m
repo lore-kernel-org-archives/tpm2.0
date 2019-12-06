@@ -1,14 +1,14 @@
-Content-Type: multipart/mixed; boundary="===============6528922653412895659=="
+Content-Type: multipart/mixed; boundary="===============4284318687058481673=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Generate keypair using OpenSSL, then load into TPM2
-Date: Fri, 06 Dec 2019 14:28:18 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E4CCEF@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CALtZhhPmk-VeBn48kgLp70uydQLSep8dkKSs4_CCzW_Arm5eyw@mail.gmail.com
+Subject: [tpm2] Re: [TPM2-TOOLS] tpm2_hash I/O error
+Date: Fri, 06 Dec 2019 14:30:19 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E4CD01@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 6bd6c69c-42b5-7b77-4cde-34d096ed29b6@qarnot-computing.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6528922653412895659==
+--===============4284318687058481673==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -16,56 +16,144 @@ Content-Transfer-Encoding: quoted-printable
 
 
 > -----Original Message-----
-> From: Frederick Gotham [mailto:cauldwell.thomas(a)gmail.com]
-> Sent: Friday, December 6, 2019 4:47 AM
-> To: tpm2 <tpm2(a)lists.01.org>
-> Subject: [tpm2] Generate keypair using OpenSSL, then load into TPM2
+> From: Gabriel Chabot [mailto:gabriel.chabot(a)qarnot-computing.com]
+> Sent: Friday, December 6, 2019 3:48 AM
+> To: tpm2(a)lists.01.org
+> Cc: yoann.ricordel(a)qarnot-computing.com
+> Subject: [tpm2] [TPM2-TOOLS] tpm2_hash I/O error
 > =
 
-> I generate an RSA keypair as follows:
+> Greetings,
 > =
 
->     openssl genrsa -out private.pem 2048
+> I am currently using TPM2 for remote attestation.
+> At some point, I want to send a message and the signature of this message=
+ to the
+> remote.
+> However, when I try to hash the message (which is greater than 1024
+> bytes) with tpm2_hash, I get the following error:
 > =
 
-> Next I want to load this keypair into the TPM2 and make it persistent.
-> In future I will use it to verify signatures.
+> ERROR:tcti:src/util/io.c:106:write_all() failed to write to fd 4: I/O err=
+or
+> ERROR:tcti:src/tss2-tcti/tcti-device.c:121:tcti_device_transmit() wrong n=
+umber of
+> bytes written. Expected 1053, wrote 0.
+> ERROR:esys:src/tss2-
+> esys/api/Esys_SequenceUpdate.c:197:Esys_SequenceUpdate_Async()
+> Finish (Execute Async) ErrorCode (0x000a000a)
+> ERROR:esys:src/tss2-
+> esys/api/Esys_SequenceUpdate.c:74:Esys_SequenceUpdate()
+> Error in async function ErrorCode (0x000a000a)
+> ERROR: Esys_SequenceUpdate(0xA000A) - tcti:IO failure
+> ERROR: Unable to run tpm2_hash
 > =
 
-> Looking through the manual for TPM2 tools, I notice three tools in partic=
-ular,
-> "load", "loadexternal", "import". At first glance it looks like the one I=
- need here is
-> "import". So here's what I do:
+> Afterwards, I cannot use my TPM until I reboot.
 > =
 
->     tpm2_createprimary --hierarchy=3Do --hash-algorithm=3Dsha256 --key-
-> algorithm=3Drsa --key-context=3Dprimary.ctx
+> I investigated the issue a bit, and this issue also happens when I try to=
+ hash input
+> from stdin.
+> So it seems that I have an issue with this part of tpm2_hash.c:
 > =
 
->     tpm2_flushcontext --transient-object
+> tool_rc rc =3D tpm2_hash_sequence_start(ectx, &null_auth, halg,
+> &sequence_handle);
+>      if (rc !=3D tool_rc_success) {
+>          return rc;
+>      }
 > =
 
->     tpm2_import -C primary.ctx -G rsa -i private.pem -u key.pub -r key.pr=
-iv
+>      /* If we know the file size, we decrement the amount read and termin=
+ate
+>       * the loop when 1 block is left, else we go till feof.
+>       */
+>      done =3D false;
+>      while (!done) {
+>          /*  if we're using infilep, read the file. Otherwise, directly
+>           copy into our local buffer. */
+>          buffer.size =3D BUFFER_SIZE(typeof(buffer), buffer);
+>          if (!!infilep) {
+>              bytes_read =3D fread(buffer.buffer, 1, buffer.size, infilep);
+>              if (ferror(infilep)) {
+>                  LOG_ERR("Error reading from input file");
+>                  return tool_rc_general_error;
+>              } else {
+>                  buffer.size =3D bytes_read;
+>              }
+>          } else {
+>              memcpy(buffer.buffer, inbuffer, buffer.size);
+>              inbuffer =3D inbuffer + buffer.size;
+>          }
+> =
 
-Import essentially creates blobs that can be loaded into the tpm (key.pub a=
-nd key.priv)
-These can be loaded via tpm2_load
+>          rc =3D tpm2_sequence_update(ectx, sequence_handle, &buffer);
+>          if (rc !=3D tool_rc_success) {
+>              return rc;
+>          }
+> =
 
-tpm2_load -C primary.ctx -u key.pub -r key.priv -c key.ctx
+>          if (use_left) {
+>              left -=3D buffer.size;
+>              if (left <=3D TPM2_MAX_DIGEST_BUFFER) {
+>                  done =3D true;
+>                  continue;
+>              }
+>          } else if (!!infilep && feof(infilep)) {
+>              done =3D true;
+>          }
+>      } /* end file read/hash update loop */
+> =
 
+> (I will take a deeper look later).
+> =
+
+> I am using tpm-tools 4.1 with an AMD fTPM on alpine linux 3.10.
+> Here is how I can reproduce the issue on my machine:
+> =
+
+> $ i=3D0; while [ $i -lt 1024 ]; do echo 0 >> /tmp/testfile; i=3D$((i+1));=
+ done; $
+> tpm2_hash -g sha256 -o /tmp/testfile.digest testfile;
+> =
+
+> OR
+> =
+
+> $ tpm2_hash -g sha256 -o /tmp/testfile.digest
+>    <input something><End of File>
+> =
+
+> I did try to hash my message with sha256sum instead of the TPM. However, =
+since
+> I am using an AK, I cannot sign an object that was not generated by the T=
+PM (or
+> maybe I am not doing something correctly, but the AK should be restricted=
+).
+> =
+
+> My current workaroud to this problem is to hash my message with sha256sum,
+> then to hash this hash with tpm2_hash.
+> =
+
+> Any ideas of what could cause this?
+
+I wish I knew off hand, but this is the first report I've seen of this natu=
+re and haven't
+been able to reproduce. Please keep us informed of your progress, and thanks
+for digging into this.
 
 > =
 
-> It works fine up until here. Next I want make it persistent. . . .Oh wait=
- I can't. I
-> don't have a context file to feed into "tpm2_evictcontrol". So where do I=
- go from
-> here?
+> Regards,
+> =
+
+> --
+> Gabriel
 > _______________________________________________
 > tpm2 mailing list -- tpm2(a)lists.01.org
 > To unsubscribe send an email to tpm2-leave(a)lists.01.org
 > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============6528922653412895659==--
+--===============4284318687058481673==--
 
