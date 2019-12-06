@@ -1,70 +1,156 @@
-Content-Type: multipart/mixed; boundary="===============2173393580935539650=="
+Content-Type: multipart/mixed; boundary="===============0831182533912654688=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Check to see if signature is okay, then reboot
-Date: Thu, 05 Dec 2019 22:34:09 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E4C7F7@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CALtZhhPDzuOtMY45JbacHpUe+4rribj5pOxE0rUBnS-R1Krs6A@mail.gmail.com
+From: Zhao, Shirley <shirley.zhao at intel.com>
+Subject: [tpm2] Question about marshal/un-marshal TPM2.0 packet
+Date: Fri, 06 Dec 2019 02:10:38 +0000
+Message-ID: <A888B25CD99C1141B7C254171A953E8E4909EC96@shsmsx102.ccr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2173393580935539650==
+--===============0831182533912654688==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi, all,
+
+I want to know how TPM2.0 marshal the command packet, especially some param=
+eter is optional.
+There is only  marshal/un-marshal API defined in tpm2-tss/include/tss2.0/ts=
+s2_mu.h, like:
+
+TSS2_RC
+Tss2_MU_TPMA_ALGORITHM_Marshal(
+    TPMA_ALGORITHM  src,
+    uint8_t         buffer[],
+    size_t          buffer_size,
+    size_t          *offset);
+
+TSS2_RC
+Tss2_MU_TPMA_ALGORITHM_Unmarshal(
+    uint8_t const   buffer[],
+    size_t          buffer_size,
+    size_t         *offset,
+    TPMA_ALGORITHM *dest);
+
+But I can't find function body, how to get the detailed function body?
+
+Thanks.
 
 
-> -----Original Message-----
-> From: Frederick Gotham [mailto:cauldwell.thomas(a)gmail.com]
-> Sent: Thursday, December 5, 2019 12:14 PM
-> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2 <tpm2(a)list=
-s.01.org>
-> Subject: Re: Check to see if signature is okay, then reboot
-> =
-
-> > But anyways, you can use nvram to store it, and then use the key
-> > externally with openssl or call tpm2_loadexternal again.
-> =
-
-> =
-
-> =
-
-> =
-
-> First I will try to load a keypair into the TMP2, such that the private p=
-art is garbage
-> but the public part is correct.
-
-That only works for the null hierarchy, which get you back to tpm2_evictcon=
-trol error.
-Per spec of tpm2_loadexternal:
-Load of a public external object area allows the object be associated with =
-a hierarchy so that the correct
-algorithms may be used when creating tickets. The hierarchy parameter provi=
-des this association. If the
-public and sensitive portions of the object are loaded, hierarchy is requir=
-ed to be TPM_RH_NULL.
-
-I would also be surprised if the tpm2_loadexternal tool's interface would b=
-e flexible enough to allow this easily.
-
-Even if you got this to work, you bump back into the evictcontrol issue:
-If objectHandle references a Transient Object:
-The TPM shall return TPM_RC_ATTRIBUTES if
-1) it is in the hierarchy of TPM_RH_NULL,
-2) only the public portion of the object is loaded, or
-3) the stClear is SET in the object or in an ancestor key.
+  *   Shirley
 
 
-> =
+--===============0831182533912654688==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
 
-> =
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpXaW5n
+ZGluZ3M7CglwYW5vc2UtMTo1IDAgMCAwIDAgMCAwIDAgMCAwO30KQGZvbnQtZmFjZQoJe2ZvbnQt
+ZmFtaWx5OlNpbVN1bjsKCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQpAZm9udC1mYWNl
+Cgl7Zm9udC1mYW1pbHk6IkNhbWJyaWEgTWF0aCI7CglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMg
+MiA0O30KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7CglwYW5vc2UtMToyIDE1IDUg
+MiAyIDIgNCAzIDIgNDt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpTaW1TdW47CglwYW5vc2Ut
+MToyIDEgNiAwIDMgMSAxIDEgMSAxO30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3Jt
+YWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90
+dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNh
+bnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5
+Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0
+ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cglj
+b2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnAuTXNvTGlzdFBhcmFn
+cmFwaCwgbGkuTXNvTGlzdFBhcmFncmFwaCwgZGl2Lk1zb0xpc3RQYXJhZ3JhcGgKCXttc28tc3R5
+bGUtcHJpb3JpdHk6MzQ7CgltYXJnaW4tdG9wOjBpbjsKCW1hcmdpbi1yaWdodDowaW47CgltYXJn
+aW4tYm90dG9tOjBpbjsKCW1hcmdpbi1sZWZ0Oi41aW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7
+Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpz
+cGFuLkVtYWlsU3R5bGUxNwoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7Cglmb250
+LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7fQouTXNvQ2hw
+RGVmYXVsdAoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5OwoJZm9udC1mYW1pbHk6IkNhbGli
+cmkiLHNhbnMtc2VyaWY7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsK
+CW1hcmdpbjoxLjBpbiAxLjI1aW4gMS4waW4gMS4yNWluO30KZGl2LldvcmRTZWN0aW9uMQoJe3Bh
+Z2U6V29yZFNlY3Rpb24xO30KLyogTGlzdCBEZWZpbml0aW9ucyAqLwpAbGlzdCBsMAoJe21zby1s
+aXN0LWlkOjg0OTQ4OTYwODsKCW1zby1saXN0LXR5cGU6aHlicmlkOwoJbXNvLWxpc3QtdGVtcGxh
+dGUtaWRzOi0xNzM1OTgzODg0IDIwNTA4OTcxNzggNjc2OTg2OTEgNjc2OTg2OTMgNjc2OTg2ODkg
+Njc2OTg2OTEgNjc2OTg2OTMgNjc2OTg2ODkgNjc2OTg2OTEgNjc2OTg2OTM7fQpAbGlzdCBsMDps
+ZXZlbDEKCXttc28tbGV2ZWwtc3RhcnQtYXQ6NzsKCW1zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1
+bGxldDsKCW1zby1sZXZlbC10ZXh0Oi07Cgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1s
+ZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsKCXRleHQtaW5kZW50Oi0uMjVpbjsKCWZvbnQtZmFt
+aWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJbXNvLWZhcmVhc3QtZm9udC1mYW1pbHk6U2ltU3Vu
+O30KQGxpc3QgbDA6bGV2ZWwyCgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNv
+LWxldmVsLXRleHQ6bzsKCW1zby1sZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVsLW51bWJl
+ci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6IkNvdXJp
+ZXIgTmV3Ijt9CkBsaXN0IGwwOmxldmVsMwoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxl
+dDsKCW1zby1sZXZlbC10ZXh0OlxGMEE3OwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7Cgltc28t
+bGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZh
+bWlseTpXaW5nZGluZ3M7fQpAbGlzdCBsMDpsZXZlbDQKCXttc28tbGV2ZWwtbnVtYmVyLWZvcm1h
+dDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpcRjBCNzsKCW1zby1sZXZlbC10YWItc3RvcDpub25l
+OwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJ
+Zm9udC1mYW1pbHk6U3ltYm9sO30KQGxpc3QgbDA6bGV2ZWw1Cgl7bXNvLWxldmVsLW51bWJlci1m
+b3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6bzsKCW1zby1sZXZlbC10YWItc3RvcDpub25l
+OwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJ
+Zm9udC1mYW1pbHk6IkNvdXJpZXIgTmV3Ijt9CkBsaXN0IGwwOmxldmVsNgoJe21zby1sZXZlbC1u
+dW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEE3OwoJbXNvLWxldmVsLXRh
+Yi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVu
+dDotLjI1aW47Cglmb250LWZhbWlseTpXaW5nZGluZ3M7fQpAbGlzdCBsMDpsZXZlbDcKCXttc28t
+bGV2ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpcRjBCNzsKCW1zby1s
+ZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4
+dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6U3ltYm9sO30KQGxpc3QgbDA6bGV2ZWw4Cgl7
+bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6bzsKCW1zby1s
+ZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4
+dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6IkNvdXJpZXIgTmV3Ijt9CkBsaXN0IGwwOmxl
+dmVsOQoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxG
+MEE3OwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9u
+OmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseTpXaW5nZGluZ3M7fQpvbAoJ
+e21hcmdpbi1ib3R0b206MGluO30KdWwKCXttYXJnaW4tYm90dG9tOjBpbjt9Ci0tPjwvc3R5bGU+
+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNw
+aWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1s
+Pgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRh
+PSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkg
+bGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRpdiBjbGFzcz0i
+V29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGksIGFsbCwgPG86cD48L286cD48
+L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0i
+TXNvTm9ybWFsIj5JIHdhbnQgdG8ga25vdyBob3cgVFBNMi4wIG1hcnNoYWwgdGhlIGNvbW1hbmQg
+cGFja2V0LCBlc3BlY2lhbGx5IHNvbWUgcGFyYW1ldGVyIGlzIG9wdGlvbmFsLjxvOnA+PC9vOnA+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGVyZSBpcyBvbmx5ICZuYnNwO21hcnNoYWwvdW4t
+bWFyc2hhbCBBUEkgZGVmaW5lZCBpbiB0cG0yLXRzcy9pbmNsdWRlL3RzczIuMC90c3MyX211Lmgs
+IGxpa2U6CjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwv
+bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VFNTMl9SQzxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj5Uc3MyX01VX1RQTUFfQUxHT1JJVEhNX01hcnNoYWwoPG86cD48L286
+cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOyZuYnNwOyZuYnNwOyBUUE1BX0FMR09S
+SVRITSZuYnNwOyBzcmMsPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNw
+OyZuYnNwOyZuYnNwOyB1aW50OF90Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7IGJ1ZmZlcltdLDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij4mbmJzcDsmbmJzcDsmbmJzcDsgc2l6ZV90Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGJ1ZmZlcl9zaXplLDxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj4mbmJzcDsmbmJzcDsmbmJzcDsgc2l6ZV90Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICpvZmZzZXQpOzxvOnA+PC9v
+OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+VFNTMl9SQzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij5Uc3MyX01VX1RQTUFfQUxHT1JJVEhNX1VubWFyc2hhbCg8bzpwPjwvbzpwPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IHVpbnQ4X3QgY29uc3QmbmJzcDsmbmJz
+cDsgYnVmZmVyW10sPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOyZu
+YnNwOyZuYnNwOyBzaXplX3QmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsgYnVmZmVyX3NpemUsPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiPiZuYnNwOyZuYnNwOyZuYnNwOyBzaXplX3QmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgKm9mZnNldCw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IFRQTUFfQUxHT1JJVEhNICpkZXN0KTs8bzpw
+PjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPkJ1dCBJIGNhbiYjODIxNzt0IGZpbmQgZnVuY3Rpb24gYm9keSwg
+aG93IHRvIGdldCB0aGUgZGV0YWlsZWQgZnVuY3Rpb24gYm9keT8KPG86cD48L286cD48L3A+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5UaGFua3MuIDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZu
+YnNwOzwvbzpwPjwvcD4KPHVsIHN0eWxlPSJtYXJnaW4tdG9wOjBpbiIgdHlwZT0iZGlzYyI+Cjxs
+aSBjbGFzcz0iTXNvTGlzdFBhcmFncmFwaCIgc3R5bGU9Im1hcmdpbi1sZWZ0OjBpbjttc28tbGlz
+dDpsMCBsZXZlbDEgbGZvMSI+U2hpcmxleQo8bzpwPjwvbzpwPjwvbGk+PC91bD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
 
-> To achieve this, I will first try to zero out parts of the private key be=
-fore I load it in.
-> I'm not sure if this will work. (It works with openssl anyway).
-
---===============2173393580935539650==--
+--===============0831182533912654688==--
 
