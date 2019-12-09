@@ -1,14 +1,14 @@
-Content-Type: multipart/mixed; boundary="===============6652152355667533135=="
+Content-Type: multipart/mixed; boundary="===============8744224588044817049=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Verifying signature with "-d" instead of "-g -m"
-Date: Mon, 09 Dec 2019 15:40:44 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E5711B@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CALtZhhMR8O-c6dVZPvtcdh=+KhTb=9TcXFixqFi=acSK1KyDHQ@mail.gmail.com
+Subject: [tpm2] Re: Commands to be run in Factory
+Date: Mon, 09 Dec 2019 15:48:09 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E5812E@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CALtZhhPo_huzVWJLqUEnm7vAKZbcDCnNO4Mcz-5fEsjjfvZ76Q@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6652152355667533135==
+--===============8744224588044817049==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -17,85 +17,124 @@ Content-Transfer-Encoding: quoted-printable
 
 > -----Original Message-----
 > From: Frederick Gotham [mailto:cauldwell.thomas(a)gmail.com]
-> Sent: Monday, December 9, 2019 7:03 AM
+> Sent: Monday, December 9, 2019 5:31 AM
 > To: tpm2 <tpm2(a)lists.01.org>
-> Subject: [tpm2] Verifying signature with "-d" instead of "-g -m"
+> Subject: [tpm2] Commands to be run in Factory
 > =
 
-> Up until now, I've been able to verify signatures with a one-liner as fol=
-lows:
+> I'm developing an embedded Linux device. In the factory, I need to load a=
+n RSA
+> keypair into the TPM2 chip and it has be stored persistently.
 > =
 
->     tpm2_verifysignature -g sha256 -f rsassa -c 0x81000000 -m ./rootfs.ta=
-r -s
-> ./signature_file
+> I've put together a script for doing this. Could you please glance over i=
+t and tell
+> me if I've missed anything?
 > =
 
-> This failed to work today though on a file that's over 300 MB. I need it =
-to work on
-> files up to about 500 MB.
+>     #!/bin/sh
 > =
 
-> So it looks like I'll have to create a hash file first, and then use the =
-"-d" option
-> when verifying, as follows:
+>     # Delete temporary files
+>     rm /tmp/primary.ctx /tmp/private.blob /tmp/public.blob
+> /tmp/key_to_persist.ctx > /dev/null 2>&1
 > =
 
->     # This first line creates a sum file in raw binary format
->     sha256sum rootfs.tar | cut -c -64 | sed 's/\([0-9A-F]\{2\}\)/\\\\\\x\=
-1/gI' | xargs
-> -n1 printf > digesthash.sum
+>     # You need to call this before doing anything with the TPM2 chip
+>     tpm2_startup --clear
 > =
 
->     tpm2_verifysignature -c 0x81000000 -d digesthash.sum -s signature_file
+>     # The next three lines flush out all the stuff in RAM (as well as =E2=
+=80=98sessions=E2=80=99 which I
+> don=E2=80=99t quite understand)
+
+Sessions are just state associated with a handle. That state is the policy =
+hash and any
+Encryption/decryption stuff. You can actually use sessions to build encrypt=
+ed tunnels to
+Your TPM. Sessions can be used to authorize access to TPM objects using var=
+ious tpm2_policyxxx
+commands.
+
+>     tpm2_flushcontext --transient-object
+>     tpm2_flushcontext --loaded-session
+>     tpm2_flushcontext --saved-session
+
+On a tpm boot up, transient and sessions shouldn't be present. If you have =
+other users of the TPM
+doing this could cause them issues. It's best to use a resource manager. If=
+ you can't spin up
+tpm2-abrmd, the Linux kernel has /dev/tpmrm0, which you can specify in the =
+TCTI options
+like so:
+
+tpm2_toolxxx -t device:/dev/tpmrm0
+
+or via env
+export TPM2TOOLS_TCTI=3Ddevice:/dev/tomrm0
+
+Then you don't need to worry about the tpm2_startup command or flushing non=
+-persistent
+Objects.
+
 > =
 
-> Here is the error I get when I try to do this:
+>     # The next line removes all persistent keys (just in case there=E2=80=
+=99s some already in
+> there)
+>     tpm2_getcap handles-persistent | cut -d ' ' -f 2 | xargs -I {} -n1 -r=
+ -t
+> tpm2_evictcontrol --hierarchy=3Do --object-context=3D{}
+
+If you have python you can make a HEREDOC python script and use something l=
+ike
+YAML to output this. It would be a little less brittle.
+
 > =
 
->     ERROR: Esys_VerifySignature(0x2D2) - tpm:parameter(2):unsupported or
-> incompatible scheme
+>     # Prepare the chip to receive a new RSA key pair
+>     # (This produces a temporary file primary.ctx which can be discarded =
+later)
+>     tpm2_createprimary --hierarchy=3Do --hash-algorithm=3Dsha256 --key-
+> algorithm=3Drsa --key-context=3D/tmp/primary.ctx > /dev/null 2>&1
+>     tpm2_flushcontext --transient-object
 > =
 
-> This is strange because it works fine when I verify with options "-m -g".=
- Also, I
-> have checked to make sure that the output from "tpm2_hash" is the same as=
- the
-> format I use above. I don't know why it's rejecting it saying it's unsupp=
-orted.
+>     # Load the RSA key pair into the chip (Yes it is necessary to load th=
+e private key
+> in even if you=E2=80=99re just doing signature verification)
+>     # (This produces another three temporary files (.blob, .ctx) that can=
+ be
+> discarded later)
+>     tpm2_import --input=3D/home/service/private.pem --parent-
+> context=3D/tmp/primary.ctx --key-algorithm=3Drsa --private=3D/tmp/private=
+.blob --
+> public=3D/tmp/public.blob > /dev/null 2>&1
+>     tpm2_load --parent-context=3D/tmp/primary.ctx --private=3D/tmp/privat=
+e.blob --
+> public=3D/tmp/public.blob --key-context=3D/tmp/key_to_persist.ctx
+> =
 
-Im not sure 100% offhand, whats going on. I'd have to try and reproduce... =
-but in the test code, =
+>     # Lastly, and quite counter-intuitively, you use =E2=80=9Cevictcontro=
+l=E2=80=9D to make the key
+> persistent at address 0x81000000
+>     tpm2_evictcontrol --hierarchy=3Do
+> --object-context=3D/tmp/key_to_persist.ctx 0x81000000
 
-we specify the ticket when doing the detached hashing. Internally to the to=
-ol, we don't even use
-a ticket which is silly. However, we never test an externally provided hash=
- and externally provided
-signature file.
+You should use -o persistent.tr rather than a raw handle to access the obje=
+ct. Using an
+Esys TR object verifies that the name of the object is as expected.
 
-I also see what I think is a bug in tpm2_verify. I am not sure why we're pa=
-ssing ctx.halg (the hashing alg)
-When loading the signature from disk. In the TSS format, it's just ignored,=
- but when it's an external
-Signature format, the signature shcheme is used in a switch to figure out h=
-ow to load the external
-Signature file and no hashing algorithm is a valid signature scheme so it s=
-hould throw an error. In
-your case, you're not even specifying the signature scheme used....
+> =
 
-IIRC. there are some checks where the requested signing scheme and the obje=
-cts signature scheme have to match =
-
-when the key's scheme is not TPM2_ALG_NULL. Also, additional checks requiri=
-ng a ticket to be present when the
-key is restricted.
-
-This smells like a bug in the tools, can you create a bug report in the tpm=
-2-tools issue tracker?
-
+>     # Do the clean-up again
+>     tpm2_flushcontext --transient-object
+>     tpm2_flushcontext --loaded-session
+>     tpm2_flushcontext --saved-session
 > _______________________________________________
 > tpm2 mailing list -- tpm2(a)lists.01.org
 > To unsubscribe send an email to tpm2-leave(a)lists.01.org
 > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============6652152355667533135==--
+
+--===============8744224588044817049==--
 
