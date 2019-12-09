@@ -1,73 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============8068823762792029975=="
+Content-Type: multipart/mixed; boundary="===============8973555485396607294=="
 MIME-Version: 1.0
 From: Frederick Gotham <cauldwell.thomas at gmail.com>
-Subject: [tpm2] Re: Generate keypair using OpenSSL, then load into TPM2
-Date: Fri, 06 Dec 2019 17:52:08 +0000
-Message-ID: <CALtZhhN+bZh7NicxBZ9yjo1CQS7m0bbj=wgh9ueVPafKVC1xWQ@mail.gmail.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E4CCEF@ORSMSX101.amr.corp.intel.com
+Subject: [tpm2] Commands to be run in Factory
+Date: Mon, 09 Dec 2019 11:30:31 +0000
+Message-ID: <CALtZhhPo_huzVWJLqUEnm7vAKZbcDCnNO4Mcz-5fEsjjfvZ76Q@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8068823762792029975==
+--===============8973555485396607294==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Friday, December 6, 2019, Roberts, William C:
+I'm developing an embedded Linux device. In the factory, I need to
+load an RSA keypair into the TPM2 chip and it has be stored
+persistently.
 
+I've put together a script for doing this. Could you please glance
+over it and tell me if I've missed anything?
 
-> Import essentially creates blobs that can be loaded into the tpm (key.pub
-> and key.priv)
-> These can be loaded via tpm2_load
->
-> tpm2_load -C primary.ctx -u key.pub -r key.priv -c key.ctx
->
+    #!/bin/sh
 
+    # Delete temporary files
+    rm /tmp/primary.ctx /tmp/private.blob /tmp/public.blob
+/tmp/key_to_persist.ctx > /dev/null 2>&1
 
-Thank you, I finally got it working. I can load the RSA keypair into the
-device in the factory, and from that point forward, I can use 0x81000000 to
-validate signatures.
+    # You need to call this before doing anything with the TPM2 chip
+    tpm2_startup --clear
 
-I came up with a trick to scramble the private key. I take the entire key
-which is 608 bytes in raw binary form, and then I iterate through each of
-the bytes trying to set each byte to zero. I try to feed the altered key
-into the TMP2 and see if I get an error (e.g. it might fail and say
-"private and public portions are not cryptographically bound"). I was able
-to zero out 64% of the RSA keypair and still load it into the TPM2 to use
-the public key to validate signatures. This way the private key never has
-to leave the office (i.e. it doesn't need to go on a disk that's used in
-the factory). Only the public key leaves the office.
+    # The next three lines flush out all the stuff in RAM (as well as
+=E2=80=98sessions=E2=80=99 which I don=E2=80=99t quite understand)
+    tpm2_flushcontext --transient-object
+    tpm2_flushcontext --loaded-session
+    tpm2_flushcontext --saved-session
 
---===============8068823762792029975==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+    # The next line removes all persistent keys (just in case there=E2=80=
+=99s
+some already in there)
+    tpm2_getcap handles-persistent | cut -d ' ' -f 2 | xargs -I {} -n1
+-r -t tpm2_evictcontrol --hierarchy=3Do --object-context=3D{}
 
-T24gRnJpZGF5LCBEZWNlbWJlciA2LCAyMDE5LCBSb2JlcnRzLCBXaWxsaWFtIEM6PGRpdj48YnI+
-PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjAgMCAwIC44ZXg7
-Ym9yZGVyLWxlZnQ6MXB4ICNjY2Mgc29saWQ7cGFkZGluZy1sZWZ0OjFleCI+Cjxicj4KSW1wb3J0
-IGVzc2VudGlhbGx5IGNyZWF0ZXMgYmxvYnMgdGhhdCBjYW4gYmUgbG9hZGVkIGludG8gdGhlIHRw
-bSAoa2V5LnB1YiBhbmQga2V5LnByaXYpPGJyPgpUaGVzZSBjYW4gYmUgbG9hZGVkIHZpYSB0cG0y
-X2xvYWQ8YnI+Cjxicj4KdHBtMl9sb2FkIC1DIHByaW1hcnkuY3R4IC11IGtleS5wdWIgLXIga2V5
-LnByaXYgLWMga2V5LmN0eDxicj4KPC9ibG9ja3F1b3RlPjxkaXY+PGJyPjwvZGl2PjxkaXY+PGJy
-PjwvZGl2PjxkaXY+VGhhbmsgeW91LCBJIGZpbmFsbHkgZ290IGl0IHdvcmtpbmcuIEkgY2FuIGxv
-YWQgdGhlIFJTQSBrZXlwYWlyIGludG8gdGhlIGRldmljZSBpbiB0aGUgZmFjdG9yeSwgYW5kIGZy
-b20gdGhhdCBwb2ludCBmb3J3YXJkLCBJIGNhbiB1c2UgMHg4MTAwMDAwMCB0byB2YWxpZGF0ZSBz
-aWduYXR1cmVzLjwvZGl2PjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+SSBjYW1lIHVwIHdpdGgg
-YSB0cmljayB0byBzY3JhbWJsZSB0aGUgcHJpdmF0ZSBrZXkuIEkgdGFrZSB0aGUgZW50aXJlIGtl
-eSB3aGljaCBpcyA2MDggYnl0ZXMgaW4gcmF3IGJpbmFyeSBmb3JtLCBhbmQgdGhlbiBJIGl0ZXJh
-dGUgdGhyb3VnaCBlYWNoIG9mIHRoZSBieXRlcyB0cnlpbmcgdG8gc2V0IGVhY2ggYnl0ZSB0byB6
-ZXJvLiBJIHRyeSB0byBmZWVkIHRoZSBhbHRlcmVkIGtleSBpbnRvIHRoZSBUTVAyIGFuZCBzZWUg
-aWYgSSBnZXQgYW4gZXJyb3IgKGUuZy4gaXQgbWlnaHQgZmFpbCBhbmQgc2F5ICZxdW90O3ByaXZh
-dGUgYW5kIHB1YmxpYyBwb3J0aW9ucyBhcmUgbm90IGNyeXB0b2dyYXBoaWNhbGx5IGJvdW5kJnF1
-b3Q7KS4gSSB3YXMgYWJsZSB0byB6ZXJvIG91dCA2NCUgb2YgdGhlIFJTQSBrZXlwYWlyIGFuZCBz
-dGlsbCBsb2FkIGl0IGludG8gdGhlIFRQTTIgdG8gdXNlIHRoZSBwdWJsaWMga2V5IHRvIHZhbGlk
-YXRlIHNpZ25hdHVyZXMuIFRoaXMgd2F5IHRoZSBwcml2YXRlIGtleSBuZXZlciBoYXMgdG8gbGVh
-dmUgdGhlIG9mZmljZSAoaS5lLiBpdCBkb2VzbiYjMzk7dCBuZWVkIHRvIGdvIG9uIGEgZGlzayB0
-aGF0JiMzOTtzIHVzZWQgaW4gdGhlIGZhY3RvcnkpLiBPbmx5IHRoZSBwdWJsaWMga2V5IGxlYXZl
-cyB0aGUgb2ZmaWNlLjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PGJy
-PjwvZGl2Pgo=
+    # Prepare the chip to receive a new RSA key pair
+    # (This produces a temporary file primary.ctx which can be discarded la=
+ter)
+    tpm2_createprimary --hierarchy=3Do --hash-algorithm=3Dsha256
+--key-algorithm=3Drsa --key-context=3D/tmp/primary.ctx > /dev/null 2>&1
+    tpm2_flushcontext --transient-object
 
---===============8068823762792029975==--
+    # Load the RSA key pair into the chip (Yes it is necessary to load
+the private key in even if you=E2=80=99re just doing signature verification)
+    # (This produces another three temporary files (.blob, .ctx) that
+can be discarded later)
+    tpm2_import --input=3D/home/service/private.pem
+--parent-context=3D/tmp/primary.ctx --key-algorithm=3Drsa
+--private=3D/tmp/private.blob --public=3D/tmp/public.blob > /dev/null 2>&1
+    tpm2_load --parent-context=3D/tmp/primary.ctx
+--private=3D/tmp/private.blob --public=3D/tmp/public.blob
+--key-context=3D/tmp/key_to_persist.ctx
+
+    # Lastly, and quite counter-intuitively, you use =E2=80=9Cevictcontrol=
+=E2=80=9D to
+make the key persistent at address 0x81000000
+    tpm2_evictcontrol --hierarchy=3Do
+--object-context=3D/tmp/key_to_persist.ctx 0x81000000
+
+    # Do the clean-up again
+    tpm2_flushcontext --transient-object
+    tpm2_flushcontext --loaded-session
+    tpm2_flushcontext --saved-session
+--===============8973555485396607294==--
 
