@@ -1,132 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============2691890310578840547=="
+Content-Type: multipart/mixed; boundary="===============0074134931055467691=="
 MIME-Version: 1.0
-From: Zhao, Shirley <shirley.zhao at intel.com>
-Subject: [tpm2] Re: Question about marshal/un-marshal TPM2.0 packet
-Date: Tue, 10 Dec 2019 07:58:41 +0000
-Message-ID: <A888B25CD99C1141B7C254171A953E8E4909F284@shsmsx102.ccr.corp.intel.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E4CD13@ORSMSX101.amr.corp.intel.com
+From: Frederick Gotham <cauldwell.thomas at gmail.com>
+Subject: [tpm2] Re: Generate keypair using OpenSSL, then load into TPM2
+Date: Tue, 10 Dec 2019 08:16:23 +0000
+Message-ID: <CALtZhhMA1EnSpFX11L7i++L05DddbaOnbCPXh=NUFmhe4e-qrw@mail.gmail.com>
+In-Reply-To: CAOCvsS=1Y-F4dBSHN4+Q=GxzHoC=0OCVSSPhZGEBg3-qgQyTVQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2691890310578840547==
+--===============0074134931055467691==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Get it. =
+On 12/9/19, Steven Clark <davolfman(a)gmail.com> wrote:
 
-Thanks so much, Roberts.
+> Have you tried loading the keypair with permissions that let you sign and
+> try to sign a digest with it?  Maybe you've just zero'd out a copy of the
+> public key and a self signature or something?  Even a DER of an openSSL
+> private key is much larger than it needs to be.
+>
+> Here's a rough layout of a 2048RSA private key I'm looking at with -text.
+> Modulus ~256 bytes
+> public exponent <=3D4 bytes
+> Private exponent ~256 bytes
+> Prime 1 ~128 bytes
+> Prime 2 ~128 bytes
+> Exponent 1 ~128 bytes
+> Exponent 2 ~128 bytes
+> Coefficient ~128 bytes
+> If that helps you might be able to guess which parts of the key you're
+> zeroing.
 
-- Shirley =
+Here's the before and after of a private key I zero'ed out. The
+uppercase letter 'A' corresponds to six bits all set to zero.
+
+Before:
+
+-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQCujoM27e3vbybfgGBRXpB9N6HBG1/VNlg2COJbjysYHcG6elBe
+bNldx7NscmwZFqY6hb577a0OWjpWXXJqfEpAropDKke3bqP/jFQGkMoiGfBs0P+p
+e5oOvTMD7mgtQ7PXbZIdx30VMH9oZEveP8Fe1N3ES4RK1VxX/URpt3pOnwIDAQAB
+AoGAAUdJ7r0PYRGPV1O5YN8wb7pYlPF+YjFjtAGcps8FoceWA6ehrw9dCDLOPZ0Y
+7ZYc4ZDZNE8pVVGT284TaHRAlvWV1Qm0m/bP4oirymlnwY43m2ai70TLjw8q+xli
+0OhxfVmKAy2c/winwpZKxK0w2kMMGJTrX1/lqMdNwf7QrwECQQDh64jWzLwz1dsk
+dxJxq3KBJYl98+qycjkOAcBEhpU3vljLYsCIdO6ScADLGUBAGXz+TDjIg1VV2/rb
+cM4AcDrzAkEAxcxDGyKfzhX1LQX54jr5NgoGZQAP/x0+5ZIwRJfWTvJnr1M/lEWs
+IvhXkhMq0gpOsQtXxSlV4zd4WhLqV75wpQJAKjRJDO+UXQ6fcLF51ZhUvMGZbNkr
+SAjEldRH6cVGjPJXPi+Fjjhh9SNNUqO1+AOK8SqmFPdL8s00kNgC89wDdwJACD1M
+BlNY6NLNVcTL9fqS6wdb4NUx1WS4fAOs8w6IJN3AJ/OF0H1egE5sB2+49urrAEEC
+tPnV1BM5djcXf/Q06QJBAMGkX/PF7jf4xgNKTH0Ps28oxAPA0nBt1/NGXZonsgPs
+3Lk67iZYvjwj9H9nXnelFqwqRxJLS2r1AmYkxMv/0ns=3D
+-----END RSA PRIVATE KEY-----
+
+After:
+
+-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQCujoM27e3vbybfgGBRXpB9N6HBG1/VNlg2COJbjysYHcG6elBe
+bNldx7NscmwZFqY6hb577a0OWjpWXXJqfEpAropDKke3bqP/jFQGkMoiGfBs0P+p
+e5oOvTMD7mgtQ7PXbZIdx30VMH9oZEveP8Fe1N3ES4RK1VxX/URpt3pOnwIDAQAB
+AoGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQQDh64jWzLwz1dsk
+dxJxq3KBJYl98+qycjkOAcBEhpU3vljLYsCIdO6ScADLGUBAGXz+TDjIg1VV2/rb
+cM4AcDrzAkEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAJBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=3D
+-----END RSA PRIVATE KEY-----
 
 
------Original Message-----
-From: Roberts, William C <william.c.roberts(a)intel.com> =
-
-Sent: Friday, December 6, 2019 10:34 PM
-To: Zhao, Shirley <shirley.zhao(a)intel.com>; tpm2(a)lists.01.org
-Subject: RE: Question about marshal/un-marshal TPM2.0 packet
-
-
-
-> -----Original Message-----
-> From: Zhao, Shirley [mailto:shirley.zhao(a)intel.com]
-> Sent: Thursday, December 5, 2019 8:11 PM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] Question about marshal/un-marshal TPM2.0 packet
-> =
-
-> Hi, all,
-> =
-
-> =
-
-> =
-
-> I want to know how TPM2.0 marshal the command packet, especially some =
-
-> parameter is optional.
-> =
-
-> There is only  marshal/un-marshal API defined in tpm2- =
-
-> tss/include/tss2.0/tss2_mu.h, like:
-> =
-
-> =
-
-> =
-
-> TSS2_RC
-> =
-
-> Tss2_MU_TPMA_ALGORITHM_Marshal(
-> =
-
->     TPMA_ALGORITHM  src,
-> =
-
->     uint8_t         buffer[],
-> =
-
->     size_t          buffer_size,
-> =
-
->     size_t          *offset);
-> =
-
-> =
-
-> =
-
-> TSS2_RC
-> =
-
-> Tss2_MU_TPMA_ALGORITHM_Unmarshal(
-> =
-
->     uint8_t const   buffer[],
-> =
-
->     size_t          buffer_size,
-> =
-
->     size_t         *offset,
-> =
-
->     TPMA_ALGORITHM *dest);
-> =
-
-> =
-
-> =
-
-> But I can't find function body, how to get the detailed function body?
-
-They are all generated from macro's so you need to expand them.
-I just hack up a build command with gcc -E option to expand them.
-
-For example Tss2_MU_8_Marshal is generated here:
-https://github.com/tpm2-software/tpm2-tss/blob/master/src/tss2-mu/base-type=
-s.c#L159
-
-> =
-
-> =
-
-> =
-
-> Thanks.
-> =
-
-> =
-
-> =
-
-> *	Shirley
-> =
-
->=20
-
---===============2691890310578840547==--
+If I feed this zero'ed out key into OpenSSL, I can get back the public
+key intact. Also I can import this private key into the TPM2 chip and
+use it to verify a signature.
+--===============0074134931055467691==--
 
