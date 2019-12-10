@@ -1,79 +1,117 @@
-Content-Type: multipart/mixed; boundary="===============0074134931055467691=="
+Content-Type: multipart/mixed; boundary="===============7841800493857242839=="
 MIME-Version: 1.0
-From: Frederick Gotham <cauldwell.thomas at gmail.com>
-Subject: [tpm2] Re: Generate keypair using OpenSSL, then load into TPM2
-Date: Tue, 10 Dec 2019 08:16:23 +0000
-Message-ID: <CALtZhhMA1EnSpFX11L7i++L05DddbaOnbCPXh=NUFmhe4e-qrw@mail.gmail.com>
-In-Reply-To: CAOCvsS=1Y-F4dBSHN4+Q=GxzHoC=0OCVSSPhZGEBg3-qgQyTVQ@mail.gmail.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: tpm2-pkcs11 update
+Date: Tue, 10 Dec 2019 14:21:17 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E58587@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 76308CFE-208A-4B0F-9011-192F1DDC7DE2@infradead.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0074134931055467691==
+--===============7841800493857242839==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 12/9/19, Steven Clark <davolfman(a)gmail.com> wrote:
-
-> Have you tried loading the keypair with permissions that let you sign and
-> try to sign a digest with it?  Maybe you've just zero'd out a copy of the
-> public key and a self signature or something?  Even a DER of an openSSL
-> private key is much larger than it needs to be.
->
-> Here's a rough layout of a 2048RSA private key I'm looking at with -text.
-> Modulus ~256 bytes
-> public exponent <=3D4 bytes
-> Private exponent ~256 bytes
-> Prime 1 ~128 bytes
-> Prime 2 ~128 bytes
-> Exponent 1 ~128 bytes
-> Exponent 2 ~128 bytes
-> Coefficient ~128 bytes
-> If that helps you might be able to guess which parts of the key you're
-> zeroing.
-
-Here's the before and after of a private key I zero'ed out. The
-uppercase letter 'A' corresponds to six bits all set to zero.
-
-Before:
-
------BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQCujoM27e3vbybfgGBRXpB9N6HBG1/VNlg2COJbjysYHcG6elBe
-bNldx7NscmwZFqY6hb577a0OWjpWXXJqfEpAropDKke3bqP/jFQGkMoiGfBs0P+p
-e5oOvTMD7mgtQ7PXbZIdx30VMH9oZEveP8Fe1N3ES4RK1VxX/URpt3pOnwIDAQAB
-AoGAAUdJ7r0PYRGPV1O5YN8wb7pYlPF+YjFjtAGcps8FoceWA6ehrw9dCDLOPZ0Y
-7ZYc4ZDZNE8pVVGT284TaHRAlvWV1Qm0m/bP4oirymlnwY43m2ai70TLjw8q+xli
-0OhxfVmKAy2c/winwpZKxK0w2kMMGJTrX1/lqMdNwf7QrwECQQDh64jWzLwz1dsk
-dxJxq3KBJYl98+qycjkOAcBEhpU3vljLYsCIdO6ScADLGUBAGXz+TDjIg1VV2/rb
-cM4AcDrzAkEAxcxDGyKfzhX1LQX54jr5NgoGZQAP/x0+5ZIwRJfWTvJnr1M/lEWs
-IvhXkhMq0gpOsQtXxSlV4zd4WhLqV75wpQJAKjRJDO+UXQ6fcLF51ZhUvMGZbNkr
-SAjEldRH6cVGjPJXPi+Fjjhh9SNNUqO1+AOK8SqmFPdL8s00kNgC89wDdwJACD1M
-BlNY6NLNVcTL9fqS6wdb4NUx1WS4fAOs8w6IJN3AJ/OF0H1egE5sB2+49urrAEEC
-tPnV1BM5djcXf/Q06QJBAMGkX/PF7jf4xgNKTH0Ps28oxAPA0nBt1/NGXZonsgPs
-3Lk67iZYvjwj9H9nXnelFqwqRxJLS2r1AmYkxMv/0ns=3D
------END RSA PRIVATE KEY-----
-
-After:
-
------BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQCujoM27e3vbybfgGBRXpB9N6HBG1/VNlg2COJbjysYHcG6elBe
-bNldx7NscmwZFqY6hb577a0OWjpWXXJqfEpAropDKke3bqP/jFQGkMoiGfBs0P+p
-e5oOvTMD7mgtQ7PXbZIdx30VMH9oZEveP8Fe1N3ES4RK1VxX/URpt3pOnwIDAQAB
-AoGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQQDh64jWzLwz1dsk
-dxJxq3KBJYl98+qycjkOAcBEhpU3vljLYsCIdO6ScADLGUBAGXz+TDjIg1VV2/rb
-cM4AcDrzAkEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAJBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=3D
------END RSA PRIVATE KEY-----
 
 
-If I feed this zero'ed out key into OpenSSL, I can get back the public
-key intact. Also I can import this private key into the TPM2 chip and
-use it to verify a signature.
---===============0074134931055467691==--
+> -----Original Message-----
+> From: David Woodhouse [mailto:dwmw2(a)infradead.org]
+> Sent: Monday, December 9, 2019 4:07 PM
+> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2 <tpm2(a)list=
+s.01.org>
+> Subject: RE: [tpm2] tpm2-pkcs11 update
+> =
+
+> =
+
+> =
+
+> On 9 December 2019 22:01:36 GMT, "Roberts, William C"
+> <william.c.roberts(a)intel.com> wrote:
+> >
+> >
+> >> -----Original Message-----
+> >> From: David Woodhouse [mailto:dwmw2(a)infradead.org]
+> >> Sent: Monday, December 9, 2019 2:42 PM
+> >> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2
+> ><tpm2(a)lists.01.org>
+> >> Subject: RE: [tpm2] tpm2-pkcs11 update
+> >>
+> >>
+> >>
+> >> On 9 December 2019 19:34:41 GMT, "Roberts, William C"
+> >> <william.c.roberts(a)intel.com> wrote:
+> >> >> -----Original Message-----
+> >> >> From: David Woodhouse [mailto:dwmw2(a)infradead.org]
+> >> >> Sent: Monday, December 9, 2019 10:12 AM
+> >> >> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2
+> >> ><tpm2(a)lists.01.org>
+> >> >> Subject: Re: [tpm2] tpm2-pkcs11 update
+> >> >>
+> >> >> On Mon, 2019-12-09 at 15:56 +0000, Roberts, William C wrote:
+> >> >> > All,
+> >> >> >
+> >> >> > I just wanted to update everyone on the status of tpm2-pkcs11
+> >> >> > project. I just did a major push to refactor some of the
+> >internals
+> >> >to
+> >> >> > make DB schema changes less likely and make the internal
+> >> >> > handling of attributes far less clunky.
+> >This
+> >> >> > week I am going to focus on documentation, testing and bugs and
+> >am
+> >> >> > planning the release candidate for next week.
+> >> >>
+> >> >> Can it import/export the keys in a form that is interchangeable
+> >with
+> >> >> the ENGINE now? That would be really useful.
+> >> >
+> >> >Not yet, but it should be possible.
+> >>
+> >> As long as your parent key generation is compatible with the standard
+> >used by
+> >> the engines, yes. If not, it can't work.
+> >
+> >That's why I said it's possible. Our parent key is completely
+> >configurable at token Initialization time and can be an existing
+> >persistent key as defined in the PC Client Guide which is what the
+> >engine is hardcoded to.
+> =
+
+> The engine generates a transient EC key as its parent by default.
+> =
+
+> But yes, if the token generates a persistent key it can export a PEM key =
+for the
+> engine which identifies that same persistent key as its parent.
+> =
+
+> So it's just a matter of making sure the token can use other parent keys =
+than the
+> one it made for itself, including the auto-generated transient ones?
+
+So does the engine have support for both types of parents (transient and pe=
+rsistent)?
+Looking at init_tpm_parent() makes me initially think yes.
+
+We can always design it to do that, but the issue here is that the TPM2 own=
+er !=3D TPM2 user.
+Requiring the owner auth every time can be problematic. Also, storing the o=
+wner auth in
+Plaintext in the PEM files is problematic. So now a file system level permi=
+ssion attack
+turns into someone trashing my owner NV space.
+
+
+I think I would rather dup the object when it has a transient parent primar=
+y, but flag
+TPM2_FIXEDPARENT is enabled. We could disable that be default.
+
+> =
+
+> --
+> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+
+--===============7841800493857242839==--
 
