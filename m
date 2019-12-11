@@ -1,99 +1,355 @@
-Content-Type: multipart/mixed; boundary="===============8251592472982284899=="
+Content-Type: multipart/mixed; boundary="===============4017651411158917920=="
 MIME-Version: 1.0
 From: Niklas Andersson <niklas.andersson at fredenheim.se>
-Subject: [tpm2] tpm2_create signature verification fails due to
+Subject: [tpm2] Re: tpm2_create signature verification fails due to
  "RSA_padding_check_PKCS_type1:invalid padding"
-Date: Tue, 10 Dec 2019 23:40:47 +0100
-Message-ID: <CAJ8N_u9cc-Jigg6YtM8KM0SbuzO3kC-SzhGDs8Ro3aFV4V5fDA@mail.gmail.com>
+Date: Wed, 11 Dec 2019 11:58:21 +0100
+Message-ID: <CAJ8N_u-QS=yHyDfGfWn5Mp6eMd=-j_xuUrXvsQp=3M6vj2=+sw@mail.gmail.com>
+In-Reply-To: CAJ8N_u9cc-Jigg6YtM8KM0SbuzO3kC-SzhGDs8Ro3aFV4V5fDA@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8251592472982284899==
+--===============4017651411158917920==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-openssl can not verify plain signature (256 bytes) from tpm2_certify due to
-bad padding.
+Here is the test case that explains the issue. Not sure if I am missing
+something. I believe the certify.SIGNATURE is corrupt.
 
-*This should work (verification of signature from tpm2_certifycreation
-works fine):*
+#!/bin/bash
 
-openssl dgst -verify ../AIKOpaque.der -keyform der -sha1 -signature
-Signature KeyAttest.bin
-Verification Failure
+srk_handle=3D0x81000003
+ek_handle=3D0x81010001
 
-*....examine:*
+# IDevID
+tpm2_createak \
+--ek-context=3D$ek_handle \
+--ak-context=3DIDevID.ctx \
+--key-algorithm=3Drsa \
+--hash-algorithm=3Dsha1 \
+--public=3DIDevID.pub \
+--private=3DIDevID.priv
+# --signing-algorithm=3Dsha1
 
-openssl rsautl -verify -inkey ../AIKOpaque.der -in Signature -pubin
--keyform der -pkcs > decrypted.bin
-RSA operation error
-140654247387584:error:0407008A:rsa
-routines:R*SA_padding_check_PKCS1_type_1:invalid
-padding:../crypto/rsa/rsa_pk1.c:67:*
-140654247387584:error:04067072:rsa routines:rsa_ossl_public_decrypt:padding
-check failed:../crypto/rsa/rsa_ossl.c:582:
+# LDevID
+tpm2_create \
+--parent-context=3D$srk_handle \
+--hash-algorithm=3Dsha1 \
+--key-algorithm=3Drsa2048 \
+--public=3DLDevID.pub \
+--private=3DLDevID.priv \
+--creation-data=3DLDevID.CREATION_DATA \
+--creation-hash=3DLDevID.CREATION_HASH \
+--creation-ticket=3DLDevID.CREATION_TICKET
 
+tpm2_load \
+--parent-context=3D$srk_handle \
+--public=3DLDevID.pub \
+--private=3DLDevID.priv \
+--key-context=3DLDevID.ctx
 
-*..Same operation on a plain signature from tpm2_certifycreation works:*
+# Certify
+tpm2_certify \
+--certifiedkey-context=3DLDevID.ctx \
+--signingkey-context=3DIDevID.ctx \
+--hash-algorithm=3Dsha1 \
+--attestation=3Dcertify.ATTESTATION \
+--signature=3Dcertify.SIGNATURE \
+--format=3Dplain
 
-openssl rsautl -verify -inkey ../AIKOpaque.der -in
-../IdBinding.EXTRACTED_TPMT_SIGNATURE -pubin -keyform der  > decrypted.bin
+# Certify Creation
+tpm2_certifycreation \
+--certifiedkey-context=3DLDevID.ctx \
+--signingkey-context=3DIDevID.ctx \
+--hash-algorithm=3Dsha1 \
+--creation-hash=3DLDevID.CREATION_HASH \
+--ticket=3DLDevID.CREATION_TICKET \
+--signature=3Dcertifycreation.SIGNATURE \
+--attestation=3Dcertifycreation.ATTESTATION \
+--format=3Dplain
 
-dumpasn1 decrypted.bin
-  0  33: SEQUENCE {
-  2   9:   SEQUENCE {
-  4   5:     OBJECT IDENTIFIER sha1 (1 3 14 3 2 26)
- 11   0:     NULL
-       :     }
- 13  20:   OCTET STRING 2D A1 D1 30 3A D2 FD 68 A1 5A 2F 9B 8B C1 1E DB 36
-A7 7C D4
-       :   }
+# IDevID.der
+echo 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA' | openssl base64 -a -d >
+IDevID.header.temp
+dd if=3DIDevID.pub bs=3D1 skip=3D$(expr $(stat --format=3D%s IDevID.pub) - =
+256)
+of=3DIDevID.modulus.temp
+echo -en '\x02\x03' > IDevID.mid-header.temp
+echo -ne '\x01\x00\x01' > IDevID.exponent.temp
+cat IDevID.header.temp IDevID.modulus.temp IDevID.mid-header.temp
+IDevID.exponent.temp > IDevID.der
 
-So. It looks like a bug in tpm2_certify.
-tool=3D"tpm2_certify" version=3D"4.1" tctis=3D"libtss2-tctildr"
-tcti-default=3Dtcti-device
-tpm2-tss 2.3.2-rc0
+# Remove first two bytes (byte size of struct) in
+certifycreation.ATTESTATION
+# in order for hash to comply. Magic Header" must be ff 54 43 47
+dd if=3Dcertifycreation.ATTESTATION of=3Dcertifycreation.ATTESTATION_2 bs=
+=3D1
+skip=3D2
 
-Regards,
-Niklas
+# WORKS: Verify Certify Creation
+openssl dgst \
+-verify IDevID.der -keyform der \
+-sha1 -signature certifycreation.SIGNATURE certifycreation.ATTESTATION_2
 
---===============8251592472982284899==
+# FAILS: Verify Create
+openssl dgst \
+-verify IDevID.der -keyform der \
+-sha1 -signature certify.SIGNATURE certify.ATTESTATION
+
+# WORKS:
+openssl rsautl \
+-verify \
+-pubin -inkey IDevID.der -keyform DER \
+-in certifycreation.SIGNATURE \
+-out certifycreation.SIGNATURE.asn1
+
+dumpasn1 certifycreation.SIGNATURE.asn1
+
+# FAILS:
+openssl rsautl \
+-verify \
+-pubin -inkey IDevID.der -keyform DER \
+-in certify.SIGNATURE \
+-out certify.SIGNATURE.asn1
+
+Den tis 10 dec. 2019 kl 23:40 skrev Niklas Andersson <
+niklas.andersson(a)fredenheim.se>:
+
+> openssl can not verify plain signature (256 bytes) from tpm2_certify due
+> to bad padding.
+>
+> *This should work (verification of signature from tpm2_certifycreation
+> works fine):*
+>
+> openssl dgst -verify ../AIKOpaque.der -keyform der -sha1 -signature
+> Signature KeyAttest.bin
+> Verification Failure
+>
+> *....examine:*
+>
+> openssl rsautl -verify -inkey ../AIKOpaque.der -in Signature -pubin
+> -keyform der -pkcs > decrypted.bin
+> RSA operation error
+> 140654247387584:error:0407008A:rsa routines:R*SA_padding_check_PKCS1_type=
+_1:invalid
+> padding:../crypto/rsa/rsa_pk1.c:67:*
+> 140654247387584:error:04067072:rsa
+> routines:rsa_ossl_public_decrypt:padding check
+> failed:../crypto/rsa/rsa_ossl.c:582:
+>
+>
+> *..Same operation on a plain signature from tpm2_certifycreation works:*
+>
+> openssl rsautl -verify -inkey ../AIKOpaque.der -in
+> ../IdBinding.EXTRACTED_TPMT_SIGNATURE -pubin -keyform der  > decrypted.bin
+>
+> dumpasn1 decrypted.bin
+>   0  33: SEQUENCE {
+>   2   9:   SEQUENCE {
+>   4   5:     OBJECT IDENTIFIER sha1 (1 3 14 3 2 26)
+>  11   0:     NULL
+>        :     }
+>  13  20:   OCTET STRING 2D A1 D1 30 3A D2 FD 68 A1 5A 2F 9B 8B C1 1E DB 36
+> A7 7C D4
+>        :   }
+>
+> So. It looks like a bug in tpm2_certify.
+> tool=3D"tpm2_certify" version=3D"4.1" tctis=3D"libtss2-tctildr"
+> tcti-default=3Dtcti-device
+> tpm2-tss 2.3.2-rc0
+>
+> Regards,
+> Niklas
+>
+>
+
+--===============4017651411158917920==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.html"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdj5vcGVuc3NsIGNhbiBub3QgdmVyaWZ5IHBsYWluIHNpZ25hdHVy
-ZSAoMjU2IGJ5dGVzKSBmcm9tIHRwbTJfY2VydGlmeSBkdWUgdG8gYmFkIHBhZGRpbmcuPC9kaXY+
-PGRpdj48YnI+PC9kaXY+PGRpdj48aT5UaGlzIHNob3VsZCB3b3JrICh2ZXJpZmljYXRpb24gb2Yg
-c2lnbmF0dXJlIGZyb20gdHBtMl9jZXJ0aWZ5Y3JlYXRpb24gd29ya3MgZmluZSk6PC9pPjwvZGl2
-PjxkaXY+PGJyPjwvZGl2PjxkaXY+b3BlbnNzbCBkZ3N0IC12ZXJpZnkgLi4vQUlLT3BhcXVlLmRl
-ciAta2V5Zm9ybSBkZXIgLXNoYTEgLXNpZ25hdHVyZSBTaWduYXR1cmUgS2V5QXR0ZXN0LmJpbiA8
-YnI+VmVyaWZpY2F0aW9uIEZhaWx1cmU8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxpPi4uLi5l
-eGFtaW5lOjwvaT48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pm9wZW5zc2wgcnNhdXRsIC12ZXJp
-ZnkgLWlua2V5IC4uL0FJS09wYXF1ZS5kZXIgLWluIFNpZ25hdHVyZSAtcHViaW4gLWtleWZvcm0g
-ZGVyIC1wa2NzICZndDsgZGVjcnlwdGVkLmJpbjxicj5SU0Egb3BlcmF0aW9uIGVycm9yPGJyPjE0
-MDY1NDI0NzM4NzU4NDplcnJvcjowNDA3MDA4QTpyc2Egcm91dGluZXM6UjxiPlNBX3BhZGRpbmdf
-Y2hlY2tfUEtDUzFfdHlwZV8xOmludmFsaWQgcGFkZGluZzouLi9jcnlwdG8vcnNhL3JzYV9wazEu
-Yzo2Nzo8L2I+PGJyPjE0MDY1NDI0NzM4NzU4NDplcnJvcjowNDA2NzA3Mjpyc2Egcm91dGluZXM6
-cnNhX29zc2xfcHVibGljX2RlY3J5cHQ6cGFkZGluZyBjaGVjayBmYWlsZWQ6Li4vY3J5cHRvL3Jz
-YS9yc2Ffb3NzbC5jOjU4Mjo8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxpPi4uU2FtZSBvcGVy
-YXRpb24gb24gYSBwbGFpbiBzaWduYXR1cmUgZnJvbSB0cG0yX2NlcnRpZnljcmVhdGlvbiB3b3Jr
-czo8YnI+PC9pPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+b3BlbnNzbCByc2F1dGwgLXZlcmlm
-eSAtaW5rZXkgLi4vQUlLT3BhcXVlLmRlciAtaW4gLi4vSWRCaW5kaW5nLkVYVFJBQ1RFRF9UUE1U
-X1NJR05BVFVSRSAtcHViaW4gLWtleWZvcm0gZGVyIMKgJmd0OyBkZWNyeXB0ZWQuYmluPC9kaXY+
-PGRpdj48YnI+PC9kaXY+PGRpdj5kdW1wYXNuMSBkZWNyeXB0ZWQuYmluIDxicj7CoCAwIMKgMzM6
-IFNFUVVFTkNFIHs8YnI+wqAgMiDCoCA5OiDCoCBTRVFVRU5DRSB7PGJyPsKgIDQgwqAgNTogwqAg
-wqAgT0JKRUNUIElERU5USUZJRVIgc2hhMSAoMSAzIDE0IDMgMiAyNik8YnI+wqAxMSDCoCAwOiDC
-oCDCoCBOVUxMPGJyPsKgIMKgIMKgIMKgOiDCoCDCoCB9PGJyPsKgMTMgwqAyMDogwqAgT0NURVQg
-U1RSSU5HIDJEIEExIEQxIDMwIDNBIEQyIEZEIDY4IEExIDVBIDJGIDlCIDhCIEMxIDFFIERCIDM2
-IEE3IDdDIEQ0PGJyPsKgIMKgIMKgIMKgOiDCoCB9PGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2Pjxk
-aXY+U28uIEl0IGxvb2tzIGxpa2UgYSBidWcgaW4gdHBtMl9jZXJ0aWZ5LiA8YnI+PC9kaXY+PGRp
-dj50b29sPSZxdW90O3RwbTJfY2VydGlmeSZxdW90OyB2ZXJzaW9uPSZxdW90OzQuMSZxdW90OyB0
-Y3Rpcz0mcXVvdDtsaWJ0c3MyLXRjdGlsZHImcXVvdDsgdGN0aS1kZWZhdWx0PXRjdGktZGV2aWNl
-PC9kaXY+PGRpdj50cG0yLXRzcyAyLjMuMi1yYzA8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlJl
-Z2FyZHMsPC9kaXY+PGRpdj5OaWtsYXM8YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PC9kaXY+Cg==
+PGRpdiBkaXI9Imx0ciI+PGRpdj5IZXJlIGlzIHRoZSB0ZXN0IGNhc2UgdGhhdCBleHBsYWlucyB0
+aGUgaXNzdWUuIE5vdCBzdXJlIGlmIEkgYW0gbWlzc2luZyBzb21ldGhpbmcuIEkgYmVsaWV2ZSB0
+aGUgY2VydGlmeS5TSUdOQVRVUkUgaXMgY29ycnVwdC48YnI+PC9kaXY+PGJyPjxkaXYgc3R5bGU9
+ImNvbG9yOnJnYigyMTIsMjEyLDIxMik7YmFja2dyb3VuZC1jb2xvcjpyZ2IoMzAsMzAsMzApO2Zv
+bnQtZmFtaWx5OiZxdW90O0Ryb2lkIFNhbnMgTW9ubyZxdW90OywmcXVvdDttb25vc3BhY2UmcXVv
+dDssbW9ub3NwYWNlLCZxdW90O0Ryb2lkIFNhbnMgRmFsbGJhY2smcXVvdDs7Zm9udC13ZWlnaHQ6
+bm9ybWFsO2ZvbnQtc2l6ZToxNHB4O2xpbmUtaGVpZ2h0OjE5cHg7d2hpdGUtc3BhY2U6cHJlIj48
+ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMTA2LDE1Myw4NSkiPiMhL2Jpbi9iYXNoPC9zcGFu
+PjwvZGl2Pjxicj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj5zcmtf
+aGFuZGxlPTB4ODEwMDAwMDM8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdi
+KDIxMiwyMTIsMjEyKSI+ZWtfaGFuZGxlPTB4ODEwMTAwMDE8L3NwYW4+PC9kaXY+PGJyPjxkaXY+
+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigxMDYsMTUzLDg1KSI+IyBJRGV2SUQ8L3NwYW4+PC9kaXY+
+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+dHBtMl9jcmVhdGVhayBc
+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAg
+LS1lay1jb250ZXh0PTwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDE1NiwyMjAsMjU0KSI+
+JGVrX2hhbmRsZTwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+IFw8
+L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+ICAt
+LWFrLWNvbnRleHQ9SURldklELmN0eCBcPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNv
+bG9yOnJnYigyMTIsMjEyLDIxMikiPiAgLS1rZXktYWxnb3JpdGhtPXJzYSBcPC9zcGFuPjwvZGl2
+PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAgLS1oYXNoLWFsZ29y
+aXRobT1zaGExIFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwy
+MTIsMjEyKSI+ICAtLXB1YmxpYz1JRGV2SUQucHViIFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBz
+dHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+ICAtLXByaXZhdGU9SURldklELnByaXY8L3Nw
+YW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDEwNiwxNTMsODUpIj4jIC0tc2ln
+bmluZy1hbGdvcml0aG09c2hhMTwvc3Bhbj48L2Rpdj48YnI+PGRpdj48c3BhbiBzdHlsZT0iY29s
+b3I6cmdiKDEwNiwxNTMsODUpIj4jIExEZXZJRDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxl
+PSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj50cG0yX2NyZWF0ZSBcPC9zcGFuPjwvZGl2PjxkaXY+
+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAgLS1wYXJlbnQtY29udGV4dD08
+L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigxNTYsMjIwLDI1NCkiPiRzcmtfaGFuZGxlPC9z
+cGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gXDwvc3Bhbj48L2Rpdj48
+ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC0taGFzaC1hbGdvcml0
+aG09c2hhMSBcPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEy
+LDIxMikiPiAgLS1rZXktYWxnb3JpdGhtPXJzYTIwNDggXDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFu
+IHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC0tcHVibGljPUxEZXZJRC5wdWIgXDwv
+c3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC0t
+cHJpdmF0ZT1MRGV2SUQucHJpdiBcPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9y
+OnJnYigyMTIsMjEyLDIxMikiPiAgLS1jcmVhdGlvbi1kYXRhPUxEZXZJRC5DUkVBVElPTl9EQVRB
+IFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+
+ICAtLWNyZWF0aW9uLWhhc2g9TERldklELkNSRUFUSU9OX0hBU0ggXDwvc3Bhbj48L2Rpdj48ZGl2
+PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC0tY3JlYXRpb24tdGlja2V0
+PUxEZXZJRC5DUkVBVElPTl9USUNLRVQ8L3NwYW4+PC9kaXY+PGJyPjxkaXY+PHNwYW4gc3R5bGU9
+ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPnRwbTJfbG9hZCBcPC9zcGFuPjwvZGl2PjxkaXY+PHNw
+YW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAgLS1wYXJlbnQtY29udGV4dD08L3Nw
+YW4+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigxNTYsMjIwLDI1NCkiPiRzcmtfaGFuZGxlPC9zcGFu
+PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gXDwvc3Bhbj48L2Rpdj48ZGl2
+PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC0tcHVibGljPUxEZXZJRC5w
+dWIgXDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIp
+Ij4gIC0tcHJpdmF0ZT1MRGV2SUQucHJpdiBcPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9
+ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAgLS1rZXktY29udGV4dD1MRGV2SUQuY3R4PC9zcGFu
+PjwvZGl2Pjxicj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMTA2LDE1Myw4NSkiPiMgQ2Vy
+dGlmeTwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIp
+Ij50cG0yX2NlcnRpZnkgXDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2Io
+MjEyLDIxMiwyMTIpIj4gIC0tY2VydGlmaWVka2V5LWNvbnRleHQ9TERldklELmN0eCBcPC9zcGFu
+PjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAgLS1zaWdu
+aW5na2V5LWNvbnRleHQ9SURldklELmN0eCBcPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9
+ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAgLS1oYXNoLWFsZ29yaXRobT1zaGExIFw8L3NwYW4+
+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+ICAtLWF0dGVz
+dGF0aW9uPWNlcnRpZnkuQVRURVNUQVRJT04gXDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxl
+PSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC0tc2lnbmF0dXJlPWNlcnRpZnkuU0lHTkFUVVJF
+IFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+
+ICAtLWZvcm1hdD1wbGFpbjwvc3Bhbj48L2Rpdj48YnI+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6
+cmdiKDEwNiwxNTMsODUpIj4jIENlcnRpZnkgQ3JlYXRpb248L3NwYW4+PC9kaXY+PGRpdj48c3Bh
+biBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+dHBtMl9jZXJ0aWZ5Y3JlYXRpb24gXDwv
+c3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC0t
+Y2VydGlmaWVka2V5LWNvbnRleHQ9TERldklELmN0eCBcPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4g
+c3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAgLS1zaWduaW5na2V5LWNvbnRleHQ9SURl
+dklELmN0eCBcPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEy
+LDIxMikiPiAgLS1oYXNoLWFsZ29yaXRobT1zaGExIFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBz
+dHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+ICAtLWNyZWF0aW9uLWhhc2g9TERldklELkNS
+RUFUSU9OX0hBU0ggXDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEy
+LDIxMiwyMTIpIj4gIC0tdGlja2V0PUxEZXZJRC5DUkVBVElPTl9USUNLRVQgXDwvc3Bhbj48L2Rp
+dj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC0tc2lnbmF0dXJl
+PWNlcnRpZnljcmVhdGlvbi5TSUdOQVRVUkUgXDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxl
+PSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC0tYXR0ZXN0YXRpb249Y2VydGlmeWNyZWF0aW9u
+LkFUVEVTVEFUSU9OIFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIx
+MiwyMTIsMjEyKSI+ICAtLWZvcm1hdD1wbGFpbjwvc3Bhbj48L2Rpdj48YnI+PGRpdj48c3BhbiBz
+dHlsZT0iY29sb3I6cmdiKDEwNiwxNTMsODUpIj4jIElEZXZJRC5kZXI8L3NwYW4+PC9kaXY+PGRp
+dj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIyMCwyMjAsMTcwKSI+ZWNobzwvc3Bhbj48c3BhbiBz
+dHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+IDwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6
+cmdiKDIwNiwxNDUsMTIwKSI+JiMzOTtNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1J
+SUJDZ0tDQVFFQSYjMzk7PC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIp
+Ij4gPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj58PC9zcGFuPjxz
+cGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gb3BlbnNzbCBiYXNlNjQgLWEgLWQg
+PC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4mZ3Q7PC9zcGFuPjxz
+cGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gSURldklELmhlYWRlci50ZW1wPC9z
+cGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPmRkIGlm
+PUlEZXZJRC5wdWIgYnM9MSBza2lwPTwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIwNiwx
+NDUsMTIwKSI+JChleHByICQoc3RhdCAtLWZvcm1hdD0lcyBJRGV2SUQucHViKSAtIDI1Nik8L3Nw
+YW4+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiBvZj1JRGV2SUQubW9kdWx1
+cy50ZW1wPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMjAsMjIwLDE3
+MCkiPmVjaG88L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAtZW4g
+PC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjA2LDE0NSwxMjApIj4mIzM5O1x4MDJceDAz
+JiMzOTs8L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiA8L3NwYW4+
+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiZndDs8L3NwYW4+PHNwYW4gc3R5
+bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiBJRGV2SUQubWlkLWhlYWRlci50ZW1wPC9zcGFu
+PjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMjAsMjIwLDE3MCkiPmVjaG88L3Nw
+YW4+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAtbmUgPC9zcGFuPjxzcGFu
+IHN0eWxlPSJjb2xvcjpyZ2IoMjA2LDE0NSwxMjApIj4mIzM5O1x4MDFceDAwXHgwMSYjMzk7PC9z
+cGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gPC9zcGFuPjxzcGFuIHN0
+eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4mZ3Q7PC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xv
+cjpyZ2IoMjEyLDIxMiwyMTIpIj4gSURldklELmV4cG9uZW50LnRlbXA8L3NwYW4+PC9kaXY+PGRp
+dj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+Y2F0IElEZXZJRC5oZWFkZXIu
+dGVtcCBJRGV2SUQubW9kdWx1cy50ZW1wIElEZXZJRC5taWQtaGVhZGVyLnRlbXAgSURldklELmV4
+cG9uZW50LnRlbXAgPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4m
+Z3Q7PC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gSURldklELmRl
+cjwvc3Bhbj48L2Rpdj48YnI+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDEwNiwxNTMsODUp
+Ij4jIFJlbW92ZSBmaXJzdCB0d28gYnl0ZXMgKGJ5dGUgc2l6ZSBvZiBzdHJ1Y3QpIGluIGNlcnRp
+ZnljcmVhdGlvbi5BVFRFU1RBVElPTiA8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29s
+b3I6cmdiKDEwNiwxNTMsODUpIj4jIGluIG9yZGVyIGZvciBoYXNoIHRvIGNvbXBseS4gTWFnaWMg
+SGVhZGVyJnF1b3Q7IG11c3QgYmUgZmYgNTQgNDMgNDc8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBz
+dHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+ZGQgaWY9Y2VydGlmeWNyZWF0aW9uLkFUVEVT
+VEFUSU9OIG9mPWNlcnRpZnljcmVhdGlvbi5BVFRFU1RBVElPTl8yIGJzPTEgc2tpcD0yPC9zcGFu
+PjwvZGl2Pjxicj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMTA2LDE1Myw4NSkiPiMgV09S
+S1M6IFZlcmlmeSBDZXJ0aWZ5IENyZWF0aW9uPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9
+ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPm9wZW5zc2wgZGdzdCBcPC9zcGFuPjwvZGl2PjxkaXY+
+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPiAgLXZlcmlmeSBJRGV2SUQuZGVy
+IC1rZXlmb3JtIGRlciBcPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigy
+MTIsMjEyLDIxMikiPiAgLXNoYTEgLXNpZ25hdHVyZSBjZXJ0aWZ5Y3JlYXRpb24uU0lHTkFUVVJF
+IGNlcnRpZnljcmVhdGlvbi5BVFRFU1RBVElPTl8yPC9zcGFuPjwvZGl2Pjxicj48ZGl2PjxzcGFu
+IHN0eWxlPSJjb2xvcjpyZ2IoMTA2LDE1Myw4NSkiPiMgRkFJTFM6IFZlcmlmeSBDcmVhdGU8L3Nw
+YW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+b3BlbnNz
+bCBkZ3N0IFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIs
+MjEyKSI+ICAtdmVyaWZ5IElEZXZJRC5kZXIgLWtleWZvcm0gZGVyIFw8L3NwYW4+PC9kaXY+PGRp
+dj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+ICAtc2hhMSAtc2lnbmF0dXJl
+IGNlcnRpZnkuU0lHTkFUVVJFIGNlcnRpZnkuQVRURVNUQVRJT048L3NwYW4+PC9kaXY+PGJyPjxk
+aXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigxMDYsMTUzLDg1KSI+IyBXT1JLUzo8L3NwYW4+PC9k
+aXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+b3BlbnNzbCByc2F1
+dGwgXDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIp
+Ij4gIC12ZXJpZnkgXDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEy
+LDIxMiwyMTIpIj4gIC1wdWJpbiAtaW5rZXkgSURldklELmRlciAta2V5Zm9ybSBERVIgXDwvc3Bh
+bj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC1pbiBj
+ZXJ0aWZ5Y3JlYXRpb24uU0lHTkFUVVJFIFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0i
+Y29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+ICAtb3V0IGNlcnRpZnljcmVhdGlvbi5TSUdOQVRVUkUu
+YXNuMTwvc3Bhbj48L2Rpdj48YnI+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIs
+MjEyKSI+ZHVtcGFzbjEgY2VydGlmeWNyZWF0aW9uLlNJR05BVFVSRS5hc24xPC9zcGFuPjwvZGl2
+Pjxicj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMTA2LDE1Myw4NSkiPiMgRkFJTFM6PC9z
+cGFuPjwvZGl2PjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMTIsMjEyLDIxMikiPm9wZW5z
+c2wgcnNhdXRsIFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwy
+MTIsMjEyKSI+ICAtdmVyaWZ5IFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6
+cmdiKDIxMiwyMTIsMjEyKSI+ICAtcHViaW4gLWlua2V5IElEZXZJRC5kZXIgLWtleWZvcm0gREVS
+IFw8L3NwYW4+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIxMiwyMTIsMjEyKSI+
+ICAtaW4gY2VydGlmeS5TSUdOQVRVUkUgXDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJj
+b2xvcjpyZ2IoMjEyLDIxMiwyMTIpIj4gIC1vdXQgY2VydGlmeS5TSUdOQVRVUkUuYXNuMTwvc3Bh
+bj48L2Rpdj48L2Rpdj48L2Rpdj48YnI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxkaXYgZGly
+PSJsdHIiIGNsYXNzPSJnbWFpbF9hdHRyIj5EZW4gdGlzIDEwIGRlYy4gMjAxOSBrbCAyMzo0MCBz
+a3JldiBOaWtsYXMgQW5kZXJzc29uICZsdDs8YSBocmVmPSJtYWlsdG86bmlrbGFzLmFuZGVyc3Nv
+bkBmcmVkZW5oZWltLnNlIj5uaWtsYXMuYW5kZXJzc29uQGZyZWRlbmhlaW0uc2U8L2E+Jmd0Ozo8
+YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBw
+eCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0LDIwNCwyMDQpO3Bh
+ZGRpbmctbGVmdDoxZXgiPjxkaXYgZGlyPSJsdHIiPjxkaXY+b3BlbnNzbCBjYW4gbm90IHZlcmlm
+eSBwbGFpbiBzaWduYXR1cmUgKDI1NiBieXRlcykgZnJvbSB0cG0yX2NlcnRpZnkgZHVlIHRvIGJh
+ZCBwYWRkaW5nLjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PGk+VGhpcyBzaG91bGQgd29yayAo
+dmVyaWZpY2F0aW9uIG9mIHNpZ25hdHVyZSBmcm9tIHRwbTJfY2VydGlmeWNyZWF0aW9uIHdvcmtz
+IGZpbmUpOjwvaT48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pm9wZW5zc2wgZGdzdCAtdmVyaWZ5
+IC4uL0FJS09wYXF1ZS5kZXIgLWtleWZvcm0gZGVyIC1zaGExIC1zaWduYXR1cmUgU2lnbmF0dXJl
+IEtleUF0dGVzdC5iaW4gPGJyPlZlcmlmaWNhdGlvbiBGYWlsdXJlPC9kaXY+PGRpdj48YnI+PC9k
+aXY+PGRpdj48aT4uLi4uZXhhbWluZTo8L2k+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5vcGVu
+c3NsIHJzYXV0bCAtdmVyaWZ5IC1pbmtleSAuLi9BSUtPcGFxdWUuZGVyIC1pbiBTaWduYXR1cmUg
+LXB1YmluIC1rZXlmb3JtIGRlciAtcGtjcyAmZ3Q7IGRlY3J5cHRlZC5iaW48YnI+UlNBIG9wZXJh
+dGlvbiBlcnJvcjxicj4xNDA2NTQyNDczODc1ODQ6ZXJyb3I6MDQwNzAwOEE6cnNhIHJvdXRpbmVz
+OlI8Yj5TQV9wYWRkaW5nX2NoZWNrX1BLQ1MxX3R5cGVfMTppbnZhbGlkIHBhZGRpbmc6Li4vY3J5
+cHRvL3JzYS9yc2FfcGsxLmM6Njc6PC9iPjxicj4xNDA2NTQyNDczODc1ODQ6ZXJyb3I6MDQwNjcw
+NzI6cnNhIHJvdXRpbmVzOnJzYV9vc3NsX3B1YmxpY19kZWNyeXB0OnBhZGRpbmcgY2hlY2sgZmFp
+bGVkOi4uL2NyeXB0by9yc2EvcnNhX29zc2wuYzo1ODI6PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRp
+dj48aT4uLlNhbWUgb3BlcmF0aW9uIG9uIGEgcGxhaW4gc2lnbmF0dXJlIGZyb20gdHBtMl9jZXJ0
+aWZ5Y3JlYXRpb24gd29ya3M6PGJyPjwvaT48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pm9wZW5z
+c2wgcnNhdXRsIC12ZXJpZnkgLWlua2V5IC4uL0FJS09wYXF1ZS5kZXIgLWluIC4uL0lkQmluZGlu
+Zy5FWFRSQUNURURfVFBNVF9TSUdOQVRVUkUgLXB1YmluIC1rZXlmb3JtIGRlciDCoCZndDsgZGVj
+cnlwdGVkLmJpbjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+ZHVtcGFzbjEgZGVjcnlwdGVkLmJp
+biA8YnI+wqAgMCDCoDMzOiBTRVFVRU5DRSB7PGJyPsKgIDIgwqAgOTogwqAgU0VRVUVOQ0Ugezxi
+cj7CoCA0IMKgIDU6IMKgIMKgIE9CSkVDVCBJREVOVElGSUVSIHNoYTEgKDEgMyAxNCAzIDIgMjYp
+PGJyPsKgMTEgwqAgMDogwqAgwqAgTlVMTDxicj7CoCDCoCDCoCDCoDogwqAgwqAgfTxicj7CoDEz
+IMKgMjA6IMKgIE9DVEVUIFNUUklORyAyRCBBMSBEMSAzMCAzQSBEMiBGRCA2OCBBMSA1QSAyRiA5
+QiA4QiBDMSAxRSBEQiAzNiBBNyA3QyBENDxicj7CoCDCoCDCoCDCoDogwqAgfTxicj48L2Rpdj48
+ZGl2Pjxicj48L2Rpdj48ZGl2PlNvLiBJdCBsb29rcyBsaWtlIGEgYnVnIGluIHRwbTJfY2VydGlm
+eS4gPGJyPjwvZGl2PjxkaXY+dG9vbD0mcXVvdDt0cG0yX2NlcnRpZnkmcXVvdDsgdmVyc2lvbj0m
+cXVvdDs0LjEmcXVvdDsgdGN0aXM9JnF1b3Q7bGlidHNzMi10Y3RpbGRyJnF1b3Q7IHRjdGktZGVm
+YXVsdD10Y3RpLWRldmljZTwvZGl2PjxkaXY+dHBtMi10c3MgMi4zLjItcmMwPC9kaXY+PGRpdj48
+YnI+PC9kaXY+PGRpdj5SZWdhcmRzLDwvZGl2PjxkaXY+TmlrbGFzPGJyPjwvZGl2PjxkaXY+PGJy
+PjwvZGl2PjwvZGl2Pgo8L2Jsb2NrcXVvdGU+PC9kaXY+Cg==
 
---===============8251592472982284899==--
+--===============4017651411158917920==--
 
