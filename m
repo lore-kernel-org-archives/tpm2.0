@@ -1,52 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============5827281243399298599=="
+Content-Type: multipart/mixed; boundary="===============0157987273591486875=="
 MIME-Version: 1.0
-From: Steven Clark <davolfman at gmail.com>
-Subject: [tpm2] Re: Pipe the TMP2 directly into /dev/random
-Date: Fri, 13 Dec 2019 12:10:28 -0800
-Message-ID: <CAOCvsSn=nJ9rhN1SH93fJ6WCnO4QVVEP4CCG7qV6Ft8KNBQEDg@mail.gmail.com>
-In-Reply-To: CALtZhhP=CZ6g3hGXYLFWe2-ux05EQd7J3GWgkTGDyyBOQ3cz8Q@mail.gmail.com
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: [tpm2] Re: [TPM2-TOOLS] tpm2_hash I/O error
+Date: Fri, 13 Dec 2019 14:11:27 -0800
+Message-ID: <19576812-ba03-2881-7642-0715b8ce9a78@intel.com>
+In-Reply-To: 6bd6c69c-42b5-7b77-4cde-34d096ed29b6@qarnot-computing.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5827281243399298599==
+--===============0157987273591486875==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If you want it you will probably have to code it yourself.  A start would
-be to disable the kernel's existing entropy gathering.  Then turn off
-entropy gathering and crediting for other alternate sources such as rdrand.
-Then turn rng_core.default_quality permanently to 1000 to accept TPM RNG
-entropy as real entropy.
+On 12/6/19 1:47 AM, Gabriel Chabot wrote:
+> I am currently using TPM2 for remote attestation.
+> At some point, I want to send a message and the signature of this
+> message to the remote.
+> However, when I try to hash the message (which is greater than 1024
+> bytes) with tpm2_hash, I get the following error:
+> =
 
-Or tear out the entire kernel random infrastructure and rebuild it from
-scratch. It is not just a simple character device module and hasn't been
-for who knows how long.
+> ERROR:tcti:src/util/io.c:106:write_all() failed to write to fd 4: I/O err=
+or
+> ERROR:tcti:src/tss2-tcti/tcti-device.c:121:tcti_device_transmit() wrong
+> number of bytes written. Expected 1053, wrote 0.
+> ERROR:esys:src/tss2-esys/api/Esys_SequenceUpdate.c:197:Esys_SequenceUpdat=
+e_Async()
+> Finish (Execute Async) ErrorCode (0x000a000a)
+> ERROR:esys:src/tss2-esys/api/Esys_SequenceUpdate.c:74:Esys_SequenceUpdate=
+()
+> Error in async function ErrorCode (0x000a000a)
+> ERROR: Esys_SequenceUpdate(0xA000A) - tcti:IO failure
+> ERROR: Unable to run tpm2_hash
 
-The easy answer is to just use the rng_core.default_quality=3D1000 boot
-option and accept that your TPM output is getting mixed with other stuff to
-make it even more random.
+This looks like a driver or tpm device issue.
+Do you see and TPM related problems in the system logs?
+Could you make sure that the device support sha256.
 
---===============5827281243399298599==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+Thanks,
+-- =
 
-PGRpdiBkaXI9ImF1dG8iPklmIHlvdSB3YW50IGl0IHlvdSB3aWxsIHByb2JhYmx5IGhhdmUgdG8g
-Y29kZSBpdCB5b3Vyc2VsZi7CoCBBIHN0YXJ0IHdvdWxkIGJlIHRvIGRpc2FibGUgdGhlIGtlcm5l
-bCYjMzk7cyBleGlzdGluZyBlbnRyb3B5IGdhdGhlcmluZy7CoCBUaGVuIHR1cm4gb2ZmIGVudHJv
-cHkgZ2F0aGVyaW5nIGFuZCBjcmVkaXRpbmcgZm9yIG90aGVyIGFsdGVybmF0ZSBzb3VyY2VzIHN1
-Y2ggYXMgcmRyYW5kLiBUaGVuIHR1cm4gcm5nX2NvcmUuZGVmYXVsdF9xdWFsaXR5IHBlcm1hbmVu
-dGx5IHRvIDEwMDAgdG8gYWNjZXB0IFRQTSBSTkcgZW50cm9weSBhcyByZWFsIGVudHJvcHkuPGRp
-diBkaXI9ImF1dG8iPjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0byI+T3IgdGVhciBvdXQgdGhlIGVu
-dGlyZSBrZXJuZWwgcmFuZG9tIGluZnJhc3RydWN0dXJlIGFuZCByZWJ1aWxkIGl0IGZyb20gc2Ny
-YXRjaC4gSXQgaXMgbm90IGp1c3QgYSBzaW1wbGUgY2hhcmFjdGVyIGRldmljZSBtb2R1bGUgYW5k
-IGhhc24mIzM5O3QgYmVlbiBmb3Igd2hvIGtub3dzIGhvdyBsb25nLjwvZGl2PjxkaXYgZGlyPSJh
-dXRvIj48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iPlRoZSBlYXN5IGFuc3dlciBpcyB0byBqdXN0
-IHVzZSB0aGUgcm5nX2NvcmUuZGVmYXVsdF9xdWFsaXR5PTEwMDAgYm9vdCBvcHRpb24gYW5kIGFj
-Y2VwdCB0aGF0IHlvdXIgVFBNIG91dHB1dCBpcyBnZXR0aW5nIG1peGVkIHdpdGggb3RoZXIgc3R1
-ZmYgdG8gbWFrZSBpdCBldmVuIG1vcmUgcmFuZG9tLjwvZGl2PjwvZGl2Pgo=
-
---===============5827281243399298599==--
+Tadeusz
+--===============0157987273591486875==--
 
