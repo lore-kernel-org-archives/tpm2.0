@@ -1,96 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============0320961494162783780=="
+Content-Type: multipart/mixed; boundary="===============3710349696918899049=="
 MIME-Version: 1.0
-From: Steven Clark <davolfman at gmail.com>
-Subject: [tpm2] Re: [tpm2][tpm2-abrmd]tpm2-abrmd.service may run before udev
- rule.
-Date: Fri, 13 Dec 2019 11:42:56 -0800
-Message-ID: <CAOCvsS=dnf=E7OBbWwu6hLiD8G8rzSTap3LwuDEDb6-2zyFq0g@mail.gmail.com>
-In-Reply-To: 9de29687-a740-1354-d6fb-c2eeabe0b3ba@twobit.org
+From: Frederick Gotham <cauldwell.thomas at gmail.com>
+Subject: [tpm2] Re: Pipe the TMP2 directly into /dev/random
+Date: Fri, 13 Dec 2019 19:44:51 +0000
+Message-ID: <CALtZhhP=CZ6g3hGXYLFWe2-ux05EQd7J3GWgkTGDyyBOQ3cz8Q@mail.gmail.com>
+In-Reply-To: CAOCvsS=2WrOWSuaXzabZizDo7znxALy+v2YX_CAcQ4MjqS5=Sw@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0320961494162783780==
+--===============3710349696918899049==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I pulled the patch for the wrong branch.  Here's the version for
-2.3.0.  I was wondering why it had the wrong email.
-From a2cb4d84507a12d0cf701ad12cbe2e1416e1f091 Mon Sep 17 00:00:00 2001
-From: Steven Clark <davolfman(a)gmail.com>
-Date: Tue, 3 Dec 2019 01:39:28 +0000
-Subject: [PATCH 1/1] Hold Resource Manager until tpm is accessible
+Sweet mother of divine Jesus Christ and the twelve apostles.
 
-In testing in an unusual boot scenario it was discovered that
-tpm2-abrmd.service was starting before udev had changed ownership
-of the TPM device from root to TSS.  This patch changes the
-Systemd unit file to force a udev settle before starting the
-resource manager service.
+Forgive me, but my patience is wearing thin as I have posted this idea on
+several forums and been meet with the same response every time.
 
-Signed-off-by: Steven Clark <davolfman(a)gmail.com>
----
- dist/tpm2-abrmd.service.in | 2 ++
- 1 file changed, 2 insertions(+)
+I shall now use all caps to convey my annoyance.
 
-diff --git a/dist/tpm2-abrmd.service.in b/dist/tpm2-abrmd.service.in
-index 00aa031..4300cb3 100644
---- a/dist/tpm2-abrmd.service.in
-+++ b/dist/tpm2-abrmd.service.in
-@@ -1,5 +1,7 @@
- [Unit]
- Description=3DTPM2 Access Broker and Resource Management Daemon
-+After=3Dsystemd-udev-settle.service
-+Requires=3Dsystemd-udev-settle.service
+IF ONE IS OKAY WITH THE SPEED AT WHICH RANDOM BITS CAN BE RETRIEVED FROM
+THE TMP2, THEN.... Can we please put together some code so that the TPM2
+can feed directly into /dev/null.
 
- [Service]
- Type=3Ddbus
--- =
+Frederick
 
-2.18.1
 
-On Thu, Dec 12, 2019 at 11:09 AM Philip Tricca <flihp(a)twobit.org> wrote:
+On Friday, December 13, 2019, Steven Clark <davolfman(a)gmail.com> wrote:
+
+> This is probably a much worse idea than you think it is.  Historically TPM
+> 2.0 communication has been kinda slow and only improved in some relatively
+> recent kernels.  The general theory that seems to apply to the kind of
+> entropy mixing the kernel does is that entropy is conserved and that faul=
+ty
+> sources just don't add entropy. And thanks to the mixing they can't
+> manipulate the pool enough for an attack. Given there are stirring
+> commands, even the TPM RNG is probably not collecting real entropy all th=
+at
+> fast, so it would probably become a PRNG in slow hardware on a slow bus if
+> used as the only RNG.
 >
-> Thanks Steve. I don't have much time these days to work on this stuff so
-> no worries about the delay. I'll get this in and turn the crank on a
-> bugfix release.
->
-> Thanks,
-> Philip
->
-> On 12/12/19 10:52 AM, Steven Clark wrote:
-> > Here's a version with a sign-off.  By the time I hit a lull I had to
-> > resynthesize the repository used to build the patch.  At least I get
-> > some process practice with something innocuous this way.
-> >
-> > From 4b95f1d7988a2f4d4d5e1f7b19602a8f0b1c66a4 Mon Sep 17 00:00:00 2001
-> > From: Steven Clark <davolfman(a)gmail.com>
-> > Date: Wed, 27 Nov 2019 21:10:00 +0000
-> > Subject: [PATCH 1/1] Hold Resource Manager until tpm is accessible
-> >
-> > In testing in an unusual boot scenario it was discovered that
-> > tpm2-abrmd.service was starting before udev had changed ownership
-> > of the TPM device from root to TSS.  This patch changes the
-> > Systemd unit file to force a udev settle before starting the
-> > resource manager service.
-> >
-> > Signed-off-by: Steven Clark <davolfman(a)gmail.com>
-> > ---
-> >  dist/tpm2-abrmd.service.in | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/dist/tpm2-abrmd.service.in b/dist/tpm2-abrmd.service.in
-> > index 00aa031..4300cb3 100644
-> > --- a/dist/tpm2-abrmd.service.in
-> > +++ b/dist/tpm2-abrmd.service.in
-> > @@ -1,5 +1,7 @@
-> >  [Unit]
-> >  Description=3DTPM2 Access Broker and Resource Management Daemon
-> > +After=3Dsystemd-udev-settle.service
-> > +Requires=3Dsystemd-udev-settle.service
-> >
-> >  [Service]
-> >  Type=3Ddbus
-> >
->
---===============0320961494162783780==--
+
+--===============3710349696918899049==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.html"
+
+U3dlZXQgbW90aGVyIG9mIGRpdmluZSBKZXN1cyBDaHJpc3QgYW5kIHRoZSB0d2VsdmUgYXBvc3Rs
+ZXMuPGRpdj48YnI+PC9kaXY+PGRpdj5Gb3JnaXZlIG1lLCBidXQgbXkgcGF0aWVuY2UgaXMgd2Vh
+cmluZyB0aGluIGFzIEkgaGF2ZSBwb3N0ZWQgdGhpcyBpZGVhIG9uIHNldmVyYWwgZm9ydW1zIGFu
+ZCBiZWVuIG1lZXQgd2l0aCB0aGUgc2FtZSByZXNwb25zZSBldmVyeSB0aW1lLjwvZGl2PjxkaXY+
+PGJyPjwvZGl2PjxkaXY+SSBzaGFsbCBub3cgdXNlIGFsbCBjYXBzIHRvIGNvbnZleSBteSBhbm5v
+eWFuY2UuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5JRiBPTkUgSVMgT0tBWSBXSVRIIFRIRSBT
+UEVFRCBBVCBXSElDSCBSQU5ET00gQklUUyBDQU4gQkUgUkVUUklFVkVEIEZST00gVEhFIFRNUDIs
+IFRIRU4uLi4uIENhbiB3ZSBwbGVhc2UgcHV0IHRvZ2V0aGVyIHNvbWUgY29kZSBzbyB0aGF0IHRo
+ZSBUUE0yIGNhbiBmZWVkIGRpcmVjdGx5IGludG8gL2Rldi9udWxsLjwvZGl2PjxkaXY+PGJyPjwv
+ZGl2PjxkaXY+RnJlZGVyaWNrPC9kaXY+PGRpdj48YnI+PGJyPk9uIEZyaWRheSwgRGVjZW1iZXIg
+MTMsIDIwMTksIFN0ZXZlbiBDbGFyayAmbHQ7PGEgaHJlZj0ibWFpbHRvOmRhdm9sZm1hbkBnbWFp
+bC5jb20iPmRhdm9sZm1hbkBnbWFpbC5jb208L2E+Jmd0OyB3cm90ZTo8YnI+PGJsb2NrcXVvdGUg
+Y2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjAgMCAwIC44ZXg7Ym9yZGVyLWxlZnQ6
+MXB4ICNjY2Mgc29saWQ7cGFkZGluZy1sZWZ0OjFleCI+PGRpdiBkaXI9ImF1dG8iPlRoaXMgaXMg
+cHJvYmFibHkgYSBtdWNoIHdvcnNlIGlkZWEgdGhhbiB5b3UgdGhpbmsgaXQgaXMuwqAgSGlzdG9y
+aWNhbGx5IFRQTSAyLjAgY29tbXVuaWNhdGlvbiBoYXMgYmVlbiBraW5kYSBzbG93IGFuZCBvbmx5
+IGltcHJvdmVkIGluIHNvbWUgcmVsYXRpdmVseSByZWNlbnQga2VybmVscy7CoCBUaGUgZ2VuZXJh
+bCB0aGVvcnkgdGhhdCBzZWVtcyB0byBhcHBseSB0byB0aGUga2luZCBvZiBlbnRyb3B5IG1peGlu
+ZyB0aGUga2VybmVsIGRvZXMgaXMgdGhhdCBlbnRyb3B5IGlzIGNvbnNlcnZlZCBhbmQgdGhhdCBm
+YXVsdHkgc291cmNlcyBqdXN0IGRvbiYjMzk7dCBhZGQgZW50cm9weS4gQW5kIHRoYW5rcyB0byB0
+aGUgbWl4aW5nIHRoZXkgY2FuJiMzOTt0IG1hbmlwdWxhdGUgdGhlIHBvb2wgZW5vdWdoIGZvciBh
+biBhdHRhY2suIEdpdmVuIHRoZXJlIGFyZSBzdGlycmluZyBjb21tYW5kcywgZXZlbiB0aGUgVFBN
+IFJORyBpcyBwcm9iYWJseSBub3QgY29sbGVjdGluZyByZWFsIGVudHJvcHkgYWxsIHRoYXQgZmFz
+dCwgc28gaXQgd291bGQgcHJvYmFibHkgYmVjb21lIGEgUFJORyBpbiBzbG93IGhhcmR3YXJlIG9u
+IGEgc2xvdyBidXMgaWYgdXNlZCBhcyB0aGUgb25seSBSTkcuPC9kaXY+CjwvYmxvY2txdW90ZT48
+L2Rpdj4K
+
+--===============3710349696918899049==--
 
