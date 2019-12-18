@@ -1,139 +1,106 @@
-Content-Type: multipart/mixed; boundary="===============0717765059371522425=="
+Content-Type: multipart/mixed; boundary="===============2179296449293935937=="
 MIME-Version: 1.0
-From: Zhao, Shirley <shirley.zhao at intel.com>
-Subject: [tpm2] Question about how to get session handle when create policy
-Date: Wed, 18 Dec 2019 08:25:18 +0000
-Message-ID: <A888B25CD99C1141B7C254171A953E8E490A1059@shsmsx102.ccr.corp.intel.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: Question about how to get session handle when create policy
+Date: Wed, 18 Dec 2019 15:22:50 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E60F57@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: A888B25CD99C1141B7C254171A953E8E490A1059@shsmsx102.ccr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0717765059371522425==
+--===============2179296449293935937==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-I want to get the session handle when creating policy, how to do it?
-
-For example,
-# tpm2_createpolicy --policy-pcr --pcr-list sha256:7 --policy pcr.policy --=
-policy-session
-2781c435e602b97eef2a95333b72d085a393907cf32b9f825febe37b1af54820
-
-I use tpm2_createpolicy to create the policy, and start a policy session of=
- type TPM_SE_POLICY.
-The policy digest is returned, but I can't get the session handle.
-
-So how to get the session handle?
-
-Thanks.
 
 
-  *   Shirley
+> -----Original Message-----
+> From: Zhao, Shirley
+> Sent: Wednesday, December 18, 2019 2:25 AM
+> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.o=
+rg
+> Subject: Question about how to get session handle when create policy
+> =
 
+> Hello,
+> =
 
+> =
 
+> =
 
---===============0717765059371522425==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.html"
+> I want to get the session handle when creating policy, how to do it?
+> =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpXaW5n
-ZGluZ3M7CglwYW5vc2UtMTo1IDAgMCAwIDAgMCAwIDAgMCAwO30KQGZvbnQtZmFjZQoJe2ZvbnQt
-ZmFtaWx5OlNpbVN1bjsKCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQpAZm9udC1mYWNl
-Cgl7Zm9udC1mYW1pbHk6IkNhbWJyaWEgTWF0aCI7CglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMg
-MiA0O30KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7CglwYW5vc2UtMToyIDE1IDUg
-MiAyIDIgNCAzIDIgNDt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpTaW1TdW47CglwYW5vc2Ut
-MToyIDEgNiAwIDMgMSAxIDEgMSAxO30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3Jt
-YWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90
-dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNh
-bnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5
-Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0
-ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cglj
-b2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnAuTXNvTGlzdFBhcmFn
-cmFwaCwgbGkuTXNvTGlzdFBhcmFncmFwaCwgZGl2Lk1zb0xpc3RQYXJhZ3JhcGgKCXttc28tc3R5
-bGUtcHJpb3JpdHk6MzQ7CgltYXJnaW4tdG9wOjBpbjsKCW1hcmdpbi1yaWdodDowaW47CgltYXJn
-aW4tYm90dG9tOjBpbjsKCW1hcmdpbi1sZWZ0Oi41aW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7
-Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpz
-cGFuLkVtYWlsU3R5bGUxNwoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7Cglmb250
-LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7fQouTXNvQ2hw
-RGVmYXVsdAoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5OwoJZm9udC1mYW1pbHk6IkNhbGli
-cmkiLHNhbnMtc2VyaWY7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsK
-CW1hcmdpbjoxLjBpbiAxLjI1aW4gMS4waW4gMS4yNWluO30KZGl2LldvcmRTZWN0aW9uMQoJe3Bh
-Z2U6V29yZFNlY3Rpb24xO30KLyogTGlzdCBEZWZpbml0aW9ucyAqLwpAbGlzdCBsMAoJe21zby1s
-aXN0LWlkOjE0MjQyODg0MjsKCW1zby1saXN0LXR5cGU6aHlicmlkOwoJbXNvLWxpc3QtdGVtcGxh
-dGUtaWRzOi0xMDAzODE3NDYwIDIyNDU4NDAzNCA2NzY5ODY5MSA2NzY5ODY5MyA2NzY5ODY4OSA2
-NzY5ODY5MSA2NzY5ODY5MyA2NzY5ODY4OSA2NzY5ODY5MSA2NzY5ODY5Mzt9CkBsaXN0IGwwOmxl
-dmVsMQoJe21zby1sZXZlbC1zdGFydC1hdDo0OwoJbXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVs
-bGV0OwoJbXNvLWxldmVsLXRleHQ6LTsKCW1zby1sZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxl
-dmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1p
-bHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgltc28tZmFyZWFzdC1mb250LWZhbWlseTpTaW1TdW47
-fQpAbGlzdCBsMDpsZXZlbDIKCXttc28tbGV2ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cgltc28t
-bGV2ZWwtdGV4dDpvOwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVy
-LXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseToiQ291cmll
-ciBOZXciO30KQGxpc3QgbDA6bGV2ZWwzCgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0
-OwoJbXNvLWxldmVsLXRleHQ6XEYwQTc7Cgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1s
-ZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsKCXRleHQtaW5kZW50Oi0uMjVpbjsKCWZvbnQtZmFt
-aWx5OldpbmdkaW5nczt9CkBsaXN0IGwwOmxldmVsNAoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0
-OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7
-Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglm
-b250LWZhbWlseTpTeW1ib2w7fQpAbGlzdCBsMDpsZXZlbDUKCXttc28tbGV2ZWwtbnVtYmVyLWZv
-cm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpvOwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7
-Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglm
-b250LWZhbWlseToiQ291cmllciBOZXciO30KQGxpc3QgbDA6bGV2ZWw2Cgl7bXNvLWxldmVsLW51
-bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6XEYwQTc7Cgltc28tbGV2ZWwtdGFi
-LXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsKCXRleHQtaW5kZW50
-Oi0uMjVpbjsKCWZvbnQtZmFtaWx5OldpbmdkaW5nczt9CkBsaXN0IGwwOmxldmVsNwoJe21zby1s
-ZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEI3OwoJbXNvLWxl
-dmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0
-LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseTpTeW1ib2w7fQpAbGlzdCBsMDpsZXZlbDgKCXtt
-c28tbGV2ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpvOwoJbXNvLWxl
-dmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0
-LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseToiQ291cmllciBOZXciO30KQGxpc3QgbDA6bGV2
-ZWw5Cgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6XEYw
-QTc7Cgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1sZXZlbC1udW1iZXItcG9zaXRpb246
-bGVmdDsKCXRleHQtaW5kZW50Oi0uMjVpbjsKCWZvbnQtZmFtaWx5OldpbmdkaW5nczt9Cm9sCgl7
-bWFyZ2luLWJvdHRvbTowaW47fQp1bAoJe21hcmdpbi1ib3R0b206MGluO30KLS0+PC9zdHlsZT48
-IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3Bp
-ZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+
-CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9
-IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBs
-YW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJX
-b3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbywgPG86cD48L286cD48L3A+
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIj5JIHdhbnQgdG8gZ2V0IHRoZSBzZXNzaW9uIGhhbmRsZSB3aGVuIGNyZWF0aW5nIHBv
-bGljeSwgaG93IHRvIGRvIGl0Pwo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkZvciBleGFtcGxlLCA8
-bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+IyB0cG0yX2NyZWF0ZXBvbGljeSAt
-LXBvbGljeS1wY3IgLS1wY3ItbGlzdCBzaGEyNTY6NyAtLXBvbGljeSBwY3IucG9saWN5IC0tcG9s
-aWN5LXNlc3Npb248bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Mjc4MWM0MzVl
-NjAyYjk3ZWVmMmE5NTMzM2I3MmQwODVhMzkzOTA3Y2YzMmI5ZjgyNWZlYmUzN2IxYWY1NDgyMDxv
-OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+SSB1c2UgdHBtMl9jcmVhdGVwb2xpY3kgdG8gY3JlYXRlIHRo
-ZSBwb2xpY3ksIGFuZCBzdGFydCBhIHBvbGljeSBzZXNzaW9uIG9mIHR5cGUmbmJzcDtUUE1fU0Vf
-UE9MSUNZLgo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhlIHBvbGljeSBk
-aWdlc3QgaXMgcmV0dXJuZWQsIGJ1dCBJIGNhbiYjODIxNzt0IGdldCB0aGUgc2Vzc2lvbiBoYW5k
-bGUuCjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpw
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+U28gaG93IHRvIGdldCB0aGUgc2Vzc2lvbiBoYW5k
-bGU/IDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpw
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhhbmtzLiA8bzpwPjwvbzpwPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+Cjx1bCBzdHlsZT0ibWFyZ2luLXRv
-cDowaW4iIHR5cGU9ImRpc2MiPgo8bGkgY2xhc3M9Ik1zb0xpc3RQYXJhZ3JhcGgiIHN0eWxlPSJt
-YXJnaW4tbGVmdDowaW47bXNvLWxpc3Q6bDAgbGV2ZWwxIGxmbzEiPlNoaXJsZXkKPG86cD48L286
-cD48L2xpPjwvdWw+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxiPjxvOnA+Jm5ic3A7PC9vOnA+PC9i
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNz
-PSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+
-Cg==
+> =
 
---===============0717765059371522425==--
+> =
+
+> For example,
+> =
+
+> # tpm2_createpolicy --policy-pcr --pcr-list sha256:7 --policy pcr.policy =
+--policy-
+> session
+> =
+
+> 2781c435e602b97eef2a95333b72d085a393907cf32b9f825febe37b1af54820
+
+Createpolicy does just that, creates a policy in the tool, starting and sto=
+pping sessions
+as needed. If you want the session handle, use tpm2_startauthsession and in=
+voke
+the policy on that session.
+
+A simple example can be found in the manpages for the policy commands:
+https://github.com/tpm2-software/tpm2-tools/blob/master/man/tpm2_policypass=
+word.1.md
+
+> =
+
+> =
+
+> =
+
+> I use tpm2_createpolicy to create the policy, and start a policy session =
+of type
+> TPM_SE_POLICY.
+> =
+
+> The policy digest is returned, but I can't get the session handle.
+> =
+
+> =
+
+> =
+
+> So how to get the session handle?
+> =
+
+> =
+
+> =
+
+> Thanks.
+> =
+
+> =
+
+> =
+
+> *	Shirley
+> =
+
+> =
+
+> =
+
+> =
+
+> =
+
+>=20
+
+--===============2179296449293935937==--
 
