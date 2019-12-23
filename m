@@ -1,58 +1,117 @@
-Content-Type: multipart/mixed; boundary="===============6777414110036989864=="
+Content-Type: multipart/mixed; boundary="===============3041761423448489432=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RC] tpm2-tools: 4.1.1-RC0
-Date: Mon, 23 Dec 2019 17:07:09 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E61CB5@ORSMSX101.amr.corp.intel.com>
+Subject: [tpm2] Re: Question about how to get session handle when create policy
+Date: Mon, 23 Dec 2019 17:11:03 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E61D91@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: A888B25CD99C1141B7C254171A953E8E490A1101@shsmsx102.ccr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6777414110036989864==
+--===============3041761423448489432==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
 
-I'd like to announce that tpm2-tools release 4.1.1-RC0 is now available:
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.1.1-RC0
 
-The changes are below:
-* tpm2_certify: Fix output of attestation data including size field. Now ou=
-tputs just bytes.
-* tpm2_certifycreation: Fix tool to match manpage where the code had the -C=
- and -c options reversed.
-* tpm2_gettime: Fix output of attestation data including size field. Now ou=
-tputs just bytes.
-* tpm2_nvcertify: Fix output of attestation data including size field. Now =
-outputs just bytes.
-* tpm2_nvreadpublic: add name hash output.
-* tpm2_import: Support object policies when importing raw key material.
-* Fix overflow in pcrs.h where sizeof() was used instead of ARRAY_LEN().
-* build:
-  - Fix compilation inssue: lib/tpm2_hash.c:17:19: note: 'left' was declare=
-d here.
-* man:
-    - Fix manpage examples that have "sha" instead of "sha1"
-    - tpm2_shutdown manpage was missing, add it to build.
+> -----Original Message-----
+> From: Zhao, Shirley
+> Sent: Wednesday, December 18, 2019 9:10 PM
+> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.o=
+rg
+> Subject: RE: Question about how to get session handle when create policy
+> =
 
-I'd like to point out these 3 changes:
-* tpm2_certify: Fix output of attestation data including size field. Now ou=
-tputs just bytes.
-* tpm2_gettime: Fix output of attestation data including size field. Now ou=
-tputs just bytes.
-* tpm2_nvcertify: Fix output of attestation data including size field. Now =
-outputs just bytes.
+> Thanks, Robert.
+> Just confirm, please review the following command, then 0x3000000 is the
+> session handle, right?
+> # tpm2_startauthsession -a -S session.ctx
+> session-handle: 0x3000000
+> # tpm2_policypcr -S session.ctx -L sha256:0 -f pcr.policy # tpm2_flushcon=
+text
 
-We had a bug where we outputting the structure rather than just the signatu=
-re bytes,
-*so there is a format change on this*. We considered this a bug, and since =
-the on-disk
-format is likely not long lived (like a key blob would be), we didn't do a =
-major or minor
-version bump, just a patch level bump. Please let me know if this is a prob=
-lem for you.
+Yes that's the handle, but you should always use the session.ctx file to re=
+fer to it.
 
 Bill
---===============6777414110036989864==--
+
+> =
+
+> - Shirley
+> =
+
+> -----Original Message-----
+> From: Roberts, William C <william.c.roberts(a)intel.com>
+> Sent: Wednesday, December 18, 2019 11:23 PM
+> To: Zhao, Shirley <shirley.zhao(a)intel.com>; tpm2(a)lists.01.org
+> Subject: RE: Question about how to get session handle when create policy
+> =
+
+> =
+
+> =
+
+> > -----Original Message-----
+> > From: Zhao, Shirley
+> > Sent: Wednesday, December 18, 2019 2:25 AM
+> > To: Roberts, William C <william.c.roberts(a)intel.com>;
+> > tpm2(a)lists.01.org
+> > Subject: Question about how to get session handle when create policy
+> >
+> > Hello,
+> >
+> >
+> >
+> > I want to get the session handle when creating policy, how to do it?
+> >
+> >
+> >
+> > For example,
+> >
+> > # tpm2_createpolicy --policy-pcr --pcr-list sha256:7 --policy
+> > pcr.policy --policy- session
+> >
+> > 2781c435e602b97eef2a95333b72d085a393907cf32b9f825febe37b1af54820
+> =
+
+> Createpolicy does just that, creates a policy in the tool, starting and s=
+topping
+> sessions as needed. If you want the session handle, use tpm2_startauthses=
+sion
+> and invoke the policy on that session.
+> =
+
+> A simple example can be found in the manpages for the policy commands:
+> https://github.com/tpm2-software/tpm2-
+> tools/blob/master/man/tpm2_policypassword.1.md
+> =
+
+> >
+> >
+> >
+> > I use tpm2_createpolicy to create the policy, and start a policy
+> > session of type TPM_SE_POLICY.
+> >
+> > The policy digest is returned, but I can't get the session handle.
+> >
+> >
+> >
+> > So how to get the session handle?
+> >
+> >
+> >
+> > Thanks.
+> >
+> >
+> >
+> > *	Shirley
+> >
+> >
+> >
+> >
+> >
+> >
+
+--===============3041761423448489432==--
 
