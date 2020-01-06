@@ -1,28 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============5971124710343823279=="
+Content-Type: multipart/mixed; boundary="===============1051687090779912599=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] tpm2-tss v2.4.0-rc0
-Date: Fri, 03 Jan 2020 15:30:18 -0800
-Message-ID: <47546a83-caa8-8051-f084-2a1b3fce2768@intel.com>
+From: Frederick Gotham <cauldwell.thomas at gmail.com>
+Subject: [tpm2] Random numbers from a noisy sensor?
+Date: Mon, 06 Jan 2020 13:43:01 +0000
+Message-ID: <CALtZhhM9DUgaPXisBzpYxKbaxOuC5XCV=LfidOE2jguWHwkksA@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5971124710343823279==
+--===============1051687090779912599==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-The first release candidate for tpm2-tss v2.4.0-rc0 is out.
-https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.0-rc0
+Up until now, I thought that the TPM2 chip got its random bits from
+the noise on a internal sensor. I always thought that it had a
+"genuine" hardware source for randomness.
 
-The biggest addition to this release is the implementation of
-the TCG Feature API (FAPI), but as always all the changes and
-fixes are listed in the CHANGELOG.md file.
-Any feedback welcomed.
+If this were the case though, then there wouldn't be any "tpm2_stirrandom".
 
-Thanks,
---
-Tadeusz
---===============5971124710343823279==--
+What's actually going on here?
+--===============1051687090779912599==--
 
