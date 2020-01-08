@@ -1,89 +1,121 @@
-Content-Type: multipart/mixed; boundary="===============4444357083777345183=="
+Content-Type: multipart/mixed; boundary="===============0304172154452712345=="
 MIME-Version: 1.0
-From: Alexander Lieb <alexander.lieb at online.de>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: inconsistent arguments
-Date: Wed, 08 Jan 2020 18:27:32 +0100
-Message-ID: <trinity-164caa33-de12-4433-8a7e-8da05ab856b8-1578504452450@3c-app-1and1-bs01>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E63DA1@ORSMSX101.amr.corp.intel.com
+Date: Wed, 08 Jan 2020 18:13:15 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E6538A@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: trinity-164caa33-de12-4433-8a7e-8da05ab856b8-1578504452450@3c-app-1and1-bs01
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4444357083777345183==
+--===============0304172154452712345==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+> -----Original Message-----
+> From: Alexander Lieb [mailto:alexander.lieb(a)online.de]
+> Sent: Wednesday, January 8, 2020 11:28 AM
+> To: Roberts, William C <william.c.roberts(a)intel.com>
+> Cc: tpm2(a)lists.01.org
+> Subject: Aw: [tpm2] Re: inconsistent arguments
+> =
 
---===============4444357083777345183==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+> Thanks for the fast reply.
+> =
 
-PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBWZXJkYW5h
-O2ZvbnQtc2l6ZTogMTIuMHB4OyI+PGRpdj4KPGRpdj5UaGFua3MgZm9yIHRoZSBmYXN0IHJlcGx5
-LjwvZGl2PgoKPGRpdj4mbmJzcDs8L2Rpdj4KCjxkaXY+U28gaXQgaXMgbm90IHBvc3NpYmxlIGF0
-IHRoZSBtb21lbnQgdG8gZGVjcnlwdCBhIG1lc3NhZ2UgdXNpbmcgYW4gQUs/PC9kaXY+Cgo8ZGl2
-PiZuYnNwOwo8ZGl2IG5hbWU9InF1b3RlIiBzdHlsZT0ibWFyZ2luOjEwcHggNXB4IDVweCAxMHB4
-OyBwYWRkaW5nOiAxMHB4IDAgMTBweCAxMHB4OyBib3JkZXItbGVmdDoycHggc29saWQgI0MzRDlF
-NTsgd29yZC13cmFwOiBicmVhay13b3JkOyAtd2Via2l0LW5ic3AtbW9kZTogc3BhY2U7IC13ZWJr
-aXQtbGluZS1icmVhazogYWZ0ZXItd2hpdGUtc3BhY2U7Ij4KPGRpdiBzdHlsZT0ibWFyZ2luOjAg
-MCAxMHB4IDA7Ij48Yj5HZXNlbmRldDo8L2I+Jm5ic3A7TWl0dHdvY2gsIDA4LiBKYW51YXIgMjAy
-MCB1bSAxODoxMSBVaHI8YnIvPgo8Yj5Wb246PC9iPiZuYnNwOyZxdW90O1JvYmVydHMsIFdpbGxp
-YW0gQyZxdW90OyAmbHQ7d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29tJmd0Ozxici8+CjxiPkFu
-OjwvYj4mbmJzcDsmcXVvdDtBbGV4YW5kZXIgTGllYiZxdW90OyAmbHQ7YWxleGFuZGVyLmxpZWJA
-b25saW5lLmRlJmd0OywgJnF1b3Q7dHBtMkBsaXN0cy4wMS5vcmcmcXVvdDsgJmx0O3RwbTJAbGlz
-dHMuMDEub3JnJmd0Ozxici8+CjxiPkJldHJlZmY6PC9iPiZuYnNwO1t0cG0yXSBSZTogaW5jb25z
-aXN0ZW50IGFyZ3VtZW50czwvZGl2PgoKPGRpdiBuYW1lPSJxdW90ZWQtY29udGVudCI+PGJyLz4K
-PGJyLz4KJmd0OyAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLTxici8+CiZndDsgRnJvbTogQWxl
-eGFuZGVyIExpZWIgW21haWx0bzphbGV4YW5kZXIubGllYkBvbmxpbmUuZGVdPGJyLz4KJmd0OyBT
-ZW50OiBXZWRuZXNkYXksIEphbnVhcnkgOCwgMjAyMCAxMTowMCBBTTxici8+CiZndDsgVG86IHRw
-bTJAbGlzdHMuMDEub3JnPGJyLz4KJmd0OyBTdWJqZWN0OiBbdHBtMl0gaW5jb25zaXN0ZW50IGFy
-Z3VtZW50czxici8+CiZndDs8YnIvPgomZ3Q7IEhpIGV2ZXJ5b25lLDxici8+CiZndDs8YnIvPgom
-Z3Q7IHdoeSBkb2VzPGJyLz4KJmd0Ozxici8+CiZndDsgdHBtMl9jcmVhdGVhayAtQyBlay5oYW5k
-bGUgLWMgYWsuY3R4IC11IGFrLnB1YiAtbiBhay5uYW1lIC1mIHBlbTxici8+CiZndDs8YnIvPgom
-Z3Q7IG9wZW5zc2wgcnNhdXRsIC1lbmNyeXB0IC1pbmtleSBhay5wdWIgLXB1YmluIC1pbiBwbGFp
-bnRleHQudHh0IC1vdXQgY2hpZmZyZS5lbmM8YnIvPgomZ3Q7PGJyLz4KJmd0OyB0cG0yX3JzYWRl
-Y3J5cHQgLWMgYWsuY3R4IC1vIHBsYWluLnR4dCBjaGlmZnJlLmVuYzxici8+CiZndDs8YnIvPgom
-Z3Q7IHJlc3VsdCBpbnRvPGJyLz4KJmd0Ozxici8+CiZndDsgRVJST1I6ZXN5czpzcmMvdHNzMi1l
-c3lzL2FwaS9Fc3lzX1JTQV9FbmNyeXB0LmM6MTAzOkVzeXNfUlNBX0VuY3J5cHQoKSBFc3lzPGJy
-Lz4KJmd0OyBGaW5pc2ggRXJyb3JDb2RlICgweDAwMDAwMTgyKTxici8+CiZndDsgRVJST1I6IEVz
-eXNfUlNBX0VuY3J5cHQoMHgxODIpIC0gdHBtOmhhbmRsZSgxKTppbmNvbnNpc3RlbnQgYXR0cmli
-dXRlczxici8+CiZndDsgRVJST1I6IFVuYWJsZSB0byBydW4gdHBtMl9yc2FlbmNyeXB0PGJyLz4K
-PGJyLz4KTG9va3MgbGlrZSBkZWNyeXB0IGF0dHJpYnV0ZSBpcyB0dXJuZWQgZG93bjo8YnIvPgo8
-YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL2Jsb2Iv
-MjgyMjFlNWIwYzlmYzUyMDI5YmRkOTY0ODRmYjg1NzcyNjAxYzRiMC90b29scy90cG0yX2NyZWF0
-ZWFrLmMjTDE0MiIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3
-YXJlL3RwbTItdG9vbHMvYmxvYi8yODIyMWU1YjBjOWZjNTIwMjliZGQ5NjQ4NGZiODU3NzI2MDFj
-NGIwL3Rvb2xzL3RwbTJfY3JlYXRlYWsuYyNMMTQyPC9hPjxici8+Cjxici8+CkkgdGhpbmsgaXQg
-d2FzIGNob3NlbiBiZWNhdXNlIGFuIGF0dGVzdGF0aW9uIGtleSBpcyB0eXBpY2FsbHkgdXNlZCBp
-biBhIHNpZ24vdmVyaWZ5IHBhdHRlcm4uIFNpZ24gb24gVFBNIHZlcmlmeSB3aXRoIHB1YmxpYyBr
-ZXkgb248YnIvPgpBdHRlc3RhdGlvbiB2ZXJpZmllciBzaWRlLjxici8+Cjxici8+CkkmIzM5O20g
-bm90IHN1cmUgaWYgdGhlcmUgaXMgYSB0ZW1wbGF0ZSBzcGVjaWZpZWQgZm9yIHRoZSBhdHRlc3Rh
-dGlvbiBrZXkgaW4gdGhlIHNwZWMsIEkgY2FuIG9ubHkgZmluZCBzcGVjIGRlZmluZWQ8YnIvPgpT
-UksgYW5kIEVLIHRlbXBsYXRlczo8YnIvPgotIDxhIGhyZWY9Imh0dHBzOi8vdHJ1c3RlZGNvbXB1
-dGluZ2dyb3VwLm9yZy93cC1jb250ZW50L3VwbG9hZHMvVENHLVRQTS12Mi4wLVByb3Zpc2lvbmlu
-Zy1HdWlkYW5jZS1QdWJsaXNoZWQtdjFyMS5wZGYiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL3Ry
-dXN0ZWRjb21wdXRpbmdncm91cC5vcmcvd3AtY29udGVudC91cGxvYWRzL1RDRy1UUE0tdjIuMC1Q
-cm92aXNpb25pbmctR3VpZGFuY2UtUHVibGlzaGVkLXYxcjEucGRmPC9hPjxici8+Cjxici8+CkJ1
-dCB0aGF0IHNwZWNpZmljIHNldCBvZiBwYXJhbWV0ZXJzIGZvciB0aGUgQUsgdGVtcGxhdGUgcHJl
-ZGF0ZXMgbWUsIGFuZCBJIGFtIG5vdCBzdXJlIGV4YWN0bHkgd2h5IGl0IHdhcyBjaG9zZW4uPGJy
-Lz4KPGJyLz4KJmd0Ozxici8+CiZndDsgPzxici8+CiZndDs8YnIvPgomZ3Q7ICh0aGUgc2FtZSBo
-YXBwZW5zIGlmIEkgdXNlIHRwbTJfcnNhZW5jcnlwdCk8YnIvPgomZ3Q7PGJyLz4KJmd0OyBUbyBn
-aXZlIHNvbWUgY29udGV4dDogSSB3b3VsZCBsaWtlIHRvIGRvIHNvbWV0aGluZyBsaWtlIGEgY2hh
-bGxlbmdlLXJlc3BvbnNlLjxici8+CiZndDs8YnIvPgomZ3Q7IFRoZXJlIGFyZSB0d28gd2F5cyB0
-byBkbyB0aGlzOjxici8+CiZndDs8YnIvPgomZ3Q7IDEuIFNlbmRpbmcgYSBub25jZSBhbmQgbGV0
-IHRoZSB0cG0gc2lnbiBpdCB1c2luZyBhbiBhayAobm8gaWRlYSBob3cgdG8gZG8gdGhpcykgMi48
-YnIvPgomZ3Q7IFNlbmQgYW4gZWNyeXB0ZWQgbWVzc2FnZSBhbmQgbGV0IHRoZSB0cG0gZGVjcnlw
-dCBpdCAodGhpcyBpcyB3aGF0IHNoYWxsIGhhcHBlbjxici8+CiZndDsgYWJvdmUpPGJyLz4KJmd0
-Ozxici8+CiZndDsgQXJlIHRoZXJlIGFueSBleGFtcGxlcyBvdXQgdGhlcmUgd2hpY2ggSSBtaXNz
-ZWQ/IE9yIGNhbiB5b3UgaGVscCBtZSBpbiBhbnk8YnIvPgomZ3Q7IGRpZmZlcmVudCB3YXk/PGJy
-Lz4KJmd0Ozxici8+CiZndDsgVGhhbmtzIGEgbG90ITxici8+CiZndDs8YnIvPgomZ3Q7IEJlc3Qg
-cmVnYXJkczxici8+CiZndDsgQWxleDxici8+CiZndDs8YnIvPgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXzxici8+CnRwbTIgbWFpbGluZyBsaXN0IC0tIHRw
-bTJAbGlzdHMuMDEub3JnPGJyLz4KVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0byB0cG0y
-LWxlYXZlQGxpc3RzLjAxLm9yZzxici8+CiUod2ViX3BhZ2VfdXJsKXNsaXN0aW5mbyUoY2dpZXh0
-KXMvJShfaW50ZXJuYWxfbmFtZSlzPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+PC9kaXY+PC9i
-b2R5PjwvaHRtbD4=
---===============4444357083777345183==--
+> So it is not possible at the moment to decrypt a message using an AK?
+
+Correct. You would want to create a different key with attributes suited for
+this.
+
+> =
+
+> Gesendet: Mittwoch, 08. Januar 2020 um 18:11 Uhr
+> Von: "Roberts, William C" <william.c.roberts(a)intel.com>
+> An: "Alexander Lieb" <alexander.lieb(a)online.de>, "tpm2(a)lists.01.org"
+> <tpm2(a)lists.01.org>
+> Betreff: [tpm2] Re: inconsistent arguments
+> =
+
+> =
+
+> > -----Original Message-----
+> > From: Alexander Lieb [mailto:alexander.lieb(a)online.de]
+> > Sent: Wednesday, January 8, 2020 11:00 AM
+> > To: tpm2(a)lists.01.org
+> > Subject: [tpm2] inconsistent arguments
+> >
+> > Hi everyone,
+> >
+> > why does
+> >
+> > tpm2_createak -C ek.handle -c ak.ctx -u ak.pub -n ak.name -f pem
+> >
+> > openssl rsautl -encrypt -inkey ak.pub -pubin -in plaintext.txt -out
+> > chiffre.enc
+> >
+> > tpm2_rsadecrypt -c ak.ctx -o plain.txt chiffre.enc
+> >
+> > result into
+> >
+> > ERROR:esys:src/tss2-esys/api/Esys_RSA_Encrypt.c:103:Esys_RSA_Encrypt()
+> > Esys Finish ErrorCode (0x00000182)
+> > ERROR: Esys_RSA_Encrypt(0x182) - tpm:handle(1):inconsistent attributes
+> > ERROR: Unable to run tpm2_rsaencrypt
+> =
+
+> Looks like decrypt attribute is turned down:
+> https://github.com/tpm2-software/tpm2-
+> tools/blob/28221e5b0c9fc52029bdd96484fb85772601c4b0/tools/tpm2_createak.c
+> #L142
+> =
+
+> I think it was chosen because an attestation key is typically used in a s=
+ign/verify
+> pattern. Sign on TPM verify with public key on Attestation verifier side.
+> =
+
+> I'm not sure if there is a template specified for the attestation key in =
+the spec, I
+> can only find spec defined SRK and EK templates:
+> - https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM-v2.0-
+> Provisioning-Guidance-Published-v1r1.pdf
+> =
+
+> But that specific set of parameters for the AK template predates me, and =
+I am
+> not sure exactly why it was chosen.
+> =
+
+> >
+> > ?
+> >
+> > (the same happens if I use tpm2_rsaencrypt)
+> >
+> > To give some context: I would like to do something like a challenge-res=
+ponse.
+> >
+> > There are two ways to do this:
+> >
+> > 1. Sending a nonce and let the tpm sign it using an ak (no idea how to =
+do this) 2.
+> > Send an ecrypted message and let the tpm decrypt it (this is what
+> > shall happen
+> > above)
+> >
+> > Are there any examples out there which I missed? Or can you help me in
+> > any different way?
+> >
+> > Thanks a lot!
+> >
+> > Best regards
+> > Alex
+> >
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============0304172154452712345==--
 
