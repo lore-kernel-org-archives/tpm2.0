@@ -1,51 +1,101 @@
-Content-Type: multipart/mixed; boundary="===============0702039511709579408=="
+Content-Type: multipart/mixed; boundary="===============1880213128309670609=="
 MIME-Version: 1.0
-From: Alexander Lieb <alexander.lieb at online.de>
-Subject: [tpm2] inconsistent arguments
-Date: Wed, 08 Jan 2020 17:59:51 +0100
-Message-ID: <trinity-c0f83bf4-22c2-4d2c-b217-1e9bcf82d06a-1578502791588@3c-app-1and1-bs05>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: inconsistent arguments
+Date: Wed, 08 Jan 2020 17:11:45 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E63DA1@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: trinity-c0f83bf4-22c2-4d2c-b217-1e9bcf82d06a-1578502791588@3c-app-1and1-bs05
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0702039511709579408==
+--===============1880213128309670609==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
---===============0702039511709579408==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBWZXJkYW5h
-O2ZvbnQtc2l6ZTogMTIuMHB4OyI+PGRpdj5IaSBldmVyeW9uZSw8L2Rpdj4KCjxkaXY+Jm5ic3A7
-PC9kaXY+Cgo8ZGl2PndoeSBkb2VzPC9kaXY+Cgo8ZGl2PiZuYnNwOzwvZGl2PgoKPGRpdj4KPGRp
-dj4mbmJzcDsmbmJzcDsmbmJzcDsgdHBtMl9jcmVhdGVhayAtQyBlay5oYW5kbGUgLWMgYWsuY3R4
-IC11IGFrLnB1YiAtbiBhay5uYW1lIC1mIHBlbTwvZGl2PgoKPGRpdj4mbmJzcDs8L2Rpdj4KCjxk
-aXY+Jm5ic3A7Jm5ic3A7Jm5ic3A7IG9wZW5zc2wgcnNhdXRsIC1lbmNyeXB0IC1pbmtleSBhay5w
-dWIgLXB1YmluIC1pbiBwbGFpbnRleHQudHh0IC1vdXQgY2hpZmZyZS5lbmM8L2Rpdj4KCjxkaXY+
-Jm5ic3A7PC9kaXY+Cgo8ZGl2PiZuYnNwOyZuYnNwOyZuYnNwOyB0cG0yX3JzYWRlY3J5cHQgLWMg
-YWsuY3R4IC1vIHBsYWluLnR4dCBjaGlmZnJlLmVuYzwvZGl2PgoKPGRpdj4mbmJzcDs8L2Rpdj4K
-CjxkaXY+cmVzdWx0IGludG8mbmJzcDs8L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2Pgo8
-ZGl2PkVSUk9SOmVzeXM6c3JjL3RzczItZXN5cy9hcGkvRXN5c19SU0FfRW5jcnlwdC5jOjEwMzpF
-c3lzX1JTQV9FbmNyeXB0KCkgRXN5cyBGaW5pc2ggRXJyb3JDb2RlICgweDAwMDAwMTgyKTxici8+
-CkVSUk9SOiBFc3lzX1JTQV9FbmNyeXB0KDB4MTgyKSAtIHRwbTpoYW5kbGUoMSk6aW5jb25zaXN0
-ZW50IGF0dHJpYnV0ZXM8YnIvPgpFUlJPUjogVW5hYmxlIHRvIHJ1biB0cG0yX3JzYWVuY3J5cHQ8
-L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2Pj88L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+
-Cgo8ZGl2Pih0aGUgc2FtZSBoYXBwZW5zIGlmIEkgdXNlIHRwbTJfcnNhZW5jcnlwdCk8L2Rpdj4K
-CjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2PlRvIGdpdmUgc29tZSBjb250ZXh0OiBJIHdvdWxkIGxp
-a2UgdG8gZG8gc29tZXRoaW5nIGxpa2UgYSBjaGFsbGVuZ2UtcmVzcG9uc2UuPC9kaXY+Cgo8ZGl2
-PiZuYnNwOzwvZGl2PgoKPGRpdj5UaGVyZSBhcmUgdHdvIHdheXMgdG8gZG8gdGhpczo8L2Rpdj4K
-CjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2PjEuIFNlbmRpbmcgYSBub25jZSBhbmQgbGV0IHRoZSB0
-cG0gc2lnbiBpdCB1c2luZyBhbiBhayAobm8gaWRlYSBob3cgdG8gZG8gdGhpcyk8L2Rpdj4KCjxk
-aXY+Mi4gU2VuZCBhbiBlY3J5cHRlZCBtZXNzYWdlIGFuZCBsZXQgdGhlIHRwbSBkZWNyeXB0IGl0
-ICh0aGlzIGlzIHdoYXQgc2hhbGwgaGFwcGVuIGFib3ZlKTwvZGl2PgoKPGRpdj4mbmJzcDs8L2Rp
-dj4KCjxkaXY+QXJlIHRoZXJlIGFueSBleGFtcGxlcyBvdXQgdGhlcmUgd2hpY2ggSSBtaXNzZWQ/
-IE9yIGNhbiB5b3UgaGVscCBtZSBpbiBhbnkgZGlmZmVyZW50IHdheT88L2Rpdj4KCjxkaXY+Jm5i
-c3A7PC9kaXY+Cgo8ZGl2PlRoYW5rcyBhIGxvdCE8L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+Cgo8
-ZGl2PkJlc3QgcmVnYXJkczwvZGl2PgoKPGRpdj5BbGV4PC9kaXY+Cgo8ZGl2PiZuYnNwOzwvZGl2
-Pgo8L2Rpdj4KPC9kaXY+PC9kaXY+PC9ib2R5PjwvaHRtbD4=
---===============0702039511709579408==--
+> -----Original Message-----
+> From: Alexander Lieb [mailto:alexander.lieb(a)online.de]
+> Sent: Wednesday, January 8, 2020 11:00 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] inconsistent arguments
+> =
+
+> Hi everyone,
+> =
+
+> why does
+> =
+
+>     tpm2_createak -C ek.handle -c ak.ctx -u ak.pub -n ak.name -f pem
+> =
+
+>     openssl rsautl -encrypt -inkey ak.pub -pubin -in plaintext.txt -out c=
+hiffre.enc
+> =
+
+>     tpm2_rsadecrypt -c ak.ctx -o plain.txt chiffre.enc
+> =
+
+> result into
+> =
+
+> ERROR:esys:src/tss2-esys/api/Esys_RSA_Encrypt.c:103:Esys_RSA_Encrypt() Es=
+ys
+> Finish ErrorCode (0x00000182)
+> ERROR: Esys_RSA_Encrypt(0x182) - tpm:handle(1):inconsistent attributes
+> ERROR: Unable to run tpm2_rsaencrypt
+
+Looks like decrypt attribute is turned down:
+https://github.com/tpm2-software/tpm2-tools/blob/28221e5b0c9fc52029bdd96484=
+fb85772601c4b0/tools/tpm2_createak.c#L142
+
+I think it was chosen because an attestation key is typically used in a sig=
+n/verify pattern. Sign on TPM verify with public key on
+Attestation verifier side.
+
+I'm not sure if there is a template specified for the attestation key in th=
+e spec, I can only find spec defined
+SRK and EK templates:
+  - https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM-v2.0-Provi=
+sioning-Guidance-Published-v1r1.pdf
+
+But that specific set of parameters for the AK template predates me, and I =
+am not sure exactly why it was chosen.
+
+> =
+
+> ?
+> =
+
+> (the same happens if I use tpm2_rsaencrypt)
+> =
+
+> To give some context: I would like to do something like a challenge-respo=
+nse.
+> =
+
+> There are two ways to do this:
+> =
+
+> 1. Sending a nonce and let the tpm sign it using an ak (no idea how to do=
+ this) 2.
+> Send an ecrypted message and let the tpm decrypt it (this is what shall h=
+appen
+> above)
+> =
+
+> Are there any examples out there which I missed? Or can you help me in any
+> different way?
+> =
+
+> Thanks a lot!
+> =
+
+> Best regards
+> Alex
+>=20
+
+--===============1880213128309670609==--
 
