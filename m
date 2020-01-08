@@ -1,24 +1,51 @@
-Content-Type: multipart/mixed; boundary="===============6300392692901136482=="
+Content-Type: multipart/mixed; boundary="===============0702039511709579408=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] tpm2-pkcs11: Release 1.0.1 
-Date: Mon, 06 Jan 2020 20:41:15 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E638C7@ORSMSX101.amr.corp.intel.com>
+From: Alexander Lieb <alexander.lieb at online.de>
+Subject: [tpm2] inconsistent arguments
+Date: Wed, 08 Jan 2020 17:59:51 +0100
+Message-ID: <trinity-c0f83bf4-22c2-4d2c-b217-1e9bcf82d06a-1578502791588@3c-app-1and1-bs05>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6300392692901136482==
+--===============0702039511709579408==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
 
-I'd like to announce the following version 1.0.1 release for tpm2-pkcs11:
-https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.0.1
+--===============0702039511709579408==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-1.0.1 - 2020-1-6
-  * stop linking against libdl
-  * add missing test integration scripts to dist tarball.
---===============6300392692901136482==--
+PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBWZXJkYW5h
+O2ZvbnQtc2l6ZTogMTIuMHB4OyI+PGRpdj5IaSBldmVyeW9uZSw8L2Rpdj4KCjxkaXY+Jm5ic3A7
+PC9kaXY+Cgo8ZGl2PndoeSBkb2VzPC9kaXY+Cgo8ZGl2PiZuYnNwOzwvZGl2PgoKPGRpdj4KPGRp
+dj4mbmJzcDsmbmJzcDsmbmJzcDsgdHBtMl9jcmVhdGVhayAtQyBlay5oYW5kbGUgLWMgYWsuY3R4
+IC11IGFrLnB1YiAtbiBhay5uYW1lIC1mIHBlbTwvZGl2PgoKPGRpdj4mbmJzcDs8L2Rpdj4KCjxk
+aXY+Jm5ic3A7Jm5ic3A7Jm5ic3A7IG9wZW5zc2wgcnNhdXRsIC1lbmNyeXB0IC1pbmtleSBhay5w
+dWIgLXB1YmluIC1pbiBwbGFpbnRleHQudHh0IC1vdXQgY2hpZmZyZS5lbmM8L2Rpdj4KCjxkaXY+
+Jm5ic3A7PC9kaXY+Cgo8ZGl2PiZuYnNwOyZuYnNwOyZuYnNwOyB0cG0yX3JzYWRlY3J5cHQgLWMg
+YWsuY3R4IC1vIHBsYWluLnR4dCBjaGlmZnJlLmVuYzwvZGl2PgoKPGRpdj4mbmJzcDs8L2Rpdj4K
+CjxkaXY+cmVzdWx0IGludG8mbmJzcDs8L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2Pgo8
+ZGl2PkVSUk9SOmVzeXM6c3JjL3RzczItZXN5cy9hcGkvRXN5c19SU0FfRW5jcnlwdC5jOjEwMzpF
+c3lzX1JTQV9FbmNyeXB0KCkgRXN5cyBGaW5pc2ggRXJyb3JDb2RlICgweDAwMDAwMTgyKTxici8+
+CkVSUk9SOiBFc3lzX1JTQV9FbmNyeXB0KDB4MTgyKSAtIHRwbTpoYW5kbGUoMSk6aW5jb25zaXN0
+ZW50IGF0dHJpYnV0ZXM8YnIvPgpFUlJPUjogVW5hYmxlIHRvIHJ1biB0cG0yX3JzYWVuY3J5cHQ8
+L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2Pj88L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+
+Cgo8ZGl2Pih0aGUgc2FtZSBoYXBwZW5zIGlmIEkgdXNlIHRwbTJfcnNhZW5jcnlwdCk8L2Rpdj4K
+CjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2PlRvIGdpdmUgc29tZSBjb250ZXh0OiBJIHdvdWxkIGxp
+a2UgdG8gZG8gc29tZXRoaW5nIGxpa2UgYSBjaGFsbGVuZ2UtcmVzcG9uc2UuPC9kaXY+Cgo8ZGl2
+PiZuYnNwOzwvZGl2PgoKPGRpdj5UaGVyZSBhcmUgdHdvIHdheXMgdG8gZG8gdGhpczo8L2Rpdj4K
+CjxkaXY+Jm5ic3A7PC9kaXY+Cgo8ZGl2PjEuIFNlbmRpbmcgYSBub25jZSBhbmQgbGV0IHRoZSB0
+cG0gc2lnbiBpdCB1c2luZyBhbiBhayAobm8gaWRlYSBob3cgdG8gZG8gdGhpcyk8L2Rpdj4KCjxk
+aXY+Mi4gU2VuZCBhbiBlY3J5cHRlZCBtZXNzYWdlIGFuZCBsZXQgdGhlIHRwbSBkZWNyeXB0IGl0
+ICh0aGlzIGlzIHdoYXQgc2hhbGwgaGFwcGVuIGFib3ZlKTwvZGl2PgoKPGRpdj4mbmJzcDs8L2Rp
+dj4KCjxkaXY+QXJlIHRoZXJlIGFueSBleGFtcGxlcyBvdXQgdGhlcmUgd2hpY2ggSSBtaXNzZWQ/
+IE9yIGNhbiB5b3UgaGVscCBtZSBpbiBhbnkgZGlmZmVyZW50IHdheT88L2Rpdj4KCjxkaXY+Jm5i
+c3A7PC9kaXY+Cgo8ZGl2PlRoYW5rcyBhIGxvdCE8L2Rpdj4KCjxkaXY+Jm5ic3A7PC9kaXY+Cgo8
+ZGl2PkJlc3QgcmVnYXJkczwvZGl2PgoKPGRpdj5BbGV4PC9kaXY+Cgo8ZGl2PiZuYnNwOzwvZGl2
+Pgo8L2Rpdj4KPC9kaXY+PC9kaXY+PC9ib2R5PjwvaHRtbD4=
+--===============0702039511709579408==--
 
