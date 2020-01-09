@@ -1,45 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============5635188617463471400=="
+Content-Type: multipart/mixed; boundary="===============1415184257178256477=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+From: Steven Clark <davolfman at gmail.com>
 Subject: [tpm2] Re: How do I set the TSS2 log level from my source?
-Date: Thu, 09 Jan 2020 09:31:02 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163C46FF9@EXCH2010B.sit.fraunhofer.de>
-In-Reply-To: CAOCvsSngFGP9MxN-SRPwq2ZRfztW7y-nWWu4inWMXi-xq7zeBQ@mail.gmail.com
+Date: Thu, 09 Jan 2020 09:24:08 -0800
+Message-ID: <CAOCvsS=g2Xjm=-S2=rXokiaGK_az81bTbGqLYFr59ZV2BD4AHw@mail.gmail.com>
+In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0163C46FF9@EXCH2010B.sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5635188617463471400==
+--===============1415184257178256477==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-you can set the maxloglevel from ./configure to be none
-then all logging code is compiled out.
+Setenv or putenv is probably what I'll have to use.  I was hoping to not
+have to communicate with shell land just to manipulate C.  Modifying a
+shared library for the sake of one client program is right out.
 
-Alternatively, setenv("TSS2_LOG")
+--===============1415184257178256477==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-Cheers,
-Andreas
-________________________________________
-From: Steven Clark [davolfman(a)gmail.com]
-Sent: Thursday, January 09, 2020 02:38
-To: tpm2
-Subject: [tpm2] How do I set the TSS2 log level from my source?
+PGRpdiBkaXI9ImF1dG8iPlNldGVudiBvciBwdXRlbnYgaXMgcHJvYmFibHkgd2hhdCBJJiMzOTts
+bCBoYXZlIHRvIHVzZS7CoCBJIHdhcyBob3BpbmcgdG8gbm90IGhhdmUgdG8gY29tbXVuaWNhdGUg
+d2l0aCBzaGVsbCBsYW5kIGp1c3QgdG8gbWFuaXB1bGF0ZSBDLsKgIE1vZGlmeWluZyBhIHNoYXJl
+ZCBsaWJyYXJ5IGZvciB0aGUgc2FrZSBvZiBvbmUgY2xpZW50IHByb2dyYW0gaXMgcmlnaHQgb3V0
+LjwvZGl2Pgo=
 
-I'm slowly trying to relearn some operations in C/C++ so they can be
-used in different parts of the workflow.
-Right now I'm trying to just verify if a given handle is accessible.
-The easiest way I can see to do this is to try to turn it into an
-ESAPI resource using Esys_TR_FromTPMPublic() and see if I get a
-non-zero return code.  The only issue is every layer in the API stack
-wants to let me know there's a problem on stderr.  From console I can
-set  TSS2_LOG to all+NONE to suppress this, but that documentation
-doesn't say how to do this from C land.  Is there a good way to do
-this?
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============5635188617463471400==--
+--===============1415184257178256477==--
 
