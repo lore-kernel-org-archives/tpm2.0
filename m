@@ -1,16 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============3357816417499681287=="
+Content-Type: multipart/mixed; boundary="===============7390004521864431360=="
 MIME-Version: 1.0
-From: Steffen Schwebel <s.schwebel at uvensys.de>
-Subject: [tpm2] some questions about Identity
-Date: Thu, 09 Jan 2020 09:34:43 +0100
-Message-ID: <18a6bd1e-30cb-2ed5-7f3d-f9ab40b8ed46@uvensys.de>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: [tpm2] Re: some questions about Identity
+Date: Thu, 09 Jan 2020 09:28:38 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163C46FE8@EXCH2010B.sit.fraunhofer.de>
+In-Reply-To: 18a6bd1e-30cb-2ed5-7f3d-f9ab40b8ed46@uvensys.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3357816417499681287==
+--===============7390004521864431360==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+What you need are an EK-Certificate that identifies the TPM as original (by=
+ TPM vendor)
+and a Platform Certificate that assigns the TPM to a platform with serial n=
+umber and stuff.
+
+The former is typically available.
+The latter is typically not provided yet; Sorry.
+
+But keep us posted if you get hold of some Platform Certificates.
+
+Cheers,
+Andreas
+________________________________________
+From: Steffen Schwebel [s.schwebel(a)uvensys.de]
+Sent: Thursday, January 09, 2020 09:34
+To: tpm2
+Subject: [tpm2] some questions about Identity
 
 Hello,
 
@@ -33,8 +52,7 @@ This is my first message to the group.
 Regards,
 Steffen
 
--- =
-
+--
 Steffen Schwebel
 Mail: s.schwebel(a)uvensys.de
 uvensys GmbH
@@ -72,6 +90,10 @@ those of the author and do not necessarily represent those
 of the company. If verification is required please request
 a hard-copy version.
 
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 
---===============3357816417499681287==--
+--===============7390004521864431360==--
 
