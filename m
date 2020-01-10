@@ -1,214 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============7543145909296831999=="
+Content-Type: multipart/mixed; boundary="===============2504730408508145127=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+From: Oliver, Dario N <dario.n.oliver at intel.com>
 Subject: [tpm2] Re: Some Errors
-Date: Fri, 10 Jan 2020 14:16:04 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0163C47D73@EXCH2010B.sit.fraunhofer.de>
-In-Reply-To: trinity-716f3f37-844f-4325-ba0b-1792d13a4d87-1578662912999@3c-app-1and1-bs04
+Date: Fri, 10 Jan 2020 16:36:13 +0000
+Message-ID: <20A6FE0AC912764FB8B5BC5A1A7CB92B47336E16@fmsmsx101.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7543145909296831999==
+--===============2504730408508145127==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This is now a different error code.
-It's an authorization error.
+The man page of tpm2_createak is wrong.
+It should be:
 
-Did you set the owner authorization (aka storage hierarchy) ?
-That needs to be passed using -P
-________________________________
-From: Alexander Lieb [alexander.lieb(a)online.de]
-Sent: Friday, January 10, 2020 14:28
-To: Fuchs, Andreas
-Cc: tpm2(a)lists.01.org
-Subject: Aw: RE: [tpm2] Some Errors
-
-Still not working :(
-
-# tpm2_evictcontrol -c ak.ctx 0x81010002
-WARNING:esys:src/tss2-esys/api/Esys_EvictControl.c:326:Esys_EvictControl_Fi=
-nish() Received TPM Error
-ERROR:esys:src/tss2-esys/api/Esys_EvictControl.c:114:Esys_EvictControl() Es=
-ys Finish ErrorCode (0x000009a2)
-ERROR: Esys_EvictControl(0x9A2) - tpm:session(1):authorization failure with=
-out DA implications
-ERROR:esys:src/tss2-esys/esys_tr.c:357:Esys_TR_Close() Error: Esys handle d=
-oes not exist (70018).
-ERROR: Esys_TR_Close(0x70018) - esapi:0x18
-ERROR: Unable to run tpm2_evictcontrol
-# tpm2_evictcontrol -C o -c ak.ctx 0x81010002
-WARNING:esys:src/tss2-esys/api/Esys_EvictControl.c:326:Esys_EvictControl_Fi=
-nish() Received TPM Error
-ERROR:esys:src/tss2-esys/api/Esys_EvictControl.c:114:Esys_EvictControl() Es=
-ys Finish ErrorCode (0x000009a2)
-ERROR: Esys_EvictControl(0x9A2) - tpm:session(1):authorization failure with=
-out DA implications
-ERROR:esys:src/tss2-esys/esys_tr.c:357:Esys_TR_Close() Error: Esys handle d=
-oes not exist (70018).
-ERROR: Esys_TR_Close(0x70018) - esapi:0x18
-ERROR: Unable to run tpm2_evictcontrol
-#
-
-
-
-Gesendet: Freitag, 10. Januar 2020 um 13:47 Uhr
-Von: "Fuchs, Andreas" <andreas.fuchs(a)sit.fraunhofer.de>
-An: "Alexander Lieb" <alexander.lieb(a)online.de>, "tpm2(a)lists.01.org" <t=
-pm2(a)lists.01.org>
-Betreff: RE: [tpm2] Some Errors
-That seems to not have been updated correctly.
-
-Should probably be:
-tpm2_evictcontrol -c ak.ctx 0x81010002
-or
+tpm2_createek -c ek.handle -G rsa -u ek.pub
+tpm2_createak -C ek.handle -c ak.ctx -u ak.pub -n ak.name
 tpm2_evictcontrol -C o -c ak.ctx 0x81010002
 
-Maybe you could try this and if it works, make a PR with the update to the =
-tools project.
+I was having the same problem, and that worked for me!
 
-Thanks,
-Andreas
-
-________________________________
-From: Alexander Lieb [alexander.lieb(a)online.de]
-Sent: Friday, January 10, 2020 13:36
-To: tpm2(a)lists.01.org
-Subject: [tpm2] Some Errors
-
-
-Hi,
-
-I tried to make my ak persistent, usign the following readme:
-
-https://github.com/tpm2-software/tpm2-tools/blob/master/man/tpm2_createak.1=
-.md
-
-The first two commands work fine, the last one results into:
-
-tpm2_evictcontrol -c 0x81010002 -o ak.ctx
-
-WARNING:esys:src/tss2-esys/api/Esys_ReadPublic.c:320:Esys_ReadPublic_Finish=
-() Received TPM Error
-ERROR:esys:src/tss2-esys/esys_tr.c:231:Esys_TR_FromTPMPublic_Finish() Error=
- ReadPublic ErrorCode (0x0000018b)
-ERROR:esys:src/tss2-esys/esys_tr.c:321:Esys_TR_FromTPMPublic() Error TR Fro=
-mTPMPublic ErrorCode (0x0000018b)
-ERROR: Esys_TR_FromTPMPublic(0x18B) - tpm:handle(1):the handle is not corre=
-ct for the use
-ERROR:esys:src/tss2-esys/esys_tr.c:357:Esys_TR_Close() Error: Esys handle d=
-oes not exist (70018).
-ERROR: Esys_TR_Close(0x70018) - esapi:0x18
-ERROR: Unable to run tpm2_evictcontrol
-
-
-I am not sure, whether I need to run any cmd to allocate the handle, or if =
-it is necessary to be in a special mode or sth. Can you help me with this i=
-ssue? Thanks a lot.
-
-Best regards
-
-
---===============7543145909296831999==
+--===============2504730408508145127==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjxzdHlsZSB0eXBlPSJ0ZXh0
-L2NzcyIgaWQ9Im93YVBhcmFTdHlsZSI+PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBmcHN0eWxlPSIx
-IiBvY3NpPSIwIj4KPGRpdiBzdHlsZT0iZGlyZWN0aW9uOiBsdHI7Zm9udC1mYW1pbHk6IFRhaG9t
-YTtjb2xvcjogIzAwMDAwMDtmb250LXNpemU6IDEwcHQ7Ij4KPGRpdj5UaGlzIGlzIG5vdyBhIGRp
-ZmZlcmVudCBlcnJvciBjb2RlLjwvZGl2Pgo8ZGl2Pkl0J3MgYW4gYXV0aG9yaXphdGlvbiBlcnJv
-ci48L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2PkRpZCB5b3Ugc2V0IHRoZSBvd25lciBhdXRo
-b3JpemF0aW9uIChha2Egc3RvcmFnZSBoaWVyYXJjaHkpID88L2Rpdj4KPGRpdj5UaGF0IG5lZWRz
-IHRvIGJlIHBhc3NlZCB1c2luZyAtUDxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5
-OiBUaW1lcyBOZXcgUm9tYW47IGNvbG9yOiAjMDAwMDAwOyBmb250LXNpemU6IDE2cHgiPgo8aHIg
-dGFiaW5kZXg9Ii0xIj4KPGRpdiBpZD0iZGl2UnBGNTM4MDQyIiBzdHlsZT0iZGlyZWN0aW9uOiBs
-dHI7Ij48Zm9udCBzaXplPSIyIiBmYWNlPSJUYWhvbWEiIGNvbG9yPSIjMDAwMDAwIj48Yj5Gcm9t
-OjwvYj4gQWxleGFuZGVyIExpZWIgW2FsZXhhbmRlci5saWViQG9ubGluZS5kZV08YnI+CjxiPlNl
-bnQ6PC9iPiBGcmlkYXksIEphbnVhcnkgMTAsIDIwMjAgMTQ6Mjg8YnI+CjxiPlRvOjwvYj4gRnVj
-aHMsIEFuZHJlYXM8YnI+CjxiPkNjOjwvYj4gdHBtMkBsaXN0cy4wMS5vcmc8YnI+CjxiPlN1Ympl
-Y3Q6PC9iPiBBdzogUkU6IFt0cG0yXSBTb21lIEVycm9yczxicj4KPC9mb250Pjxicj4KPC9kaXY+
-CjxkaXY+PC9kaXY+CjxkaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OlZlcmRhbmE7IGZvbnQt
-c2l6ZToxMi4wcHgiPgo8ZGl2PlN0aWxsIG5vdCB3b3JraW5nIDooPC9kaXY+CjxkaXY+Jm5ic3A7
-PC9kaXY+CjxkaXY+CjxkaXY+IyB0cG0yX2V2aWN0Y29udHJvbCAtYyBhay5jdHggMHg4MTAxMDAw
-Mjxicj4KV0FSTklORzplc3lzOnNyYy90c3MyLWVzeXMvYXBpL0VzeXNfRXZpY3RDb250cm9sLmM6
-MzI2OkVzeXNfRXZpY3RDb250cm9sX0ZpbmlzaCgpIFJlY2VpdmVkIFRQTSBFcnJvcjxicj4KRVJS
-T1I6ZXN5czpzcmMvdHNzMi1lc3lzL2FwaS9Fc3lzX0V2aWN0Q29udHJvbC5jOjExNDpFc3lzX0V2
-aWN0Q29udHJvbCgpIEVzeXMgRmluaXNoIEVycm9yQ29kZSAoMHgwMDAwMDlhMik8YnI+CkVSUk9S
-OiBFc3lzX0V2aWN0Q29udHJvbCgweDlBMikgLSB0cG06c2Vzc2lvbigxKTphdXRob3JpemF0aW9u
-IGZhaWx1cmUgd2l0aG91dCBEQSBpbXBsaWNhdGlvbnM8YnI+CkVSUk9SOmVzeXM6c3JjL3RzczIt
-ZXN5cy9lc3lzX3RyLmM6MzU3OkVzeXNfVFJfQ2xvc2UoKSBFcnJvcjogRXN5cyBoYW5kbGUgZG9l
-cyBub3QgZXhpc3QgKDcwMDE4KS48YnI+CkVSUk9SOiBFc3lzX1RSX0Nsb3NlKDB4NzAwMTgpIC0g
-ZXNhcGk6MHgxODxicj4KRVJST1I6IFVuYWJsZSB0byBydW4gdHBtMl9ldmljdGNvbnRyb2w8YnI+
-CiMgdHBtMl9ldmljdGNvbnRyb2wgLUMgbyAtYyBhay5jdHggMHg4MTAxMDAwMjxicj4KV0FSTklO
-Rzplc3lzOnNyYy90c3MyLWVzeXMvYXBpL0VzeXNfRXZpY3RDb250cm9sLmM6MzI2OkVzeXNfRXZp
-Y3RDb250cm9sX0ZpbmlzaCgpIFJlY2VpdmVkIFRQTSBFcnJvcjxicj4KRVJST1I6ZXN5czpzcmMv
-dHNzMi1lc3lzL2FwaS9Fc3lzX0V2aWN0Q29udHJvbC5jOjExNDpFc3lzX0V2aWN0Q29udHJvbCgp
-IEVzeXMgRmluaXNoIEVycm9yQ29kZSAoMHgwMDAwMDlhMik8YnI+CkVSUk9SOiBFc3lzX0V2aWN0
-Q29udHJvbCgweDlBMikgLSB0cG06c2Vzc2lvbigxKTphdXRob3JpemF0aW9uIGZhaWx1cmUgd2l0
-aG91dCBEQSBpbXBsaWNhdGlvbnM8YnI+CkVSUk9SOmVzeXM6c3JjL3RzczItZXN5cy9lc3lzX3Ry
-LmM6MzU3OkVzeXNfVFJfQ2xvc2UoKSBFcnJvcjogRXN5cyBoYW5kbGUgZG9lcyBub3QgZXhpc3Qg
-KDcwMDE4KS48YnI+CkVSUk9SOiBFc3lzX1RSX0Nsb3NlKDB4NzAwMTgpIC0gZXNhcGk6MHgxODxi
-cj4KRVJST1I6IFVuYWJsZSB0byBydW4gdHBtMl9ldmljdGNvbnRyb2w8YnI+CiM8L2Rpdj4KPGRp
-dj4mbmJzcDs8L2Rpdj4KPC9kaXY+CjxkaXY+Jm5ic3A7CjxkaXY+Jm5ic3A7CjxkaXYgbmFtZT0i
-cXVvdGUiIHN0eWxlPSJtYXJnaW46MTBweCA1cHggNXB4IDEwcHg7IHBhZGRpbmc6MTBweCAwIDEw
-cHggMTBweDsgYm9yZGVyLWxlZnQ6MnB4IHNvbGlkICNDM0Q5RTU7IHdvcmQtd3JhcDpicmVhay13
-b3JkIj4KPGRpdiBzdHlsZT0ibWFyZ2luOjAgMCAxMHB4IDAiPjxiPkdlc2VuZGV0OjwvYj4mbmJz
-cDtGcmVpdGFnLCAxMC4gSmFudWFyIDIwMjAgdW0gMTM6NDcgVWhyPGJyPgo8Yj5Wb246PC9iPiZu
-YnNwOyZxdW90O0Z1Y2hzLCBBbmRyZWFzJnF1b3Q7ICZsdDthbmRyZWFzLmZ1Y2hzQHNpdC5mcmF1
-bmhvZmVyLmRlJmd0Ozxicj4KPGI+QW46PC9iPiZuYnNwOyZxdW90O0FsZXhhbmRlciBMaWViJnF1
-b3Q7ICZsdDthbGV4YW5kZXIubGllYkBvbmxpbmUuZGUmZ3Q7LCAmcXVvdDt0cG0yQGxpc3RzLjAx
-Lm9yZyZxdW90OyAmbHQ7dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PGJyPgo8Yj5CZXRyZWZmOjwvYj4m
-bmJzcDtSRTogW3RwbTJdIFNvbWUgRXJyb3JzPC9kaXY+CjxkaXYgbmFtZT0icXVvdGVkLWNvbnRl
-bnQiPgo8ZGl2Pgo8ZGl2IHN0eWxlPSJkaXJlY3Rpb246bHRyOyBmb250LWZhbWlseTpUYWhvbWE7
-IGNvbG9yOnJnYigwLDAsMCk7IGZvbnQtc2l6ZToxMC4wcHQiPgo8ZGl2PlRoYXQgc2VlbXMgdG8g
-bm90IGhhdmUgYmVlbiB1cGRhdGVkIGNvcnJlY3RseS48L2Rpdj4KPGRpdj4mbmJzcDs8L2Rpdj4K
-PGRpdj5TaG91bGQgcHJvYmFibHkgYmU6PC9kaXY+CjxkaXY+dHBtMl9ldmljdGNvbnRyb2wgLWMg
-YWsuY3R4IDB4ODEwMTAwMDI8L2Rpdj4KPGRpdj5vcjwvZGl2Pgo8ZGl2Pgo8ZGl2PnRwbTJfZXZp
-Y3Rjb250cm9sIC1DIG8gLWMgYWsuY3R4IDB4ODEwMTAwMDI8L2Rpdj4KPGRpdj4mbmJzcDs8L2Rp
-dj4KPGRpdj5NYXliZSB5b3UgY291bGQgdHJ5IHRoaXMgYW5kIGlmIGl0IHdvcmtzLCBtYWtlIGEg
-UFIgd2l0aCB0aGUgdXBkYXRlIHRvIHRoZSB0b29scyBwcm9qZWN0LjwvZGl2Pgo8ZGl2PiZuYnNw
-OzwvZGl2Pgo8ZGl2PlRoYW5rcyw8L2Rpdj4KPGRpdj5BbmRyZWFzPC9kaXY+CjxkaXY+Jm5ic3A7
-PC9kaXY+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpUaW1lcyBOZXcgUm9tYW47IGNv
-bG9yOnJnYigwLDAsMCk7IGZvbnQtc2l6ZToxNi4wcHgiPgo8aHI+CjxkaXYgaWQ9ImRpdlJwRjM5
-OTIwNyIgc3R5bGU9ImRpcmVjdGlvbjpsdHIiPjxmb250IHNpemU9IjIiIGZhY2U9IlRhaG9tYSIg
-Y29sb3I9IiMwMDAwMDAiPjxiPkZyb206PC9iPiBBbGV4YW5kZXIgTGllYiBbYWxleGFuZGVyLmxp
-ZWJAb25saW5lLmRlXTxicj4KPGI+U2VudDo8L2I+IEZyaWRheSwgSmFudWFyeSAxMCwgMjAyMCAx
-MzozNjxicj4KPGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9yZzxicj4KPGI+U3ViamVjdDo8L2I+
-IFt0cG0yXSBTb21lIEVycm9yczwvZm9udD48YnI+CiZuYnNwOzwvZGl2Pgo8ZGl2PiZuYnNwOzwv
-ZGl2Pgo8ZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpWZXJkYW5hOyBmb250LXNpemU6MTIu
-MHB4Ij4KPGRpdj5IaSw8L2Rpdj4KPGRpdj4mbmJzcDs8L2Rpdj4KPGRpdj5JIHRyaWVkIHRvIG1h
-a2UgbXkgYWsgcGVyc2lzdGVudCwgdXNpZ24gdGhlIGZvbGxvd2luZyByZWFkbWU6PC9kaXY+Cjxk
-aXY+Jm5ic3A7PC9kaXY+CjxkaXY+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29m
-dHdhcmUvdHBtMi10b29scy9ibG9iL21hc3Rlci9tYW4vdHBtMl9jcmVhdGVhay4xLm1kIiB0YXJn
-ZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIj5odHRwczovL2dpdGh1Yi5jb20v
-dHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL2Jsb2IvbWFzdGVyL21hbi90cG0yX2NyZWF0ZWFrLjEu
-bWQ8L2E+PC9kaXY+CjxkaXY+Jm5ic3A7PC9kaXY+CjxkaXY+VGhlIGZpcnN0IHR3byBjb21tYW5k
-cyB3b3JrIGZpbmUsIHRoZSBsYXN0IG9uZSByZXN1bHRzIGludG86PC9kaXY+CjxkaXY+Jm5ic3A7
-PC9kaXY+CjxkaXY+dHBtMl9ldmljdGNvbnRyb2wgLWMgMHg4MTAxMDAwMiAtbyBhay5jdHg8L2Rp
-dj4KPGRpdj4mbmJzcDs8L2Rpdj4KPGRpdj4KPGRpdj4KPGRpdj5XQVJOSU5HOmVzeXM6c3JjL3Rz
-czItZXN5cy9hcGkvRXN5c19SZWFkUHVibGljLmM6MzIwOkVzeXNfUmVhZFB1YmxpY19GaW5pc2go
-KSBSZWNlaXZlZCBUUE0gRXJyb3I8YnI+CkVSUk9SOmVzeXM6c3JjL3RzczItZXN5cy9lc3lzX3Ry
-LmM6MjMxOkVzeXNfVFJfRnJvbVRQTVB1YmxpY19GaW5pc2goKSBFcnJvciBSZWFkUHVibGljIEVy
-cm9yQ29kZSAoMHgwMDAwMDE4Yik8YnI+CkVSUk9SOmVzeXM6c3JjL3RzczItZXN5cy9lc3lzX3Ry
-LmM6MzIxOkVzeXNfVFJfRnJvbVRQTVB1YmxpYygpIEVycm9yIFRSIEZyb21UUE1QdWJsaWMgRXJy
-b3JDb2RlICgweDAwMDAwMThiKTxicj4KRVJST1I6IEVzeXNfVFJfRnJvbVRQTVB1YmxpYygweDE4
-QikgLSB0cG06aGFuZGxlKDEpOnRoZSBoYW5kbGUgaXMgbm90IGNvcnJlY3QgZm9yIHRoZSB1c2U8
-YnI+CkVSUk9SOmVzeXM6c3JjL3RzczItZXN5cy9lc3lzX3RyLmM6MzU3OkVzeXNfVFJfQ2xvc2Uo
-KSBFcnJvcjogRXN5cyBoYW5kbGUgZG9lcyBub3QgZXhpc3QgKDcwMDE4KS48YnI+CkVSUk9SOiBF
-c3lzX1RSX0Nsb3NlKDB4NzAwMTgpIC0gZXNhcGk6MHgxODxicj4KRVJST1I6IFVuYWJsZSB0byBy
-dW4gdHBtMl9ldmljdGNvbnRyb2w8L2Rpdj4KPGRpdj4mbmJzcDs8L2Rpdj4KPGRpdj4mbmJzcDs8
-L2Rpdj4KPGRpdj5JIGFtIG5vdCBzdXJlLCB3aGV0aGVyIEkgbmVlZCB0byBydW4gYW55IGNtZCB0
-byBhbGxvY2F0ZSB0aGUgaGFuZGxlLCBvciBpZiBpdCBpcyBuZWNlc3NhcnkgdG8gYmUgaW4gYSBz
-cGVjaWFsIG1vZGUgb3Igc3RoLiBDYW4geW91IGhlbHAgbWUgd2l0aCB0aGlzIGlzc3VlPyBUaGFu
-a3MgYSBsb3QuPC9kaXY+CjxkaXY+Jm5ic3A7PC9kaXY+CjxkaXY+QmVzdCByZWdhcmRzPC9kaXY+
-CjxkaXY+Jm5ic3A7PC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9k
-aXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rp
-dj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
+ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7fQpA
+cGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsKCW1hcmdpbjoxLjBpbiAxLjBp
+biAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0t
+Pjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9
+ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1z
+byA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJl
+ZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVh
+ZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRp
+diBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhlIG1hbiBwYWdl
+IG9mIHRwbTJfY3JlYXRlYWsgaXMgd3JvbmcuPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiPkl0IHNob3VsZCBiZTo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPnRwbTJfY3JlYXRlZWsg
+LWMgZWsuaGFuZGxlIC1HIHJzYSAtdSBlay5wdWI8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+dHBtMl9jcmVhdGVhayAtQyBlay5oYW5kbGUgLWMgYWsuY3R4IC11IGFrLnB1YiAt
+biBhay5uYW1lPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPnRwbTJfZXZpY3Rj
+b250cm9sIC1DIG8gLWMgYWsuY3R4IDB4ODEwMTAwMDI8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkg
+d2FzIGhhdmluZyB0aGUgc2FtZSBwcm9ibGVtLCBhbmQgdGhhdCB3b3JrZWQgZm9yIG1lITxvOnA+
+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
---===============7543145909296831999==--
+--===============2504730408508145127==--
 
