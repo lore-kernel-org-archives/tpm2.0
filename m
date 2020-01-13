@@ -1,56 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============8242937898266175519=="
+Content-Type: multipart/mixed; boundary="===============6010143185656093617=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Some Errors
-Date: Mon, 13 Jan 2020 15:37:30 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E65AE1@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 20A6FE0AC912764FB8B5BC5A1A7CB92B47336E16@fmsmsx101.amr.corp.intel.com
+From: Tricca, Philip B <philip.b.tricca at intel.com>
+Subject: [tpm2] tpm2-abrmd 2.3.1
+Date: Mon, 13 Jan 2020 17:21:03 +0000
+Message-ID: <DB638850A6A2434A93ECADDA0BC838909CF02B16@ORSMSX104.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8242937898266175519==
+--===============6010143185656093617==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Oliver, Dario N [mailto:dario.n.oliver(a)intel.com]
-> Sent: Friday, January 10, 2020 10:36 AM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] Re: Some Errors
-> =
+The 2.3.1 bugfix release for tpm2-abrmd is now available: https://github.co=
+m/tpm2-software/tpm2-abrmd/releases/tag/2.3.1. Timing for this release got =
+a bit messed up on account of the holidays. Thanks all for your patience.
 
-> The man page of tpm2_createak is wrong.
-> =
+Best,
+Philip
 
-> It should be:
-> =
 
-> =
+--===============6010143185656093617==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-> =
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
+SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
+ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
+aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
+YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
+ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
+b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
+emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
+cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
+c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
+Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
+b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
+aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
+bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGUgMi4zLjEgYnVnZml4IHJlbGVhc2UgZm9yIHRwbTIt
+YWJybWQgaXMgbm93IGF2YWlsYWJsZTogPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTIt
+c29mdHdhcmUvdHBtMi1hYnJtZC9yZWxlYXNlcy90YWcvMi4zLjEiPgpodHRwczovL2dpdGh1Yi5j
+b20vdHBtMi1zb2Z0d2FyZS90cG0yLWFicm1kL3JlbGVhc2VzL3RhZy8yLjMuMTwvYT4uIFRpbWlu
+ZyBmb3IgdGhpcyByZWxlYXNlIGdvdCBhIGJpdCBtZXNzZWQgdXAgb24gYWNjb3VudCBvZiB0aGUg
+aG9saWRheXMuIFRoYW5rcyBhbGwgZm9yIHlvdXIgcGF0aWVuY2UuPG86cD48L286cD48L3A+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj5CZXN0LDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5QaGlsaXA8bzpw
+PjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+Cjwv
+ZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
 
-> tpm2_createek -c ek.handle -G rsa -u ek.pub
-> =
-
-> tpm2_createak -C ek.handle -c ak.ctx -u ak.pub -n ak.name
-> =
-
-> tpm2_evictcontrol -C o -c ak.ctx 0x81010002
-> =
-
-> =
-
-> =
-
-> I was having the same problem, and that worked for me!
-
-FYI this is fixed and will be on the 4.1.1 RC1 tag. The commit can be found=
- here:
-https://github.com/tpm2-software/tpm2-tools/commit/a83e8fd70b02c36b2a470124=
-23991a70df62d4f7
-
-Thanks,
-Bill
---===============8242937898266175519==--
+--===============6010143185656093617==--
 
