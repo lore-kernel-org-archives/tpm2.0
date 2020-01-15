@@ -1,92 +1,79 @@
-Content-Type: multipart/mixed; boundary="===============8202859804114085961=="
+Content-Type: multipart/mixed; boundary="===============0869884730659211348=="
 MIME-Version: 1.0
-From: Oliver, Dario N <dario.n.oliver at intel.com>
-Subject: [tpm2] Re: Device Identity Attestation with tpm2-tools
-Date: Tue, 14 Jan 2020 18:41:06 +0000
-Message-ID: <20A6FE0AC912764FB8B5BC5A1A7CB92B4734A04C@fmsmsx101.amr.corp.intel.com>
+From: Steffen <s.schwebel at uvensys.de>
+Subject: [tpm2] Re: some questions about Identity
+Date: Wed, 15 Jan 2020 09:36:35 +0100
+Message-ID: <fec9ef06-827c-8451-cfb3-4bd79a04e682@uvensys.de>
+In-Reply-To: CAJ8N_u-f9F50HpHJzGZVTgdqV5PRobOs6CA5W04M0FOqB71yFA@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8202859804114085961==
+--===============0869884730659211348==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thank you Charles for your input,
+Actually, I have a follow up question.
 
-From our internal analysis, we also agreed that the EK + AK approach provid=
-es more benefits than the others (EK only, EK + SRK). =
+If I understand the documentation correctly, I should always be able to =
 
-The EK + AK approach enables the server to also validate the integrity of t=
-he host  based on the provided quote. And this is only possible to do with =
-an AK.
-The other approaches are also valid in other scenario, specially the EK onl=
-y one, given that it does not require any persistence in the device, and it=
- can keep working even after the device disk and tpm is cleared.
-The tpm will always derive the same EK if one provides the same parameters. =
+generate the EK via tpm2_createek. That should (can?) never change.
 
+So, upon initial deployment, first check and store EK.
 
-The problem that I had to persist the AK in that approach was a bad man pag=
-e, and it was solved here https://lists.01.org/hyperkitty/list/tpm2(a)lists=
-.01.org/thread/DLWL7HYW4QHQEHQLRP275EOOBNL5JYAF/ =
+tpm2_createek -G rsa -u ek.pub -c key.ctx
 
-For the other problems, I created specific issues in github
-
-Endorsement Key created with tpm2_createek cannot be used with tpm2_activat=
-ecredential: https://github.com/tpm2-software/tpm2-tools/issues/1883
-Cannot create child key of an EK created with tpm2_createek: https://github=
-.com/tpm2-software/tpm2-tools/issues/1884
-
-The following script is an updated EK + AK example, without the previous pr=
-oblems to persist the AK, and also with nonce validation in the server usin=
-g tpm2_cehckquote
-
-echo "Enrolling with Atestation Key"
-
-# Clear the TPM
-tpm2_clear
-
-# Create Endorsment Key
-tpm2_createek -c ek.ctx -G rsa -u ek.pub
-
-# Create Attestation Key
-tpm2_createak -C ek.ctx -c ak.ctx -G rsa -g sha256 -s rsassa
-tpm2_evictcontrol -C o -c ak.ctx 0x81010002
-tpm2_readpublic -c ak.ctx -f pem -o ak.pem > ak.yaml
-cat ak.yaml | grep '^name:' | awk '{ print $2 }' > ak.name
-
-# Generate the nonce and credential for challenge
-openssl rand -hex 6 > nonce.plain
-tpm2_makecredential -e ek.pub -s nonce.plain -n $(cat ak.name) -o nonce.enc=
-rypted
-
-# Decrypt nonce with Endorsement Key
-tpm2_startauthsession --policy-session -S session.ctx
-TPM2_RH_ENDORSEMENT=3D0x4000000B
-tpm2_policysecret -S session.ctx -c ${TPM2_RH_ENDORSEMENT}
-tpm2_activatecredential -c 0x81010002 -C ek.ctx -i nonce.encrypted -o nonce=
-.decrypted -P "session:session.ctx"
-tpm2_flushcontext session.ctx
-
-# Generate Attestation Quote
-tpm2_quote -c 0x81010002 -l sha256:0,1,2,3,4,5,6,7,8,9 -q $(cat nonce.decry=
-pted) -m quote.message -s quote.signature -o quote.pcrs -g sha256
-
-# Validate Attestation Quote in the server
-tpm2_checkquote -u ak.pem -m quote.message -s quote.signature -f quote.pcrs=
- -g sha256 -q $(cat nonce.plain)
-
-Even if the server does not implements a PCR values validation, the tpm2_ch=
-eckquote command can be used to verify that the device was able to decrypt =
-the nonce.
-A very simple quote attestation system could use this initial quote to esta=
-blish the "golden values" of the device, and detect unexpected modification=
-s of the components that affects the PCRs in future quotes
-
-Regards,
-
-Nicolas Oliver
+tpm2_getekcertificate -X -o ECcert.bin -u ek.pub \
+https://tpm.manufacturer.com/ekcertserver/
 
 
---===============8202859804114085961==--
+Right?
+
+
+Best regards,
+Steffen
+
+On 09.01.20 19:43, Niklas Andersson wrote:
+> Dell should keep tab on all Endorsement Certificates that their =
+
+> computers comes with and give you that list.
+>
+> You then check for a valid Endorsement cert as part of enrollment.
+>
+> - Niklas
+>
+
+--===============0869884730659211348==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWw+CiAgPGhlYWQ+CgogICAgPG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250
+ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgiPgogIDwvaGVhZD4KICA8Ym9keT4KICAgIDxw
+PkFjdHVhbGx5LCBJIGhhdmUgYSBmb2xsb3cgdXAgcXVlc3Rpb24uPC9wPgogICAgPHA+SWYgSSB1
+bmRlcnN0YW5kIHRoZSBkb2N1bWVudGF0aW9uIGNvcnJlY3RseSwgSSBzaG91bGQgYWx3YXlzIGJl
+CiAgICAgIGFibGUgdG8gZ2VuZXJhdGUgdGhlIEVLIHZpYSB0cG0yX2NyZWF0ZWVrLiBUaGF0IHNo
+b3VsZCAoY2FuPykKICAgICAgbmV2ZXIgY2hhbmdlLjwvcD4KICAgIDxwPlNvLCB1cG9uIGluaXRp
+YWwgZGVwbG95bWVudCwgZmlyc3QgY2hlY2sgYW5kIHN0b3JlIEVLLjwvcD4KICAgIDxwcmU+dHBt
+Ml9jcmVhdGVlayAtRyByc2EgLXUgZWsucHViIC1jIGtleS5jdHgKCnRwbTJfZ2V0ZWtjZXJ0aWZp
+Y2F0ZSAtWCAtbyBFQ2NlcnQuYmluIC11IGVrLnB1YiBcCjxhIGNsYXNzPSJtb3otdHh0LWxpbmst
+ZnJlZXRleHQiIGhyZWY9Imh0dHBzOi8vdHBtLm1hbnVmYWN0dXJlci5jb20vZWtjZXJ0c2VydmVy
+LyI+aHR0cHM6Ly90cG0ubWFudWZhY3R1cmVyLmNvbS9la2NlcnRzZXJ2ZXIvPC9hPgoKCjwvcHJl
+PgogICAgUmlnaHQ/PGJyPgogICAgPHA+PGJyPgogICAgPC9wPgogICAgPHA+QmVzdCByZWdhcmRz
+LDxicj4KICAgICAgU3RlZmZlbjxicj4KICAgIDwvcD4KICAgIDxwcmU+CjwvcHJlPgogICAgPGRp
+diBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5PbiAwOS4wMS4yMCAxOTo0MywgTmlrbGFzIEFuZGVy
+c3NvbgogICAgICB3cm90ZTo8YnI+CiAgICA8L2Rpdj4KICAgIDxibG9ja3F1b3RlIHR5cGU9ImNp
+dGUiCmNpdGU9Im1pZDpDQUo4Tl91LWY5RjUwSHBISnpHWlZUZ2RxVjVQUm9iT3M2Q0E1VzA0TTBG
+T3FCNzF5RkFAbWFpbC5nbWFpbC5jb20iPgogICAgICA8ZGl2IGRpcj0iYXV0byI+RGVsbCBzaG91
+bGQga2VlcCB0YWIgb24gYWxsIEVuZG9yc2VtZW50CiAgICAgICAgQ2VydGlmaWNhdGVzIHRoYXQg
+dGhlaXIgY29tcHV0ZXJzIGNvbWVzIHdpdGggYW5kIGdpdmUgeW91IHRoYXQKICAgICAgICBsaXN0
+LsKgCiAgICAgICAgPGRpdiBkaXI9ImF1dG8iPjxicj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8
+ZGl2IGRpcj0iYXV0byI+WW91IHRoZW4gY2hlY2sgZm9yIGEgdmFsaWQgRW5kb3JzZW1lbnQgY2Vy
+dCBhcwogICAgICAgICAgcGFydCBvZiBlbnJvbGxtZW50LsKgPC9kaXY+CiAgICAgICAgPGRpdiBk
+aXI9ImF1dG8iPjxicj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8ZGl2IGRpcj0iYXV0byI+LSBO
+aWtsYXM8L2Rpdj4KICAgICAgPC9kaXY+CiAgICAgIDxicj4KICAgIDwvYmxvY2txdW90ZT4KICA8
+L2JvZHk+CjwvaHRtbD4K
+
+--===============0869884730659211348==--
 
