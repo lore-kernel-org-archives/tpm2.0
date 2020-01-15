@@ -1,79 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============0869884730659211348=="
+Content-Type: multipart/mixed; boundary="===============9138317458188333742=="
 MIME-Version: 1.0
-From: Steffen <s.schwebel at uvensys.de>
-Subject: [tpm2] Re: some questions about Identity
-Date: Wed, 15 Jan 2020 09:36:35 +0100
-Message-ID: <fec9ef06-827c-8451-cfb3-4bd79a04e682@uvensys.de>
-In-Reply-To: CAJ8N_u-f9F50HpHJzGZVTgdqV5PRobOs6CA5W04M0FOqB71yFA@mail.gmail.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: Device Identity Attestation with tpm2-tools
+Date: Wed, 15 Jan 2020 14:08:31 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E66B7A@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 20A6FE0AC912764FB8B5BC5A1A7CB92B4734A04C@fmsmsx101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0869884730659211348==
+--===============9138317458188333742==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Actually, I have a follow up question.
+<snip>
+> working even after the device disk and tpm is cleared.
+> The tpm will always derive the same EK if one provides the same parameter=
+s.
 
-If I understand the documentation correctly, I should always be able to =
+This is true 99+% of the time. However, the spec allows TPMs to to implemen=
+t the CHANGEEPS
+Command that will cause the endorsement hierarchy seed to change. When this=
+ occurs, calls
+to createprimary  with the same templates to produce different keys. While =
+this is rare, I've never
+seen one in the wild, you may wish to check the command interface for chang=
+eeps so you know
+what's possible with that TPM. Similar commands exist for other hierarchies=
+ as well.
 
-generate the EK via tpm2_createek. That should (can?) never change.
+> =
 
-So, upon initial deployment, first check and store EK.
-
-tpm2_createek -G rsa -u ek.pub -c key.ctx
-
-tpm2_getekcertificate -X -o ECcert.bin -u ek.pub \
-https://tpm.manufacturer.com/ekcertserver/
-
-
-Right?
-
-
-Best regards,
-Steffen
-
-On 09.01.20 19:43, Niklas Andersson wrote:
-> Dell should keep tab on all Endorsement Certificates that their =
-
-> computers comes with and give you that list.
->
-> You then check for a valid Endorsement cert as part of enrollment.
->
-> - Niklas
->
-
---===============0869884730659211348==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CiAgPGhlYWQ+CgogICAgPG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250
-ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgiPgogIDwvaGVhZD4KICA8Ym9keT4KICAgIDxw
-PkFjdHVhbGx5LCBJIGhhdmUgYSBmb2xsb3cgdXAgcXVlc3Rpb24uPC9wPgogICAgPHA+SWYgSSB1
-bmRlcnN0YW5kIHRoZSBkb2N1bWVudGF0aW9uIGNvcnJlY3RseSwgSSBzaG91bGQgYWx3YXlzIGJl
-CiAgICAgIGFibGUgdG8gZ2VuZXJhdGUgdGhlIEVLIHZpYSB0cG0yX2NyZWF0ZWVrLiBUaGF0IHNo
-b3VsZCAoY2FuPykKICAgICAgbmV2ZXIgY2hhbmdlLjwvcD4KICAgIDxwPlNvLCB1cG9uIGluaXRp
-YWwgZGVwbG95bWVudCwgZmlyc3QgY2hlY2sgYW5kIHN0b3JlIEVLLjwvcD4KICAgIDxwcmU+dHBt
-Ml9jcmVhdGVlayAtRyByc2EgLXUgZWsucHViIC1jIGtleS5jdHgKCnRwbTJfZ2V0ZWtjZXJ0aWZp
-Y2F0ZSAtWCAtbyBFQ2NlcnQuYmluIC11IGVrLnB1YiBcCjxhIGNsYXNzPSJtb3otdHh0LWxpbmst
-ZnJlZXRleHQiIGhyZWY9Imh0dHBzOi8vdHBtLm1hbnVmYWN0dXJlci5jb20vZWtjZXJ0c2VydmVy
-LyI+aHR0cHM6Ly90cG0ubWFudWZhY3R1cmVyLmNvbS9la2NlcnRzZXJ2ZXIvPC9hPgoKCjwvcHJl
-PgogICAgUmlnaHQ/PGJyPgogICAgPHA+PGJyPgogICAgPC9wPgogICAgPHA+QmVzdCByZWdhcmRz
-LDxicj4KICAgICAgU3RlZmZlbjxicj4KICAgIDwvcD4KICAgIDxwcmU+CjwvcHJlPgogICAgPGRp
-diBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5PbiAwOS4wMS4yMCAxOTo0MywgTmlrbGFzIEFuZGVy
-c3NvbgogICAgICB3cm90ZTo8YnI+CiAgICA8L2Rpdj4KICAgIDxibG9ja3F1b3RlIHR5cGU9ImNp
-dGUiCmNpdGU9Im1pZDpDQUo4Tl91LWY5RjUwSHBISnpHWlZUZ2RxVjVQUm9iT3M2Q0E1VzA0TTBG
-T3FCNzF5RkFAbWFpbC5nbWFpbC5jb20iPgogICAgICA8ZGl2IGRpcj0iYXV0byI+RGVsbCBzaG91
-bGQga2VlcCB0YWIgb24gYWxsIEVuZG9yc2VtZW50CiAgICAgICAgQ2VydGlmaWNhdGVzIHRoYXQg
-dGhlaXIgY29tcHV0ZXJzIGNvbWVzIHdpdGggYW5kIGdpdmUgeW91IHRoYXQKICAgICAgICBsaXN0
-LsKgCiAgICAgICAgPGRpdiBkaXI9ImF1dG8iPjxicj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8
-ZGl2IGRpcj0iYXV0byI+WW91IHRoZW4gY2hlY2sgZm9yIGEgdmFsaWQgRW5kb3JzZW1lbnQgY2Vy
-dCBhcwogICAgICAgICAgcGFydCBvZiBlbnJvbGxtZW50LsKgPC9kaXY+CiAgICAgICAgPGRpdiBk
-aXI9ImF1dG8iPjxicj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8ZGl2IGRpcj0iYXV0byI+LSBO
-aWtsYXM8L2Rpdj4KICAgICAgPC9kaXY+CiAgICAgIDxicj4KICAgIDwvYmxvY2txdW90ZT4KICA8
-L2JvZHk+CjwvaHRtbD4K
-
---===============0869884730659211348==--
+<snip>
+--===============9138317458188333742==--
 
