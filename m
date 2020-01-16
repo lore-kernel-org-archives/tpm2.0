@@ -1,145 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============5266663701518134731=="
+Content-Type: multipart/mixed; boundary="===============6769012117304651633=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: some questions about Identity
-Date: Thu, 16 Jan 2020 22:31:52 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E67046@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 688D07BB9E3A9E4A852BA1336D1910FFA251A387@fmsmsx107.amr.corp.intel.com
+Subject: [tpm2] Re: ActivateCredential not working
+Date: Thu, 16 Jan 2020 22:43:25 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E6705F@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 8592e618-4b74-14cd-bb81-a35e783afce1@uvensys.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5266663701518134731==
+--===============6769012117304651633==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-
-
-> -----Original Message-----
-> From: Desai, Imran
-> Sent: Wednesday, January 15, 2020 4:23 PM
-> To: Roberts, William C <william.c.roberts(a)intel.com>;
-> nicolasoliver03(a)gmail.com; tpm2(a)lists.01.org
-> Subject: RE: [tpm2] Re: some questions about Identity
+<snip>
+> Hello,
 > =
 
-> At NV index 0x1c00002 is the full EK certificate written out by PTT.
+> the gist looks very good, thanks for sharing.
+> A quick question, tho.
+> =
 
-Doh! 0x1C00002 !=3D 0x01c0000c
+> Sometime you use create_primary, sometimes you use createek
+> =
 
-For anyone following along and wonder what I am rambling about, it's in the=
- EK spec.
-For systems playing nicely and following all these specs, the following NV =
-indices may
-be defined for following purposes, see section 2.2.1.4.
+> https://gist.github.com/dnoliver/04364e72d8b81368f72ad4e6896f688d#file-
+> enrollment-sh-L19
+> =
 
-0x01c00002 RSA 2048 EK Certificate
-0x01c00003 RSA 2048 EK Nonce
-0x01c00004 RSA 2048 EK Template
-0x01c0000a ECC NIST P256 EK Certificate
-0x01c0000b ECC NIST P256 EK Nonce
-0x01c0000c ECC NIST P256 EK Template
+> https://gist.github.com/dnoliver/04364e72d8b81368f72ad4e6896f688d#file-
+> enrollment-sh-L41
+> =
+
+> =
+
+> Is it true that those commands are interchangeable
+
+tpm2_createek is just a specific call to tpm2_createprimary with a very spe=
+cific template for
+the object. That template is defined in the EK profile spec:
 
 https://trustedcomputinggroup.org/wp-content/uploads/TCG_IWG_Credential_Pro=
 file_EK_V2.1_R13.pdf
 
-
-> ________________________________________
-> From: Roberts, William C
-> Sent: Wednesday, January 15, 2020 1:53 PM
-> To: Desai, Imran; nicolasoliver03(a)gmail.com; tpm2(a)lists.01.org
-> Subject: RE: [tpm2] Re: some questions about Identity
-> =
-
-> > -----Original Message-----
-> > From: Desai, Imran
-> > Sent: Wednesday, January 15, 2020 1:33 PM
-> > To: Roberts, William C <william.c.roberts(a)intel.com>;
-> > nicolasoliver03(a)gmail.com; tpm2(a)lists.01.org
-> > Subject: RE: [tpm2] Re: some questions about Identity
-> >
-> > Right. Due to the security advisory on this Intel part, it
-> > necessitates the retrieval of the EK cert from different backend which
-> > requires intel content licensing server communication.
-> > However, can you check if NV index 0x1C00002 is defined already which
-> > would mean the provisioning from alternative backend is already done
-> > and the EK cert should be available at the NV index.
-> =
-
-> Isn't that the template, looking at tpm2_createek:
-> #define ECC_EK_TEMPLATE_NV_INDEX 0x01c0000c
-> =
-
-> > ________________________________________
-> > From: Roberts, William C
-> > Sent: Wednesday, January 15, 2020 11:18 AM
-> > To: nicolasoliver03(a)gmail.com; tpm2(a)lists.01.org; Desai, Imran
-> > Subject: RE: [tpm2] Re: some questions about Identity
-> >
-> > > -----Original Message-----
-> > > From: nicolasoliver03(a)gmail.com [mailto:nicolasoliver03(a)gmail.com]
-> > > Sent: Wednesday, January 15, 2020 11:17 AM
-> > > To: tpm2(a)lists.01.org
-> > > Subject: [tpm2] Re: some questions about Identity
-> > >
-> > > About tpm2_getekcertificate, I executed it agains
-> > > https://ekop.intel.com/ekcert (hope it is the correct one):
-> > >
-> > > tpm2_createek -G rsa -u ek.pub -c key.ctx tpm2_getekcertificate -X
-> > > -o ECcert.bin -u ek.pub https://ekop.intel.com/ekcert
-> > >
-> > > Output:
-> > >
-> > > WARN: TLS communication with the said TPM manufacturer server setup
-> > > with SSL_NO_VERIFY!
-> > > ERROR: Cannot proceed. For further information please refer to:
-> > > https://www.intel.com/content/www/us/en/security-center/advisory/int
-> > > el
-> > > -sa- 00086.html. Recovery tools are located
-> > > here:https://github.com/intel/INTEL-SA-
-> > > 00086-Linux-Recovery-Tools
-> > > ERROR: Unable to run tpm2_getekcertificate
-> > >
-> > > Is that expected?
-> >
-> > I think so, came in:
-> >
-> > commit 0df61fcb928e6cf762b08e37312d70edd5f539ec
-> > Author: Imran Desai <imran.desai(a)intel.com>
-> > Date:   Tue Aug 6 12:06:18 2019 -0700
-> >
-> >     tpm2_getekcertificate: Parses tpm manufacturers for unique issues
-> >
-> >     1. If the TPM manufacturer is the IBM simulator, error out since the
-> >        simulator endorsement keys aren't certified by IBM.
-> >     2. If the TPM manufacturer is Intel aka the the TPM2 device is PTT,
-> >        also if the tpmGeneratedEPS bit is set it implies that the soc
-> >        or pch has a firmware that has mitigations for Intel security
-> >        advisory SA-00086. And so another utility must be used to retrie=
-ve
-> >        the endorsement key certificate. More information on the advisor=
-y:
-> >
-> > https://www.intel.com/content/www/us/en/security-center/advisory/intel
-> > -
-> > sa-00086.html
-> >        The alternative utility and the instructions can be found here:
-> >        https://github.com/intel/INTEL-SA-00086-Linux-Recovery-Tools.
-> > ---
-> >
-> > Looks like there's another way to get the EK cert. I wonder if we
-> > could pull that logic in over erroring out. Looking at that repo it
-> > looks like the functionality is not trivial to implement.
-> >
-> > Imran, Can you clarify?
-> >
-> > Thanks,
-> > Bill
-> >
-> >
-> > > _______________________________________________
-> > > tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email
-> > > to tpm2-leave(a)lists.01.org
-> > > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============5266663701518134731==--
+<snip>
+--===============6769012117304651633==--
 
