@@ -1,48 +1,91 @@
-Content-Type: multipart/mixed; boundary="===============6769012117304651633=="
+Content-Type: multipart/mixed; boundary="===============6157654411514922226=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: ActivateCredential not working
-Date: Thu, 16 Jan 2020 22:43:25 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E6705F@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 8592e618-4b74-14cd-bb81-a35e783afce1@uvensys.de
+Subject: [tpm2] Re: tpm2-pkcs11 and certificates, also Linux Networking
+Date: Thu, 16 Jan 2020 22:45:00 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E67070@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: e8e5b6b3-e876-9a66-e499-cc3bcb98988c@uvensys.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6769012117304651633==
+--===============6157654411514922226==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-<snip>
-> Hello,
+
+
+> -----Original Message-----
+> From: Steffen Schwebel [mailto:s.schwebel(a)uvensys.de]
+> Sent: Thursday, January 16, 2020 1:02 PM
+> To: tpm2(a)lists.01.org >> tpm2 <tpm2(a)lists.01.org>
+> Subject: [tpm2] Re: tpm2-pkcs11 and certificates, also Linux Networking
 > =
 
-> the gist looks very good, thanks for sharing.
-> A quick question, tho.
+> Hi,
 > =
 
-> Sometime you use create_primary, sometimes you use createek
+> I managed to get that working as well.
 > =
 
-> https://gist.github.com/dnoliver/04364e72d8b81368f72ad4e6896f688d#file-
-> enrollment-sh-L19
+> I also asked at NetworkManager and wpa_supplicant mailing list.
 > =
 
-> https://gist.github.com/dnoliver/04364e72d8b81368f72ad4e6896f688d#file-
-> enrollment-sh-L41
+> Seems that NM has support for tpm2-tss at versions > 1.20 Not sure yet ab=
+out
+> wpa_supplicant.
+> =
+
+> Since I couldnt store the client cert via PKCS11, I point wpa_supplicant =
+to a file on
+> disk
+
+You should be able to now via tpm2_ptool addcert on the master branch. I ha=
+ve that
+Feature heading for v1.1.
+
+> =
+
+> client_cert=3D"/home/steffenschwebel/Projects/PKI_network/hardware.crt"
+> private_key=3D"pkcs11:model=3D;manufacturer=3DSTMicro;serial=3D0000000000=
+000000;t
+> oken=3Dsoveryimportant;id=3D%F2%BE%D0%AB%C3%81%72%8A%B5%40%69%31%D
+> 1%38%28%8C%9D%BB%EE%9E;object=3Dklarna;type=3Dprivate"
+> pin=3D"456456"
+> =
+
+> regards,
+> Steffen
 > =
 
 > =
 
-> Is it true that those commands are interchangeable
+> On 1/16/20 7:49 PM, nicolasoliver03(a)gmail.com wrote:
+> > Hi Steffen,
+> >
+> > In our side, we were able to get wpa_supplicant, tpm2_pkcs11, and EAP-T=
+LS to
+> authenticate a device in a corporate network.
+> > It requires a wireless AP or router that supports EAP-TLS, and a Radius=
+ server
+> for auth.
+> >
+> > There is a thread in this mailing list about that here
+> > https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/AYUBCAFC
+> > CXITEVSWA4IFC466LYS6ZIYX/ There are also commits in tpm2-pkcs11 to
+> > enable support for wpa_supplicant
+> > https://github.com/tpm2-software/tpm2-pkcs11/pull/366
+> > _______________________________________________
+> > tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email to
+> > tpm2-leave(a)lists.01.org
+> > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+> =
 
-tpm2_createek is just a specific call to tpm2_createprimary with a very spe=
-cific template for
-the object. That template is defined in the EK profile spec:
+> =
 
-https://trustedcomputinggroup.org/wp-content/uploads/TCG_IWG_Credential_Pro=
-file_EK_V2.1_R13.pdf
-
-<snip>
---===============6769012117304651633==--
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+--===============6157654411514922226==--
 
