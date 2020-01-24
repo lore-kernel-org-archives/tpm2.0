@@ -1,155 +1,145 @@
-Content-Type: multipart/mixed; boundary="===============3482194732897659096=="
+Content-Type: multipart/mixed; boundary="===============2384836428306251845=="
 MIME-Version: 1.0
-From: Emmanuel Deloget <logout at free.fr>
+From: David Woodhouse <dwmw2 at infradead.org>
 Subject: [tpm2] Re: OpenSSL TLS using tpm2-pkcs11 doesn't work on newer
  versions
-Date: Fri, 24 Jan 2020 18:10:02 +0100
-Message-ID: <CAKh=nwFvt_-3W=8ZZxTVwTbDS0LAmaX+XQ1JuHpT+6zL7Xg0Bg@mail.gmail.com>
-In-Reply-To: 20200124155210.2993.13868@ml01.vlan13.01.org
+Date: Fri, 24 Jan 2020 21:11:09 +0000
+Message-ID: <db725d5b7e36fa8152ee46e9223e953a66f75325.camel@infradead.org>
+In-Reply-To: CAKh=nwFvt_-3W=8ZZxTVwTbDS0LAmaX+XQ1JuHpT+6zL7Xg0Bg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3482194732897659096==
+--===============2384836428306251845==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, 2020-01-24 at 18:10 +0100, Emmanuel Deloget wrote:
+> =
 
-On Fri, Jan 24, 2020 at 4:52 PM <nicolasoliver03(a)gmail.com> wrote:
+> In my experience this is mostly true - the key word in that sentence
+> being "mostly". The PKCS#11 is fairly big (
+> http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/os/pkcs11-base-v2.40-=
+os.html
+> ) and while it fully describes the interface between the
+> cryptographic system and its user, it does very little to describe
+> how is shall be used. That's where the experience comes in handy:
+> different softwares use different workflows. So given a specific
+> PKCS#11 engine, you may be able to have it work with (for example)
+> OpenVPN, but not with wget (though the PKCS#11 engine for OpenSSL).
+> This will only be true if the specific PKCS#11 engine you use for
+> your device implements everything in the spec.
 
->
-> Our assumption is that, if we make the PKCS#11 module work for
-> wpa_supplicant, we will also enable any software that wants to use the TPM
-> by just using the PKCS#11 standard, which is much more easier than
-> implementing specific logic to talk with the TPM in specific platforms
-> (standards are good
->
->
-In my experience this is mostly true - the key word in that sentence being
-"mostly". The PKCS#11 is fairly big (
-http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/os/pkcs11-base-v2.40-os=
-.html)
-and while it fully describes the interface between the cryptographic system
-and its user, it does very little to describe how is shall be used. That's
-where the experience comes in handy: different softwares use different
-workflows. So given a specific PKCS#11 engine, you may be able to have it
-work with (for example) OpenVPN, but not with wget (though the PKCS#11
-engine for OpenSSL). This will only be true if the specific PKCS#11 engine
-you use for your device implements everything in the spec.
+FWIW much of this *shouldn't* be true, at least for basic key storage
+for TLS and similar purposes.
+
+If you have a properly functioning PKCS#11 provider which is correctly
+registered with p11-kit on a Linux system, then any application which
+accepts certificates+keys in a PEM or PKCS#12 or similar file SHOULD
+also accept a PKCS#11 URI as defined by RFC7512.
+
+At least in Fedora, if you find an application for which that *isn't*
+true, please file a bug and Cc me.
+
+On other distributions, YMMV.
 
 
-Additionally, to have this widely available, we need to make this packages
-> available in the target distros (Fedora and Ubuntu for now).
-> There is a tpm2-pkcs11 package available in Fedora as today:
-> https://pkgs.org/download/tpm2-pkcs11.
-> I just found that there is a tpm2-pk11 package in Ubuntu as well, that
-> also uses tpm2-tss here
-> https://zoomadmin.com/HowToInstall/UbuntuPackage/tpm2-pk11.
->
-
-I haven't worked with tpm2-pkcs11 yet so I cannot say much about it (this
-is planed but I have to find some time to do so ; my goal is to use it over
-tpm2-pk11 but then I have a specific version where the public certificates
-are stored as DER in the nvram of the TPM2 instead of being stored in a
-specific directory). tpm2-pk11 was missing things when I started to use it
-and I had to add what was missing for my own use case (we have used it for
-2 years with OpenVPN, OpenSSL and a handful of other programs).
-
-> As regards the tpm2-tss-engine, there is no package for Ubuntu. There is
-> an rpm for Fedora being assembled here
-> https://bugzilla.redhat.com/show_bug.cgi?id=3D1773855 though.
->
-> So I hope that all this exercise makes the process more stable for
-> everybody!
->
-
-Thanks :)
-
-Best regards,
-
---
-Emmanuel Deloget
-
---===============3482194732897659096==
-Content-Type: text/html
+--===============2384836428306251845==
+Content-Type: application/x-pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+Content-Disposition: attachment; filename="smime.p7s"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBjbGFzcz0iZ21haWxfZGVmYXVsdCIg
-c3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPkhlbGxvLMKgPC9kaXY+PC9k
-aXY+PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0ibHRyIiBjbGFzcz0iZ21h
-aWxfYXR0ciI+T24gRnJpLCBKYW4gMjQsIDIwMjAgYXQgNDo1MiBQTSAmbHQ7PGEgaHJlZj0ibWFp
-bHRvOm5pY29sYXNvbGl2ZXIwM0BnbWFpbC5jb20iPm5pY29sYXNvbGl2ZXIwM0BnbWFpbC5jb208
-L2E+Jmd0OyB3cm90ZTo8YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBz
-dHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2Io
-MjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxicj4KT3VyIGFzc3VtcHRpb24gaXMgdGhh
-dCwgaWYgd2UgbWFrZSB0aGUgUEtDUyMxMSBtb2R1bGUgd29yayBmb3Igd3BhX3N1cHBsaWNhbnQs
-IHdlIHdpbGwgYWxzbyBlbmFibGUgYW55IHNvZnR3YXJlIHRoYXQgd2FudHMgdG8gdXNlIHRoZSBU
-UE0gYnkganVzdCB1c2luZyB0aGUgUEtDUyMxMSBzdGFuZGFyZCwgd2hpY2ggaXMgbXVjaCBtb3Jl
-IGVhc2llciB0aGFuIGltcGxlbWVudGluZyBzcGVjaWZpYyBsb2dpYyB0byB0YWxrIHdpdGggdGhl
-IFRQTSBpbiBzcGVjaWZpYyBwbGF0Zm9ybXMgKHN0YW5kYXJkcyBhcmUgZ29vZCA8YnI+Cjxicj48
-L2Jsb2NrcXVvdGU+PGRpdj48YnI+PC9kaXY+PGRpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0
-IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+SW4gbXkgZXhwZXJpZW5j
-ZSB0aGlzIGlzIG1vc3RseSB0cnVlIC0gdGhlIGtleSB3b3JkIGluIHRoYXQgc2VudGVuY2UgYmVp
-bmcgJnF1b3Q7bW9zdGx5JnF1b3Q7LiBUaGUgUEtDUyMxMSBpcyBmYWlybHkgYmlnICg8YSBocmVm
-PSJodHRwOi8vZG9jcy5vYXNpcy1vcGVuLm9yZy9wa2NzMTEvcGtjczExLWJhc2UvdjIuNDAvb3Mv
-cGtjczExLWJhc2UtdjIuNDAtb3MuaHRtbCIgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsLEhlbHZl
-dGljYSxzYW5zLXNlcmlmIj5odHRwOi8vZG9jcy5vYXNpcy1vcGVuLm9yZy9wa2NzMTEvcGtjczEx
-LWJhc2UvdjIuNDAvb3MvcGtjczExLWJhc2UtdjIuNDAtb3MuaHRtbDwvYT4pIGFuZCB3aGlsZSBp
-dCBmdWxseSBkZXNjcmliZXMgdGhlIGludGVyZmFjZSBiZXR3ZWVuIHRoZSBjcnlwdG9ncmFwaGlj
-IHN5c3RlbSBhbmQgaXRzIHVzZXIsIGl0IGRvZXMgdmVyeSBsaXR0bGUgdG8gZGVzY3JpYmUgaG93
-IGlzIHNoYWxsIGJlIHVzZWQuIFRoYXQmIzM5O3Mgd2hlcmUgdGhlIGV4cGVyaWVuY2UgY29tZXMg
-aW4gaGFuZHk6IGRpZmZlcmVudCBzb2Z0d2FyZXMgdXNlIGRpZmZlcmVudCB3b3JrZmxvd3MuIFNv
-IGdpdmVuIGEgc3BlY2lmaWMgUEtDUyMxMSBlbmdpbmUsIHlvdSBtYXkgYmUgYWJsZSB0byBoYXZl
-IGl0IHdvcmsgd2l0aCAoZm9yIGV4YW1wbGUpIE9wZW5WUE4sIGJ1dCBub3Qgd2l0aCB3Z2V0ICh0
-aG91Z2ggdGhlIFBLQ1MjMTEgZW5naW5lIGZvciBPcGVuU1NMKS4gVGhpcyB3aWxsIG9ubHkgYmUg
-dHJ1ZSBpZiB0aGUgc3BlY2lmaWMgUEtDUyMxMSBlbmdpbmUgeW91IHVzZSBmb3IgeW91ciBkZXZp
-Y2UgaW1wbGVtZW50cyBldmVyeXRoaW5nIGluIHRoZSBzcGVjLjwvZGl2PjxkaXYgY2xhc3M9Imdt
-YWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48YnI+
-PC9kaXY+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3Rl
-IiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCBy
-Z2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPgpBZGRpdGlvbmFsbHksIHRvIGhhdmUg
-dGhpcyB3aWRlbHkgYXZhaWxhYmxlLCB3ZSBuZWVkIHRvIG1ha2UgdGhpcyBwYWNrYWdlcyBhdmFp
-bGFibGUgaW4gdGhlIHRhcmdldCBkaXN0cm9zIChGZWRvcmEgYW5kIFVidW50dSBmb3Igbm93KS48
-YnI+ClRoZXJlIGlzIGEgdHBtMi1wa2NzMTEgcGFja2FnZSBhdmFpbGFibGUgaW4gRmVkb3JhIGFz
-IHRvZGF5OiA8YSBocmVmPSJodHRwczovL3BrZ3Mub3JnL2Rvd25sb2FkL3RwbTItcGtjczExIiBy
-ZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL3BrZ3Mub3JnL2Rvd25sb2Fk
-L3RwbTItcGtjczExPC9hPi4gPGJyPgpJIGp1c3QgZm91bmQgdGhhdCB0aGVyZSBpcyBhIHRwbTIt
-cGsxMSBwYWNrYWdlIGluIFVidW50dSBhcyB3ZWxsLCB0aGF0IGFsc28gdXNlcyB0cG0yLXRzcyBo
-ZXJlIDxhIGhyZWY9Imh0dHBzOi8vem9vbWFkbWluLmNvbS9Ib3dUb0luc3RhbGwvVWJ1bnR1UGFj
-a2FnZS90cG0yLXBrMTEiIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBzOi8v
-em9vbWFkbWluLmNvbS9Ib3dUb0luc3RhbGwvVWJ1bnR1UGFja2FnZS90cG0yLXBrMTE8L2E+LiA8
-YnI+CjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0
-IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+SSBoYXZlbiYjMzk7dCB3
-b3JrZWQgd2l0aCB0cG0yLXBrY3MxMSB5ZXQgIHNvIEkgY2Fubm90IHNheSBtdWNoIGFib3V0IGl0
-ICh0aGlzIGlzIHBsYW5lZCBidXQgSSBoYXZlIHRvIGZpbmQgc29tZSB0aW1lIHRvIGRvIHNvIDsg
-bXkgZ29hbCBpcyB0byB1c2UgaXQgb3ZlciB0cG0yLXBrMTEgYnV0IHRoZW4gSSBoYXZlIGEgc3Bl
-Y2lmaWMgdmVyc2lvbiB3aGVyZSB0aGUgcHVibGljIGNlcnRpZmljYXRlcyBhcmUgc3RvcmVkIGFz
-IERFUiBpbiB0aGUgbnZyYW0gb2YgdGhlIFRQTTIgaW5zdGVhZCBvZiBiZWluZyBzdG9yZWQgaW4g
-YSBzcGVjaWZpYyBkaXJlY3RvcnkpLiB0cG0yLXBrMTEgd2FzIG1pc3NpbmcgdGhpbmdzIHdoZW4g
-SSBzdGFydGVkIHRvIHVzZSBpdCBhbmQgSSBoYWQgdG8gYWRkIHdoYXQgd2FzIG1pc3NpbmcgZm9y
-IG15IG93biB1c2UgY2FzZSAod2UgaGF2ZSB1c2VkIGl0IGZvciAyIHllYXJzIHdpdGggT3BlblZQ
-TiwgT3BlblNTTCBhbmQgYSBoYW5kZnVsIG9mIG90aGVyIHByb2dyYW1zKS48L2Rpdj48ZGl2IGNs
-YXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFj
-ZSI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBw
-eCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0LDIwNCwyMDQpO3Bh
-ZGRpbmctbGVmdDoxZXgiPkFzIHJlZ2FyZHMgdGhlIHRwbTItdHNzLWVuZ2luZSwgdGhlcmUgaXMg
-bm8gcGFja2FnZSBmb3IgVWJ1bnR1LiBUaGVyZSBpcyBhbiBycG0gZm9yIEZlZG9yYSBiZWluZyBh
-c3NlbWJsZWQgaGVyZSA8YSBocmVmPSJodHRwczovL2J1Z3ppbGxhLnJlZGhhdC5jb20vc2hvd19i
-dWcuY2dpP2lkPTE3NzM4NTUiIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBz
-Oi8vYnVnemlsbGEucmVkaGF0LmNvbS9zaG93X2J1Zy5jZ2k/aWQ9MTc3Mzg1NTwvYT4gdGhvdWdo
-Ljxicj4KPGJyPgpTbyBJIGhvcGUgdGhhdCBhbGwgdGhpcyBleGVyY2lzZSBtYWtlcyB0aGUgcHJv
-Y2VzcyBtb3JlIHN0YWJsZSBmb3IgZXZlcnlib2R5ITxicj48L2Jsb2NrcXVvdGU+PGRpdj48YnI+
-PC9kaXY+PGRpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6
-bW9ub3NwYWNlLG1vbm9zcGFjZSI+VGhhbmtzIDopPC9kaXY+PGJyPjwvZGl2PjxkaXY+PGRpdiBj
-bGFzcz0iZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3Bh
-Y2UiPkJlc3QgcmVnYXJkcyzCoDwvZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2RlZmF1bHQiIHN0eWxl
-PSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48YnI+PC9kaXY+PGRpdiBjbGFzcz0i
-Z21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPi0t
-PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9z
-cGFjZSxtb25vc3BhY2UiPkVtbWFudWVsIERlbG9nZXQ8L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4K
-
---===============3482194732897659096==--
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
+ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
+OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
+RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
+cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
+uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
+Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
+Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
+xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
+YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
+nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
+PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
+7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
+Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
+MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
+NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
+/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
+0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
+vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
+ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
+ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
+CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
+aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
+bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
+bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
+LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
+W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
+vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
+gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
+RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
+jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
+b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
++bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
+WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
+aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
+CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
+u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
+RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
+QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
+b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
+cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
+SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
+0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
+KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
+E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
+M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
+yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
+gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
+R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
+ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAw
+MTI0MjExMTA5WjAvBgkqhkiG9w0BCQQxIgQgagWUtXC55MxtR/ei3r8VD//LDqgCDYt62h9Aykv7
+hJ8wgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
+PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
+aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
+DQEBAQUABIIBAFvsc73oYzfOH6tmIkm8pDxFsADP04mQH7XSEv3iz9tJITcLBYr8VJ45x0WJojd3
+UNWzsacUqZbIRHsfYx7VsTW3OgUuEOHw3DYLzDMMEQvua07q25eGVXxS8eBUEFLsMFJ5NndnUlZS
+REX97iIhXmUnpp23YXZYYeFngFWDzIuyyhMEKJLObzYAdQEn7dkevjWxbM/lnxxM59qywWWRPgcL
+/8AuUk40rfSMVdPIGLYlqXFjy3bX9xZ0jbWIDteTgte/nIvIz4HtYGon4yCI8lY8u+ZvP6WItFn2
+uCbJV+1BFvB9A/0N/xq6t9Ln1LfbdpKNRMRstJVO5f+s2xcjD/MAAAAAAAA=
+--===============2384836428306251845==--
 
