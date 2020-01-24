@@ -1,104 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============3779623169644715037=="
+Content-Type: multipart/mixed; boundary="===============6485294172528365885=="
 MIME-Version: 1.0
-From: Steffen Schwebel <s.schwebel at uvensys.de>
+From: nicolasoliver03 at gmail.com
 Subject: [tpm2] Re: OpenSSL TLS using tpm2-pkcs11 doesn't work on newer
  versions
-Date: Fri, 24 Jan 2020 09:53:46 +0100
-Message-ID: <5e20e86f-d193-c57d-2c70-e67efef9a51d@uvensys.de>
-In-Reply-To: 20200122183555.2993.88054@ml01.vlan13.01.org
+Date: Fri, 24 Jan 2020 15:52:10 +0000
+Message-ID: <20200124155210.2993.13868@ml01.vlan13.01.org>
+In-Reply-To: 5e20e86f-d193-c57d-2c70-e67efef9a51d@uvensys.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3779623169644715037==
+--===============6485294172528365885==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Will definitively take a look at it once the tpm2-pkcs11 approach works!
 
-another way to get this working would be to avoid tpm2-pkcs11 entirely.
+Are you talking about this commit in master branch of wpa_supplicant? https=
+://w1.fi/cgit/hostap/commit/?id=3D18780c6d6706ee90c98eb5f27454c1bcf7b4e1bc
 
-Both wpa_supplicant and NetworkManager have versions working with
-tpm2-tss-engine already.
-For NetworkManager that should be any version > 1.20 and for
-wpa_supplicant, its in the current development branch.
+The reason why we moved forward with the pkcs11 approach is mostly because =
+it has the PKCS standard in the package name, (..."The PKCS #11 standard de=
+fines a platform-independent API to cryptographic tokens, such as hardware =
+security modules (HSM) and smart cards"..).
 
-Although that might be no fun at all as well with older Ubuntu versions.
+Our assumption is that, if we make the PKCS#11 module work for wpa_supplica=
+nt, we will also enable any software that wants to use the TPM by just usin=
+g the PKCS#11 standard, which is much more easier than implementing specifi=
+c logic to talk with the TPM in specific platforms (standards are good =
 
-regards,
-Steffen
 
-On 1/22/20 7:35 PM, Ignacio Jaureguiberry wrote:
-> I was trying to make wpa_supplicant use a tpm2-pkcs11 stored private key =
-to authenticate against a RADIUS server, I mentioned about it on this discu=
-ssion: https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/message/AYU=
-BCAFCCXITEVSWA4IFC466LYS6ZIYX/
->
-> With some fixes on tpm2-pkcs11, TLS is working and there is an integratio=
-n test for that here: https://github.com/tpm2-software/tpm2-pkcs11/blob/mas=
-ter/test/integration/tls-tests.sh
->
-> I wasn't able to reproduce this on Ubuntu 18, and noted that the test cas=
-es ran on top of an Ubuntu 16.04 image. I tried Ubuntu 16.04 and TLS works =
-as in the integration test. I also checked that using latest version of wpa=
-_supplicant, it does work with tpm2-pkcs11 and creates an EAP-TLS connectio=
-n using the TPM.
->
-> I've debugged a bit in both OS versions and found that openssl is calling=
- pkey_rsa_sign with different padding modes: RSA_PKCS1_PADDING in Ubuntu 16=
-, and RSA_PKCS1_PSS_PADDING in Ubuntu 18. The consequence is that in tpm2-p=
-kcs11, sign_init is being called using CKM_RSA_PKCS as mechanism on Ubuntu =
-16, but in Ubuntu 18 it is being called with CKM_RSA_X_509, which is not su=
-pported.
->
-> I think I have to file a bug to OpenSSL, but I don't know too much about =
-the PKCS11 specs to support the claims. I'd appreciate any help to file a d=
-ecent issue. Also, any workaround is welcome, as replacing OpenSSL in any d=
-istribution is very hard given all the software that depends on it.
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+Additionally, to have this widely available, we need to make this packages =
+available in the target distros (Fedora and Ubuntu for now).
+There is a tpm2-pkcs11 package available in Fedora as today: https://pkgs.o=
+rg/download/tpm2-pkcs11. =
 
--- =
+I just found that there is a tpm2-pk11 package in Ubuntu as well, that also=
+ uses tpm2-tss here https://zoomadmin.com/HowToInstall/UbuntuPackage/tpm2-p=
+k11. =
 
-Steffen Schwebel
-Mail: s.schwebel(a)uvensys.de
-uvensys GmbH
+As regards the tpm2-tss-engine, there is no package for Ubuntu. There is an=
+ rpm for Fedora being assembled here https://bugzilla.redhat.com/show_bug.c=
+gi?id=3D1773855 though.
 
-Firmensitz und Sitz der Gesellschaft:
-uvensys GmbH
-Robert-Bosch-Stra=C3=9Fe 4b =
-
-35440 Linden
-
-HRB: AG Friedberg, 7780
-USt-Id: DE282879294
-
-Gesch=C3=A4ftsf=C3=BChrer:
-Dr. Thomas Licht, t.licht(a)uvensys.de
-Volker Lieder, v.lieder(a)uvensys.de
-
-Mail: info(a)uvensys.de
-Internet: www.uvensys.de
-
-Durchwahl: 06403 - 789 3622
-Hotline: 06403 - 789 3688
-Zentrale: 06403- 789 360
-Fax: 06403 - 789 3699
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-
-Jegliche Stellungnahmen und Meinungen dieser E-Mail sind
-alleine die des Autors und nicht notwendigerweise die der
-Firma. Falls erforderlich, k=C3=B6nnen Sie eine gesonderte
-schriftliche Best=C3=A4tigung anfordern.
-
-Any views or opinions presented in this email are solely
-those of the author and do not necessarily represent those
-of the company. If verification is required please request
-a hard-copy version.
-
---===============3779623169644715037==--
+So I hope that all this exercise makes the process more stable for everybod=
+y!
+--===============6485294172528365885==--
 
