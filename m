@@ -1,49 +1,155 @@
-Content-Type: multipart/mixed; boundary="===============6485294172528365885=="
+Content-Type: multipart/mixed; boundary="===============3482194732897659096=="
 MIME-Version: 1.0
-From: nicolasoliver03 at gmail.com
+From: Emmanuel Deloget <logout at free.fr>
 Subject: [tpm2] Re: OpenSSL TLS using tpm2-pkcs11 doesn't work on newer
  versions
-Date: Fri, 24 Jan 2020 15:52:10 +0000
-Message-ID: <20200124155210.2993.13868@ml01.vlan13.01.org>
-In-Reply-To: 5e20e86f-d193-c57d-2c70-e67efef9a51d@uvensys.de
+Date: Fri, 24 Jan 2020 18:10:02 +0100
+Message-ID: <CAKh=nwFvt_-3W=8ZZxTVwTbDS0LAmaX+XQ1JuHpT+6zL7Xg0Bg@mail.gmail.com>
+In-Reply-To: 20200124155210.2993.13868@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6485294172528365885==
+--===============3482194732897659096==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Will definitively take a look at it once the tpm2-pkcs11 approach works!
+Hello,
 
-Are you talking about this commit in master branch of wpa_supplicant? https=
-://w1.fi/cgit/hostap/commit/?id=3D18780c6d6706ee90c98eb5f27454c1bcf7b4e1bc
+On Fri, Jan 24, 2020 at 4:52 PM <nicolasoliver03(a)gmail.com> wrote:
 
-The reason why we moved forward with the pkcs11 approach is mostly because =
-it has the PKCS standard in the package name, (..."The PKCS #11 standard de=
-fines a platform-independent API to cryptographic tokens, such as hardware =
-security modules (HSM) and smart cards"..).
+>
+> Our assumption is that, if we make the PKCS#11 module work for
+> wpa_supplicant, we will also enable any software that wants to use the TPM
+> by just using the PKCS#11 standard, which is much more easier than
+> implementing specific logic to talk with the TPM in specific platforms
+> (standards are good
+>
+>
+In my experience this is mostly true - the key word in that sentence being
+"mostly". The PKCS#11 is fairly big (
+http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/os/pkcs11-base-v2.40-os=
+.html)
+and while it fully describes the interface between the cryptographic system
+and its user, it does very little to describe how is shall be used. That's
+where the experience comes in handy: different softwares use different
+workflows. So given a specific PKCS#11 engine, you may be able to have it
+work with (for example) OpenVPN, but not with wget (though the PKCS#11
+engine for OpenSSL). This will only be true if the specific PKCS#11 engine
+you use for your device implements everything in the spec.
 
-Our assumption is that, if we make the PKCS#11 module work for wpa_supplica=
-nt, we will also enable any software that wants to use the TPM by just usin=
-g the PKCS#11 standard, which is much more easier than implementing specifi=
-c logic to talk with the TPM in specific platforms (standards are good =
 
+Additionally, to have this widely available, we need to make this packages
+> available in the target distros (Fedora and Ubuntu for now).
+> There is a tpm2-pkcs11 package available in Fedora as today:
+> https://pkgs.org/download/tpm2-pkcs11.
+> I just found that there is a tpm2-pk11 package in Ubuntu as well, that
+> also uses tpm2-tss here
+> https://zoomadmin.com/HowToInstall/UbuntuPackage/tpm2-pk11.
+>
 
-Additionally, to have this widely available, we need to make this packages =
-available in the target distros (Fedora and Ubuntu for now).
-There is a tpm2-pkcs11 package available in Fedora as today: https://pkgs.o=
-rg/download/tpm2-pkcs11. =
+I haven't worked with tpm2-pkcs11 yet so I cannot say much about it (this
+is planed but I have to find some time to do so ; my goal is to use it over
+tpm2-pk11 but then I have a specific version where the public certificates
+are stored as DER in the nvram of the TPM2 instead of being stored in a
+specific directory). tpm2-pk11 was missing things when I started to use it
+and I had to add what was missing for my own use case (we have used it for
+2 years with OpenVPN, OpenSSL and a handful of other programs).
 
-I just found that there is a tpm2-pk11 package in Ubuntu as well, that also=
- uses tpm2-tss here https://zoomadmin.com/HowToInstall/UbuntuPackage/tpm2-p=
-k11. =
+> As regards the tpm2-tss-engine, there is no package for Ubuntu. There is
+> an rpm for Fedora being assembled here
+> https://bugzilla.redhat.com/show_bug.cgi?id=3D1773855 though.
+>
+> So I hope that all this exercise makes the process more stable for
+> everybody!
+>
 
-As regards the tpm2-tss-engine, there is no package for Ubuntu. There is an=
- rpm for Fedora being assembled here https://bugzilla.redhat.com/show_bug.c=
-gi?id=3D1773855 though.
+Thanks :)
 
-So I hope that all this exercise makes the process more stable for everybod=
-y!
---===============6485294172528365885==--
+Best regards,
+
+--
+Emmanuel Deloget
+
+--===============3482194732897659096==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBjbGFzcz0iZ21haWxfZGVmYXVsdCIg
+c3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPkhlbGxvLMKgPC9kaXY+PC9k
+aXY+PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0ibHRyIiBjbGFzcz0iZ21h
+aWxfYXR0ciI+T24gRnJpLCBKYW4gMjQsIDIwMjAgYXQgNDo1MiBQTSAmbHQ7PGEgaHJlZj0ibWFp
+bHRvOm5pY29sYXNvbGl2ZXIwM0BnbWFpbC5jb20iPm5pY29sYXNvbGl2ZXIwM0BnbWFpbC5jb208
+L2E+Jmd0OyB3cm90ZTo8YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBz
+dHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2Io
+MjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxicj4KT3VyIGFzc3VtcHRpb24gaXMgdGhh
+dCwgaWYgd2UgbWFrZSB0aGUgUEtDUyMxMSBtb2R1bGUgd29yayBmb3Igd3BhX3N1cHBsaWNhbnQs
+IHdlIHdpbGwgYWxzbyBlbmFibGUgYW55IHNvZnR3YXJlIHRoYXQgd2FudHMgdG8gdXNlIHRoZSBU
+UE0gYnkganVzdCB1c2luZyB0aGUgUEtDUyMxMSBzdGFuZGFyZCwgd2hpY2ggaXMgbXVjaCBtb3Jl
+IGVhc2llciB0aGFuIGltcGxlbWVudGluZyBzcGVjaWZpYyBsb2dpYyB0byB0YWxrIHdpdGggdGhl
+IFRQTSBpbiBzcGVjaWZpYyBwbGF0Zm9ybXMgKHN0YW5kYXJkcyBhcmUgZ29vZCA8YnI+Cjxicj48
+L2Jsb2NrcXVvdGU+PGRpdj48YnI+PC9kaXY+PGRpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0
+IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+SW4gbXkgZXhwZXJpZW5j
+ZSB0aGlzIGlzIG1vc3RseSB0cnVlIC0gdGhlIGtleSB3b3JkIGluIHRoYXQgc2VudGVuY2UgYmVp
+bmcgJnF1b3Q7bW9zdGx5JnF1b3Q7LiBUaGUgUEtDUyMxMSBpcyBmYWlybHkgYmlnICg8YSBocmVm
+PSJodHRwOi8vZG9jcy5vYXNpcy1vcGVuLm9yZy9wa2NzMTEvcGtjczExLWJhc2UvdjIuNDAvb3Mv
+cGtjczExLWJhc2UtdjIuNDAtb3MuaHRtbCIgc3R5bGU9ImZvbnQtZmFtaWx5OkFyaWFsLEhlbHZl
+dGljYSxzYW5zLXNlcmlmIj5odHRwOi8vZG9jcy5vYXNpcy1vcGVuLm9yZy9wa2NzMTEvcGtjczEx
+LWJhc2UvdjIuNDAvb3MvcGtjczExLWJhc2UtdjIuNDAtb3MuaHRtbDwvYT4pIGFuZCB3aGlsZSBp
+dCBmdWxseSBkZXNjcmliZXMgdGhlIGludGVyZmFjZSBiZXR3ZWVuIHRoZSBjcnlwdG9ncmFwaGlj
+IHN5c3RlbSBhbmQgaXRzIHVzZXIsIGl0IGRvZXMgdmVyeSBsaXR0bGUgdG8gZGVzY3JpYmUgaG93
+IGlzIHNoYWxsIGJlIHVzZWQuIFRoYXQmIzM5O3Mgd2hlcmUgdGhlIGV4cGVyaWVuY2UgY29tZXMg
+aW4gaGFuZHk6IGRpZmZlcmVudCBzb2Z0d2FyZXMgdXNlIGRpZmZlcmVudCB3b3JrZmxvd3MuIFNv
+IGdpdmVuIGEgc3BlY2lmaWMgUEtDUyMxMSBlbmdpbmUsIHlvdSBtYXkgYmUgYWJsZSB0byBoYXZl
+IGl0IHdvcmsgd2l0aCAoZm9yIGV4YW1wbGUpIE9wZW5WUE4sIGJ1dCBub3Qgd2l0aCB3Z2V0ICh0
+aG91Z2ggdGhlIFBLQ1MjMTEgZW5naW5lIGZvciBPcGVuU1NMKS4gVGhpcyB3aWxsIG9ubHkgYmUg
+dHJ1ZSBpZiB0aGUgc3BlY2lmaWMgUEtDUyMxMSBlbmdpbmUgeW91IHVzZSBmb3IgeW91ciBkZXZp
+Y2UgaW1wbGVtZW50cyBldmVyeXRoaW5nIGluIHRoZSBzcGVjLjwvZGl2PjxkaXYgY2xhc3M9Imdt
+YWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48YnI+
+PC9kaXY+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3Rl
+IiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCBy
+Z2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPgpBZGRpdGlvbmFsbHksIHRvIGhhdmUg
+dGhpcyB3aWRlbHkgYXZhaWxhYmxlLCB3ZSBuZWVkIHRvIG1ha2UgdGhpcyBwYWNrYWdlcyBhdmFp
+bGFibGUgaW4gdGhlIHRhcmdldCBkaXN0cm9zIChGZWRvcmEgYW5kIFVidW50dSBmb3Igbm93KS48
+YnI+ClRoZXJlIGlzIGEgdHBtMi1wa2NzMTEgcGFja2FnZSBhdmFpbGFibGUgaW4gRmVkb3JhIGFz
+IHRvZGF5OiA8YSBocmVmPSJodHRwczovL3BrZ3Mub3JnL2Rvd25sb2FkL3RwbTItcGtjczExIiBy
+ZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL3BrZ3Mub3JnL2Rvd25sb2Fk
+L3RwbTItcGtjczExPC9hPi4gPGJyPgpJIGp1c3QgZm91bmQgdGhhdCB0aGVyZSBpcyBhIHRwbTIt
+cGsxMSBwYWNrYWdlIGluIFVidW50dSBhcyB3ZWxsLCB0aGF0IGFsc28gdXNlcyB0cG0yLXRzcyBo
+ZXJlIDxhIGhyZWY9Imh0dHBzOi8vem9vbWFkbWluLmNvbS9Ib3dUb0luc3RhbGwvVWJ1bnR1UGFj
+a2FnZS90cG0yLXBrMTEiIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBzOi8v
+em9vbWFkbWluLmNvbS9Ib3dUb0luc3RhbGwvVWJ1bnR1UGFja2FnZS90cG0yLXBrMTE8L2E+LiA8
+YnI+CjwvYmxvY2txdW90ZT48ZGl2Pjxicj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0
+IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+SSBoYXZlbiYjMzk7dCB3
+b3JrZWQgd2l0aCB0cG0yLXBrY3MxMSB5ZXQgIHNvIEkgY2Fubm90IHNheSBtdWNoIGFib3V0IGl0
+ICh0aGlzIGlzIHBsYW5lZCBidXQgSSBoYXZlIHRvIGZpbmQgc29tZSB0aW1lIHRvIGRvIHNvIDsg
+bXkgZ29hbCBpcyB0byB1c2UgaXQgb3ZlciB0cG0yLXBrMTEgYnV0IHRoZW4gSSBoYXZlIGEgc3Bl
+Y2lmaWMgdmVyc2lvbiB3aGVyZSB0aGUgcHVibGljIGNlcnRpZmljYXRlcyBhcmUgc3RvcmVkIGFz
+IERFUiBpbiB0aGUgbnZyYW0gb2YgdGhlIFRQTTIgaW5zdGVhZCBvZiBiZWluZyBzdG9yZWQgaW4g
+YSBzcGVjaWZpYyBkaXJlY3RvcnkpLiB0cG0yLXBrMTEgd2FzIG1pc3NpbmcgdGhpbmdzIHdoZW4g
+SSBzdGFydGVkIHRvIHVzZSBpdCBhbmQgSSBoYWQgdG8gYWRkIHdoYXQgd2FzIG1pc3NpbmcgZm9y
+IG15IG93biB1c2UgY2FzZSAod2UgaGF2ZSB1c2VkIGl0IGZvciAyIHllYXJzIHdpdGggT3BlblZQ
+TiwgT3BlblNTTCBhbmQgYSBoYW5kZnVsIG9mIG90aGVyIHByb2dyYW1zKS48L2Rpdj48ZGl2IGNs
+YXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFj
+ZSI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBw
+eCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0LDIwNCwyMDQpO3Bh
+ZGRpbmctbGVmdDoxZXgiPkFzIHJlZ2FyZHMgdGhlIHRwbTItdHNzLWVuZ2luZSwgdGhlcmUgaXMg
+bm8gcGFja2FnZSBmb3IgVWJ1bnR1LiBUaGVyZSBpcyBhbiBycG0gZm9yIEZlZG9yYSBiZWluZyBh
+c3NlbWJsZWQgaGVyZSA8YSBocmVmPSJodHRwczovL2J1Z3ppbGxhLnJlZGhhdC5jb20vc2hvd19i
+dWcuY2dpP2lkPTE3NzM4NTUiIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBz
+Oi8vYnVnemlsbGEucmVkaGF0LmNvbS9zaG93X2J1Zy5jZ2k/aWQ9MTc3Mzg1NTwvYT4gdGhvdWdo
+Ljxicj4KPGJyPgpTbyBJIGhvcGUgdGhhdCBhbGwgdGhpcyBleGVyY2lzZSBtYWtlcyB0aGUgcHJv
+Y2VzcyBtb3JlIHN0YWJsZSBmb3IgZXZlcnlib2R5ITxicj48L2Jsb2NrcXVvdGU+PGRpdj48YnI+
+PC9kaXY+PGRpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6
+bW9ub3NwYWNlLG1vbm9zcGFjZSI+VGhhbmtzIDopPC9kaXY+PGJyPjwvZGl2PjxkaXY+PGRpdiBj
+bGFzcz0iZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3Bh
+Y2UiPkJlc3QgcmVnYXJkcyzCoDwvZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2RlZmF1bHQiIHN0eWxl
+PSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48YnI+PC9kaXY+PGRpdiBjbGFzcz0i
+Z21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPi0t
+PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9z
+cGFjZSxtb25vc3BhY2UiPkVtbWFudWVsIERlbG9nZXQ8L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4K
+
+--===============3482194732897659096==--
 
