@@ -1,145 +1,279 @@
-Content-Type: multipart/mixed; boundary="===============2384836428306251845=="
+Content-Type: multipart/mixed; boundary="===============3141483558537120792=="
 MIME-Version: 1.0
-From: David Woodhouse <dwmw2 at infradead.org>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: OpenSSL TLS using tpm2-pkcs11 doesn't work on newer
  versions
-Date: Fri, 24 Jan 2020 21:11:09 +0000
-Message-ID: <db725d5b7e36fa8152ee46e9223e953a66f75325.camel@infradead.org>
-In-Reply-To: CAKh=nwFvt_-3W=8ZZxTVwTbDS0LAmaX+XQ1JuHpT+6zL7Xg0Bg@mail.gmail.com
+Date: Sat, 25 Jan 2020 01:15:23 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E7BD99@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 3b60420193894d54a80fbc66c162af8f@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2384836428306251845==
+--===============3141483558537120792==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-01-24 at 18:10 +0100, Emmanuel Deloget wrote:
+I was able to reproduce this by commenting out all the support for other al=
+gorithms:
+https://github.com/williamcroberts/tpm2-pkcs11/tree/force-raw-rsa
+
+It dawned on my while eating dinner, that it was likely something where we =
+needed to flip the RSA operations.
+The TPM adheres to the true definitions of RSA Encrypt and RSA Decrypt, and=
+ when you specify a C_Encrypt() call with
+A private key object, the code calls TPM2_RSA_Encrypt() which is the RSA op=
+eration with the public key. Which the TPM
+Doesn't throw an error because the handle going to the TPM maps to the keyp=
+air and the TPM just does the right thing.
+
+After doing the initial setup, if you swap the RSA encrypt/decrypt calls, i=
+t works (see patch below).
+
+We likely need to track and call the proper TPM RSA routines on what the op=
+eration is when it is RSA X509:
+
+Key Class                  Interface       Operation
+CKO_PRIVATE      C_Decrypt    tpm_decrypt
+CKO_PUBLIC        C_Decrypt    tpm_encrypt
+CKO_PRIVATE     C_Encrypt        tpm_decrypt
+CKO_PUBLIC        C_Encrypt       tpm_encrypt
+
+We'll need to get proper support in for this and a regression test performi=
+ng one half in the TPM and the other half
+With OpenSSL. Theirs already tests for CKM_RSA_X_509 in pkcs-crypt.int.c, s=
+o we likely just need to expand on those.
+
+diff --git a/src/lib/tpm.c b/src/lib/tpm.c
+index f906ffbc584e..735151f016a7 100644
+--- a/src/lib/tpm.c
++++ b/src/lib/tpm.c
+@@ -1836,7 +1836,7 @@ CK_RV tpm_encrypt(crypto_op_data *opdata,
+     tpm_encrypt_data *tpm_enc_data =3D opdata->tpm_enc_data;
+ =
+
+     if (tpm_enc_data->is_rsa) {
+-        return tpm_rsa_encrypt(tpm_enc_data, ptext, ptextlen, ctext, ctext=
+len);
++        return tpm_rsa_decrypt(tpm_enc_data, ptext, ptextlen, ctext, ctext=
+len);
+     }
+ =
+
+     tpm_ctx *ctx =3D tpm_enc_data->ctx;
+@@ -1857,7 +1857,7 @@ CK_RV tpm_decrypt(crypto_op_data *opdata,
+     tpm_encrypt_data *tpm_enc_data =3D opdata->tpm_enc_data;
+ =
+
+     if (tpm_enc_data->is_rsa) {
+-        return tpm_rsa_decrypt(tpm_enc_data, ctext, ctextlen, ptext, ptext=
+len);
++        return tpm_rsa_encrypt(tpm_enc_data, ctext, ctextlen, ptext, ptext=
+len);
+     }
+ =
+
+     tpm_ctx *ctx =3D tpm_enc_data->ctx;
+
+> -----Original Message-----
+> From: Jaureguiberry, IgnacioX
+> Sent: Thursday, January 23, 2020 2:30 PM
+> To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.o=
+rg
+> Subject: RE: [tpm2] OpenSSL TLS using tpm2-pkcs11 doesn't work on newer
+> versions
 > =
 
-> In my experience this is mostly true - the key word in that sentence
-> being "mostly". The PKCS#11 is fairly big (
-> http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/os/pkcs11-base-v2.40-=
-os.html
-> ) and while it fully describes the interface between the
-> cryptographic system and its user, it does very little to describe
-> how is shall be used. That's where the experience comes in handy:
-> different softwares use different workflows. So given a specific
-> PKCS#11 engine, you may be able to have it work with (for example)
-> OpenVPN, but not with wget (though the PKCS#11 engine for OpenSSL).
-> This will only be true if the specific PKCS#11 engine you use for
-> your device implements everything in the spec.
+> I'm using tpm2-pkcs11 tag 1.0 because latest version requires python 3.7 =
+for the
+> tpm2_ptool to work. This is a bit of work in both Ubuntu 16.04 and 18.04.
+> =
 
-FWIW much of this *shouldn't* be true, at least for basic key storage
-for TLS and similar purposes.
+> I've upgraded to python3.7 in the Ubuntu 18.04 setup and then installed t=
+pm2-
+> pkcs11 to HEAD of master and it still shows the same error: C_SignInit wi=
+th
+> mechanism CKM_RSA_X_509 returns CKR_KEY_FUNCTION_NOT_PERMITTED.
+> =
 
-If you have a properly functioning PKCS#11 provider which is correctly
-registered with p11-kit on a Linux system, then any application which
-accepts certificates+keys in a PEM or PKCS#12 or similar file SHOULD
-also accept a PKCS#11 URI as defined by RFC7512.
+> -----Original Message-----
+> From: Roberts, William C
+> Sent: Thursday, January 23, 2020 4:33 PM
+> To: Jaureguiberry, IgnacioX <ignaciox.jaureguiberry(a)intel.com>;
+> tpm2(a)lists.01.org
+> Subject: RE: [tpm2] OpenSSL TLS using tpm2-pkcs11 doesn't work on newer
+> versions
+> =
 
-At least in Fedora, if you find an application for which that *isn't*
-true, please file a bug and Cc me.
+> Backing up your TPM2_PKCS11_STORE, what happens if you bump tpm2-pkcs11
+> to current master HEAD?
+> =
 
-On other distributions, YMMV.
+> Still fail?
+> =
 
+> Bill
+> =
 
---===============2384836428306251845==
-Content-Type: application/x-pkcs7-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
-ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
-OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
-RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
-cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
-uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
-Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
-Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
-xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
-YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
-nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
-PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
-7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
-Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
-MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
-NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
-/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
-0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
-vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
-ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
-ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
-CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
-aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
-bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
-LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
-CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
-W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
-vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
-gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
-RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
-jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
-b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
-+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
-WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
-aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
-CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
-u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
-RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
-QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
-b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
-cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
-SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
-0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
-KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
-E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
-M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
-yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
-gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
-R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
-ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAw
-MTI0MjExMTA5WjAvBgkqhkiG9w0BCQQxIgQgagWUtXC55MxtR/ei3r8VD//LDqgCDYt62h9Aykv7
-hJ8wgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
-TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
-PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAFvsc73oYzfOH6tmIkm8pDxFsADP04mQH7XSEv3iz9tJITcLBYr8VJ45x0WJojd3
-UNWzsacUqZbIRHsfYx7VsTW3OgUuEOHw3DYLzDMMEQvua07q25eGVXxS8eBUEFLsMFJ5NndnUlZS
-REX97iIhXmUnpp23YXZYYeFngFWDzIuyyhMEKJLObzYAdQEn7dkevjWxbM/lnxxM59qywWWRPgcL
-/8AuUk40rfSMVdPIGLYlqXFjy3bX9xZ0jbWIDteTgte/nIvIz4HtYGon4yCI8lY8u+ZvP6WItFn2
-uCbJV+1BFvB9A/0N/xq6t9Ln1LfbdpKNRMRstJVO5f+s2xcjD/MAAAAAAAA=
---===============2384836428306251845==--
+> > -----Original Message-----
+> > From: Jaureguiberry, IgnacioX
+> > Sent: Thursday, January 23, 2020 1:16 PM
+> > To: Roberts, William C <william.c.roberts(a)intel.com>;
+> > tpm2(a)lists.01.org
+> > Subject: RE: [tpm2] OpenSSL TLS using tpm2-pkcs11 doesn't work on
+> > newer versions
+> >
+> > These are the software versions on each setup. For the Ubuntu packages
+> > I'm putting the Ubuntu package and version, and also de project with its
+> version.
+> >
+> > On the Ubuntu 16.04:
+> > Bundled with Ubuntu:
+> > * libssl1.0.0 [1.0.2g-1] - openssl [1.0.2g]
+> > * libp11-2 [0.3.1-1] - libp11 [0.3.1]
+> > * libengine-pkcs11-openssl [0.2.1-1] - engine_pkcs11 [0.2.1]
+> >
+> > Tpm2 project libraries, built from sources:
+> > * tpm2-tss    [ git sha: eedaf1a - tag 2.3.2 ]
+> > * tpm2-abrmd  [ git sha: e275930 - tag 2.3.1 ]
+> > * tpm2-tools  [ git sha: c971982 - master    ]
+> > * tpm2-pkcs11 [ git sha: 7af62a4 - tag 1.0   ]
+> >
+> > On the Ubuntu 18.04 setup:
+> > Bundled with Ubuntu:
+> > * libssl1.1 [1.1.1-1ubuntu2.1] - openssl [1.1.1]
+> > * libengine-pkcs11-openssl [0.4.7-3] - libp11 [0.4.7]
+> > * opensc-pkcs11 [0.17.0-3] - opensc [0.17.0]
+> > * p11-kit-modules [0.23.9-2] - p11-kit [0.23.9]
+> >
+> > Tpm2 project libraries, built from sources:
+> > * tpm2-tss    [ git sha: eedaf1a - tag 2.3.2 ]
+> > * tpm2-tools  [ git sha: c971982 - master    ]
+> > * tpm2-pkcs11 [ git sha: 7af62a4 - tag 1.0   ]
+> >
+> > I'm sending the logs and function calls captured with pkcs11spy for eac=
+h setup.
+> > The different mechanism in C_SignInit can be seen on them.
+> >
+> >
+> > -----Original Message-----
+> > From: Roberts, William C
+> > Sent: Thursday, January 23, 2020 11:44 AM
+> > To: Jaureguiberry, IgnacioX <ignaciox.jaureguiberry(a)intel.com>;
+> > tpm2(a)lists.01.org
+> > Subject: RE: [tpm2] OpenSSL TLS using tpm2-pkcs11 doesn't work on
+> > newer versions
+> >
+> >
+> >
+> > > -----Original Message-----
+> > > From: Ignacio Jaureguiberry
+> > > [mailto:ignaciox.jaureguiberry(a)intel.com]
+> > > Sent: Wednesday, January 22, 2020 12:36 PM
+> > > To: tpm2(a)lists.01.org
+> > > Subject: [tpm2] OpenSSL TLS using tpm2-pkcs11 doesn't work on newer
+> > > versions
+> > >
+> > > I was trying to make wpa_supplicant use a tpm2-pkcs11 stored private
+> > > key to authenticate against a RADIUS server, I mentioned about it on
+> > > this
+> > discussion:
+> > > https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/message/AYUBC
+> > > AF
+> > > CCXITEV
+> > > SWA4IFC466LYS6ZIYX/
+> > >
+> > > With some fixes on tpm2-pkcs11, TLS is working and there is an
+> > > integration test for that here:
+> > > https://github.com/tpm2-software/tpm2-
+> > > pkcs11/blob/master/test/integration/tls-tests.sh
+> > >
+> > > I wasn't able to reproduce this on Ubuntu 18, and noted that the
+> > > test cases ran on top of an Ubuntu 16.04 image. I tried Ubuntu 16.04
+> > > and TLS works as in the integration test. I also checked that using
+> > > latest version of wpa_supplicant, it does work with tpm2-pkcs11 and
+> > > creates an EAP-
+> > TLS connection using the TPM.
+> >
+> > Increasing our distro coverage is definitely something I need/want to
+> > do for tpm2-pkcs11.
+> > I already did this for many of the other tpm2 projects like tpm2-tools
+> > and tpm2- tss.
+> >
+> > >
+> > > I've debugged a bit in both OS versions and found that openssl is
+> > > calling pkey_rsa_sign with different padding modes:
+> > > RSA_PKCS1_PADDING in Ubuntu 16, and RSA_PKCS1_PSS_PADDING in
+> Ubuntu
+> > > 18. The consequence is that in
+> >
+> > This seems like a good change, IIUC PKCS1 padding has some known
+> > issues, so changing To PSS is a good move.
+> >
+> > > tpm2-pkcs11, sign_init is being called using CKM_RSA_PKCS as
+> > > mechanism on Ubuntu 16, but in Ubuntu 18 it is being called with
+> > > CKM_RSA_X_509, which is not supported.
+> >
+> > CKM_RSA_X_509 is supported, it's raw RSA encryption and AFAICT it's
+> > been supported since release 1.0. If it's signing with raw RSA, It
+> > must apply the PSS padding separately. Which it does looking at OSSL 1_=
+1_1
+> code:
+> >
+> > -- code ---
+> >         } else if (rctx->pad_mode =3D=3D RSA_PKCS1_PSS_PADDING) {
+> >             if (!setup_tbuf(rctx, ctx))
+> >                 return -1;
+> >             if (!RSA_padding_add_PKCS1_PSS_mgf1(rsa,
+> >                                                 rctx->tbuf, tbs,
+> >                                                 rctx->md, rctx->mgf1md,
+> >                                                 rctx->saltlen))
+> >                 return -1;
+> >             ret =3D RSA_private_encrypt(RSA_size(rsa), rctx->tbuf,
+> >                                       sig, rsa, RSA_NO_PADDING);
+> > ---
+> >
+> > So this makes sense to what you're seeing hitting the pkey_rsa_sign
+> > versus the calls hitting
+> > pkcs11 C_SignInit.
+> >
+> > >
+> > > I think I have to file a bug to OpenSSL, but I don't know too much
+> > > about the
+> > > PKCS11 specs to support the claims. I'd appreciate any help to file
+> > > a decent
+> > issue.
+> > > Also, any workaround is welcome, as replacing OpenSSL in any
+> > > distribution is very hard given all the software that depends on it.
+> >
+> > Probably not, it's probably something we need to fix in the pkcs11
+> > library which is very much an under development project. We should try
+> > and replicate the bug first, and deduce that it is their bug before we
+> > file. We don't want to cry wolf here.
+> >
+> > I would capture the parameters going into the C_SignInit and
+> > subsequent C_Sign calls and create a test in
+> > test/integration/pkcs-crypt.int.c that reproduces the error.
+> >
+> > If you get me the inputs soon, I can develop this test and get a fix
+> > out. I am out all next week Jan 27-Jan31.
+> >
+> > Another great way to debug deeper is both pkcs11spy and setting the
+> > env variable "export TPM2_PKCS11_DEBUG_LOG=3D2" to get verbose logs out
+> > of the
+> > tpm2-pkcs11 Library. You can find the pkcs11spy project at:
+> > https://github.com/OpenSC/OpenSC/wiki/Using-OpenSC
+> >
+> > Also, specifying versions of OSSL and tpm2-pkcs11 as well as more logs
+> > and specific error messages you share, the easier it will be for us to =
+help debug.
+> >
+> > Thanks,
+> > Bill
+> >
+> > > _______________________________________________
+> > > tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email
+> > > to tpm2-leave(a)lists.01.org
+> > > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+--===============3141483558537120792==--
 
