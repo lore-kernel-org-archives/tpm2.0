@@ -1,20 +1,20 @@
-Content-Type: multipart/mixed; boundary="===============1086294482489189963=="
+Content-Type: multipart/mixed; boundary="===============1797213332804819728=="
 MIME-Version: 1.0
 From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] tpm2-tss v2.3.3-rc2
-Date: Tue, 28 Jan 2020 11:54:40 -0800
-Message-ID: <38b4362d-9779-0471-660e-7be8938d54e4@intel.com>
+Subject: [tpm2] tpm2-tss v2.4.0-rc2
+Date: Wed, 29 Jan 2020 16:29:09 -0800
+Message-ID: <e43c9f48-00cf-1d73-3d06-07e34c87e39f@intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1086294482489189963==
+--===============1797213332804819728==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
-New release candidate for tpm2-tss v2.3.3 bugfix release is out.
-https://github.com/tpm2-software/tpm2-tss/releases/tag/2.3.3-rc2
+Another release candidate (rc2) for tpm2-tss v2.4.0 is out.
+https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.0-rc2
 
 All changes and fixes are listed in the CHANGELOG.md file.
 Any feedback welcomed.
@@ -22,5 +22,5 @@ Any feedback welcomed.
 Thanks,
 --
 Tadeusz
---===============1086294482489189963==--
+--===============1797213332804819728==--
 
