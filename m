@@ -1,21 +1,22 @@
-Content-Type: multipart/mixed; boundary="===============4527128765485764036=="
+Content-Type: multipart/mixed; boundary="===============5181419825345069636=="
 MIME-Version: 1.0
-From: chenxiz at fb.com
+From: nicolasoliver03 at gmail.com
 Subject: [tpm2] Re: Need Help to parse AK public key
-Date: Wed, 19 Feb 2020 23:05:12 +0000
-Message-ID: <20200219230512.2820.70066@ml01.vlan13.01.org>
-In-Reply-To: ec23bdf1-5cb8-2851-1891-1345b66d784e@uvensys.de
+Date: Wed, 19 Feb 2020 23:24:21 +0000
+Message-ID: <20200219232421.2820.78220@ml01.vlan13.01.org>
+In-Reply-To: 20200219230512.2820.70066@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4527128765485764036==
+--===============5181419825345069636==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks Steffen, It helps!
+You can also use tpm2_readpublic for an already created one!
 
-thanks,
-Chenxi
---===============4527128765485764036==--
+tpm2_readpublic -c ak.ctx -f PEM -o ak.pem
+
+tpm2_readpublic -c 0x81010001 -f PEM -o ak.pem
+--===============5181419825345069636==--
 
