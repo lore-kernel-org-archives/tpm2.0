@@ -1,30 +1,37 @@
-Content-Type: multipart/mixed; boundary="===============6229587275406315124=="
+Content-Type: multipart/mixed; boundary="===============9141816364304515914=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] Re: Need help cross compiling tpm2-* for arm
-Date: Wed, 19 Feb 2020 10:38:23 -0800
-Message-ID: <0d69d83f-3528-2751-77c6-deb83d8341d0@intel.com>
-In-Reply-To: a8e9516a21464004bafc26965bf77ff0@EXDAG32-1.EXCHANGE.INT
+From: chenxiz at fb.com
+Subject: [tpm2] Need Help to parse AK public key
+Date: Wed, 19 Feb 2020 22:32:42 +0000
+Message-ID: <20200219223242.2820.81088@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6229587275406315124==
+--===============9141816364304515914==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 2/19/20 8:04 AM, pweggler(a)jacol.de wrote:
-> Thank you! It compiles now, but the filetype of .libs/ libtpm2tss.so is E=
-LF x86-64 instead of the expected arm
+Hi,
 
-You can also pass in the standard --prefix=3D<dir> when you ./configure
-the TSS libraries and then do "make install".That is the easiest and
-proffered way.
-WRT the so being ELF x86-64 make sure that you set the $CC and other
-tools are set to the cross-compiler.
+I created a 2048 RSA AK by using the command below :
+tpm2_createak -C 0x81010001 -c ak.ctx -u ak.pub -r ak.priv -n ak.name -P=C2=
+=A0dummypwd -p dummypwd
 
--- =
+ak.pub file size =3D 282 bytes.
+$stat --printf=3D"%s" ak.pub
+282
 
-Tadeusz
---===============6229587275406315124==--
+I would like to parse the RSA public key, i.e., e and n, Can anyone help me=
+ elaborate the ak.pub format or is there any tool I can use to parse it?
+
+TPM2 tools version (all are the latest):
+tpm2-tools-4.1.1
+tpm2-abrmd-2.3.1
+tpm2-tss-2.3.2
+
+
+Thanks,
+Chenxi
+--===============9141816364304515914==--
 
