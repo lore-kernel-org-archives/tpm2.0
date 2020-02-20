@@ -1,18 +1,25 @@
-Content-Type: multipart/mixed; boundary="===============1434284020772606886=="
+Content-Type: multipart/mixed; boundary="===============1665431111961993253=="
 MIME-Version: 1.0
-From: Chenxi Z <cxzhang1981 at hotmail.com>
-Subject: [tpm2] Re: Need Help to parse AK public key
-Date: Wed, 19 Feb 2020 23:52:57 +0000
-Message-ID: <20200219235257.2820.31200@ml01.vlan13.01.org>
-In-Reply-To: 20200219232421.2820.78220@ml01.vlan13.01.org
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: [tpm2] tpm2-tss v2.3.3
+Date: Wed, 19 Feb 2020 16:24:55 -0800
+Message-ID: <7ea34472-76d3-1bb0-4f2f-462189023cd8@intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1434284020772606886==
+--===============1665431111961993253==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-thanks. It is even better.
---===============1434284020772606886==--
+Hello,
+A new bugfix release tpm2-tss v2.3.3 is out.
+https://github.com/tpm2-software/tpm2-tss/releases/tag/2.3.3
+
+All changes and fixes are listed in the CHANGELOG.md file.
+
+Thanks,
+--
+Tadeusz
+--===============1665431111961993253==--
 
