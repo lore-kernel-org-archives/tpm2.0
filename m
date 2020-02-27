@@ -1,27 +1,28 @@
-Content-Type: multipart/mixed; boundary="===============5214344809597580551=="
+Content-Type: multipart/mixed; boundary="===============0771462093435092655=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] tpm2-tss v2.4.0-rc3
-Date: Mon, 24 Feb 2020 16:03:26 -0800
-Message-ID: <fd548394-8c1f-a496-f79e-43a1984bbe6d@intel.com>
+From: Chenxi Z <cxzhang1981 at hotmail.com>
+Subject: [tpm2] How can I get EK certificate?
+Date: Thu, 27 Feb 2020 19:29:44 +0000
+Message-ID: <20200227192944.2640.91090@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5214344809597580551==
+--===============0771462093435092655==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-Another release candidate-rc3 for tpm2-tss v2.4.0 is out.
-https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.0-rc3
+Anyone knows how to get EK certificate?
 
-All changes and fixes are listed in the CHANGELOG.md file.
-Any feedback welcomed.
+I am able to get EK public key by using the command below, but not sure how=
+ to get EK cert.
 
-Thanks,
---
-Tadeusz
+#tpm2_readpublic -c 0x81010001 -o ek.pub.pem -f pem
 
---===============5214344809597580551==--
+
+TPM2 tools version:
+tpm2-tools-4.1.1
+tpm2-abrmd-2.3.1
+tpm2-tss-2.3.2
+--===============0771462093435092655==--
 
