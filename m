@@ -1,134 +1,219 @@
-Content-Type: multipart/mixed; boundary="===============1137559479480829667=="
+Content-Type: multipart/mixed; boundary="===============5919585557204256629=="
 MIME-Version: 1.0
-From: Rowan Moul <lists at rowan.moul.ca>
+From: Martin Townsend <mtownsend1973 at gmail.com>
 Subject: [tpm2] Re: tpm2_createek and transient EK problem
-Date: Fri, 28 Feb 2020 08:57:38 -0700
-Message-ID: <7B1E05F7-DD6E-4588-BE3A-4BC72ED16580@rowan.moul.ca>
-In-Reply-To: CABatt_xYtcXf5o4rn3=TG5udXT-97DzbHN=qqb0L08SAVxWs1A@mail.gmail.com
+Date: Fri, 28 Feb 2020 16:06:25 +0000
+Message-ID: <CABatt_yrzpHZcjhp9zEm5UW6sSVg297q7xcrsa39hNEuB46crw@mail.gmail.com>
+In-Reply-To: 7B1E05F7-DD6E-4588-BE3A-4BC72ED16580@rowan.moul.ca
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1137559479480829667==
+--===============5919585557204256629==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Running any tool with the -v option will print out both the version of tpm2=
--tools that tool came from, and the TCTI that it is using.
+Yes it was defaulting to abrmd.  I read the links and can confirm if I
+use the device directly I get some transient objects :)
 
-If you have the abrmd service running it should default to that.
+tpm2_createek -G rsa -u ek.pub -c ek.ctx -P xxx -T device:/dev/tpm0
+root(a)varsomam43-b1871a-elite[net-nfs-rw]:~# tpm2_getcap
+handles-transient -T device:/dev/tpm0
+- 0x80000000
+- 0x80000001
 
-https://github.com/tpm2-software/tpm2-tools/blob/master/man/common/options.=
-md
+So if you want to use transient objects with tpm2-tools don't use the
+resource manager.  Out of interest what is the advantages of the
+Resource Manager? Is there some documentation for it that I could
+read?
 
-https://github.com/tpm2-software/tpm2-tools/blob/master/man/common/tcti.md
-
-
-Rowan
-
->> On Feb 28, 2020, at 08:37, Martin Townsend <mtownsend1973(a)gmail.com> w=
-rote:
+On Fri, Feb 28, 2020 at 3:57 PM Rowan Moul <lists(a)rowan.moul.ca> wrote:
+>
+> Running any tool with the -v option will print out both the version of tp=
+m2-tools that tool came from, and the TCTI that it is using.
+>
+> If you have the abrmd service running it should default to that.
+>
+> https://github.com/tpm2-software/tpm2-tools/blob/master/man/common/option=
+s.md
+>
+> https://github.com/tpm2-software/tpm2-tools/blob/master/man/common/tcti.md
+>
+>
+> Rowan
+>
+> On Feb 28, 2020, at 08:37, Martin Townsend <mtownsend1973(a)gmail.com> wr=
+ote:
+>
 > =EF=BB=BFOn Fri, Feb 28, 2020 at 2:45 PM Roberts, William C
 > <william.c.roberts(a)intel.com> wrote:
->> =
-
->> =
-
->> =
-
->>> -----Original Message-----
->>> From: Roberts, William C [mailto:william.c.roberts(a)intel.com]
->>> Sent: Friday, February 28, 2020 8:35 AM
->>> To: Martin Townsend <mtownsend1973(a)gmail.com>; tpm2(a)lists.01.org
->>> Subject: [tpm2] Re: tpm2_createek and transient EK problem
->>>> -----Original Message-----
->>>> From: Martin Townsend [mailto:mtownsend1973(a)gmail.com]
->>>> Sent: Friday, February 28, 2020 5:42 AM
->>>> To: tpm2(a)lists.01.org
->>>> Subject: [tpm2] tpm2_createek and transient EK problem
->>>> Hi,
->>>> I'm trying out the tpm2_createek tool and in the manual
->>>> https://github.com/tpm2-software/tpm2-
->>>> tools/blob/master/man/tpm2_createek.1.md
->>>> It explains how to create a transient EK, I following these
->>>> instructions but can't get them to work.  I've taken ownership of the
->>>> TPM and created a SRK.  I then ran the command as listed in the manual
->>>> page:
->>>> tpm2_createek -G rsa -u ek.pub
->>>> ERROR: Expected option -c
->>>> Usage: tpm2_createek [<options>]
->>>> Where <options> are:
->>>>    [ -P | --eh-auth=3D<value>] [ -w | --owner-auth=3D<value>] [ -p |
->>>> --ek- auth=3D<value>] [ -G | --key-algorithm=3D<value>]
->>>>    [ -u | --public=3D<value>] [ -f | --format=3D<value>] [ -c |
->>>> --ek-context=3D<value>] [ - t | --template=3D<value>]
->>>> So I added the -c to save the context to disk and provide the EH autho=
-risation:
->>>> tpm2_createek -G rsa -u ek.pub -c ek.ctx -P xxx echo $?
->>>> 0
->>>> so it looks like it's succeeded but I then try the to list the
->>>> transient objects with
->>>> tpm2_getcap handles-transient
->>>> and I get nothing.  The files have been created
->>> So a resource manager will flush all transient objects when the client =
-disconnects.
->>> So in this case, when tpm2_createek exits, the RM flushes. This assumes=
- you're
->>> Using a resource manager (RM), like tpm2-abrmd or the in kernel RM
->>> /dev/tpmrm0.
->>> If you're not using an RM, and using the device directly  (/dev/tpm0), =
-I am not
->>> really sure why it wouldn't remain loaded.
->>> Once you have the transient EK in a context file, you can just pass tha=
-t to any
->>> tools -c or -C Option (depends on command and use). The tools will noti=
-ce that
->>> you need to restore the object from the context file and perform a Cont=
-extLoad
->>> command.
->>> Typically, the EK is persisted at a specific handle, I thought it was i=
-n the PC client
->>> spec or Credential Profile EK spec:
->>> https://trustedcomputinggroup.org/wp-
->>> content/uploads/TCG_PC_Client_Platform_TPM_Profile_PTP_Specification_Fam
->>> ily_2.0_Revision_1.3v22.pdf
->>> https://trustedcomputinggroup.org/wp-
->>> content/uploads/TCG_IWG_Credential_Profile_EK_V2.1_R13.pdf
->>> However, I can't find that handle, so perhaps I am miss remembering, bu=
-t you
->>> can persist it via the tpm2_evictcontrol command
->> =
-
->> Ahh the provisioning guide has it in Table 2:
->> https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM-v2.0-Provis=
-ioning-Guidance-Published-v1r1.pdf
->> =
-
->> The EK should be persisted at: 0x81010001
->> =
-
->> If you want to conform with the spec
-> =
-
+>
+>
+>
+>
+> -----Original Message-----
+>
+> From: Roberts, William C [mailto:william.c.roberts(a)intel.com]
+>
+> Sent: Friday, February 28, 2020 8:35 AM
+>
+> To: Martin Townsend <mtownsend1973(a)gmail.com>; tpm2(a)lists.01.org
+>
+> Subject: [tpm2] Re: tpm2_createek and transient EK problem
+>
+>
+>
+>
+> -----Original Message-----
+>
+> From: Martin Townsend [mailto:mtownsend1973(a)gmail.com]
+>
+> Sent: Friday, February 28, 2020 5:42 AM
+>
+> To: tpm2(a)lists.01.org
+>
+> Subject: [tpm2] tpm2_createek and transient EK problem
+>
+>
+> Hi,
+>
+>
+> I'm trying out the tpm2_createek tool and in the manual
+>
+> https://github.com/tpm2-software/tpm2-
+>
+> tools/blob/master/man/tpm2_createek.1.md
+>
+>
+> It explains how to create a transient EK, I following these
+>
+> instructions but can't get them to work.  I've taken ownership of the
+>
+> TPM and created a SRK.  I then ran the command as listed in the manual
+>
+> page:
+>
+>
+> tpm2_createek -G rsa -u ek.pub
+>
+> ERROR: Expected option -c
+>
+> Usage: tpm2_createek [<options>]
+>
+> Where <options> are:
+>
+>    [ -P | --eh-auth=3D<value>] [ -w | --owner-auth=3D<value>] [ -p |
+>
+> --ek- auth=3D<value>] [ -G | --key-algorithm=3D<value>]
+>
+>    [ -u | --public=3D<value>] [ -f | --format=3D<value>] [ -c |
+>
+> --ek-context=3D<value>] [ - t | --template=3D<value>]
+>
+>
+> So I added the -c to save the context to disk and provide the EH authoris=
+ation:
+>
+>
+> tpm2_createek -G rsa -u ek.pub -c ek.ctx -P xxx echo $?
+>
+> 0
+>
+>
+> so it looks like it's succeeded but I then try the to list the
+>
+> transient objects with
+>
+>
+> tpm2_getcap handles-transient
+>
+>
+> and I get nothing.  The files have been created
+>
+>
+> So a resource manager will flush all transient objects when the client di=
+sconnects.
+>
+> So in this case, when tpm2_createek exits, the RM flushes. This assumes y=
+ou're
+>
+> Using a resource manager (RM), like tpm2-abrmd or the in kernel RM
+>
+> /dev/tpmrm0.
+>
+>
+> If you're not using an RM, and using the device directly  (/dev/tpm0), I =
+am not
+>
+> really sure why it wouldn't remain loaded.
+>
+>
+> Once you have the transient EK in a context file, you can just pass that =
+to any
+>
+> tools -c or -C Option (depends on command and use). The tools will notice=
+ that
+>
+> you need to restore the object from the context file and perform a Contex=
+tLoad
+>
+> command.
+>
+>
+> Typically, the EK is persisted at a specific handle, I thought it was in =
+the PC client
+>
+> spec or Credential Profile EK spec:
+>
+> https://trustedcomputinggroup.org/wp-
+>
+> content/uploads/TCG_PC_Client_Platform_TPM_Profile_PTP_Specification_Fam
+>
+> ily_2.0_Revision_1.3v22.pdf
+>
+> https://trustedcomputinggroup.org/wp-
+>
+> content/uploads/TCG_IWG_Credential_Profile_EK_V2.1_R13.pdf
+>
+>
+> However, I can't find that handle, so perhaps I am miss remembering, but =
+you
+>
+> can persist it via the tpm2_evictcontrol command
+>
+>
+>
+> Ahh the provisioning guide has it in Table 2:
+>
+> https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM-v2.0-Provisi=
+oning-Guidance-Published-v1r1.pdf
+>
+>
+> The EK should be persisted at: 0x81010001
+>
+>
+> If you want to conform with the spec
+>
+>
+>
+>
+>
+>
 > Hi Wiliam,
-> =
-
+>
 > Thank you for the reply, this is something I didn't know about the
 > resource manager.  I'm fairly new to TPM so I'm on a bit of a steep
 > learning curve.
-> =
-
+>
 > I have no idea if it's using a resource manager, there is a ABRMD process:
 > tss        834     1  0 14:12 ?        00:00:00 /usr/sbin/tpm2-abrmd
 > and there is also the kernel device
 > ls -la /dev/tpmrm0
 > crw-rw---- 1 tss tss 253, 65536 Sep 21 14:11 /dev/tpmrm0
-> =
-
+>
 > How would I know what the tools are using? Can I force it to not use a
 > resource manager to see if the transient object is there?
-> =
-
+>
 > I have already tried the method of making the key persist and this
 > works fine but thank you for the proper handle value, I was using
 > 0x81010000 :)
@@ -136,261 +221,5 @@ ioning-Guidance-Published-v1r1.pdf
 > tpm2 mailing list -- tpm2(a)lists.01.org
 > To unsubscribe send an email to tpm2-leave(a)lists.01.org
 > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============1137559479480829667==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250ZW50PSJ0ZXh0
-L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPjwvaGVhZD48Ym9keSBkaXI9ImF1dG8iPjxkaXYgZGlyPSJs
-dHIiPjxtZXRhIGh0dHAtZXF1aXY9ImNvbnRlbnQtdHlwZSIgY29udGVudD0idGV4dC9odG1sOyBj
-aGFyc2V0PXV0Zi04Ij48ZGl2IGRpcj0ibHRyIj48bWV0YSBodHRwLWVxdWl2PSJjb250ZW50LXR5
-cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCI+PHNwYW4gc3R5bGU9ImNhcmV0
-LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij5SdW5uaW5nIGFueSB0
-b29sIHdpdGggdGhlIC12IG9wdGlvbiB3aWxsIHByaW50IG91dCBib3RoIHRoZSB2ZXJzaW9uIG9m
-IHRwbTItdG9vbHMgdGhhdCB0b29sIGNhbWUgZnJvbSwgYW5kIHRoZSBUQ1RJIHRoYXQgaXQgaXMg
-dXNpbmcuPC9zcGFuPjxkaXYgc3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iY2FyZXQtY29sb3I6IHJnYigw
-LCAwLCAwKTsgY29sb3I6IHJnYigwLCAwLCAwKTsiPklmIHlvdSBoYXZlIHRoZSBhYnJtZCBzZXJ2
-aWNlIHJ1bm5pbmcgaXQgc2hvdWxkIGRlZmF1bHQgdG8gdGhhdC48YnI+PGRpdj48YnI+PC9kaXY+
-PGRpdj48YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xz
-L2Jsb2IvbWFzdGVyL21hbi9jb21tb24vb3B0aW9ucy5tZCI+aHR0cHM6Ly9naXRodWIuY29tL3Rw
-bTItc29mdHdhcmUvdHBtMi10b29scy9ibG9iL21hc3Rlci9tYW4vY29tbW9uL29wdGlvbnMubWQ8
-L2E+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj48YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20v
-dHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL2Jsb2IvbWFzdGVyL21hbi9jb21tb24vdGN0aS5tZCI+
-aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10b29scy9ibG9iL21hc3Rlci9t
-YW4vY29tbW9uL3RjdGkubWQ8L2E+PGJyPjwvZGl2PjwvZGl2Pjxicj48ZGl2IGRpcj0ibHRyIj48
-ZGl2Pjxicj48L2Rpdj5Sb3dhbjwvZGl2PjxkaXYgZGlyPSJsdHIiPjxicj48YmxvY2txdW90ZSB0
-eXBlPSJjaXRlIj5PbiBGZWIgMjgsIDIwMjAsIGF0IDA4OjM3LCBNYXJ0aW4gVG93bnNlbmQgJmx0
-O210b3duc2VuZDE5NzNAZ21haWwuY29tJmd0OyB3cm90ZTo8YnI+PGJyPjwvYmxvY2txdW90ZT48
-L2Rpdj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48ZGl2IGRpcj0ibHRyIj7vu788c3Bhbj5PbiBG
-cmksIEZlYiAyOCwgMjAyMCBhdCAyOjQ1IFBNIFJvYmVydHMsIFdpbGxpYW0gQzwvc3Bhbj48YnI+
-PHNwYW4+Jmx0O3dpbGxpYW0uYy5yb2JlcnRzQGludGVsLmNvbSZndDsgd3JvdGU6PC9zcGFuPjxi
-cj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48
-YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48Ymxv
-Y2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48YmxvY2tx
-dW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4tLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLTwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48Ymxv
-Y2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5Gcm9tOiBS
-b2JlcnRzLCBXaWxsaWFtIEMgW21haWx0bzp3aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5jb21dPC9z
-cGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUi
-PjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPlNlbnQ6IEZyaWRheSwgRmVicnVhcnkgMjgs
-IDIwMjAgODozNSBBTTwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2tx
-dW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5UbzogTWFydGlu
-IFRvd25zZW5kICZsdDttdG93bnNlbmQxOTczQGdtYWlsLmNvbSZndDs7IHRwbTJAbGlzdHMuMDEu
-b3JnPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9
-ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPlN1YmplY3Q6IFt0cG0yXSBSZTog
-dHBtMl9jcmVhdGVlayBhbmQgdHJhbnNpZW50IEVLIHByb2JsZW08L3NwYW4+PGJyPjwvYmxvY2tx
-dW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlw
-ZT0iY2l0ZSI+PHNwYW4+PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9j
-a3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48
-YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48Ymxv
-Y2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2Nr
-cXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJs
-b2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS08L3Nw
-YW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3Rl
-IHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNp
-dGUiPjxzcGFuPkZyb206IE1hcnRpbiBUb3duc2VuZCBbbWFpbHRvOm10b3duc2VuZDE5NzNAZ21h
-aWwuY29tXTwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+
-PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVv
-dGUgdHlwZT0iY2l0ZSI+PHNwYW4+U2VudDogRnJpZGF5LCBGZWJydWFyeSAyOCwgMjAyMCA1OjQy
-IEFNPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48Ymxv
-Y2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0
-eXBlPSJjaXRlIj48c3Bhbj5UbzogdHBtMkBsaXN0cy4wMS5vcmc8L3NwYW4+PGJyPjwvYmxvY2tx
-dW90ZT48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxi
-bG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPlN1Ympl
-Y3Q6IFt0cG0yXSB0cG0yX2NyZWF0ZWVrIGFuZCB0cmFuc2llbnQgRUsgcHJvYmxlbTwvc3Bhbj48
-YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlw
-ZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+
-PHNwYW4+PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48
-YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90
-ZSB0eXBlPSJjaXRlIj48c3Bhbj5IaSw8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVv
-dGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9
-ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9ibG9ja3F1
-b3RlPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJs
-b2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+SSdtIHRy
-eWluZyBvdXQgdGhlIHRwbTJfY3JlYXRlZWsgdG9vbCBhbmQgaW4gdGhlIG1hbnVhbDwvc3Bhbj48
-YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlw
-ZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+
-PHNwYW4+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi08L3NwYW4+PGJyPjwv
-YmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNp
-dGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFu
-PnRvb2xzL2Jsb2IvbWFzdGVyL21hbi90cG0yX2NyZWF0ZWVrLjEubWQ8L3NwYW4+PGJyPjwvYmxv
-Y2txdW90ZT48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUi
-PjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwv
-c3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVv
-dGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0i
-Y2l0ZSI+PHNwYW4+SXQgZXhwbGFpbnMgaG93IHRvIGNyZWF0ZSBhIHRyYW5zaWVudCBFSywgSSBm
-b2xsb3dpbmcgdGhlc2U8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PC9ibG9j
-a3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxi
-bG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPmluc3RydWN0aW9ucyBidXQgY2FuJ3QgZ2V0IHRo
-ZW0gdG8gd29yay4gJm5ic3A7SSd2ZSB0YWtlbiBvd25lcnNoaXAgb2YgdGhlPC9zcGFuPjxicj48
-L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJj
-aXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bh
-bj5UUE0gYW5kIGNyZWF0ZWQgYSBTUksuICZuYnNwO0kgdGhlbiByYW4gdGhlIGNvbW1hbmQgYXMg
-bGlzdGVkIGluIHRoZSBtYW51YWw8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+
-PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNp
-dGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPnBhZ2U6PC9zcGFuPjxicj48L2Jsb2Nr
-cXVvdGU+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48
-YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3Nw
-YW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3Rl
-IHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNp
-dGUiPjxzcGFuPnRwbTJfY3JlYXRlZWsgLUcgcnNhIC11IGVrLnB1Yjwvc3Bhbj48YnI+PC9ibG9j
-a3F1b3RlPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+
-PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+RVJS
-T1I6IEV4cGVjdGVkIG9wdGlvbiAtYzwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90
-ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0i
-Y2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+VXNhZ2U6IHRwbTJfY3JlYXRlZWsg
-WyZsdDtvcHRpb25zJmd0O108L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PC9i
-bG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUi
-PjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPldoZXJlICZsdDtvcHRpb25zJmd0OyBhcmU6
-PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2tx
-dW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBl
-PSJjaXRlIj48c3Bhbj4gJm5ic3A7Jm5ic3A7Jm5ic3A7WyAtUCB8IC0tZWgtYXV0aD0mbHQ7dmFs
-dWUmZ3Q7XSBbIC13IHwgLS1vd25lci1hdXRoPSZsdDt2YWx1ZSZndDtdIFsgLXAgfDwvc3Bhbj48
-YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlw
-ZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+
-PHNwYW4+LS1lay0gYXV0aD0mbHQ7dmFsdWUmZ3Q7XSBbIC1HIHwgLS1rZXktYWxnb3JpdGhtPSZs
-dDt2YWx1ZSZndDtdPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjwvYmxvY2tx
-dW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48Ymxv
-Y2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4gJm5ic3A7Jm5ic3A7Jm5ic3A7WyAtdSB8IC0tcHVi
-bGljPSZsdDt2YWx1ZSZndDtdIFsgLWYgfCAtLWZvcm1hdD0mbHQ7dmFsdWUmZ3Q7XSBbIC1jIHw8
-L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1
-b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9
-ImNpdGUiPjxzcGFuPi0tZWstY29udGV4dD0mbHQ7dmFsdWUmZ3Q7XSBbIC0gdCB8IC0tdGVtcGxh
-dGU9Jmx0O3ZhbHVlJmd0O108L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PC9i
-bG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUi
-PjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwv
-YmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVv
-dGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+U28gSSBhZGRlZCB0
-aGUgLWMgdG8gc2F2ZSB0aGUgY29udGV4dCB0byBkaXNrIGFuZCBwcm92aWRlIHRoZSBFSCBhdXRo
-b3Jpc2F0aW9uOjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVv
-dGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2Nr
-cXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1
-b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBl
-PSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj50cG0yX2NyZWF0ZWVrIC1HIHJz
-YSAtdSBlay5wdWIgLWMgZWsuY3R4IC1QIHh4eCBlY2hvICQ/PC9zcGFuPjxicj48L2Jsb2NrcXVv
-dGU+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48Ymxv
-Y2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4wPC9zcGFu
-Pjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0
-eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRl
-Ij48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3Rl
-PjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1
-b3RlIHR5cGU9ImNpdGUiPjxzcGFuPnNvIGl0IGxvb2tzIGxpa2UgaXQncyBzdWNjZWVkZWQgYnV0
-IEkgdGhlbiB0cnkgdGhlIHRvIGxpc3QgdGhlPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9j
-a3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0
-eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj50cmFuc2llbnQgb2JqZWN0
-cyB3aXRoPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48
-YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90
-ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+
-PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNp
-dGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPnRwbTJfZ2V0Y2FwIGhhbmRsZXMtdHJh
-bnNpZW50PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48
-YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90
-ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+
-PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNp
-dGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPmFuZCBJIGdldCBub3RoaW5nLiAmbmJz
-cDtUaGUgZmlsZXMgaGF2ZSBiZWVuIGNyZWF0ZWQ8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Js
-b2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3Rl
-IHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48
-YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5TbyBh
-IHJlc291cmNlIG1hbmFnZXIgd2lsbCBmbHVzaCBhbGwgdHJhbnNpZW50IG9iamVjdHMgd2hlbiB0
-aGUgY2xpZW50IGRpc2Nvbm5lY3RzLjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90
-ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5T
-byBpbiB0aGlzIGNhc2UsIHdoZW4gdHBtMl9jcmVhdGVlayBleGl0cywgdGhlIFJNIGZsdXNoZXMu
-IFRoaXMgYXNzdW1lcyB5b3UncmU8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+
-PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+VXNp
-bmcgYSByZXNvdXJjZSBtYW5hZ2VyIChSTSksIGxpa2UgdHBtMi1hYnJtZCBvciB0aGUgaW4ga2Vy
-bmVsIFJNPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5
-cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPi9kZXYvdHBtcm0wLjwvc3Bh
-bj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48
-YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Js
-b2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+
-PHNwYW4+SWYgeW91J3JlIG5vdCB1c2luZyBhbiBSTSwgYW5kIHVzaW5nIHRoZSBkZXZpY2UgZGly
-ZWN0bHkgJm5ic3A7KC9kZXYvdHBtMCksIEkgYW0gbm90PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+
-PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNp
-dGUiPjxzcGFuPnJlYWxseSBzdXJlIHdoeSBpdCB3b3VsZG4ndCByZW1haW4gbG9hZGVkLjwvc3Bh
-bj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48
-YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Js
-b2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+
-PHNwYW4+T25jZSB5b3UgaGF2ZSB0aGUgdHJhbnNpZW50IEVLIGluIGEgY29udGV4dCBmaWxlLCB5
-b3UgY2FuIGp1c3QgcGFzcyB0aGF0IHRvIGFueTwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxv
-Y2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48
-c3Bhbj50b29scyAtYyBvciAtQyBPcHRpb24gKGRlcGVuZHMgb24gY29tbWFuZCBhbmQgdXNlKS4g
-VGhlIHRvb2xzIHdpbGwgbm90aWNlIHRoYXQ8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2Nr
-cXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNw
-YW4+eW91IG5lZWQgdG8gcmVzdG9yZSB0aGUgb2JqZWN0IGZyb20gdGhlIGNvbnRleHQgZmlsZSBh
-bmQgcGVyZm9ybSBhIENvbnRleHRMb2FkPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1
-b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFu
-PmNvbW1hbmQuPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3Rl
-IHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9i
-bG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90
-ZSB0eXBlPSJjaXRlIj48c3Bhbj5UeXBpY2FsbHksIHRoZSBFSyBpcyBwZXJzaXN0ZWQgYXQgYSBz
-cGVjaWZpYyBoYW5kbGUsIEkgdGhvdWdodCBpdCB3YXMgaW4gdGhlIFBDIGNsaWVudDwvc3Bhbj48
-YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48Ymxv
-Y2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5zcGVjIG9yIENyZWRlbnRpYWwgUHJvZmlsZSBFSyBz
-cGVjOjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBl
-PSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4gaHR0cHM6Ly90cnVzdGVkY29t
-cHV0aW5nZ3JvdXAub3JnL3dwLTwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48
-YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5jb250
-ZW50L3VwbG9hZHMvVENHX1BDX0NsaWVudF9QbGF0Zm9ybV9UUE1fUHJvZmlsZV9QVFBfU3BlY2lm
-aWNhdGlvbl9GYW08L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVv
-dGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+aWx5XzIuMF9SZXZp
-c2lvbl8xLjN2MjIucGRmPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PC9ibG9ja3F1b3RlPjxibG9j
-a3F1b3RlIHR5cGU9ImNpdGUiPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPmh0dHBzOi8v
-dHJ1c3RlZGNvbXB1dGluZ2dyb3VwLm9yZy93cC08L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Js
-b2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+
-PHNwYW4+Y29udGVudC91cGxvYWRzL1RDR19JV0dfQ3JlZGVudGlhbF9Qcm9maWxlX0VLX1YyLjFf
-UjEzLnBkZjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0
-eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxv
-Y2txdW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PGJsb2NrcXVvdGUg
-dHlwZT0iY2l0ZSI+PHNwYW4+SG93ZXZlciwgSSBjYW4ndCBmaW5kIHRoYXQgaGFuZGxlLCBzbyBw
-ZXJoYXBzIEkgYW0gbWlzcyByZW1lbWJlcmluZywgYnV0IHlvdTwvc3Bhbj48YnI+PC9ibG9ja3F1
-b3RlPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48YmxvY2txdW90ZSB0eXBl
-PSJjaXRlIj48c3Bhbj5jYW4gcGVyc2lzdCBpdCB2aWEgdGhlIHRwbTJfZXZpY3Rjb250cm9sIGNv
-bW1hbmQ8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlw
-ZT0iY2l0ZSI+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+PC9zcGFuPjxicj48L2Jsb2Nr
-cXVvdGU+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48
-YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPkFoaCB0aGUgcHJv
-dmlzaW9uaW5nIGd1aWRlIGhhcyBpdCBpbiBUYWJsZSAyOjwvc3Bhbj48YnI+PC9ibG9ja3F1b3Rl
-PjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPmh0dHBzOi8vdHJ1c3RlZGNvbXB1dGluZ2dy
-b3VwLm9yZy93cC1jb250ZW50L3VwbG9hZHMvVENHLVRQTS12Mi4wLVByb3Zpc2lvbmluZy1HdWlk
-YW5jZS1QdWJsaXNoZWQtdjFyMS5wZGY8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48YmxvY2txdW90
-ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0
-eXBlPSJjaXRlIj48c3Bhbj5UaGUgRUsgc2hvdWxkIGJlIHBlcnNpc3RlZCBhdDogMHg4MTAxMDAw
-MTwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwv
-c3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPklmIHlv
-dSB3YW50IHRvIGNvbmZvcm0gd2l0aCB0aGUgc3BlYzwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxi
-bG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxibG9j
-a3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1
-b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3Rl
-IHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxzcGFuPjwvc3Bhbj48
-YnI+PHNwYW4+SGkgV2lsaWFtLDwvc3Bhbj48YnI+PHNwYW4+PC9zcGFuPjxicj48c3Bhbj5UaGFu
-ayB5b3UgZm9yIHRoZSByZXBseSwgdGhpcyBpcyBzb21ldGhpbmcgSSBkaWRuJ3Qga25vdyBhYm91
-dCB0aGU8L3NwYW4+PGJyPjxzcGFuPnJlc291cmNlIG1hbmFnZXIuICZuYnNwO0knbSBmYWlybHkg
-bmV3IHRvIFRQTSBzbyBJJ20gb24gYSBiaXQgb2YgYSBzdGVlcDwvc3Bhbj48YnI+PHNwYW4+bGVh
-cm5pbmcgY3VydmUuPC9zcGFuPjxicj48c3Bhbj48L3NwYW4+PGJyPjxzcGFuPkkgaGF2ZSBubyBp
-ZGVhIGlmIGl0J3MgdXNpbmcgYSByZXNvdXJjZSBtYW5hZ2VyLCB0aGVyZSBpcyBhIEFCUk1EIHBy
-b2Nlc3M6PC9zcGFuPjxicj48c3Bhbj50c3MgJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7ODM0ICZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOzEgJm5ic3A7MCAxNDoxMiA/
-ICZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOzAwOjAwOjAwIC91c3Iv
-c2Jpbi90cG0yLWFicm1kPC9zcGFuPjxicj48c3Bhbj5hbmQgdGhlcmUgaXMgYWxzbyB0aGUga2Vy
-bmVsIGRldmljZTwvc3Bhbj48YnI+PHNwYW4+bHMgLWxhIC9kZXYvdHBtcm0wPC9zcGFuPjxicj48
-c3Bhbj5jcnctcnctLS0tIDEgdHNzIHRzcyAyNTMsIDY1NTM2IFNlcCAyMSAxNDoxMSAvZGV2L3Rw
-bXJtMDwvc3Bhbj48YnI+PHNwYW4+PC9zcGFuPjxicj48c3Bhbj5Ib3cgd291bGQgSSBrbm93IHdo
-YXQgdGhlIHRvb2xzIGFyZSB1c2luZz8gQ2FuIEkgZm9yY2UgaXQgdG8gbm90IHVzZSBhPC9zcGFu
-Pjxicj48c3Bhbj5yZXNvdXJjZSBtYW5hZ2VyIHRvIHNlZSBpZiB0aGUgdHJhbnNpZW50IG9iamVj
-dCBpcyB0aGVyZT88L3NwYW4+PGJyPjxzcGFuPjwvc3Bhbj48YnI+PHNwYW4+SSBoYXZlIGFscmVh
-ZHkgdHJpZWQgdGhlIG1ldGhvZCBvZiBtYWtpbmcgdGhlIGtleSBwZXJzaXN0IGFuZCB0aGlzPC9z
-cGFuPjxicj48c3Bhbj53b3JrcyBmaW5lIGJ1dCB0aGFuayB5b3UgZm9yIHRoZSBwcm9wZXIgaGFu
-ZGxlIHZhbHVlLCBJIHdhcyB1c2luZzwvc3Bhbj48YnI+PHNwYW4+MHg4MTAxMDAwMCA6KTwvc3Bh
-bj48YnI+PHNwYW4+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X188L3NwYW4+PGJyPjxzcGFuPnRwbTIgbWFpbGluZyBsaXN0IC0tIHRwbTJAbGlzdHMuMDEub3Jn
-PC9zcGFuPjxicj48c3Bhbj5UbyB1bnN1YnNjcmliZSBzZW5kIGFuIGVtYWlsIHRvIHRwbTItbGVh
-dmVAbGlzdHMuMDEub3JnPC9zcGFuPjxicj48c3Bhbj4lKHdlYl9wYWdlX3VybClzbGlzdGluZm8l
-KGNnaWV4dClzLyUoX2ludGVybmFsX25hbWUpczwvc3Bhbj48YnI+PC9kaXY+PC9ibG9ja3F1b3Rl
-PjwvZGl2PjwvZGl2PjwvYm9keT48L2h0bWw+
---===============1137559479480829667==--
+--===============5919585557204256629==--
 
