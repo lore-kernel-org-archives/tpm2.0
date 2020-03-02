@@ -1,29 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============3916593749272734192=="
+Content-Type: multipart/mixed; boundary="===============8156997588746707044=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] Re: tpm2_createek and transient EK problem
-Date: Fri, 28 Feb 2020 08:51:03 -0800
-Message-ID: <a7a4a1d0-6e6e-da6d-df27-15f1d7ce2464@intel.com>
-In-Reply-To: CABatt_yrzpHZcjhp9zEm5UW6sSVg297q7xcrsa39hNEuB46crw@mail.gmail.com
+From: ramyasnair ramyasnair <ramyasnair1996 at gmail.com>
+Subject: [tpm2] TPM2.0 device or resource busy error
+Date: Mon, 02 Mar 2020 15:58:07 +0530
+Message-ID: <CA+M7zR1DUpqYjLgMvZnrb4omEdu7HmNJSnXu=AouFwRWKCTOPQ@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3916593749272734192==
+--===============8156997588746707044==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 2/28/20 8:06 AM, Martin Townsend wrote:
-> So if you want to use transient objects with tpm2-tools don't use the
-> resource manager.  Out of interest what is the advantages of the
-> Resource Manager? Is there some documentation for it that I could
-> read?
-Here is the spec:
-https://trustedcomputinggroup.org/wp-content/uploads/TSS-TAB-and-Resource-M=
-anager-ver1.0-rev16_Public_Review.pdf
+Hi,
+When I try to open /dev/tpm0, it shows device or resource busy error and
+fails to open. I tried to restart tpm2-abrmd referring to information given
+in some solutions for the same issue.Still it doesn't work.Please advise.
 
--- =
+Thanks & Regards
+Ramya
 
-Tadeusz
---===============3916593749272734192==--
+--===============8156997588746707044==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGRpdiBkaXI9ImF1dG8iPkhpLDxkaXYgZGlyPSJhdXRvIj5XaGVuIEkgdHJ5IHRvIG9wZW4gL2Rl
+di90cG0wLCBpdCBzaG93cyBkZXZpY2Ugb3IgcmVzb3VyY2UgYnVzeSBlcnJvciBhbmQgZmFpbHMg
+dG8gb3Blbi4gSSB0cmllZCB0byByZXN0YXJ0IHRwbTItYWJybWQgcmVmZXJyaW5nIHRvIGluZm9y
+bWF0aW9uIGdpdmVuIGluIHNvbWUgc29sdXRpb25zIGZvciB0aGUgc2FtZSBpc3N1ZS5TdGlsbCBp
+dCBkb2VzbiYjMzk7dCB3b3JrLlBsZWFzZSBhZHZpc2UuPC9kaXY+PGRpdiBkaXI9ImF1dG8iPjxi
+cj48L2Rpdj48ZGl2IGRpcj0iYXV0byI+VGhhbmtzICZhbXA7IFJlZ2FyZHM8L2Rpdj48ZGl2IGRp
+cj0iYXV0byI+UmFteWE8L2Rpdj48L2Rpdj4K
+
+--===============8156997588746707044==--
 
