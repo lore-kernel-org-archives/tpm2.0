@@ -1,65 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============1498325974688633371=="
+Content-Type: multipart/mixed; boundary="===============1690384059548176930=="
 MIME-Version: 1.0
 From: Martin Townsend <mtownsend1973 at gmail.com>
-Subject: [tpm2] Re: tpm2_createek and transient EK problem
-Date: Tue, 03 Mar 2020 09:30:37 +0000
-Message-ID: <CABatt_yYom=29SYJqdMnuz6eNLZ-b9AmbEqGqKi_qu1sM5Feew@mail.gmail.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E9749C@ORSMSX101.amr.corp.intel.com
+Subject: [tpm2] Initial Identity
+Date: Wed, 04 Mar 2020 16:52:23 +0000
+Message-ID: <CABatt_xVek_wJNDaWops43SevgdBzzd_Kj9nJmSUor63VkQBdw@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1498325974688633371==
+--===============1690384059548176930==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 2, 2020 at 4:51 PM Roberts, William C
-<william.c.roberts(a)intel.com> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Tadeusz Struk [mailto:tadeusz.struk(a)intel.com]
-> > Sent: Friday, February 28, 2020 10:51 AM
-> > To: Martin Townsend <mtownsend1973(a)gmail.com>; Rowan Moul
-> > <lists(a)rowan.moul.ca>
-> > Cc: tpm2(a)lists.01.org
-> > Subject: [tpm2] Re: tpm2_createek and transient EK problem
-> >
-> > On 2/28/20 8:06 AM, Martin Townsend wrote:
-> > > So if you want to use transient objects with tpm2-tools don't use the
-> > > resource manager.  Out of interest what is the advantages of the
->
-> That's not really true. You can use a resource manager, with transient ob=
-jects just fine.
-> The transient context file is saved and restored by the tools. So you jus=
-t pass the ctx file whenever
-> you need to use the object.
->
-> You won't be able to run tpm2_getcap between tool invocations and see the=
- transient
-> handle loaded in the TPM, because the RM flushes it. But you can still us=
-e your context
-> file for the life of the TPM boot. If you restart the TPM,  then you need=
- to call tpm2_load
-> and get the context file again.
->
+Hi,
 
-Got it. I've read up some more on context management and I think I now
-understand.  I didn't appreciate the context file is only valid for
-the life of the TPM boot though so thank you for the info.
+I've been reading up on Initial identity and specifically the sections
+in the "TCG Guidance for Securing Network Equipment Using TCG
+Technology" document and am currently working through the provisioning
+.  Originally I thought tpm2_createak should be used to create the key
+pair that is referred to as the Initial Attestation key (IAK).  But I
+think this tool creates an Attestation Identity Key (AIK) and is
+something that is done after provisioning and used by applications. Is
+this the case?
 
-> > > Resource Manager? Is there some documentation for it that I could
-> > > read?
-> > Here is the spec:
-> > https://trustedcomputinggroup.org/wp-content/uploads/TSS-TAB-and-
-> > Resource-Manager-ver1.0-rev16_Public_Review.pdf
-> >
-> > --
-> > Tadeusz
-> > _______________________________________________
-> > tpm2 mailing list -- tpm2(a)lists.01.org
-> > To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============1498325974688633371==--
+The document goes on to say that the keys should be primary keys so
+should I create these keys with tpm2_createprimary?  This would create
+the keys from the Endorsement Primary Seed so if I make the IAK a
+restricted signing key and the IDevID an unrestricted signing key then
+they would both be different as this is part of the Template used to
+generate the key from the seed.  I could then use the IDevID with
+software such as OpenSSL. Does anyone know if this sounds plausible?
+
+Also does anyone have any idea how I would certify these keys, for the
+IDevID as it's unrestricted I take it I could sign a CSR with this key
+but I'm not sure how to certify the IAK with TPM2.0.
+
+Many Thanks,
+Martin.
+--===============1690384059548176930==--
 
