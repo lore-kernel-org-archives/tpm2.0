@@ -1,46 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============0864895746520166866=="
+Content-Type: multipart/mixed; boundary="===============5318975794640460239=="
 MIME-Version: 1.0
-From: andrew.featherstone at gmail.com
-Subject: [tpm2] tpm2_certify signature verification
-Date: Sat, 07 Mar 2020 13:12:29 +0000
-Message-ID: <20200307131229.2908.93567@ml01.vlan13.01.org>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] tpm2-pkcs11: Release v1.1.0
+Date: Mon, 09 Mar 2020 15:18:47 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649E98F30@ORSMSX101.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0864895746520166866==
+--===============5318975794640460239==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi there,
+Hello,
 
-I'm trying to use the output of tpm2_certify to construt the Subject Key At=
-testation Evidence Extension (SKAE Extension)[1] for a X.509 Certificate Re=
-quest. I've followed the example at https://github.com/tpm2-software/tpm2-t=
-ools/blob/master/man/tpm2_certify.1.md , but I'm struggling to work out how=
- to use the tpm2-tools to check the signature over the attestation structur=
-e. Looking at https://github.com/tpm2-software/tpm2-tools/blob/master/man/t=
-pm2_verifysignature.1.md I expected to perform something like the following=
- (unfortunately I'm not able to retrieve the complete command history right=
- now):
+I would like to announce the 1.1.0 release of tpm2-pkcs11:
+https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.1.0
 
-tpm2_create -G rsa -u rsa.pub -r rsa.priv -C primary.ctx
-tpm2_load -C primary.ctx -u rsa.pub -r rsa.priv -c rsa.ctx
-tpm2_certify -c rsa.ctx -C certify.ctx -g sha256 -o attest.out -s sig.out
-tpm2_verifysignature -c rsa.ctx -g sha256 -m attest.out -s sig.out
-WARNING:esys:../tpm2-tss-2.3.2/src/tss2-esys/api/Esys_VerifySignature.c:302=
-:Esys_VerifySignature_Finish() Received TPM Error
-ERROR:esys:../tpm2-tss-2.3.2/src/tss2-esys/api/Esys_VerifySignature.c:103:E=
-sys_VerifySignature() Esys Finish ErrorCode (0x000002db)
-ERROR: Esys_VerifySignature(0x2DB) - tpm:parameter(2):the signature is not =
-valid
-ERROR: Verify signature failed!
-ERROR: Unable to run tpm2_verifysignature
+With the following CHANGELOG:
+  * DB Schema Change from 1 to 3.
+    - **Backup your DB before upgrading**
+  * Support C_InitToken interface.
+  * Add Java PKCS11 Keystore support for RSA/ECB/RSAPKCS1.5
+    via public encrypt and private decrypt.
+  * Decouple handles from db primary keys. Key handles are
+    no longer stable between runs.
+  * tpm2_ptool objmod:
+    - Support adding an attribute.
+    - Fix bug in variable name vtype over type.
+  * C_Sign: support mechanism CKM_RSA_X_509.
+  * C_GetTokenInfo: add missing mechanism CKM_SHA512_RSA_PKCS.
+  * Fix store search logic to fail when TPM2_PKCS11_STORE cannot be accesse=
+d.
+  * Fix potential double free in token_free() logic.
+  * Fix -Werror=3Dformat-truncation with GCC >=3D 7 #415
+  * Fix unitialized variable warnings #416
+  * test: use release tarball vs source code.
+  * build: clean leftover file in make clean.
+  * release: add missing tests to tarball no matter configure options.
+  * test: fix invalid flags on CKM_SHA512_RSA_PKCS causing test failures.
+  * Switch OASIS pkcs11 headers to FSF Unlimited License Headers.
 
-Is anyone able to post a complete example to show how the output of tpm2_ce=
-rtify is verified, based on the attestation key used?
 
-[1] https://trustedcomputinggroup.org/wp-content/uploads/IWG_SKAE_Extension=
-_1-00.pdf
---===============0864895746520166866==--
+Thanks,
+Bill
+--===============5318975794640460239==--
 
