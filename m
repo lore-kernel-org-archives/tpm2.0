@@ -1,26 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============1766047428924543409=="
+Content-Type: multipart/mixed; boundary="===============1877508663140249694=="
 MIME-Version: 1.0
-From: Imran Desai <imran.desai at intel.com>
-Subject: [tpm2] Re: tpm2_certify signature verification
-Date: Tue, 10 Mar 2020 17:12:35 +0000
-Message-ID: <20200310171235.2908.1896@ml01.vlan13.01.org>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649E9937A@ORSMSX101.amr.corp.intel.com
+From: Rowan Moul <lists at rowan.moul.ca>
+Subject: [tpm2] Issue with tpm2_policycountertimer
+Date: Tue, 10 Mar 2020 13:29:47 -0600
+Message-ID: <96D222CC-AD85-423A-8906-0C5FE67CEC42@rowan.moul.ca>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1766047428924543409==
+--===============1877508663140249694==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Try this:
+Hello,
 
-tpm2_createprimary -C o -c primary.ctx -Q =
+I=E2=80=99m having an issue with tpm2_policycountertimer when using a real =
+policy session, however it works with a trial session.
 
-tpm2_create -G rsa -u rsa.pub -r rsa.priv -C primary.ctx -Q =
+The commands that I used:
 
-tpm2_load -C primary.ctx -u rsa.pub -r rsa.priv -c rsa.ctx
-tpm2_certify -c primary.ctx -C rsa.ctx -g sha256 -o attest.out -s sig.out
-tpm2_verifysignature -c rsa.ctx -g sha256 -m attest.out -s sig.out
---===============1766047428924543409==--
+tpm2_startauthsession --policy-session -S policy-session.ctx
+
+tpm2_policycountertimer -S policy-session.ctx --eq resets=3D43
+
+43 is the current reset_count from tpm2-readclock
+
+I get the following error:
+Esys_PolicyCounterTimer_Finish() Received TPM Error
+Esys_PolicyCounterTimer() Esys Finish ErrorCode (0x00000126)
+policy failure in math operation or an invalid authPolicy value
+
+I get the same error wether I am using abrmd, the kernel RM, or /dev/tpm0 d=
+irectly.
+
+Versions:
+tpm2-tools 4.1.1
+tpm2-tss 2.3.2
+tpm2-abrmd 2.3.1
+
+I am using an Intel PTT fTPM that isn=E2=80=99t compliant with the latest v=
+ersions of the 2.0 spec. Not sure if that tips anyone off to known issues.
+
+Thank you,
+
+Rowan
+--===============1877508663140249694==--
 
