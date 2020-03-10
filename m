@@ -1,48 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============1877508663140249694=="
+Content-Type: multipart/mixed; boundary="===============5426000037212894754=="
 MIME-Version: 1.0
-From: Rowan Moul <lists at rowan.moul.ca>
-Subject: [tpm2] Issue with tpm2_policycountertimer
-Date: Tue, 10 Mar 2020 13:29:47 -0600
-Message-ID: <96D222CC-AD85-423A-8906-0C5FE67CEC42@rowan.moul.ca>
+From: Rahul Hardikar <rahulhardikar at gmail.com>
+Subject: [tpm2] ESys_ActivateCredential
+Date: Tue, 10 Mar 2020 15:02:16 -0700
+Message-ID: <CAP3jAwRj7s6wut+CsO8kSoN+OsxF9Lys8wdfL6fRr29n0fe2yA@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1877508663140249694==
+--===============5426000037212894754==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi All,
+What does it mean when Esys_ActivateCredential returns 0x2c4? I don't see
+this error defined anywhere.
 
-I=E2=80=99m having an issue with tpm2_policycountertimer when using a real =
-policy session, however it works with a trial session.
+Thanks,
+Rahul
 
-The commands that I used:
+--===============5426000037212894754==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-tpm2_startauthsession --policy-session -S policy-session.ctx
+PGRpdiBkaXI9Imx0ciI+PGJyPjxkaXY+SGkgQWxsLDwvZGl2PjxkaXY+V2hhdCBkb2VzIGl0IG1l
+YW4gd2hlbiBFc3lzX0FjdGl2YXRlQ3JlZGVudGlhbCByZXR1cm5zIDB4MmM0PyBJIGRvbiYjMzk7
+dCBzZWUgdGhpcyBlcnJvciBkZWZpbmVkIGFueXdoZXJlLjwvZGl2PjxkaXY+PGJyPjwvZGl2Pjxk
+aXY+VGhhbmtzLDwvZGl2PjxkaXY+UmFodWw8L2Rpdj48L2Rpdj4K
 
-tpm2_policycountertimer -S policy-session.ctx --eq resets=3D43
-
-43 is the current reset_count from tpm2-readclock
-
-I get the following error:
-Esys_PolicyCounterTimer_Finish() Received TPM Error
-Esys_PolicyCounterTimer() Esys Finish ErrorCode (0x00000126)
-policy failure in math operation or an invalid authPolicy value
-
-I get the same error wether I am using abrmd, the kernel RM, or /dev/tpm0 d=
-irectly.
-
-Versions:
-tpm2-tools 4.1.1
-tpm2-tss 2.3.2
-tpm2-abrmd 2.3.1
-
-I am using an Intel PTT fTPM that isn=E2=80=99t compliant with the latest v=
-ersions of the 2.0 spec. Not sure if that tips anyone off to known issues.
-
-Thank you,
-
-Rowan
---===============1877508663140249694==--
+--===============5426000037212894754==--
 
