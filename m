@@ -1,17 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============0672985381255266946=="
+Content-Type: multipart/mixed; boundary="===============8039669272974968301=="
 MIME-Version: 1.0
-From: Steffen Schwebel <s.schwebel at uvensys.de>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
 Subject: [tpm2] Re: tpm2-tss v2.4.0
-Date: Fri, 13 Mar 2020 09:50:38 +0100
-Message-ID: <bd7178a2-47c9-f244-ce72-fd987772223f@uvensys.de>
-In-Reply-To: 23629d8b-280a-e282-2de9-00f119dc0258@intel.com
+Date: Fri, 13 Mar 2020 08:52:11 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171ACE833@exch2010c.sit.fraunhofer.de>
+In-Reply-To: bd7178a2-47c9-f244-ce72-fd987772223f@uvensys.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0672985381255266946==
+--===============8039669272974968301==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+There's a bunch of manpages and the specs:
+https://trustedcomputinggroup.org/wp-content/uploads/TSS_FAPI_v0.94_r04_pub=
+rev.pdf
+https://trustedcomputinggroup.org/wp-content/uploads/TSS_JSON_Policy_v0.7_r=
+04_pubrev.pdf
+
+Hope that helps,
+Andreas
+________________________________________
+From: Steffen Schwebel [s.schwebel(a)uvensys.de]
+Sent: Friday, March 13, 2020 09:50
+To: tpm2(a)lists.01.org
+Subject: [tpm2] Re: tpm2-tss v2.4.0
 
 Hello,
 
@@ -80,10 +94,13 @@ on
 > To unsubscribe send an email to tpm2-leave(a)lists.01.org
 > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 
--- =
-
+--
 Steffen Schwebel
 Mail: s.schwebel(a)uvensys.de
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 
---===============0672985381255266946==--
+--===============8039669272974968301==--
 
