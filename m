@@ -1,200 +1,104 @@
-Content-Type: multipart/mixed; boundary="===============1978477652058957550=="
+Content-Type: multipart/mixed; boundary="===============3125641740512798017=="
 MIME-Version: 1.0
-From: Rowan Moul <lists at rowan.moul.ca>
-Subject: [tpm2] Re: Relating tpm2_createprimary, Primary Seeds, and tpm2_clear
-Date: Tue, 31 Mar 2020 12:11:15 -0600
-Message-ID: <4F3C500E-8BD3-4535-9603-D91C3F700175@rowan.moul.ca>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649EB6701@ORSMSX101.amr.corp.intel.com
+From: ray at 3econtrols.com
+Subject: [tpm2] curl TLS session using tpm encoded keyfile.
+Date: Wed, 01 Apr 2020 19:14:32 +0000
+Message-ID: <20200401191432.2692.3511@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1978477652058957550==
+--===============3125641740512798017==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks for the corrections. I=E2=80=99ve only actually used the Owner Hiera=
-rchy myself, I guess it makes sense that the endorsement hierarchy is a lit=
-tle different.
+Does anyone know how to use a tpm keyfile generated with:
+tpm2tss-genkey -a rsa -s 2048 /home/pi/certs/client.key
+
+I have a program that uses curl and openSSL to log into a website using a c=
+ert file signed by the tpm client key.
+In my program, I can load and use the key with the tpm2 library to encode/d=
+ecode messages.
+However, I am having trouble getting a TLS session going using libcurl.
+
+My curl --engine list output is:
+          Build-time engines:
+            dynamic
+            tpm2tss
+
+The basic code I am using to generate the curl session is:
+                curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_POST, 1L);
+		curl_easy_setopt(curl, CURLOPT_USERNAME, username);
+		curl_easy_setopt(curl, CURLOPT_PASSWORD, password);
+		curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, CONNECTION_TIMEOUT);
+                curl_easy_setopt(curl, CURLOPT_SSLENGINE, "tpm2tss");
+                curl_easy_setopt(curl, CURLOPT_SSLENGINE_DEFAULT, 1L);
+                curl_easy_setopt(curl, CURLOPT_SSLCERTTYPE, "ENG");
+
+When initiating the session (with curl tracing & my program tracing turned =
+on) I get the following messages:
+[2020-04-01 18:50:19] - [VERBOSE] - httpclient-http_post_json--Setting cURL=
+ to use TPM as SSL Engine tpm2tss
 
 
-Rowan
+[LIBCURL4] --- Setting CURLOPT_SSLENGINE to : tpm2tss
+[LIBCURL4] --- Curl_setstropt result : 0
+[LIBCURL] ---- Curl_ssl_set_engine is call.
+[LIBCURL4] --- Curl_ssl_set_engine result : 0
 
-> On Mar 31, 2020, at 11:47, Roberts, William C <william.c.roberts(a)intel.=
-com> wrote:
-> =
+[2020-04-01 18:50:19] - [VERBOSE] - httpclient-http_post_json--Setting cURL=
+ to use TPM as the default SSL Engine tpm2tss
+[2020-04-01 18:50:19] - [VERBOSE] - httpclient-http_post_json--Setting cURL=
+ to have keytype as engine
+[2020-04-01 18:50:19] - [TRACE]   - httpclient-http_post_json-Setting trust=
+Store to /home/pi/certs/trust.store
+[2020-04-01 18:50:19] - [TRACE]   - httpclient-http_post_json-Setting clien=
+tCert to /home/pi/certs/client.crt
+[2020-04-01 18:50:19] - [TRACE]   - httpclient-http_post_json-Setting clien=
+tKey to /home/pi/certs/client.key
+* STATE: INIT =3D> CONNECT handle 0x4cabb8; line 1623 (connection #-5000)
+* Added connection 0. The cache now contains 1 members
+* STATE: CONNECT =3D> WAITRESOLVE handle 0x4cabb8; line 1664 (connection #0)
+* family0 =3D=3D v4, family1 =3D=3D v6
+*   Trying 52.167.122.10:443...
+* STATE: WAITRESOLVE =3D> WAITCONNECT handle 0x4cabb8; line 1743 (connectio=
+n #0)
+* Connected to product.thedemodrive.com (52.167.122.10) port 443 (#0)
+* STATE: WAITCONNECT =3D> SENDPROTOCONNECT handle 0x4cabb8; line 1799 (conn=
+ection #0)
+* Marked for [keep alive]: HTTP default
+WARNING:esys:src/tss2-esys/esys_tcti_default.c:134:tcti_from_file() Could n=
+ot load TCTI file: libtss2-tcti-default.so
+WARNING:esys:src/tss2-esys/esys_tcti_default.c:134:tcti_from_file() Could n=
+ot load TCTI file: libtss2-tcti-default.so
+WARNING:esys:src/tss2-esys/esys_tcti_default.c:134:tcti_from_file() Could n=
+ot load TCTI file: libtss2-tcti-default.so
+WARNING:esys:src/tss2-esys/esys_tcti_default.c:134:tcti_from_file() Could n=
+ot load TCTI file: libtss2-tcti-default.so
+* ALPN, offering http/1.1
+* ssl engine didn't initialized the certificate properly.
+* Marked for [closure]: Failed HTTPS connection
+* multi_done
+* Closing connection 0
+* The cache now contains 0 members
+* Expire cleared (transfer 0x4cabb8)
+[2020-04-01 18:50:19] - [TRACE]   - httpclient-http_post_json--libcurl: (58)
+[2020-04-01 18:50:19] - [TRACE]   - httpclient-http_post_json--ssl engine d=
+idn't initialized the certificate properly.
 
-> =EF=BB=BF
-> =
+[2020-04-01 18:50:19] - [ERROR]   - httpclient-http_post_json-http-WriteMem=
+oryCallback-Problem with the local SSL certificate
+[2020-04-01 18:50:19] - [VERBOSE] - session-register_session-Session Respon=
+se:
+[2020-04-01 18:50:19] - [VERBOSE] - (null)
+[2020-04-01 18:50:19] - [ERROR]   - session-register_session-Session regist=
+ration failed with error code 58
 
->> -----Original Message-----
->> From: Rowan Moul [mailto:lists(a)rowan.moul.ca]
->> Sent: Tuesday, March 31, 2020 12:40 PM
->> To: John S <sedigj(a)gmail.com>
->> Cc: tpm2(a)lists.01.org
->> Subject: [tpm2] Re: Relating tpm2_createprimary, Primary Seeds, and tpm2=
-_clear
->> =
+Can anyone assist me?
+Has anyone programmed curl with a TSS engine?
 
->> Hi John,
->> =
-
->> There=E2=80=99s a mention in that book, in the Key management Chapter in=
- the Key
->> generation section that a TPM_CLEAR command will reset the seeds. I=E2=
-=80=99m not sure
-> =
-
-> Not seeds (plural), tpm2_clear only resets the Owner seed aka Storage Pri=
-mary Seed (SPS).
-> =
-
->> if it is mentioned elsewhere. Of course it is also in the spec sheets if=
- you can find
->> it.
->> The man page for tpm2_clear alludes to it too, but could probably stand =
-to be
->> more explicit (it says all objects under hierarchies will be lost).
-> =
-
-> That sounds like it should be upfront, bolded, and corrected that it roll=
-s the SPS.
-> So only Owner Hierarchy objects are lost.
-> =
-
->> =
-
->> So no, the seeds are not permanent forever. Just until cleared.
-> =
-
-> Platform and Endorsement seeds generally are stable, but the command set
-> Does allow for ChangeEPS and ChangeSPS commands. But I don't think I have
-> ever seen a production TPM support this, but be aware that it exists.
-> =
-
->> tpm2_clear can be authorized in one of two ways: the Platform Hierarchy
->> authorization value, or the Dictionary Attack lockout reset authorizatio=
-n value.
->> The platform authorization should be set by the BIOS/Firmware on each bo=
-ot (as
->> it is cleared on every shutdown of the TPM) so you don=E2=80=99t have ac=
-cess to this
->> normally, though most BIOS interfaces should have a menu option to invok=
-e a
->> clear using this value. The dictionary attack lockout defaults to an emp=
-ty string
->> authorization value, so functionally anyone can clear until you set this=
-. As such, it
->> is a good idea to set this authorization value if you want to rely on be=
-ing able to
->> re-generate primary keys. If you forget what you set it to later, invoki=
-ng clear
->> (with the platform auth via BIOS menu) will reset it.
-> =
-
-> You can even disable it with tpm2_clearcontrol.
-> =
-
->> Also on the note of re-generating primary keys, you may find my previous=
- thread
->> about the unique data option in tpm2_createprimary helpful if you want t=
-o use
->> unique data in addition to the seed.
->> =
-
->> =
-
->> Rowan
->> =
-
->>>> On Mar 31, 2020, at 09:56, John S <sedigj(a)gmail.com> wrote:
->>> =
-
->>> =EF=BB=BFHi, have been playing around with tpm2 tools and tss engine fo=
-r openssl for
->> awhile.
->>> Also reading Practical Guide to TPM 2.0.
->>> =
-
->>> I have found all the resources in the tpm2-tools readme and wiki and be=
-yond
->> quite helping in getting started.
->>> =
-
->>> The book (chapter 10) talks about the primary seeds for the hierarchy, =
-and how
->> any amount of key hierarchies can be extended from the primary keys. Pri=
-mary
->> keys are derived from the primary seeds. My understanding is that the se=
-eds are
->> unique and permanent in the tpm hardware.
->>> =
-
->>> I was anticipating that tpm2_createprimary could be used to get back to=
- the
->> primary key (given the same inputs/template) no matter what data is clea=
-red or
->> erased.
->>> =
-
->>> Running tpm2_createprimary twice yields same result as evidence by the =
-rsa
->> value, as expected.
->>> =
-
->>> But running:
->>> tpm2_createprimary
->>> tpm2_clear
->>> tpm2_createprimary
->>> =
-
->>> yields a totally different key, as can be seen from the resulting rsa v=
-alue.
->>> This is also consistent with the manpage of tpm2_clear:
->>> "Clears lockout, endorsement and owner hierarchy authorization values."=
- and
->> "NOTE: All objects created under the respective hierarchies are lost."
->>> =
-
->>> This makes tpm2_clear seem like an exceptionally dangerous command, if =
-I run
->> it once (inadvertently perhaps), I've now destroyed all use of all keys =
-ever
->> created on the system. Yet, based on what I thought I understood about t=
-he
->> primary seeds, I'd always be able to derive back to a key value.
->>> =
-
->>> So, what I am I missing?
->>> Feel free to link in references.
->>> =
-
->>> A side question:
->>> I am unable to create a primary Platform key (owner, endorsement, and n=
-ull
->> work). Looks like authorization is expected.
->>> Is this an expected result based on how the TPM is configured from the
->>> chip vendor? In this case Infineon Here is the output:
->>> $ tpm2_createprimary -C p -c platform_primary.ctx
->>> WARNING:esys:src/tss2-esys/api/Esys_CreatePrimary.c:393:Esys_CreatePri
->>> mary_Finish() Received TPM Error
->>> ERROR:esys:src/tss2-esys/api/Esys_CreatePrimary.c:135:Esys_CreatePrima
->>> ry() Esys Finish ErrorCode (0x000009a2)
->>> ERROR: Esys_CreatePrimary(0x9A2) - tpm:session(1):authorization
->>> failure without DA implications
->>> ERROR: Unable to run tpm2_createprimary
->>> =
-
->>> Thanks,
->>> -John
->>> _______________________________________________
->>> tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email to
->>> tpm2-leave(a)lists.01.org
->>> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
->> _______________________________________________
->> tpm2 mailing list -- tpm2(a)lists.01.org
->> To unsubscribe send an email to tpm2-leave(a)lists.01.org
->> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============1978477652058957550==--
+Cheers --
+Ray
+--===============3125641740512798017==--
 
