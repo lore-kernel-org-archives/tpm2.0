@@ -1,324 +1,239 @@
-Content-Type: multipart/mixed; boundary="===============6485184510429459888=="
+Content-Type: multipart/mixed; boundary="===============5445016087369745367=="
 MIME-Version: 1.0
-From: Florian.Schreiner at infineon.com
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: Relating tpm2_createprimary, Primary Seeds, and tpm2_clear
-Date: Thu, 02 Apr 2020 10:01:18 +0000
-Message-ID: <66c54a5b310b454fb3ad4abd0c4320d3@infineon.com>
+Date: Fri, 03 Apr 2020 15:18:27 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EB715E@ORSMSX101.amr.corp.intel.com>
 In-Reply-To: 7169F4BB-61AF-47A4-A76C-13BC3A571822@rowan.moul.ca
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6485184510429459888==
+--===============5445016087369745367==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-For Infineon, the TPM with firmware versions FW 7.8x, e.g. FW 7.85 (see www=
-.infineon.com/tpm<http://www.infineon.com/tpm>), support the Change_EPS/PPS=
- commands.
-
-Florian
 
 
-From: Rowan Moul <lists(a)rowan.moul.ca>
-Sent: Donnerstag, 2. April 2020 02:17
-To: John S <sedigj(a)gmail.com>
-Cc: tpm2(a)lists.01.org
-Subject: [tpm2] Re: Relating tpm2_createprimary, Primary Seeds, and tpm2_cl=
-ear
+> -----Original Message-----
+> From: Rowan Moul [mailto:lists(a)rowan.moul.ca]
+> Sent: Wednesday, April 1, 2020 7:17 PM
+> To: John S <sedigj(a)gmail.com>
+> Cc: tpm2(a)lists.01.org
+> Subject: [tpm2] Re: Relating tpm2_createprimary, Primary Seeds, and tpm2_=
+clear
+> =
 
-Caution: This e-mail originated outside Infineon Technologies. Do not click=
- on links or open attachments unless you validate it is safe<http://iweb.in=
-fineon.com/en-US/Support/security/CDC/pse/Pages/pce.aspx>.
+> =EF=BB=BF
+> Your quotes look fine to me.
+> =
+
+> =
+
+> 	This appears to be confirmation that these commands are Not present on
+> my TPM:
+> 	$ tpm2_getcap commands|grep eps
+> 	$ tpm2_getcap commands|grep pps
+> =
+
+> I=E2=80=99m not sure of the exact implementation that tpm2-tools uses. It=
+=E2=80=99s possible that
+> the tool name doesn=E2=80=99t match the internal command used, but this o=
+ne is best left
+> to the experts.
+
+You should be able to add -I to that grep, it will be output as:
+TPM2_CC_ChangeEPS
+TPM2_CC_ChangePPS
+
+> =
+
+> =
+
+> 	Thanks, do you have a link? I could not find this thread yet after
+> searching. Also, is there a good reason to use the unique data in additio=
+n to being
+> extra cautious? Maybe this is addressed in the thread.
+> =
+
+> As for the unique field. I can=E2=80=99t say if it=E2=80=99s better or wo=
+rse to use it or not. However
+> if you don=E2=80=99t use it, anyone with access to your TPM can re-genera=
+te your primary
+> key (assuming they know what other options you chose). Once they have your
+> Primary Key, they have everything under it too.
+
+Anything that's input to the CreatePrimary command, will control the genera=
+ted key. So any input
+that varies changes the key.
+
+If you set the auth value, that will also provide uniqueness. The policy va=
+lue will too, but that can
+be read out by anyone. You can assume that your template for key generation=
+ is known, with the
+exception of:
+1. secrets used to auth via policy
+2. password (private portion of the object anyways)
+
+If someone creates a primary key, they will be able to load objects under t=
+he primary object
+IFF they have auth. So even if they know your full template and policy hash=
+ (all public info)
+The policy controls whether or not they can load subordinate objects. As lo=
+ad requires parent
+object authorization. So they won't be able to load them if they don't know=
+ the authorization to
+the object.
+
+The unique field shouldn't be considered a security feature. It's merely so=
+ you could create
+different primary keys with *almost* the same template/input parameters. Yo=
+u would vary
+the unique field.
+
+To protect a primary key from unauthorized use, set proper authorization (p=
+eriod).
+
+> The thread I referred to is mostly about some awkward formatting required=
+. It
+> got split into two because I didn=E2=80=99t reply all correctly The conte=
+xt:
+> https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/B5HVVKDH4=
+PVGOU
+> CT6WPCHRYHB35LMDBW/
+> <https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/B5HVVKDH=
+4PVGO
+> UCT6WPCHRYHB35LMDBW/>
+> The useful part:
+> https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/5YDZRV63L=
+CGX6BZ
+> QXRW6S6F77PSS5JU5/
+> =
+
+> =
+
+> =
+
+> =
+
+> 	Regarding Platform authorization value - should I expect this is control=
+led
+> by BIOS or OS?
+> 	Sounds like I can at least clear it via the BIOS, I'll check.
+> =
+
+> See section on startup initialization (and read the stuff before that for=
+ context)
+> https://link.springer.com/chapter/10.1007/978-1-4302-6584-9_19
+> =
+
+> You cannot clear the platform auth as it is set on each boot, so clearing=
+ it is
+> minimally useful. You can=E2=80=99t do anything with it unless the one wh=
+o set it gives you
+> this option (the bios/platform manufacturer). This can be frustrating if =
+like me
+> you have a TPM 2.0 with only sha1 PCR=E2=80=99s allocated despite support=
+ing sha256.
+> (If this is incorrect, someone please tell me how so I can re-allocate my=
+ PCRs!)
+> =
+
+> Rowan
+> =
+
+> =
+
+> 	On Apr 1, 2020, at 15:59, John S <sedigj(a)gmail.com> wrote:
+> =
+
+> =
+
+> =
+
+> 	=EF=BB=BFThank you both for a prompt reply yesterday.
+> =
+
+> 	From what you contributed yesterday, I understand tpm2_clear will clear
+> the Owner seed/hierarchy, and that the functionality to perform the clear=
+ on the
+> Owner hierarchy can be disabled.
+> =
+
+> =
+
+> =
+
+> 		Platform and Endorsement seeds generally are stable, but the
+> command set
+> =
+
+> =
+
+> 		Does allow for ChangeEPS and ChangeSPS commands. But I don't
+> think I have
+> =
+
+> =
+
+> 		ever seen a production TPM support this, but be aware that it
+> exists.
+> =
+
+> =
+
+> 	This appears to be confirmation that these commands are Not present on
+> my TPM:
+> 	$ tpm2_getcap commands|grep eps
+> 	$ tpm2_getcap commands|grep pps
+> =
+
+> 	I read in another discussion that it sounds like this means that platform
+> and endorsement seeds would effectively be unchangeable in my case.
+> 	https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/5KE3W6QLY
+> H3N76K753VNQSX6CPJMH7KJ/
+> =
+
+> =
+
+> =
+
+> =
+
+> 		Also on the note of re-generating primary keys, you may find my
+> previous thread about the
+> =
+
+> =
+
+> 		unique data option in tpm2_createprimary helpful if you want to
+> use unique data in
+> =
+
+> =
+
+> 		addition to the seed.
+> =
+
+> =
+
+> 	Thanks, do you have a link? I could not find this thread yet after
+> searching. Also, is there a good reason to use the unique data in additio=
+n to being
+> extra cautious? Maybe this is addressed in the thread.
+> =
+
+> 	Regarding Platform authorization value - should I expect this is control=
+led
+> by BIOS or OS?
+> 	Sounds like I can at least clear it via the BIOS, I'll check.
+> 	_______________________________________________
+> 	tpm2 mailing list -- tpm2(a)lists.01.org
+> 	To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> 	%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+> =
 
 
-=EF=BB=BF
-Your quotes look fine to me.
 
-This appears to be confirmation that these commands are Not present on my T=
-PM:
-$ tpm2_getcap commands|grep eps
-$ tpm2_getcap commands|grep pps
-I=E2=80=99m not sure of the exact implementation that tpm2-tools uses. It=
-=E2=80=99s possible that the tool name doesn=E2=80=99t match the internal c=
-ommand used, but this one is best left to the experts.
-
-Thanks, do you have a link? I could not find this thread yet after searchin=
-g. Also, is there a good reason to use the unique data in addition to being=
- extra cautious? Maybe this is addressed in the thread.
-As for the unique field. I can=E2=80=99t say if it=E2=80=99s better or wors=
-e to use it or not. However if you don=E2=80=99t use it, anyone with access=
- to your TPM can re-generate your primary key (assuming they know what othe=
-r options you chose). Once they have your Primary Key, they have everything=
- under it too.
-The thread I referred to is mostly about some awkward formatting required. =
-It got split into two because I didn=E2=80=99t reply all correctly
-The context: https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/threa=
-d/B5HVVKDH4PVGOUCT6WPCHRYHB35LMDBW/<https://lists.01.org/hyperkitty/list/tp=
-m2(a)lists.01.org/thread/B5HVVKDH4PVGOUCT6WPCHRYHB35LMDBW/>
-The useful part: https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/t=
-hread/5YDZRV63LCGX6BZQXRW6S6F77PSS5JU5/
-
-Regarding Platform authorization value - should I expect this is controlled=
- by BIOS or OS?
-Sounds like I can at least clear it via the BIOS, I'll check.
-See section on startup initialization (and read the stuff before that for c=
-ontext)
-https://link.springer.com/chapter/10.1007/978-1-4302-6584-9_19
-
-You cannot clear the platform auth as it is set on each boot, so clearing i=
-t is minimally useful. You can=E2=80=99t do anything with it unless the one=
- who set it gives you this option (the bios/platform manufacturer). This ca=
-n be frustrating if like me you have a TPM 2.0 with only sha1 PCR=E2=80=99s=
- allocated despite supporting sha256.
-(If this is incorrect, someone please tell me how so I can re-allocate my P=
-CRs!)
-
-Rowan
-
-
-On Apr 1, 2020, at 15:59, John S <sedigj(a)gmail.com<mailto:sedigj(a)gmail.=
-com>> wrote:
-=EF=BB=BFThank you both for a prompt reply yesterday.
-
-From what you contributed yesterday, I understand tpm2_clear will clear the=
- Owner seed/hierarchy, and that the functionality to perform the clear on t=
-he Owner hierarchy can be disabled.
-
-
-Platform and Endorsement seeds generally are stable, but the command set
-Does allow for ChangeEPS and ChangeSPS commands. But I don't think I have
-ever seen a production TPM support this, but be aware that it exists.
-This appears to be confirmation that these commands are Not present on my T=
-PM:
-$ tpm2_getcap commands|grep eps
-$ tpm2_getcap commands|grep pps
-
-I read in another discussion that it sounds like this means that platform a=
-nd endorsement seeds would effectively be unchangeable in my case.
-https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/5KE3W6QLYH3=
-N76K753VNQSX6CPJMH7KJ/
-
-
-
-Also on the note of re-generating primary keys, you may find my previous th=
-read about the
-unique data option in tpm2_createprimary helpful if you want to use unique =
-data in
-addition to the seed.
-Thanks, do you have a link? I could not find this thread yet after searchin=
-g. Also, is there a good reason to use the unique data in addition to being=
- extra cautious? Maybe this is addressed in the thread.
-
-Regarding Platform authorization value - should I expect this is controlled=
- by BIOS or OS?
-Sounds like I can at least clear it via the BIOS, I'll check.
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-To unsubscribe send an email to tpm2-leave(a)lists.01.org<mailto:tpm2-leave=
-(a)lists.01.org>
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============6485184510429459888==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpUYWhvbWE7DQoJcGFub3NlLTE6MiAxMSA2
-IDQgMyA1IDQgNCAyIDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBs
-aS5Nc29Ob3JtYWwsIGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9t
-Oi4wMDAxcHQ7DQoJZm9udC1zaXplOjEyLjBwdDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJv
-bWFuIixzZXJpZjt9DQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlv
-cml0eTo5OTsNCgljb2xvcjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2
-aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5
-OTsNCgljb2xvcjpwdXJwbGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwLm1zb25v
-cm1hbDAsIGxpLm1zb25vcm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1uYW1lOm1z
-b25vcm1hbDsNCgltc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGNtOw0K
-CW1zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBjbTsNCglmb250LXNp
-emU6MTIuMHB0Ow0KCWZvbnQtZmFtaWx5OiJUaW1lcyBOZXcgUm9tYW4iLHNlcmlmO30NCnNwYW4u
-RW1haWxTdHlsZTE5DQoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFt
-aWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOw0KCWNvbG9yOiMxRjQ5N0Q7fQ0KLk1zb0NocERlZmF1
-bHQNCgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7DQoJZm9udC1zaXplOjEwLjBwdDt9DQpA
-cGFnZSBXb3JkU2VjdGlvbjENCgl7c2l6ZTo2MTIuMHB0IDc5Mi4wcHQ7DQoJbWFyZ2luOjcyLjBw
-dCA3Mi4wcHQgNzIuMHB0IDcyLjBwdDt9DQpkaXYuV29yZFNlY3Rpb24xDQoJe3BhZ2U6V29yZFNl
-Y3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWRl
-ZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPg0KPC94bWw+PCFbZW5kaWZdLS0+
-PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+DQo8
-bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4NCjwvbzpzaGFwZWxheW91dD48L3htbD48
-IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5IGxhbmc9IkRFIiBsaW5rPSJibHVlIiB2bGluaz0i
-cHVycGxlIj4NCjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6
-JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOiMxRjQ5N0Q7bXNvLWZhcmVhc3Qt
-bGFuZ3VhZ2U6RU4tVVMiPkZvciBJbmZpbmVvbiwgdGhlIFRQTSB3aXRoIGZpcm13YXJlIHZlcnNp
-b25zIEZXIDcuOHgsIGUuZy4gRlcgNy44NSAoc2VlDQo8YSBocmVmPSJodHRwOi8vd3d3LmluZmlu
-ZW9uLmNvbS90cG0iPnd3dy5pbmZpbmVvbi5jb20vdHBtPC9hPiksIHN1cHBvcnQgdGhlIENoYW5n
-ZV9FUFMvUFBTIGNvbW1hbmRzLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZh
-bWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6IzFGNDk3RDttc28tZmFy
-ZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNpemU6MTEuMHB0
-O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdE
-O21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5GbG9yaWFuDQo8bzpwPjwvbzpwPjwvc3Bhbj48
-L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQt
-c2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO2Nv
-bG9yOiMxRjQ5N0Q7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHls
-ZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMt
-c2VyaWY7Y29sb3I6IzFGNDk3RDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4mbmJz
-cDs8L286cD48L3NwYW4+PC9wPg0KPGRpdj4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRl
-ci10b3A6c29saWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBjbSAwY20gMGNtIj4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXpl
-OjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWYiPkZyb206
-PC9zcGFuPjwvYj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj4gUm93YW4gTW91bCAmbHQ7
-bGlzdHNAcm93YW4ubW91bC5jYSZndDsNCjxicj4NCjxiPlNlbnQ6PC9iPiBEb25uZXJzdGFnLCAy
-LiBBcHJpbCAyMDIwIDAyOjE3PGJyPg0KPGI+VG86PC9iPiBKb2huIFMgJmx0O3NlZGlnakBnbWFp
-bC5jb20mZ3Q7PGJyPg0KPGI+Q2M6PC9iPiB0cG0yQGxpc3RzLjAxLm9yZzxicj4NCjxiPlN1Ympl
-Y3Q6PC9iPiBbdHBtMl0gUmU6IFJlbGF0aW5nIHRwbTJfY3JlYXRlcHJpbWFyeSwgUHJpbWFyeSBT
-ZWVkcywgYW5kIHRwbTJfY2xlYXI8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjwvZGl2
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2Pg0KPHRh
-YmxlIGNsYXNzPSJNc29Ob3JtYWxUYWJsZSIgYm9yZGVyPSIwIiBjZWxscGFkZGluZz0iMCIgd2lk
-dGg9IjAiIHN0eWxlPSJ3aWR0aDowY207YmFja2dyb3VuZDptb2NjYXNpbiI+DQo8dGJvZHk+DQo8
-dHI+DQo8dGQgc3R5bGU9InBhZGRpbmc6Ljc1cHQgLjc1cHQgLjc1cHQgLjc1cHQiPg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+PHN0cm9uZz48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjVwdCI+Q2F1
-dGlvbjwvc3Bhbj48L3N0cm9uZz48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjVwdCI+OiBUaGlz
-IGUtbWFpbCBvcmlnaW5hdGVkIG91dHNpZGUgSW5maW5lb24gVGVjaG5vbG9naWVzLiBEbyBub3Qg
-Y2xpY2sgb24gbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91DQo8YSBocmVmPSJo
-dHRwOi8vaXdlYi5pbmZpbmVvbi5jb20vZW4tVVMvU3VwcG9ydC9zZWN1cml0eS9DREMvcHNlL1Bh
-Z2VzL3BjZS5hc3B4Ij4NCnZhbGlkYXRlIGl0IGlzIHNhZmU8L2E+LjxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4NCjwvdGQ+DQo8L3RyPg0KPC90Ym9keT4NCjwvdGFibGU+DQo8L2Rpdj4NCjxwIGNsYXNz
-PSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUYWhvbWEmcXVvdDssc2Fucy1z
-ZXJpZiI+77u/PC9zcGFuPjxvOnA+PC9vOnA+PC9wPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPllvdXIgcXVvdGVzIGxvb2sgZmluZSB0byBtZS48bzpwPjwvbzpwPjwvcD4NCjxkaXY+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
-CjxibG9ja3F1b3RlIHN0eWxlPSJtYXJnaW4tdG9wOjUuMHB0O21hcmdpbi1ib3R0b206NS4wcHQi
-Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoaXMgYXBwZWFycyB0byBiZSBjb25maXJt
-YXRpb24gdGhhdCB0aGVzZSBjb21tYW5kcyBhcmUgTm90IHByZXNlbnQgb24gbXkgVFBNOjxicj4N
-CiQgdHBtMl9nZXRjYXAgY29tbWFuZHN8Z3JlcCBlcHM8YnI+DQokIHRwbTJfZ2V0Y2FwIGNvbW1h
-bmRzfGdyZXAgcHBzPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjwvYmxvY2txdW90ZT4NCjwvZGl2
-Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPknigJltIG5vdCBzdXJlIG9mIHRoZSBleGFj
-dCBpbXBsZW1lbnRhdGlvbiB0aGF0IHRwbTItdG9vbHMgdXNlcy4gSXTigJlzIHBvc3NpYmxlIHRo
-YXQgdGhlIHRvb2wgbmFtZSBkb2VzbuKAmXQgbWF0Y2ggdGhlIGludGVybmFsIGNvbW1hbmQgdXNl
-ZCwgYnV0IHRoaXMgb25lIGlzIGJlc3QgbGVmdCB0byB0aGUgZXhwZXJ0cy48bzpwPjwvbzpwPjwv
-cD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPGJsb2NrcXVvdGUgc3R5bGU9Im1hcmdpbi10b3A6NS4wcHQ7
-bWFyZ2luLWJvdHRvbTo1LjBwdCI+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhhbmtz
-LCBkbyB5b3UgaGF2ZSBhIGxpbms/IEkgY291bGQgbm90IGZpbmQgdGhpcyB0aHJlYWQgeWV0IGFm
-dGVyIHNlYXJjaGluZy4gQWxzbywgaXMgdGhlcmUgYSBnb29kIHJlYXNvbiB0byB1c2UgdGhlIHVu
-aXF1ZSBkYXRhIGluIGFkZGl0aW9uIHRvIGJlaW5nIGV4dHJhIGNhdXRpb3VzPyBNYXliZSB0aGlz
-IGlzIGFkZHJlc3NlZCBpbiB0aGUgdGhyZWFkLjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Js
-b2NrcXVvdGU+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5BcyBmb3IgdGhl
-IHVuaXF1ZSBmaWVsZC4gSSBjYW7igJl0IHNheSBpZiBpdOKAmXMgYmV0dGVyIG9yIHdvcnNlIHRv
-IHVzZSBpdCBvciBub3QuIEhvd2V2ZXIgaWYgeW91IGRvbuKAmXQgdXNlIGl0LCBhbnlvbmUgd2l0
-aCBhY2Nlc3MgdG8geW91ciBUUE0gY2FuIHJlLWdlbmVyYXRlIHlvdXIgcHJpbWFyeSBrZXkgKGFz
-c3VtaW5nIHRoZXkga25vdyB3aGF0IG90aGVyIG9wdGlvbnMgeW91IGNob3NlKS4gT25jZSB0aGV5
-IGhhdmUNCiB5b3VyIFByaW1hcnkgS2V5LCB0aGV5IGhhdmUgZXZlcnl0aGluZyB1bmRlciBpdCB0
-b28uJm5ic3A7PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj5UaGUgdGhyZWFkIEkgcmVmZXJyZWQgdG8gaXMgbW9zdGx5IGFib3V0IHNvbWUgYXdrd2Fy
-ZCBmb3JtYXR0aW5nIHJlcXVpcmVkLiBJdCBnb3Qgc3BsaXQgaW50byB0d28gYmVjYXVzZSBJIGRp
-ZG7igJl0IHJlcGx5IGFsbCBjb3JyZWN0bHk8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoZSBjb250ZXh0OjxhIGhyZWY9Imh0dHBzOi8vbGlzdHMu
-MDEub3JnL2h5cGVya2l0dHkvbGlzdC90cG0yQGxpc3RzLjAxLm9yZy90aHJlYWQvQjVIVlZLREg0
-UFZHT1VDVDZXUENIUllIQjM1TE1EQlcvIj4mbmJzcDtodHRwczovL2xpc3RzLjAxLm9yZy9oeXBl
-cmtpdHR5L2xpc3QvdHBtMkBsaXN0cy4wMS5vcmcvdGhyZWFkL0I1SFZWS0RINFBWR09VQ1Q2V1BD
-SFJZSEIzNUxNREJXLzwvYT48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNz
-PSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+VGhlIHVzZWZ1bCBwYXJ0
-OiZuYnNwOzxhIGhyZWY9Imh0dHBzOi8vbGlzdHMuMDEub3JnL2h5cGVya2l0dHkvbGlzdC90cG0y
-QGxpc3RzLjAxLm9yZy90aHJlYWQvNVlEWlJWNjNMQ0dYNkJaUVhSVzZTNkY3N1BTUzVKVTUvIj5o
-dHRwczovL2xpc3RzLjAxLm9yZy9oeXBlcmtpdHR5L2xpc3QvdHBtMkBsaXN0cy4wMS5vcmcvdGhy
-ZWFkLzVZRFpSVjYzTENHWDZCWlFYUlc2UzZGNzdQU1M1SlU1LzwvYT48bzpwPjwvbzpwPjwvcD4N
-CjxkaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+
-DQo8L2Rpdj4NCjxkaXY+DQo8YmxvY2txdW90ZSBzdHlsZT0ibWFyZ2luLXRvcDo1LjBwdDttYXJn
-aW4tYm90dG9tOjUuMHB0Ij4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5SZWdhcmRpbmcg
-UGxhdGZvcm0gYXV0aG9yaXphdGlvbiB2YWx1ZSAtIHNob3VsZCBJIGV4cGVjdCB0aGlzIGlzIGNv
-bnRyb2xsZWQgYnkgQklPUyBvciBPUz88YnI+DQpTb3VuZHMgbGlrZSBJIGNhbiBhdCBsZWFzdCBj
-bGVhciBpdCB2aWEgdGhlIEJJT1MsIEknbGwgY2hlY2suPG86cD48L286cD48L3A+DQo8L2Rpdj4N
-CjwvYmxvY2txdW90ZT4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlNlZSBzZWN0aW9uIG9uIHN0YXJ0
-dXAgaW5pdGlhbGl6YXRpb24gKGFuZCByZWFkIHRoZSBzdHVmZiBiZWZvcmUgdGhhdCBmb3IgY29u
-dGV4dCk8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxhIGhyZWY9Imh0dHBzOi8vbGluay5zcHJpbmdlci5jb20vY2hhcHRlci8xMC4xMDA3Lzk3OC0x
-LTQzMDItNjU4NC05XzE5Ij5odHRwczovL2xpbmsuc3ByaW5nZXIuY29tL2NoYXB0ZXIvMTAuMTAw
-Ny85NzgtMS00MzAyLTY1ODQtOV8xOTwvYT48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+WW91IGNhbm5vdCBjbGVhciB0aGUgcGxhdGZvcm0gYXV0
-aCBhcyBpdCBpcyBzZXQgb24gZWFjaCBib290LCBzbyBjbGVhcmluZyBpdCBpcyBtaW5pbWFsbHkg
-dXNlZnVsLiBZb3UgY2Fu4oCZdCBkbyBhbnl0aGluZyB3aXRoIGl0IHVubGVzcyB0aGUgb25lIHdo
-byBzZXQgaXQgZ2l2ZXMgeW91IHRoaXMgb3B0aW9uICh0aGUgYmlvcy9wbGF0Zm9ybSBtYW51ZmFj
-dHVyZXIpLiBUaGlzIGNhbiBiZSBmcnVzdHJhdGluZyBpZg0KIGxpa2UgbWUgeW91IGhhdmUgYSBU
-UE0gMi4wIHdpdGggb25seSBzaGExIFBDUuKAmXMgYWxsb2NhdGVkIGRlc3BpdGUgc3VwcG9ydGlu
-ZyBzaGEyNTYuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj4oSWYgdGhpcyBpcyBpbmNvcnJlY3QsIHNvbWVvbmUgcGxlYXNlIHRlbGwgbWUgaG93IHNv
-IEkgY2FuIHJlLWFsbG9jYXRlIG15IFBDUnMhKTxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8L2Rpdj4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPlJvd2FuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48YnI+DQo8YnI+DQo8bzpwPjwvbzpwPjwvcD4NCjxibG9ja3F1
-b3RlIHN0eWxlPSJtYXJnaW4tdG9wOjUuMHB0O21hcmdpbi1ib3R0b206NS4wcHQiPg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbi1ib3R0b206MTIuMHB0Ij5PbiBBcHIgMSwgMjAy
-MCwgYXQgMTU6NTksIEpvaG4gUyAmbHQ7PGEgaHJlZj0ibWFpbHRvOnNlZGlnakBnbWFpbC5jb20i
-PnNlZGlnakBnbWFpbC5jb208L2E+Jmd0OyB3cm90ZTo8bzpwPjwvbzpwPjwvcD4NCjwvYmxvY2tx
-dW90ZT4NCjwvZGl2Pg0KPGJsb2NrcXVvdGUgc3R5bGU9Im1hcmdpbi10b3A6NS4wcHQ7bWFyZ2lu
-LWJvdHRvbTo1LjBwdCI+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9
-ImZvbnQtZmFtaWx5OiZxdW90O1RhaG9tYSZxdW90OyxzYW5zLXNlcmlmIj7vu788L3NwYW4+VGhh
-bmsgeW91IGJvdGggZm9yIGEgcHJvbXB0IHJlcGx5IHllc3RlcmRheS48YnI+DQo8YnI+DQpGcm9t
-IHdoYXQgeW91IGNvbnRyaWJ1dGVkIHllc3RlcmRheSwgSSB1bmRlcnN0YW5kIHRwbTJfY2xlYXIg
-d2lsbCBjbGVhciB0aGUgT3duZXIgc2VlZC9oaWVyYXJjaHksIGFuZCB0aGF0IHRoZSBmdW5jdGlv
-bmFsaXR5IHRvIHBlcmZvcm0gdGhlIGNsZWFyIG9uIHRoZSBPd25lciBoaWVyYXJjaHkgY2FuIGJl
-IGRpc2FibGVkLjxicj4NCjxicj4NCjxicj4NCjxvOnA+PC9vOnA+PC9wPg0KPGJsb2NrcXVvdGUg
-c3R5bGU9Im1hcmdpbi10b3A6NS4wcHQ7bWFyZ2luLWJvdHRvbTo1LjBwdCI+DQo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj5QbGF0Zm9ybSBhbmQgRW5kb3JzZW1lbnQgc2VlZHMgZ2VuZXJhbGx5IGFyZSBz
-dGFibGUsIGJ1dCB0aGUgY29tbWFuZCBzZXQ8bzpwPjwvbzpwPjwvcD4NCjwvYmxvY2txdW90ZT4N
-CjxibG9ja3F1b3RlIHN0eWxlPSJtYXJnaW4tdG9wOjUuMHB0O21hcmdpbi1ib3R0b206NS4wcHQi
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RG9lcyBhbGxvdyBmb3IgQ2hhbmdlRVBTIGFuZCBDaGFu
-Z2VTUFMgY29tbWFuZHMuIEJ1dCBJIGRvbid0IHRoaW5rIEkgaGF2ZTxvOnA+PC9vOnA+PC9wPg0K
-PC9ibG9ja3F1b3RlPg0KPGJsb2NrcXVvdGUgc3R5bGU9Im1hcmdpbi10b3A6NS4wcHQ7bWFyZ2lu
-LWJvdHRvbTo1LjBwdCI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5ldmVyIHNlZW4gYSBwcm9kdWN0
-aW9uIFRQTSBzdXBwb3J0IHRoaXMsIGJ1dCBiZSBhd2FyZSB0aGF0IGl0IGV4aXN0cy48bzpwPjwv
-bzpwPjwvcD4NCjwvYmxvY2txdW90ZT4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoaXMgYXBwZWFy
-cyB0byBiZSBjb25maXJtYXRpb24gdGhhdCB0aGVzZSBjb21tYW5kcyBhcmUgTm90IHByZXNlbnQg
-b24gbXkgVFBNOjxicj4NCiQgdHBtMl9nZXRjYXAgY29tbWFuZHN8Z3JlcCBlcHM8YnI+DQokIHRw
-bTJfZ2V0Y2FwIGNvbW1hbmRzfGdyZXAgcHBzPGJyPg0KPGJyPg0KSSByZWFkIGluIGFub3RoZXIg
-ZGlzY3Vzc2lvbiB0aGF0IGl0IHNvdW5kcyBsaWtlIHRoaXMgbWVhbnMgdGhhdCBwbGF0Zm9ybSBh
-bmQgZW5kb3JzZW1lbnQgc2VlZHMgd291bGQgZWZmZWN0aXZlbHkgYmUgdW5jaGFuZ2VhYmxlIGlu
-IG15IGNhc2UuPGJyPg0KPGEgaHJlZj0iaHR0cHM6Ly9saXN0cy4wMS5vcmcvaHlwZXJraXR0eS9s
-aXN0L3RwbTJAbGlzdHMuMDEub3JnL3RocmVhZC81S0UzVzZRTFlIM043Nks3NTNWTlFTWDZDUEpN
-SDdLSi8iPmh0dHBzOi8vbGlzdHMuMDEub3JnL2h5cGVya2l0dHkvbGlzdC90cG0yQGxpc3RzLjAx
-Lm9yZy90aHJlYWQvNUtFM1c2UUxZSDNONzZLNzUzVk5RU1g2Q1BKTUg3S0ovPC9hPjxicj4NCjxi
-cj4NCjxicj4NCjxicj4NCjxvOnA+PC9vOnA+PC9wPg0KPGJsb2NrcXVvdGUgc3R5bGU9Im1hcmdp
-bi10b3A6NS4wcHQ7bWFyZ2luLWJvdHRvbTo1LjBwdCI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5B
-bHNvIG9uIHRoZSBub3RlIG9mIHJlLWdlbmVyYXRpbmcgcHJpbWFyeSBrZXlzLCB5b3UgbWF5IGZp
-bmQgbXkgcHJldmlvdXMgdGhyZWFkIGFib3V0IHRoZTxvOnA+PC9vOnA+PC9wPg0KPC9ibG9ja3F1
-b3RlPg0KPGJsb2NrcXVvdGUgc3R5bGU9Im1hcmdpbi10b3A6NS4wcHQ7bWFyZ2luLWJvdHRvbTo1
-LjBwdCI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj51bmlxdWUgZGF0YSBvcHRpb24gaW4gdHBtMl9j
-cmVhdGVwcmltYXJ5IGhlbHBmdWwgaWYgeW91IHdhbnQgdG8gdXNlIHVuaXF1ZSBkYXRhIGluPG86
-cD48L286cD48L3A+DQo8L2Jsb2NrcXVvdGU+DQo8YmxvY2txdW90ZSBzdHlsZT0ibWFyZ2luLXRv
-cDo1LjBwdDttYXJnaW4tYm90dG9tOjUuMHB0Ij4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPmFkZGl0
-aW9uIHRvIHRoZSBzZWVkLjxvOnA+PC9vOnA+PC9wPg0KPC9ibG9ja3F1b3RlPg0KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+VGhhbmtzLCBkbyB5b3UgaGF2ZSBhIGxpbms/IEkgY291bGQgbm90IGZpbmQg
-dGhpcyB0aHJlYWQgeWV0IGFmdGVyIHNlYXJjaGluZy4gQWxzbywgaXMgdGhlcmUgYSBnb29kIHJl
-YXNvbiB0byB1c2UgdGhlIHVuaXF1ZSBkYXRhIGluIGFkZGl0aW9uIHRvIGJlaW5nIGV4dHJhIGNh
-dXRpb3VzPyBNYXliZSB0aGlzIGlzIGFkZHJlc3NlZCBpbiB0aGUgdGhyZWFkLjxicj4NCjxicj4N
-ClJlZ2FyZGluZyBQbGF0Zm9ybSBhdXRob3JpemF0aW9uIHZhbHVlIC0gc2hvdWxkIEkgZXhwZWN0
-IHRoaXMgaXMgY29udHJvbGxlZCBieSBCSU9TIG9yIE9TPzxicj4NClNvdW5kcyBsaWtlIEkgY2Fu
-IGF0IGxlYXN0IGNsZWFyIGl0IHZpYSB0aGUgQklPUywgSSdsbCBjaGVjay48YnI+DQpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXzxicj4NCnRwbTIgbWFpbGlu
-ZyBsaXN0IC0tIDxhIGhyZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9yZyI+dHBtMkBsaXN0cy4w
-MS5vcmc8L2E+PGJyPg0KVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0byA8YSBocmVmPSJt
-YWlsdG86dHBtMi1sZWF2ZUBsaXN0cy4wMS5vcmciPnRwbTItbGVhdmVAbGlzdHMuMDEub3JnPC9h
-Pjxicj4NCiUod2ViX3BhZ2VfdXJsKXNsaXN0aW5mbyUoY2dpZXh0KXMvJShfaW50ZXJuYWxfbmFt
-ZSlzPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjwvYmxvY2txdW90ZT4NCjwvZGl2Pg0KPC9kaXY+
-DQo8L2Rpdj4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
-
---===============6485184510429459888==--
+--===============5445016087369745367==--
 
