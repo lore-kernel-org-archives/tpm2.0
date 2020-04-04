@@ -1,239 +1,84 @@
-Content-Type: multipart/mixed; boundary="===============5445016087369745367=="
+Content-Type: multipart/mixed; boundary="===============5408051955569503232=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Relating tpm2_createprimary, Primary Seeds, and tpm2_clear
-Date: Fri, 03 Apr 2020 15:18:27 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EB715E@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 7169F4BB-61AF-47A4-A76C-13BC3A571822@rowan.moul.ca
+From: John S <sedigj at gmail.com>
+Subject: [tpm2] Protecting symmetric keys / symmetric algorithms
+Date: Sat, 04 Apr 2020 21:44:37 +0000
+Message-ID: <20200404214437.2692.62906@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5445016087369745367==
+--===============5408051955569503232==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Other questions for which I am hopeful folks here can give some guidance on.
 
+A little background on context/use cases. My Linux device which has the TPM=
+2.0 on it, will be participating in communication protocols with other devi=
+ces on the network. Think user-less, embedded devices and protocols. The di=
+fferent devices will be performing key agreement and then authenticating th=
+eir communication messages. =
 
-> -----Original Message-----
-> From: Rowan Moul [mailto:lists(a)rowan.moul.ca]
-> Sent: Wednesday, April 1, 2020 7:17 PM
-> To: John S <sedigj(a)gmail.com>
-> Cc: tpm2(a)lists.01.org
-> Subject: [tpm2] Re: Relating tpm2_createprimary, Primary Seeds, and tpm2_=
-clear
-> =
+We expect to involve CMAC for both key derivation and also MACing the messa=
+ges, which is using AES128 keys. We are familiar with CMAC and other device=
+s have support for this already.
 
-> =EF=BB=BF
-> Your quotes look fine to me.
-> =
+In general too, having AES encypt/decrypt is useful for a wide variety of u=
+se cases.
 
-> =
+The problem: =
 
-> 	This appears to be confirmation that these commands are Not present on
-> my TPM:
-> 	$ tpm2_getcap commands|grep eps
-> 	$ tpm2_getcap commands|grep pps
-> =
+It appears my TPM2.0 device does not have support for symmetric operations.=
+ Reading other threads here indicates only a minority of TPM2.0 devices do =
+have symmetric support.
+I can see how I can involve the TPM to share secrets between devices on the=
+ network in a trusted and secure way. But once the TPM decrypts the secret =
+(using asymmetric), what are my options for hardware protection of my AES k=
+eys? I guess they can be encrypted at rest / until time of use by a TPM key=
+. But when they're actually in use it seems I'm stuck with them in software=
+.  =
 
-> I=E2=80=99m not sure of the exact implementation that tpm2-tools uses. It=
-=E2=80=99s possible that
-> the tool name doesn=E2=80=99t match the internal command used, but this o=
-ne is best left
-> to the experts.
+Any other ideas I'm not thinking of?
 
-You should be able to add -I to that grep, it will be output as:
-TPM2_CC_ChangeEPS
-TPM2_CC_ChangePPS
+-----Behavior on my specific TPM----
+--I concluded my tpm does not support symmetric because these sequences hav=
+e failed:
 
-> =
+tpm2_getcap commands : output has nothing to do with 'sym' or 'aes'
 
-> =
+tpm2_createprimary -Grsa2048:aes128cfb -C o -c parent.ctx
+dd if=3D/dev/urandom of=3Dsym.key bs=3D1 count=3D16
+tpm2_import -C parent.ctx -i sym.key -u key.pub -r key.priv -G aes
+WARNING:esys:src/tss2-esys/api/Esys_Import.c:323:Esys_Import_Finish() Recei=
+ved TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_Import.c:110:Esys_Import() Esys Finish Er=
+rorCode (0x000002c9)
+ERROR: Esys_HMAC(0x2C9) - tpm:parameter(2):mode of operation not supported
+ERROR: Unable to run tpm2_import
 
-> 	Thanks, do you have a link? I could not find this thread yet after
-> searching. Also, is there a good reason to use the unique data in additio=
-n to being
-> extra cautious? Maybe this is addressed in the thread.
-> =
+tpm2_createprimary -o primary.ctx
+tpm2_create -C primary.ctx -Ghmac -c hmac.key
+WARNING:esys:src/tss2-esys/api/Esys_CreateLoaded.c:355:Esys_CreateLoaded_Fi=
+nish() Received TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_CreateLoaded.c:129:Esys_CreateLoaded() Es=
+ys Finish ErrorCode (0x000b0143)
+ERROR: Esys_CreateLoaded(0xB0143) - rmt:error(2.0): command code not suppor=
+ted
 
-> As for the unique field. I can=E2=80=99t say if it=E2=80=99s better or wo=
-rse to use it or not. However
-> if you don=E2=80=99t use it, anyone with access to your TPM can re-genera=
-te your primary
-> key (assuming they know what other options you chose). Once they have your
-> Primary Key, they have everything under it too.
+--From tpm2_getcap algorithms, I see I have:
+aes, hmac, and cfb which all indicate they are symmetric.
+But I have no way to use them? (They are just for tpm sessions?)
 
-Anything that's input to the CreatePrimary command, will control the genera=
-ted key. So any input
-that varies changes the key.
+--From tpm2_getcap algorithms, I see 2 of my algorithms are:
+kdf1_sp800_56a
+kdf1_sp800_108
+Both are noted as type 'hash'. =
 
-If you set the auth value, that will also provide uniqueness. The policy va=
-lue will too, but that can
-be read out by anyone. You can assume that your template for key generation=
- is known, with the
-exception of:
-1. secrets used to auth via policy
-2. password (private portion of the object anyways)
+Would I use tpm2_hash to use these? If so, how would the key for the kdf be=
+ provided?
 
-If someone creates a primary key, they will be able to load objects under t=
-he primary object
-IFF they have auth. So even if they know your full template and policy hash=
- (all public info)
-The policy controls whether or not they can load subordinate objects. As lo=
-ad requires parent
-object authorization. So they won't be able to load them if they don't know=
- the authorization to
-the object.
-
-The unique field shouldn't be considered a security feature. It's merely so=
- you could create
-different primary keys with *almost* the same template/input parameters. Yo=
-u would vary
-the unique field.
-
-To protect a primary key from unauthorized use, set proper authorization (p=
-eriod).
-
-> The thread I referred to is mostly about some awkward formatting required=
-. It
-> got split into two because I didn=E2=80=99t reply all correctly The conte=
-xt:
-> https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/B5HVVKDH4=
-PVGOU
-> CT6WPCHRYHB35LMDBW/
-> <https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/B5HVVKDH=
-4PVGO
-> UCT6WPCHRYHB35LMDBW/>
-> The useful part:
-> https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/5YDZRV63L=
-CGX6BZ
-> QXRW6S6F77PSS5JU5/
-> =
-
-> =
-
-> =
-
-> =
-
-> 	Regarding Platform authorization value - should I expect this is control=
-led
-> by BIOS or OS?
-> 	Sounds like I can at least clear it via the BIOS, I'll check.
-> =
-
-> See section on startup initialization (and read the stuff before that for=
- context)
-> https://link.springer.com/chapter/10.1007/978-1-4302-6584-9_19
-> =
-
-> You cannot clear the platform auth as it is set on each boot, so clearing=
- it is
-> minimally useful. You can=E2=80=99t do anything with it unless the one wh=
-o set it gives you
-> this option (the bios/platform manufacturer). This can be frustrating if =
-like me
-> you have a TPM 2.0 with only sha1 PCR=E2=80=99s allocated despite support=
-ing sha256.
-> (If this is incorrect, someone please tell me how so I can re-allocate my=
- PCRs!)
-> =
-
-> Rowan
-> =
-
-> =
-
-> 	On Apr 1, 2020, at 15:59, John S <sedigj(a)gmail.com> wrote:
-> =
-
-> =
-
-> =
-
-> 	=EF=BB=BFThank you both for a prompt reply yesterday.
-> =
-
-> 	From what you contributed yesterday, I understand tpm2_clear will clear
-> the Owner seed/hierarchy, and that the functionality to perform the clear=
- on the
-> Owner hierarchy can be disabled.
-> =
-
-> =
-
-> =
-
-> 		Platform and Endorsement seeds generally are stable, but the
-> command set
-> =
-
-> =
-
-> 		Does allow for ChangeEPS and ChangeSPS commands. But I don't
-> think I have
-> =
-
-> =
-
-> 		ever seen a production TPM support this, but be aware that it
-> exists.
-> =
-
-> =
-
-> 	This appears to be confirmation that these commands are Not present on
-> my TPM:
-> 	$ tpm2_getcap commands|grep eps
-> 	$ tpm2_getcap commands|grep pps
-> =
-
-> 	I read in another discussion that it sounds like this means that platform
-> and endorsement seeds would effectively be unchangeable in my case.
-> 	https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/5KE3W6QLY
-> H3N76K753VNQSX6CPJMH7KJ/
-> =
-
-> =
-
-> =
-
-> =
-
-> 		Also on the note of re-generating primary keys, you may find my
-> previous thread about the
-> =
-
-> =
-
-> 		unique data option in tpm2_createprimary helpful if you want to
-> use unique data in
-> =
-
-> =
-
-> 		addition to the seed.
-> =
-
-> =
-
-> 	Thanks, do you have a link? I could not find this thread yet after
-> searching. Also, is there a good reason to use the unique data in additio=
-n to being
-> extra cautious? Maybe this is addressed in the thread.
-> =
-
-> 	Regarding Platform authorization value - should I expect this is control=
-led
-> by BIOS or OS?
-> 	Sounds like I can at least clear it via the BIOS, I'll check.
-> 	_______________________________________________
-> 	tpm2 mailing list -- tpm2(a)lists.01.org
-> 	To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> 	%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-> =
-
-
-
---===============5445016087369745367==--
+Thanks much in advance,
+-John
+--===============5408051955569503232==--
 
