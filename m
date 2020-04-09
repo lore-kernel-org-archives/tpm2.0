@@ -1,109 +1,78 @@
-Content-Type: multipart/mixed; boundary="===============1989046986992610495=="
+Content-Type: multipart/mixed; boundary="===============7845918858961993925=="
 MIME-Version: 1.0
-From: Imran Desai <imran.desai at intel.com>
-Subject: [tpm2] [Release] tpm2-tools v4.2
-Date: Thu, 09 Apr 2020 01:24:06 +0000
-Message-ID: <20200409012406.2799.93131@ml01.vlan13.01.org>
+From: Rahul Hardikar <rahulhardikar at gmail.com>
+Subject: [tpm2] Re: ESys_ActivateCredential
+Date: Wed, 08 Apr 2020 19:02:51 -0700
+Message-ID: <CAP3jAwTeq-A4QV6zPrYyT=hZ2x9GxkxHfiVL6C18dN9sPC7w6Q@mail.gmail.com>
+In-Reply-To: 20200317132045.2753.53204@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1989046986992610495==
+--===============7845918858961993925==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Thanks guys, I'll try this but  i also wanted to know if there is a way to
+know if the TPM still has the EK and AK keys loaded? I have the EK handle
+and AK handle (not made it persistent) but I want to make sure it's present
+as these are necessary for ActivateCredential to succeed
+ESys_ActivateCredential complaining about secret parameter doesn't make
+sense to me, I tested on server side, ak_name is same as that sent and so
+is EK_PUB object as well as  EK_Cert in nvram, I call the same
+external_makecredential call that's in the GitHub to create secret and made
+sure secret,credblob matches on the client side when received from server.
 
-tpm2-tools release candidate version 4.2 is published at
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.2
+Thanks,
+Rahul
 
-Thanks and Regards,
+On Tue, Mar 17, 2020 at 6:19 AM Imran Desai <imran.desai(a)intel.com> wrote:
 
-Imran Desai
+> Set this up with all handles in use made persistent. If you still see
+> issues, gdb-break or turn on debug logging at the Esys call and compare t=
+he
+> function arguments.
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+>
 
-Changelog/ Updates:
+--===============7845918858961993925==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-### 4.2 - 2020-04-08
+PGRpdiBkaXI9Imx0ciI+VGhhbmtzIGd1eXMsIEkmIzM5O2xsIHRyeSB0aGlzIGJ1dCDCoGkgYWxz
+byB3YW50ZWQgdG8ga25vdyBpZsKgdGhlcmUgaXMgYSB3YXkgdG8ga25vdyBpZiB0aGUgVFBNIHN0
+aWxsIGhhcyB0aGUgRUsgYW5kIEFLIGtleXMgbG9hZGVkPyBJIGhhdmUgdGhlIEVLIGhhbmRsZSBh
+bmQgQUsgaGFuZGxlIChub3QgbWFkZSBpdCBwZXJzaXN0ZW50KSBidXQgSSB3YW50IHRvIG1ha2Ug
+c3VyZSBpdCYjMzk7cyBwcmVzZW50IGFzIHRoZXNlIGFyZSBuZWNlc3NhcnkgZm9yIEFjdGl2YXRl
+Q3JlZGVudGlhbCB0byBzdWNjZWVkwqA8ZGl2PkVTeXNfQWN0aXZhdGVDcmVkZW50aWFsIGNvbXBs
+YWluaW5nIGFib3V0IHNlY3JldCBwYXJhbWV0ZXIgZG9lc24mIzM5O3QgbWFrZSBzZW5zZSB0byBt
+ZSwgSSB0ZXN0ZWQgb24gc2VydmVyIHNpZGUsIGFrX25hbWUgaXMgc2FtZSBhcyB0aGF0IHNlbnQg
+YW5kIHNvIGlzIEVLX1BVQiBvYmplY3QgYXMgd2VsbCBhcyDCoEVLX0NlcnQgaW4gbnZyYW0sIEkg
+Y2FsbCB0aGUgc2FtZSBleHRlcm5hbF9tYWtlY3JlZGVudGlhbCBjYWxsIHRoYXQmIzM5O3MgaW4g
+dGhlIEdpdEh1YiB0byBjcmVhdGUgc2VjcmV0IGFuZCBtYWRlIHN1cmUgc2VjcmV0LGNyZWRibG9i
+IG1hdGNoZXMgb24gdGhlIGNsaWVudCBzaWRlIHdoZW4gcmVjZWl2ZWQgZnJvbSBzZXJ2ZXIuPC9k
+aXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFua3MsPC9kaXY+PGRpdj5SYWh1bDwvZGl2PjwvZGl2
+Pjxicj48ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGRpdiBkaXI9Imx0ciIgY2xhc3M9ImdtYWls
+X2F0dHIiPk9uIFR1ZSwgTWFyIDE3LCAyMDIwIGF0IDY6MTkgQU0gSW1yYW4gRGVzYWkgJmx0Ozxh
+IGhyZWY9Im1haWx0bzppbXJhbi5kZXNhaUBpbnRlbC5jb20iPmltcmFuLmRlc2FpQGludGVsLmNv
+bTwvYT4mZ3Q7IHdyb3RlOjxicj48L2Rpdj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUi
+IHN0eWxlPSJtYXJnaW46MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQtd2lkdGg6MXB4O2Jv
+cmRlci1sZWZ0LXN0eWxlOnNvbGlkO2JvcmRlci1sZWZ0LWNvbG9yOnJnYigyMDQsMjA0LDIwNCk7
+cGFkZGluZy1sZWZ0OjFleCI+U2V0IHRoaXMgdXAgd2l0aCBhbGwgaGFuZGxlcyBpbiB1c2UgbWFk
+ZSBwZXJzaXN0ZW50LiBJZiB5b3Ugc3RpbGwgc2VlIGlzc3VlcywgZ2RiLWJyZWFrIG9yIHR1cm4g
+b24gZGVidWcgbG9nZ2luZyBhdCB0aGUgRXN5cyBjYWxsIGFuZCBjb21wYXJlIHRoZSBmdW5jdGlv
+biBhcmd1bWVudHMuPGJyPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXzxicj4KdHBtMiBtYWlsaW5nIGxpc3QgLS0gPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlz
+dHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+PGJyPgpUbyB1
+bnN1YnNjcmliZSBzZW5kIGFuIGVtYWlsIHRvIDxhIGhyZWY9Im1haWx0bzp0cG0yLWxlYXZlQGxp
+c3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPnRwbTItbGVhdmVAbGlzdHMuMDEub3JnPC9hPjxi
+cj4KJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQpcy8lKF9pbnRlcm5hbF9uYW1lKXM8
+YnI+CjwvYmxvY2txdW90ZT48L2Rpdj4K
 
- * Fix various issues reported by static analysis tools.
-
- * Add integration test for ECC based getekcertificate.
-
- * Fix for issue #1959 where ARM builds were failing.
-
- * Add a check in autotools to add "expect" as a package dependency for fapi
-tools.
-
- * tpm2_createek: Drop the unused -p or --ek-auth option
-
- * tpm2_policyor: List of policy files should be specified as an argument
-   instead of -l option. The -l option is still retained for backwards
-   compatibility. See issue#1894.
-
- * tpm2\_eventlog: add a tool for parsing and displaying the event log.
-
- * tpm2_createek: Fix an issue where the `template` option looked for args
-
- * tpm2_hierarchycontrol: Fixed bug where tool operation failed silently
-
- * tpm2_nvdefine: Fixed an issue where text output suggested failures as pa=
-sses
-
- * tpm2_certify: Add an example usage in man page
-
- * tpm2_policyor: Fix a bug where tool failed silently when no input were g=
-iven
-
- * tpm2_getekcertificate: Intel (R) PTT EK cert web portal is set as defaul=
-t address
-
- * tpm2_alg_util.c: Fix a bug where string rsa3072 was not parsed
-
- * .ci/download-deps.sh: Change tss dependency to 2.4.0 to acquire SAPI han=
-dles for cpHash
-calculations
-
- * tpm2_policycphash: Add a tool to implement enhanced authorization with c=
-pHash of a
-command
-
- * Add options to tools to enable cpHash outputs: tpm2_nvsetbits, tpm2_nvex=
-tend,
-   tpm2_nvincrement, tpm2_nvread, tpm2_nvreadlock, tpm2_writelock, tpm2_nvd=
-efine,
-   tpm2_nvundefine, tpm2_nvcertify, tpm2_policynv, tpm2_policyauthorizenv,
-   tpm2_policysecret, tpm2_create, tpm2_load, tpm2_activatecredential, tpm2=
-_unseal,
-   tpm2_changeauth, tpm2_duplicate, tpm2_import, tpm2_rsadecrypt, tpm2_cert=
-ify,
-   tpm2_certifycreation, tpm2_hierarchycontrol, tpm2_setprimarypolicy, tpm2=
-_clearcontrol,
-   tpm2_dictionarylockout, tpm2_evictcontrol, tpm2_setclock, tpm2_clockrate=
-adjust,
-   tpm2_clear, tpm2_nvwrite, tpm2_encryptdecrypt, tpm2_hmac.
-
- * tpm2_import: Fix an issue where the imported key always required to have=
- a policy
-
- * tpm2_policysecret: Fix an issue where authorization model was fixed to p=
-assword only
-
- * Feature API (FAPI) tools added. These additional set of tools implement =
-utilities
-   using the FAPI which was added to the tpm2-tss v2.4.4:
-   tss2_decrypt, tss2_encrypt, tss2_list, tss2_changeauth, tss2_delete,
-   tss2_import, tss2_getinfo, tss2_createkey, tss2_createseal, tss2_exportk=
-ey,
-   tss2_getcertificate, tss2_getplatformcertificates, tss2_gettpmblobs,
-   tss2_getappdata, tss2_setappdata, tss2_setcertificate, tss2_sign,
-   tss2_verifysignature, tss2_verifyquote, tss2_createnv, tss2_nvextend,
-   tss2_nvincrement, tss2_nvread, tss2_nvsetbits, tss2_nvwrite,
-   tss2_getdescription, tss2_setdescription, tss2_pcrextend, tss2_quote,
-   tss2_pcrread, tss2_authorizepolicy, tss2_exportpolicy, tss2_import,
-   tss2_provision, tss2_getrandom, tss2_unseal, tss2_writeauthorizenv
-
- * tpm2_policycountertimer: Fix an issue where operandB array was reversed =
-causing faulty
-comparisons.
---===============1989046986992610495==--
+--===============7845918858961993925==--
 
