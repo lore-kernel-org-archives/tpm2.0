@@ -1,314 +1,175 @@
-Content-Type: multipart/mixed; boundary="===============1319337203525178673=="
+Content-Type: multipart/mixed; boundary="===============8020681730369299182=="
 MIME-Version: 1.0
-From: Rahul Hardikar <rahulhardikar at gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: ESys_ActivateCredential
-Date: Thu, 09 Apr 2020 09:17:43 -0700
-Message-ID: <CAP3jAwS5tgRZJ5f9OYDHBVNCE_p570Z=oKLPDdav9SFcwe9SFg@mail.gmail.com>
-In-Reply-To: CAP3jAwTeq-A4QV6zPrYyT=hZ2x9GxkxHfiVL6C18dN9sPC7w6Q@mail.gmail.com
+Date: Thu, 09 Apr 2020 17:23:44 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EBBEFC@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAP3jAwS5tgRZJ5f9OYDHBVNCE_p570Z=oKLPDdav9SFcwe9SFg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1319337203525178673==
+--===============8020681730369299182==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-How do I know if  RM is being used?
-When I do ESys_Initialize, I see these WARNINGs, wondering if it's okay for
-multi-thread
-WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could
-not load TCTI file: libtss2-tcti-default.so
-libtss2-tcti-default.so
-WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could
-not load TCTI file: libtss2-tcti-tabrmd.so
+> -----Original Message-----
+> From: Rahul Hardikar [mailto:rahulhardikar(a)gmail.com]
+> Sent: Thursday, April 9, 2020 11:18 AM
+> To: Desai, Imran <imran.desai(a)intel.com>
+> Cc: tpm2(a)lists.01.org
+> Subject: [tpm2] Re: ESys_ActivateCredential
+> =
 
-In my single threaded process, everything works so smoothly
-[root]# ./tpm
-WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could
-not load TCTI file: libtss2-tcti-default.so
-WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could
-not load TCTI file: libtss2-tcti-tabrmd.so
-ESYS Initialization: Pass
-
-Read TPM EK Certificate: Pass
-
-TPM EK Certificate Root-CA Verification: Pass
-
-Clear TPM State: Pass
-
-Created EK Primary object: Pass
-#####Handle 0x418368
-
-Create Attestation Key: Pass
-#####Ak_Handle 0x41836b
-
-Original Credential=3D"deadbeefdeadbeefdead"
-
-Make Credential: Pass
-#####Encrypted Credential
-Blob=3D"0020508e439bc6512d044bb8739e8d61c8ce3664d25f3572389b46c8797e562a45c=
-412864f020a7f1bbcab7a34f0"
-
-#####Encrypted
-Secret=3D"b70689bb0ed9fa8324cfa03d727e6c6795069b4f0943108409b89009b9cc76c76=
-bddb31a5ccf34cfebc5d3fe715899bb725a8a3c8fe4a6046233869123f3e978051aece0d7af=
-0ad6f85164a32fd2c5ad756e8c3b72f6311126de79a30c0d72aa0a6f3f437f6bc077c41d3cc=
-6450c71e803ca6074d34ce3debf5114f4bac2fd7ee6a87ef9f07d830794775dda4f77e4620c=
-baf9aeb302040ee2a66a352b9fffaa5447c09a249bb22d9d989b7f1406612a90b8d8bce6bb9=
-40fbfd1d50f31398403a2643c73bec336e6fcca46f29f9b6aa87fd11d53ec6f145d61b2a61d=
-ffc783ae2b2c66184435d633d0b5a420efa01748e39d687e1eb9fcc1759c184972779bfc"
-
-Activating Credential: Pass
-#####Recovered Credential=3D"deadbeefdeadbeefdead"
-
-[root]#
+> How do I know if  RM is being used?
 
 
-On Wed, Apr 8, 2020 at 7:02 PM Rahul Hardikar <rahulhardikar(a)gmail.com>
-wrote:
+If you set the tcti to the device tcti, it will open /dev/tpm0 by default. =
+And that wont
+Be an RM. You can also give it an option. Esys_Initialize() takes a tcti as=
+ an option,
+NULL will cause it to use the default search behavior of the Tss2_TctiLdr, =
+see:
 
-> Thanks guys, I'll try this but  i also wanted to know if there is a way to
-> know if the TPM still has the EK and AK keys loaded? I have the EK handle
-> and AK handle (not made it persistent) but I want to make sure it's prese=
-nt
-> as these are necessary for ActivateCredential to succeed
-> ESys_ActivateCredential complaining about secret parameter doesn't make
-> sense to me, I tested on server side, ak_name is same as that sent and so
-> is EK_PUB object as well as  EK_Cert in nvram, I call the same
+https://github.com/tpm2-software/tpm2-tss/blob/master/man/Tss2_TctiLdr_Init=
+ialize.3.in
+https://github.com/tpm2-software/tpm2-tss/blob/master/man/Tss2_Tcti_Device_=
+Init.3.in
+https://github.com/tpm2-software/tpm2-tss/blob/master/man/tss2-tcti-device.=
+7.in
+
+You can use man locally if you prefer as well:
+man 3 Tss2_TctiLdr_Initialize
+man 7 tss2-tcti-device
+man 3 Tss2_Tcti_Device_Init
+
+Note that https://github.com/tpm2-software/tpm2-tss/blob/master/man/Tss2_Tc=
+ti_Device_Init.3.in
+Has sample code in it.
+
+If you're using the tools, it supports explicitly choosing the TCTI:
+https://github.com/tpm2-software/tpm2-tools/blob/master/man/common/tcti.md
+
+Also note that the /dev/tpmrm0 (Notice the RM) is an in-kernel resource man=
+ager.
+
+
+> When I do ESys_Initialize, I see these WARNINGs, wondering if it's okay f=
+or multi-
+> thread
+> WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could=
+ not
+> load TCTI file: libtss2-tcti-default.so <http://libtss2-tcti-default.so/>=
+ libtss2-tcti-
+> default.so <http://libtss2-tcti-default.so/>
+> WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could=
+ not
+> load TCTI file: libtss2-tcti-tabrmd.so <http://libtss2-tcti-tabrmd.so/>
+> =
+
+> In my single threaded process, everything works so smoothly [root]# ./tpm
+> WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could=
+ not
+> load TCTI file: libtss2-tcti-default.so <http://libtss2-tcti-default.so/>
+> WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file() Could=
+ not
+> load TCTI file: libtss2-tcti-tabrmd.so <http://libtss2-tcti-tabrmd.so/> E=
+SYS
+> Initialization: Pass
+> =
+
+> Read TPM EK Certificate: Pass
+> =
+
+> TPM EK Certificate Root-CA Verification: Pass
+> =
+
+> Clear TPM State: Pass
+> =
+
+> Created EK Primary object: Pass
+> #####Handle 0x418368
+> =
+
+> Create Attestation Key: Pass
+> #####Ak_Handle 0x41836b
+> =
+
+> Original Credential=3D"deadbeefdeadbeefdead"
+> =
+
+> Make Credential: Pass
+> #####Encrypted Credential
+> Blob=3D"0020508e439bc6512d044bb8739e8d61c8ce3664d25f3572389b46c8797e562a
+> 45c412864f020a7f1bbcab7a34f0"
+> =
+
+> #####Encrypted
+> Secret=3D"b70689bb0ed9fa8324cfa03d727e6c6795069b4f0943108409b89009b9cc76c
+> 76bddb31a5ccf34cfebc5d3fe715899bb725a8a3c8fe4a6046233869123f3e978051aec
+> e0d7af0ad6f85164a32fd2c5ad756e8c3b72f6311126de79a30c0d72aa0a6f3f437f6bc
+> 077c41d3cc6450c71e803ca6074d34ce3debf5114f4bac2fd7ee6a87ef9f07d83079477
+> 5dda4f77e4620cbaf9aeb302040ee2a66a352b9fffaa5447c09a249bb22d9d989b7f14
+> 06612a90b8d8bce6bb940fbfd1d50f31398403a2643c73bec336e6fcca46f29f9b6aa87
+> fd11d53ec6f145d61b2a61dffc783ae2b2c66184435d633d0b5a420efa01748e39d687
+> e1eb9fcc1759c184972779bfc"
+> =
+
+> Activating Credential: Pass
+> #####Recovered Credential=3D"deadbeefdeadbeefdead"
+> =
+
+> [root]#
+> =
+
+> =
+
+> =
+
+> On Wed, Apr 8, 2020 at 7:02 PM Rahul Hardikar <rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com> > wrote:
+> =
+
+> =
+
+> 	Thanks guys, I'll try this but  i also wanted to know if there is a way =
+to
+> know if the TPM still has the EK and AK keys loaded? I have the EK handle=
+ and AK
+> handle (not made it persistent) but I want to make sure it's present as t=
+hese are
+> necessary for ActivateCredential to succeed
+> 	ESys_ActivateCredential complaining about secret parameter doesn't
+> make sense to me, I tested on server side, ak_name is same as that sent a=
+nd so is
+> EK_PUB object as well as  EK_Cert in nvram, I call the same
 > external_makecredential call that's in the GitHub to create secret and ma=
-de
-> sure secret,credblob matches on the client side when received from server.
->
-> Thanks,
-> Rahul
->
-> On Tue, Mar 17, 2020 at 6:19 AM Imran Desai <imran.desai(a)intel.com> wro=
-te:
->
->> Set this up with all handles in use made persistent. If you still see
->> issues, gdb-break or turn on debug logging at the Esys call and compare =
-the
->> function arguments.
->> _______________________________________________
->> tpm2 mailing list -- tpm2(a)lists.01.org
->> To unsubscribe send an email to tpm2-leave(a)lists.01.org
->> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
->>
->
+de sure
+> secret,credblob matches on the client side when received from server.
+> =
 
---===============1319337203525178673==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+> 	Thanks,
+> 	Rahul
+> =
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+SG93IGRvIEkga25v
-dyBpZiDCoFJNIGlzIGJlaW5nIHVzZWQ/PGRpdj5XaGVuIEkgZG8gRVN5c19Jbml0aWFsaXplLCBJ
-IHNlZSB0aGVzZSBXQVJOSU5Hcywgd29uZGVyaW5nIGlmIGl0JiMzOTtzIG9rYXkgZm9yIG11bHRp
-LXRocmVhZMKgPC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250LWZh
-bWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVt
-b2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij5XQVJOSU5HOmVzeXM6
-c3JjL3RzczItZXN5cy9lc3lzX3RjdGlfZGVmYXVsdC5jOjEzNzp0Y3RpX2Zyb21fZmlsZSgpIENv
-dWxkIG5vdCBsb2FkIFRDVEkgZmlsZTrCoDwvc3Bhbj48YSBocmVmPSJodHRwOi8vbGlidHNzMi10
-Y3RpLWRlZmF1bHQuc28vIiBhbHQ9Imh0dHA6Ly9saWJ0c3MyLXRjdGktZGVmYXVsdC5zbyIgc3R5
-bGU9InRleHQtZGVjb3JhdGlvbjpub25lO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7
-U2Vnb2UgVUkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDssc2Fucy1zZXJpZixNZWly
-eW87Zm9udC1zaXplOjE0cHg7Y29sb3I6aW5pdGlhbCI+bGlidHNzMi10Y3RpLWRlZmF1bHQuc288
-L2E+PC9kaXY+PGEgaHJlZj0iaHR0cDovL2xpYnRzczItdGN0aS1kZWZhdWx0LnNvLyIgYWx0PSJo
-dHRwOi8vbGlidHNzMi10Y3RpLWRlZmF1bHQuc28iIHN0eWxlPSJ0ZXh0LWRlY29yYXRpb246bm9u
-ZTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1Nl
-Z29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4O2NvbG9y
-OmluaXRpYWwiPmxpYnRzczItdGN0aS1kZWZhdWx0LnNvPC9hPjxiciBzdHlsZT0iY29sb3I6cmdi
-KDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZx
-dW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4
-Ij48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVt
-LCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2Vy
-aWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij5XQVJOSU5HOmVzeXM6c3JjL3RzczItZXN5cy9lc3lz
-X3RjdGlfZGVmYXVsdC5jOjEzNzp0Y3RpX2Zyb21fZmlsZSgpIENvdWxkIG5vdCBsb2FkIFRDVEkg
-ZmlsZTrCoDwvc3Bhbj48YSBocmVmPSJodHRwOi8vbGlidHNzMi10Y3RpLXRhYnJtZC5zby8iIGFs
-dD0iaHR0cDovL2xpYnRzczItdGN0aS10YWJybWQuc28iIHN0eWxlPSJ0ZXh0LWRlY29yYXRpb246
-bm9uZTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90
-O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4O2Nv
-bG9yOmluaXRpYWwiPmxpYnRzczItdGN0aS10YWJybWQuc288L2E+PC9kaXY+PGRpdiBkaXI9Imx0
-ciI+PGJyPjwvZGl2PjxkaXY+SW4gbXkgc2luZ2xlIHRocmVhZGVkIHByb2Nlc3MsIGV2ZXJ5dGhp
-bmcgd29ya3Mgc28gc21vb3RobHk8L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMCww
-LDApO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkmcXVvdDssJnF1b3Q7
-U2Vnb2UgVUkgRW1vamkmcXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1zaXplOjE0cHgiPlty
-b290XSMgLi90cG08L3NwYW4+PGJyIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtZmFtaWx5
-Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkm
-cXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1zaXplOjE0cHgiPjxzcGFuIHN0eWxlPSJjb2xv
-cjpyZ2IoMCwwLDApO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkmcXVv
-dDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1zaXpl
-OjE0cHgiPldBUk5JTkc6ZXN5czpzcmMvdHNzMi1lc3lzL2VzeXNfdGN0aV9kZWZhdWx0LmM6MTM3
-OnRjdGlfZnJvbV9maWxlKCkgQ291bGQgbm90IGxvYWQgVENUSSBmaWxlOsKgPC9zcGFuPjxhIGhy
-ZWY9Imh0dHA6Ly9saWJ0c3MyLXRjdGktZGVmYXVsdC5zby8iIGFsdD0iaHR0cDovL2xpYnRzczIt
-dGN0aS1kZWZhdWx0LnNvIiBzdHlsZT0idGV4dC1kZWNvcmF0aW9uOm5vbmU7Zm9udC1mYW1pbHk6
-LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZx
-dW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweDtjb2xvcjppbml0aWFsIj5saWJ0
-c3MyLXRjdGktZGVmYXVsdC5zbzwvYT48YnIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1m
-YW1pbHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBF
-bW9qaSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+PHNwYW4gc3R5bGU9
-ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBV
-SSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250
-LXNpemU6MTRweCI+V0FSTklORzplc3lzOnNyYy90c3MyLWVzeXMvZXN5c190Y3RpX2RlZmF1bHQu
-YzoxMzc6dGN0aV9mcm9tX2ZpbGUoKSBDb3VsZCBub3QgbG9hZCBUQ1RJIGZpbGU6wqA8L3NwYW4+
-PGEgaHJlZj0iaHR0cDovL2xpYnRzczItdGN0aS10YWJybWQuc28vIiBhbHQ9Imh0dHA6Ly9saWJ0
-c3MyLXRjdGktdGFicm1kLnNvIiBzdHlsZT0idGV4dC1kZWNvcmF0aW9uOm5vbmU7Zm9udC1mYW1p
-bHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9q
-aSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweDtjb2xvcjppbml0aWFsIj5s
-aWJ0c3MyLXRjdGktdGFicm1kLnNvPC9hPjxiciBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250
-LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJ
-IEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij48c3BhbiBzdHls
-ZT0iY29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29l
-IFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2Zv
-bnQtc2l6ZToxNHB4Ij5FU1lTIEluaXRpYWxpemF0aW9uOiBQYXNzPC9zcGFuPjxiciBzdHlsZT0i
-Y29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJ
-JnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQt
-c2l6ZToxNHB4Ij48YnIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxl
-LXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90Oyxz
-YW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigw
-LDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVv
-dDtTZWdvZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+
-UmVhZCBUUE0gRUsgQ2VydGlmaWNhdGU6IFBhc3M8L3NwYW4+PGJyIHN0eWxlPSJjb2xvcjpyZ2Io
-MCwwLDApO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkmcXVvdDssJnF1
-b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1zaXplOjE0cHgi
-PjxiciBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZx
-dW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYs
-TWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250
-LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJ
-IEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij5UUE0gRUsgQ2Vy
-dGlmaWNhdGUgUm9vdC1DQSBWZXJpZmljYXRpb246IFBhc3M8L3NwYW4+PGJyIHN0eWxlPSJjb2xv
-cjpyZ2IoMCwwLDApO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkmcXVv
-dDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1zaXpl
-OjE0cHgiPjxiciBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lz
-dGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMt
-c2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDAsMCww
-KTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1Nl
-Z29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij5DbGVh
-ciBUUE0gU3RhdGU6IFBhc3M8L3NwYW4+PGJyIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO2ZvbnQt
-ZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkg
-RW1vamkmcXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1zaXplOjE0cHgiPjxiciBzdHlsZT0i
-Y29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJ
-JnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQt
-c2l6ZToxNHB4Ij48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBw
-bGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7
-LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij5DcmVhdGVkIEVLIFByaW1hcnkgb2Jq
-ZWN0OiBQYXNzPC9zcGFuPjxiciBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTot
-YXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1
-b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij48c3BhbiBzdHlsZT0iY29sb3I6
-cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7
-LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZTox
-NHB4Ij4jIyMjI0hhbmRsZSAweDQxODM2ODwvc3Bhbj48YnIgc3R5bGU9ImNvbG9yOnJnYigwLDAs
-MCk7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtT
-ZWdvZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+PGJy
-IHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7
-U2Vnb2UgVUkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDssc2Fucy1zZXJpZixNZWly
-eW87Zm9udC1zaXplOjE0cHgiPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtZmFt
-aWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1v
-amkmcXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1zaXplOjE0cHgiPkNyZWF0ZSBBdHRlc3Rh
-dGlvbiBLZXk6IFBhc3M8L3NwYW4+PGJyIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtZmFt
-aWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1v
-amkmcXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1zaXplOjE0cHgiPjxzcGFuIHN0eWxlPSJj
-b2xvcjpyZ2IoMCwwLDApO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkm
-cXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1z
-aXplOjE0cHgiPiMjIyMjQWtfSGFuZGxlIDB4NDE4MzZiPC9zcGFuPjxiciBzdHlsZT0iY29sb3I6
-cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7
-LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZTox
-NHB4Ij48YnIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3Rl
-bSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNl
-cmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7
-Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtTZWdv
-ZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+T3JpZ2lu
-YWwgQ3JlZGVudGlhbD0mcXVvdDtkZWFkYmVlZmRlYWRiZWVmZGVhZCZxdW90Ozwvc3Bhbj48YnIg
-c3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtT
-ZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5
-bztmb250LXNpemU6MTRweCI+PGJyIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtZmFtaWx5
-Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkmcXVvdDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkm
-cXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1zaXplOjE0cHgiPjxzcGFuIHN0eWxlPSJjb2xv
-cjpyZ2IoMCwwLDApO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7U2Vnb2UgVUkmcXVv
-dDssJnF1b3Q7U2Vnb2UgVUkgRW1vamkmcXVvdDssc2Fucy1zZXJpZixNZWlyeW87Zm9udC1zaXpl
-OjE0cHgiPk1ha2UgQ3JlZGVudGlhbDogUGFzczwvc3Bhbj48YnIgc3R5bGU9ImNvbG9yOnJnYigw
-LDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVv
-dDtTZWdvZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+
-PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSwm
-cXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNlcmlm
-LE1laXJ5bztmb250LXNpemU6MTRweCI+IyMjIyNFbmNyeXB0ZWQgQ3JlZGVudGlhbCBCbG9iPSZx
-dW90OzAwMjA1MDhlNDM5YmM2NTEyZDA0NGJiODczOWU4ZDYxYzhjZTM2NjRkMjVmMzU3MjM4OWI0
-NmM4Nzk3ZTU2MmE0NWM0MTI4NjRmMDIwYTdmMWJiY2FiN2EzNGYwJnF1b3Q7PC9zcGFuPjxiciBz
-dHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1Nl
-Z29lIFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlv
-O2ZvbnQtc2l6ZToxNHB4Ij48YnIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6
-LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZx
-dW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+PHNwYW4gc3R5bGU9ImNvbG9y
-OnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90
-OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6
-MTRweCI+IyMjIyNFbmNyeXB0ZWQgU2VjcmV0PSZxdW90O2I3MDY4OWJiMGVkOWZhODMyNGNmYTAz
-ZDcyN2U2YzY3OTUwNjliNGYwOTQzMTA4NDA5Yjg5MDA5YjljYzc2Yzc2YmRkYjMxYTVjY2YzNGNm
-ZWJjNWQzZmU3MTU4OTliYjcyNWE4YTNjOGZlNGE2MDQ2MjMzODY5MTIzZjNlOTc4MDUxYWVjZTBk
-N2FmMGFkNmY4NTE2NGEzMmZkMmM1YWQ3NTZlOGMzYjcyZjYzMTExMjZkZTc5YTMwYzBkNzJhYTBh
-NmYzZjQzN2Y2YmMwNzdjNDFkM2NjNjQ1MGM3MWU4MDNjYTYwNzRkMzRjZTNkZWJmNTExNGY0YmFj
-MmZkN2VlNmE4N2VmOWYwN2Q4MzA3OTQ3NzVkZGE0Zjc3ZTQ2MjBjYmFmOWFlYjMwMjA0MGVlMmE2
-NmEzNTJiOWZmZmFhNTQ0N2MwOWEyNDliYjIyZDlkOTg5YjdmMTQwNjYxMmE5MGI4ZDhiY2U2YmI5
-NDBmYmZkMWQ1MGYzMTM5ODQwM2EyNjQzYzczYmVjMzM2ZTZmY2NhNDZmMjlmOWI2YWE4N2ZkMTFk
-NTNlYzZmMTQ1ZDYxYjJhNjFkZmZjNzgzYWUyYjJjNjYxODQ0MzVkNjMzZDBiNWE0MjBlZmEwMTc0
-OGUzOWQ2ODdlMWViOWZjYzE3NTljMTg0OTcyNzc5YmZjJnF1b3Q7PC9zcGFuPjxiciBzdHlsZT0i
-Y29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJ
-JnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQt
-c2l6ZToxNHB4Ij48YnIgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxl
-LXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90Oyxz
-YW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigw
-LDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVv
-dDtTZWdvZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+
-QWN0aXZhdGluZyBDcmVkZW50aWFsOiBQYXNzPC9zcGFuPjxiciBzdHlsZT0iY29sb3I6cmdiKDAs
-MCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90
-O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij48
-c3BhbiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZx
-dW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYs
-TWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij4jIyMjI1JlY292ZXJlZCBDcmVkZW50aWFsPSZxdW90O2Rl
-YWRiZWVmZGVhZGJlZWZkZWFkJnF1b3Q7PC9zcGFuPjxiciBzdHlsZT0iY29sb3I6cmdiKDAsMCww
-KTtmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O1Nl
-Z29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYsTWVpcnlvO2ZvbnQtc2l6ZToxNHB4Ij48YnIg
-c3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtT
-ZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9qaSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5
-bztmb250LXNpemU6MTRweCI+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1p
-bHk6LWFwcGxlLXN5c3RlbSwmcXVvdDtTZWdvZSBVSSZxdW90OywmcXVvdDtTZWdvZSBVSSBFbW9q
-aSZxdW90OyxzYW5zLXNlcmlmLE1laXJ5bztmb250LXNpemU6MTRweCI+W3Jvb3RdIzwvc3Bhbj48
-YnI+PGJyPjwvZGl2PjwvZGl2PjwvZGl2Pjxicj48ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGRp
-diBkaXI9Imx0ciIgY2xhc3M9ImdtYWlsX2F0dHIiPk9uIFdlZCwgQXByIDgsIDIwMjAgYXQgNzow
-MiBQTSBSYWh1bCBIYXJkaWthciAmbHQ7PGEgaHJlZj0ibWFpbHRvOnJhaHVsaGFyZGlrYXJAZ21h
-aWwuY29tIj5yYWh1bGhhcmRpa2FyQGdtYWlsLmNvbTwvYT4mZ3Q7IHdyb3RlOjxicj48L2Rpdj48
-YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAwcHgg
-MC44ZXg7Ym9yZGVyLWxlZnQtd2lkdGg6MXB4O2JvcmRlci1sZWZ0LXN0eWxlOnNvbGlkO2JvcmRl
-ci1sZWZ0LWNvbG9yOnJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+PGRpdiBkaXI9
-Imx0ciI+VGhhbmtzIGd1eXMsIEkmIzM5O2xsIHRyeSB0aGlzIGJ1dCDCoGkgYWxzbyB3YW50ZWQg
-dG8ga25vdyBpZsKgdGhlcmUgaXMgYSB3YXkgdG8ga25vdyBpZiB0aGUgVFBNIHN0aWxsIGhhcyB0
-aGUgRUsgYW5kIEFLIGtleXMgbG9hZGVkPyBJIGhhdmUgdGhlIEVLIGhhbmRsZSBhbmQgQUsgaGFu
-ZGxlIChub3QgbWFkZSBpdCBwZXJzaXN0ZW50KSBidXQgSSB3YW50IHRvIG1ha2Ugc3VyZSBpdCYj
-Mzk7cyBwcmVzZW50IGFzIHRoZXNlIGFyZSBuZWNlc3NhcnkgZm9yIEFjdGl2YXRlQ3JlZGVudGlh
-bCB0byBzdWNjZWVkwqA8ZGl2PkVTeXNfQWN0aXZhdGVDcmVkZW50aWFsIGNvbXBsYWluaW5nIGFi
-b3V0IHNlY3JldCBwYXJhbWV0ZXIgZG9lc24mIzM5O3QgbWFrZSBzZW5zZSB0byBtZSwgSSB0ZXN0
-ZWQgb24gc2VydmVyIHNpZGUsIGFrX25hbWUgaXMgc2FtZSBhcyB0aGF0IHNlbnQgYW5kIHNvIGlz
-IEVLX1BVQiBvYmplY3QgYXMgd2VsbCBhcyDCoEVLX0NlcnQgaW4gbnZyYW0sIEkgY2FsbCB0aGUg
-c2FtZSBleHRlcm5hbF9tYWtlY3JlZGVudGlhbCBjYWxsIHRoYXQmIzM5O3MgaW4gdGhlIEdpdEh1
-YiB0byBjcmVhdGUgc2VjcmV0IGFuZCBtYWRlIHN1cmUgc2VjcmV0LGNyZWRibG9iIG1hdGNoZXMg
-b24gdGhlIGNsaWVudCBzaWRlIHdoZW4gcmVjZWl2ZWQgZnJvbSBzZXJ2ZXIuPC9kaXY+PGRpdj48
-YnI+PC9kaXY+PGRpdj5UaGFua3MsPC9kaXY+PGRpdj5SYWh1bDwvZGl2PjwvZGl2Pjxicj48ZGl2
-IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGRpdiBkaXI9Imx0ciIgY2xhc3M9ImdtYWlsX2F0dHIiPk9u
-IFR1ZSwgTWFyIDE3LCAyMDIwIGF0IDY6MTkgQU0gSW1yYW4gRGVzYWkgJmx0OzxhIGhyZWY9Im1h
-aWx0bzppbXJhbi5kZXNhaUBpbnRlbC5jb20iIHRhcmdldD0iX2JsYW5rIj5pbXJhbi5kZXNhaUBp
-bnRlbC5jb208L2E+Jmd0OyB3cm90ZTo8YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWls
-X3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0LXdpZHRo
-OjFweDtib3JkZXItbGVmdC1zdHlsZTpzb2xpZDtib3JkZXItbGVmdC1jb2xvcjpyZ2IoMjA0LDIw
-NCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPlNldCB0aGlzIHVwIHdpdGggYWxsIGhhbmRsZXMgaW4g
-dXNlIG1hZGUgcGVyc2lzdGVudC4gSWYgeW91IHN0aWxsIHNlZSBpc3N1ZXMsIGdkYi1icmVhayBv
-ciB0dXJuIG9uIGRlYnVnIGxvZ2dpbmcgYXQgdGhlIEVzeXMgY2FsbCBhbmQgY29tcGFyZSB0aGUg
-ZnVuY3Rpb24gYXJndW1lbnRzLjxicj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX188YnI+CnRwbTIgbWFpbGluZyBsaXN0IC0tIDxhIGhyZWY9Im1haWx0bzp0
-cG0yQGxpc3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPnRwbTJAbGlzdHMuMDEub3JnPC9hPjxi
-cj4KVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0byA8YSBocmVmPSJtYWlsdG86dHBtMi1s
-ZWF2ZUBsaXN0cy4wMS5vcmciIHRhcmdldD0iX2JsYW5rIj50cG0yLWxlYXZlQGxpc3RzLjAxLm9y
-ZzwvYT48YnI+CiUod2ViX3BhZ2VfdXJsKXNsaXN0aW5mbyUoY2dpZXh0KXMvJShfaW50ZXJuYWxf
-bmFtZSlzPGJyPgo8L2Jsb2NrcXVvdGU+PC9kaXY+CjwvYmxvY2txdW90ZT48L2Rpdj4K
+> 	On Tue, Mar 17, 2020 at 6:19 AM Imran Desai <imran.desai(a)intel.com
+> <mailto:imran.desai(a)intel.com> > wrote:
+> =
 
---===============1319337203525178673==--
+> =
+
+> 		Set this up with all handles in use made persistent. If you still see
+> issues, gdb-break or turn on debug logging at the Esys call and compare t=
+he
+> function arguments.
+> 		_______________________________________________
+> 		tpm2 mailing list -- tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> 		To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> <mailto:tpm2-leave(a)lists.01.org>
+> 		%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+> =
+
+
+
+--===============8020681730369299182==--
 
