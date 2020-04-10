@@ -1,370 +1,255 @@
-Content-Type: multipart/mixed; boundary="===============6924331008128501491=="
+Content-Type: multipart/mixed; boundary="===============7327554661995157240=="
 MIME-Version: 1.0
-From: Rahul Hardikar <rahulhardikar at gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: ESys_ActivateCredential
-Date: Thu, 09 Apr 2020 12:50:45 -0700
-Message-ID: <CAP3jAwQ7FtfMGfonMxxTVi7Ruo-LJQ9wOpGKuouCO4-4gOPscg@mail.gmail.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649EBBEFC@ORSMSX101.amr.corp.intel.com
+Date: Fri, 10 Apr 2020 15:16:29 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EBC1A8@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAP3jAwQ7FtfMGfonMxxTVi7Ruo-LJQ9wOpGKuouCO4-4gOPscg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6924331008128501491==
+--===============7327554661995157240==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks Bill. I use this
-Esys_Initialize( &ectx, NULL, NULL);
-so i'm assuming it would take the default  libtss2-tcti-tabrmd.so.0.
-
-If I need to debug Esys_ActivateCredential more, how can I do it, these
-APIs are no more standalone, I have integrated it in a bigger code base and
-added the esys-tss2 and other libs in my poky build, so now it runs as
-different process that invokes this function, I can gdb into the process
-but I can't seem to gdb into Esys_Activate..( )
-
-Thanks,
-Rahul
 
 
-On Thu, Apr 9, 2020 at 10:23 AM Roberts, William C <
-william.c.roberts(a)intel.com> wrote:
+> -----Original Message-----
+> From: Rahul Hardikar [mailto:rahulhardikar(a)gmail.com]
+> Sent: Thursday, April 9, 2020 2:51 PM
+> To: Roberts, William C <william.c.roberts(a)intel.com>
+> Cc: Desai, Imran <imran.desai(a)intel.com>; tpm2(a)lists.01.org
+> Subject: Re: [tpm2] Re: ESys_ActivateCredential
+> =
 
-> > -----Original Message-----
-> > From: Rahul Hardikar [mailto:rahulhardikar(a)gmail.com]
-> > Sent: Thursday, April 9, 2020 11:18 AM
-> > To: Desai, Imran <imran.desai(a)intel.com>
-> > Cc: tpm2(a)lists.01.org
-> > Subject: [tpm2] Re: ESys_ActivateCredential
-> >
-> > How do I know if  RM is being used?
->
->
-> If you set the tcti to the device tcti, it will open /dev/tpm0 by default.
-> And that wont
-> Be an RM. You can also give it an option. Esys_Initialize() takes a tcti
-> as an option,
-> NULL will cause it to use the default search behavior of the Tss2_TctiLdr,
+> Thanks Bill. I use this
+> Esys_Initialize( &ectx, NULL, NULL);
+> =
+
+> so i'm assuming it would take the default  libtss2-tcti-tabrmd.so.0.
+
+This should do it for you:
+TSS2_RC
+Tss2_TctiLdr_Initialize (const char *nameConf,
+                         TSS2_TCTI_CONTEXT **context);
+
+Set nameConf to the string "tabrmd", that should give you a tcti pointer yo=
+u can
+pass wot Esys_Initialize()
+
+> =
+
+> =
+
+> If I need to debug Esys_ActivateCredential more, how can I do it, these A=
+PIs are
+> no more standalone, I have integrated it in a bigger code base and added =
+the
+> esys-tss2 and other libs in my poky build, so now it runs as different pr=
+ocess that
+> invokes this function, I can gdb into the process but I can't seem to gdb=
+ into
+> Esys_Activate..( )
+
+Did you build tpm2-tss with debug symbols?
+Add --enable-debug
+
+> =
+
+> =
+
+> Thanks,
+> Rahul
+> =
+
+> =
+
+> =
+
+> =
+
+> On Thu, Apr 9, 2020 at 10:23 AM Roberts, William C <william.c.roberts(a)i=
+ntel.com
+> <mailto:william.c.roberts(a)intel.com> > wrote:
+> =
+
+> =
+
+> 	> -----Original Message-----
+> 	> From: Rahul Hardikar [mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com> ]
+> 	> Sent: Thursday, April 9, 2020 11:18 AM
+> 	> To: Desai, Imran <imran.desai(a)intel.com
+> <mailto:imran.desai(a)intel.com> >
+> 	> Cc: tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> 	> Subject: [tpm2] Re: ESys_ActivateCredential
+> 	>
+> 	> How do I know if  RM is being used?
+> =
+
+> =
+
+> 	If you set the tcti to the device tcti, it will open /dev/tpm0 by defaul=
+t. And
+> that wont
+> 	Be an RM. You can also give it an option. Esys_Initialize() takes a tcti=
+ as an
+> option,
+> 	NULL will cause it to use the default search behavior of the Tss2_TctiLd=
+r,
 > see:
->
->
-> https://github.com/tpm2-software/tpm2-tss/blob/master/man/Tss2_TctiLdr_In=
-itialize.3.in
->
-> https://github.com/tpm2-software/tpm2-tss/blob/master/man/Tss2_Tcti_Devic=
-e_Init.3.in
->
-> https://github.com/tpm2-software/tpm2-tss/blob/master/man/tss2-tcti-devic=
-e.7.in
->
-> You can use man locally if you prefer as well:
-> man 3 Tss2_TctiLdr_Initialize
-> man 7 tss2-tcti-device
-> man 3 Tss2_Tcti_Device_Init
->
-> Note that
-> https://github.com/tpm2-software/tpm2-tss/blob/master/man/Tss2_Tcti_Devic=
-e_Init.3.in
-> Has sample code in it.
->
-> If you're using the tools, it supports explicitly choosing the TCTI:
-> https://github.com/tpm2-software/tpm2-tools/blob/master/man/common/tcti.md
->
-> Also note that the /dev/tpmrm0 (Notice the RM) is an in-kernel resource
+> =
+
+> 	https://github.com/tpm2-software/tpm2-
+> tss/blob/master/man/Tss2_TctiLdr_Initialize.3.in
+> 	https://github.com/tpm2-software/tpm2-
+> tss/blob/master/man/Tss2_Tcti_Device_Init.3.in
+> 	https://github.com/tpm2-software/tpm2-tss/blob/master/man/tss2-
+> tcti-device.7.in
+> =
+
+> 	You can use man locally if you prefer as well:
+> 	man 3 Tss2_TctiLdr_Initialize
+> 	man 7 tss2-tcti-device
+> 	man 3 Tss2_Tcti_Device_Init
+> =
+
+> 	Note that https://github.com/tpm2-software/tpm2-
+> tss/blob/master/man/Tss2_Tcti_Device_Init.3.in
+> 	Has sample code in it.
+> =
+
+> 	If you're using the tools, it supports explicitly choosing the TCTI:
+> 	https://github.com/tpm2-software/tpm2-
+> tools/blob/master/man/common/tcti.md
+> =
+
+> 	Also note that the /dev/tpmrm0 (Notice the RM) is an in-kernel resource
 > manager.
->
->
-> > When I do ESys_Initialize, I see these WARNINGs, wondering if it's okay
+> =
+
+> =
+
+> 	> When I do ESys_Initialize, I see these WARNINGs, wondering if it's okay
 > for multi-
-> > thread
-> > WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file()
+> 	> thread
+> 	> WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file()
 > Could not
-> > load TCTI file: libtss2-tcti-default.so <http://libtss2-tcti-default.so=
-/>
+> 	> load TCTI file: libtss2-tcti-default.so <http://libtss2-tcti-default.s=
+o/>
 > libtss2-tcti-
-> > default.so <http://libtss2-tcti-default.so/>
-> > WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file()
+> 	> default.so <http://libtss2-tcti-default.so/>
+> 	> WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file()
 > Could not
-> > load TCTI file: libtss2-tcti-tabrmd.so <http://libtss2-tcti-tabrmd.so/>
-> >
-> > In my single threaded process, everything works so smoothly [root]# ./t=
-pm
-> > WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file()
+> 	> load TCTI file: libtss2-tcti-tabrmd.so <http://libtss2-tcti-tabrmd.so/>
+> 	>
+> 	> In my single threaded process, everything works so smoothly [root]#
+> ./tpm
+> 	> WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file()
 > Could not
-> > load TCTI file: libtss2-tcti-default.so <http://libtss2-tcti-default.so/
-> >
-> > WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file()
+> 	> load TCTI file: libtss2-tcti-default.so <http://libtss2-tcti-default.s=
+o/>
+> 	> WARNING:esys:src/tss2-esys/esys_tcti_default.c:137:tcti_from_file()
 > Could not
-> > load TCTI file: libtss2-tcti-tabrmd.so <http://libtss2-tcti-tabrmd.so/>
+> 	> load TCTI file: libtss2-tcti-tabrmd.so <http://libtss2-tcti-tabrmd.so/>
 > ESYS
-> > Initialization: Pass
-> >
-> > Read TPM EK Certificate: Pass
-> >
-> > TPM EK Certificate Root-CA Verification: Pass
-> >
-> > Clear TPM State: Pass
-> >
-> > Created EK Primary object: Pass
-> > #####Handle 0x418368
-> >
-> > Create Attestation Key: Pass
-> > #####Ak_Handle 0x41836b
-> >
-> > Original Credential=3D"deadbeefdeadbeefdead"
-> >
-> > Make Credential: Pass
-> > #####Encrypted Credential
-> > Blob=3D"0020508e439bc6512d044bb8739e8d61c8ce3664d25f3572389b46c8797e562a
-> > 45c412864f020a7f1bbcab7a34f0"
-> >
-> > #####Encrypted
-> > Secret=3D"b70689bb0ed9fa8324cfa03d727e6c6795069b4f0943108409b89009b9cc7=
-6c
-> > 76bddb31a5ccf34cfebc5d3fe715899bb725a8a3c8fe4a6046233869123f3e978051aec
-> > e0d7af0ad6f85164a32fd2c5ad756e8c3b72f6311126de79a30c0d72aa0a6f3f437f6bc
-> > 077c41d3cc6450c71e803ca6074d34ce3debf5114f4bac2fd7ee6a87ef9f07d83079477
-> > 5dda4f77e4620cbaf9aeb302040ee2a66a352b9fffaa5447c09a249bb22d9d989b7f14
-> > 06612a90b8d8bce6bb940fbfd1d50f31398403a2643c73bec336e6fcca46f29f9b6aa87
-> > fd11d53ec6f145d61b2a61dffc783ae2b2c66184435d633d0b5a420efa01748e39d687
-> > e1eb9fcc1759c184972779bfc"
-> >
-> > Activating Credential: Pass
-> > #####Recovered Credential=3D"deadbeefdeadbeefdead"
-> >
-> > [root]#
-> >
-> >
-> >
-> > On Wed, Apr 8, 2020 at 7:02 PM Rahul Hardikar <rahulhardikar(a)gmail.com
-> > <mailto:rahulhardikar(a)gmail.com> > wrote:
-> >
-> >
-> >       Thanks guys, I'll try this but  i also wanted to know if there is
-> a way to
-> > know if the TPM still has the EK and AK keys loaded? I have the EK
+> 	> Initialization: Pass
+> 	>
+> 	> Read TPM EK Certificate: Pass
+> 	>
+> 	> TPM EK Certificate Root-CA Verification: Pass
+> 	>
+> 	> Clear TPM State: Pass
+> 	>
+> 	> Created EK Primary object: Pass
+> 	> #####Handle 0x418368
+> 	>
+> 	> Create Attestation Key: Pass
+> 	> #####Ak_Handle 0x41836b
+> 	>
+> 	> Original Credential=3D"deadbeefdeadbeefdead"
+> 	>
+> 	> Make Credential: Pass
+> 	> #####Encrypted Credential
+> 	>
+> Blob=3D"0020508e439bc6512d044bb8739e8d61c8ce3664d25f3572389b46c8797e562a
+> 	> 45c412864f020a7f1bbcab7a34f0"
+> 	>
+> 	> #####Encrypted
+> 	>
+> Secret=3D"b70689bb0ed9fa8324cfa03d727e6c6795069b4f0943108409b89009b9cc76c
+> 	>
+> 76bddb31a5ccf34cfebc5d3fe715899bb725a8a3c8fe4a6046233869123f3e978051aec
+> 	>
+> e0d7af0ad6f85164a32fd2c5ad756e8c3b72f6311126de79a30c0d72aa0a6f3f437f6bc
+> 	>
+> 077c41d3cc6450c71e803ca6074d34ce3debf5114f4bac2fd7ee6a87ef9f07d83079477
+> 	>
+> 5dda4f77e4620cbaf9aeb302040ee2a66a352b9fffaa5447c09a249bb22d9d989b7f14
+> 	>
+> 06612a90b8d8bce6bb940fbfd1d50f31398403a2643c73bec336e6fcca46f29f9b6aa87
+> 	>
+> fd11d53ec6f145d61b2a61dffc783ae2b2c66184435d633d0b5a420efa01748e39d687
+> 	> e1eb9fcc1759c184972779bfc"
+> 	>
+> 	> Activating Credential: Pass
+> 	> #####Recovered Credential=3D"deadbeefdeadbeefdead"
+> 	>
+> 	> [root]#
+> 	>
+> 	>
+> 	>
+> 	> On Wed, Apr 8, 2020 at 7:02 PM Rahul Hardikar
+> <rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com>
+> 	> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com> >
+> > wrote:
+> 	>
+> 	>
+> 	>       Thanks guys, I'll try this but  i also wanted to know if there i=
+s a way to
+> 	> know if the TPM still has the EK and AK keys loaded? I have the EK
 > handle and AK
-> > handle (not made it persistent) but I want to make sure it's present as
+> 	> handle (not made it persistent) but I want to make sure it's present as
 > these are
-> > necessary for ActivateCredential to succeed
-> >       ESys_ActivateCredential complaining about secret parameter doesn't
-> > make sense to me, I tested on server side, ak_name is same as that sent
-> and so is
-> > EK_PUB object as well as  EK_Cert in nvram, I call the same
-> > external_makecredential call that's in the GitHub to create secret and
+> 	> necessary for ActivateCredential to succeed
+> 	>       ESys_ActivateCredential complaining about secret parameter
+> doesn't
+> 	> make sense to me, I tested on server side, ak_name is same as that
+> sent and so is
+> 	> EK_PUB object as well as  EK_Cert in nvram, I call the same
+> 	> external_makecredential call that's in the GitHub to create secret and
 > made sure
-> > secret,credblob matches on the client side when received from server.
-> >
-> >       Thanks,
-> >       Rahul
-> >
-> >       On Tue, Mar 17, 2020 at 6:19 AM Imran Desai <imran.desai(a)intel.=
-com
-> > <mailto:imran.desai(a)intel.com> > wrote:
-> >
-> >
-> >               Set this up with all handles in use made persistent. If
-> you still see
-> > issues, gdb-break or turn on debug logging at the Esys call and compare
+> 	> secret,credblob matches on the client side when received from server.
+> 	>
+> 	>       Thanks,
+> 	>       Rahul
+> 	>
+> 	>       On Tue, Mar 17, 2020 at 6:19 AM Imran Desai
+> <imran.desai(a)intel.com <mailto:imran.desai(a)intel.com>
+> 	> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> > >
+> wrote:
+> 	>
+> 	>
+> 	>               Set this up with all handles in use made persistent. If =
+you still see
+> 	> issues, gdb-break or turn on debug logging at the Esys call and compare
 > the
-> > function arguments.
-> >               _______________________________________________
-> >               tpm2 mailing list -- tpm2(a)lists.01.org <mailto:
-> tpm2(a)lists.01.org>
-> >               To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> > <mailto:tpm2-leave(a)lists.01.org>
-> >               %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-> >
->
->
+> 	> function arguments.
+> 	>               _______________________________________________
+> 	>               tpm2 mailing list -- tpm2(a)lists.01.org <mailto:tpm2(a)=
+lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> >
+> 	>               To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> <mailto:tpm2-leave(a)lists.01.org>
+> 	> <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-leave(a)lists.01.org> >
+> 	>               %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+> 	>
+> =
 
---===============6924331008128501491==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+> =
 
-PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9Imx0
-ciI+VGhhbmtzIEJpbGwuIEkgdXNlIHRoaXPCoDxkaXY+RXN5c19Jbml0aWFsaXplKCAmYW1wO2Vj
-dHgsIE5VTEwsIE5VTEwpOzxicj48L2Rpdj48ZGl2PnNvIGkmIzM5O20gYXNzdW1pbmcgaXQgd291
-bGQgdGFrZSB0aGUgZGVmYXVsdCDCoDxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO2ZvbnQt
-ZmFtaWx5Oi13ZWJraXQtc3RhbmRhcmQ7Zm9udC1zaXplOm1lZGl1bSI+bGlidHNzMi10Y3RpLXRh
-YnJtZC5zby4wLjwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDAp
-O2ZvbnQtZmFtaWx5Oi13ZWJraXQtc3RhbmRhcmQ7Zm9udC1zaXplOm1lZGl1bSI+PGJyPjwvc3Bh
-bj48L2Rpdj48ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtZmFtaWx5Oi13
-ZWJraXQtc3RhbmRhcmQ7Zm9udC1zaXplOm1lZGl1bSI+SWYgSSBuZWVkIHRvIGRlYnVnIEVzPC9z
-cGFuPjxmb250IGNvbG9yPSIjMDAwMDAwIiBmYWNlPSItd2Via2l0LXN0YW5kYXJkIiBzaXplPSIz
-Ij55c19BY3RpdmF0ZUNyZWRlbnRpYWwgbW9yZSwgaG93wqBjYW4gSSBkbyBpdCwgdGhlc2UgQVBJ
-cyBhcmUgbm8gbW9yZSBzdGFuZGFsb25lLCBJIGhhdmXCoGludGVncmF0ZWQgaXQgaW4gYSBiaWdn
-ZXIgY29kZSBiYXNlIGFuZCBhZGRlZCB0aGUgZXN5cy10c3MyIGFuZCBvdGhlciBsaWJzIGluIG15
-IHBva3kgYnVpbGQsIHNvIG5vdyBpdCBydW5zIGFzIGRpZmZlcmVudCBwcm9jZXNzIHRoYXQgaW52
-b2tlcyB0aGlzIGZ1bmN0aW9uLCBJIGNhbiBnZGIgaW50byB0aGUgcHJvY2VzcyBidXQgScKgPHNw
-YW4gc3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7Ij5jYW4mIzM5O3Qgc2VlbSB0byBn
-ZGIgaW50byBFc3lzX0FjdGl2YXRlLi4oICnCoDwvc3Bhbj48L2ZvbnQ+PC9kaXY+PGRpdj48Zm9u
-dCBjb2xvcj0iIzAwMDAwMCIgZmFjZT0iLXdlYmtpdC1zdGFuZGFyZCIgc2l6ZT0iMyI+PHNwYW4g
-c3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7Ij48YnI+PC9zcGFuPjwvZm9udD48L2Rp
-dj48ZGl2Pjxmb250IGNvbG9yPSIjMDAwMDAwIiBmYWNlPSItd2Via2l0LXN0YW5kYXJkIiBzaXpl
-PSIzIj48c3BhbiBzdHlsZT0iY2FyZXQtY29sb3I6IHJnYigwLCAwLCAwKTsiPlRoYW5rcyw8L3Nw
-YW4+PC9mb250PjwvZGl2PjxkaXY+PGZvbnQgY29sb3I9IiMwMDAwMDAiIGZhY2U9Ii13ZWJraXQt
-c3RhbmRhcmQiIHNpemU9IjMiPjxzcGFuIHN0eWxlPSJjYXJldC1jb2xvcjogcmdiKDAsIDAsIDAp
-OyI+UmFodWw8L3NwYW4+PC9mb250PjwvZGl2Pjx0YWJsZSBjbGFzcz0iZ21haWwtaGlnaGxpZ2h0
-IGdtYWlsLXRhYi1zaXplIGdtYWlsLWpzLWZpbGUtbGluZS1jb250YWluZXIiIHN0eWxlPSJib3gt
-c2l6aW5nOmJvcmRlci1ib3g7Ym9yZGVyLXNwYWNpbmc6MHB4O2JvcmRlci1jb2xsYXBzZTpjb2xs
-YXBzZTtjb2xvcjpyZ2IoMzYsNDEsNDYpO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtN
-YWNTeXN0ZW1Gb250LCZxdW90O1NlZ29lIFVJJnF1b3Q7LEhlbHZldGljYSxBcmlhbCxzYW5zLXNl
-cmlmLCZxdW90O0FwcGxlIENvbG9yIEVtb2ppJnF1b3Q7LCZxdW90O1NlZ29lIFVJIEVtb2ppJnF1
-b3Q7O2ZvbnQtc2l6ZToxNHB4Ij48dGJvZHkgc3R5bGU9ImJveC1zaXppbmc6Ym9yZGVyLWJveCI+
-PHRyIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3giPjwvdHI+PHRyIHN0eWxlPSJib3gtc2l6
-aW5nOmJvcmRlci1ib3giPjx0ZCBpZD0iZ21haWwtTEM2MyIgY2xhc3M9ImdtYWlsLWJsb2ItY29k
-ZSBnbWFpbC1ibG9iLWNvZGUtaW5uZXIgZ21haWwtanMtZmlsZS1saW5lIiBzdHlsZT0iYm94LXNp
-emluZzpib3JkZXItYm94O3BhZGRpbmc6MHB4IDEwcHg7bGluZS1oZWlnaHQ6MjBweDt2ZXJ0aWNh
-bC1hbGlnbjp0b3A7b3ZlcmZsb3c6dmlzaWJsZTtmb250LWZhbWlseTpTRk1vbm8tUmVndWxhcixD
-b25zb2xhcywmcXVvdDtMaWJlcmF0aW9uIE1vbm8mcXVvdDssTWVubG8sbW9ub3NwYWNlO2ZvbnQt
-c2l6ZToxMnB4O3dvcmQtd3JhcDpub3JtYWw7d2hpdGUtc3BhY2U6cHJlIj48L3RkPjwvdHI+PHRy
-IHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3giPjx0ZCBpZD0iZ21haWwtTDY0IiBjbGFzcz0i
-Z21haWwtYmxvYi1udW0gZ21haWwtanMtbGluZS1udW1iZXIiIHN0eWxlPSJib3gtc2l6aW5nOmJv
-cmRlci1ib3g7cGFkZGluZzowcHggMTBweDt3aWR0aDo1MHB4O21pbi13aWR0aDo1MHB4O2ZvbnQt
-ZmFtaWx5OlNGTW9uby1SZWd1bGFyLENvbnNvbGFzLCZxdW90O0xpYmVyYXRpb24gTW9ubyZxdW90
-OyxNZW5sbyxtb25vc3BhY2U7Zm9udC1zaXplOjEycHg7bGluZS1oZWlnaHQ6MjBweDtjb2xvcjpy
-Z2JhKDI3LDMxLDM1LDAuMjk4MDM5KTt0ZXh0LWFsaWduOnJpZ2h0O3doaXRlLXNwYWNlOm5vd3Jh
-cDt2ZXJ0aWNhbC1hbGlnbjp0b3AiPjwvdGQ+PC90cj48L3Rib2R5PjwvdGFibGU+PGJyPjwvZGl2
-PjwvZGl2PjwvZGl2PjwvZGl2Pjxicj48ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+PGRpdiBkaXI9
-Imx0ciIgY2xhc3M9ImdtYWlsX2F0dHIiPk9uIFRodSwgQXByIDksIDIwMjAgYXQgMTA6MjMgQU0g
-Um9iZXJ0cywgV2lsbGlhbSBDICZsdDs8YSBocmVmPSJtYWlsdG86d2lsbGlhbS5jLnJvYmVydHNA
-aW50ZWwuY29tIj53aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5jb208L2E+Jmd0OyB3cm90ZTo8YnI+
-PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAw
-cHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0LXdpZHRoOjFweDtib3JkZXItbGVmdC1zdHlsZTpzb2xp
-ZDtib3JkZXItbGVmdC1jb2xvcjpyZ2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPiZn
-dDsgLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS08YnI+CiZndDsgRnJvbTogUmFodWwgSGFyZGlr
-YXIgW21haWx0bzo8YSBocmVmPSJtYWlsdG86cmFodWxoYXJkaWthckBnbWFpbC5jb20iIHRhcmdl
-dD0iX2JsYW5rIj5yYWh1bGhhcmRpa2FyQGdtYWlsLmNvbTwvYT5dPGJyPgomZ3Q7IFNlbnQ6IFRo
-dXJzZGF5LCBBcHJpbCA5LCAyMDIwIDExOjE4IEFNPGJyPgomZ3Q7IFRvOiBEZXNhaSwgSW1yYW4g
-Jmx0OzxhIGhyZWY9Im1haWx0bzppbXJhbi5kZXNhaUBpbnRlbC5jb20iIHRhcmdldD0iX2JsYW5r
-Ij5pbXJhbi5kZXNhaUBpbnRlbC5jb208L2E+Jmd0Ozxicj4KJmd0OyBDYzogPGEgaHJlZj0ibWFp
-bHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayI+dHBtMkBsaXN0cy4wMS5vcmc8
-L2E+PGJyPgomZ3Q7IFN1YmplY3Q6IFt0cG0yXSBSZTogRVN5c19BY3RpdmF0ZUNyZWRlbnRpYWw8
-YnI+CiZndDsgPGJyPgomZ3Q7IEhvdyBkbyBJIGtub3cgaWbCoCBSTSBpcyBiZWluZyB1c2VkPzxi
-cj4KPGJyPgo8YnI+CklmIHlvdSBzZXQgdGhlIHRjdGkgdG8gdGhlIGRldmljZSB0Y3RpLCBpdCB3
-aWxsIG9wZW4gL2Rldi90cG0wIGJ5IGRlZmF1bHQuIEFuZCB0aGF0IHdvbnQ8YnI+CkJlIGFuIFJN
-LiBZb3UgY2FuIGFsc28gZ2l2ZSBpdCBhbiBvcHRpb24uIEVzeXNfSW5pdGlhbGl6ZSgpIHRha2Vz
-IGEgdGN0aSBhcyBhbiBvcHRpb24sPGJyPgpOVUxMIHdpbGwgY2F1c2UgaXQgdG8gdXNlIHRoZSBk
-ZWZhdWx0IHNlYXJjaCBiZWhhdmlvciBvZiB0aGUgVHNzMl9UY3RpTGRyLCBzZWU6PGJyPgo8YnI+
-CjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdHNzL2Jsb2Iv
-bWFzdGVyL21hbi9Uc3MyX1RjdGlMZHJfSW5pdGlhbGl6ZS4zLmluIiByZWw9Im5vcmVmZXJyZXIi
-IHRhcmdldD0iX2JsYW5rIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRz
-cy9ibG9iL21hc3Rlci9tYW4vVHNzMl9UY3RpTGRyX0luaXRpYWxpemUuMy5pbjwvYT48YnI+Cjxh
-IGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdHNzL2Jsb2IvbWFz
-dGVyL21hbi9Uc3MyX1RjdGlfRGV2aWNlX0luaXQuMy5pbiIgcmVsPSJub3JlZmVycmVyIiB0YXJn
-ZXQ9Il9ibGFuayI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3MvYmxv
-Yi9tYXN0ZXIvbWFuL1RzczJfVGN0aV9EZXZpY2VfSW5pdC4zLmluPC9hPjxicj4KPGEgaHJlZj0i
-aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3MvYmxvYi9tYXN0ZXIvbWFu
-L3RzczItdGN0aS1kZXZpY2UuNy5pbiIgcmVsPSJub3JlZmVycmVyIiB0YXJnZXQ9Il9ibGFuayI+
-aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3MvYmxvYi9tYXN0ZXIvbWFu
-L3RzczItdGN0aS1kZXZpY2UuNy5pbjwvYT48YnI+Cjxicj4KWW91IGNhbiB1c2UgbWFuIGxvY2Fs
-bHkgaWYgeW91IHByZWZlciBhcyB3ZWxsOjxicj4KbWFuIDMgVHNzMl9UY3RpTGRyX0luaXRpYWxp
-emU8YnI+Cm1hbiA3IHRzczItdGN0aS1kZXZpY2U8YnI+Cm1hbiAzIFRzczJfVGN0aV9EZXZpY2Vf
-SW5pdDxicj4KPGJyPgpOb3RlIHRoYXQgPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTIt
-c29mdHdhcmUvdHBtMi10c3MvYmxvYi9tYXN0ZXIvbWFuL1RzczJfVGN0aV9EZXZpY2VfSW5pdC4z
-LmluIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL2dpdGh1Yi5jb20v
-dHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9ibG9iL21hc3Rlci9tYW4vVHNzMl9UY3RpX0RldmljZV9J
-bml0LjMuaW48L2E+PGJyPgpIYXMgc2FtcGxlIGNvZGUgaW4gaXQuPGJyPgo8YnI+CklmIHlvdSYj
-Mzk7cmUgdXNpbmcgdGhlIHRvb2xzLCBpdCBzdXBwb3J0cyBleHBsaWNpdGx5IGNob29zaW5nIHRo
-ZSBUQ1RJOjxicj4KPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBt
-Mi10b29scy9ibG9iL21hc3Rlci9tYW4vY29tbW9uL3RjdGkubWQiIHJlbD0ibm9yZWZlcnJlciIg
-dGFyZ2V0PSJfYmxhbmsiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdG9v
-bHMvYmxvYi9tYXN0ZXIvbWFuL2NvbW1vbi90Y3RpLm1kPC9hPjxicj4KPGJyPgpBbHNvIG5vdGUg
-dGhhdCB0aGUgL2Rldi90cG1ybTAgKE5vdGljZSB0aGUgUk0pIGlzIGFuIGluLWtlcm5lbCByZXNv
-dXJjZSBtYW5hZ2VyLjxicj4KPGJyPgo8YnI+CiZndDsgV2hlbiBJIGRvIEVTeXNfSW5pdGlhbGl6
-ZSwgSSBzZWUgdGhlc2UgV0FSTklOR3MsIHdvbmRlcmluZyBpZiBpdCYjMzk7cyBva2F5IGZvciBt
-dWx0aS08YnI+CiZndDsgdGhyZWFkPGJyPgomZ3Q7IFdBUk5JTkc6ZXN5czpzcmMvdHNzMi1lc3lz
-L2VzeXNfdGN0aV9kZWZhdWx0LmM6MTM3OnRjdGlfZnJvbV9maWxlKCkgQ291bGQgbm90PGJyPgom
-Z3Q7IGxvYWQgVENUSSBmaWxlOiBsaWJ0c3MyLXRjdGktZGVmYXVsdC5zbyAmbHQ7PGEgaHJlZj0i
-aHR0cDovL2xpYnRzczItdGN0aS1kZWZhdWx0LnNvLyIgcmVsPSJub3JlZmVycmVyIiB0YXJnZXQ9
-Il9ibGFuayI+aHR0cDovL2xpYnRzczItdGN0aS1kZWZhdWx0LnNvLzwvYT4mZ3Q7IGxpYnRzczIt
-dGN0aS08YnI+CiZndDsgZGVmYXVsdC5zbyAmbHQ7PGEgaHJlZj0iaHR0cDovL2xpYnRzczItdGN0
-aS1kZWZhdWx0LnNvLyIgcmVsPSJub3JlZmVycmVyIiB0YXJnZXQ9Il9ibGFuayI+aHR0cDovL2xp
-YnRzczItdGN0aS1kZWZhdWx0LnNvLzwvYT4mZ3Q7PGJyPgomZ3Q7IFdBUk5JTkc6ZXN5czpzcmMv
-dHNzMi1lc3lzL2VzeXNfdGN0aV9kZWZhdWx0LmM6MTM3OnRjdGlfZnJvbV9maWxlKCkgQ291bGQg
-bm90PGJyPgomZ3Q7IGxvYWQgVENUSSBmaWxlOiBsaWJ0c3MyLXRjdGktdGFicm1kLnNvICZsdDs8
-YSBocmVmPSJodHRwOi8vbGlidHNzMi10Y3RpLXRhYnJtZC5zby8iIHJlbD0ibm9yZWZlcnJlciIg
-dGFyZ2V0PSJfYmxhbmsiPmh0dHA6Ly9saWJ0c3MyLXRjdGktdGFicm1kLnNvLzwvYT4mZ3Q7PGJy
-PgomZ3Q7IDxicj4KJmd0OyBJbiBteSBzaW5nbGUgdGhyZWFkZWQgcHJvY2VzcywgZXZlcnl0aGlu
-ZyB3b3JrcyBzbyBzbW9vdGhseSBbcm9vdF0jIC4vdHBtPGJyPgomZ3Q7IFdBUk5JTkc6ZXN5czpz
-cmMvdHNzMi1lc3lzL2VzeXNfdGN0aV9kZWZhdWx0LmM6MTM3OnRjdGlfZnJvbV9maWxlKCkgQ291
-bGQgbm90PGJyPgomZ3Q7IGxvYWQgVENUSSBmaWxlOiBsaWJ0c3MyLXRjdGktZGVmYXVsdC5zbyAm
-bHQ7PGEgaHJlZj0iaHR0cDovL2xpYnRzczItdGN0aS1kZWZhdWx0LnNvLyIgcmVsPSJub3JlZmVy
-cmVyIiB0YXJnZXQ9Il9ibGFuayI+aHR0cDovL2xpYnRzczItdGN0aS1kZWZhdWx0LnNvLzwvYT4m
-Z3Q7PGJyPgomZ3Q7IFdBUk5JTkc6ZXN5czpzcmMvdHNzMi1lc3lzL2VzeXNfdGN0aV9kZWZhdWx0
-LmM6MTM3OnRjdGlfZnJvbV9maWxlKCkgQ291bGQgbm90PGJyPgomZ3Q7IGxvYWQgVENUSSBmaWxl
-OiBsaWJ0c3MyLXRjdGktdGFicm1kLnNvICZsdDs8YSBocmVmPSJodHRwOi8vbGlidHNzMi10Y3Rp
-LXRhYnJtZC5zby8iIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPmh0dHA6Ly9saWJ0
-c3MyLXRjdGktdGFicm1kLnNvLzwvYT4mZ3Q7IEVTWVM8YnI+CiZndDsgSW5pdGlhbGl6YXRpb246
-IFBhc3M8YnI+CiZndDsgPGJyPgomZ3Q7IFJlYWQgVFBNIEVLIENlcnRpZmljYXRlOiBQYXNzPGJy
-PgomZ3Q7IDxicj4KJmd0OyBUUE0gRUsgQ2VydGlmaWNhdGUgUm9vdC1DQSBWZXJpZmljYXRpb246
-IFBhc3M8YnI+CiZndDsgPGJyPgomZ3Q7IENsZWFyIFRQTSBTdGF0ZTogUGFzczxicj4KJmd0OyA8
-YnI+CiZndDsgQ3JlYXRlZCBFSyBQcmltYXJ5IG9iamVjdDogUGFzczxicj4KJmd0OyAjIyMjI0hh
-bmRsZSAweDQxODM2ODxicj4KJmd0OyA8YnI+CiZndDsgQ3JlYXRlIEF0dGVzdGF0aW9uIEtleTog
-UGFzczxicj4KJmd0OyAjIyMjI0FrX0hhbmRsZSAweDQxODM2Yjxicj4KJmd0OyA8YnI+CiZndDsg
-T3JpZ2luYWwgQ3JlZGVudGlhbD0mcXVvdDtkZWFkYmVlZmRlYWRiZWVmZGVhZCZxdW90Ozxicj4K
-Jmd0OyA8YnI+CiZndDsgTWFrZSBDcmVkZW50aWFsOiBQYXNzPGJyPgomZ3Q7ICMjIyMjRW5jcnlw
-dGVkIENyZWRlbnRpYWw8YnI+CiZndDsgQmxvYj0mcXVvdDswMDIwNTA4ZTQzOWJjNjUxMmQwNDRi
-Yjg3MzllOGQ2MWM4Y2UzNjY0ZDI1ZjM1NzIzODliNDZjODc5N2U1NjJhPGJyPgomZ3Q7IDQ1YzQx
-Mjg2NGYwMjBhN2YxYmJjYWI3YTM0ZjAmcXVvdDs8YnI+CiZndDsgPGJyPgomZ3Q7ICMjIyMjRW5j
-cnlwdGVkPGJyPgomZ3Q7IFNlY3JldD0mcXVvdDtiNzA2ODliYjBlZDlmYTgzMjRjZmEwM2Q3Mjdl
-NmM2Nzk1MDY5YjRmMDk0MzEwODQwOWI4OTAwOWI5Y2M3NmM8YnI+CiZndDsgNzZiZGRiMzFhNWNj
-ZjM0Y2ZlYmM1ZDNmZTcxNTg5OWJiNzI1YThhM2M4ZmU0YTYwNDYyMzM4NjkxMjNmM2U5NzgwNTFh
-ZWM8YnI+CiZndDsgZTBkN2FmMGFkNmY4NTE2NGEzMmZkMmM1YWQ3NTZlOGMzYjcyZjYzMTExMjZk
-ZTc5YTMwYzBkNzJhYTBhNmYzZjQzN2Y2YmM8YnI+CiZndDsgMDc3YzQxZDNjYzY0NTBjNzFlODAz
-Y2E2MDc0ZDM0Y2UzZGViZjUxMTRmNGJhYzJmZDdlZTZhODdlZjlmMDdkODMwNzk0Nzc8YnI+CiZn
-dDsgNWRkYTRmNzdlNDYyMGNiYWY5YWViMzAyMDQwZWUyYTY2YTM1MmI5ZmZmYWE1NDQ3YzA5YTI0
-OWJiMjJkOWQ5ODliN2YxNDxicj4KJmd0OyAwNjYxMmE5MGI4ZDhiY2U2YmI5NDBmYmZkMWQ1MGYz
-MTM5ODQwM2EyNjQzYzczYmVjMzM2ZTZmY2NhNDZmMjlmOWI2YWE4Nzxicj4KJmd0OyBmZDExZDUz
-ZWM2ZjE0NWQ2MWIyYTYxZGZmYzc4M2FlMmIyYzY2MTg0NDM1ZDYzM2QwYjVhNDIwZWZhMDE3NDhl
-MzlkNjg3PGJyPgomZ3Q7IGUxZWI5ZmNjMTc1OWMxODQ5NzI3NzliZmMmcXVvdDs8YnI+CiZndDsg
-PGJyPgomZ3Q7IEFjdGl2YXRpbmcgQ3JlZGVudGlhbDogUGFzczxicj4KJmd0OyAjIyMjI1JlY292
-ZXJlZCBDcmVkZW50aWFsPSZxdW90O2RlYWRiZWVmZGVhZGJlZWZkZWFkJnF1b3Q7PGJyPgomZ3Q7
-IDxicj4KJmd0OyBbcm9vdF0jPGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDsgPGJyPgomZ3Q7
-IE9uIFdlZCwgQXByIDgsIDIwMjAgYXQgNzowMiBQTSBSYWh1bCBIYXJkaWthciAmbHQ7PGEgaHJl
-Zj0ibWFpbHRvOnJhaHVsaGFyZGlrYXJAZ21haWwuY29tIiB0YXJnZXQ9Il9ibGFuayI+cmFodWxo
-YXJkaWthckBnbWFpbC5jb208L2E+PGJyPgomZ3Q7ICZsdDttYWlsdG86PGEgaHJlZj0ibWFpbHRv
-OnJhaHVsaGFyZGlrYXJAZ21haWwuY29tIiB0YXJnZXQ9Il9ibGFuayI+cmFodWxoYXJkaWthckBn
-bWFpbC5jb208L2E+Jmd0OyAmZ3Q7IHdyb3RlOjxicj4KJmd0OyA8YnI+CiZndDsgPGJyPgomZ3Q7
-wqAgwqAgwqAgwqBUaGFua3MgZ3V5cywgSSYjMzk7bGwgdHJ5IHRoaXMgYnV0wqAgaSBhbHNvIHdh
-bnRlZCB0byBrbm93IGlmIHRoZXJlIGlzIGEgd2F5IHRvPGJyPgomZ3Q7IGtub3cgaWYgdGhlIFRQ
-TSBzdGlsbCBoYXMgdGhlIEVLIGFuZCBBSyBrZXlzIGxvYWRlZD8gSSBoYXZlIHRoZSBFSyBoYW5k
-bGUgYW5kIEFLPGJyPgomZ3Q7IGhhbmRsZSAobm90IG1hZGUgaXQgcGVyc2lzdGVudCkgYnV0IEkg
-d2FudCB0byBtYWtlIHN1cmUgaXQmIzM5O3MgcHJlc2VudCBhcyB0aGVzZSBhcmU8YnI+CiZndDsg
-bmVjZXNzYXJ5IGZvciBBY3RpdmF0ZUNyZWRlbnRpYWwgdG8gc3VjY2VlZDxicj4KJmd0O8KgIMKg
-IMKgIMKgRVN5c19BY3RpdmF0ZUNyZWRlbnRpYWwgY29tcGxhaW5pbmcgYWJvdXQgc2VjcmV0IHBh
-cmFtZXRlciBkb2VzbiYjMzk7dDxicj4KJmd0OyBtYWtlIHNlbnNlIHRvIG1lLCBJIHRlc3RlZCBv
-biBzZXJ2ZXIgc2lkZSwgYWtfbmFtZSBpcyBzYW1lIGFzIHRoYXQgc2VudCBhbmQgc28gaXM8YnI+
-CiZndDsgRUtfUFVCIG9iamVjdCBhcyB3ZWxsIGFzwqAgRUtfQ2VydCBpbiBudnJhbSwgSSBjYWxs
-IHRoZSBzYW1lPGJyPgomZ3Q7IGV4dGVybmFsX21ha2VjcmVkZW50aWFsIGNhbGwgdGhhdCYjMzk7
-cyBpbiB0aGUgR2l0SHViIHRvIGNyZWF0ZSBzZWNyZXQgYW5kIG1hZGUgc3VyZTxicj4KJmd0OyBz
-ZWNyZXQsY3JlZGJsb2IgbWF0Y2hlcyBvbiB0aGUgY2xpZW50IHNpZGUgd2hlbiByZWNlaXZlZCBm
-cm9tIHNlcnZlci48YnI+CiZndDsgPGJyPgomZ3Q7wqAgwqAgwqAgwqBUaGFua3MsPGJyPgomZ3Q7
-wqAgwqAgwqAgwqBSYWh1bDxicj4KJmd0OyA8YnI+CiZndDvCoCDCoCDCoCDCoE9uIFR1ZSwgTWFy
-IDE3LCAyMDIwIGF0IDY6MTkgQU0gSW1yYW4gRGVzYWkgJmx0OzxhIGhyZWY9Im1haWx0bzppbXJh
-bi5kZXNhaUBpbnRlbC5jb20iIHRhcmdldD0iX2JsYW5rIj5pbXJhbi5kZXNhaUBpbnRlbC5jb208
-L2E+PGJyPgomZ3Q7ICZsdDttYWlsdG86PGEgaHJlZj0ibWFpbHRvOmltcmFuLmRlc2FpQGludGVs
-LmNvbSIgdGFyZ2V0PSJfYmxhbmsiPmltcmFuLmRlc2FpQGludGVsLmNvbTwvYT4mZ3Q7ICZndDsg
-d3JvdGU6PGJyPgomZ3Q7IDxicj4KJmd0OyA8YnI+CiZndDvCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oFNldCB0aGlzIHVwIHdpdGggYWxsIGhhbmRsZXMgaW4gdXNlIG1hZGUgcGVyc2lzdGVudC4gSWYg
-eW91IHN0aWxsIHNlZTxicj4KJmd0OyBpc3N1ZXMsIGdkYi1icmVhayBvciB0dXJuIG9uIGRlYnVn
-IGxvZ2dpbmcgYXQgdGhlIEVzeXMgY2FsbCBhbmQgY29tcGFyZSB0aGU8YnI+CiZndDsgZnVuY3Rp
-b24gYXJndW1lbnRzLjxicj4KJmd0O8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188YnI+CiZndDvCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoHRwbTIgbWFpbGluZyBsaXN0IC0tIDxhIGhyZWY9Im1haWx0bzp0cG0yQGxpc3Rz
-LjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPnRwbTJAbGlzdHMuMDEub3JnPC9hPiAmbHQ7bWFpbHRv
-OjxhIGhyZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPnRwbTJA
-bGlzdHMuMDEub3JnPC9hPiZndDs8YnI+CiZndDvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoFRvIHVu
-c3Vic2NyaWJlIHNlbmQgYW4gZW1haWwgdG8gPGEgaHJlZj0ibWFpbHRvOnRwbTItbGVhdmVAbGlz
-dHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayI+dHBtMi1sZWF2ZUBsaXN0cy4wMS5vcmc8L2E+PGJy
-PgomZ3Q7ICZsdDttYWlsdG86PGEgaHJlZj0ibWFpbHRvOnRwbTItbGVhdmVAbGlzdHMuMDEub3Jn
-IiB0YXJnZXQ9Il9ibGFuayI+dHBtMi1sZWF2ZUBsaXN0cy4wMS5vcmc8L2E+Jmd0Ozxicj4KJmd0
-O8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQp
-cy8lKF9pbnRlcm5hbF9uYW1lKXM8YnI+CiZndDsgPGJyPgo8YnI+CjwvYmxvY2txdW90ZT48L2Rp
-dj4K
 
---===============6924331008128501491==--
+
+--===============7327554661995157240==--
 
