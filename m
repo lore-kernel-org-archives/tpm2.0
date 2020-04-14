@@ -1,103 +1,109 @@
-Content-Type: multipart/mixed; boundary="===============8831966192958086423=="
+Content-Type: multipart/mixed; boundary="===============4479766235279203370=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] Re: using Esys_Create() API creating a key with AES encryption
-Date: Tue, 14 Apr 2020 07:51:18 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171B1A7E2@exch2010c.sit.fraunhofer.de>
-In-Reply-To: 20200414073858.2799.96850@ml01.vlan13.01.org
+From: muthu.smk at gmail.com
+Subject: [tpm2] writing in to NVRAM by using Tss2_Sys_NV_Write()API and create
+ a C library
+Date: Tue, 14 Apr 2020 07:53:30 +0000
+Message-ID: <20200414075330.2799.86716@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8831966192958086423==
+--===============4479766235279203370==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Just keep in mind that 99.9% of TPMs do not support AES keys.
-This is due to export / import restrictions of most countries in the world.
-Just be sure that your TPM supports AES keys; otherwise your code will fail.
+Hi @William Roberts,
+As you suggested i tired using "Tss2_Sys_NV_Write () API to write a data bu=
+ffer to NV RAM. I make the code working and am getting core dump issue in s=
+etting up the argument of "Tss2_Sys_NV_Write()" . Please find below code sn=
+ippet that am currently working and throws "coredump" error after below pri=
+nt statement .
+*********NV INDEX TESTS*************
+ As i said above , the issue might be the args that am not setting up prope=
+rly (except data buffer) . Can you guide on what am i missing here and make=
+ this code working . Also i need to read the same buffer using "Tss2_Sys_NV=
+_Read() API .
 
-Your inPublic must be of type SYMCIPHER and then the algorithm would be
-AES. Have a look at the "TPM library specification Part 2" and look for the
-descriptions of TPMT_PUBLIC and which type yields which union-selection
-to figure out the details.
+NOTE : Right now am using SIM to test this TPM stuff. =
 
-The lack of examples comes from the aforementioned reason.
 
-________________________________________
-From: muthu.smk(a)gmail.com [muthu.smk(a)gmail.com]
-Sent: Tuesday, April 14, 2020 09:38
-To: tpm2(a)lists.01.org
-Subject: [tpm2] using Esys_Create() API creating a key with AES encryption
 
-Hi @williams
-As suggested by you creating this request in the emailing list
+TPM2B_DIGEST *bytes =3D NULL;
 
-I just want to create a "AES key" using TPM , i could find the below sample=
- of RSA key generation using tpm2tss_rsa_genkey() API . Could you help me o=
-n sharing the API or sample code block that helps me to generate "AES based=
- key" using TPM ?
+/* In main function iam using Esys_GetRandom() API to generate a Random num=
+ber and passing that Esys_GetRandom()API output buffer
+as input to my another function tpm2_nv_write() to what that buffer in to N=
+VRAM */ =
 
-rsa =3D RSA_new();
-if (!rsa) {
-ERR("out of memory\n");
-BN_free(e);
-return NULL;
-}
-if (!tpm2tss_rsa_genkey(rsa, opt.keysize, e, opt.password, opt.parent)) {
-BN_free(e);
-RSA_free(rsa);
-ERR("Error: Generating key failed\n");
-return NULL;
-}
+void main()
+{
+ TSS2_RC rc =3D Esys_Initialize(&ectx, NULL, NULL);
+        if (rc !=3D TSS2_RC_SUCCESS) {
+                fprintf(stderr, "Esys_Initialize: %s\n", Tss2_RC_Decode(rc)=
+);
+                exit(1);
+        }
 
-You have suggested to use - Esys_Create, with the public template filled in=
- for an AES key.
-I have found the sample of the same in https://github.com/tpm2-software/tpm=
-2-tss/blob/master/test/integration/esys-encrypt-decrypt.int.c
+        rc =3D Esys_GetRandom(ectx,
+                        ESYS_TR_NONE, ESYS_TR_NONE, ESYS_TR_NONE,
+                        64, &bytes);
+        if (rc !=3D TSS2_RC_SUCCESS) {
+                fprintf(stderr, "Esys_GetRandom: %s\n", Tss2_RC_Decode(rc));
+                exit(1);
+        }
 
-And the below code block/structure that enable "AES" based key generation w=
-as  shared below. Can you please confirm whether am i going in correct dire=
-ction to achieve my requirement . It would be great if you have any sample =
-code to be shared with me on this front.
-...
+    size_t i;
+    for (i =3D 0; i < bytes->size; i++) {
+        printf("%02x", bytes->buffer[i]);
+    }
+
+    printf("\n");
+
+    printf("Writing the RandomKey in to TPM using nvwrite API\n");
+    //tpm2_nvwrite -x 0x1c00002
+
+    printf("***********Performing MemCopy to nv_write_data.buffer\n");
+    memcpy(nv_write_data.buffer, bytes->buffer,
+               sizeof(bytes->buffer));
+
+    /*Calling my own below function to write the newly generated random num=
+ber to nvRam*/
+    tpm2_nv_write(&nv_write_data.buffer);
 ..
- TPM2B_PUBLIC inPublic2 =3D {
-..
-..
-.parameters.rsaDetail =3D {
-                 .symmetric =3D {
-                     .algorithm =3D TPM2_ALG_AES,
-                     .keyBits.aes =3D 128,
-                     .mode.aes =3D TPM2_ALG_CFB},
-                 .scheme =3D {
-                      .scheme =3D TPM2_ALG_NULL
-                  },
-                 .keyBits =3D 2048,
-                 .exponent =3D 0,
-             },
-
-...
 ...
 }
 
-/* Esys_Create API , which will take above struct inputs filled by user as
-  r =3D Esys_Create(esys_context,
-                    primaryHandle,
-                    ESYS_TR_PASSWORD, ESYS_TR_NONE, ESYS_TR_NONE,
-                    &inSensitive2,
-                    &inPublic2,    /* in this struct we are filling that we=
- required AES based input key gen */
-                    &outsideInfo2,
-                    &creationPCR2,
-                    &outPrivate2,
-                    &outPublic2,
-                    &creationData2, &creationHash2, &creationTicket2);
-                           &creationTicket);
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 
---===============8831966192958086423==--
+/* my tpm2_nv_write funcation , which takes the input as "data buffer" . By=
+ which this "buffer" data has to be written in to NVRAM" */
+void tpm2_nv_write(TPM2B_MAX_NV_BUFFER *nvWriteData)
+{
+    UINT32 rval;
+    TSS2_SYS_CONTEXT *sysContext;
+    TPM2B_NV_PUBLIC publicInfo;
+    TPM2B_AUTH  nvAuth;
+    TSS2L_SYS_AUTH_RESPONSE sessionsDataOut;
+    int i;
+   TPM2B_MAX_NV_BUFFER nvData;
+
+    TPM2B_NV_PUBLIC nvPublic;
+    TPM2B_NAME nvName;
+
+    TSS2L_SYS_AUTH_COMMAND sessionsData =3D { .count =3D 1, .auths =3D {{
+        .sessionHandle =3D TPM2_RS_PW,
+        .sessionAttributes =3D 0,
+        .nonce =3D {.size =3D 0},
+        .hmac =3D {.size =3D 0}}}};
+
+    printf("*********NV INDEX TESTS*************\n" );
+
+    nvAuth.size =3D 20;
+
+        rval =3D Tss2_Sys_NV_Write( sysContext, TPM2_RH_PLATFORM, TPM20_IND=
+EX_TEST1, &sessionsData, &nvWriteData, 0, &sessionsDataOut );
+
+
+}
+--===============4479766235279203370==--
 
