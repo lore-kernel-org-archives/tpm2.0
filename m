@@ -1,19 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============7448460368656309859=="
+Content-Type: multipart/mixed; boundary="===============8831966192958086423=="
 MIME-Version: 1.0
-From: muthu.smk at gmail.com
-Subject: [tpm2] using Esys_Create() API creating a key with AES encryption
-Date: Tue, 14 Apr 2020 07:38:58 +0000
-Message-ID: <20200414073858.2799.96850@ml01.vlan13.01.org>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: [tpm2] Re: using Esys_Create() API creating a key with AES encryption
+Date: Tue, 14 Apr 2020 07:51:18 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171B1A7E2@exch2010c.sit.fraunhofer.de>
+In-Reply-To: 20200414073858.2799.96850@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7448460368656309859==
+--===============8831966192958086423==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi @williams =
+Just keep in mind that 99.9% of TPMs do not support AES keys.
+This is due to export / import restrictions of most countries in the world.
+Just be sure that your TPM supports AES keys; otherwise your code will fail.
 
+Your inPublic must be of type SYMCIPHER and then the algorithm would be
+AES. Have a look at the "TPM library specification Part 2" and look for the
+descriptions of TPMT_PUBLIC and which type yields which union-selection
+to figure out the details.
+
+The lack of examples comes from the aforementioned reason.
+
+________________________________________
+From: muthu.smk(a)gmail.com [muthu.smk(a)gmail.com]
+Sent: Tuesday, April 14, 2020 09:38
+To: tpm2(a)lists.01.org
+Subject: [tpm2] using Esys_Create() API creating a key with AES encryption
+
+Hi @williams
 As suggested by you creating this request in the emailing list
 
 I just want to create a "AES key" using TPM , i could find the below sample=
@@ -64,8 +81,7 @@ code to be shared with me on this front.
 ...
 }
 
-/* Esys_Create API , which will take above struct inputs filled by user as =
-
+/* Esys_Create API , which will take above struct inputs filled by user as
   r =3D Esys_Create(esys_context,
                     primaryHandle,
                     ESYS_TR_PASSWORD, ESYS_TR_NONE, ESYS_TR_NONE,
@@ -78,5 +94,10 @@ code to be shared with me on this front.
                     &outPublic2,
                     &creationData2, &creationHash2, &creationTicket2);
                            &creationTicket);
---===============7448460368656309859==--
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============8831966192958086423==--
 
