@@ -1,229 +1,631 @@
-Content-Type: multipart/mixed; boundary="===============5866659483683954261=="
+Content-Type: multipart/mixed; boundary="===============2342729706549047071=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: writing in to NVRAM by using Tss2_Sys_NV_Write()API and
- create a C library
-Date: Wed, 15 Apr 2020 15:14:28 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649ECECEB@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 20200414075330.2799.86716@ml01.vlan13.01.org
+Subject: [tpm2] Re: ESys_ActivateCredential
+Date: Wed, 15 Apr 2020 15:23:12 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649ECED04@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CAP3jAwS7HV5nk7O5kAvuHjpuG8NoZUPhsjagDSVo0eVo5XxD5g@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5866659483683954261==
+--===============2342729706549047071==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+
+
 > -----Original Message-----
-> From: muthu.smk(a)gmail.com [mailto:muthu.smk(a)gmail.com]
-> Sent: Tuesday, April 14, 2020 2:54 AM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] writing in to NVRAM by using Tss2_Sys_NV_Write()API and
-> create a C library
+> From: Rahul Hardikar [mailto:rahulhardikar(a)gmail.com]
+> Sent: Monday, April 13, 2020 2:32 PM
+> To: Roberts, William C <william.c.roberts(a)intel.com>
+> Cc: Desai, Imran <imran.desai(a)intel.com>; tpm2(a)lists.01.org
+> Subject: Re: [tpm2] Re: ESys_ActivateCredential
 > =
 
-> Hi @William Roberts,
-> As you suggested i tired using "Tss2_Sys_NV_Write () API to write a data =
-buffer
-> to NV RAM. I make the code working and am getting core dump issue in sett=
-ing
-> up the argument of "Tss2_Sys_NV_Write()" . Please find below code snippet=
- that
-> am currently working and throws "coredump" error after below print statem=
-ent .
-> *********NV INDEX TESTS*************
->  As i said above , the issue might be the args that am not setting up pro=
-perly
-> (except data buffer) . Can you guide on what am i missing here and make t=
-his
-> code working . Also i need to read the same buffer using "Tss2_Sys_NV_Rea=
-d()
-> API .
+> Ok, got it. I'm using ESAPI C APIs. But its pretty much the same as the t=
+pm2 tools
+> implementation.
+> How do i add debugs in my poky directory?  I have tpm2.0-tss_2.1.4.bb
+> <http://tpm2.0-tss_2.1.4.bb>  file.
+
+I've never touched Yocto, so we're probably not going to be able to help
+much there.
+
+> Also, how to add compile-time log flags to my src file that uses ESAPI ca=
+lls?
+> Running separately was easy, I just called TSS2_LOG=3D"all+ERROR,tcti+DEB=
+UG"
+
+That=E2=80=99s not a compile time flag, it's in the environment. All progra=
+ms have access to
+The environment, via getenv and setenv calls. See: https://linux.die.net/ma=
+n/5/environ
+So you could call setenv() in the program. However, usually if you're not s=
+taring
+The program directly on the shell, some type of execution environment, like=
+ init
+or system will allow you to add these values in. This sounds very yocto spe=
+cific on
+how to do that, thus you would probably want to discuss that on the Yocto p=
+roject
+mailing lists.
+
+The log messages go to stderr and stdout, so you could redirect them. Doing=
+ it in C:
+https://stackoverflow.com/questions/584868/rerouting-stdin-and-stdout-from-c
+
+But it would probably be easier just to alter the execution environment of =
+the program,
+How to do that is system specific. =
+
+
 > =
 
-> NOTE : Right now am using SIM to test this TPM stuff.
-> =
-
-> =
-
-> TPM2B_DIGEST *bytes =3D NULL;
-> =
-
-> /* In main function iam using Esys_GetRandom() API to generate a Random
-> number and passing that Esys_GetRandom()API output buffer as input to my
-> another function tpm2_nv_write() to what that buffer in to NVRAM */ void
-> main() {  TSS2_RC rc =3D Esys_Initialize(&ectx, NULL, NULL);
->         if (rc !=3D TSS2_RC_SUCCESS) {
->                 fprintf(stderr, "Esys_Initialize: %s\n", Tss2_RC_Decode(r=
-c));
->                 exit(1);
->         }
-> =
-
->         rc =3D Esys_GetRandom(ectx,
->                         ESYS_TR_NONE, ESYS_TR_NONE, ESYS_TR_NONE,
->                         64, &bytes);
->         if (rc !=3D TSS2_RC_SUCCESS) {
->                 fprintf(stderr, "Esys_GetRandom: %s\n", Tss2_RC_Decode(rc=
-));
->                 exit(1);
->         }
-> =
-
->     size_t i;
->     for (i =3D 0; i < bytes->size; i++) {
->         printf("%02x", bytes->buffer[i]);
->     }
-> =
-
->     printf("\n");
-> =
-
->     printf("Writing the RandomKey in to TPM using nvwrite API\n");
->     //tpm2_nvwrite -x 0x1c00002
-> =
-
->     printf("***********Performing MemCopy to nv_write_data.buffer\n");
->     memcpy(nv_write_data.buffer, bytes->buffer,
->                sizeof(bytes->buffer));
-> =
-
->     /*Calling my own below function to write the newly generated random
-> number to nvRam*/
->     tpm2_nv_write(&nv_write_data.buffer);
-
-You need to pass ectx. The Esys context pointer contains all the informatio=
-n and
-State for talking to the TPM.
-
-> ..
-> ...
-> }
+> On Mon, Apr 13, 2020 at 7:20 AM Roberts, William C <william.c.roberts(a)i=
+ntel.com
+> <mailto:william.c.roberts(a)intel.com> > wrote:
 > =
 
 > =
 
-> /* my tpm2_nv_write funcation , which takes the input as "data buffer" . =
-By
-> which this "buffer" data has to be written in to NVRAM" */ void
-> tpm2_nv_write(TPM2B_MAX_NV_BUFFER *nvWriteData) {
->     UINT32 rval;
->     TSS2_SYS_CONTEXT *sysContext;
-
-Why would you switch from the ESYS (esapi) library to the SYS (sapi) librar=
-y?
-Generally you just pick one and stick with it.
-
->     TPM2B_NV_PUBLIC publicInfo;
->     TPM2B_AUTH  nvAuth;
->     TSS2L_SYS_AUTH_RESPONSE sessionsDataOut;
->     int i;
->    TPM2B_MAX_NV_BUFFER nvData;
+> 	> -----Original Message-----
+> 	> From: Rahul Hardikar [mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com> ]
+> 	> Sent: Friday, April 10, 2020 4:15 PM
+> 	> To: Roberts, William C <william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com> >
+> 	> Cc: Desai, Imran <imran.desai(a)intel.com
+> <mailto:imran.desai(a)intel.com> >; tpm2(a)lists.01.org
+> <mailto:tpm2(a)lists.01.org>
+> 	> Subject: Re: [tpm2] Re: ESys_ActivateCredential
+> 	>
+> 	> Hi Bill,
+> 	> I have this on my system: Is tpmrm0 same as tabrmd? I believe mine is
+> using this
+> 	> right now , i'm changing it to what you mentioned  to see if it helps.
+> 	> [root(a)nfvis ~]# ls -l /dev/tpm*
+> 	> crw-rw----. 1 tss root  10,   224 Apr  8 23:19 /dev/tpm0
+> 	> crw-rw----. 1 tss tss  254, 65536 Apr  8 23:19 /dev/tpmrm0 Thanks, Rah=
+ul
 > =
 
->     TPM2B_NV_PUBLIC nvPublic;
->     TPM2B_NAME nvName;
+> 	In theory, yes. In practice no.
+> 	/dev/tpmrm0 is the in kernel resource manager
+> 	tpm2-abrmd is the userspace resource manager
 > =
 
->     TSS2L_SYS_AUTH_COMMAND sessionsData =3D { .count =3D 1, .auths =3D {{
->         .sessionHandle =3D TPM2_RS_PW,
->         .sessionAttributes =3D 0,
->         .nonce =3D {.size =3D 0},
->         .hmac =3D {.size =3D 0}}}};
+> 	tpm2-abrmd has a few features tpmrm0 doesn't have, but unless you're
+> 	using policy sessions with tpm2-tools, you shouldn't notice a difference.
 > =
 
->     printf("*********NV INDEX TESTS*************\n" );
+> 	>
+> 	> On Fri, Apr 10, 2020 at 11:33 AM Roberts, William C
+> <william.c.roberts(a)intel.com <mailto:william.c.roberts(a)intel.com>
+> 	> <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com> > > wrote:
+> 	>
+> 	>
+> 	>
+> 	>
+> 	>       > -----Original Message-----
+> 	>       > From: Rahul Hardikar [mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com>
+> 	> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com> >
+> ]
+> 	>       > Sent: Friday, April 10, 2020 1:08 PM
+> 	>       > To: Roberts, William C <william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com>
+> 	> <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com> > >
+> 	>       > Cc: Desai, Imran <imran.desai(a)intel.com
+> <mailto:imran.desai(a)intel.com>
+> 	> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> > >;
+> tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> 	> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> >
+> 	>       > Subject: Re: [tpm2] Re: ESys_ActivateCredential
+> 	>       >
+> 	>       > Thanks Bill, trying that.
+> 	>       >  I did not get debug build tpm2_tss, isn't it all prebuilt ? I=
+ will have
+> to see
+> 	> how to
+> 	>       > do it in poky.
+> 	>
+> 	>       If you're getting it from a package manager, yes. But there's no=
+thing
+> 	> stopping you
+> 	>       from using source builds. Some distro's will package debug symbo=
+ls
+> for
+> 	> their
+> 	>       packages.
+> 	>
+> 	>       >
+> 	>       > On Fri, Apr 10, 2020 at 8:16 AM Roberts, William C
+> 	> <william.c.roberts(a)intel.com <mailto:william.c.roberts(a)intel.com>
+> <mailto:william.c.roberts(a)intel.com <mailto:william.c.roberts(a)intel.c=
+om> >
+> 	>       > <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com>
+> 	> <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com> > > > wrote:
+> 	>       >
+> 	>       >
+> 	>       >
+> 	>       >
+> 	>       >       > -----Original Message-----
+> 	>       >       > From: Rahul Hardikar [mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com>
+> 	> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com> >
+> 	>       > <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com>  <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com> > >
+> 	> ]
+> 	>       >       > Sent: Thursday, April 9, 2020 2:51 PM
+> 	>       >       > To: Roberts, William C <william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com>
+> 	> <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com> >
+> 	>       > <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com>
+> 	> <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com> > > >
+> 	>       >       > Cc: Desai, Imran <imran.desai(a)intel.com
+> <mailto:imran.desai(a)intel.com>
+> 	> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> >
+> 	>       > <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.co=
+m>
+> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> > > >;
+> 	> tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> >
+> 	>       > <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> > >
+> 	>       >       > Subject: Re: [tpm2] Re: ESys_ActivateCredential
+> 	>       >       >
+> 	>       >       > Thanks Bill. I use this
+> 	>       >       > Esys_Initialize( &ectx, NULL, NULL);
+> 	>       >       >
+> 	>       >       > so i'm assuming it would take the default  libtss2-tct=
+i-
+> tabrmd.so.0.
+> 	>       >
+> 	>       >       This should do it for you:
+> 	>       >       TSS2_RC
+> 	>       >       Tss2_TctiLdr_Initialize (const char *nameConf,
+> 	>       >                                TSS2_TCTI_CONTEXT **context);
+> 	>       >
+> 	>       >       Set nameConf to the string "tabrmd", that should give yo=
+u a tcti
+> 	> pointer
+> 	>       > you can
+> 	>       >       pass wot Esys_Initialize()
+> 	>       >
+> 	>       >       >
+> 	>       >       >
+> 	>       >       > If I need to debug Esys_ActivateCredential more, how c=
+an I do
+> it,
+> 	> these
+> 	>       > APIs are
+> 	>       >       > no more standalone, I have integrated it in a bigger c=
+ode base
+> and
+> 	>       > added the
+> 	>       >       > esys-tss2 and other libs in my poky build, so now it r=
+uns as
+> 	> different
+> 	>       > process that
+> 	>       >       > invokes this function, I can gdb into the process but =
+I can't
+> seem to
+> 	> gdb
+> 	>       > into
+> 	>       >       > Esys_Activate..( )
+> 	>       >
+> 	>       >       Did you build tpm2-tss with debug symbols?
+> 	>       >       Add --enable-debug
+> 	>       >
+> 	>       >       >
+> 	>       >       >
+> 	>       >       > Thanks,
+> 	>       >       > Rahul
+> 	>       >       >
+> 	>       >       >
+> 	>       >       >
+> 	>       >       >
+> 	>       >       > On Thu, Apr 9, 2020 at 10:23 AM Roberts, William C
+> 	>       > <william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com>  <mailto:william.c.roberts(a)intel=
+.com
+> <mailto:william.c.roberts(a)intel.com> >
+> 	> <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com>  <mailto:william.c.roberts(a)intel=
+.com
+> <mailto:william.c.roberts(a)intel.com> > >
+> 	>       >       > <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com>
+> 	> <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com> >
+> 	>       > <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com>
+> 	> <mailto:william.c.roberts(a)intel.com
+> <mailto:william.c.roberts(a)intel.com> > > > > wrote:
+> 	>       >       >
+> 	>       >       >
+> 	>       >       >       > -----Original Message-----
+> 	>       >       >       > From: Rahul Hardikar [mailto:rahulhardikar(a)g=
+mail.com
+> <mailto:rahulhardikar(a)gmail.com>
+> 	> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com> >
+> 	>       > <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com>  <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com> > >
+> 	>       >       > <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com>
+> 	> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com> >
+> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com>
+> 	> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com> >
+> > >
+> 	>       > ]
+> 	>       >       >       > Sent: Thursday, April 9, 2020 11:18 AM
+> 	>       >       >       > To: Desai, Imran <imran.desai(a)intel.com
+> <mailto:imran.desai(a)intel.com>
+> 	> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> >
+> 	>       > <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.co=
+m>
+> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> > >
+> 	>       >       > <mailto:imran.desai(a)intel.com
+> <mailto:imran.desai(a)intel.com>  <mailto:imran.desai(a)intel.com
+> <mailto:imran.desai(a)intel.com> >
+> 	> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com>
+> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> > > > >
+> 	>       >       >       > Cc: tpm2(a)lists.01.org <mailto:tpm2(a)lists.0=
+1.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> >
+> 	> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> > >
+> 	>       > <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> >
+> 	> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> > > >
+> 	>       >       >       > Subject: [tpm2] Re: ESys_ActivateCredential
+> 	>       >       >       >
+> 	>       >       >       > How do I know if  RM is being used?
+> 	>       >       >
+> 	>       >       >
+> 	>       >       >       If you set the tcti to the device tcti, it will =
+open /dev/tpm0
+> by
+> 	>       > default. And
+> 	>       >       > that wont
+> 	>       >       >       Be an RM. You can also give it an option. Esys_I=
+nitialize()
+> takes a
+> 	> tcti
+> 	>       > as an
+> 	>       >       > option,
+> 	>       >       >       NULL will cause it to use the default search beh=
+avior of the
+> 	>       > Tss2_TctiLdr,
+> 	>       >       > see:
+> 	>       >       >
+> 	>       >       >       https://github.com/tpm2-software/tpm2-
+> 	>       >       > tss/blob/master/man/Tss2_TctiLdr_Initialize.3.in
+> <http://Tss2_TctiLdr_Initialize.3.in>
+> 	> <http://Tss2_TctiLdr_Initialize.3.in>
+> 	>       > <http://Tss2_TctiLdr_Initialize.3.in>
+> 	>       >       >       https://github.com/tpm2-software/tpm2-
+> 	>       >       > tss/blob/master/man/Tss2_Tcti_Device_Init.3.in
+> <http://Tss2_Tcti_Device_Init.3.in>
+> 	> <http://Tss2_Tcti_Device_Init.3.in>
+> 	>       > <http://Tss2_Tcti_Device_Init.3.in>
+> 	>       >       >       https://github.com/tpm2-software/tpm2-
+> 	>       > tss/blob/master/man/tss2-
+> 	>       >       > tcti-device.7.in <http://tcti-device.7.in>  <http://tc=
+ti-
+> device.7.in>  <http://tcti-device.7.in>
+> 	>       >       >
+> 	>       >       >       You can use man locally if you prefer as well:
+> 	>       >       >       man 3 Tss2_TctiLdr_Initialize
+> 	>       >       >       man 7 tss2-tcti-device
+> 	>       >       >       man 3 Tss2_Tcti_Device_Init
+> 	>       >       >
+> 	>       >       >       Note that https://github.com/tpm2-software/tpm2-
+> 	>       >       > tss/blob/master/man/Tss2_Tcti_Device_Init.3.in
+> <http://Tss2_Tcti_Device_Init.3.in>
+> 	> <http://Tss2_Tcti_Device_Init.3.in>
+> 	>       > <http://Tss2_Tcti_Device_Init.3.in>
+> 	>       >       >       Has sample code in it.
+> 	>       >       >
+> 	>       >       >       If you're using the tools, it supports explicitl=
+y choosing the
+> TCTI:
+> 	>       >       >       https://github.com/tpm2-software/tpm2-
+> 	>       >       > tools/blob/master/man/common/tcti.md
+> 	>       >       >
+> 	>       >       >       Also note that the /dev/tpmrm0 (Notice the RM) i=
+s an in-
+> kernel
+> 	>       > resource
+> 	>       >       > manager.
+> 	>       >       >
+> 	>       >       >
+> 	>       >       >       > When I do ESys_Initialize, I see these WARNING=
+s,
+> wondering
+> 	> if it's
+> 	>       > okay
+> 	>       >       > for multi-
+> 	>       >       >       > thread
+> 	>       >       >       > WARNING:esys:src/tss2-
+> 	>       > esys/esys_tcti_default.c:137:tcti_from_file()
+> 	>       >       > Could not
+> 	>       >       >       > load TCTI file: libtss2-tcti-default.so <http:=
+//libtss2-tcti-
+> 	>       > default.so/ <http://default.so/>  <http://default.so/> >
+> 	>       >       > libtss2-tcti-
+> 	>       >       >       > default.so <http://libtss2-tcti-default.so/>
+> 	>       >       >       > WARNING:esys:src/tss2-
+> 	>       > esys/esys_tcti_default.c:137:tcti_from_file()
+> 	>       >       > Could not
+> 	>       >       >       > load TCTI file: libtss2-tcti-tabrmd.so <http:/=
+/libtss2-tcti-
+> 	>       > tabrmd.so/ <http://tabrmd.so/>  <http://tabrmd.so/> >
+> 	>       >       >       >
+> 	>       >       >       > In my single threaded process, everything work=
+s so
+> smoothly
+> 	>       > [root]#
+> 	>       >       > ./tpm
+> 	>       >       >       > WARNING:esys:src/tss2-
+> 	>       > esys/esys_tcti_default.c:137:tcti_from_file()
+> 	>       >       > Could not
+> 	>       >       >       > load TCTI file: libtss2-tcti-default.so <http:=
+//libtss2-tcti-
+> 	>       > default.so/ <http://default.so/>  <http://default.so/> >
+> 	>       >       >       > WARNING:esys:src/tss2-
+> 	>       > esys/esys_tcti_default.c:137:tcti_from_file()
+> 	>       >       > Could not
+> 	>       >       >       > load TCTI file: libtss2-tcti-tabrmd.so <http:/=
+/libtss2-tcti-
+> 	>       > tabrmd.so/ <http://tabrmd.so/>  <http://tabrmd.so/> >
+> 	>       >       > ESYS
+> 	>       >       >       > Initialization: Pass
+> 	>       >       >       >
+> 	>       >       >       > Read TPM EK Certificate: Pass
+> 	>       >       >       >
+> 	>       >       >       > TPM EK Certificate Root-CA Verification: Pass
+> 	>       >       >       >
+> 	>       >       >       > Clear TPM State: Pass
+> 	>       >       >       >
+> 	>       >       >       > Created EK Primary object: Pass
+> 	>       >       >       > #####Handle 0x418368
+> 	>       >       >       >
+> 	>       >       >       > Create Attestation Key: Pass
+> 	>       >       >       > #####Ak_Handle 0x41836b
+> 	>       >       >       >
+> 	>       >       >       > Original Credential=3D"deadbeefdeadbeefdead"
+> 	>       >       >       >
+> 	>       >       >       > Make Credential: Pass
+> 	>       >       >       > #####Encrypted Credential
+> 	>       >       >       >
+> 	>       >       >
+> 	>       >
+> 	>
+> Blob=3D"0020508e439bc6512d044bb8739e8d61c8ce3664d25f3572389b46c8797e562a
+> 	>       >       >       > 45c412864f020a7f1bbcab7a34f0"
+> 	>       >       >       >
+> 	>       >       >       > #####Encrypted
+> 	>       >       >       >
+> 	>       >       >
+> 	>       >
+> 	>
+> Secret=3D"b70689bb0ed9fa8324cfa03d727e6c6795069b4f0943108409b89009b9cc76c
+> 	>       >       >       >
+> 	>       >       >
+> 	>       >
+> 	>
+> 76bddb31a5ccf34cfebc5d3fe715899bb725a8a3c8fe4a6046233869123f3e978051aec
+> 	>       >       >       >
+> 	>       >       >
+> 	>       >
+> 	>
+> e0d7af0ad6f85164a32fd2c5ad756e8c3b72f6311126de79a30c0d72aa0a6f3f437f6bc
+> 	>       >       >       >
+> 	>       >       >
+> 	>       >
+> 	>
+> 077c41d3cc6450c71e803ca6074d34ce3debf5114f4bac2fd7ee6a87ef9f07d83079477
+> 	>       >       >       >
+> 	>       >       >
+> 	>       >
+> 	>
+> 5dda4f77e4620cbaf9aeb302040ee2a66a352b9fffaa5447c09a249bb22d9d989b7f14
+> 	>       >       >       >
+> 	>       >       >
+> 	>       >
+> 	>
+> 06612a90b8d8bce6bb940fbfd1d50f31398403a2643c73bec336e6fcca46f29f9b6aa87
+> 	>       >       >       >
+> 	>       >       >
+> 	>       >
+> 	>
+> fd11d53ec6f145d61b2a61dffc783ae2b2c66184435d633d0b5a420efa01748e39d687
+> 	>       >       >       > e1eb9fcc1759c184972779bfc"
+> 	>       >       >       >
+> 	>       >       >       > Activating Credential: Pass
+> 	>       >       >       > #####Recovered Credential=3D"deadbeefdeadbeefd=
+ead"
+> 	>       >       >       >
+> 	>       >       >       > [root]#
+> 	>       >       >       >
+> 	>       >       >       >
+> 	>       >       >       >
+> 	>       >       >       > On Wed, Apr 8, 2020 at 7:02 PM Rahul Hardikar
+> 	>       >       > <rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com>  <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com> >
+> 	> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com>
+> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com> > >
+> 	>       > <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com>  <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com> >
+> 	> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com>
+> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com> > > >
+> 	>       >       >       > <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com>
+> 	> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com> >
+> 	>       > <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com>  <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com> > >
+> 	> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com>
+> <mailto:rahulhardikar(a)gmail.com <mailto:rahulhardikar(a)gmail.com> >
+> 	>       > <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com>  <mailto:rahulhardikar(a)gmail.com
+> <mailto:rahulhardikar(a)gmail.com> > >
+> 	> > >
+> 	>       >       > > wrote:
+> 	>       >       >       >
+> 	>       >       >       >
+> 	>       >       >       >       Thanks guys, I'll try this but  i also w=
+anted to know if
+> there
+> 	> is a
+> 	>       > way to
+> 	>       >       >       > know if the TPM still has the EK and AK keys l=
+oaded? I
+> have
+> 	> the EK
+> 	>       >       > handle and AK
+> 	>       >       >       > handle (not made it persistent) but I want to =
+make sure
+> it's
+> 	>       > present as
+> 	>       >       > these are
+> 	>       >       >       > necessary for ActivateCredential to succeed
+> 	>       >       >       >       ESys_ActivateCredential complaining abou=
+t secret
+> 	> parameter
+> 	>       >       > doesn't
+> 	>       >       >       > make sense to me, I tested on server side, ak_=
+name is
+> same
+> 	> as
+> 	>       > that
+> 	>       >       > sent and so is
+> 	>       >       >       > EK_PUB object as well as  EK_Cert in nvram, I =
+call the
+> same
+> 	>       >       >       > external_makecredential call that's in the Git=
+Hub to
+> create
+> 	> secret
+> 	>       > and
+> 	>       >       > made sure
+> 	>       >       >       > secret,credblob matches on the client side when
+> received
+> 	> from
+> 	>       > server.
+> 	>       >       >       >
+> 	>       >       >       >       Thanks,
+> 	>       >       >       >       Rahul
+> 	>       >       >       >
+> 	>       >       >       >       On Tue, Mar 17, 2020 at 6:19 AM Imran De=
+sai
+> 	>       >       > <imran.desai(a)intel.com <mailto:imran.desai(a)intel.c=
+om>
+> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> >
+> 	> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com>
+> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> > >
+> 	>       > <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.co=
+m>
+> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> >
+> 	> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com>
+> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> > > >
+> 	>       >       >       > <mailto:imran.desai(a)intel.com
+> <mailto:imran.desai(a)intel.com>
+> 	> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> >
+> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com>
+> 	> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> > >
+> 	>       > <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.co=
+m>
+> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> >
+> 	> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com>
+> <mailto:imran.desai(a)intel.com <mailto:imran.desai(a)intel.com> > > > > >
+> 	>       >       > wrote:
+> 	>       >       >       >
+> 	>       >       >       >
+> 	>       >       >       >               Set this up with all handles in =
+use made persistent.
+> If
+> 	> you
+> 	>       > still see
+> 	>       >       >       > issues, gdb-break or turn on debug logging at =
+the Esys call
+> and
+> 	>       > compare
+> 	>       >       > the
+> 	>       >       >       > function arguments.
+> 	>       >       >       >
+> 	>       > _______________________________________________
+> 	>       >       >       >               tpm2 mailing list -- tpm2(a)list=
+s.01.org
+> <mailto:tpm2(a)lists.01.org>
+> 	> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> >
+> 	>       > <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> > >
+> 	> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> >
+> 	>       > <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> > > >
+> 	>       >       > <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.or=
+g>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> >
+> 	> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> > >
+> 	>       > <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> >
+> 	> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> <mailto:tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> > > > >
+> 	>       >       >       >               To unsubscribe send an email to =
+tpm2-
+> 	> leave(a)lists.01.org <mailto:leave(a)lists.01.org>  <mailto:tpm2-
+> leave(a)lists.01.org <mailto:tpm2-leave(a)lists.01.org> >
+> 	>       > <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-leave(a)lists.0=
+1.org>
+> <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-leave(a)lists.01.org> > >
+> 	>       >       > <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-
+> leave(a)lists.01.org>  <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-
+> leave(a)lists.01.org> >
+> 	> <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-leave(a)lists.01.org>
+> <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-leave(a)lists.01.org> > > >
+> 	>       >       >       > <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-
+> leave(a)lists.01.org>  <mailto:tpm2- <mailto:tpm2->
+> 	> leave(a)lists.01.org <mailto:leave(a)lists.01.org> >  <mailto:tpm2-
+> leave(a)lists.01.org <mailto:tpm2-leave(a)lists.01.org>  <mailto:tpm2-
+> <mailto:tpm2->
+> 	> leave(a)lists.01.org <mailto:leave(a)lists.01.org> > >
+> 	>       > <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-leave(a)lists.0=
+1.org>
+> <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-leave(a)lists.01.org> >
+> 	> <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-leave(a)lists.01.org>
+> <mailto:tpm2-leave(a)lists.01.org <mailto:tpm2-leave(a)lists.01.org> > > =
+> >
+> 	>       >       >       >
+> 	> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+> 	>       >       >       >
+> 	>       >       >
+> 	>       >       >
+> 	>       >
+> 	>       >
+> 	>
+> 	>
 > =
 
->     nvAuth.size =3D 20;
 > =
 
->         rval =3D Tss2_Sys_NV_Write( sysContext, TPM2_RH_PLATFORM,
-> TPM20_INDEX_TEST1, &sessionsData, &nvWriteData, 0, &sessionsDataOut );
-
-How did you initialize any of the input variables? It looks like you didn't.
-sysContext is a pointer and it was never properly initialized, so its point=
-ing
-to whatever garbage value it has. Which means when the CPU attempts
-to fetch memory, it's not allocated and you get a crash.
-
-Switch your call to Esys_NV_Write.
-
-TSS2_RC
-Esys_NV_Write(
-    ESYS_CONTEXT *esysContext,
-    ESYS_TR authHandle,
-    ESYS_TR nvIndex,
-    ESYS_TR shandle1,
-    ESYS_TR shandle2,
-    ESYS_TR shandle3,
-    const TPM2B_MAX_NV_BUFFER *data,
-    UINT16 offset);
-
-TPM2B_MAX_NV data =3D {
-    .size =3D 4,
-    .data =3D { 'h', 'e', 'l', 'p' }
-};
-TSS2_RC =3D Esys_NV_Write(ectx,
-ESYS_TR_RH_PLATFORM, // what hierarchy to authenticate with, this can also =
-be the same as the NV index itself (see notes below),
-Nv_index, // The Esys TR of a nv index,
-ESYS_TR_PASSWORD, // You want to authenticate with a password. Unless you s=
-et the password, it assumes an empty password.
-ESYS_TR_NONE,
-ESYS_TR_NONE,
-&data, // data to write
-0); // start at beining of index location.
-
-authHandle:
-NV indices can be authenticated by their handle, or their associated hierar=
-chy. This is all setup with you call Esys_NV_DefineSpace().
-If you need to set a password, you call:
-TSS2_RC
-Esys_TR_SetAuth(
-    ESYS_CONTEXT *esysContext,
-    ESYS_TR handle,
-    TPM2B_AUTH const *authValue);
 
 
-nvIndex:
-This has to be an Esys_TR, which is a different way of representing resourc=
-es in the TPM. If you call Esys_NV_DefineSpace() to create
-An NV index, it give you back in ESYS_TR, you can serialize these and save =
-to disk with all you want via:
-Esys_TR_Serialize
-Esys_TR_Deserialize
-
-However, if you start with a TPM NV handle, like 0x1000000, you need to con=
-vert that to an ESYS TR via:
-Esys_TR_FromTPMPublic().
-
-
-The best place to look for complete, simple examples is in the test code:
-https://github.com/tpm2-software/tpm2-tss/tree/master/test/integration
-
-
-However, the fact that you're passing trivial unutilized wild pointers,  in=
-dicates
-That not only are you trying to figure out how to use the TPM, but also fig=
-uring out
-how to code and code in C. I would recommend conquering the learning to
-program in C, and this TPM API will be much simpler, or just use the tpm2-t=
-ools.
-
-I can't help you learn how to program in C, but I wish you the best luck. T=
-his
-Will be my last lengthy reply. I'll continue to answer API and TPM questions
-However.
-
-> =
-
-> =
-
-> }
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============5866659483683954261==--
+--===============2342729706549047071==--
 
