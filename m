@@ -1,253 +1,96 @@
-Content-Type: multipart/mixed; boundary="===============5101512969360412988=="
+Content-Type: multipart/mixed; boundary="===============6109763614319912879=="
 MIME-Version: 1.0
-From: Zhao, Shirley <shirley.zhao at intel.com>
-Subject: [tpm2] The script of tpm2_policyauthorize failed 
-Date: Mon, 27 Apr 2020 09:33:24 +0000
-Message-ID: <A888B25CD99C1141B7C254171A953E8E490EA523@shsmsx102.ccr.corp.intel.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: One question in the code of
+ tpm2-tools/tools/tpm2_loadexternal.c
+Date: Mon, 27 Apr 2020 15:43:05 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649ED7A0A@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: A888B25CD99C1141B7C254171A953E8E490EA38C@shsmsx102.ccr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5101512969360412988==
+--===============6109763614319912879==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi, all,
-
-I ran the script of tpm2_policyauthorize and met error.
-The steps is following the page https://github.com/tpm2-software/tpm2-tools=
-/blob/master/man/tpm2_policyauthorize.1.md.
-Not sure whether it is the script error or any bug in source code.
-The log is as below, please help check.
-
-$ openssl genrsa -out signing_key_private.pem 2048
-Generating RSA private key, 2048 bit long modulus (2 primes)
-........................+++++
-...........................................................................=
-...........................................................................=
-...........................................................................=
-...+++++
-e is 65537 (0x010001)
-$ openssl rsa -in signing_key_private.pem -out signing_key_public.pem -pubo=
-ut
-writing RSA key
-$ tpm2_startup --clear --tcti=3Dmssim
-$ tpm2_loadexternal -G rsa -C o -u signing_key_public.pem -c signing_key.ct=
-x -n signing_key.name --tcti=3Dmssim
-name: 000be282af94009998a545488daf129bac7379048a44361b9e77df40a03bc4ab8a4e
-$ tpm2_pcrread -opcr0.sha256 sha256:0  --tcti=3Dmssim
-sha256:
-  0 : 0x0000000000000000000000000000000000000000000000000000000000000000
-$ tpm2_startauthsession -S session.ctx  --tcti=3Dmssim
-$ tpm2_policypcr -S session.ctx -l sha256:0 -f pcr0.sha256 -L pcr.policy  -=
--tcti=3Dmssim
-093ceb41181d47808862d7946268ee6a17a10e3d1b79b32351bc56e4beaceff0
-$ tpm2_flushcontext session.ctx  --tcti=3Dmssim
-$ openssl dgst -sha256 -sign signing_key_private.pem -out pcr.signature pcr=
-.policy
-$ tpm2_startauthsession -S session.ctx --tcti=3Dmssim
-$ tpm2_policyauthorize -S session.ctx -L authorized.policy -i pcr.policy -n=
- signing_key.name --tcti=3Dmssim
-1307183d719d482ddb2465b67e31ee1728313157d4be0f15a6fe0ded4540758d
-$ tpm2_flushcontext session.ctx --tcti=3Dmssim
-$ tpm2_nvdefine 0x1500017 -C o -s 32 -L authorized.policy -a "policyread|po=
-licywrite" --tcti=3Dmssim
-nv-index: 0x1500017
-$ tpm2_verifysignature -c signing_key.ctx -g sha256 -m pcr.policy -s pcr.si=
-gnature -t verification.tkt -f rsassa --tcti=3Dmssim
-$ tpm2_startauthsession --policy-session -S session.ctx --tcti=3Dmssim
-$ tpm2_policyauthorize -S session.ctx -L authorized.policy -i pcr.policy -n=
- signing_key.name -t verification.tkt --tcti=3Dmssim
-WARNING:esys:src/tss2-esys/api/Esys_PolicyAuthorize.c:306:Esys_PolicyAuthor=
-ize_Finish() Received TPM Error
-ERROR:esys:src/tss2-esys/api/Esys_PolicyAuthorize.c:108:Esys_PolicyAuthoriz=
-e() Esys Finish ErrorCode (0x000001c4)
-ERROR: Esys_PolicyAuthorize(0x1C4) - tpm:parameter(1):value is out of range=
- or is not correct for the context
-ERROR: Could not build tpm authorized policy
-ERROR: Unable to run tpm2_policyauthorize
-$ echo "nvpolicyauthorizetest" > nv.test_w
-$ tpm2_nvwrite 0x1500017 -P"session:session.ctx" -i nv.test_w --tcti=3Dmssim
-WARNING:esys:src/tss2-esys/api/Esys_NV_Write.c:310:Esys_NV_Write_Finish() R=
-eceived TPM Error
-ERROR:esys:src/tss2-esys/api/Esys_NV_Write.c:110:Esys_NV_Write() Esys Finis=
-h ErrorCode (0x0000099d)
-ERROR: Failed to write NV area at index 0x1500017
-ERROR: Tss2_Sys_NV_Write(0x99D) - tpm:session(1):a policy check failed
-ERROR: Unable to run tpm2_nvwrite
-
-Thanks.
 
 
-  *   Shirley
+> -----Original Message-----
+> From: Zhao, Shirley [mailto:shirley.zhao(a)intel.com]
+> Sent: Sunday, April 26, 2020 3:43 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] One question in the code of tpm2-
+> tools/tools/tpm2_loadexternal.c
+> =
 
---===============5101512969360412988==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+> Hi, all,
+> =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseTpXaW5n
-ZGluZ3M7CglwYW5vc2UtMTo1IDAgMCAwIDAgMCAwIDAgMCAwO30KQGZvbnQtZmFjZQoJe2ZvbnQt
-ZmFtaWx5OlNpbVN1bjsKCXBhbm9zZS0xOjIgMSA2IDAgMyAxIDEgMSAxIDE7fQpAZm9udC1mYWNl
-Cgl7Zm9udC1mYW1pbHk6IkNhbWJyaWEgTWF0aCI7CglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMg
-MiA0O30KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7CglwYW5vc2UtMToyIDE1IDUg
-MiAyIDIgNCAzIDIgNDt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpTaW1TdW47CglwYW5vc2Ut
-MToyIDEgNiAwIDMgMSAxIDEgMSAxO30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3Jt
-YWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90
-dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNh
-bnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5
-Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0
-ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cglj
-b2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnAuTXNvTGlzdFBhcmFn
-cmFwaCwgbGkuTXNvTGlzdFBhcmFncmFwaCwgZGl2Lk1zb0xpc3RQYXJhZ3JhcGgKCXttc28tc3R5
-bGUtcHJpb3JpdHk6MzQ7CgltYXJnaW4tdG9wOjBpbjsKCW1hcmdpbi1yaWdodDowaW47CgltYXJn
-aW4tYm90dG9tOjBpbjsKCW1hcmdpbi1sZWZ0Oi41aW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7
-Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpz
-cGFuLkVtYWlsU3R5bGUxNwoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7Cglmb250
-LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7fQouTXNvQ2hw
-RGVmYXVsdAoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5OwoJZm9udC1mYW1pbHk6IkNhbGli
-cmkiLHNhbnMtc2VyaWY7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsK
-CW1hcmdpbjoxLjBpbiAxLjI1aW4gMS4waW4gMS4yNWluO30KZGl2LldvcmRTZWN0aW9uMQoJe3Bh
-Z2U6V29yZFNlY3Rpb24xO30KLyogTGlzdCBEZWZpbml0aW9ucyAqLwpAbGlzdCBsMAoJe21zby1s
-aXN0LWlkOjE3MDU2NzAwNTU7Cgltc28tbGlzdC10eXBlOmh5YnJpZDsKCW1zby1saXN0LXRlbXBs
-YXRlLWlkczotNDUzMjI1OTU4IC04NjU2NzQ4MTIgNjc2OTg2OTEgNjc2OTg2OTMgNjc2OTg2ODkg
-Njc2OTg2OTEgNjc2OTg2OTMgNjc2OTg2ODkgNjc2OTg2OTEgNjc2OTg2OTM7fQpAbGlzdCBsMDps
-ZXZlbDEKCXttc28tbGV2ZWwtc3RhcnQtYXQ6NjsKCW1zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1
-bGxldDsKCW1zby1sZXZlbC10ZXh0Oi07Cgltc28tbGV2ZWwtdGFiLXN0b3A6bm9uZTsKCW1zby1s
-ZXZlbC1udW1iZXItcG9zaXRpb246bGVmdDsKCXRleHQtaW5kZW50Oi0uMjVpbjsKCWZvbnQtZmFt
-aWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJbXNvLWZhcmVhc3QtZm9udC1mYW1pbHk6U2ltU3Vu
-O30KQGxpc3QgbDA6bGV2ZWwyCgl7bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNv
-LWxldmVsLXRleHQ6bzsKCW1zby1sZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVsLW51bWJl
-ci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6IkNvdXJp
-ZXIgTmV3Ijt9CkBsaXN0IGwwOmxldmVsMwoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxl
-dDsKCW1zby1sZXZlbC10ZXh0OlxGMEE3OwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7Cgltc28t
-bGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZh
-bWlseTpXaW5nZGluZ3M7fQpAbGlzdCBsMDpsZXZlbDQKCXttc28tbGV2ZWwtbnVtYmVyLWZvcm1h
-dDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpcRjBCNzsKCW1zby1sZXZlbC10YWItc3RvcDpub25l
-OwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJ
-Zm9udC1mYW1pbHk6U3ltYm9sO30KQGxpc3QgbDA6bGV2ZWw1Cgl7bXNvLWxldmVsLW51bWJlci1m
-b3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6bzsKCW1zby1sZXZlbC10YWItc3RvcDpub25l
-OwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4dC1pbmRlbnQ6LS4yNWluOwoJ
-Zm9udC1mYW1pbHk6IkNvdXJpZXIgTmV3Ijt9CkBsaXN0IGwwOmxldmVsNgoJe21zby1sZXZlbC1u
-dW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxGMEE3OwoJbXNvLWxldmVsLXRh
-Yi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9uOmxlZnQ7Cgl0ZXh0LWluZGVu
-dDotLjI1aW47Cglmb250LWZhbWlseTpXaW5nZGluZ3M7fQpAbGlzdCBsMDpsZXZlbDcKCXttc28t
-bGV2ZWwtbnVtYmVyLWZvcm1hdDpidWxsZXQ7Cgltc28tbGV2ZWwtdGV4dDpcRjBCNzsKCW1zby1s
-ZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4
-dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6U3ltYm9sO30KQGxpc3QgbDA6bGV2ZWw4Cgl7
-bXNvLWxldmVsLW51bWJlci1mb3JtYXQ6YnVsbGV0OwoJbXNvLWxldmVsLXRleHQ6bzsKCW1zby1s
-ZXZlbC10YWItc3RvcDpub25lOwoJbXNvLWxldmVsLW51bWJlci1wb3NpdGlvbjpsZWZ0OwoJdGV4
-dC1pbmRlbnQ6LS4yNWluOwoJZm9udC1mYW1pbHk6IkNvdXJpZXIgTmV3Ijt9CkBsaXN0IGwwOmxl
-dmVsOQoJe21zby1sZXZlbC1udW1iZXItZm9ybWF0OmJ1bGxldDsKCW1zby1sZXZlbC10ZXh0OlxG
-MEE3OwoJbXNvLWxldmVsLXRhYi1zdG9wOm5vbmU7Cgltc28tbGV2ZWwtbnVtYmVyLXBvc2l0aW9u
-OmxlZnQ7Cgl0ZXh0LWluZGVudDotLjI1aW47Cglmb250LWZhbWlseTpXaW5nZGluZ3M7fQpvbAoJ
-e21hcmdpbi1ib3R0b206MGluO30KdWwKCXttYXJnaW4tYm90dG9tOjBpbjt9Ci0tPjwvc3R5bGU+
-PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNw
-aWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1s
-Pgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRh
-PSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkg
-bGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRpdiBjbGFzcz0i
-V29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGksIGFsbCwgPG86cD48L286cD48
-L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj5JIHJhbiB0aGUgc2NyaXB0IG9mIHRwbTJfcG9saWN5YXV0aG9yaXplIGFuZCBt
-ZXQgZXJyb3IuIDxvOnA+CjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhlIHN0ZXBz
-IGlzIGZvbGxvd2luZyB0aGUgcGFnZSA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1z
-b2Z0d2FyZS90cG0yLXRvb2xzL2Jsb2IvbWFzdGVyL21hbi90cG0yX3BvbGljeWF1dGhvcml6ZS4x
-Lm1kIj4KaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10b29scy9ibG9iL21h
-c3Rlci9tYW4vdHBtMl9wb2xpY3lhdXRob3JpemUuMS5tZDwvYT4uCjxvOnA+PC9vOnA+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj5Ob3Qgc3VyZSB3aGV0aGVyIGl0IGlzIHRoZSBzY3JpcHQgZXJy
-b3Igb3IgYW55IGJ1ZyBpbiBzb3VyY2UgY29kZS4KPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPlRoZSBsb2cgaXMgYXMgYmVsb3csIHBsZWFzZSBoZWxwIGNoZWNrLiA8bzpwPjwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPiQgb3BlbnNzbCBnZW5yc2EgLW91dCBzaWduaW5nX2tleV9wcml2YXRl
-LnBlbSAyMDQ4PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkdlbmVyYXRpbmcg
-UlNBIHByaXZhdGUga2V5LCAyMDQ4IGJpdCBsb25nIG1vZHVsdXMgKDIgcHJpbWVzKTxvOnA+PC9v
-OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4mIzQz
-OyYjNDM7JiM0MzsmIzQzOyYjNDM7PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-Pi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-LiYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0Mzs8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+ZSBpcyA2NTUzNyAoMHgwMTAwMDEpPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPiQgb3BlbnNzbCByc2EgLWluIHNpZ25pbmdfa2V5X3ByaXZhdGUucGVtIC1vdXQgc2ln
-bmluZ19rZXlfcHVibGljLnBlbSAtcHVib3V0PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPndyaXRpbmcgUlNBIGtleTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij4kIHRwbTJfc3RhcnR1cCAtLWNsZWFyIC0tdGN0aT1tc3NpbTxvOnA+PC9vOnA+PC9wPgo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj4kIHRwbTJfbG9hZGV4dGVybmFsIC1HIHJzYSAtQyBvIC11IHNpZ25p
-bmdfa2V5X3B1YmxpYy5wZW0gLWMgc2lnbmluZ19rZXkuY3R4IC1uIHNpZ25pbmdfa2V5Lm5hbWUg
-LS10Y3RpPW1zc2ltPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPm5hbWU6IDAw
-MGJlMjgyYWY5NDAwOTk5OGE1NDU0ODhkYWYxMjliYWM3Mzc5MDQ4YTQ0MzYxYjllNzdkZjQwYTAz
-YmM0YWI4YTRlPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiQgdHBtMl9wY3Jy
-ZWFkIC1vcGNyMC5zaGEyNTYgc2hhMjU2OjAmbmJzcDsgLS10Y3RpPW1zc2ltPG86cD48L286cD48
-L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPnNoYTI1Njo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+Jm5ic3A7IDAgOiAweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw
-MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+JCB0cG0yX3N0YXJ0YXV0aHNlc3Npb24gLVMgc2Vzc2lvbi5jdHgmbmJzcDsg
-LS10Y3RpPW1zc2ltPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiQgdHBtMl9w
-b2xpY3lwY3IgLVMgc2Vzc2lvbi5jdHggLWwgc2hhMjU2OjAgLWYgcGNyMC5zaGEyNTYgLUwgcGNy
-LnBvbGljeSZuYnNwOyAtLXRjdGk9bXNzaW08bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+MDkzY2ViNDExODFkNDc4MDg4NjJkNzk0NjI2OGVlNmExN2ExMGUzZDFiNzliMzIzNTFi
-YzU2ZTRiZWFjZWZmMDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4kIHRwbTJf
-Zmx1c2hjb250ZXh0IHNlc3Npb24uY3R4Jm5ic3A7IC0tdGN0aT1tc3NpbTxvOnA+PC9vOnA+PC9w
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4kIG9wZW5zc2wgZGdzdCAtc2hhMjU2IC1zaWduIHNpZ25p
-bmdfa2V5X3ByaXZhdGUucGVtIC1vdXQgcGNyLnNpZ25hdHVyZSBwY3IucG9saWN5PG86cD48L286
-cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiQgdHBtMl9zdGFydGF1dGhzZXNzaW9uIC1TIHNl
-c3Npb24uY3R4IC0tdGN0aT1tc3NpbTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij4kIHRwbTJfcG9saWN5YXV0aG9yaXplIC1TIHNlc3Npb24uY3R4IC1MIGF1dGhvcml6ZWQucG9s
-aWN5IC1pIHBjci5wb2xpY3kgLW4gc2lnbmluZ19rZXkubmFtZSAtLXRjdGk9bXNzaW08bzpwPjwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+MTMwNzE4M2Q3MTlkNDgyZGRiMjQ2NWI2N2Uz
-MWVlMTcyODMxMzE1N2Q0YmUwZjE1YTZmZTBkZWQ0NTQwNzU4ZDxvOnA+PC9vOnA+PC9wPgo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj4kIHRwbTJfZmx1c2hjb250ZXh0IHNlc3Npb24uY3R4IC0tdGN0aT1t
-c3NpbTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4kIHRwbTJfbnZkZWZpbmUg
-MHgxNTAwMDE3IC1DIG8gLXMgMzIgLUwgYXV0aG9yaXplZC5wb2xpY3kgLWEgJnF1b3Q7cG9saWN5
-cmVhZHxwb2xpY3l3cml0ZSZxdW90OyAtLXRjdGk9bXNzaW08bzpwPjwvbzpwPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+bnYtaW5kZXg6IDB4MTUwMDAxNzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj4kIHRwbTJfdmVyaWZ5c2lnbmF0dXJlIC1jIHNpZ25pbmdfa2V5LmN0eCAt
-ZyBzaGEyNTYgLW0gcGNyLnBvbGljeSAtcyBwY3Iuc2lnbmF0dXJlIC10IHZlcmlmaWNhdGlvbi50
-a3QgLWYgcnNhc3NhIC0tdGN0aT1tc3NpbTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj4kIHRwbTJfc3RhcnRhdXRoc2Vzc2lvbiAtLXBvbGljeS1zZXNzaW9uIC1TIHNlc3Npb24u
-Y3R4IC0tdGN0aT1tc3NpbTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4kIHRw
-bTJfcG9saWN5YXV0aG9yaXplIC1TIHNlc3Npb24uY3R4IC1MIGF1dGhvcml6ZWQucG9saWN5IC1p
-IHBjci5wb2xpY3kgLW4gc2lnbmluZ19rZXkubmFtZSAtdCB2ZXJpZmljYXRpb24udGt0IC0tdGN0
-aT1tc3NpbTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5XQVJOSU5HOmVzeXM6
-c3JjL3RzczItZXN5cy9hcGkvRXN5c19Qb2xpY3lBdXRob3JpemUuYzozMDY6RXN5c19Qb2xpY3lB
-dXRob3JpemVfRmluaXNoKCkgUmVjZWl2ZWQgVFBNIEVycm9yPG86cD48L286cD48L3A+CjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPkVSUk9SOmVzeXM6c3JjL3RzczItZXN5cy9hcGkvRXN5c19Qb2xpY3lB
-dXRob3JpemUuYzoxMDg6RXN5c19Qb2xpY3lBdXRob3JpemUoKSBFc3lzIEZpbmlzaCBFcnJvckNv
-ZGUgKDB4MDAwMDAxYzQpPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkVSUk9S
-OiBFc3lzX1BvbGljeUF1dGhvcml6ZSgweDFDNCkgLSB0cG06cGFyYW1ldGVyKDEpOnZhbHVlIGlz
-IG91dCBvZiByYW5nZSBvciBpcyBub3QgY29ycmVjdCBmb3IgdGhlIGNvbnRleHQ8bzpwPjwvbzpw
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RVJST1I6IENvdWxkIG5vdCBidWlsZCB0cG0gYXV0
-aG9yaXplZCBwb2xpY3k8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RVJST1I6
-IFVuYWJsZSB0byBydW4gdHBtMl9wb2xpY3lhdXRob3JpemU8bzpwPjwvbzpwPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+JCBlY2hvICZxdW90O252cG9saWN5YXV0aG9yaXpldGVzdCZxdW90OyAm
-Z3Q7IG52LnRlc3RfdzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4kIHRwbTJf
-bnZ3cml0ZSAweDE1MDAwMTcgLVAmcXVvdDtzZXNzaW9uOnNlc3Npb24uY3R4JnF1b3Q7IC1pIG52
-LnRlc3RfdyAtLXRjdGk9bXNzaW08bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-V0FSTklORzplc3lzOnNyYy90c3MyLWVzeXMvYXBpL0VzeXNfTlZfV3JpdGUuYzozMTA6RXN5c19O
-Vl9Xcml0ZV9GaW5pc2goKSBSZWNlaXZlZCBUUE0gRXJyb3I8bzpwPjwvbzpwPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+RVJST1I6ZXN5czpzcmMvdHNzMi1lc3lzL2FwaS9Fc3lzX05WX1dyaXRl
-LmM6MTEwOkVzeXNfTlZfV3JpdGUoKSBFc3lzIEZpbmlzaCBFcnJvckNvZGUgKDB4MDAwMDA5OWQp
-PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkVSUk9SOiBGYWlsZWQgdG8gd3Jp
-dGUgTlYgYXJlYSBhdCBpbmRleCAweDE1MDAwMTc8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+RVJST1I6IFRzczJfU3lzX05WX1dyaXRlKDB4OTlEKSAtIHRwbTpzZXNzaW9uKDEp
-OmEgcG9saWN5IGNoZWNrIGZhaWxlZDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij5FUlJPUjogVW5hYmxlIHRvIHJ1biB0cG0yX252d3JpdGU8bzpwPjwvbzpwPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PlRoYW5rcy4gPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7
-PC9vOnA+PC9wPgo8dWwgc3R5bGU9Im1hcmdpbi10b3A6MGluIiB0eXBlPSJkaXNjIj4KPGxpIGNs
-YXNzPSJNc29MaXN0UGFyYWdyYXBoIiBzdHlsZT0ibWFyZ2luLWxlZnQ6MGluO21zby1saXN0Omww
-IGxldmVsMSBsZm8xIj5TaGlybGV5CjxvOnA+PC9vOnA+PC9saT48L3VsPgo8L2Rpdj4KPC9ib2R5
-Pgo8L2h0bWw+Cg==
+> In the following condition in tools/tpm2_loadexternal.c, if both policy a=
+nd auth
+> are empty, then it will also set TPMA_OBJECT_USERWITHAUTH.
+> Seems it is not correct.
 
---===============5101512969360412988==--
+If you're not using a policy and have an empty password, then auth with the=
+ empty password.
+That's the default behavior. If you specify a policy, we will turn down use=
+rwithauth, if you specify
+both, we use them both IIRC (policy or auth). If you want different attribu=
+tes, the -a option will
+give you full control. This should be true on tpm2-tools 4.0+.
+
+> =
+
+>     pub.publicArea.objectAttributes =3D BASE_DEFAULT_ATTRS;
+> =
+
+>     if (!(ctx.policy && !ctx.auth)) {
+> =
+
+>         pub.publicArea.objectAttributes |=3D TPMA_OBJECT_USERWITHAUTH;
+> =
+
+>     }
+> =
+
+> =
+
+> =
+
+> And no description about  this scenario in spec, part2, section 8.3.1.
+> =
+
+> 6
+> =
+
+> userWithAuth
+> =
+
+> SET (1): Approval of USER role actions with this object may be with an HM=
+AC
+> session or with a password using the authValue of the object or a policy =
+session.
+> CLEAR (0): Approval of USER role actions with this object may only be don=
+e with a
+> policy session.
+> =
+
+> =
+
+> =
+
+> Can you help to give more information?
+> =
+
+> =
+
+> =
+
+> Thanks.
+> =
+
+> *	Shirley
+
+--===============6109763614319912879==--
 
