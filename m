@@ -1,85 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============2546720011321421380=="
+Content-Type: multipart/mixed; boundary="===============2829559019179109079=="
 MIME-Version: 1.0
-From: Michael Walz <m.walz at digitalendoscopy.de>
-Subject: [tpm2] Re: PCR pre-calculation
-Date: Wed, 29 Apr 2020 18:10:25 +0200
-Message-ID: <86d9ecbb-81b6-7e29-43a0-1aaae16d0bd5@digitalendoscopy.de>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649ED8577@ORSMSX101.amr.corp.intel.com
+From: Steven Clark <davolfman at gmail.com>
+Subject: [tpm2] Can an ECC key both sign and perform ECDH key agreement?
+Date: Wed, 29 Apr 2020 13:44:12 -0700
+Message-ID: <CAOCvsSka0Nfa127=J_jKsycmNqhyqXgzObNKfZ_67ER=+p3vJQ@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2546720011321421380==
+--===============2829559019179109079==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-That is perfect for me, got it.
-Thanks a lot guys!
+For my project I need to create an ECC shared secret.  I'm going to need to
+get up to speed to writing an ESAPI executable from scratch to do this.  In
+the meantime I'm studying up on the specs again to see if they make me any
+more confident, and if I find any theoretical gotchas.
 
+Here's a potential:
+Spec v1.59 part 1 appendix C.7.3 on TPM2_ECDH_ZGen says "To prevent
+inadvertent compromise of a signing key, sign and restricted are required
+to be CLEAR in the referenced key.
+Spec v1.59 part 3 section 14.5.1 only says that restricted needs to be
+CLEAR and decrypt SET.  Along with something about the scheme needing to be
+TPM_ALG_ECDH or TPM_ALG_NULL, which I don't know is relevant yet.
 
-On 28.04.20 16:45, Roberts, William C wrote:
-> Yeah theirs no mac, it's just a straight hash of existing + new, which is=
- exactly what
-> Andrea's example is.
-> =
+To register this key with other parts of the system I may need to produce a
+CSR from it, which presumably means I need to be able to sign with the key,
+even though it's primary use is key agreement.
 
->> -----Original Message-----
->> From: Fuchs, Andreas [mailto:andreas.fuchs(a)sit.fraunhofer.de]
->> Sent: Tuesday, April 28, 2020 7:31 AM
->> To: Michael Walz <m.walz(a)digitalendoscopy.de>; tpm2(a)lists.01.org
->> Subject: [tpm2] Re: PCR pre-calculation
->>
->> I've used this function in the past:
->>
->> pcr_extend() {
->>    ( echo -n "$1" | xxd -r -p
->>      echo -n "$2" | xxd -r -p
->>    ) | sha1sum | cut -d " " -f 1
->> }
->>
->> PCRVALUE=3D"0000000000000000000000000000000000000000"
->> PCRVALUE=3D"$(pcr_extend "$PCRVALUE"
->> "86454b08919afa1c912af74dc704b87bc08afe99")"
->>
->> Cheers,
->> Andreas
->> ________________________________________
->> From: Michael Walz [m.walz(a)digitalendoscopy.de]
->> Sent: Tuesday, April 28, 2020 12:58
->> To: tpm2(a)lists.01.org
->> Subject: [tpm2] PCR pre-calculation
->>
->> Hi there,
->> I do not know if this is the right place for this question, so please po=
-int me in the
->> right direction when I am wrong here.
->> We are trying to use the TPM2.0 in embedded devices. My job is to write a
->> verification suite to test if our scripts and tools are working correctl=
-y. One point
->> here is that I want to check if the resulting PCRs are as expected.
->> Microsoft provides a "TPM PCR Calculator" for this purpose. I would need
->> something similar for linux command line and I googled a lot, but I did =
-not find
->> something useful. I tried openssl and commands like
->>
->> echo -n '86454b08919afa1c912af74dc704b87bc08afe99' | xxd -r -p | openssl=
- dgst -
->> sha1 -mac hmac -macopt hexkey:0000000000000000000000000000000000000000
->>
->> I tested several options and variations, but the results never match the=
- PCR
->> register I get with tpm2_pcrextend.
->> Is there some way to get a pre-calculation for the PCRs?
->>
->> Thanks in advance!!
->> Michael
->> _______________________________________________
->> tpm2 mailing list -- tpm2(a)lists.01.org
->> To unsubscribe send an email to tpm2-leave(a)lists.01.org
->> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
->> _______________________________________________
->> tpm2 mailing list -- tpm2(a)lists.01.org
->> To unsubscribe send an email to tpm2-leave(a)lists.01.org
->> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============2546720011321421380==--
+Is this going to be possible?  Does the first reference preclude a key that
+is both a signing and encryption key? or only a key that can perform both
+attestation and key agreement?
+
+--===============2829559019179109079==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGRpdiBkaXI9Imx0ciI+Rm9yIG15IHByb2plY3QgSSBuZWVkIHRvIGNyZWF0ZSBhbiBFQ0Mgc2hh
+cmVkIHNlY3JldC7CoCBJJiMzOTttIGdvaW5nIHRvIG5lZWQgdG8gZ2V0IHVwIHRvIHNwZWVkIHRv
+IHdyaXRpbmcgYW4gRVNBUEkgZXhlY3V0YWJsZSBmcm9tIHNjcmF0Y2ggdG8gZG8gdGhpcy7CoCBJ
+biB0aGUgbWVhbnRpbWUgSSYjMzk7bSBzdHVkeWluZyB1cCBvbiB0aGUgc3BlY3MgYWdhaW4gdG8g
+c2VlIGlmIHRoZXkgbWFrZSBtZSBhbnkgbW9yZSBjb25maWRlbnQsIGFuZCBpZiBJIGZpbmQgYW55
+IHRoZW9yZXRpY2FsIGdvdGNoYXMuPGRpdj48YnI+PC9kaXY+PGRpdj5IZXJlJiMzOTtzIGEgcG90
+ZW50aWFsOjxkaXY+U3BlYyB2MS41OSBwYXJ0IDEgYXBwZW5kaXggQy43LjMgb24gVFBNMl9FQ0RI
+X1pHZW4gc2F5cyAmcXVvdDtUbyBwcmV2ZW50IGluYWR2ZXJ0ZW50IGNvbXByb21pc2Ugb2YgYSBz
+aWduaW5nIGtleSwgc2lnbiBhbmQgcmVzdHJpY3RlZCBhcmUgcmVxdWlyZWQgdG8gYmUgQ0xFQVIg
+aW4gdGhlIHJlZmVyZW5jZWTCoGtleS48L2Rpdj48ZGl2PlNwZWMgdjEuNTkgcGFydCAzIHNlY3Rp
+b24gMTQuNS4xIG9ubHkgc2F5cyB0aGF0IHJlc3RyaWN0ZWQgbmVlZHMgdG8gYmUgQ0xFQVIgYW5k
+IGRlY3J5cHQgU0VULsKgIEFsb25nIHdpdGggc29tZXRoaW5nIGFib3V0IHRoZSBzY2hlbWUgbmVl
+ZGluZyB0byBiZSBUUE1fQUxHX0VDREggb3IgVFBNX0FMR19OVUxMLCB3aGljaCBJIGRvbiYjMzk7
+dCBrbm93IGlzIHJlbGV2YW50IHlldC48L2Rpdj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRv
+IHJlZ2lzdGVyIHRoaXMga2V5IHdpdGggb3RoZXIgcGFydHMgb2YgdGhlIHN5c3RlbSBJIG1heSBu
+ZWVkIHRvIHByb2R1Y2UgYSBDU1IgZnJvbSBpdCwgd2hpY2ggcHJlc3VtYWJseSBtZWFucyBJIG5l
+ZWQgdG8gYmUgYWJsZSB0byBzaWduIHdpdGggdGhlIGtleSwgZXZlbiB0aG91Z2ggaXQmIzM5O3Mg
+cHJpbWFyeSB1c2UgaXMga2V5IGFncmVlbWVudC48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pklz
+IHRoaXMgZ29pbmcgdG8gYmUgcG9zc2libGU/wqAgRG9lcyB0aGUgZmlyc3QgcmVmZXJlbmNlIHBy
+ZWNsdWRlIGEga2V5IHRoYXQgaXMgYm90aCBhIHNpZ25pbmcgYW5kIGVuY3J5cHRpb24ga2V5PyBv
+ciBvbmx5IGEga2V5IHRoYXQgY2FuIHBlcmZvcm0gYm90aCBhdHRlc3RhdGlvbiBhbmQga2V5IGFn
+cmVlbWVudD88L2Rpdj48L2Rpdj4K
+
+--===============2829559019179109079==--
 
