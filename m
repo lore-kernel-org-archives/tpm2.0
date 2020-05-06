@@ -1,82 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============8486751448438478616=="
+Content-Type: multipart/mixed; boundary="===============2843199008629403416=="
 MIME-Version: 1.0
-From: Steven Clark <davolfman at gmail.com>
-Subject: [tpm2] Re: Are there any help documents/sites on writing an ESAPI
- program.
-Date: Fri, 01 May 2020 10:17:28 -0700
-Message-ID: <CAOCvsSmwZ8Ae8x7dpttyRZ=jV_M2X-AHWhO8On0afKkzsiC0rA@mail.gmail.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649ED8EBA@ORSMSX101.amr.corp.intel.com
+From: Dimitar Tomov <dimi at designfirst.ee>
+Subject: [tpm2] Hello from a small community of TPM enthusiasts
+Date: Wed, 06 May 2020 18:56:51 +0000
+Message-ID: <
+ <VI1PR08MB2653F88E6B82998D7A6DBD22B5A40@VI1PR08MB2653.eurprd08.prod.outlook.com>>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8486751448438478616==
+--===============2843199008629403416==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-OpenSSL splits ECC into the "ec" and "ecparam" commands as part of
-dealing with the fact that there's not just one curve and you need to
-know which curve to operate on, unlike RSA.  The "ecparam" can
-generate a parameter structure and then a key that meets those
-parameters from it, or "ecparam" can just generate a key on one of the
-known curves and skip the extra step entirely.  Given that curve IDs
-are used by the TPM this is probably the method you'd want to use to
-generate a keypair anyway.
+Hello everyone,
 
-All I've really got is "because that's what the Internet told me" and
-"because that's what OpenSSL does" however bad those reasons are.  The
-32 bytes shared secret applies to ECDH with ECC-P256 and other curves
-would have other lengths obviously.  The sources I read on the
-operation said you "ECC multiplied" the private key by the public key
-of the peer and took the X coordinate as the shared secret.  When
-performing the -derive operation on P256 keys with OpenSSL the result
-is a 32-byte stream that looks like it's high-entropy.  Also a
-tpm2_readpublic of an ECC-p256 key shows a 32-byte X-coordinate so
-this seems consistent.  When I run OpenSSL's derive operation with the
-reverse pairing I also get the same number so the command does seem to
-generate a shared secret.  I'm pretty sure this shared secret is some
-sort of raw bitstream because it's not in an ASN.1 representation like
-everything else OpenSSL reads or creates, and it's exactly the right
-size to be a 256 bit symmetric key or other raw number.
+We have a small community of about 25 TPM enthusiast from companies like No=
+kia Bell Labs, LetsTrust, WolfSSL, etc. We use TPM2 tools and discuss vario=
+us use cases, the TPM implementations, everything, some interesting topics =
+arise. We would really appreciate you joining our online chats, we have it =
+every Wednesday at 8am PDT - https://developers.tpm.dev/events We are think=
+ing about some documentation effort of how to use TPM features. Everyone's =
+welcomed.
 
-Given the original output of the operation is a point on the curve the
-command might also be one part of the process of creating an ephemeral
-key.  With a second use case maybe there'd need to be -x and -y
-arguments instead of -o?  Or maybe a -F for output format and pack it
-into an ASN.1 public key package or TPMS (public?) if the other
-format's selected, that way meta data about algorithm and curve ID is
-available.
-The ASN.1 format OpenSSL stores a public key in is something like
-(you'll have to forgive my lack of ASN.1 plaintext notation):
-SEQUENCE:
-    SEQUENCE:
-        OID:
-            id-ecPublicKey
-        OID:
-            <curveID>
-    BIT STRING:
-            sec1 string format:
-                0x00 for octet string
-                0x04 for uncompressed
-                <x coordinate>
-                <y coordinate>
+Best,
+Dimi
 
+--===============2843199008629403416==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1NSwgMjU1LCAyNTUpOyI+
+CjxzcGFuIHN0eWxlPSJtYXJnaW46IDBweDsgZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
+ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij5IZWxsbyBldmVyeW9u
+ZSw8YnI+Cjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
+ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IGJhY2tncm91bmQtY29s
+b3I6IHJnYigyNTUsIDI1NSwgMjU1KTsgZGlzcGxheTogaW5saW5lICFpbXBvcnRhbnQ7Ij48L3Nw
+YW4+CjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4OyBmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWws
+IEhlbHZldGljYSwgc2Fucy1zZXJpZjsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2
+Pgo8ZGl2IHN0eWxlPSJtYXJnaW46IDBweDsgZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
+ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KV2UgaGF2ZSBhIHNt
+YWxsIGNvbW11bml0eSBvZiBhYm91dCAyNSBUUE0gZW50aHVzaWFzdCBmcm9tIGNvbXBhbmllcyBs
+aWtlIE5va2lhIEJlbGwgTGFicywgTGV0c1RydXN0LCBXb2xmU1NMLCBldGMuIFdlIHVzZSBUUE0y
+IHRvb2xzIGFuZCBkaXNjdXNzIHZhcmlvdXMgdXNlIGNhc2VzLCB0aGUgVFBNIGltcGxlbWVudGF0
+aW9ucywgZXZlcnl0aGluZywgc29tZSBpbnRlcmVzdGluZyB0b3BpY3MgYXJpc2UuIFdlIHdvdWxk
+IHJlYWxseSBhcHByZWNpYXRlCiB5b3Ugam9pbmluZyBvdXIgb25saW5lIGNoYXRzLCB3ZSBoYXZl
+IGl0IGV2ZXJ5IFdlZG5lc2RheSBhdCA4YW0gUERUIC08c3Bhbj4mbmJzcDs8L3NwYW4+PGEgaHJl
+Zj0iaHR0cHM6Ly9kZXZlbG9wZXJzLnRwbS5kZXYvZXZlbnRzIiB0YXJnZXQ9Il9ibGFuayIgcmVs
+PSJub29wZW5lciBub3JlZmVycmVyIiBzdHlsZT0ibWFyZ2luOiAwcHg7Ij5odHRwczovL2RldmVs
+b3BlcnMudHBtLmRldi9ldmVudHM8L2E+Jm5ic3A7V2UgYXJlIHRoaW5raW5nIGFib3V0IHNvbWUg
+ZG9jdW1lbnRhdGlvbgogZWZmb3J0IG9mIGhvdyB0byB1c2UgVFBNIGZlYXR1cmVzLiBFdmVyeW9u
+ZSdzIHdlbGNvbWVkLjwvZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW46IDBweDsgZm9udC1mYW1pbHk6
+IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGNvbG9yOiByZ2IoMCwgMCwg
+MCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luOiAwcHg7IGZvbnQtZmFtaWx5OiBD
+YWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBjb2xvcjogcmdiKDAsIDAsIDAp
+OyI+CkJlc3QsPGJyPgo8L2Rpdj4KPHNwYW4gc3R5bGU9Im1hcmdpbjogMHB4OyBmb250LWZhbWls
+eTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgY29sb3I6IHJnYigwLCAw
+LCAwKTsiPkRpbWk8L3NwYW4+PGJyPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
->
-> > decode.  The tool should ideally have a -o option that's optional with =
-pipe
-> > detection to switch to binary like tpm2_getrandom, because the expected
-> > output format is a 32-byte integer with no formatting.
->
-> Is it? How do you know that (im curious)? Their's code to go from TPM2 da=
-ta structures
-> To openssl EC_POINT. I was trying to figure out what to do with it then. =
-Openssl has
-> The app ecparams that shows some PEM output of BEGIN EC PARAMS in scissor=
- lines.
-> I wasn't sure if we should go that route.
->
->
---===============8486751448438478616==--
+--===============2843199008629403416==--
 
