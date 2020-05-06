@@ -1,69 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============2843199008629403416=="
+Content-Type: multipart/mixed; boundary="===============2652752326876962926=="
 MIME-Version: 1.0
-From: Dimitar Tomov <dimi at designfirst.ee>
-Subject: [tpm2] Hello from a small community of TPM enthusiasts
-Date: Wed, 06 May 2020 18:56:51 +0000
-Message-ID: <
- <VI1PR08MB2653F88E6B82998D7A6DBD22B5A40@VI1PR08MB2653.eurprd08.prod.outlook.com>>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: Hello from a small community of TPM enthusiasts
+Date: Wed, 06 May 2020 19:24:42 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EDAF1E@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: VI1PR08MB2653F88E6B82998D7A6DBD22B5A40@VI1PR08MB2653.eurprd08.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2843199008629403416==
+--===============2652752326876962926==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
+I am going to try and attend next week. Thanks.
 
-We have a small community of about 25 TPM enthusiast from companies like No=
-kia Bell Labs, LetsTrust, WolfSSL, etc. We use TPM2 tools and discuss vario=
-us use cases, the TPM implementations, everything, some interesting topics =
-arise. We would really appreciate you joining our online chats, we have it =
-every Wednesday at 8am PDT - https://developers.tpm.dev/events We are think=
-ing about some documentation effort of how to use TPM features. Everyone's =
-welcomed.
+Bill
 
-Best,
-Dimi
+> -----Original Message-----
+> From: Dimitar Tomov [mailto:dimi(a)designfirst.ee]
+> Sent: Wednesday, May 6, 2020 1:57 PM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Hello from a small community of TPM enthusiasts
+> =
 
---===============2843199008629403416==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+> Hello everyone,
+> =
 
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
-ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
-eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
-bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
-b3I6IHJnYigwLCAwLCAwKTsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1NSwgMjU1LCAyNTUpOyI+
-CjxzcGFuIHN0eWxlPSJtYXJnaW46IDBweDsgZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
-ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij5IZWxsbyBldmVyeW9u
-ZSw8YnI+Cjwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
-ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IGJhY2tncm91bmQtY29s
-b3I6IHJnYigyNTUsIDI1NSwgMjU1KTsgZGlzcGxheTogaW5saW5lICFpbXBvcnRhbnQ7Ij48L3Nw
-YW4+CjxkaXYgc3R5bGU9Im1hcmdpbjogMHB4OyBmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWws
-IEhlbHZldGljYSwgc2Fucy1zZXJpZjsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2
-Pgo8ZGl2IHN0eWxlPSJtYXJnaW46IDBweDsgZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
-ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KV2UgaGF2ZSBhIHNt
-YWxsIGNvbW11bml0eSBvZiBhYm91dCAyNSBUUE0gZW50aHVzaWFzdCBmcm9tIGNvbXBhbmllcyBs
-aWtlIE5va2lhIEJlbGwgTGFicywgTGV0c1RydXN0LCBXb2xmU1NMLCBldGMuIFdlIHVzZSBUUE0y
-IHRvb2xzIGFuZCBkaXNjdXNzIHZhcmlvdXMgdXNlIGNhc2VzLCB0aGUgVFBNIGltcGxlbWVudGF0
-aW9ucywgZXZlcnl0aGluZywgc29tZSBpbnRlcmVzdGluZyB0b3BpY3MgYXJpc2UuIFdlIHdvdWxk
-IHJlYWxseSBhcHByZWNpYXRlCiB5b3Ugam9pbmluZyBvdXIgb25saW5lIGNoYXRzLCB3ZSBoYXZl
-IGl0IGV2ZXJ5IFdlZG5lc2RheSBhdCA4YW0gUERUIC08c3Bhbj4mbmJzcDs8L3NwYW4+PGEgaHJl
-Zj0iaHR0cHM6Ly9kZXZlbG9wZXJzLnRwbS5kZXYvZXZlbnRzIiB0YXJnZXQ9Il9ibGFuayIgcmVs
-PSJub29wZW5lciBub3JlZmVycmVyIiBzdHlsZT0ibWFyZ2luOiAwcHg7Ij5odHRwczovL2RldmVs
-b3BlcnMudHBtLmRldi9ldmVudHM8L2E+Jm5ic3A7V2UgYXJlIHRoaW5raW5nIGFib3V0IHNvbWUg
-ZG9jdW1lbnRhdGlvbgogZWZmb3J0IG9mIGhvdyB0byB1c2UgVFBNIGZlYXR1cmVzLiBFdmVyeW9u
-ZSdzIHdlbGNvbWVkLjwvZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW46IDBweDsgZm9udC1mYW1pbHk6
-IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGNvbG9yOiByZ2IoMCwgMCwg
-MCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luOiAwcHg7IGZvbnQtZmFtaWx5OiBD
-YWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBjb2xvcjogcmdiKDAsIDAsIDAp
-OyI+CkJlc3QsPGJyPgo8L2Rpdj4KPHNwYW4gc3R5bGU9Im1hcmdpbjogMHB4OyBmb250LWZhbWls
-eTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgY29sb3I6IHJnYigwLCAw
-LCAwKTsiPkRpbWk8L3NwYW4+PGJyPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+> =
 
---===============2843199008629403416==--
+> We have a small community of about 25 TPM enthusiast from companies like
+> Nokia Bell Labs, LetsTrust, WolfSSL, etc. We use TPM2 tools and discuss v=
+arious
+> use cases, the TPM implementations, everything, some interesting topics a=
+rise.
+> We would really appreciate you joining our online chats, we have it every
+> Wednesday at 8am PDT - https://developers.tpm.dev/events We are thinking
+> about some documentation effort of how to use TPM features. Everyone's
+> welcomed.
+> =
+
+> Best,
+> =
+
+> Dimi
+
+--===============2652752326876962926==--
 
