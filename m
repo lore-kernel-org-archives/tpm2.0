@@ -1,27 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============6999258851703387023=="
+Content-Type: multipart/mixed; boundary="===============2058287103295787979=="
 MIME-Version: 1.0
 From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] tpm2-tss v2.4.1-rc1
-Date: Thu, 07 May 2020 15:00:13 -0700
-Message-ID: <87dbcda8-1c88-0f4f-9952-d85aee37335c@intel.com>
+Subject: [tpm2] Re: tpm2_clear
+Date: Thu, 07 May 2020 15:05:44 -0700
+Message-ID: <a917e102-c7e7-39b0-3cef-eef334ac3bad@intel.com>
+In-Reply-To: f1508ca2-f8ed-22c8-ee6f-adcec09df1f6@ufomoviez.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6999258851703387023==
+--===============2058287103295787979==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-A new release candidate rc-1 for tpm2-tss v2.4.1 is out.
-https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.1-rc1
+On 5/7/20 11:08 AM, Lester Cordeiro wrote:
+>>
+> =
 
-All changes and fixes are listed in the CHANGELOG.md file.
-Any feedback welcomed.
+> hi,
+> =
 
-Thanks,
+> =C2=A0=C2=A0=C2=A0 is it possible to provide an example on how to create =
+RSA key under
+> SRK? Like what tpm2 tools should i use and what arguments?
+> =
+
+
+See here: https://github.com/tpm2-software/tpm2-tools/wiki/Creating-Objects
 -- =
 
 Tadeusz
---===============6999258851703387023==--
+--===============2058287103295787979==--
 
