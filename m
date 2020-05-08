@@ -1,23 +1,195 @@
-Content-Type: multipart/mixed; boundary="===============7628390805681584151=="
+Content-Type: multipart/mixed; boundary="===============3218511581965938339=="
 MIME-Version: 1.0
-From: =?utf-8?q?Eduardo_Falc=C3=A3o_=3Ceduardolfalcao_at_gmail=2Ecom=3E?=
-Subject: [tpm2] Re: Use PCR10 of sha256 PCR bank
-Date: Fri, 08 May 2020 17:27:35 +0000
-Message-ID: <20200508172735.2843.15961@ml01.vlan13.01.org>
-In-Reply-To: 20200508155440.2843.22202@ml01.vlan13.01.org
+From: Muthukumar S <muthu.smk at gmail.com>
+Subject: [tpm2] Re: How CreateCsr using openssl API flow works ,
+ when is passes via tpm2-tss-engine
+Date: Fri, 08 May 2020 23:44:14 +0530
+Message-ID: <CANGCWd1GwRyoo9nAuyd0TeDV4c_=ziLKrvg7L4wgqdmYMOkD6g@mail.gmail.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649EDC509@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7628390805681584151==
+--===============3218511581965938339==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thank you, Nicolas.
+Hi Roberts,
+Yes , I have loaded the engine.
 
-Your reasoning makes total sense to me.
-I'll try upgrading my ubuntu to check if this issue is solved.
+I have doubt that the issue might be due to abrmd resource management ? on
+reinitialize TCTI device (ref: shared below links)
+Scenario : I am doing two operation in single application
+tpm2tss-rsa-genkey   and then creatingCsr() . Here tpm2tss-rsa-genkey is
+working fine , then am covering the genkey to EVP_PKEY
+and giving it to createcsr. Even inside createcsr app getting crash  when
+the sign API is get called.
 
-Best regards
---===============7628390805681584151==--
+*Look in to how to reinitialize TCTI device*
+
+https://github.com/tpm2-software/tpm2-tss/issues/1395
+
+https://github.com/tpm2-software/tpm2-tss/issues/1499
+
+"Device or resource busy" usually means that some other process has it open.
+try lsof | grep tpm to catch the sneaky program.
+
+
+
+
+
+On Fri, May 8, 2020, 9:45 PM Roberts, William C <william.c.roberts(a)intel.=
+com
+wrote:
+
+>
+>
+> > -----Original Message-----
+> > From: muthu.smk(a)gmail.com [mailto:muthu.smk(a)gmail.com]
+> > Sent: Friday, May 8, 2020 3:01 AM
+> > To: tpm2(a)lists.01.org
+> > Subject: [tpm2] How CreateCsr using openssl API flow works , when is
+> passes via
+> > tpm2-tss-engine
+> >
+> > I have below openssl command with tpmengine which generate csr using the
+> > private key generated using tpm2tss-genkey.
+> >
+> > /* Generating private using below tpm2tss-genkey API*/ tpm2tss-genkey -a
+> rsa -
+> > s 2048 tpm2tss_rsa_genkey_2048
+> > /* using below openssl API creating a csr with input key (private key
+> generated
+> > by tpm2tss)  , via engine tpm2tss */ openssl req -new -engine tpm2tss
+> -keyform
+> > engine -out openssl_created_mod_rsa_key.csr -key  tpm2tss_rsa_genkey_20=
+48
+>
+> Did you load the engine so the API hits the tss engine versus normal
+> openssl?
+> IIRC the last time I saw your code snippets you never loaded the engine.
+> >
+> > While creating the similar application what the above tpm2-genkey
+> creation and
+> > openssl does using tpm2/tpm2-tss api , am getting my app crash in below
+> signing
+> > API . I tried checking the tpm2-tss-engine code which works for openssl
+> to
+> > perform tpm2 tss task . But i could not able to get any clue regarding
+> where this
+> > "sign" is happening .  Since this "sign" is part of csr generation , am
+> not sure how
+> > come the command line above openssl api works . Can any one give me some
+> > inputs on this .
+> >
+> > X509_REQ_sign ()
+> >
+> > Thanks
+> > _______________________________________________
+> > tpm2 mailing list -- tpm2(a)lists.01.org
+> > To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+>
+
+--===============3218511581965938339==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGRpdiBkaXI9Imx0ciI+PGRpdiBkaXI9ImF1dG8iPkhpIFJvYmVydHMsPGRpdiBkaXI9ImF1dG8i
+PlllcyAsIEkgaGF2ZSBsb2FkZWQgdGhlIGVuZ2luZS48L2Rpdj48ZGl2IGRpcj0iYXV0byI+PGJy
+PjwvZGl2PjxkaXYgZGlyPSJhdXRvIj5JIGhhdmUgZG91YnQgdGhhdCB0aGUgaXNzdWUgbWlnaHQg
+YmUgZHVlIHRvIGFicm1kIHJlc291cmNlIG1hbmFnZW1lbnQgPyBvbiByZWluaXRpYWxpemUgVENU
+SSBkZXZpY2UgKHJlZjogc2hhcmVkIGJlbG93IGxpbmtzKTwvZGl2PjxkaXY+U2NlbmFyaW8gOiBJ
+IGFtIGRvaW5nIHR3byBvcGVyYXRpb24gaW4gc2luZ2xlIGFwcGxpY2F0aW9uIHRwbTJ0c3MtcnNh
+LWdlbmtlecKgIMKgYW5kIHRoZW4gY3JlYXRpbmdDc3IoKSAuIEhlcmUgdHBtMnRzcy1yc2EtZ2Vu
+a2V5IGlzIHdvcmtpbmcgZmluZSAsIHRoZW4gYW0gY292ZXJpbmcgdGhlIGdlbmtleSB0byBFVlBf
+UEtFWTwvZGl2PjxkaXY+YW5kIGdpdmluZyBpdCB0byBjcmVhdGVjc3IuIEV2ZW4gaW5zaWRlIGNy
+ZWF0ZWNzciBhcHAgZ2V0dGluZyBjcmFzaMKgIHdoZW4gdGhlIHNpZ24gQVBJIGlzIGdldCBjYWxs
+ZWQuwqDCoDwvZGl2PjxkaXYgZGlyPSJhdXRvIj48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iPjxi
+IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLHNhbnMtc2VyaWY7Zm9udC1zaXplOjExcHQiPjxz
+cGFuIHN0eWxlPSJjb2xvcjpibGFjayI+TG9vayBpbiB0byBob3cgdG8gcmVpbml0aWFsaXplIFRD
+VEkgZGV2aWNlPC9zcGFuPjwvYj48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iPgoKPHAgY2xhc3M9
+Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjowY20gMGNtIDAuMDAwMXB0O2xpbmUtaGVpZ2h0Om5v
+cm1hbDtiYWNrZ3JvdW5kLWltYWdlOmluaXRpYWw7YmFja2dyb3VuZC1wb3NpdGlvbjppbml0aWFs
+O2JhY2tncm91bmQtc2l6ZTppbml0aWFsO2JhY2tncm91bmQtcmVwZWF0OmluaXRpYWw7YmFja2dy
+b3VuZC1vcmlnaW46aW5pdGlhbDtiYWNrZ3JvdW5kLWNsaXA6aW5pdGlhbDt2ZXJ0aWNhbC1hbGln
+bjpiYXNlbGluZTtmb250LXNpemU6MTFwdDtmb250LWZhbWlseTpDYWxpYnJpLHNhbnMtc2VyaWYi
+PjxzcGFuIHN0eWxlPSJjb2xvcjpibGFjayI+PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3Rw
+bTItc29mdHdhcmUvdHBtMi10c3MvaXNzdWVzLzEzOTUiIHN0eWxlPSJjb2xvcjpibHVlIj5odHRw
+czovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9pc3N1ZXMvMTM5NTwvYT48L3Nw
+YW4+PC9wPgoKPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjowY20gMGNtIDAuMDAw
+MXB0O2xpbmUtaGVpZ2h0Om5vcm1hbDtiYWNrZ3JvdW5kLWltYWdlOmluaXRpYWw7YmFja2dyb3Vu
+ZC1wb3NpdGlvbjppbml0aWFsO2JhY2tncm91bmQtc2l6ZTppbml0aWFsO2JhY2tncm91bmQtcmVw
+ZWF0OmluaXRpYWw7YmFja2dyb3VuZC1vcmlnaW46aW5pdGlhbDtiYWNrZ3JvdW5kLWNsaXA6aW5p
+dGlhbDt2ZXJ0aWNhbC1hbGlnbjpiYXNlbGluZTtmb250LXNpemU6MTFwdDtmb250LWZhbWlseTpD
+YWxpYnJpLHNhbnMtc2VyaWYiPjxzcGFuIHN0eWxlPSJjb2xvcjpibGFjayI+PGEgaHJlZj0iaHR0
+cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3MvaXNzdWVzLzE0OTkiIHN0eWxl
+PSJjb2xvcjpibHVlIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9p
+c3N1ZXMvMTQ5OTwvYT48L3NwYW4+PC9wPgoKPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1h
+cmdpbjowY20gMGNtIDAuMDAwMXB0IDM2cHQ7bGluZS1oZWlnaHQ6bm9ybWFsO2ZvbnQtc2l6ZTox
+MXB0O2ZvbnQtZmFtaWx5OkNhbGlicmksc2Fucy1zZXJpZiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
+ZToxMC41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7U2Vnb2UgVUkmcXVvdDssc2Fucy1zZXJpZjtjb2xv
+cjpyZWQiPiZxdW90O0RldmljZSBvcgpyZXNvdXJjZSBidXN5JnF1b3Q7IHVzdWFsbHkgbWVhbnMg
+dGhhdCBzb21lIG90aGVyIHByb2Nlc3MgaGFzIGl0IG9wZW4uPGJyPgp0cnnCoDwvc3Bhbj48c3Bh
+biBzdHlsZT0iZm9udC1zaXplOjlwdDtmb250LWZhbWlseTpDb25zb2xhcztjb2xvcjpyZWQiPmxz
+b2YgfCBncmVwIHRwbTwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjVwdDtmb250LWZh
+bWlseTomcXVvdDtTZWdvZSBVSSZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOnJlZCI+wqB0bwpjYXRj
+aCB0aGUgc25lYWt5IHByb2dyYW0uPC9zcGFuPjwvcD48cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHls
+ZT0ibWFyZ2luOjBjbSAwY20gMC4wMDAxcHQgMzZwdDtsaW5lLWhlaWdodDpub3JtYWw7Zm9udC1z
+aXplOjExcHQ7Zm9udC1mYW1pbHk6Q2FsaWJyaSxzYW5zLXNlcmlmIj48YnI+PC9wPjxwIGNsYXNz
+PSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46MGNtIDBjbSAwLjAwMDFwdCAzNnB0O2xpbmUtaGVp
+Z2h0Om5vcm1hbDtmb250LXNpemU6MTFwdDtmb250LWZhbWlseTpDYWxpYnJpLHNhbnMtc2VyaWYi
+Pjxicj48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjowY20gMGNtIDAuMDAw
+MXB0IDM2cHQ7bGluZS1oZWlnaHQ6bm9ybWFsO2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5OkNh
+bGlicmksc2Fucy1zZXJpZiI+PGJyPjwvcD48L2Rpdj48L2Rpdj48L2Rpdj48YnI+PGRpdiBjbGFz
+cz0iZ21haWxfcXVvdGUiPjxkaXYgZGlyPSJsdHIiPk9uIEZyaSwgTWF5IDgsIDIwMjAsIDk6NDUg
+UE0gUm9iZXJ0cywgV2lsbGlhbSBDICZsdDs8YSBocmVmPSJtYWlsdG86d2lsbGlhbS5jLnJvYmVy
+dHNAaW50ZWwuY29tIiB0YXJnZXQ9Il9ibGFuayI+d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29t
+PC9hPiB3cm90ZTo8YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHls
+ZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0
+LDIwNCwyMDQpO3BhZGRpbmctbGVmdDoxZXgiPjxicj4KPGJyPgomZ3Q7IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tPGJyPgomZ3Q7IEZyb206IDxhIGhyZWY9Im1haWx0bzptdXRodS5zbWtAZ21h
+aWwuY29tIiByZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5tdXRodS5zbWtAZ21haWwu
+Y29tPC9hPiBbbWFpbHRvOjxhIGhyZWY9Im1haWx0bzptdXRodS5zbWtAZ21haWwuY29tIiByZWw9
+Im5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj5tdXRodS5zbWtAZ21haWwuY29tPC9hPl08YnI+
+CiZndDsgU2VudDogRnJpZGF5LCBNYXkgOCwgMjAyMCAzOjAxIEFNPGJyPgomZ3Q7IFRvOiA8YSBo
+cmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJf
+YmxhbmsiPnRwbTJAbGlzdHMuMDEub3JnPC9hPjxicj4KJmd0OyBTdWJqZWN0OiBbdHBtMl0gSG93
+IENyZWF0ZUNzciB1c2luZyBvcGVuc3NsIEFQSSBmbG93IHdvcmtzICwgd2hlbiBpcyBwYXNzZXMg
+dmlhPGJyPgomZ3Q7IHRwbTItdHNzLWVuZ2luZTxicj4KJmd0OyA8YnI+CiZndDsgSSBoYXZlIGJl
+bG93IG9wZW5zc2wgY29tbWFuZCB3aXRoIHRwbWVuZ2luZSB3aGljaCBnZW5lcmF0ZSBjc3IgdXNp
+bmcgdGhlPGJyPgomZ3Q7IHByaXZhdGUga2V5IGdlbmVyYXRlZCB1c2luZyB0cG0ydHNzLWdlbmtl
+eS48YnI+CiZndDsgPGJyPgomZ3Q7IC8qIEdlbmVyYXRpbmcgcHJpdmF0ZSB1c2luZyBiZWxvdyB0
+cG0ydHNzLWdlbmtleSBBUEkqLyB0cG0ydHNzLWdlbmtleSAtYSByc2EgLTxicj4KJmd0OyBzIDIw
+NDggdHBtMnRzc19yc2FfZ2Vua2V5XzIwNDg8YnI+CiZndDsgLyogdXNpbmcgYmVsb3cgb3BlbnNz
+bCBBUEkgY3JlYXRpbmcgYSBjc3Igd2l0aCBpbnB1dCBrZXkgKHByaXZhdGUga2V5IGdlbmVyYXRl
+ZDxicj4KJmd0OyBieSB0cG0ydHNzKcKgICwgdmlhIGVuZ2luZSB0cG0ydHNzICovIG9wZW5zc2wg
+cmVxIC1uZXcgLWVuZ2luZSB0cG0ydHNzIC1rZXlmb3JtPGJyPgomZ3Q7IGVuZ2luZSAtb3V0IG9w
+ZW5zc2xfY3JlYXRlZF9tb2RfcnNhX2tleS5jc3IgLWtlecKgIHRwbTJ0c3NfcnNhX2dlbmtleV8y
+MDQ4PGJyPgo8YnI+CkRpZCB5b3UgbG9hZCB0aGUgZW5naW5lIHNvIHRoZSBBUEkgaGl0cyB0aGUg
+dHNzIGVuZ2luZSB2ZXJzdXMgbm9ybWFsIG9wZW5zc2w/PGJyPgpJSVJDIHRoZSBsYXN0IHRpbWUg
+SSBzYXcgeW91ciBjb2RlIHNuaXBwZXRzIHlvdSBuZXZlciBsb2FkZWQgdGhlIGVuZ2luZS48YnI+
+CiZndDsgPGJyPgomZ3Q7IFdoaWxlIGNyZWF0aW5nIHRoZSBzaW1pbGFyIGFwcGxpY2F0aW9uIHdo
+YXQgdGhlIGFib3ZlIHRwbTItZ2Vua2V5IGNyZWF0aW9uIGFuZDxicj4KJmd0OyBvcGVuc3NsIGRv
+ZXMgdXNpbmcgdHBtMi90cG0yLXRzcyBhcGkgLCBhbSBnZXR0aW5nIG15IGFwcCBjcmFzaCBpbiBi
+ZWxvdyBzaWduaW5nPGJyPgomZ3Q7IEFQSSAuIEkgdHJpZWQgY2hlY2tpbmcgdGhlIHRwbTItdHNz
+LWVuZ2luZSBjb2RlIHdoaWNoIHdvcmtzIGZvciBvcGVuc3NsIHRvPGJyPgomZ3Q7IHBlcmZvcm0g
+dHBtMiB0c3MgdGFzayAuIEJ1dCBpIGNvdWxkIG5vdCBhYmxlIHRvIGdldCBhbnkgY2x1ZSByZWdh
+cmRpbmcgd2hlcmUgdGhpczxicj4KJmd0OyAmcXVvdDtzaWduJnF1b3Q7IGlzIGhhcHBlbmluZyAu
+wqAgU2luY2UgdGhpcyAmcXVvdDtzaWduJnF1b3Q7IGlzIHBhcnQgb2YgY3NyIGdlbmVyYXRpb24g
+LCBhbSBub3Qgc3VyZSBob3c8YnI+CiZndDsgY29tZSB0aGUgY29tbWFuZCBsaW5lIGFib3ZlIG9w
+ZW5zc2wgYXBpIHdvcmtzIC4gQ2FuIGFueSBvbmUgZ2l2ZSBtZSBzb21lPGJyPgomZ3Q7IGlucHV0
+cyBvbiB0aGlzIC48YnI+CiZndDsgPGJyPgomZ3Q7IFg1MDlfUkVRX3NpZ24gKCk8YnI+CiZndDsg
+PGJyPgomZ3Q7IFRoYW5rczxicj4KJmd0OyBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXzxicj4KJmd0OyB0cG0yIG1haWxpbmcgbGlzdCAtLSA8YSBocmVmPSJt
+YWlsdG86dHBtMkBsaXN0cy4wMS5vcmciIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsi
+PnRwbTJAbGlzdHMuMDEub3JnPC9hPjxicj4KJmd0OyBUbyB1bnN1YnNjcmliZSBzZW5kIGFuIGVt
+YWlsIHRvIDxhIGhyZWY9Im1haWx0bzp0cG0yLWxlYXZlQGxpc3RzLjAxLm9yZyIgcmVsPSJub3Jl
+ZmVycmVyIiB0YXJnZXQ9Il9ibGFuayI+dHBtMi1sZWF2ZUBsaXN0cy4wMS5vcmc8L2E+PGJyPgom
+Z3Q7ICUod2ViX3BhZ2VfdXJsKXNsaXN0aW5mbyUoY2dpZXh0KXMvJShfaW50ZXJuYWxfbmFtZSlz
+PGJyPgo8L2Jsb2NrcXVvdGU+PC9kaXY+Cg==
+
+--===============3218511581965938339==--
 
