@@ -1,40 +1,49 @@
-Content-Type: multipart/mixed; boundary="===============4052500526467874677=="
+Content-Type: multipart/mixed; boundary="===============8926181499482045063=="
 MIME-Version: 1.0
-From: nicolasoliver03 at gmail.com
-Subject: [tpm2] Re: Use PCR10 of sha256 PCR bank
-Date: Fri, 08 May 2020 15:54:40 +0000
-Message-ID: <20200508155440.2843.22202@ml01.vlan13.01.org>
-In-Reply-To: 20200508015349.2843.24020@ml01.vlan13.01.org
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: tpm2_clear
+Date: Fri, 08 May 2020 16:08:14 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EDC4C7@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: a917e102-c7e7-39b0-3cef-eef334ac3bad@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4052500526467874677==
+--===============8926181499482045063==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-As today, IMA is harcoded to make the boot_aggregate entry in SHA1
+I don't know if we ever updated those examples fully for 4.0, it looks like=
+ we did,
+But also the man page for tpm2_create has examples. So if you run into issu=
+es, consult that
+as well:
+https://github.com/tpm2-software/tpm2-tools/blob/master/man/tpm2_create.1.md
 
-https://github.com/torvalds/linux/blob/ac438771ccb4479528594c7e19f2c39cf181=
-4a86/security/integrity/ima/ima_init.c#L59
+> -----Original Message-----
+> From: Struk, Tadeusz
+> Sent: Thursday, May 7, 2020 5:06 PM
+> To: Lester Cordeiro <lester.corderio(a)ufomoviez.com>; Roberts, William C
+> <william.c.roberts(a)intel.com>; Florian.Schreiner(a)infineon.com;
+> andreas.fuchs(a)sit.fraunhofer.de; tpm2(a)lists.01.org
+> Subject: Re: [tpm2] Re: tpm2_clear
+> =
 
-So the ima_hash=3Dsha256 option is activated after the boot_aggregate. It i=
-s the same for me in Fedora 31. It would be nice if somebody contributed to=
- the kernel and fixes this, or at least harcode it to sha256 :)
+> On 5/7/20 11:08 AM, Lester Cordeiro wrote:
+> >>
+> >
+> > hi,
+> >
+> > =C2=A0=C2=A0=C2=A0 is it possible to provide an example on how to creat=
+e RSA key
+> > under SRK? Like what tpm2 tools should i use and what arguments?
+> >
+> =
 
-What I can see from you initial message is that you get all the digest from=
- the measured boot process (PCR 0 to 7) in both SHA1 and SHA256 PCRs, which=
- means that your BIOS to TPM interaction is working fine. In Fedora, you wo=
-uld see additional measurements in the PCR 8 and 9 corresponding to the dig=
-ests of the components that grub2 reads (config, kernel and kernel config, =
-and initiramfs).
+> See here: https://github.com/tpm2-software/tpm2-tools/wiki/Creating-Objec=
+ts
+> --
+> Tadeusz
 
-But when IMA is measuring stuff, you get only PCR SHA1 digests. I think thi=
-s is related to the 4.4 kernel version. The oldest kernel I used to validat=
-e IMA was a 4.17, and I am currently using 5.6. I believe there is no optio=
-n to control which PCR banks IMA uses, it should measure in all the availab=
-le PCR 10s by default. Is upgrading to Ubuntu 18.04 or 20.04 possible for y=
-ou? Also, Ubuntu 16.04 is EOL since April 2019, so you have other good reas=
-ons to upgrade :)
---===============4052500526467874677==--
+--===============8926181499482045063==--
 
