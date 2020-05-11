@@ -1,32 +1,26 @@
-Content-Type: multipart/mixed; boundary="===============3904388676267157057=="
+Content-Type: multipart/mixed; boundary="===============5485697122898294939=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE] tpm2-tools 4.2.1-RC0
-Date: Mon, 11 May 2020 20:17:09 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EDCD92@ORSMSX101.amr.corp.intel.com>
+From: nicolasoliver03 at gmail.com
+Subject: [tpm2] Re: Use PCR10 of sha256 PCR bank
+Date: Mon, 11 May 2020 20:42:25 +0000
+Message-ID: <20200511204225.2843.94901@ml01.vlan13.01.org>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649EDCC72@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3904388676267157057==
+--===============5485697122898294939==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Great! =
 
-I would like to announce the 4.2.1
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.2.1-rc0
 
-The changelog is:
- - Fix missing handle maps for ESY3 handle breaks. See #1994.
- - Fix error: 'for' loop initial declarations are only allowed in C99 mode
+Additionally in that patch, there is a tool that provides IMA event log par=
+sing here https://github.com/initlove/attest-tools
+Apparently, it requires the IBM TSS stack. =
 
-Note that I forgot the " Fix error: 'for' loop initial declarations are onl=
-y allowed in C99 mode", in the doc/CHANGELOG.md file I will roll a changelog
-Update with RC1 if we get feedback or include It in the actual release chan=
-gelog.
-
-Thanks,
-Bill
---===============3904388676267157057==--
+I would be nice if the https://github.com/tpm2-software/tpm2-tools/blob/mas=
+ter/tools/misc/tpm2_eventlog.c tool supported the IMA event log as well
+--===============5485697122898294939==--
 
