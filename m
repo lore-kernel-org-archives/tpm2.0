@@ -1,139 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============5248583309403436885=="
+Content-Type: multipart/mixed; boundary="===============4478120051671274312=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: The script of evictcontrol failed during create ek and ak
-Date: Mon, 11 May 2020 14:50:35 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EDCA30@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649EDC9FC@ORSMSX101.amr.corp.intel.com
+Subject: [tpm2] Re: Use PCR10 of sha256 PCR bank
+Date: Mon, 11 May 2020 19:30:00 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EDCC72@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649EDC5DB@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5248583309403436885==
+--===============4478120051671274312==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-> What's the exact command and error?
-
-Ok I see it below, I think. Perhaps you already have a handle persistent th=
-ere,
-What's the output of:
-tpm2_getcap handles-persistent
-
-If you see something like:
-- 0x81010002
-
-You need to evict it first, perhaps a previous persist occurred. If it was =
-a real
-TPM perhaps you're colliding with someone else on the TPM who persisted
-something there....but I see it's just the mssim, so you should be okay to
-just evict it, like so:
-tpm2_evictcontrol -C o -c 0x81010002
-
+> > -----Original Message-----
+> > From: nicolasoliver03(a)gmail.com [mailto:nicolasoliver03(a)gmail.com]
+> > Sent: Friday, May 8, 2020 10:55 AM
+> > To: tpm2(a)lists.01.org
+> > Subject: [tpm2] Re: Use PCR10 of sha256 PCR bank
+> >
+> > As today, IMA is harcoded to make the boot_aggregate entry in SHA1
+> >
+> > https://github.com/torvalds/linux/blob/ac438771ccb4479528594c7e19f2c39
+> > cf181
+> > 4a86/security/integrity/ima/ima_init.c#L59
+> >
+> > So the ima_hash=3Dsha256 option is activated after the boot_aggregate.
+> > It is the same for me in Fedora 31. It would be nice if somebody
+> > contributed to the kernel and fixes this, or at least harcode it to
+> > sha256 :)
+> >
+> > What I can see from you initial message is that you get all the digest
+> > from the measured boot process (PCR 0 to 7) in both SHA1 and SHA256
+> > PCRs, which means that your BIOS to TPM interaction is working fine.
+> > In Fedora, you would see additional measurements in the PCR 8 and 9
+> > corresponding to the digests of the components that grub2 reads (config,
+> kernel and kernel config, and initiramfs).
+> >
+> > But when IMA is measuring stuff, you get only PCR SHA1 digests. I
+> > think this is related to the 4.4 kernel version. The oldest kernel I
+> > used to validate IMA was a 4.17, and I am currently using 5.6. I
+> > believe there is no option to control which PCR banks IMA uses, it
+> > should measure in all the available PCR 10s by default. Is upgrading
+> > to Ubuntu 18.04 or 20.04 possible for you? Also, Ubuntu 16.04 is EOL
+> > since April 2019, so you have other good reasons to upgrade :)
 > =
 
-> > -----Original Message-----
-> > From: Zhao, Shirley [mailto:shirley.zhao(a)intel.com]
-> > Sent: Sunday, May 10, 2020 9:31 PM
-> > To: tpm2(a)lists.01.org
-> > Cc: Desai, Imran <imran.desai(a)intel.com>
-> > Subject: [tpm2] Re: The script of evictcontrol failed during create ek
-> > and ak
-> >
-> > Oh, I use another parameter to make it persistent, it works as below:
-> >
-> > tpm2_evictcontrol -C o -c ak.ctx -o primary.handle
-> >
-> > But still not sure why assign a handle 0x81010002 doesn't work.
-> >
-> > The TPM has been cleared.
-> >
-> >
-> >
-> > From: Zhao, Shirley
-> > Sent: Saturday, May 9, 2020 11:58 AM
-> > To: 'tpm2(a)lists.01.org' <tpm2(a)lists.01.org>
-> > Cc: Desai, Imran <imran.desai(a)intel.com>
-> > Subject: The script of evictcontrol failed during create ek and ak
-> >
-> >
-> >
-> > Thanks, Imran.
-> >
-> > I have fixed the failure of the script of tpm2_policyauthorize.
-> >
-> >
-> >
-> > Now, I met another failure when running the script on
-> > https://github.com/tpm2-
-> > software/tpm2-tools/blob/master/man/tpm2_createak.1.md
-> > <https://github.com/tpm2-software/tpm2-
-> > tools/blob/master/man/tpm2_createak.1.md> .
-> >
-> > The log is:
-> >
-> > $ tpm2_startup --clear --tcti=3Dmssim
-> >
-> > $ tpm2_createek -c ek.handle -G rsa -u ek.pub --tcti=3Dmssim
-> >
-> > $ tpm2_createak -C ek.handle -c ak.ctx -u ak.pub -n ak.name
-> > --tcti=3Dmssim
-> >
-> > loaded-key:
-> >
-> >   name:
-> > 000ba3f7e942e3d87b2c7bebb28f6893c4146bc5a89a4018c9f6b778406f2eac0fea
-> >
-> > $ tpm2_evictcontrol -C o -c ak.ctx 0x81010002 --tcti=3Dmssim
-> >
-> > WARNING:esys:src/tss2-
-> > esys/api/Esys_ContextLoad.c:279:Esys_ContextLoad_Finish() Received TPM
-> > Error
-> >
-> > ERROR:esys:src/tss2-esys/api/Esys_ContextLoad.c:93:Esys_ContextLoad()
-> > Esys Finish ErrorCode (0x00000902)
-> >
-> > ERROR: Esys_ContextLoad(0x902) - tpm:warn(2.0): out of memory for
-> > object contexts
-> >
-> > ERROR:esys:src/tss2-esys/esys_tr.c:357:Esys_TR_Close() Error: Esys
-> > handle does not exist (70018).
-> >
-> > ERROR: Esys_TR_Close(0x70018) - esapi:The ESYS_TR resource object is
-> > bad
-> >
-> > ERROR: Unable to run tpm2_evictcontrol
-> >
-> >
-> >
-> > Not sure whether it is the handle is wrong, because when check
-> > transient handle as below.
-> >
-> > $ tpm2_getcap handles-transient --tcti=3Dmssim
-> >
-> > - 0x80000000
-> >
-> > - 0x80000001
-> >
-> > - 0x80000002
-> >
-> >
-> >
-> > But even I update the 0x81010002 into 0x80000000, 0x80000001 or
-> > 0x80000002, it still result in the same error.
-> >
-> >
-> >
-> > Please help, thanks.
-> >
-> >
-> >
-> > *	Shirley
-> >
-> >
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============5248583309403436885==--
+> They likely limit it because hashing things for N digests is pretty slow.=
+ However,
+> the Code could be taught that if it's extending to a tpm2 chip to use sha=
+256 and
+> sha1 for The older < 1.2 chips.
+> =
+
+> I through together, an untested kernel patch here, that should at least c=
+over that
+> one Case you pointed out earlier, but their might be others, I don't know=
+. If there
+> are others It might be worth a different approach where IMA just asks wha=
+t the
+> best algorithm is and associates all tpm events with that algorithm, rath=
+er than
+> having to do it at a bunch of spots in the code.
+> Not 100% sure how IMA is internally constructed.
+> =
+
+> Here is a link to that patch if you wanna give it a go
+> https://github.com/tpm2-software/tpm2-tools/issues/2009#issuecomment-
+> 625961138
+> =
+
+
+FYI there is a patchlist on IMA already doing what we want, see:
+https://lore.kernel.org/linux-integrity/20200325104712.25694-1-roberto.sass=
+u(a)huawei.com/
+
+Bill
+--===============4478120051671274312==--
 
