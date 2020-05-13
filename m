@@ -1,38 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============8500741292506869272=="
+Content-Type: multipart/mixed; boundary="===============0485307662186834005=="
 MIME-Version: 1.0
 From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] Re: configure of tpm2-tss looking for json-c
-Date: Tue, 12 May 2020 18:28:06 -0700
-Message-ID: <8f6fc06a-d91e-9697-321b-213891e18424@intel.com>
-In-Reply-To: 2d271cf0-95aa-16d7-92c5-8779dccefc9f@oracle.com
+Subject: [tpm2] tpm2-tss v2.4.1
+Date: Tue, 12 May 2020 18:34:32 -0700
+Message-ID: <23b78810-7e06-d109-f36d-d91ce54d94c8@intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8500741292506869272==
+--===============0485307662186834005==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 5/12/20 4:23 PM, ted.h.kim(a)oracle.com wrote:
-> =
+Hello,
+I'm happy to announce a new tpm2-tss 2.4.1 bugfix release.
 
-> When running ./configure for tpm2-tss (2.4.x branch),
-> pkg-config complains about not finding "json-c".
-> =
+https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.1
 
-> What is it looking for?
-> I do have a /usr/lib64/libjson-c.so.4.0.0.
-> =
-
-> What is it supposed to be finding?
-
-It needs the dev package of it.
-On ubuntu type distro make sure that libjson-c-dev is installed, or
-json-c-devel on fedora.
+The release includes number of fixes as follows:
+- Fixed systemd-sysusers/-tmpfiles creation without systemd
+- Removed expired coverity token from travis.yaml
+- Fixed uninitialized context of FAPI command Fapi_ChangeAuth issue
+- Fixed handling of tcti pointer in Esys_Initialize
+- Fixed usages of EC routines deprecated in OSSL 1.2 and greater
+- Fixed FAPI handling of TPMs without stored certificates
 
 Thanks,
--- =
-
+--
 Tadeusz
---===============8500741292506869272==--
+--===============0485307662186834005==--
 
