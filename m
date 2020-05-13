@@ -1,320 +1,53 @@
-Content-Type: multipart/mixed; boundary="===============4546886383124618902=="
+Content-Type: multipart/mixed; boundary="===============1420386556049050365=="
 MIME-Version: 1.0
-From: Dimitar Tomov <dimi at designfirst.ee>
-Subject: [tpm2] Re: Hello from a small community of TPM enthusiasts
-Date: Wed, 13 May 2020 13:21:18 +0000
-Message-ID: <
- <VI1PR08MB26534EB95C1F8DE27BCCA559B5BF0@VI1PR08MB2653.eurprd08.prod.outlook.com>>
-In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649EDB3B4@ORSMSX101.amr.corp.intel.com
+From: ted.h.kim at oracle.com
+Subject: [tpm2] compile error on tpm2-tools (4.2.X branch)
+Date: Wed, 13 May 2020 09:14:38 -0700
+Message-ID: <727e9e27-8689-9a70-65fc-06199f26af98@oracle.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4546886383124618902==
+--===============1420386556049050365==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks for the detailed explanation! I will definitely share it on today's =
-online call.
+Folks,
 
-Already added link to your response from the mailing list archive in the de=
-scription https://developers.tpm.dev/events/online-chat-8 for everyone to s=
-ee. I hope we get to talk in a few hours.
+I got an "error" compiling tpm2-tools (4.2.X branch).
+Yes, I realize this is because warnings being converted to errors.
+Don't think I changed the CC flags, but maybe this is just my environment?
 
-/Dimi
+Haven't checked the new 4.2.1 release update - does that take care of this?
 
-<https://developers.tpm.dev/events/online-chat-8>
-________________________________
-From: Roberts, William C <william.c.roberts(a)intel.com>
-Sent: Thursday, May 7, 2020 7:21 PM
-To: Dimitar Tomov <dimi(a)designfirst.ee>; David Woodhouse <dwmw2(a)infrade=
-ad.org>; tpm2(a)lists.01.org <tpm2(a)lists.01.org>
-Subject: RE: [tpm2] Re: Hello from a small community of TPM enthusiasts
+Thanks,
+-ted
 
-> -----Original Message-----
-> From: Dimitar Tomov [mailto:dimi(a)designfirst.ee]
-> Sent: Thursday, May 7, 2020 5:46 AM
-> To: David Woodhouse <dwmw2(a)infradead.org>; tpm2(a)lists.01.org
-> Subject: [tpm2] Re: Hello from a small community of TPM enthusiasts
->
-> Hi David,
->
-> May be outdated, but your page is also a resource, so please feel free to=
- share it
-> with the community developers.tpm.dev ;-)
->
-> For the other topics you rise I will reply inline below
->
-> On Wed, 2020-05-07 at 13:16, David Woodhouse wrote:
-> > I'll see if I can join.
->
-> We are doing them every week, so even if you miss next week's call, just =
-join us
-> in next one. Same time, Wednesday 8am PDT/5pm CEST
->
-> >
-> > With respect to documentation I'd strongly recommend taking the
-> > approach of "if it needs documenting, fix it first. Then document
-> > what's left".
->
-> I could not agree more. We are not the ones developing tpm2-tools, rather=
- trying
-> to make use of them. But we can provide valuable feedback.
->
-> > We should make software as trivial and intuitive as possible for
-> > users, not *just* provide a twisty maze of documentation in the hope
-> > that some of the most persistent will eventually navigate their way thr=
-ough it.
->
-> Spot on. I have one such example from yesterday, where we were wondering
-> why generating a symmetric key with tpm2-tools now produces private and
-> public part. Eventually, a clean slide would be the only viable option le=
-ft. I
-> personally am a fan of the minimalistic approach.
-> We can discuss this further on our calls. I do not want to go offtopic he=
-re.
->
+++++
 
-Why "now produces"tpm2_create has always produced a public and private port=
-ion.
-Did something change that I am not aware of?
+from the make output:
 
-As Andreas mentioned, those blobs are for the TPM, and contain a lot of met=
-adata outside
-Of what one typically things of as a public portion of a key. For example R=
-SA would contain
-At a minimum the exponent and the modulus. The public portion of a tpm file=
- contains
-attributes and for a symmetric key, which can be viewed with tpm2_readpubli=
-c, and
-some of them are output on tpm2_create as well (stdout output).
+lib/tpm2.c: In function =E2=80=98tpm2_getsapicontext=E2=80=99:
+lib/tpm2.c:4070:20: error: implicit declaration of function =
 
-$ tpm2_readpublic -c aes.key
-name: 000b530cfa588448c802f23b06707ae1a140fec0d5b2d4dfc6de114094f4cbca8b9b
-qualified name: 000ba07ee113cee302967a859956e4351b966d3216a3949702e919248c3=
-54876d432
-name-alg:
-  value: sha256
-  raw: 0xb
-attributes:
-  value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|sign
-  raw: 0x60072
-type:
-  value: symcipher
-  raw: 0x25
-sym-alg:
-  value: aes
-  raw: 0x6
-sym-mode:
-  value: null
-  raw: 0x10
-sym-keybits: 256
-symcipher: b916f79cc7984287fee3632df1dbf061594e01c4c01401f379a8e08867bfee7a
+=E2=80=98Esys_GetSysContext=E2=80=99
+; did you mean =E2=80=98Esys_FlushContext=E2=80=99? [-Werror=3Dimplicit-fun=
+ction-declaration]
+ =C2=A0=C2=A0=C2=A0=C2=A0 TSS2_RC rval =3D Esys_GetSysContext(esys_context,=
+ sys_context);
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Esys_FlushContext
+cc1: all warnings being treated as errors
+make: *** [Makefile:4857: lib/libcommon_a-tpm2.o] Error 1
 
-All those fields have meaning, for instance that name of the object, is the=
- hash of type sha256.
-Names are unique, and how we make sure we're getting what we expect when us=
-ing them for
-Things like encrypted sessions.
+-- =
 
-The attributes describe how that object can be used, it can't be reparented=
- within the TPM, its fixed to the TPM
-And cannot be extracted, and is authorized by the user with a password. It =
-can be used for both encryption (sign)
-and decryption.
+Ted H. Kim, PhD
+ted.h.kim(a)oracle.com
++1 310-258-7515
 
-Type, syme-alg and sym-mode all describe the associated algorithm of the ob=
-ject, it's a symmetric cipher of type
-AES and since mode is null, it can be used with any supported AES mode, ie =
-CBC, ECB, etc. You could set this to
-a single mode at tpm2_create time, and then the key would be restricted to =
-a single mode.
 
-It tells you the keybits, and the symcipher field is a fingerprint of the k=
-ey. For AES offhand I think it's the name-alg
-Hash (sha256) of the key bytes. For RSA this would be the modulus, and the =
-field name would be rsa. Rsa would also
-Contain the exponent, so you could actual use it like a public key. In fact=
- readpublic can output the public
-as a pem for asymmetric keypairs.
-
-Additionally, the public and private are bound cryptograhically, so the TPM=
- knows what public corresponds with the
-private key (in this case the AES secret key) and thus can trust the public=
- portion in making policy decisions, like
-don't allow it to be reparented or be extracted from the TPM.
-
-The private portion is encrypted and integrity checked by the TPM, so (hope=
-fully) only the TPM can view the actual
-key material.
-
-Hopefully this helps, we try and distill stuff down in the tpm2-tools manpa=
-ges the best we can and work on other
-Supporting documentation as well. We need to start making things like, divi=
-ng into objects. Because these details
-I just shared are only in the spec....which is not exactly fun to read at t=
-imes, albeit thorough.
-
-> /Dimi
->
->
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============4546886383124618902==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
-ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
-ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsiPgpU
-aGFua3MgZm9yIHRoZSBkZXRhaWxlZCBleHBsYW5hdGlvbiEmbmJzcDs8c3BhbiBzdHlsZT0iZm9u
-dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
-ZTogMTJwdDsiPkkgd2lsbCBkZWZpbml0ZWx5IHNoYXJlIGl0IG9uIHRvZGF5J3Mgb25saW5lIGNh
-bGwuPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWws
-IEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAs
-IDApOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij4KPHNwYW4gc3R5bGU9
-ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250
-LXNpemU6IDEycHQ7Ij48YnI+Cjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
-IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsg
-Y29sb3I6IHJnYigwLCAwLCAwKTsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1NSwgMjU1LCAyNTUp
-OyI+CjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwg
-c2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyI+QWxyZWFkeSBhZGRlZCBsaW5rIHRvIHlvdXIg
-cmVzcG9uc2UgZnJvbSB0aGUgbWFpbGluZyBsaXN0IGFyY2hpdmUgaW4gdGhlIGRlc2NyaXB0aW9u
-IGh0dHBzOi8vZGV2ZWxvcGVycy50cG0uZGV2L2V2ZW50cy9vbmxpbmUtY2hhdC04IGZvciBldmVy
-eW9uZSB0byBzZWUuJm5ic3A7PC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJy
-aSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyI+SQogaG9w
-ZSB3ZSBnZXQgdG8gdGFsayBpbiBhIGZldyBob3Vycy48L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9
-ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250
-LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IGJhY2tncm91bmQtY29sb3I6IHJnYigy
-NTUsIDI1NSwgMjU1KTsiPgo8c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
-LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsiPjxicj4KPC9zcGFuPjwv
-ZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwg
-c2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyBiYWNrZ3Jv
-dW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij4KL0RpbWk8L2Rpdj4KPGRpdiBzdHlsZT0i
-Zm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQt
-c2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1
-NSwgMjU1LCAyNTUpOyI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsiPgo8
-YSBocmVmPSJodHRwczovL2RldmVsb3BlcnMudHBtLmRldi9ldmVudHMvb25saW5lLWNoYXQtOCIg
-c3R5bGU9IiIgaWQ9IkxQbG5rNzY0NTcxIj48L2E+PGJyPgo8L2Rpdj4KPGRpdiBpZD0iYXBwZW5k
-b25zZW5kIj48L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3aWR0aDo5OCUi
-IHRhYmluZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRyIj48Zm9udCBm
-YWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQiIGNvbG9yPSIj
-MDAwMDAwIj48Yj5Gcm9tOjwvYj4gUm9iZXJ0cywgV2lsbGlhbSBDICZsdDt3aWxsaWFtLmMucm9i
-ZXJ0c0BpbnRlbC5jb20mZ3Q7PGJyPgo8Yj5TZW50OjwvYj4gVGh1cnNkYXksIE1heSA3LCAyMDIw
-IDc6MjEgUE08YnI+CjxiPlRvOjwvYj4gRGltaXRhciBUb21vdiAmbHQ7ZGltaUBkZXNpZ25maXJz
-dC5lZSZndDs7IERhdmlkIFdvb2Rob3VzZSAmbHQ7ZHdtdzJAaW5mcmFkZWFkLm9yZyZndDs7IHRw
-bTJAbGlzdHMuMDEub3JnICZsdDt0cG0yQGxpc3RzLjAxLm9yZyZndDs8YnI+CjxiPlN1YmplY3Q6
-PC9iPiBSRTogW3RwbTJdIFJlOiBIZWxsbyBmcm9tIGEgc21hbGwgY29tbXVuaXR5IG9mIFRQTSBl
-bnRodXNpYXN0czwvZm9udD4KPGRpdj4mbmJzcDs8L2Rpdj4KPC9kaXY+CjxkaXYgY2xhc3M9IkJv
-ZHlGcmFnbWVudCI+PGZvbnQgc2l6ZT0iMiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMXB0OyI+
-CjxkaXYgY2xhc3M9IlBsYWluVGV4dCI+Jmd0OyAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLTxi
-cj4KJmd0OyBGcm9tOiBEaW1pdGFyIFRvbW92IFs8YSBocmVmPSJtYWlsdG86ZGltaUBkZXNpZ25m
-aXJzdC5lZSI+bWFpbHRvOmRpbWlAZGVzaWduZmlyc3QuZWU8L2E+XTxicj4KJmd0OyBTZW50OiBU
-aHVyc2RheSwgTWF5IDcsIDIwMjAgNTo0NiBBTTxicj4KJmd0OyBUbzogRGF2aWQgV29vZGhvdXNl
-ICZsdDtkd213MkBpbmZyYWRlYWQub3JnJmd0OzsgdHBtMkBsaXN0cy4wMS5vcmc8YnI+CiZndDsg
-U3ViamVjdDogW3RwbTJdIFJlOiBIZWxsbyBmcm9tIGEgc21hbGwgY29tbXVuaXR5IG9mIFRQTSBl
-bnRodXNpYXN0czxicj4KJmd0OyA8YnI+CiZndDsgSGkgRGF2aWQsPGJyPgomZ3Q7IDxicj4KJmd0
-OyBNYXkgYmUgb3V0ZGF0ZWQsIGJ1dCB5b3VyIHBhZ2UgaXMgYWxzbyBhIHJlc291cmNlLCBzbyBw
-bGVhc2UgZmVlbCBmcmVlIHRvIHNoYXJlIGl0PGJyPgomZ3Q7IHdpdGggdGhlIGNvbW11bml0eSBk
-ZXZlbG9wZXJzLnRwbS5kZXYgOy0pPGJyPgomZ3Q7IDxicj4KJmd0OyBGb3IgdGhlIG90aGVyIHRv
-cGljcyB5b3UgcmlzZSBJIHdpbGwgcmVwbHkgaW5saW5lIGJlbG93PGJyPgomZ3Q7IDxicj4KJmd0
-OyBPbiBXZWQsIDIwMjAtMDUtMDcgYXQgMTM6MTYsIERhdmlkIFdvb2Rob3VzZSB3cm90ZTo8YnI+
-CiZndDsgJmd0OyBJJ2xsIHNlZSBpZiBJIGNhbiBqb2luLjxicj4KJmd0OyA8YnI+CiZndDsgV2Ug
-YXJlIGRvaW5nIHRoZW0gZXZlcnkgd2Vlaywgc28gZXZlbiBpZiB5b3UgbWlzcyBuZXh0IHdlZWsn
-cyBjYWxsLCBqdXN0IGpvaW4gdXM8YnI+CiZndDsgaW4gbmV4dCBvbmUuIFNhbWUgdGltZSwgV2Vk
-bmVzZGF5IDhhbSBQRFQvNXBtIENFU1Q8YnI+CiZndDsgPGJyPgomZ3Q7ICZndDs8YnI+CiZndDsg
-Jmd0OyBXaXRoIHJlc3BlY3QgdG8gZG9jdW1lbnRhdGlvbiBJJ2Qgc3Ryb25nbHkgcmVjb21tZW5k
-IHRha2luZyB0aGU8YnI+CiZndDsgJmd0OyBhcHByb2FjaCBvZiAmcXVvdDtpZiBpdCBuZWVkcyBk
-b2N1bWVudGluZywgZml4IGl0IGZpcnN0LiBUaGVuIGRvY3VtZW50PGJyPgomZ3Q7ICZndDsgd2hh
-dCdzIGxlZnQmcXVvdDsuPGJyPgomZ3Q7IDxicj4KJmd0OyBJIGNvdWxkIG5vdCBhZ3JlZSBtb3Jl
-LiBXZSBhcmUgbm90IHRoZSBvbmVzIGRldmVsb3BpbmcgdHBtMi10b29scywgcmF0aGVyIHRyeWlu
-Zzxicj4KJmd0OyB0byBtYWtlIHVzZSBvZiB0aGVtLiBCdXQgd2UgY2FuIHByb3ZpZGUgdmFsdWFi
-bGUgZmVlZGJhY2suPGJyPgomZ3Q7IDxicj4KJmd0OyAmZ3Q7IFdlIHNob3VsZCBtYWtlIHNvZnR3
-YXJlIGFzIHRyaXZpYWwgYW5kIGludHVpdGl2ZSBhcyBwb3NzaWJsZSBmb3I8YnI+CiZndDsgJmd0
-OyB1c2Vycywgbm90ICpqdXN0KiBwcm92aWRlIGEgdHdpc3R5IG1hemUgb2YgZG9jdW1lbnRhdGlv
-biBpbiB0aGUgaG9wZTxicj4KJmd0OyAmZ3Q7IHRoYXQgc29tZSBvZiB0aGUgbW9zdCBwZXJzaXN0
-ZW50IHdpbGwgZXZlbnR1YWxseSBuYXZpZ2F0ZSB0aGVpciB3YXkgdGhyb3VnaCBpdC48YnI+CiZn
-dDsgPGJyPgomZ3Q7IFNwb3Qgb24uIEkgaGF2ZSBvbmUgc3VjaCBleGFtcGxlIGZyb20geWVzdGVy
-ZGF5LCB3aGVyZSB3ZSB3ZXJlIHdvbmRlcmluZzxicj4KJmd0OyB3aHkgZ2VuZXJhdGluZyBhIHN5
-bW1ldHJpYyBrZXkgd2l0aCB0cG0yLXRvb2xzIG5vdyBwcm9kdWNlcyBwcml2YXRlIGFuZDxicj4K
-Jmd0OyBwdWJsaWMgcGFydC4gRXZlbnR1YWxseSwgYSBjbGVhbiBzbGlkZSB3b3VsZCBiZSB0aGUg
-b25seSB2aWFibGUgb3B0aW9uIGxlZnQuIEk8YnI+CiZndDsgcGVyc29uYWxseSBhbSBhIGZhbiBv
-ZiB0aGUgbWluaW1hbGlzdGljIGFwcHJvYWNoLjxicj4KJmd0OyBXZSBjYW4gZGlzY3VzcyB0aGlz
-IGZ1cnRoZXIgb24gb3VyIGNhbGxzLiBJIGRvIG5vdCB3YW50IHRvIGdvIG9mZnRvcGljIGhlcmUu
-PGJyPgomZ3Q7IDxicj4KPGJyPgpXaHkgJnF1b3Q7bm93IHByb2R1Y2VzJnF1b3Q7dHBtMl9jcmVh
-dGUgaGFzIGFsd2F5cyBwcm9kdWNlZCBhIHB1YmxpYyBhbmQgcHJpdmF0ZSBwb3J0aW9uLjxicj4K
-RGlkIHNvbWV0aGluZyBjaGFuZ2UgdGhhdCBJIGFtIG5vdCBhd2FyZSBvZj88YnI+Cjxicj4KQXMg
-QW5kcmVhcyBtZW50aW9uZWQsIHRob3NlIGJsb2JzIGFyZSBmb3IgdGhlIFRQTSwgYW5kIGNvbnRh
-aW4gYSBsb3Qgb2YgbWV0YWRhdGEgb3V0c2lkZTxicj4KT2Ygd2hhdCBvbmUgdHlwaWNhbGx5IHRo
-aW5ncyBvZiBhcyBhIHB1YmxpYyBwb3J0aW9uIG9mIGEga2V5LiBGb3IgZXhhbXBsZSBSU0Egd291
-bGQgY29udGFpbjxicj4KQXQgYSBtaW5pbXVtIHRoZSBleHBvbmVudCBhbmQgdGhlIG1vZHVsdXMu
-IFRoZSBwdWJsaWMgcG9ydGlvbiBvZiBhIHRwbSBmaWxlIGNvbnRhaW5zPGJyPgphdHRyaWJ1dGVz
-IGFuZCBmb3IgYSBzeW1tZXRyaWMga2V5LCB3aGljaCBjYW4gYmUgdmlld2VkIHdpdGggdHBtMl9y
-ZWFkcHVibGljLCBhbmQ8YnI+CnNvbWUgb2YgdGhlbSBhcmUgb3V0cHV0IG9uIHRwbTJfY3JlYXRl
-IGFzIHdlbGwgKHN0ZG91dCBvdXRwdXQpLjxicj4KPGJyPgokIHRwbTJfcmVhZHB1YmxpYyAtYyBh
-ZXMua2V5IDxicj4KbmFtZTogMDAwYjUzMGNmYTU4ODQ0OGM4MDJmMjNiMDY3MDdhZTFhMTQwZmVj
-MGQ1YjJkNGRmYzZkZTExNDA5NGY0Y2JjYThiOWI8YnI+CnF1YWxpZmllZCBuYW1lOiAwMDBiYTA3
-ZWUxMTNjZWUzMDI5NjdhODU5OTU2ZTQzNTFiOTY2ZDMyMTZhMzk0OTcwMmU5MTkyNDhjMzU0ODc2
-ZDQzMjxicj4KbmFtZS1hbGc6PGJyPgombmJzcDsgdmFsdWU6IHNoYTI1Njxicj4KJm5ic3A7IHJh
-dzogMHhiPGJyPgphdHRyaWJ1dGVzOjxicj4KJm5ic3A7IHZhbHVlOiBmaXhlZHRwbXxmaXhlZHBh
-cmVudHxzZW5zaXRpdmVkYXRhb3JpZ2lufHVzZXJ3aXRoYXV0aHxkZWNyeXB0fHNpZ248YnI+CiZu
-YnNwOyByYXc6IDB4NjAwNzI8YnI+CnR5cGU6PGJyPgombmJzcDsgdmFsdWU6IHN5bWNpcGhlcjxi
-cj4KJm5ic3A7IHJhdzogMHgyNTxicj4Kc3ltLWFsZzo8YnI+CiZuYnNwOyB2YWx1ZTogYWVzPGJy
-PgombmJzcDsgcmF3OiAweDY8YnI+CnN5bS1tb2RlOjxicj4KJm5ic3A7IHZhbHVlOiBudWxsPGJy
-PgombmJzcDsgcmF3OiAweDEwPGJyPgpzeW0ta2V5Yml0czogMjU2PGJyPgpzeW1jaXBoZXI6IGI5
-MTZmNzljYzc5ODQyODdmZWUzNjMyZGYxZGJmMDYxNTk0ZTAxYzRjMDE0MDFmMzc5YThlMDg4Njdi
-ZmVlN2E8YnI+Cjxicj4KQWxsIHRob3NlIGZpZWxkcyBoYXZlIG1lYW5pbmcsIGZvciBpbnN0YW5j
-ZSB0aGF0IG5hbWUgb2YgdGhlIG9iamVjdCwgaXMgdGhlIGhhc2ggb2YgdHlwZSBzaGEyNTYuPGJy
-PgpOYW1lcyBhcmUgdW5pcXVlLCBhbmQgaG93IHdlIG1ha2Ugc3VyZSB3ZSdyZSBnZXR0aW5nIHdo
-YXQgd2UgZXhwZWN0IHdoZW4gdXNpbmcgdGhlbSBmb3I8YnI+ClRoaW5ncyBsaWtlIGVuY3J5cHRl
-ZCBzZXNzaW9ucy48YnI+Cjxicj4KVGhlIGF0dHJpYnV0ZXMgZGVzY3JpYmUgaG93IHRoYXQgb2Jq
-ZWN0IGNhbiBiZSB1c2VkLCBpdCBjYW4ndCBiZSByZXBhcmVudGVkIHdpdGhpbiB0aGUgVFBNLCBp
-dHMgZml4ZWQgdG8gdGhlIFRQTTxicj4KQW5kIGNhbm5vdCBiZSBleHRyYWN0ZWQsIGFuZCBpcyBh
-dXRob3JpemVkIGJ5IHRoZSB1c2VyIHdpdGggYSBwYXNzd29yZC4gSXQgY2FuIGJlIHVzZWQgZm9y
-IGJvdGggZW5jcnlwdGlvbiAoc2lnbik8YnI+CmFuZCBkZWNyeXB0aW9uLjxicj4KPGJyPgpUeXBl
-LCBzeW1lLWFsZyBhbmQgc3ltLW1vZGUgYWxsIGRlc2NyaWJlIHRoZSBhc3NvY2lhdGVkIGFsZ29y
-aXRobSBvZiB0aGUgb2JqZWN0LCBpdCdzIGEgc3ltbWV0cmljIGNpcGhlciBvZiB0eXBlPGJyPgpB
-RVMgYW5kIHNpbmNlIG1vZGUgaXMgbnVsbCwgaXQgY2FuIGJlIHVzZWQgd2l0aCBhbnkgc3VwcG9y
-dGVkIEFFUyBtb2RlLCBpZSBDQkMsIEVDQiwgZXRjLiBZb3UgY291bGQgc2V0IHRoaXMgdG88YnI+
-CmEgc2luZ2xlIG1vZGUgYXQgdHBtMl9jcmVhdGUgdGltZSwgYW5kIHRoZW4gdGhlIGtleSB3b3Vs
-ZCBiZSByZXN0cmljdGVkIHRvIGEgc2luZ2xlIG1vZGUuPGJyPgo8YnI+Ckl0IHRlbGxzIHlvdSB0
-aGUga2V5Yml0cywgYW5kIHRoZSBzeW1jaXBoZXIgZmllbGQgaXMgYSBmaW5nZXJwcmludCBvZiB0
-aGUga2V5LiBGb3IgQUVTIG9mZmhhbmQgSSB0aGluayBpdCdzIHRoZSBuYW1lLWFsZzxicj4KSGFz
-aCAoc2hhMjU2KSBvZiB0aGUga2V5IGJ5dGVzLiBGb3IgUlNBIHRoaXMgd291bGQgYmUgdGhlIG1v
-ZHVsdXMsIGFuZCB0aGUgZmllbGQgbmFtZSB3b3VsZCBiZSByc2EuIFJzYSB3b3VsZCBhbHNvPGJy
-PgpDb250YWluIHRoZSBleHBvbmVudCwgc28geW91IGNvdWxkIGFjdHVhbCB1c2UgaXQgbGlrZSBh
-IHB1YmxpYyBrZXkuIEluIGZhY3QgcmVhZHB1YmxpYyBjYW4gb3V0cHV0IHRoZSBwdWJsaWM8YnI+
-CmFzIGEgcGVtIGZvciBhc3ltbWV0cmljIGtleXBhaXJzLjxicj4KPGJyPgpBZGRpdGlvbmFsbHks
-IHRoZSBwdWJsaWMgYW5kIHByaXZhdGUgYXJlIGJvdW5kIGNyeXB0b2dyYWhpY2FsbHksIHNvIHRo
-ZSBUUE0ga25vd3Mgd2hhdCBwdWJsaWMgY29ycmVzcG9uZHMgd2l0aCB0aGU8YnI+CnByaXZhdGUg
-a2V5IChpbiB0aGlzIGNhc2UgdGhlIEFFUyBzZWNyZXQga2V5KSBhbmQgdGh1cyBjYW4gdHJ1c3Qg
-dGhlIHB1YmxpYyBwb3J0aW9uIGluIG1ha2luZyBwb2xpY3kgZGVjaXNpb25zLCBsaWtlPGJyPgpk
-b24ndCBhbGxvdyBpdCB0byBiZSByZXBhcmVudGVkIG9yIGJlIGV4dHJhY3RlZCBmcm9tIHRoZSBU
-UE0uPGJyPgo8YnI+ClRoZSBwcml2YXRlIHBvcnRpb24gaXMgZW5jcnlwdGVkIGFuZCBpbnRlZ3Jp
-dHkgY2hlY2tlZCBieSB0aGUgVFBNLCBzbyAoaG9wZWZ1bGx5KSBvbmx5IHRoZSBUUE0gY2FuIHZp
-ZXcgdGhlIGFjdHVhbDxicj4Ka2V5IG1hdGVyaWFsLjxicj4KPGJyPgpIb3BlZnVsbHkgdGhpcyBo
-ZWxwcywgd2UgdHJ5IGFuZCBkaXN0aWxsIHN0dWZmIGRvd24gaW4gdGhlIHRwbTItdG9vbHMgbWFu
-cGFnZXMgdGhlIGJlc3Qgd2UgY2FuIGFuZCB3b3JrIG9uIG90aGVyPGJyPgpTdXBwb3J0aW5nIGRv
-Y3VtZW50YXRpb24gYXMgd2VsbC4gV2UgbmVlZCB0byBzdGFydCBtYWtpbmcgdGhpbmdzIGxpa2Us
-IGRpdmluZyBpbnRvIG9iamVjdHMuIEJlY2F1c2UgdGhlc2UgZGV0YWlsczxicj4KSSBqdXN0IHNo
-YXJlZCBhcmUgb25seSBpbiB0aGUgc3BlYy4uLi53aGljaCBpcyBub3QgZXhhY3RseSBmdW4gdG8g
-cmVhZCBhdCB0aW1lcywgYWxiZWl0IHRob3JvdWdoLjxicj4KPGJyPgomZ3Q7IC9EaW1pPGJyPgom
-Z3Q7IDxicj4KJmd0OyA8YnI+CiZndDsgX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX188YnI+CiZndDsgdHBtMiBtYWlsaW5nIGxpc3QgLS0gdHBtMkBsaXN0cy4w
-MS5vcmc8YnI+CiZndDsgVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0byB0cG0yLWxlYXZl
-QGxpc3RzLjAxLm9yZzxicj4KJmd0OyAlKHdlYl9wYWdlX3VybClzbGlzdGluZm8lKGNnaWV4dClz
-LyUoX2ludGVybmFsX25hbWUpczxicj4KPC9kaXY+Cjwvc3Bhbj48L2ZvbnQ+PC9kaXY+CjwvYm9k
-eT4KPC9odG1sPgo=
-
---===============4546886383124618902==--
+--===============1420386556049050365==--
 
