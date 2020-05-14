@@ -1,111 +1,277 @@
-Content-Type: multipart/mixed; boundary="===============9159727066196140804=="
+Content-Type: multipart/mixed; boundary="===============3799998906435928290=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: compile error on tpm2-tools (4.2.X branch)
-Date: Wed, 13 May 2020 19:22:00 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EDDAD8@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0171B4DE56@exch2010c.sit.fraunhofer.de
+From: Zhao, Shirley <shirley.zhao at intel.com>
+Subject: [tpm2] Re: The script of evictcontrol failed during create ek and ak
+Date: Thu, 14 May 2020 08:41:40 +0000
+Message-ID: <BL0PR11MB3252BA15AE8638E173AE30F08DBC0@BL0PR11MB3252.namprd11.prod.outlook.com>
+In-Reply-To: 476DC76E7D1DF2438D32BFADF679FC5649EDD2F4@ORSMSX101.amr.corp.intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9159727066196140804==
+--===============3799998906435928290==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Ill backport that fix and add it to 4.2.1-RC1 next Monday. Thank you for th=
-e bug report
-And thanks Andreas for the triage!
+Thanks Robert. =
+
+Using tpm2_flushcontext -t can solve the problem. =
+
+
+- Shirley =
+
+
+-----Original Message-----
+From: Roberts, William C <william.c.roberts(a)intel.com> =
+
+Sent: Tuesday, May 12, 2020 10:17 PM
+To: Zhao, Shirley <shirley.zhao(a)intel.com>; tpm2(a)lists.01.org
+Cc: Desai, Imran <imran.desai(a)intel.com>
+Subject: RE: The script of evictcontrol failed during create ek and ak
+
+
 
 > -----Original Message-----
-> From: Fuchs, Andreas [mailto:andreas.fuchs(a)sit.fraunhofer.de]
-> Sent: Wednesday, May 13, 2020 11:52 AM
-> To: ted.h.kim(a)oracle.com; tpm2(a)lists.01.org
-> Subject: [tpm2] Re: compile error on tpm2-tools (4.2.X branch)
+> From: Zhao, Shirley
+> Sent: Tuesday, May 12, 2020 4:18 AM
+> To: Roberts, William C <william.c.roberts(a)intel.com>; =
+
+> tpm2(a)lists.01.org
+> Cc: Desai, Imran <imran.desai(a)intel.com>
+> Subject: RE: The script of evictcontrol failed during create ek and ak
 > =
 
-> No, you need 2.4.x.
-> I opened and issue here: https://github.com/tpm2-software/tpm2-
-> tools/issues/2022
+> There is no persistent handle 0x81010002 before.
+> Please review the following command log.
+> Persistent handles and transient handles are printed on every step.
+> =
+
+> By the way, another question, why when as is created, there are two =
+
+> more handles, 0x80000001, 0x80000002? I only create one ak.
+> =
+
+> $ tpm2_startup --clear --tcti=3Dmssim
+> $ tpm2_createek -c ek.handle -G rsa -u ek.pub --tcti=3Dmssim $ =
+
+> tpm2_getcap handles-persistent --tcti=3Dmssim $ tpm2_getcap =
+
+> handles-transient --tcti=3Dmssim
+> - 0x80000000
+> $ tpm2_createak -C ek.handle -c ak.ctx -u ak.pub -n ak.name =
+
+> --tcti=3Dmssim
+> loaded-key:
+>   name:
+> 000b649a400a39adce51917b1fb6ee7a21bf30d6e06e1f88fb1de690518117073ccc
+> $ tpm2_getcap handles-persistent --tcti=3Dmssim $ tpm2_getcap =
+
+> handles-transient --tcti=3Dmssim
+> - 0x80000000
+> - 0x80000001
+> - 0x80000002
+
+Here is your problem, every command invocation causes a new transient handl=
+e to be added.
+Add a tpm2_flushcontext -t between command invocations OR use tpm2-abrmd to=
+ manage your TPM connection.
+
+> $ tpm2_evictcontrol -C o -c ak.ctx 0x81010002 --tcti=3Dmssim
+
+When you call this, it can't load up ak.ctx into a transient handle, and th=
+us has nothing to persist.
+
+You could, optionally, instead of using the context files, use the transien=
+t handle of the loaded object.
+But this won't work if a  resource manager is introduced and leaves you sus=
+ceptible to MITM type Issues.
+
+> WARNING:esys:src/tss2-
+> esys/api/Esys_ContextLoad.c:279:Esys_ContextLoad_Finish() Received TPM =
+
+> Error
+> ERROR:esys:src/tss2-esys/api/Esys_ContextLoad.c:93:Esys_ContextLoad() =
+
+> Esys Finish ErrorCode (0x00000902)
+> ERROR: Esys_ContextLoad(0x902) - tpm:warn(2.0): out of memory for =
+
+> object contexts
+> ERROR:esys:src/tss2-esys/esys_tr.c:357:Esys_TR_Close() Error: Esys =
+
+> handle does not exist (70018).
+> ERROR: Esys_TR_Close(0x70018) - esapi:The ESYS_TR resource object is =
+
+> bad
+> ERROR: Unable to run tpm2_evictcontrol $ tpm2_getcap =
+
+> handles-persistent --tcti=3Dmssim $ tpm2_getcap handles-transient =
+
+> --tcti=3Dmssim
+> - 0x80000000
+> - 0x80000001
+> - 0x80000002
 > =
 
 > =
 
-> ________________________________________
-> From: ted.h.kim(a)oracle.com [ted.h.kim(a)oracle.com]
-> Sent: Wednesday, May 13, 2020 18:22
-> To: Fuchs, Andreas; tpm2(a)lists.01.org
-> Subject: Re: [tpm2] compile error on tpm2-tools (4.2.X branch)
+> Thanks.
+> - Shirley
 > =
 
-> Is the stuff in tpm2-tss 2.3.X - not good enough?
 > =
 
-> -ted
+> -----Original Message-----
+> From: Roberts, William C <william.c.roberts(a)intel.com>
+> Sent: Monday, May 11, 2020 10:51 PM
+> To: Roberts, William C <william.c.roberts(a)intel.com>; Zhao, Shirley =
+
+> <shirley.zhao(a)intel.com>; tpm2(a)lists.01.org
+> Cc: Desai, Imran <imran.desai(a)intel.com>
+> Subject: RE: The script of evictcontrol failed during create ek and ak
 > =
 
-> On 5/13/20 9:18 AM, Fuchs, Andreas wrote:
-> > I guess your tpm2-tss and thus your tss2_esys.h / libtss2-esys.so are t=
-oo old.
+> > What's the exact command and error?
+> =
+
+> Ok I see it below, I think. Perhaps you already have a handle =
+
+> persistent there, What's the output of:
+> tpm2_getcap handles-persistent
+> =
+
+> If you see something like:
+> - 0x81010002
+> =
+
+> You need to evict it first, perhaps a previous persist occurred. If it =
+
+> was a real TPM perhaps you're colliding with someone else on the TPM =
+
+> who persisted something there....but I see it's just the mssim, so you sh=
+ould be okay to just evict it, like so:
+> tpm2_evictcontrol -C o -c 0x81010002
+> =
+
 > >
-> > Cheers,
-> > Andreas
-> > ________________________________________
-> > From: ted.h.kim(a)oracle.com [ted.h.kim(a)oracle.com]
-> > Sent: Wednesday, May 13, 2020 18:14
-> > To: tpm2(a)lists.01.org
-> > Subject: [tpm2] compile error on tpm2-tools (4.2.X branch)
-> >
-> > Folks,
-> >
-> > I got an "error" compiling tpm2-tools (4.2.X branch).
-> > Yes, I realize this is because warnings being converted to errors.
-> > Don't think I changed the CC flags, but maybe this is just my environme=
-nt?
-> >
-> > Haven't checked the new 4.2.1 release update - does that take care of t=
-his?
-> >
-> > Thanks,
-> > -ted
-> >
-> > ++++
-> >
-> > from the make output:
-> >
-> > lib/tpm2.c: In function 'tpm2_getsapicontext':
-> > lib/tpm2.c:4070:20: error: implicit declaration of function
-> > 'Esys_GetSysContext'
-> > ; did you mean 'Esys_FlushContext'? [-Werror=3Dimplicit-function-declar=
-ation]
-> >        TSS2_RC rval =3D Esys_GetSysContext(esys_context, sys_context);
-> >                       ^~~~~~~~~~~~~~~~~~
-> >                       Esys_FlushContext
-> > cc1: all warnings being treated as errors
-> > make: *** [Makefile:4857: lib/libcommon_a-tpm2.o] Error 1
-> >
-> > --
-> > Ted H. Kim, PhD
-> > ted.h.kim(a)oracle.com
-> > +1 310-258-7515
-> >
+> > > -----Original Message-----
+> > > From: Zhao, Shirley [mailto:shirley.zhao(a)intel.com]
+> > > Sent: Sunday, May 10, 2020 9:31 PM
+> > > To: tpm2(a)lists.01.org
+> > > Cc: Desai, Imran <imran.desai(a)intel.com>
+> > > Subject: [tpm2] Re: The script of evictcontrol failed during =
+
+> > > create ek and ak
+> > >
+> > > Oh, I use another parameter to make it persistent, it works as below:
+> > >
+> > > tpm2_evictcontrol -C o -c ak.ctx -o primary.handle
+> > >
+> > > But still not sure why assign a handle 0x81010002 doesn't work.
+> > >
+> > > The TPM has been cleared.
+> > >
+> > >
+> > >
+> > > From: Zhao, Shirley
+> > > Sent: Saturday, May 9, 2020 11:58 AM
+> > > To: 'tpm2(a)lists.01.org' <tpm2(a)lists.01.org>
+> > > Cc: Desai, Imran <imran.desai(a)intel.com>
+> > > Subject: The script of evictcontrol failed during create ek and ak
+> > >
+> > >
+> > >
+> > > Thanks, Imran.
+> > >
+> > > I have fixed the failure of the script of tpm2_policyauthorize.
+> > >
+> > >
+> > >
+> > > Now, I met another failure when running the script on
+> > > https://github.com/tpm2-
+> > > software/tpm2-tools/blob/master/man/tpm2_createak.1.md
+> > > <https://github.com/tpm2-software/tpm2-
+> > > tools/blob/master/man/tpm2_createak.1.md> .
+> > >
+> > > The log is:
+> > >
+> > > $ tpm2_startup --clear --tcti=3Dmssim
+> > >
+> > > $ tpm2_createek -c ek.handle -G rsa -u ek.pub --tcti=3Dmssim
+> > >
+> > > $ tpm2_createak -C ek.handle -c ak.ctx -u ak.pub -n ak.name =
+
+> > > --tcti=3Dmssim
+> > >
+> > > loaded-key:
+> > >
+> > >   name:
+> > > 000ba3f7e942e3d87b2c7bebb28f6893c4146bc5a89a4018c9f6b778406f2eac0f
+> > > ea
+> > >
+> > > $ tpm2_evictcontrol -C o -c ak.ctx 0x81010002 --tcti=3Dmssim
+> > >
+> > > WARNING:esys:src/tss2-
+> > > esys/api/Esys_ContextLoad.c:279:Esys_ContextLoad_Finish() Received =
+
+> > > TPM Error
+> > >
+> > > ERROR:esys:src/tss2-esys/api/Esys_ContextLoad.c:93:Esys_ContextLoa
+> > > d(
+> > > )
+> > > Esys Finish ErrorCode (0x00000902)
+> > >
+> > > ERROR: Esys_ContextLoad(0x902) - tpm:warn(2.0): out of memory for =
+
+> > > object contexts
+> > >
+> > > ERROR:esys:src/tss2-esys/esys_tr.c:357:Esys_TR_Close() Error: Esys =
+
+> > > handle does not exist (70018).
+> > >
+> > > ERROR: Esys_TR_Close(0x70018) - esapi:The ESYS_TR resource object =
+
+> > > is bad
+> > >
+> > > ERROR: Unable to run tpm2_evictcontrol
+> > >
+> > >
+> > >
+> > > Not sure whether it is the handle is wrong, because when check =
+
+> > > transient handle as below.
+> > >
+> > > $ tpm2_getcap handles-transient --tcti=3Dmssim
+> > >
+> > > - 0x80000000
+> > >
+> > > - 0x80000001
+> > >
+> > > - 0x80000002
+> > >
+> > >
+> > >
+> > > But even I update the 0x81010002 into 0x80000000, 0x80000001 or =
+
+> > > 0x80000002, it still result in the same error.
+> > >
+> > >
+> > >
+> > > Please help, thanks.
+> > >
+> > >
+> > >
+> > > *Shirley
+> > >
+> > >
 > > _______________________________________________
-> > tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email to
-> > tpm2-leave(a)lists.01.org
+> > tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email =
+
+> > to tpm2-leave(a)lists.01.org =
+
 > > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 > =
 
-> --
-> Ted H. Kim, PhD
-> ted.h.kim(a)oracle.com
-> +1 310-258-7515
-> =
 
-> =
 
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============9159727066196140804==--
+--===============3799998906435928290==--
 
