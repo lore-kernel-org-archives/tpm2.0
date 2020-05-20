@@ -1,95 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============2979731121506026186=="
+Content-Type: multipart/mixed; boundary="===============7264248490245120561=="
 MIME-Version: 1.0
-From: Steffen Schwebel <s.schwebel at uvensys.de>
-Subject: [tpm2] Re: Trying to decrypt a file encrypted with a TPM.
-Date: Wed, 20 May 2020 13:50:23 +0200
-Message-ID: <968ed6e9-9e8a-96be-0e35-84fe318cbba2@uvensys.de>
-In-Reply-To: 20200520093354.2843.3259@ml01.vlan13.01.org
+From: =?utf-8?q?Eduardo_Falc=C3=A3o_=3Ceduardolfalcao_at_gmail=2Ecom=3E?=
+Subject: [tpm2] Stablishing trust on to TPM simulator
+Date: Wed, 20 May 2020 14:08:47 +0000
+Message-ID: <20200520140847.2843.90531@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2979731121506026186==
+--===============7264248490245120561==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-With asymmetric keys, you encrypt something with the public key.
+Hello, everyone :)
 
-You need the public key of the recipient and encrypt with it.
-That way only the keeper of the private key can decrypt it.
+I am creating a demo where I attest the state of a machine (VM) using a sim=
+ulated TPM. I think I've done properly the core operations of my demonstrat=
+ion, but I'm still wondering how would I stablish trust with TPM in this si=
+mulated scenario.
 
-You wont be able to decrypt that file anywhere else, except on that
-system...
+I think that in a real setup, with a real TPM, there may be a service that =
+validates the TPM Ek certificate. Is there something similar I could do in =
+simulation mode, or I would have to mock this action (in simulation environ=
+ment)?
 
-On 5/20/20 11:33 AM, oscargomezf(a)gmail.com wrote:
-> Hi everyone,
->
-> I have encrypted a file using a TPM with the following commands:
->
-> tpm2_createprimary -c primary.ctx
-> tpm2_create -C primary.ctx -Grsa2048 -u key.pub -r key.priv
->
-> tpm2_flushcontext -t
->
-> tpm2_load -C primary.ctx -u key.pub -r key.priv -c key.ctx
-> echo "my message" > msg.dat
-> tpm2_rsaencrypt -c key.ctx -o msg.enc msg.dat
->
-> Therefore, I am able to encrypt the file msg.dat to msg.enc. And I have t=
-he following keys:
->
-> 1. primary.ctx
-> 2. key.pub
-> 3. key.priv
-> 4. key.ctx
->
-> So far so good. However, I need to decrypt the file in msg.enc in another=
- embedded system (Linux platform) without a TPM.
->
-> How can I do that? What tools do I need to use?
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+Also, in case I have a real TPM, how would I use this service (for instance=
+, with a TPM from Intel)? Where would I check the parameters of this API?
 
--- =
 
-Steffen Schwebel
-Mail: s.schwebel(a)uvensys.de
-uvensys GmbH
+-------- =
 
-Firmensitz und Sitz der Gesellschaft:
-uvensys GmbH
-Schorbachstra=C3=9Fe 11
-35510 Butzbach
+More info on my setup:
+The TPM I am using is simulated. Thus, my setup involves installing the SWT=
+PM (https://github.com/stefanberger/swtpm.git and https://github.com/stefan=
+berger/libtpms.git), QEMU (https://github.com/qemu/qemu), and EDK2 (https:/=
+/github.com/tianocore/edk2.git).
+When configuring my simulator, I run it with --createek, --create-ek-cert, =
+and --create-platform-cert flag, as follows: =
 
-HRB: AG Friedberg, 7780
-USt-Id: DE282879294
 
-Gesch=C3=A4ftsf=C3=BChrer:
-Dr. Thomas Licht, t.licht(a)uvensys.de
-Volker Lieder, v.lieder(a)uvensys.de
+sudo swtpm_setup --tpmstate ${VTPM_DIR_PATH} --createek --create-ek-cert --=
+create-platform-cert --allow-signing --tpm2
 
-Mail: info(a)uvensys.de
-Internet: www.uvensys.de
+Through Qemu, I am able to start a VM with TPM2 features, and then I instal=
+l TSS (https://github.com/tpm2-software/tpm2-tss), ABRMD (https://github.co=
+m/tpm2-software/tpm2-abrmd), and TPM2_TOOLS (https://github.com/tpm2-softwa=
+re/tpm2-tools). This setup allows me to try out TPM in simulation mode.
 
-Durchwahl: 06033 - 18 19 225
-Hotline: 06033 - 18 19 288
-Zentrale: 06033 - 18 19 20
-Fax: 06033 - 18 19 299
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
+Steps of attestation:
+1. (VM to be attested) getting the public portion of my endorsement key
+2. (VM to be attested) creating an attestation key (AK)
+3. (VM to be attested) quoting given PCRs with freshly created AK (outputin=
+g the quote, pcrs, and signature)
+4. (Attestator VM) run python program that checks quote signatue, and check=
+s if value of PCR digest from quote matches an expected value =
 
-Jegliche Stellungnahmen und Meinungen dieser E-Mail sind
-alleine die des Autors und nicht notwendigerweise die der
-Firma. Falls erforderlich, k=C3=B6nnen Sie eine gesonderte
-schriftliche Best=C3=A4tigung anfordern.
 
-Any views or opinions presented in this email are solely
-those of the author and do not necessarily represent those
-of the company. If verification is required please request
-a hard-copy version.
+Missing step:
+1. (Attestator VM) check if vendor root certificates validate the EK certif=
+icate
+-------- =
 
---===============2979731121506026186==--
+
+Best regards
+--===============7264248490245120561==--
 
