@@ -1,67 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============7264248490245120561=="
+Content-Type: multipart/mixed; boundary="===============6895857603937751690=="
 MIME-Version: 1.0
-From: =?utf-8?q?Eduardo_Falc=C3=A3o_=3Ceduardolfalcao_at_gmail=2Ecom=3E?=
-Subject: [tpm2] Stablishing trust on to TPM simulator
-Date: Wed, 20 May 2020 14:08:47 +0000
-Message-ID: <20200520140847.2843.90531@ml01.vlan13.01.org>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: authHandle issues
+Date: Wed, 20 May 2020 14:59:10 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EEFEBF@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: CANGCWd0wLxEi+NOeEoHx1_TLx8Sed6ekJ=PaEkfgt=gdBeXDMQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7264248490245120561==
+--===============6895857603937751690==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello, everyone :)
-
-I am creating a demo where I attest the state of a machine (VM) using a sim=
-ulated TPM. I think I've done properly the core operations of my demonstrat=
-ion, but I'm still wondering how would I stablish trust with TPM in this si=
-mulated scenario.
-
-I think that in a real setup, with a real TPM, there may be a service that =
-validates the TPM Ek certificate. Is there something similar I could do in =
-simulation mode, or I would have to mock this action (in simulation environ=
-ment)?
-
-Also, in case I have a real TPM, how would I use this service (for instance=
-, with a TPM from Intel)? Where would I check the parameters of this API?
 
 
--------- =
+> -----Original Message-----
+> From: Muthukumar S [mailto:muthu.smk(a)gmail.com]
+> Sent: Wednesday, May 20, 2020 4:29 AM
+> To: tpm2(a)lists.01.org; Roberts, William C <william.c.roberts(a)intel.co=
+m>
+> Subject: authHandle issues
+> =
 
-More info on my setup:
-The TPM I am using is simulated. Thus, my setup involves installing the SWT=
-PM (https://github.com/stefanberger/swtpm.git and https://github.com/stefan=
-berger/libtpms.git), QEMU (https://github.com/qemu/qemu), and EDK2 (https:/=
-/github.com/tianocore/edk2.git).
-When configuring my simulator, I run it with --createek, --create-ek-cert, =
-and --create-platform-cert flag, as follows: =
+> Hi Roberts,
+> =
 
+> Thanks a lot for your response. As per your suggestion , I remember that =
+I set
+> "authHandle" as ESYS_TR type. And the test code that I have shared also h=
+as the
+> same implementation.
+> =
 
-sudo swtpm_setup --tpmstate ${VTPM_DIR_PATH} --createek --create-ek-cert --=
-create-platform-cert --allow-signing --tpm2
+> Below is how I set the "authHandle" , which is of ESYS_TR type and passed=
+ as
+> argument to below Esys_NV_Read () API.
+> =
 
-Through Qemu, I am able to start a VM with TPM2 features, and then I instal=
-l TSS (https://github.com/tpm2-software/tpm2-tss), ABRMD (https://github.co=
-m/tpm2-software/tpm2-abrmd), and TPM2_TOOLS (https://github.com/tpm2-softwa=
-re/tpm2-tools). This setup allows me to try out TPM in simulation mode.
+> ESYS_TR authHandle =3D 0x40000001;
 
-Steps of attestation:
-1. (VM to be attested) getting the public portion of my endorsement key
-2. (VM to be attested) creating an attestation key (AK)
-3. (VM to be attested) quoting given PCRs with freshly created AK (outputin=
-g the quote, pcrs, and signature)
-4. (Attestator VM) run python program that checks quote signatue, and check=
-s if value of PCR digest from quote matches an expected value =
+Just because the C type is an ESYS_TR doesn't mean the value you're assigni=
+ng is
+Correct. You're assigning the raw tpm handle to that ESYS_TR. ESYS doesn't =
+understand
+That. You need to assign either:
+1. The value of nv_index2 (saying authorize me by using the authvalue for t=
+he nv index)
+2.  ESYS_TR_RH_OWNER (saying authorize me by using the authvalue of the own=
+er)
 
+You can find the definition for ESYS_TR_RH_OWNER here:
+https://github.com/tpm2-software/tpm2-tss/blob/master/include/tss2/tss2_esy=
+s.h#L54
 
-Missing step:
-1. (Attestator VM) check if vendor root certificates validate the EK certif=
-icate
--------- =
+In retrospect, we should have made ESYS_TR an enum to make this more explic=
+it.
 
+> rc =3D Esys_NV_Read(
+>                 ectx,
+> 		authHandle,
+>                 nv_index2, /* the nv index to read from */
+>                 ESYS_TR_PASSWORD,
+>                 ESYS_TR_NONE,
+>                 ESYS_TR_NONE,
+> 		20,
+>                 0,
+>                 &read_data);
+>                 if (rc !=3D TSS2_RC_SUCCESS) {
+>                         printf("Esys_NV_Read <ERROR>: 0x%x\n", rc);
+>                 	goto out;
+> 		}
+> Let me know , anything else am I missing?
+> =
 
-Best regards
---===============7264248490245120561==--
+> BR,
+> Muthukumar
+
+--===============6895857603937751690==--
 
