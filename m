@@ -1,81 +1,158 @@
-Content-Type: multipart/mixed; boundary="===============6895857603937751690=="
+Content-Type: multipart/mixed; boundary="===============3120994002495680993=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: authHandle issues
-Date: Wed, 20 May 2020 14:59:10 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EEFEBF@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: CANGCWd0wLxEi+NOeEoHx1_TLx8Sed6ekJ=PaEkfgt=gdBeXDMQ@mail.gmail.com
+Subject: [tpm2] Re: Trying to decrypt a file encrypted with a TPM.
+Date: Wed, 20 May 2020 15:08:14 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EEFED1@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: 968ed6e9-9e8a-96be-0e35-84fe318cbba2@uvensys.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6895857603937751690==
+--===============3120994002495680993==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+The TPM follows the true meanings of RSA Encrypt and RSA Decrypt:
+
+RSA Encrypt: Do math with public key
+RSA Decrypt: Do math with private key
+
+So you feed one into encrypt then decrypt or vice versa depending on what
+Properties you want.
+
+Encrypt to Decrypt: You want to send something only the private key holder =
+can
+Access. For instance, you want to furlough a symmetric key from a server, y=
+ou
+Could encrypt the key with the clients public key (RSA Encrypt) and then se=
+nd
+It to the client. The client would then call RSA Decrypt. This pattern give=
+s you
+privacy. Note there is no forward secrecy here like if you do other, better
+ways of key exchange. This is just an example.
+
+Decrypt to Encrypt: This is for verifying the authenticity of a message. Th=
+ink signing.
+You get a hash, perform RSA Decrypt (math with private key), and append tha=
+t to the
+Message. Now someone wants to make sure it's from you and not tampered with,
+They use your public key, perform RSA Encrypt (math with public key) and ge=
+t the
+Expected hash of the message. They then compare that to a hash they calcula=
+te. =
+
+
+RSA Encrypt is supported by the TPM as a helper. You don't really need to u=
+se the
+TPM because it's with the public key, it can just be done anywhere as the p=
+ublic
+Key is public.
+
+Hopefully this clears it up.
 
 
 > -----Original Message-----
-> From: Muthukumar S [mailto:muthu.smk(a)gmail.com]
-> Sent: Wednesday, May 20, 2020 4:29 AM
-> To: tpm2(a)lists.01.org; Roberts, William C <william.c.roberts(a)intel.co=
-m>
-> Subject: authHandle issues
+> From: Steffen Schwebel [mailto:s.schwebel(a)uvensys.de]
+> Sent: Wednesday, May 20, 2020 6:50 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Re: Trying to decrypt a file encrypted with a TPM.
 > =
 
-> Hi Roberts,
+> With asymmetric keys, you encrypt something with the public key.
 > =
 
-> Thanks a lot for your response. As per your suggestion , I remember that =
-I set
-> "authHandle" as ESYS_TR type. And the test code that I have shared also h=
-as the
-> same implementation.
+> You need the public key of the recipient and encrypt with it.
+> That way only the keeper of the private key can decrypt it.
 > =
 
-> Below is how I set the "authHandle" , which is of ESYS_TR type and passed=
- as
-> argument to below Esys_NV_Read () API.
+> You wont be able to decrypt that file anywhere else, except on that syste=
+m...
 > =
 
-> ESYS_TR authHandle =3D 0x40000001;
-
-Just because the C type is an ESYS_TR doesn't mean the value you're assigni=
-ng is
-Correct. You're assigning the raw tpm handle to that ESYS_TR. ESYS doesn't =
-understand
-That. You need to assign either:
-1. The value of nv_index2 (saying authorize me by using the authvalue for t=
-he nv index)
-2.  ESYS_TR_RH_OWNER (saying authorize me by using the authvalue of the own=
-er)
-
-You can find the definition for ESYS_TR_RH_OWNER here:
-https://github.com/tpm2-software/tpm2-tss/blob/master/include/tss2/tss2_esy=
-s.h#L54
-
-In retrospect, we should have made ESYS_TR an enum to make this more explic=
-it.
-
-> rc =3D Esys_NV_Read(
->                 ectx,
-> 		authHandle,
->                 nv_index2, /* the nv index to read from */
->                 ESYS_TR_PASSWORD,
->                 ESYS_TR_NONE,
->                 ESYS_TR_NONE,
-> 		20,
->                 0,
->                 &read_data);
->                 if (rc !=3D TSS2_RC_SUCCESS) {
->                         printf("Esys_NV_Read <ERROR>: 0x%x\n", rc);
->                 	goto out;
-> 		}
-> Let me know , anything else am I missing?
+> On 5/20/20 11:33 AM, oscargomezf(a)gmail.com wrote:
+> > Hi everyone,
+> >
+> > I have encrypted a file using a TPM with the following commands:
+> >
+> > tpm2_createprimary -c primary.ctx
+> > tpm2_create -C primary.ctx -Grsa2048 -u key.pub -r key.priv
+> >
+> > tpm2_flushcontext -t
+> >
+> > tpm2_load -C primary.ctx -u key.pub -r key.priv -c key.ctx echo "my
+> > message" > msg.dat tpm2_rsaencrypt -c key.ctx -o msg.enc msg.dat
+> >
+> > Therefore, I am able to encrypt the file msg.dat to msg.enc. And I have=
+ the
+> following keys:
+> >
+> > 1. primary.ctx
+> > 2. key.pub
+> > 3. key.priv
+> > 4. key.ctx
+> >
+> > So far so good. However, I need to decrypt the file in msg.enc in anoth=
+er
+> embedded system (Linux platform) without a TPM.
+> >
+> > How can I do that? What tools do I need to use?
+> > _______________________________________________
+> > tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email to
+> > tpm2-leave(a)lists.01.org
+> > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 > =
 
-> BR,
-> Muthukumar
+> --
+> Steffen Schwebel
+> Mail: s.schwebel(a)uvensys.de
+> uvensys GmbH
+> =
 
---===============6895857603937751690==--
+> Firmensitz und Sitz der Gesellschaft:
+> uvensys GmbH
+> Schorbachstra=C3=9Fe 11
+> 35510 Butzbach
+> =
+
+> HRB: AG Friedberg, 7780
+> USt-Id: DE282879294
+> =
+
+> Gesch=C3=A4ftsf=C3=BChrer:
+> Dr. Thomas Licht, t.licht(a)uvensys.de
+> Volker Lieder, v.lieder(a)uvensys.de
+> =
+
+> Mail: info(a)uvensys.de
+> Internet: www.uvensys.de
+> =
+
+> Durchwahl: 06033 - 18 19 225
+> Hotline: 06033 - 18 19 288
+> Zentrale: 06033 - 18 19 20
+> Fax: 06033 - 18 19 299
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =
+
+> Jegliche Stellungnahmen und Meinungen dieser E-Mail sind alleine die des =
+Autors
+> und nicht notwendigerweise die der Firma. Falls erforderlich, k=C3=B6nnen=
+ Sie eine
+> gesonderte schriftliche Best=C3=A4tigung anfordern.
+> =
+
+> Any views or opinions presented in this email are solely those of the aut=
+hor and
+> do not necessarily represent those of the company. If verification is req=
+uired
+> please request a hard-copy version.
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============3120994002495680993==--
 
