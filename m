@@ -1,158 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============3120994002495680993=="
+Content-Type: multipart/mixed; boundary="===============6114873288432926974=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Trying to decrypt a file encrypted with a TPM.
-Date: Wed, 20 May 2020 15:08:14 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EEFED1@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: 968ed6e9-9e8a-96be-0e35-84fe318cbba2@uvensys.de
+Subject: [tpm2] Re: trying duplication and then rsa_en/decrypt
+Date: Wed, 20 May 2020 15:09:52 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EEFEE5@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: cc54ff02-467f-e5a0-9a93-3b2470de3533@oracle.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3120994002495680993==
+--===============6114873288432926974==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The TPM follows the true meanings of RSA Encrypt and RSA Decrypt:
++ Imran,
 
-RSA Encrypt: Do math with public key
-RSA Decrypt: Do math with private key
-
-So you feed one into encrypt then decrypt or vice versa depending on what
-Properties you want.
-
-Encrypt to Decrypt: You want to send something only the private key holder =
-can
-Access. For instance, you want to furlough a symmetric key from a server, y=
-ou
-Could encrypt the key with the clients public key (RSA Encrypt) and then se=
-nd
-It to the client. The client would then call RSA Decrypt. This pattern give=
-s you
-privacy. Note there is no forward secrecy here like if you do other, better
-ways of key exchange. This is just an example.
-
-Decrypt to Encrypt: This is for verifying the authenticity of a message. Th=
-ink signing.
-You get a hash, perform RSA Decrypt (math with private key), and append tha=
-t to the
-Message. Now someone wants to make sure it's from you and not tampered with,
-They use your public key, perform RSA Encrypt (math with public key) and ge=
-t the
-Expected hash of the message. They then compare that to a hash they calcula=
-te. =
-
-
-RSA Encrypt is supported by the TPM as a helper. You don't really need to u=
-se the
-TPM because it's with the public key, it can just be done anywhere as the p=
-ublic
-Key is public.
-
-Hopefully this clears it up.
+Can you help him out?
+Also, can you add to the manpages so theirs examples of using the duplicate=
+d key?
 
 
 > -----Original Message-----
-> From: Steffen Schwebel [mailto:s.schwebel(a)uvensys.de]
-> Sent: Wednesday, May 20, 2020 6:50 AM
+> From: ted.h.kim(a)oracle.com [mailto:ted.h.kim(a)oracle.com]
+> Sent: Tuesday, May 19, 2020 8:10 PM
 > To: tpm2(a)lists.01.org
-> Subject: [tpm2] Re: Trying to decrypt a file encrypted with a TPM.
+> Subject: [tpm2] trying duplication and then rsa_en/decrypt
 > =
 
-> With asymmetric keys, you encrypt something with the public key.
+> Folks,
 > =
 
-> You need the public key of the recipient and encrypt with it.
-> That way only the keeper of the private key can decrypt it.
+> Sorry for what is probably an obvious question ...
 > =
 
-> You wont be able to decrypt that file anywhere else, except on that syste=
-m...
+> I tried the examples in the tpm2_duplicate(1) and
+> tpm2_policyduplicationselect(1) man pages. Afterwards, I just wanted to t=
+ry out
+> the duplicated keys. So I tried tpm2_rsaencrypt followed by tpm2_rsadecry=
+pt.
+> But when doing the latter, I got:
 > =
 
-> On 5/20/20 11:33 AM, oscargomezf(a)gmail.com wrote:
-> > Hi everyone,
-> >
-> > I have encrypted a file using a TPM with the following commands:
-> >
-> > tpm2_createprimary -c primary.ctx
-> > tpm2_create -C primary.ctx -Grsa2048 -u key.pub -r key.priv
-> >
-> > tpm2_flushcontext -t
-> >
-> > tpm2_load -C primary.ctx -u key.pub -r key.priv -c key.ctx echo "my
-> > message" > msg.dat tpm2_rsaencrypt -c key.ctx -o msg.enc msg.dat
-> >
-> > Therefore, I am able to encrypt the file msg.dat to msg.enc. And I have=
- the
-> following keys:
-> >
-> > 1. primary.ctx
-> > 2. key.pub
-> > 3. key.priv
-> > 4. key.ctx
-> >
-> > So far so good. However, I need to decrypt the file in msg.enc in anoth=
-er
-> embedded system (Linux platform) without a TPM.
-> >
-> > How can I do that? What tools do I need to use?
-> > _______________________________________________
-> > tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email to
-> > tpm2-leave(a)lists.01.org
-> > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+> WARNING:esys:src/tss2-
+> esys/api/Esys_RSA_Decrypt.c:305:Esys_RSA_Decrypt_Finish()
+> Received TPM Error
+> ERROR:esys:src/tss2-esys/api/Esys_RSA_Decrypt.c:102:Esys_RSA_Decrypt()
+> Esys Finish ErrorCode (0x0000012f)
+> ERROR: Esys_RSA_Decrypt(0x12F) - tpm:error(2.0): authValue or authPolicy =
+is not
+> available for selected entity
+> ERROR: Unable to run tpm2_rsadecrypt
+> =
+
+> =
+
+> Which I guess means I didn't satisfy the policy for the object. But if I =
+try to run
+> tpm2_startauthsession like those man page examples show, I get this error:
+> =
+
+> WARNING:esys:src/tss2-
+> esys/api/Esys_RSA_Decrypt.c:305:Esys_RSA_Decrypt_Finish()
+> Received TPM Error
+> ERROR:esys:src/tss2-esys/api/Esys_RSA_Decrypt.c:102:Esys_RSA_Decrypt()
+> Esys Finish ErrorCode (0x000009a4)
+> ERROR: Esys_RSA_Decrypt(0x9A4) - tpm:session(1):the commandCode in the
+> policy is not the commandCode of the command or the command code in a pol=
+icy
+> command references a command that is not implemented
+> ERROR: Unable to run tpm2_rsadecrypt
+> =
+
+> =
+
+> And so, I am confused now about what I need to do to get these duplicated=
+ keys
+> to work with tpm2_rsadecrypt.
+> =
+
+> =
+
+> Thanks,
+> -ted
+> =
+
+> =
+
 > =
 
 > --
-> Steffen Schwebel
-> Mail: s.schwebel(a)uvensys.de
-> uvensys GmbH
+> Ted H. Kim, PhD
+> ted.h.kim(a)oracle.com
+> +1 310-258-7515
 > =
 
-> Firmensitz und Sitz der Gesellschaft:
-> uvensys GmbH
-> Schorbachstra=C3=9Fe 11
-> 35510 Butzbach
-> =
-
-> HRB: AG Friedberg, 7780
-> USt-Id: DE282879294
-> =
-
-> Gesch=C3=A4ftsf=C3=BChrer:
-> Dr. Thomas Licht, t.licht(a)uvensys.de
-> Volker Lieder, v.lieder(a)uvensys.de
-> =
-
-> Mail: info(a)uvensys.de
-> Internet: www.uvensys.de
-> =
-
-> Durchwahl: 06033 - 18 19 225
-> Hotline: 06033 - 18 19 288
-> Zentrale: 06033 - 18 19 20
-> Fax: 06033 - 18 19 299
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =
-
-> Jegliche Stellungnahmen und Meinungen dieser E-Mail sind alleine die des =
-Autors
-> und nicht notwendigerweise die der Firma. Falls erforderlich, k=C3=B6nnen=
- Sie eine
-> gesonderte schriftliche Best=C3=A4tigung anfordern.
-> =
-
-> Any views or opinions presented in this email are solely those of the aut=
-hor and
-> do not necessarily represent those of the company. If verification is req=
-uired
-> please request a hard-copy version.
 > _______________________________________________
 > tpm2 mailing list -- tpm2(a)lists.01.org
 > To unsubscribe send an email to tpm2-leave(a)lists.01.org
 > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============3120994002495680993==--
+--===============6114873288432926974==--
 
