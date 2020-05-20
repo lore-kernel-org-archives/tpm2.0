@@ -1,75 +1,41 @@
-Content-Type: multipart/mixed; boundary="===============4038849398535786824=="
+Content-Type: multipart/mixed; boundary="===============8954794824641882849=="
 MIME-Version: 1.0
-From: Muthukumar S <muthu.smk at gmail.com>
-Subject: [tpm2] authHandle issues
-Date: Wed, 20 May 2020 14:59:26 +0530
-Message-ID: <CANGCWd0wLxEi+NOeEoHx1_TLx8Sed6ekJ=PaEkfgt=gdBeXDMQ@mail.gmail.com>
+From: oscargomezf at gmail.com
+Subject: [tpm2] Trying to decrypt a file encrypted with a TPM.
+Date: Wed, 20 May 2020 09:33:54 +0000
+Message-ID: <20200520093354.2843.3259@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4038849398535786824==
+--===============8954794824641882849==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Roberts,
+Hi everyone,
 
-Thanks a lot for your response. As per your suggestion , I remember that I
-set "authHandle" as ESYS_TR type. And the test code that I have shared also
-has the same implementation.
+I have encrypted a file using a TPM with the following commands:
 
-Below is how I set the "authHandle" , which is of ESYS_TR type and passed
-as argument to below Esys_NV_Read () API.
+tpm2_createprimary -c primary.ctx
+tpm2_create -C primary.ctx -Grsa2048 -u key.pub -r key.priv
 
-ESYS_TR authHandle =3D 0x40000001;
+tpm2_flushcontext -t
 
-rc =3D Esys_NV_Read(
-                ectx,
-		authHandle,
-                nv_index2, /* the nv index to read from */
-                ESYS_TR_PASSWORD,
-                ESYS_TR_NONE,
-                ESYS_TR_NONE,
-		20,
-                0,
-                &read_data);
-                if (rc !=3D TSS2_RC_SUCCESS) {
-                        printf("Esys_NV_Read <ERROR>: 0x%x\n", rc);
-                	goto out;
-		}
+tpm2_load -C primary.ctx -u key.pub -r key.priv -c key.ctx
+echo "my message" > msg.dat
+tpm2_rsaencrypt -c key.ctx -o msg.enc msg.dat
 
-Let me know , anything else am I missing?
+Therefore, I am able to encrypt the file msg.dat to msg.enc. And I have the=
+ following keys:
 
-BR,
-Muthukumar
+1. primary.ctx
+2. key.pub
+3. key.priv
+4. key.ctx
 
---===============4038849398535786824==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+So far so good. However, I need to decrypt the file in msg.enc in another e=
+mbedded system (Linux platform) without a TPM.
 
-PGRpdiBkaXI9ImF1dG8iPkhpIFJvYmVydHMsPGRpdiBkaXI9ImF1dG8iPjxicj48L2Rpdj48ZGl2
-IGRpcj0iYXV0byI+VGhhbmtzIGEgbG90IGZvciB5b3VyIHJlc3BvbnNlLiBBcyBwZXIgeW91ciBz
-dWdnZXN0aW9uICwgSSByZW1lbWJlciB0aGF0IEkgc2V0ICZxdW90O2F1dGhIYW5kbGUmcXVvdDsg
-YXMgRVNZU19UUiB0eXBlLiBBbmQgdGhlIHRlc3QgY29kZSB0aGF0IEkgaGF2ZSBzaGFyZWQgYWxz
-byBoYXMgdGhlIHNhbWUgaW1wbGVtZW50YXRpb24uPC9kaXY+PGRpdiBkaXI9ImF1dG8iPjxicj48
-L2Rpdj48ZGl2IGRpcj0iYXV0byI+QmVsb3cgaXMgaG93IEkgc2V0IHRoZSAmcXVvdDthdXRoSGFu
-ZGxlJnF1b3Q7ICwgd2hpY2ggaXMgb2YgRVNZU19UUiB0eXBlIGFuZCBwYXNzZWQgYXMgYXJndW1l
-bnQgdG8gYmVsb3cgRXN5c19OVl9SZWFkICgpIEFQSS48YnI+PGRpdiBkaXI9ImF1dG8iPjxwcmUg
-c3R5bGU9IndoaXRlLXNwYWNlOnByZS13cmFwIj5FU1lTX1RSIGF1dGhIYW5kbGUgPSAweDQwMDAw
-MDAxOzwvcHJlPjxwcmUgc3R5bGU9IndoaXRlLXNwYWNlOnByZS13cmFwIj5yYyA9IEVzeXNfTlZf
-UmVhZCgKICAgICAgICAgICAgICAgIGVjdHgsCgkJYXV0aEhhbmRsZSwKICAgICAgICAgICAgICAg
-IG52X2luZGV4MiwgLyogdGhlIG52IGluZGV4IHRvIHJlYWQgZnJvbSAqLwogICAgICAgICAgICAg
-ICAgRVNZU19UUl9QQVNTV09SRCwKICAgICAgICAgICAgICAgIEVTWVNfVFJfTk9ORSwKICAgICAg
-ICAgICAgICAgIEVTWVNfVFJfTk9ORSwKCQkyMCwKICAgICAgICAgICAgICAgIDAsCiAgICAgICAg
-ICAgICAgICAmYW1wO3JlYWRfZGF0YSk7CiAgICAgICAgICAgICAgICBpZiAocmMgIT0gVFNTMl9S
-Q19TVUNDRVNTKSB7CiAgICAgICAgICAgICAgICAgICAgICAgIHByaW50ZigmcXVvdDtFc3lzX05W
-X1JlYWQgJmx0O0VSUk9SJmd0OzogMHgleFxuJnF1b3Q7LCByYyk7CiAgICAgICAgICAgICAgICAJ
-Z290byBvdXQ7CgkJfTwvcHJlPjwvZGl2PjxkaXYgZGlyPSJhdXRvIj5MZXQgbWUga25vdyAsIGFu
-eXRoaW5nIGVsc2UgYW0gSSBtaXNzaW5nPzwvZGl2PjxkaXYgZGlyPSJhdXRvIj48YnI+PC9kaXY+
-PGRpdiBkaXI9ImF1dG8iPkJSLDwvZGl2PjxkaXYgZGlyPSJhdXRvIj5NdXRodWt1bWFyPC9kaXY+
-PC9kaXY+PC9kaXY+Cg==
-
---===============4038849398535786824==--
+How can I do that? What tools do I need to use?
+--===============8954794824641882849==--
 
