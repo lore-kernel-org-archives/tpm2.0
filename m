@@ -1,35 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============9077431938920315895=="
+Content-Type: multipart/mixed; boundary="===============2012035400825737800=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-tools: 4.1.3-rc0
-Date: Mon, 25 May 2020 16:38:42 +0000
-Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EF45EA@ORSMSX101.amr.corp.intel.com>
+Subject: [tpm2] [RELEASE] tpm2-tools: 4.2.1
+Date: Mon, 25 May 2020 16:52:02 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EF4601@ORSMSX101.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9077431938920315895==
+--===============2012035400825737800==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-I would like to announce tpm2-tools version 4.1.3-rc0, with the following c=
-hanges over 4.1.2:
-4.1.3-rc0 - 2020-05-22
-* tpm2_create: Fix issue with userauth attribute being cleared if policy is=
- specified.
+I would like to announce the release of tpm2-tools version 4.2.1 with the f=
+ollowing changelog:
 
-(I know the date is wrong, I was living in the past. Will update with the f=
-inal release)
+### 4.2.1 - 2020-05-25
 
-You can find the release at:
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.1.3-rc0
+* Fix missing handle maps for ESY3 handle breaks. See #1994.
+
+* Bump ESYS minimum dependency version from 2.3.0 to 2.4.0.
+
+* Fix for loop declarations build error.
+
+You can find the release here:
+https://github.com/tpm2-software/tpm2-tools/releases/tag/4.2.1
 
 Thanks,
 Bill
-
-
-
---===============9077431938920315895==--
+--===============2012035400825737800==--
 
