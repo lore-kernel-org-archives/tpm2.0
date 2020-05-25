@@ -1,36 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============4779814542042919504=="
+Content-Type: multipart/mixed; boundary="===============9077431938920315895=="
 MIME-Version: 1.0
-From: =?utf-8?q?Eduardo_Falc=C3=A3o_=3Ceduardolfalcao_at_gmail=2Ecom=3E?=
-Subject: [tpm2] Re: Stablishing trust on to TPM simulator
-Date: Sat, 23 May 2020 19:49:47 +0000
-Message-ID: <20200523194947.2859.89837@ml01.vlan13.01.org>
-In-Reply-To: 20200520184131.2843.35549@ml01.vlan13.01.org
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] [RELEASE CANDIDATE] tpm2-tools: 4.1.3-rc0
+Date: Mon, 25 May 2020 16:38:42 +0000
+Message-ID: <476DC76E7D1DF2438D32BFADF679FC5649EF45EA@ORSMSX101.amr.corp.intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4779814542042919504==
+--===============9077431938920315895==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Desai and Roberts.
+Hello,
 
-Thank you for yours responses.
+I would like to announce tpm2-tools version 4.1.3-rc0, with the following c=
+hanges over 4.1.2:
+4.1.3-rc0 - 2020-05-22
+* tpm2_create: Fix issue with userauth attribute being cleared if policy is=
+ specified.
 
-Yes, Desai, I already knew the Keylime project. And, indeed, I got the feel=
-ing that they were doing what I wanted. But in a first moment, I want to do=
- the demo by myself, so I can better understand the concepts and steps invo=
-lved to create the chain of trust. Perhaps I'll consider using Keylime when=
- I'll be comfortable with the whole process.
+(I know the date is wrong, I was living in the past. Will update with the f=
+inal release)
 
-Roberts, the path you pointed was really correct. Thank you.
+You can find the release at:
+https://github.com/tpm2-software/tpm2-tools/releases/tag/4.1.3-rc0
 
-I created an issue on the swtpm project and Stefan extended a wiki about ce=
-rtificate creation.
-For those interested, it is here:  https://github.com/stefanberger/swtpm/wi=
-ki/Certificiates-created-by-swtpm_setup#verifying-your-ek-cert-against-the-=
-ca
+Thanks,
+Bill
 
-Regards
---===============4779814542042919504==--
+
+
+--===============9077431938920315895==--
 
