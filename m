@@ -1,212 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============2341200280434541324=="
+Content-Type: multipart/mixed; boundary="===============8586511632021883998=="
 MIME-Version: 1.0
-From: Benjamin Berg <benjamin at sipsolutions.net>
-Subject: [tpm2] Re: Possible TPM uses in fprintd/libfprint
-Date: Fri, 29 May 2020 11:27:01 +0200
-Message-ID: <d3262eef85315dafe56f01493c72824df10e2c36.camel@sipsolutions.net>
-In-Reply-To: SN6PR11MB33440FCC67C70BB4869C798A848E0@SN6PR11MB3344.namprd11.prod.outlook.com
+From: ted.h.kim at oracle.com
+Subject: [tpm2] key destruction
+Date: Fri, 29 May 2020 14:44:51 -0700
+Message-ID: <5bcc1bd1-0adb-54da-929f-4d3eb14d1e19@oracle.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2341200280434541324==
+--===============8586511632021883998==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Folks,
 
-On Thu, 2020-05-28 at 01:10 +0000, Zhu, Bing wrote:
-> Given that you already have a SDCP-capable sensor (like fingerprint),
-> and you also have a trusted execution environment (TEE), then SDCP
-> should work perfectly for you. on MSFT windows, virtualization-based
-> security (VBS) provides a TEE to allow you to do that.  In other OSs,
-> you can use Intel SGX-based solution to securely talk with your
-> sensor based on SDCP security protocols. =
+Sorry for what might be an obvious question ...
+
+What is the right command sequence to destroy keys, despite the users =
+
+possibly still having context files?
+
+I read something about resetting the seed for a hierarchy through the =
+
+TPM2_Clear operation (presumably the tpm2_clear command can do this). =
+
+But that is too drastic.
+
+I just want to kill off a single key and make it not usable. If I kill =
+
+off a parent presumably I can destroy a whole tree of keys. But that =
+
+just moves the problem, potentially up to a primary key.
+What is the right way to do this?
+
+I suppose there is some trick whereby you make a policy not able to be =
+
+satisfied. But then it seems you still need to retain state to prevent =
+
+the key from being used. I would rather just have all the key state be =
+
+gone and not able to be recreated.
+
+Thanks,
+-ted
+
+--
+Ted H. Kim, PhD
+ted.h.kim(a)oracle.com
++1 310-258-7515
 
 
-Yeah. I don't think I need to secure the channel though. This is about
-being able to fully trust the process that it has correctly verified
-the Fingerprint readers authenticity, that it is not itself a vector
-for a MitM attack or can simply be bypassed somehow.
-
-The idea mentioned earlier to include the SDCP enabled device in the
-boot measurements would not require any further safety precautions. It
-would be perfectly viable to verify and include the devices public-key
-(and firmware hash) in the measurements.
-
-> Now, may I have a question -  what problems would you like to solve
-> if you need to add TPM?
-
-I don't really think that adding a TPM will solve an issues in itself.
-If I "just" authenticate a user on an already running system, then the
-entire authentication stack is trusted anyway. SDPC does add a bit more
-security as it allows to verify the integrity of the reader. But I
-don't think that a TPM would make a major difference in this scenario.
-
-My primary example of a new use-case would be to enable per-user disk
-encryption and password less (or multi-factor) login together with the
-Fingerprint reader.
-In such a scenario the Fingerprint reader does not just authenticate
-the user. Instead it also enables unsealing secrets for the user after
-the finger was presented (e.g. a disk encryption key). Protecting these
-secrets seems like a much harder problem than only authenticating the
-user.
-
-Benjamin
-
-> > -----Original Message-----
-> > From: Roberts, William C <william.c.roberts(a)intel.com>
-> > Sent: Wednesday, May 27, 2020 22:48 PM
-> > To: Benjamin Berg <benjamin(a)sipsolutions.net>; tpm2(a)lists.01.org
-> > Subject: [tpm2] Re: Possible TPM uses in fprintd/libfprint
-> > =
-
-> > =
-
-> > =
-
-> > > -----Original Message-----
-> > > From: Benjamin Berg [mailto:benjamin(a)sipsolutions.net]
-> > > Sent: Wednesday, May 27, 2020 9:24 AM
-> > > To: tpm2(a)lists.01.org
-> > > Subject: [tpm2] Possible TPM uses in fprintd/libfprint
-> > > =
-
-> > > Hi,
-> > > =
-
-> > > I was wondering if someone has ideas about integrating the TPM
-> > > with
-> > > Fingerprint readers.
-> > > =
-
-> > > Recently I started looking into supporting Secure Device
-> > > Connection
-> > > Protocol (SDCP, [1]) in libfprint. The general idea is to verify
-> > > that
-> > > the Fingerprint reader can be trusted, but I initially also
-> > > imagined
-> > > that further use-cases like unsealing data in a TPM may be
-> > > possible (e.g. to
-> > retrieve disk encryption keys).
-> > > However, looking into it more, my current conclusion is that
-> > > there is
-> > > little to no advantage to use the TPM. At least not unless one
-> > > also
-> > > has a trusted (userspace)
-> > =
-
-> > In theory you would have a measured boot environment. This way you
-> > can attest
-> > the host is in a good state. You could further isolate by have a
-> > segregated userspace
-> > components through things like Trustlets or SGX Enclaves. The
-> > general paradigm of
-> > security is to take sensitive operations and move them out of band
-> > to a smaller
-> > execution environment, this paradigm can be extended infinitely,
-> > but the
-> > restrictions here lie in the realm of how much work do you want to
-> > do, which is
-> > determining by what you're trying to protect.
-> > =
-
-> > > program which is capable of signing TPM authorizations. One could
-> > > easily offload the required parts into a small helper, but that
-> > > may
-> > > require ensuring it runs in a trusted execution environment.
-> > > Microsoft seems to run relevant parts as trustlets that are
-> > > walled off
-> > > from the rest of the system. That seems sensible to me, but it
-> > > also
-> > > means requiring all the infrastructure for execution and signing
-> > > and I doubt that is
-> > feasible currently.
-> > =
-
-> > You're still sharing hardware, which means that a potentially bad
-> > host, could be
-> > undermining the hardware and VM protections. Granted you have
-> > higher level of
-> > assurances, it's not a guarantee.
-> > =
-
-> > > =
-
-> > > Right now I'll probably go the way of not using the TPM at all.
-> > > But I
-> > > am really not an expert for this. So should someone see scenarios
-> > > where a TPM is actually helpful in this context, then I would
-> > > like to hear about
-> > them.
-> > =
-
-> > You could do a measured boot scenario that included measuring the
-> > state of the
-> > fingerprint reader (I'm assuming SCDO would give you something like
-> > that).
-> > Something has to cause the measurement to get extended into a PCR
-> > so you can Get
-> > a quote and check later that it's all OK. If it's all OK, you can
-> > then release a secret
-> > From the TPM. You can couple keys/objects to this measured state.
-> > =
-
-> > There is stuff on this in the Practical Guide to TPM2.0 and is
-> > available os a ODF
-> > download:
-> > https://link.springer.com/content/pdf/10.1007%2F978-1-4302-6584-9.pdf
-> > =
-
-> > =
-
-> > > Benjamin
-> > > =
-
-> > > PS: A quick summary of how SDCP works:
-> > >  * Device has a private ECC key that signs the firmware and
-> > > ephemeral
-> > >    keys during boot (and is inaccessible afterwards)
-> > >  * A certificate proofs that this key was provisioned in factory
-> > >  * Device builds a shared secret with the host (s)
-> > >  * Device sends id, HMAC_SHA256(s, "identify" || nonce || id)
-> > >    when the finger "id" was presented.
-> > >  * The HMAC proofs knowledge of the shared secret and authorizes
-> > > the
-> > >    print.
-> > > =
-
-> > > [1]
-> > > https://github.com/microsoft/SecureDeviceConnectionProtocol/wiki/Secur
-> > > e-
-> > > Device-Connection-Protocol
-> > _______________________________________________
-> > tpm2 mailing list -- tpm2(a)lists.01.org
-> > To unsubscribe send an email to tpm2-
-> > leave(a)lists.01.org
-> > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============2341200280434541324==
-Content-Type: application/pgp-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="signature.asc"
-
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSXpCQUFCQ0FBZEZpRUVEMk5PNHZNUzMz
-VzhFNEFGcTZaV2hwbUZZM0FGQWw3UTFXWUFDZ2tRcTZaV2hwbUYKWTNEL1RRLy9jclhHa3Y4a1h2
-QjNRM2ZLeTllMFhYVWVIZWFURVVLOUtUM2h4bEJYOWdPNXRrZzU4emx5WVpyZgpQU3JuVHUxelVv
-ZTkyKzFyTkF0bnI2ams3UGNyYS9YMXJxaTJROXR0U1N1aFdlK3Y1TS9Cdno4aUszN0FBblRhCmtG
-b1IrWW01QjhpaTJKeS9BTFcwMXkwUy9hRFcrTkoyMUczZ0ZsdHFneC8yS08yUk90L3MzRWRFUFRu
-b3lhSXAKeDVKQkpYcW0rY0JmcWsvbjRvQW96Ky9Zc2RqYnlidWNmZ3M4eGxzNDNoNG1DcXRNaFBy
-WGg4YkNZWDJybUdUYgo1U3k4QmZHVzRQNTNTZWtlcHRuaGxENmJpbXVIVzYzbjhyQjBmdTNKZWR6
-ZGxRR2R0L3o5THBkZXZ2bTFKditxCllrUm5JOFJiUjdoQzRKZlFZNDgzVEp5dGNTcllubzVFTk9w
-UWNuZDdhRU1xMlU2Q3I5c2FXZTM1d3NEL3EyRysKNytDZkdWV0tjNHdvMEY1b2F4VEVLdlRRbUN3
-bW9iT01xTWlGWEZsK20yMitDS1VWWUF4OVhXRUNSaXVzUlNmbApTNmE3V1g0U0d1eG1DTlVMNmVv
-ekoreDJPRlVmdVkxQ0llVnFONlErMGxsREtOM1ZtbDVnNWNhQ1JHaHdKRjdSClZBWURESDlna2tD
-M1Ria3pKT1Z6dCtRSE9EK2pUcExnamdMY3JkRndMdnFZcWRRY2JoUEFtV0lXUERjNVpvekIKS2pk
-eTVFM01HdFEwall6R2plZ3lMUkx4VGhjTkdwVG1CUWRGd05HZ1pHeEhHdVZES3p5MEdSdFJmc2NC
-Q0pKWQprdTJDRisyaUZZdFlhcERQUU03Vndid0t0WVJaOHpHOXdaYXFzS2lHNTdxVURGeERtUjQ9
-Cj1qcWw1Ci0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
-
---===============2341200280434541324==--
+--===============8586511632021883998==--
 
