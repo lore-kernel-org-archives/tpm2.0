@@ -1,54 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============8586511632021883998=="
+Content-Type: multipart/mixed; boundary="===============6968328513609426597=="
 MIME-Version: 1.0
-From: ted.h.kim at oracle.com
-Subject: [tpm2] key destruction
-Date: Fri, 29 May 2020 14:44:51 -0700
-Message-ID: <5bcc1bd1-0adb-54da-929f-4d3eb14d1e19@oracle.com>
+From: Imran Desai <imran.desai at intel.com>
+Subject: [tpm2] Re: key destruction
+Date: Sat, 30 May 2020 20:38:14 +0000
+Message-ID: <20200530203814.2851.99582@ml01.vlan13.01.org>
+In-Reply-To: 5bcc1bd1-0adb-54da-929f-4d3eb14d1e19@oracle.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8586511632021883998==
+--===============6968328513609426597==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Folks,
+Of the many ways, you can achieve this here is a way to do it with PolicyPc=
+r --> Extend a random value to debug-PCR (PCR#16) and create a key with pol=
+icypcr referencing the debug PCR.
 
-Sorry for what might be an obvious question ...
+As long as no other data is extended into the debug-PCR from this point on =
+the key can be used indefinitely as long as pcrpolicy is satisfied.
 
-What is the right command sequence to destroy keys, despite the users =
+Extend the debug-PCR once again with another random value once ready to dum=
+p the key. The only reason to use debug-PCR 16 is if you do not want to dis=
+turb other PCR values potentially invalidating the authorization of other T=
+PM objects.
 
-possibly still having context files?
-
-I read something about resetting the seed for a hierarchy through the =
-
-TPM2_Clear operation (presumably the tpm2_clear command can do this). =
-
-But that is too drastic.
-
-I just want to kill off a single key and make it not usable. If I kill =
-
-off a parent presumably I can destroy a whole tree of keys. But that =
-
-just moves the problem, potentially up to a primary key.
-What is the right way to do this?
-
-I suppose there is some trick whereby you make a policy not able to be =
-
-satisfied. But then it seems you still need to retain state to prevent =
-
-the key from being used. I would rather just have all the key state be =
-
-gone and not able to be recreated.
-
-Thanks,
--ted
-
---
-Ted H. Kim, PhD
-ted.h.kim(a)oracle.com
-+1 310-258-7515
-
-
---===============8586511632021883998==--
+Note: Instead of extending the debug-PCR with a random value, you can also =
+achieve the same result by simply issuing tpm2_pcrreset on the debug-PCR wh=
+ich will change the pcr contents to 0. This will happen anyway when the sys=
+tem or TPM restarts.
+--===============6968328513609426597==--
 
