@@ -1,29 +1,24 @@
-Content-Type: multipart/mixed; boundary="===============2110601978326749979=="
+Content-Type: multipart/mixed; boundary="===============8139328014188505328=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-pkcs11 1.0.2-RC0
-Date: Wed, 03 Jun 2020 22:29:35 +0000
-Message-ID: <SN6PR11MB34378D6046AEF005F5D91E81B8880@SN6PR11MB3437.namprd11.prod.outlook.com>
+From: =?utf-8?q?Eduardo_Falc=C3=A3o_=3Ceduardolfalcao_at_gmail=2Ecom=3E?=
+Subject: [tpm2] Re: How we authorize the EK hierarchy to create AIK?
+Date: Thu, 04 Jun 2020 13:14:34 +0000
+Message-ID: <20200604131434.2851.68222@ml01.vlan13.01.org>
+In-Reply-To: SN6PR11MB343787A71A1ADE29F9918C99B8880@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2110601978326749979==
+--===============8139328014188505328==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Thank you, Roberts. Now it is completely clear the need of a session.
 
-I'd like to announce the release candidate for tpm2-pkcs11 project 1.0.2-RC=
-0 with the following changes:
+Regarding the server side, would it be possible to create a credential over=
+ the AK and nonce without TPM (tpm2_makecredential)?
+If so, could you point me some direction?
 
-1.0.2-RC0 - 2020-06-02
-Fix build issue about unused variable config. Notably fixes gcc10 builds.
-
-One can find the build here:
-https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.0.2-RC0
-
-Thanks,
-Bill
---===============2110601978326749979==--
+Best regards
+--===============8139328014188505328==--
 
