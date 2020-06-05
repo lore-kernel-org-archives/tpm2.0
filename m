@@ -1,23 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============0560681799069556941=="
+Content-Type: multipart/mixed; boundary="===============7041290454194705523=="
 MIME-Version: 1.0
-From: =?utf-8?q?Eduardo_Falc=C3=A3o_=3Ceduardolfalcao_at_gmail=2Ecom=3E?=
-Subject: [tpm2] Re: tpm2_takeownership equivalent command in tpm2-tools v4.1
-Date: Fri, 05 Jun 2020 16:19:06 +0000
-Message-ID: <20200605161906.2851.82833@ml01.vlan13.01.org>
-In-Reply-To: 20200605082049.2851.31127@ml01.vlan13.01.org
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: [tpm2] Re: Sharing TPM 2.0 between containers with access policy
+Date: Fri, 05 Jun 2020 10:16:28 -0700
+Message-ID: <18096ca7-42ac-fd5f-faa4-118adcf11140@intel.com>
+In-Reply-To: AM0PR03MB4162166A604E7966236ABBCCE3860@AM0PR03MB4162.eurprd03.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0560681799069556941==
+--===============7041290454194705523==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Chenxi.
+On 6/5/20 12:52 AM, Oleksii Moisieiev wrote:
+> Hello all,
+> =
 
-Take a loon on this thread: https://lists.01.org/hyperkitty/list/tpm2(a)lis=
-ts.01.org/thread/YQ3NTFKIZDM54KP3SNSCRAMVNXMBNJOF/
+> I have an embedded device, with Docker containers based architecture.
+> This device is operating by software, installed in separate containers.
+> =
 
-Regards
---===============0560681799069556941==--
+> =
+
+> I would like to share TPM2.0 access between this containers with the
+> following restrictions:
+> =
+
+> 1) Forbid Clear TPM command for the containers;
+> 2) Each container should have an access only to the set of keys it owns.
+> 3) Each container can create keys, but not overwrite existing keys that
+> does not related to this container.
+> =
+
+> According to the "TCG TSS 2.0 TAB and Resource Manager Specification" -
+> TPM Resource manager doesn't implement access restrictions right now.
+
+I think you could run a separate instance of RM in per container to get
+2 & 3. As for 1, this would need to be prevented on a platform
+configuration level, like in BIOS or equivalent.
+
+Thanks,
+-- =
+
+Tadeusz
+--===============7041290454194705523==--
 
