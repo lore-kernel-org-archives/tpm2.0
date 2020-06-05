@@ -1,48 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============7041290454194705523=="
+Content-Type: multipart/mixed; boundary="===============7811026987638161217=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] Re: Sharing TPM 2.0 between containers with access policy
-Date: Fri, 05 Jun 2020 10:16:28 -0700
-Message-ID: <18096ca7-42ac-fd5f-faa4-118adcf11140@intel.com>
-In-Reply-To: AM0PR03MB4162166A604E7966236ABBCCE3860@AM0PR03MB4162.eurprd03.prod.outlook.com
+From: ted.h.kim at oracle.com
+Subject: [tpm2] Re: how unique are primary keys ?
+Date: Fri, 05 Jun 2020 13:49:48 -0700
+Message-ID: <dfd4d74e-f530-e466-9628-c15969c48b61@oracle.com>
+In-Reply-To: 8b015c5e-624a-ed89-903d-0621df4f4b8d@oracle.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7041290454194705523==
+--===============7811026987638161217==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 6/5/20 12:52 AM, Oleksii Moisieiev wrote:
-> Hello all,
-> =
+Folks,
 
-> I have an embedded device, with Docker containers based architecture.
-> This device is operating by software, installed in separate containers.
-> =
+Doesn't this behavior kind of make PolicyDuplicationSelect meaningless?
+I am thinking of the example in the tpm2_policyduplicationselect man page.
 
-> =
+If the tpm2_readpublic output is the same for all three keys, then the =
 
-> I would like to share TPM2.0 access between this containers with the
-> following restrictions:
-> =
+names are the same as well as the RSA public keys.
 
-> 1) Forbid Clear TPM command for the containers;
-> 2) Each container should have an access only to the set of keys it owns.
-> 3) Each container can create keys, but not overwrite existing keys that
-> does not related to this container.
-> =
+So the policy digest created by tpm2_policyduplicationselect specifying =
 
-> According to the "TCG TSS 2.0 TAB and Resource Manager Specification" -
-> TPM Resource manager doesn't implement access restrictions right now.
+prim1 as parent will be the same as created for prim2 and prim3. And =
 
-I think you could run a separate instance of RM in per container to get
-2 & 3. As for 1, this would need to be prevented on a platform
-configuration level, like in BIOS or equivalent.
+importing a duplicated key meant for prim1 as a parent will also work =
+
+under prim2 and prim3.
+
+Am I missing something here?
 
 Thanks,
+-ted
+
+
+On 6/4/20 4:46 PM, ted.h.kim(a)oracle.com wrote:
+> Folks,
+>
+> How unique are primary keys ?
+>
+> As an example:
+>
+> $ tpm2_createprimary -Q -C o -c prim1.ctx
+> $ tpm2_createprimary -Q -C o -c prim2.ctx
+> $ tpm2_createprimary -Q -C o -u /dev/random -c prim3.ctx
+> $ tpm2_readpublic -c prim1.ctx > prim1.rp
+> $ tpm2_readpublic -c prim2.ctx > prim2.rp
+> $ tpm2_readpublic -c prim3.ctx > prim3.rp
+> $ diff prim1.rp prim2.rp
+> $ diff prim1.rp prim3.rp
+> $
+>
+> Is it supposed to be like this?
+> Shouldn't they be different in some way?
+> For prim3, I thought putting some -u data would make a difference, but =
+
+> it seems not.
+>
+> FWIW, I am using 4.1 branch of tpm2-tools with swtpm.
+>
+> Thanks,
+> -ted
+>
 -- =
 
-Tadeusz
---===============7041290454194705523==--
+Ted H. Kim, PhD
+ted.h.kim(a)oracle.com
++1 310-258-7515
+
+
+--===============7811026987638161217==--
 
