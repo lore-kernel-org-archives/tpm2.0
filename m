@@ -1,171 +1,254 @@
-Content-Type: multipart/mixed; boundary="===============0222597643355105540=="
+Content-Type: multipart/mixed; boundary="===============8489907187147525921=="
 MIME-Version: 1.0
-From: Rowan Moul <lists at rowan.moul.ca>
+From: ted.h.kim at oracle.com
 Subject: [tpm2] Re: how unique are primary keys ?
-Date: Fri, 05 Jun 2020 16:34:47 -0600
-Message-ID: <941AB458-8376-4C6C-995C-808C7773DA1C@rowan.moul.ca>
-In-Reply-To: 8b015c5e-624a-ed89-903d-0621df4f4b8d@oracle.com
+Date: Fri, 05 Jun 2020 16:00:38 -0700
+Message-ID: <3dcbfed6-b585-1b74-b965-38392c5c847b@oracle.com>
+In-Reply-To: 941AB458-8376-4C6C-995C-808C7773DA1C@rowan.moul.ca
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0222597643355105540==
+--===============8489907187147525921==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Primary Keys are created using a deterministic key derivation function, the=
- seed value of the selected hierarchy, and the key =E2=80=9Ctemplate=E2=80=
-=9D (effectively the options you pass to tpm2_createprimary). This is the i=
-ntended functionality.
+Rowan,
 
-Your first two calls are identical, and so they will indeed produce the sam=
-e key. The third one passes in unique data from /dev/random which in theory=
- should make it unique, but in practice I=E2=80=99m not sure how that is im=
-plemented (eg how much data will it actually read in?). I=E2=80=99m actuall=
-y surprised it didn=E2=80=99t fail based on my experience here:
-https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/message/5YDZRV63LC=
-GX6BZQXRW6S6F77PSS5JU5/
-I=E2=80=99m honesty not even convinced that what I did in that thread was a=
-ctually correct. Perhaps someone more knowledgeable will answer here and cl=
-ear that up.
-Another way to make a key unique is to set an authorization value or policy=
-, but you would have to have a different value for every key, which is wher=
-e the unique data is supposed to come in if you want multiple keys with the=
- same authorization value.
+I think I understand your point.
+
+But are these KDFs "stateless"? I would think they would be like random =
+
+number generators, where you can set the initial seed, but from then on =
+
+each invocation updates the state. That way there is a deterministic =
+
+sequence for a given starting seed, but still there is a sequence. But =
+
+of course, I am no expert about any of this.
+
+Sorry I am not able clear things up on your thread.
+
+Thanks,
+-ted
+
+On 6/5/20 3:34 PM, Rowan Moul wrote:
+> Primary Keys are created using a deterministic key derivation =
+
+> function, the seed value of the selected hierarchy, and the key =
+
+> =E2=80=9Ctemplate=E2=80=9D (effectively the options you pass to tpm2_crea=
+teprimary). =
+
+> This is the intended functionality.
+>
+> Your first two calls are identical, and so they will indeed produce =
+
+> the same key. The third one passes in unique data from /dev/random =
+
+> which in theory should make it unique, but in practice I=E2=80=99m not su=
+re =
+
+> how that is implemented (eg how much data will it actually read in?). =
+
+> I=E2=80=99m actually surprised it didn=E2=80=99t fail based on my experie=
+nce here:
+> https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/message/5YDZRV63=
+LCGX6BZQXRW6S6F77PSS5JU5/ =
+
+> <https://urldefense.com/v3/__https://lists.01.org/hyperkitty/list/tpm2(a)=
+lists.01.org/message/5YDZRV63LCGX6BZQXRW6S6F77PSS5JU5/__;!!GqivPVa7Brio!MfG=
+iWe1M5tPIE6MeSRiB3WpC1xS4FOvRzXt4cLDDXmSjrARG9I7nv-UffpZC-cs$>
+> I=E2=80=99m honesty not even convinced that what I did in that thread was =
+
+> actually correct. Perhaps someone more knowledgeable will answer here =
+
+> and clear that up.
+> Another way to make a key unique is to set an authorization value or =
+
+> policy, but you would have to have a different value for every key, =
+
+> which is where the unique data is supposed to come in if you want =
+
+> multiple keys with the same authorization value.
+>
+>
+> Rowan
+>
+>> On Jun 4, 2020, at 17:48, ted.h.kim(a)oracle.com wrote:
+>>
+>> =EF=BB=BFFolks,
+>>
+>> How unique are primary keys ?
+>>
+>> As an example:
+>>
+>> $ tpm2_createprimary -Q -C o -c prim1.ctx
+>> $ tpm2_createprimary -Q -C o -c prim2.ctx
+>> $ tpm2_createprimary -Q -C o -u /dev/random -c prim3.ctx
+>> $ tpm2_readpublic -c prim1.ctx > prim1.rp
+>> $ tpm2_readpublic -c prim2.ctx > prim2.rp
+>> $ tpm2_readpublic -c prim3.ctx > prim3.rp
+>> $ diff prim1.rp prim2.rp
+>> $ diff prim1.rp prim3.rp
+>> $
+>>
+>> Is it supposed to be like this?
+>> Shouldn't they be different in some way?
+>> For prim3, I thought putting some -u data would make a difference, =
+
+>> but it seems not.
+>>
+>> FWIW, I am using 4.1 branch of tpm2-tools with swtpm.
+>>
+>> Thanks,
+>> -ted
+>>
+>> -- =
+
+>> Ted H. Kim, PhD
+>> ted.h.kim(a)oracle.com
+>> +1 310-258-7515
+>>
+>> _______________________________________________
+>> tpm2 mailing list -- tpm2(a)lists.01.org
+>> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+>> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+-- =
+
+Ted H. Kim, PhD
+ted.h.kim(a)oracle.com
++1 310-258-7515
 
 
-Rowan
 
-> On Jun 4, 2020, at 17:48, ted.h.kim(a)oracle.com wrote:
-> =
-
-> =EF=BB=BFFolks,
-> =
-
-> How unique are primary keys ?
-> =
-
-> As an example:
-> =
-
-> $ tpm2_createprimary -Q -C o -c prim1.ctx
-> $ tpm2_createprimary -Q -C o -c prim2.ctx
-> $ tpm2_createprimary -Q -C o -u /dev/random -c prim3.ctx
-> $ tpm2_readpublic -c prim1.ctx > prim1.rp
-> $ tpm2_readpublic -c prim2.ctx > prim2.rp
-> $ tpm2_readpublic -c prim3.ctx > prim3.rp
-> $ diff prim1.rp prim2.rp
-> $ diff prim1.rp prim3.rp
-> $
-> =
-
-> Is it supposed to be like this?
-> Shouldn't they be different in some way?
-> For prim3, I thought putting some -u data would make a difference, but it=
- seems not.
-> =
-
-> FWIW, I am using 4.1 branch of tpm2-tools with swtpm.
-> =
-
-> Thanks,
-> -ted
-> =
-
-> -- =
-
-> Ted H. Kim, PhD
-> ted.h.kim(a)oracle.com
-> +1 310-258-7515
-> =
-
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============0222597643355105540==
+--===============8489907187147525921==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250ZW50PSJ0ZXh0
-L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPjwvaGVhZD48Ym9keSBkaXI9ImF1dG8iPjxkaXYgZGlyPSJs
-dHIiPjxzcGFuPlByaW1hcnkgS2V5cyBhcmUgY3JlYXRlZCB1c2luZyBhIGRldGVybWluaXN0aWMg
-a2V5IGRlcml2YXRpb24gZnVuY3Rpb24sIHRoZSBzZWVkIHZhbHVlIG9mIHRoZSBzZWxlY3RlZCBo
-aWVyYXJjaHksIGFuZCB0aGUga2V5IOKAnHRlbXBsYXRl4oCdIChlZmZlY3RpdmVseSB0aGUgb3B0
-aW9ucyB5b3UgcGFzcyB0byB0cG0yX2NyZWF0ZXByaW1hcnkpLiBUaGlzIGlzIHRoZSBpbnRlbmRl
-ZCBmdW5jdGlvbmFsaXR5Ljwvc3Bhbj48L2Rpdj48ZGl2IGRpcj0ibHRyIj48YnI+PHNwYW4+WW91
-ciBmaXJzdCB0d28gY2FsbHMgYXJlIGlkZW50aWNhbCwgYW5kIHNvIHRoZXkgd2lsbCBpbmRlZWQg
-cHJvZHVjZSB0aGUgc2FtZSBrZXkuIFRoZSB0aGlyZCBvbmUgcGFzc2VzIGluIHVuaXF1ZSBkYXRh
-IGZyb20gL2Rldi9yYW5kb20gd2hpY2ggaW4gdGhlb3J5IHNob3VsZCBtYWtlIGl0IHVuaXF1ZSwg
-YnV0IGluIHByYWN0aWNlIEnigJltIG5vdCBzdXJlIGhvdyB0aGF0IGlzIGltcGxlbWVudGVkIChl
-ZyBob3cgbXVjaCBkYXRhIHdpbGwgaXQgYWN0dWFsbHkgcmVhZCBpbj8pLiBJ4oCZbSBhY3R1YWxs
-eSBzdXJwcmlzZWQgaXQgZGlkbuKAmXQgZmFpbCBiYXNlZCBvbiBteSBleHBlcmllbmNlIGhlcmU6
-PC9zcGFuPjwvZGl2PjxkaXYgZGlyPSJsdHIiPjxhIGhyZWY9Imh0dHBzOi8vbGlzdHMuMDEub3Jn
-L2h5cGVya2l0dHkvbGlzdC90cG0yQGxpc3RzLjAxLm9yZy9tZXNzYWdlLzVZRFpSVjYzTENHWDZC
-WlFYUlc2UzZGNzdQU1M1SlU1LyI+aHR0cHM6Ly9saXN0cy4wMS5vcmcvaHlwZXJraXR0eS9saXN0
-L3RwbTJAbGlzdHMuMDEub3JnL21lc3NhZ2UvNVlEWlJWNjNMQ0dYNkJaUVhSVzZTNkY3N1BTUzVK
-VTUvPC9hPjwvZGl2PjxkaXYgZGlyPSJsdHIiPknigJltIGhvbmVzdHkgbm90IGV2ZW4gY29udmlu
-Y2VkIHRoYXQgd2hhdCBJIGRpZCBpbiB0aGF0IHRocmVhZCB3YXMgYWN0dWFsbHkgY29ycmVjdC4g
-UGVyaGFwcyBzb21lb25lIG1vcmUga25vd2xlZGdlYWJsZSB3aWxsIGFuc3dlciBoZXJlIGFuZCBj
-bGVhciB0aGF0IHVwLjwvZGl2PjxkaXYgZGlyPSJsdHIiPkFub3RoZXIgd2F5IHRvIG1ha2UgYSBr
-ZXkgdW5pcXVlIGlzIHRvIHNldCBhbiBhdXRob3JpemF0aW9uIHZhbHVlIG9yIHBvbGljeSwgYnV0
-IHlvdSB3b3VsZCBoYXZlIHRvIGhhdmUgYSBkaWZmZXJlbnQgdmFsdWUgZm9yIGV2ZXJ5IGtleSwg
-d2hpY2ggaXMgd2hlcmUgdGhlIHVuaXF1ZSBkYXRhIGlzIHN1cHBvc2VkIHRvIGNvbWUgaW4gaWYg
-eW91IHdhbnQgbXVsdGlwbGUga2V5cyB3aXRoIHRoZSBzYW1lIGF1dGhvcml6YXRpb24gdmFsdWUu
-PC9kaXY+PGRpdiBkaXI9Imx0ciI+PHNwYW4+PC9zcGFuPjxicj48c3Bhbj48L3NwYW4+PGJyPjxz
-cGFuPlJvd2FuPC9zcGFuPjxicj48c3Bhbj48L3NwYW4+PGJyPjxibG9ja3F1b3RlIHR5cGU9ImNp
-dGUiPjxzcGFuPk9uIEp1biA0LCAyMDIwLCBhdCAxNzo0OCwgdGVkLmgua2ltQG9yYWNsZS5jb20g
-d3JvdGU6PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNw
-YW4+PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+
-77u/Rm9sa3MsPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+
-PHNwYW4+PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNw
-YW4+SG93IHVuaXF1ZSBhcmUgcHJpbWFyeSBrZXlzID88L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48
-YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48Ymxv
-Y2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5BcyBhbiBleGFtcGxlOjwvc3Bhbj48YnI+PC9ibG9j
-a3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9ibG9ja3F1
-b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPiQgdHBtMl9jcmVhdGVwcmltYXJ5IC1R
-IC1DIG8gLWMgcHJpbTEuY3R4PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlw
-ZT0iY2l0ZSI+PHNwYW4+JCB0cG0yX2NyZWF0ZXByaW1hcnkgLVEgLUMgbyAtYyBwcmltMi5jdHg8
-L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4kIHRw
-bTJfY3JlYXRlcHJpbWFyeSAtUSAtQyBvIC11IC9kZXYvcmFuZG9tIC1jIHByaW0zLmN0eDwvc3Bh
-bj48YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPiQgdHBtMl9y
-ZWFkcHVibGljIC1jIHByaW0xLmN0eCAmZ3Q7IHByaW0xLnJwPC9zcGFuPjxicj48L2Jsb2NrcXVv
-dGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+JCB0cG0yX3JlYWRwdWJsaWMgLWMgcHJp
-bTIuY3R4ICZndDsgcHJpbTIucnA8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0
-eXBlPSJjaXRlIj48c3Bhbj4kIHRwbTJfcmVhZHB1YmxpYyAtYyBwcmltMy5jdHggJmd0OyBwcmlt
-My5ycDwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFu
-PiQgZGlmZiBwcmltMS5ycCBwcmltMi5ycDwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1
-b3RlIHR5cGU9ImNpdGUiPjxzcGFuPiQgZGlmZiBwcmltMS5ycCBwcmltMy5ycDwvc3Bhbj48YnI+
-PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPiQ8L3NwYW4+PGJyPjwv
-YmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPjwvYmxv
-Y2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5JcyBpdCBzdXBwb3NlZCB0byBi
-ZSBsaWtlIHRoaXM/PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0
-ZSI+PHNwYW4+U2hvdWxkbid0IHRoZXkgYmUgZGlmZmVyZW50IGluIHNvbWUgd2F5Pzwvc3Bhbj48
-YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPkZvciBwcmltMywg
-SSB0aG91Z2h0IHB1dHRpbmcgc29tZSAtdSBkYXRhIHdvdWxkIG1ha2UgYSBkaWZmZXJlbmNlLCBi
-dXQgaXQgc2VlbXMgbm90Ljwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9
-ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNp
-dGUiPjxzcGFuPkZXSVcsIEkgYW0gdXNpbmcgNC4xIGJyYW5jaCBvZiB0cG0yLXRvb2xzIHdpdGgg
-c3d0cG0uPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNw
-YW4+PC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+
-VGhhbmtzLDwvc3Bhbj48YnI+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxz
-cGFuPi10ZWQ8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48
-c3Bhbj48L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bh
-bj4tLSA8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bh
-bj5UZWQgSC4gS2ltLCBQaEQ8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBl
-PSJjaXRlIj48c3Bhbj50ZWQuaC5raW1Ab3JhY2xlLmNvbTwvc3Bhbj48YnI+PC9ibG9ja3F1b3Rl
-PjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPisxIDMxMC0yNTgtNzUxNTwvc3Bhbj48YnI+
-PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+PC9i
-bG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PGJs
-b2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+dHBtMiBtYWlsaW5nIGxpc3QgLS0gdHBtMkBsaXN0
-cy4wMS5vcmc8L3NwYW4+PGJyPjwvYmxvY2txdW90ZT48YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48
-c3Bhbj5UbyB1bnN1YnNjcmliZSBzZW5kIGFuIGVtYWlsIHRvIHRwbTItbGVhdmVAbGlzdHMuMDEu
-b3JnPC9zcGFuPjxicj48L2Jsb2NrcXVvdGU+PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+
-JSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQpcy8lKF9pbnRlcm5hbF9uYW1lKXM8L3Nw
-YW4+PGJyPjwvYmxvY2txdW90ZT48L2Rpdj48L2JvZHk+PC9odG1sPg==
---===============0222597643355105540==--
+PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
+bnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCI+CiAgPC9oZWFkPgogIDxib2R5PgogICAgPHA+
+Um93YW4sPC9wPgogICAgPHA+SSB0aGluayBJIHVuZGVyc3RhbmQgeW91ciBwb2ludC48L3A+CiAg
+ICA8cD5CdXQgYXJlIHRoZXNlIEtERnMgInN0YXRlbGVzcyI/IEkgd291bGQgdGhpbmsgdGhleSB3
+b3VsZCBiZSBsaWtlCiAgICAgIHJhbmRvbSBudW1iZXIgZ2VuZXJhdG9ycywgd2hlcmUgeW91IGNh
+biBzZXQgdGhlIGluaXRpYWwgc2VlZCwgYnV0CiAgICAgIGZyb20gdGhlbiBvbiBlYWNoIGludm9j
+YXRpb24gdXBkYXRlcyB0aGUgc3RhdGUuIFRoYXQgd2F5IHRoZXJlIGlzCiAgICAgIGEgZGV0ZXJt
+aW5pc3RpYyBzZXF1ZW5jZSBmb3IgYSBnaXZlbiBzdGFydGluZyBzZWVkLCBidXQgc3RpbGwKICAg
+ICAgdGhlcmUgaXMgYSBzZXF1ZW5jZS4gQnV0IG9mIGNvdXJzZSwgSSBhbSBubyBleHBlcnQgYWJv
+dXQgYW55IG9mCiAgICAgIHRoaXMuPC9wPgogICAgPHA+U29ycnkgSSBhbSBub3QgYWJsZSBjbGVh
+ciB0aGluZ3MgdXAgb24geW91ciB0aHJlYWQuPC9wPgogICAgPHA+VGhhbmtzLDxicj4KICAgICAg
+LXRlZDxicj4KICAgIDwvcD4KICAgIDxkaXYgY2xhc3M9Im1vei1jaXRlLXByZWZpeCI+T24gNi81
+LzIwIDM6MzQgUE0sIFJvd2FuIE1vdWwgd3JvdGU6PGJyPgogICAgPC9kaXY+CiAgICA8YmxvY2tx
+dW90ZSB0eXBlPSJjaXRlIgogICAgICBjaXRlPSJtaWQ6OTQxQUI0NTgtODM3Ni00QzZDLTk5NUMt
+ODA4Qzc3NzNEQTFDQHJvd2FuLm1vdWwuY2EiPgogICAgICA8bWV0YSBodHRwLWVxdWl2PSJjb250
+ZW50LXR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCI+CiAgICAgIDxkaXYg
+ZGlyPSJsdHIiPjxzcGFuPlByaW1hcnkgS2V5cyBhcmUgY3JlYXRlZCB1c2luZyBhCiAgICAgICAg
+ICBkZXRlcm1pbmlzdGljIGtleSBkZXJpdmF0aW9uIGZ1bmN0aW9uLCB0aGUgc2VlZCB2YWx1ZSBv
+ZiB0aGUKICAgICAgICAgIHNlbGVjdGVkIGhpZXJhcmNoeSwgYW5kIHRoZSBrZXkg4oCcdGVtcGxh
+dGXigJ0gKGVmZmVjdGl2ZWx5IHRoZQogICAgICAgICAgb3B0aW9ucyB5b3UgcGFzcyB0byB0cG0y
+X2NyZWF0ZXByaW1hcnkpLiBUaGlzIGlzIHRoZSBpbnRlbmRlZAogICAgICAgICAgZnVuY3Rpb25h
+bGl0eS48L3NwYW4+PC9kaXY+CiAgICAgIDxkaXYgZGlyPSJsdHIiPjxicj4KICAgICAgICA8c3Bh
+bj5Zb3VyIGZpcnN0IHR3byBjYWxscyBhcmUgaWRlbnRpY2FsLCBhbmQgc28gdGhleSB3aWxsCiAg
+ICAgICAgICBpbmRlZWQgcHJvZHVjZSB0aGUgc2FtZSBrZXkuIFRoZSB0aGlyZCBvbmUgcGFzc2Vz
+IGluIHVuaXF1ZQogICAgICAgICAgZGF0YSBmcm9tIC9kZXYvcmFuZG9tIHdoaWNoIGluIHRoZW9y
+eSBzaG91bGQgbWFrZSBpdCB1bmlxdWUsCiAgICAgICAgICBidXQgaW4gcHJhY3RpY2UgSeKAmW0g
+bm90IHN1cmUgaG93IHRoYXQgaXMgaW1wbGVtZW50ZWQgKGVnIGhvdwogICAgICAgICAgbXVjaCBk
+YXRhIHdpbGwgaXQgYWN0dWFsbHkgcmVhZCBpbj8pLiBJ4oCZbSBhY3R1YWxseSBzdXJwcmlzZWQK
+ICAgICAgICAgIGl0IGRpZG7igJl0IGZhaWwgYmFzZWQgb24gbXkgZXhwZXJpZW5jZSBoZXJlOjwv
+c3Bhbj48L2Rpdj4KICAgICAgPGRpdiBkaXI9Imx0ciI+PGEKaHJlZj0iaHR0cHM6Ly91cmxkZWZl
+bnNlLmNvbS92My9fX2h0dHBzOi8vbGlzdHMuMDEub3JnL2h5cGVya2l0dHkvbGlzdC90cG0yQGxp
+c3RzLjAxLm9yZy9tZXNzYWdlLzVZRFpSVjYzTENHWDZCWlFYUlc2UzZGNzdQU1M1SlU1L19fOyEh
+R3FpdlBWYTdCcmlvIU1mR2lXZTFNNXRQSUU2TWVTUmlCM1dwQzF4UzRGT3ZSelh0NGNMRERYbVNq
+ckFSRzlJN252LVVmZnBaQy1jcyQiCiAgICAgICAgICBtb3otZG8tbm90LXNlbmQ9InRydWUiPmh0
+dHBzOi8vbGlzdHMuMDEub3JnL2h5cGVya2l0dHkvbGlzdC90cG0yQGxpc3RzLjAxLm9yZy9tZXNz
+YWdlLzVZRFpSVjYzTENHWDZCWlFYUlc2UzZGNzdQU1M1SlU1LzwvYT48L2Rpdj4KICAgICAgPGRp
+diBkaXI9Imx0ciI+SeKAmW0gaG9uZXN0eSBub3QgZXZlbiBjb252aW5jZWQgdGhhdCB3aGF0IEkg
+ZGlkIGluCiAgICAgICAgdGhhdCB0aHJlYWQgd2FzIGFjdHVhbGx5IGNvcnJlY3QuIFBlcmhhcHMg
+c29tZW9uZSBtb3JlCiAgICAgICAga25vd2xlZGdlYWJsZSB3aWxsIGFuc3dlciBoZXJlIGFuZCBj
+bGVhciB0aGF0IHVwLjwvZGl2PgogICAgICA8ZGl2IGRpcj0ibHRyIj5Bbm90aGVyIHdheSB0byBt
+YWtlIGEga2V5IHVuaXF1ZSBpcyB0byBzZXQgYW4KICAgICAgICBhdXRob3JpemF0aW9uIHZhbHVl
+IG9yIHBvbGljeSwgYnV0IHlvdSB3b3VsZCBoYXZlIHRvIGhhdmUgYQogICAgICAgIGRpZmZlcmVu
+dCB2YWx1ZSBmb3IgZXZlcnkga2V5LCB3aGljaCBpcyB3aGVyZSB0aGUgdW5pcXVlIGRhdGEgaXMK
+ICAgICAgICBzdXBwb3NlZCB0byBjb21lIGluIGlmIHlvdSB3YW50IG11bHRpcGxlIGtleXMgd2l0
+aCB0aGUgc2FtZQogICAgICAgIGF1dGhvcml6YXRpb24gdmFsdWUuPC9kaXY+CiAgICAgIDxkaXYg
+ZGlyPSJsdHIiPjxzcGFuPjwvc3Bhbj48YnI+CiAgICAgICAgPHNwYW4+PC9zcGFuPjxicj4KICAg
+ICAgICA8c3Bhbj5Sb3dhbjwvc3Bhbj48YnI+CiAgICAgICAgPHNwYW4+PC9zcGFuPjxicj4KICAg
+ICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5PbiBKdW4gNCwgMjAyMCwgYXQgMTc6
+NDgsCiAgICAgICAgICAgIDxhIGNsYXNzPSJtb3otdHh0LWxpbmstYWJicmV2aWF0ZWQiIGhyZWY9
+Im1haWx0bzp0ZWQuaC5raW1Ab3JhY2xlLmNvbSI+dGVkLmgua2ltQG9yYWNsZS5jb208L2E+IHdy
+b3RlOjwvc3Bhbj48YnI+CiAgICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgIDxibG9ja3F1b3Rl
+IHR5cGU9ImNpdGUiPjxzcGFuPjwvc3Bhbj48YnI+CiAgICAgICAgPC9ibG9ja3F1b3RlPgogICAg
+ICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPu+7v0ZvbGtzLDwvc3Bhbj48YnI+CiAg
+ICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFu
+Pjwvc3Bhbj48YnI+CiAgICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgIDxibG9ja3F1b3RlIHR5
+cGU9ImNpdGUiPjxzcGFuPkhvdyB1bmlxdWUgYXJlIHByaW1hcnkga2V5cyA/PC9zcGFuPjxicj4K
+ICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNw
+YW4+PC9zcGFuPjxicj4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgICAgPGJsb2NrcXVvdGUg
+dHlwZT0iY2l0ZSI+PHNwYW4+QXMgYW4gZXhhbXBsZTo8L3NwYW4+PGJyPgogICAgICAgIDwvYmxv
+Y2txdW90ZT4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJy
+PgogICAgICAgIDwvYmxvY2txdW90ZT4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48
+c3Bhbj4kIHRwbTJfY3JlYXRlcHJpbWFyeSAtUSAtQyBvIC1jCiAgICAgICAgICAgIHByaW0xLmN0
+eDwvc3Bhbj48YnI+CiAgICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgIDxibG9ja3F1b3RlIHR5
+cGU9ImNpdGUiPjxzcGFuPiQgdHBtMl9jcmVhdGVwcmltYXJ5IC1RIC1DIG8gLWMKICAgICAgICAg
+ICAgcHJpbTIuY3R4PC9zcGFuPjxicj4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgICAgPGJs
+b2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+JCB0cG0yX2NyZWF0ZXByaW1hcnkgLVEgLUMgbyAt
+dQogICAgICAgICAgICAvZGV2L3JhbmRvbSAtYyBwcmltMy5jdHg8L3NwYW4+PGJyPgogICAgICAg
+IDwvYmxvY2txdW90ZT4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4kIHRw
+bTJfcmVhZHB1YmxpYyAtYyBwcmltMS5jdHgKICAgICAgICAgICAgJmd0OyBwcmltMS5ycDwvc3Bh
+bj48YnI+CiAgICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgIDxibG9ja3F1b3RlIHR5cGU9ImNp
+dGUiPjxzcGFuPiQgdHBtMl9yZWFkcHVibGljIC1jIHByaW0yLmN0eAogICAgICAgICAgICAmZ3Q7
+IHByaW0yLnJwPC9zcGFuPjxicj4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgICAgPGJsb2Nr
+cXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+JCB0cG0yX3JlYWRwdWJsaWMgLWMgcHJpbTMuY3R4CiAg
+ICAgICAgICAgICZndDsgcHJpbTMucnA8L3NwYW4+PGJyPgogICAgICAgIDwvYmxvY2txdW90ZT4K
+ICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4kIGRpZmYgcHJpbTEucnAgcHJp
+bTIucnA8L3NwYW4+PGJyPgogICAgICAgIDwvYmxvY2txdW90ZT4KICAgICAgICA8YmxvY2txdW90
+ZSB0eXBlPSJjaXRlIj48c3Bhbj4kIGRpZmYgcHJpbTEucnAgcHJpbTMucnA8L3NwYW4+PGJyPgog
+ICAgICAgIDwvYmxvY2txdW90ZT4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bh
+bj4kPC9zcGFuPjxicj4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgICAgPGJsb2NrcXVvdGUg
+dHlwZT0iY2l0ZSI+PHNwYW4+PC9zcGFuPjxicj4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAg
+ICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+SXMgaXQgc3VwcG9zZWQgdG8gYmUgbGlr
+ZSB0aGlzPzwvc3Bhbj48YnI+CiAgICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgIDxibG9ja3F1
+b3RlIHR5cGU9ImNpdGUiPjxzcGFuPlNob3VsZG4ndCB0aGV5IGJlIGRpZmZlcmVudCBpbgogICAg
+ICAgICAgICBzb21lIHdheT88L3NwYW4+PGJyPgogICAgICAgIDwvYmxvY2txdW90ZT4KICAgICAg
+ICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5Gb3IgcHJpbTMsIEkgdGhvdWdodCBwdXR0
+aW5nIHNvbWUKICAgICAgICAgICAgLXUgZGF0YSB3b3VsZCBtYWtlIGEgZGlmZmVyZW5jZSwgYnV0
+IGl0IHNlZW1zIG5vdC48L3NwYW4+PGJyPgogICAgICAgIDwvYmxvY2txdW90ZT4KICAgICAgICA8
+YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPgogICAgICAgIDwvYmxvY2tx
+dW90ZT4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5GV0lXLCBJIGFtIHVz
+aW5nIDQuMSBicmFuY2ggb2YKICAgICAgICAgICAgdHBtMi10b29scyB3aXRoIHN3dHBtLjwvc3Bh
+bj48YnI+CiAgICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgIDxibG9ja3F1b3RlIHR5cGU9ImNp
+dGUiPjxzcGFuPjwvc3Bhbj48YnI+CiAgICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgIDxibG9j
+a3F1b3RlIHR5cGU9ImNpdGUiPjxzcGFuPlRoYW5rcyw8L3NwYW4+PGJyPgogICAgICAgIDwvYmxv
+Y2txdW90ZT4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj4tdGVkPC9zcGFu
+Pjxicj4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0
+ZSI+PHNwYW4+PC9zcGFuPjxicj4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgICAgPGJsb2Nr
+cXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+LS0gPC9zcGFuPjxicj4KICAgICAgICA8L2Jsb2NrcXVv
+dGU+CiAgICAgICAgPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+VGVkIEguIEtpbSwgUGhE
+PC9zcGFuPjxicj4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgICAgPGJsb2NrcXVvdGUgdHlw
+ZT0iY2l0ZSI+PHNwYW4+PGEgY2xhc3M9Im1vei10eHQtbGluay1hYmJyZXZpYXRlZCIgaHJlZj0i
+bWFpbHRvOnRlZC5oLmtpbUBvcmFjbGUuY29tIj50ZWQuaC5raW1Ab3JhY2xlLmNvbTwvYT48L3Nw
+YW4+PGJyPgogICAgICAgIDwvYmxvY2txdW90ZT4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJj
+aXRlIj48c3Bhbj4rMSAzMTAtMjU4LTc1MTU8L3NwYW4+PGJyPgogICAgICAgIDwvYmxvY2txdW90
+ZT4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj48L3NwYW4+PGJyPgogICAg
+ICAgIDwvYmxvY2txdW90ZT4KICAgICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIj48c3Bhbj5f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXzwvc3Bhbj48YnI+
+CiAgICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxz
+cGFuPnRwbTIgbWFpbGluZyBsaXN0IC0tCiAgICAgICAgICAgIDxhIGNsYXNzPSJtb3otdHh0LWxp
+bmstYWJicmV2aWF0ZWQiIGhyZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9yZyI+dHBtMkBsaXN0
+cy4wMS5vcmc8L2E+PC9zcGFuPjxicj4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgICAgPGJs
+b2NrcXVvdGUgdHlwZT0iY2l0ZSI+PHNwYW4+VG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0
+bwogICAgICAgICAgICA8YSBjbGFzcz0ibW96LXR4dC1saW5rLWFiYnJldmlhdGVkIiBocmVmPSJt
+YWlsdG86dHBtMi1sZWF2ZUBsaXN0cy4wMS5vcmciPnRwbTItbGVhdmVAbGlzdHMuMDEub3JnPC9h
+Pjwvc3Bhbj48YnI+CiAgICAgICAgPC9ibG9ja3F1b3RlPgogICAgICAgIDxibG9ja3F1b3RlIHR5
+cGU9ImNpdGUiPjxzcGFuPiUod2ViX3BhZ2VfdXJsKXNsaXN0aW5mbyUoY2dpZXh0KXMvJShfaW50
+ZXJuYWxfbmFtZSlzPC9zcGFuPjxicj4KICAgICAgICA8L2Jsb2NrcXVvdGU+CiAgICAgIDwvZGl2
+PgogICAgPC9ibG9ja3F1b3RlPgogICAgPHByZSBjbGFzcz0ibW96LXNpZ25hdHVyZSIgY29scz0i
+NzIiPi0tIApUZWQgSC4gS2ltLCBQaEQKPGEgY2xhc3M9Im1vei10eHQtbGluay1hYmJyZXZpYXRl
+ZCIgaHJlZj0ibWFpbHRvOnRlZC5oLmtpbUBvcmFjbGUuY29tIj50ZWQuaC5raW1Ab3JhY2xlLmNv
+bTwvYT4KKzEgMzEwLTI1OC03NTE1CgoKPC9wcmU+CiAgPC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============8489907187147525921==--
 
