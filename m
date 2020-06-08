@@ -1,28 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============1008333220631749209=="
+Content-Type: multipart/mixed; boundary="===============4327116565693104100=="
 MIME-Version: 1.0
-From: nicolasoliver03 at gmail.com
-Subject: [tpm2] Re: Sharing TPM 2.0 between containers with access policy
-Date: Mon, 08 Jun 2020 15:38:09 +0000
-Message-ID: <20200608153809.2851.94079@ml01.vlan13.01.org>
-In-Reply-To: 18096ca7-42ac-fd5f-faa4-118adcf11140@intel.com
+From: Imran Desai <imran.desai at intel.com>
+Subject: [tpm2] Re: how unique are primary keys ?
+Date: Mon, 08 Jun 2020 19:40:23 +0000
+Message-ID: <20200608194023.2851.73993@ml01.vlan13.01.org>
+In-Reply-To: SN6PR11MB3437DB5C94E6F8B873F3BD8CB8850@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1008333220631749209==
+--===============4327116565693104100==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Could you use tpm2_clearcontrol for 1)? =
+From integration tests -- https://github.com/tpm2-software/tpm2-tools/blob/=
+876e5d57efb48cce4225bdb738704c5cd48aa312/test/integration/tests/createprima=
+ry.sh#L53
 
+printf '\x00\x01' > ud.1
 
-https://github.com/tpm2-software/tpm2-tools/blob/master/man/tpm2_clearcontr=
-ol.1.md
+dd if=3D/dev/zero bs=3D256 count=3D1 of=3Dud.2
 
-tpm2_clearcontrol(1) - Allows user with knowledge of either lockout auth an=
-d or platform hierarchy auth to set disableClear which prevents the lockout=
- authorization's capability to execute tpm2_clear. Only user with authoriza=
-tion knowledge of the platform hierarchy can clear the disableClear. By def=
-ault it attempts to clear the disableClear bit.
---===============1008333220631749209==--
+cat ud.1 ud.2 > unique.dat
+
+tpm2_createprimary -C o -G rsa2048:aes128cfb -g sha256 -c prim.ctx -a "rest=
+ricted|decrypt|fixedtpm|fixedparent|sensitivedataorigin|userwithauth|\
+noda" -u unique.dat
+
+tpm2_createprimary -C o -G rsa2048:aes128cfb -g sha256 -c prim2.ctx -a "res=
+tricted|decrypt|fixedtpm|fixedparent|sensitivedataorigin|userwithauth|\
+noda"
+
+diff prim.ctx prim2.ctx
+--===============4327116565693104100==--
 
