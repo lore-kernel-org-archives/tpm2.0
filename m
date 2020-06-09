@@ -1,54 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============0897403112848579325=="
+Content-Type: multipart/mixed; boundary="===============3666273662432778530=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: IMA determinism
-Date: Tue, 09 Jun 2020 16:11:13 +0000
-Message-ID: <SN6PR11MB34372FF3BA83C70C38C2A73EB8820@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 20200609154528.2851.72508@ml01.vlan13.01.org
+Subject: [tpm2] [RELEASE CANDIDATE] tpm2-pkcs11 1.0.3-RC0
+Date: Tue, 09 Jun 2020 18:22:18 +0000
+Message-ID: <SN6PR11MB3437657D0F43E4B6CC42634BB8820@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0897403112848579325==
+--===============3666273662432778530==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Have you tried the IMA list?
+Hello,
 
-http://vger.kernel.org/vger-lists.html#linux-integrity
+I Would like to announce the following tpm2-pkcs11 release candidate 1.0.3-=
+RC0, with the following changelog:
 
-> -----Original Message-----
-> From: Eduardo Falc=C3=A3o <eduardolfalcao(a)gmail.com>
-> Sent: Tuesday, June 9, 2020 10:45 AM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] IMA determinism
-> =
+### 1.0.3-RC0 - 2020-06-09
 
-> Hi folks
-> =
+  * test/pkcs-get-mechanism: allow a maximum key size of 3072 bits.
 
-> I know this is not a TPM doubt, but it's related and some people may have=
- had
-> this issue.
-> =
+https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.0.3-RC0
 
-> Is there some form to make the digest collected through IMA deterministic=
-? I
-> rebooted my system several times, and on the very beginning of system
-> initialization I've noticed the hash in PCR 10 of TPM is changing. The nu=
-mber of
-> lines initializes equally, but it seems that the order the programs are r=
-an always
-> changes.
-> =
+This allows the test suite to run against the newest IBM simulator which wa=
+s causing CI failures.
 
-> Any ideas for overcoming this issue?
-> =
+Thanks,
+Bill
 
-> []'s
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============0897403112848579325==--
+--===============3666273662432778530==--
 
