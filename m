@@ -1,35 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============5334456540255210715=="
+Content-Type: multipart/mixed; boundary="===============3192799110475403982=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-pkcs11 1.1.1-RC0
-Date: Tue, 09 Jun 2020 18:29:25 +0000
-Message-ID: <SN6PR11MB3437027DA9D733E5FE272213B8820@SN6PR11MB3437.namprd11.prod.outlook.com>
+From: nicolasoliver03 at gmail.com
+Subject: [tpm2] Re: IMA determinism
+Date: Tue, 09 Jun 2020 18:57:36 +0000
+Message-ID: <20200609185736.2851.45258@ml01.vlan13.01.org>
+In-Reply-To: 20200609154528.2851.72508@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5334456540255210715==
+--===============3192799110475403982==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+I don't think IMA was designed to be deterministic. And I think you should =
+not rely on the TPM PCR 10 value being in an specific state for e.g. secret=
+ sealing.
 
-I Would like to announce the following tpm2-pkcs11 release candidate 1.1.1-=
-RC0,
-with the following changelog:
- =
+The reason is the asynchronous nature of the OS. Things happens when they a=
+re ready, and IMA measures them as they are requested. =
 
-### 1.1.1-RC0 - 2020-06-09
 
-  * test/pkcs-get-mechanism: allow a maximum key size of 3072 bits.
+I think the sole purpose of the IMA Measurement and the TPM PCR 10 extensio=
+n is to extend the hardware root of trust to the user space, and have user =
+space remote attestation capabilities. For this, you need the IMA Measureme=
+nt Log, and check that the quoted PCR 10 value matches the aggregated diges=
+t calculated from IMA Measurement Log.
 
-https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.1.1-RC0
+You could reduce the IMA Measurement policy to a very reduced set of user f=
+iles, like only measuring the Kernel Modules for example, but that will imp=
+ly not measuring important parts of the Trusted Computing Base.
 
-This allows the test suite to run against the newest IBM simulator which was
-causing CI failures.
-
-Thanks,
-Bill
-
---===============5334456540255210715==--
+Could you expand on the reason to the a deterministic PCR 10?
+--===============3192799110475403982==--
 
