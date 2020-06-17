@@ -1,123 +1,159 @@
-Content-Type: multipart/mixed; boundary="===============0370660890308251507=="
+Content-Type: multipart/mixed; boundary="===============7458867654285588350=="
 MIME-Version: 1.0
-From: Rahul Hardikar <rahulhardikar at gmail.com>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
 Subject: [tpm2] Re: FAPI
-Date: Tue, 16 Jun 2020 15:23:35 -0700
-Message-ID: <CAP3jAwQbzmn3Xzuw+cdUczJeLVWjyqV7gHsGQY3O9fsBAEL_aQ@mail.gmail.com>
-In-Reply-To: 9F48E1A823B03B4790B7E6E69430724D0171B6B580@exch2010c.sit.fraunhofer.de
+Date: Wed, 17 Jun 2020 08:24:22 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171B6D3C4@exch2010c.sit.fraunhofer.de>
+In-Reply-To: CAP3jAwQbzmn3Xzuw+cdUczJeLVWjyqV7gHsGQY3O9fsBAEL_aQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0370660890308251507==
+--===============7458867654285588350==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hi Rahul,
+
+that is correct, activatecredential is not supported by FAPI, because it wa=
+s not promoted as a use case to the spec writers.
+
+ActivateCredential is only needed for privacy-ca like application scenarios=
+. Do you have one of those ?
+
+Cheers,
+Andreas
+
+________________________________
+From: Rahul Hardikar [rahulhardikar(a)gmail.com]
+Sent: Wednesday, June 17, 2020 00:23
+To: Fuchs, Andreas
+Cc: tpm2(a)lists.01.org
+Subject: Re: FAPI
+
 Hi Andreas,
-Thanks for the pointer but I don't see the make credential
-(tpm2_makecredential and tpm2_activatecredential) anywhere?
+Thanks for the pointer but I don't see the make credential (tpm2_makecreden=
+tial and tpm2_activatecredential) anywhere?
 
 Thanks,
 Rahul
 
-On Tue, Jun 16, 2020 at 1:40 AM Fuchs, Andreas <
-andreas.fuchs(a)sit.fraunhofer.de> wrote:
+On Tue, Jun 16, 2020 at 1:40 AM Fuchs, Andreas <andreas.fuchs(a)sit.fraunho=
+fer.de<mailto:andreas.fuchs(a)sit.fraunhofer.de>> wrote:
+You might want to use this integration test as starter:
+https://github.com/tpm2-software/tpm2-tss/blob/master/test/integration/fapi=
+-quote.int.c
 
-> You might want to use this integration test as starter:
->
-> https://github.com/tpm2-software/tpm2-tss/blob/master/test/integration/fa=
-pi-quote.int.c
->
-> It creates the restricted signing key, calls quote, etc.
->
-> Note that we still await the TCG event log format spec to fully support
-> the event log.
->
-> Cheers,
-> Andreas
-> ------------------------------
-> *From:* Rahul Hardikar [rahulhardikar(a)gmail.com]
-> *Sent:* Monday, June 15, 2020 22:50
-> *To:* tpm2(a)lists.01.org
-> *Cc:* Fuchs, Andreas
-> *Subject:* FAPI
->
->
-> Sorry for the subject, was going to CC Andreas
-> On Mon, Jun 15, 2020 at 1:50 PM Rahul Hardikar <rahulhardikar(a)gmail.com>
-> wrote:
->
->> Hi All,
->> Since FAPI is now supported in the latest tss2, I would like to implement
->> the Attestation protocol using FAPI, I believe basic commands like
->> create_ek, create_ak, read_manufac_certificate exist in FAPI API, what is
->> missing is, make credential w/o a TPM chip as most servers don't have tpm
->> chip.  I also don't see Activate Credential.
->>
->> How can we achieve this in FAPI?
->>
->> Thanks,
->> Rahul
->>
->
+It creates the restricted signing key, calls quote, etc.
 
---===============0370660890308251507==
+Note that we still await the TCG event log format spec to fully support the=
+ event log.
+
+Cheers,
+Andreas
+________________________________
+From: Rahul Hardikar [rahulhardikar(a)gmail.com<mailto:rahulhardikar(a)gmai=
+l.com>]
+Sent: Monday, June 15, 2020 22:50
+To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
+Cc: Fuchs, Andreas
+Subject: FAPI
+
+
+Sorry for the subject, was going to CC Andreas
+On Mon, Jun 15, 2020 at 1:50 PM Rahul Hardikar <rahulhardikar(a)gmail.com<m=
+ailto:rahulhardikar(a)gmail.com>> wrote:
+Hi All,
+Since FAPI is now supported in the latest tss2, I would like to implement t=
+he Attestation protocol using FAPI, I believe basic commands like create_ek=
+, create_ak, read_manufac_certificate exist in FAPI API, what is missing is=
+, make credential w/o a TPM chip as most servers don't have tpm chip.  I al=
+so don't see Activate Credential.
+
+How can we achieve this in FAPI?
+
+Thanks,
+Rahul
+
+--===============7458867654285588350==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGRpdiBkaXI9Imx0ciI+SGkgQW5kcmVhcyw8ZGl2PlRoYW5rcyBmb3IgdGhlIHBvaW50ZXIgYnV0
-IEkgZG9uJiMzOTt0IHNlZSB0aGUgbWFrZSBjcmVkZW50aWFsICh0cG0yX21ha2VjcmVkZW50aWFs
-IGFuZCB0cG0yX2FjdGl2YXRlY3JlZGVudGlhbCkgYW55d2hlcmU/IMKgPC9kaXY+PGRpdj48YnI+
-PC9kaXY+PGRpdj5UaGFua3MsPC9kaXY+PGRpdj5SYWh1bDwvZGl2PjwvZGl2Pjxicj48ZGl2IGNs
-YXNzPSJnbWFpbF9xdW90ZSI+PGRpdiBkaXI9Imx0ciIgY2xhc3M9ImdtYWlsX2F0dHIiPk9uIFR1
-ZSwgSnVuIDE2LCAyMDIwIGF0IDE6NDAgQU0gRnVjaHMsIEFuZHJlYXMgJmx0OzxhIGhyZWY9Im1h
-aWx0bzphbmRyZWFzLmZ1Y2hzQHNpdC5mcmF1bmhvZmVyLmRlIj5hbmRyZWFzLmZ1Y2hzQHNpdC5m
-cmF1bmhvZmVyLmRlPC9hPiZndDsgd3JvdGU6PGJyPjwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJn
-bWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdC13
-aWR0aDoxcHg7Ym9yZGVyLWxlZnQtc3R5bGU6c29saWQ7Ym9yZGVyLWxlZnQtY29sb3I6cmdiKDIw
-NCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij4KCgoKCjxkaXY+CjxkaXYgc3R5bGU9ImRpcmVj
-dGlvbjpsdHI7Zm9udC1mYW1pbHk6VGFob21hO2NvbG9yOnJnYigwLDAsMCk7Zm9udC1zaXplOjEw
-cHQiPgo8ZGl2PllvdSBtaWdodCB3YW50IHRvIHVzZSB0aGlzIGludGVncmF0aW9uIHRlc3QgYXMg
-c3RhcnRlcjo8L2Rpdj4KPGRpdj48YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0
-d2FyZS90cG0yLXRzcy9ibG9iL21hc3Rlci90ZXN0L2ludGVncmF0aW9uL2ZhcGktcXVvdGUuaW50
-LmMiIHRhcmdldD0iX2JsYW5rIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0y
-LXRzcy9ibG9iL21hc3Rlci90ZXN0L2ludGVncmF0aW9uL2ZhcGktcXVvdGUuaW50LmM8L2E+PC9k
-aXY+CjxkaXY+PGJyPgo8L2Rpdj4KPGRpdj5JdCBjcmVhdGVzIHRoZSByZXN0cmljdGVkIHNpZ25p
-bmcga2V5LCBjYWxscyBxdW90ZSwgZXRjLjwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+Tm90
-ZSB0aGF0IHdlIHN0aWxsIGF3YWl0IHRoZSBUQ0cgZXZlbnQgbG9nIGZvcm1hdCBzcGVjIHRvIGZ1
-bGx5IHN1cHBvcnQgdGhlIGV2ZW50IGxvZy48L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2PkNo
-ZWVycyw8L2Rpdj4KPGRpdj5BbmRyZWFzPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1p
-bHk6JnF1b3Q7VGltZXMgTmV3IFJvbWFuJnF1b3Q7O2NvbG9yOnJnYigwLDAsMCk7Zm9udC1zaXpl
-OjE2cHgiPgo8aHI+CjxkaXYgaWQ9ImdtYWlsLW1fLTM1MDQzMDc2NDY5Mjk3NzEzMjdkaXZScEYx
-NTgyNjAiIHN0eWxlPSJkaXJlY3Rpb246bHRyIj48Zm9udCBzaXplPSIyIiBmYWNlPSJUYWhvbWEi
-IGNvbG9yPSIjMDAwMDAwIj48Yj5Gcm9tOjwvYj4gUmFodWwgSGFyZGlrYXIgWzxhIGhyZWY9Im1h
-aWx0bzpyYWh1bGhhcmRpa2FyQGdtYWlsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiPnJhaHVsaGFyZGlr
-YXJAZ21haWwuY29tPC9hPl08YnI+CjxiPlNlbnQ6PC9iPiBNb25kYXksIEp1bmUgMTUsIDIwMjAg
-MjI6NTA8YnI+CjxiPlRvOjwvYj4gPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0
-YXJnZXQ9Il9ibGFuayI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+PGJyPgo8Yj5DYzo8L2I+IEZ1Y2hz
-LCBBbmRyZWFzPGJyPgo8Yj5TdWJqZWN0OjwvYj4gRkFQSTxicj4KPC9mb250Pjxicj4KPC9kaXY+
-CjxkaXY+PC9kaXY+CjxkaXY+CjxkaXYgZGlyPSJsdHIiPgo8ZGl2IGRpcj0ibHRyIj48YnI+Cjwv
-ZGl2PgpTb3JyeSBmb3IgdGhlIHN1YmplY3QsIHdhcyBnb2luZyB0byBDQyBBbmRyZWFzPGJyPgo8
-ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+CjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJnbWFpbF9hdHRy
-Ij5PbiBNb24sIEp1biAxNSwgMjAyMCBhdCAxOjUwIFBNIFJhaHVsIEhhcmRpa2FyICZsdDs8YSBo
-cmVmPSJtYWlsdG86cmFodWxoYXJkaWthckBnbWFpbC5jb20iIHJlbD0ibm9vcGVuZXIgbm9yZWZl
-cnJlciIgdGFyZ2V0PSJfYmxhbmsiPnJhaHVsaGFyZGlrYXJAZ21haWwuY29tPC9hPiZndDsgd3Jv
-dGU6PGJyPgo8L2Rpdj4KPGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFy
-Z2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0LXdpZHRoOjFweDtib3JkZXItbGVmdC1z
-dHlsZTpzb2xpZDtib3JkZXItbGVmdC1jb2xvcjpyZ2IoMjA0LDIwNCwyMDQpO3BhZGRpbmctbGVm
-dDoxZXgiPgo8ZGl2IGRpcj0ibHRyIj5IaSBBbGwsCjxkaXY+U2luY2UgRkFQSSBpcyBub3cgc3Vw
-cG9ydGVkIGluIHRoZSBsYXRlc3QgdHNzMiwgSSB3b3VsZCBsaWtlIHRvIGltcGxlbWVudCB0aGUg
-QXR0ZXN0YXRpb24gcHJvdG9jb2wgdXNpbmcgRkFQSSwgSSBiZWxpZXZlIGJhc2ljIGNvbW1hbmRz
-IGxpa2UgY3JlYXRlX2VrLCBjcmVhdGVfYWssIHJlYWRfbWFudWZhY19jZXJ0aWZpY2F0ZSBleGlz
-dCBpbiBGQVBJIEFQSSwgd2hhdCBpcyBtaXNzaW5nIGlzLCBtYWtlIGNyZWRlbnRpYWwgdy9vIGEg
-VFBNCiBjaGlwIGFzIG1vc3Qgc2VydmVycyBkb24mIzM5O3QgaGF2ZSB0cG0gY2hpcC7CoCBJIGFs
-c28gZG9uJiMzOTt0IHNlZSBBY3RpdmF0ZSBDcmVkZW50aWFsLjwvZGl2Pgo8ZGl2Pjxicj4KPC9k
-aXY+CjxkaXY+SG93IGNhbiB3ZSBhY2hpZXZlIHRoaXMgaW4gRkFQST88L2Rpdj4KPGRpdj48YnI+
-CjwvZGl2Pgo8ZGl2PlRoYW5rcyw8L2Rpdj4KPGRpdj5SYWh1bDwvZGl2Pgo8L2Rpdj4KPC9ibG9j
-a3F1b3RlPgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2PgoKPC9ibG9j
-a3F1b3RlPjwvZGl2Pgo=
+PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
+b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjxzdHlsZSB0eXBlPSJ0ZXh0
+L2NzcyIgaWQ9Im93YVBhcmFTdHlsZSI+PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBmcHN0eWxlPSIx
+IiBvY3NpPSIwIj4KPGRpdiBzdHlsZT0iZGlyZWN0aW9uOiBsdHI7Zm9udC1mYW1pbHk6IFRhaG9t
+YTtjb2xvcjogIzAwMDAwMDtmb250LXNpemU6IDEwcHQ7Ij4KPGRpdj5IaSBSYWh1bCw8L2Rpdj4K
+PGRpdj48YnI+CjwvZGl2Pgo8ZGl2PnRoYXQgaXMgY29ycmVjdCwgYWN0aXZhdGVjcmVkZW50aWFs
+IGlzIG5vdCBzdXBwb3J0ZWQgYnkgRkFQSSwgYmVjYXVzZSBpdCB3YXMgbm90IHByb21vdGVkIGFz
+IGEgdXNlIGNhc2UgdG8gdGhlIHNwZWMgd3JpdGVycy48L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8
+ZGl2PkFjdGl2YXRlQ3JlZGVudGlhbCBpcyBvbmx5IG5lZWRlZCBmb3IgcHJpdmFjeS1jYSBsaWtl
+IGFwcGxpY2F0aW9uIHNjZW5hcmlvcy4gRG8geW91IGhhdmUgb25lIG9mIHRob3NlID88L2Rpdj4K
+PGRpdj48YnI+CjwvZGl2Pgo8ZGl2PkNoZWVycyw8L2Rpdj4KPGRpdj5BbmRyZWFzPGJyPgo8L2Rp
+dj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogVGltZXMgTmV3IFJv
+bWFuOyBjb2xvcjogIzAwMDAwMDsgZm9udC1zaXplOiAxNnB4Ij4KPGhyIHRhYmluZGV4PSItMSI+
+CjxkaXYgaWQ9ImRpdlJwRjc0MjU0OCIgc3R5bGU9ImRpcmVjdGlvbjogbHRyOyI+PGZvbnQgc2l6
+ZT0iMiIgZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IFJhaHVsIEhh
+cmRpa2FyIFtyYWh1bGhhcmRpa2FyQGdtYWlsLmNvbV08YnI+CjxiPlNlbnQ6PC9iPiBXZWRuZXNk
+YXksIEp1bmUgMTcsIDIwMjAgMDA6MjM8YnI+CjxiPlRvOjwvYj4gRnVjaHMsIEFuZHJlYXM8YnI+
+CjxiPkNjOjwvYj4gdHBtMkBsaXN0cy4wMS5vcmc8YnI+CjxiPlN1YmplY3Q6PC9iPiBSZTogRkFQ
+STxicj4KPC9mb250Pjxicj4KPC9kaXY+CjxkaXY+PC9kaXY+CjxkaXY+CjxkaXYgZGlyPSJsdHIi
+PkhpIEFuZHJlYXMsCjxkaXY+VGhhbmtzIGZvciB0aGUgcG9pbnRlciBidXQgSSBkb24ndCBzZWUg
+dGhlIG1ha2UgY3JlZGVudGlhbCAodHBtMl9tYWtlY3JlZGVudGlhbCBhbmQgdHBtMl9hY3RpdmF0
+ZWNyZWRlbnRpYWwpIGFueXdoZXJlPyAmbmJzcDs8L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2
+PlRoYW5rcyw8L2Rpdj4KPGRpdj5SYWh1bDwvZGl2Pgo8L2Rpdj4KPGJyPgo8ZGl2IGNsYXNzPSJn
+bWFpbF9xdW90ZSI+CjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJnbWFpbF9hdHRyIj5PbiBUdWUsIEp1
+biAxNiwgMjAyMCBhdCAxOjQwIEFNIEZ1Y2hzLCBBbmRyZWFzICZsdDs8YSBocmVmPSJtYWlsdG86
+YW5kcmVhcy5mdWNoc0BzaXQuZnJhdW5ob2Zlci5kZSIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9v
+cGVuZXIgbm9yZWZlcnJlciI+YW5kcmVhcy5mdWNoc0BzaXQuZnJhdW5ob2Zlci5kZTwvYT4mZ3Q7
+IHdyb3RlOjxicj4KPC9kaXY+CjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9
+Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDsgYm9yZGVyLWxlZnQtd2lkdGg6MXB4OyBib3JkZXIt
+bGVmdC1zdHlsZTpzb2xpZDsgYm9yZGVyLWxlZnQtY29sb3I6cmdiKDIwNCwyMDQsMjA0KTsgcGFk
+ZGluZy1sZWZ0OjFleCI+CjxkaXY+CjxkaXYgc3R5bGU9ImRpcmVjdGlvbjpsdHI7IGZvbnQtZmFt
+aWx5OlRhaG9tYTsgY29sb3I6cmdiKDAsMCwwKTsgZm9udC1zaXplOjEwcHQiPgo8ZGl2PllvdSBt
+aWdodCB3YW50IHRvIHVzZSB0aGlzIGludGVncmF0aW9uIHRlc3QgYXMgc3RhcnRlcjo8L2Rpdj4K
+PGRpdj48YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9i
+bG9iL21hc3Rlci90ZXN0L2ludGVncmF0aW9uL2ZhcGktcXVvdGUuaW50LmMiIHRhcmdldD0iX2Js
+YW5rIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNv
+ZnR3YXJlL3RwbTItdHNzL2Jsb2IvbWFzdGVyL3Rlc3QvaW50ZWdyYXRpb24vZmFwaS1xdW90ZS5p
+bnQuYzwvYT48L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2Pkl0IGNyZWF0ZXMgdGhlIHJlc3Ry
+aWN0ZWQgc2lnbmluZyBrZXksIGNhbGxzIHF1b3RlLCBldGMuPC9kaXY+CjxkaXY+PGJyPgo8L2Rp
+dj4KPGRpdj5Ob3RlIHRoYXQgd2Ugc3RpbGwgYXdhaXQgdGhlIFRDRyBldmVudCBsb2cgZm9ybWF0
+IHNwZWMgdG8gZnVsbHkgc3VwcG9ydCB0aGUgZXZlbnQgbG9nLjwvZGl2Pgo8ZGl2Pjxicj4KPC9k
+aXY+CjxkaXY+Q2hlZXJzLDwvZGl2Pgo8ZGl2PkFuZHJlYXM8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxl
+PSJmb250LWZhbWlseTomcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDs7IGNvbG9yOnJnYigwLDAs
+MCk7IGZvbnQtc2l6ZToxNnB4Ij4KPGhyPgo8ZGl2IGlkPSJnbWFpbC1tXy0zNTA0MzA3NjQ2OTI5
+NzcxMzI3ZGl2UnBGMTU4MjYwIiBzdHlsZT0iZGlyZWN0aW9uOmx0ciI+PGZvbnQgc2l6ZT0iMiIg
+ZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IFJhaHVsIEhhcmRpa2Fy
+IFs8YSBocmVmPSJtYWlsdG86cmFodWxoYXJkaWthckBnbWFpbC5jb20iIHRhcmdldD0iX2JsYW5r
+IiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiPnJhaHVsaGFyZGlrYXJAZ21haWwuY29tPC9hPl08
+YnI+CjxiPlNlbnQ6PC9iPiBNb25kYXksIEp1bmUgMTUsIDIwMjAgMjI6NTA8YnI+CjxiPlRvOjwv
+Yj4gPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayIgcmVs
+PSJub29wZW5lciBub3JlZmVycmVyIj4KdHBtMkBsaXN0cy4wMS5vcmc8L2E+PGJyPgo8Yj5DYzo8
+L2I+IEZ1Y2hzLCBBbmRyZWFzPGJyPgo8Yj5TdWJqZWN0OjwvYj4gRkFQSTxicj4KPC9mb250Pjxi
+cj4KPC9kaXY+CjxkaXY+PC9kaXY+CjxkaXY+CjxkaXYgZGlyPSJsdHIiPgo8ZGl2IGRpcj0ibHRy
+Ij48YnI+CjwvZGl2PgpTb3JyeSBmb3IgdGhlIHN1YmplY3QsIHdhcyBnb2luZyB0byBDQyBBbmRy
+ZWFzPGJyPgo8ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+CjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJn
+bWFpbF9hdHRyIj5PbiBNb24sIEp1biAxNSwgMjAyMCBhdCAxOjUwIFBNIFJhaHVsIEhhcmRpa2Fy
+ICZsdDs8YSBocmVmPSJtYWlsdG86cmFodWxoYXJkaWthckBnbWFpbC5jb20iIHJlbD0ibm9vcGVu
+ZXIgbm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPnJhaHVsaGFyZGlrYXJAZ21haWwuY29tPC9h
+PiZndDsgd3JvdGU6PGJyPgo8L2Rpdj4KPGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBz
+dHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4OyBib3JkZXItbGVmdC13aWR0aDoxcHg7IGJv
+cmRlci1sZWZ0LXN0eWxlOnNvbGlkOyBib3JkZXItbGVmdC1jb2xvcjpyZ2IoMjA0LDIwNCwyMDQp
+OyBwYWRkaW5nLWxlZnQ6MWV4Ij4KPGRpdiBkaXI9Imx0ciI+SGkgQWxsLAo8ZGl2PlNpbmNlIEZB
+UEkgaXMgbm93IHN1cHBvcnRlZCBpbiB0aGUgbGF0ZXN0IHRzczIsIEkgd291bGQgbGlrZSB0byBp
+bXBsZW1lbnQgdGhlIEF0dGVzdGF0aW9uIHByb3RvY29sIHVzaW5nIEZBUEksIEkgYmVsaWV2ZSBi
+YXNpYyBjb21tYW5kcyBsaWtlIGNyZWF0ZV9laywgY3JlYXRlX2FrLCByZWFkX21hbnVmYWNfY2Vy
+dGlmaWNhdGUgZXhpc3QgaW4gRkFQSSBBUEksIHdoYXQgaXMgbWlzc2luZyBpcywgbWFrZSBjcmVk
+ZW50aWFsIHcvbyBhIFRQTQogY2hpcCBhcyBtb3N0IHNlcnZlcnMgZG9uJ3QgaGF2ZSB0cG0gY2hp
+cC4mbmJzcDsgSSBhbHNvIGRvbid0IHNlZSBBY3RpdmF0ZSBDcmVkZW50aWFsLjwvZGl2Pgo8ZGl2
+Pjxicj4KPC9kaXY+CjxkaXY+SG93IGNhbiB3ZSBhY2hpZXZlIHRoaXMgaW4gRkFQST88L2Rpdj4K
+PGRpdj48YnI+CjwvZGl2Pgo8ZGl2PlRoYW5rcyw8L2Rpdj4KPGRpdj5SYWh1bDwvZGl2Pgo8L2Rp
+dj4KPC9ibG9ja3F1b3RlPgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2
+Pgo8L2Jsb2NrcXVvdGU+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjwvaHRt
+bD4K
 
---===============0370660890308251507==--
+--===============7458867654285588350==--
 
