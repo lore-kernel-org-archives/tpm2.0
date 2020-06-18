@@ -1,159 +1,138 @@
-Content-Type: multipart/mixed; boundary="===============7458867654285588350=="
+Content-Type: multipart/mixed; boundary="===============8715860033811541696=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] Re: FAPI
-Date: Wed, 17 Jun 2020 08:24:22 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171B6D3C4@exch2010c.sit.fraunhofer.de>
-In-Reply-To: CAP3jAwQbzmn3Xzuw+cdUczJeLVWjyqV7gHsGQY3O9fsBAEL_aQ@mail.gmail.com
+From: Oleksii Moisieiev <Oleksii_Moisieiev at epam.com>
+Subject: [tpm2] Re: Sharing TPM 2.0 between containers with access policy
+Date: Thu, 18 Jun 2020 18:20:57 +0000
+Message-ID: <
+ <AM0PR03MB416242FDEC6CFFC947E97C4DE39B0@AM0PR03MB4162.eurprd03.prod.outlook.com>>
+In-Reply-To: 18096ca7-42ac-fd5f-faa4-118adcf11140@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7458867654285588350==
+--===============8715860033811541696==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Rahul,
+Hello Tadeusz.
 
-that is correct, activatecredential is not supported by FAPI, because it wa=
-s not promoted as a use case to the spec writers.
+Thank you for the answer.
+I've done some investigation and found that passing device /dev/tpmrm0 to t=
+he containers will do the job. Also problem with tpm_clear can be solved by=
+ resrtiction owner access to the tpm. So each container can use keys in TPM=
+ but talk to owner if any changes is needed.
 
-ActivateCredential is only needed for privacy-ca like application scenarios=
-. Do you have one of those ?
+I have another question: According to the documentation - TPM is having uni=
+que endoresement key, embedded to the device during manufacturing. So each =
+module can be identified by this key.
+How can I retrieve this key embedded to the TPM module?
 
-Cheers,
-Andreas
-
+Best regards,
+Oleksii.
 ________________________________
-From: Rahul Hardikar [rahulhardikar(a)gmail.com]
-Sent: Wednesday, June 17, 2020 00:23
-To: Fuchs, Andreas
-Cc: tpm2(a)lists.01.org
-Subject: Re: FAPI
+From: Tadeusz Struk <tadeusz.struk(a)intel.com>
+Sent: Friday, June 5, 2020 8:16 PM
+To: Oleksii Moisieiev <Oleksii_Moisieiev(a)epam.com>; tpm2(a)lists.01.org <=
+tpm2(a)lists.01.org>
+Subject: Re: [tpm2] Sharing TPM 2.0 between containers with access policy
 
-Hi Andreas,
-Thanks for the pointer but I don't see the make credential (tpm2_makecreden=
-tial and tpm2_activatecredential) anywhere?
+On 6/5/20 12:52 AM, Oleksii Moisieiev wrote:
+> Hello all,
+>
+> I have an embedded device, with Docker containers based architecture.
+> This device is operating by software, installed in separate containers.
+>
+>
+> I would like to share TPM2.0 access between this containers with the
+> following restrictions:
+>
+> 1) Forbid Clear TPM command for the containers;
+> 2) Each container should have an access only to the set of keys it owns.
+> 3) Each container can create keys, but not overwrite existing keys that
+> does not related to this container.
+>
+> According to the "TCG TSS 2.0 TAB and Resource Manager Specification" -
+> TPM Resource manager doesn't implement access restrictions right now.
+
+I think you could run a separate instance of RM in per container to get
+2 & 3. As for 1, this would need to be prevented on a platform
+configuration level, like in BIOS or equivalent.
 
 Thanks,
-Rahul
+--
+Tadeusz
 
-On Tue, Jun 16, 2020 at 1:40 AM Fuchs, Andreas <andreas.fuchs(a)sit.fraunho=
-fer.de<mailto:andreas.fuchs(a)sit.fraunhofer.de>> wrote:
-You might want to use this integration test as starter:
-https://github.com/tpm2-software/tpm2-tss/blob/master/test/integration/fapi=
--quote.int.c
-
-It creates the restricted signing key, calls quote, etc.
-
-Note that we still await the TCG event log format spec to fully support the=
- event log.
-
-Cheers,
-Andreas
-________________________________
-From: Rahul Hardikar [rahulhardikar(a)gmail.com<mailto:rahulhardikar(a)gmai=
-l.com>]
-Sent: Monday, June 15, 2020 22:50
-To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Cc: Fuchs, Andreas
-Subject: FAPI
-
-
-Sorry for the subject, was going to CC Andreas
-On Mon, Jun 15, 2020 at 1:50 PM Rahul Hardikar <rahulhardikar(a)gmail.com<m=
-ailto:rahulhardikar(a)gmail.com>> wrote:
-Hi All,
-Since FAPI is now supported in the latest tss2, I would like to implement t=
-he Attestation protocol using FAPI, I believe basic commands like create_ek=
-, create_ak, read_manufac_certificate exist in FAPI API, what is missing is=
-, make credential w/o a TPM chip as most servers don't have tpm chip.  I al=
-so don't see Activate Credential.
-
-How can we achieve this in FAPI?
-
-Thanks,
-Rahul
-
---===============7458867654285588350==
+--===============8715860033811541696==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjxzdHlsZSB0eXBlPSJ0ZXh0
-L2NzcyIgaWQ9Im93YVBhcmFTdHlsZSI+PC9zdHlsZT4KPC9oZWFkPgo8Ym9keSBmcHN0eWxlPSIx
-IiBvY3NpPSIwIj4KPGRpdiBzdHlsZT0iZGlyZWN0aW9uOiBsdHI7Zm9udC1mYW1pbHk6IFRhaG9t
-YTtjb2xvcjogIzAwMDAwMDtmb250LXNpemU6IDEwcHQ7Ij4KPGRpdj5IaSBSYWh1bCw8L2Rpdj4K
-PGRpdj48YnI+CjwvZGl2Pgo8ZGl2PnRoYXQgaXMgY29ycmVjdCwgYWN0aXZhdGVjcmVkZW50aWFs
-IGlzIG5vdCBzdXBwb3J0ZWQgYnkgRkFQSSwgYmVjYXVzZSBpdCB3YXMgbm90IHByb21vdGVkIGFz
-IGEgdXNlIGNhc2UgdG8gdGhlIHNwZWMgd3JpdGVycy48L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8
-ZGl2PkFjdGl2YXRlQ3JlZGVudGlhbCBpcyBvbmx5IG5lZWRlZCBmb3IgcHJpdmFjeS1jYSBsaWtl
-IGFwcGxpY2F0aW9uIHNjZW5hcmlvcy4gRG8geW91IGhhdmUgb25lIG9mIHRob3NlID88L2Rpdj4K
-PGRpdj48YnI+CjwvZGl2Pgo8ZGl2PkNoZWVycyw8L2Rpdj4KPGRpdj5BbmRyZWFzPGJyPgo8L2Rp
-dj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogVGltZXMgTmV3IFJv
-bWFuOyBjb2xvcjogIzAwMDAwMDsgZm9udC1zaXplOiAxNnB4Ij4KPGhyIHRhYmluZGV4PSItMSI+
-CjxkaXYgaWQ9ImRpdlJwRjc0MjU0OCIgc3R5bGU9ImRpcmVjdGlvbjogbHRyOyI+PGZvbnQgc2l6
-ZT0iMiIgZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IFJhaHVsIEhh
-cmRpa2FyIFtyYWh1bGhhcmRpa2FyQGdtYWlsLmNvbV08YnI+CjxiPlNlbnQ6PC9iPiBXZWRuZXNk
-YXksIEp1bmUgMTcsIDIwMjAgMDA6MjM8YnI+CjxiPlRvOjwvYj4gRnVjaHMsIEFuZHJlYXM8YnI+
-CjxiPkNjOjwvYj4gdHBtMkBsaXN0cy4wMS5vcmc8YnI+CjxiPlN1YmplY3Q6PC9iPiBSZTogRkFQ
-STxicj4KPC9mb250Pjxicj4KPC9kaXY+CjxkaXY+PC9kaXY+CjxkaXY+CjxkaXYgZGlyPSJsdHIi
-PkhpIEFuZHJlYXMsCjxkaXY+VGhhbmtzIGZvciB0aGUgcG9pbnRlciBidXQgSSBkb24ndCBzZWUg
-dGhlIG1ha2UgY3JlZGVudGlhbCAodHBtMl9tYWtlY3JlZGVudGlhbCBhbmQgdHBtMl9hY3RpdmF0
-ZWNyZWRlbnRpYWwpIGFueXdoZXJlPyAmbmJzcDs8L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2
-PlRoYW5rcyw8L2Rpdj4KPGRpdj5SYWh1bDwvZGl2Pgo8L2Rpdj4KPGJyPgo8ZGl2IGNsYXNzPSJn
-bWFpbF9xdW90ZSI+CjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJnbWFpbF9hdHRyIj5PbiBUdWUsIEp1
-biAxNiwgMjAyMCBhdCAxOjQwIEFNIEZ1Y2hzLCBBbmRyZWFzICZsdDs8YSBocmVmPSJtYWlsdG86
-YW5kcmVhcy5mdWNoc0BzaXQuZnJhdW5ob2Zlci5kZSIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9v
-cGVuZXIgbm9yZWZlcnJlciI+YW5kcmVhcy5mdWNoc0BzaXQuZnJhdW5ob2Zlci5kZTwvYT4mZ3Q7
-IHdyb3RlOjxicj4KPC9kaXY+CjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9
-Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDsgYm9yZGVyLWxlZnQtd2lkdGg6MXB4OyBib3JkZXIt
-bGVmdC1zdHlsZTpzb2xpZDsgYm9yZGVyLWxlZnQtY29sb3I6cmdiKDIwNCwyMDQsMjA0KTsgcGFk
-ZGluZy1sZWZ0OjFleCI+CjxkaXY+CjxkaXYgc3R5bGU9ImRpcmVjdGlvbjpsdHI7IGZvbnQtZmFt
-aWx5OlRhaG9tYTsgY29sb3I6cmdiKDAsMCwwKTsgZm9udC1zaXplOjEwcHQiPgo8ZGl2PllvdSBt
-aWdodCB3YW50IHRvIHVzZSB0aGlzIGludGVncmF0aW9uIHRlc3QgYXMgc3RhcnRlcjo8L2Rpdj4K
-PGRpdj48YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9i
-bG9iL21hc3Rlci90ZXN0L2ludGVncmF0aW9uL2ZhcGktcXVvdGUuaW50LmMiIHRhcmdldD0iX2Js
-YW5rIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNv
-ZnR3YXJlL3RwbTItdHNzL2Jsb2IvbWFzdGVyL3Rlc3QvaW50ZWdyYXRpb24vZmFwaS1xdW90ZS5p
-bnQuYzwvYT48L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2Pkl0IGNyZWF0ZXMgdGhlIHJlc3Ry
-aWN0ZWQgc2lnbmluZyBrZXksIGNhbGxzIHF1b3RlLCBldGMuPC9kaXY+CjxkaXY+PGJyPgo8L2Rp
-dj4KPGRpdj5Ob3RlIHRoYXQgd2Ugc3RpbGwgYXdhaXQgdGhlIFRDRyBldmVudCBsb2cgZm9ybWF0
-IHNwZWMgdG8gZnVsbHkgc3VwcG9ydCB0aGUgZXZlbnQgbG9nLjwvZGl2Pgo8ZGl2Pjxicj4KPC9k
-aXY+CjxkaXY+Q2hlZXJzLDwvZGl2Pgo8ZGl2PkFuZHJlYXM8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxl
-PSJmb250LWZhbWlseTomcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDs7IGNvbG9yOnJnYigwLDAs
-MCk7IGZvbnQtc2l6ZToxNnB4Ij4KPGhyPgo8ZGl2IGlkPSJnbWFpbC1tXy0zNTA0MzA3NjQ2OTI5
-NzcxMzI3ZGl2UnBGMTU4MjYwIiBzdHlsZT0iZGlyZWN0aW9uOmx0ciI+PGZvbnQgc2l6ZT0iMiIg
-ZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IFJhaHVsIEhhcmRpa2Fy
-IFs8YSBocmVmPSJtYWlsdG86cmFodWxoYXJkaWthckBnbWFpbC5jb20iIHRhcmdldD0iX2JsYW5r
-IiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiPnJhaHVsaGFyZGlrYXJAZ21haWwuY29tPC9hPl08
-YnI+CjxiPlNlbnQ6PC9iPiBNb25kYXksIEp1bmUgMTUsIDIwMjAgMjI6NTA8YnI+CjxiPlRvOjwv
-Yj4gPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayIgcmVs
-PSJub29wZW5lciBub3JlZmVycmVyIj4KdHBtMkBsaXN0cy4wMS5vcmc8L2E+PGJyPgo8Yj5DYzo8
-L2I+IEZ1Y2hzLCBBbmRyZWFzPGJyPgo8Yj5TdWJqZWN0OjwvYj4gRkFQSTxicj4KPC9mb250Pjxi
-cj4KPC9kaXY+CjxkaXY+PC9kaXY+CjxkaXY+CjxkaXYgZGlyPSJsdHIiPgo8ZGl2IGRpcj0ibHRy
-Ij48YnI+CjwvZGl2PgpTb3JyeSBmb3IgdGhlIHN1YmplY3QsIHdhcyBnb2luZyB0byBDQyBBbmRy
-ZWFzPGJyPgo8ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+CjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJn
-bWFpbF9hdHRyIj5PbiBNb24sIEp1biAxNSwgMjAyMCBhdCAxOjUwIFBNIFJhaHVsIEhhcmRpa2Fy
-ICZsdDs8YSBocmVmPSJtYWlsdG86cmFodWxoYXJkaWthckBnbWFpbC5jb20iIHJlbD0ibm9vcGVu
-ZXIgbm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsiPnJhaHVsaGFyZGlrYXJAZ21haWwuY29tPC9h
-PiZndDsgd3JvdGU6PGJyPgo8L2Rpdj4KPGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBz
-dHlsZT0ibWFyZ2luOjBweCAwcHggMHB4IDAuOGV4OyBib3JkZXItbGVmdC13aWR0aDoxcHg7IGJv
-cmRlci1sZWZ0LXN0eWxlOnNvbGlkOyBib3JkZXItbGVmdC1jb2xvcjpyZ2IoMjA0LDIwNCwyMDQp
-OyBwYWRkaW5nLWxlZnQ6MWV4Ij4KPGRpdiBkaXI9Imx0ciI+SGkgQWxsLAo8ZGl2PlNpbmNlIEZB
-UEkgaXMgbm93IHN1cHBvcnRlZCBpbiB0aGUgbGF0ZXN0IHRzczIsIEkgd291bGQgbGlrZSB0byBp
-bXBsZW1lbnQgdGhlIEF0dGVzdGF0aW9uIHByb3RvY29sIHVzaW5nIEZBUEksIEkgYmVsaWV2ZSBi
-YXNpYyBjb21tYW5kcyBsaWtlIGNyZWF0ZV9laywgY3JlYXRlX2FrLCByZWFkX21hbnVmYWNfY2Vy
-dGlmaWNhdGUgZXhpc3QgaW4gRkFQSSBBUEksIHdoYXQgaXMgbWlzc2luZyBpcywgbWFrZSBjcmVk
-ZW50aWFsIHcvbyBhIFRQTQogY2hpcCBhcyBtb3N0IHNlcnZlcnMgZG9uJ3QgaGF2ZSB0cG0gY2hp
-cC4mbmJzcDsgSSBhbHNvIGRvbid0IHNlZSBBY3RpdmF0ZSBDcmVkZW50aWFsLjwvZGl2Pgo8ZGl2
-Pjxicj4KPC9kaXY+CjxkaXY+SG93IGNhbiB3ZSBhY2hpZXZlIHRoaXMgaW4gRkFQST88L2Rpdj4K
-PGRpdj48YnI+CjwvZGl2Pgo8ZGl2PlRoYW5rcyw8L2Rpdj4KPGRpdj5SYWh1bDwvZGl2Pgo8L2Rp
-dj4KPC9ibG9ja3F1b3RlPgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2
-Pgo8L2Jsb2NrcXVvdGU+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjwvaHRt
-bD4K
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
+ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
+ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
+YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
+OiByZ2IoMCwgMCwgMCk7Ij4KSGVsbG8gVGFkZXVzei4mbmJzcDs8L2Rpdj4KPGRpdiBzdHlsZT0i
+Zm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQt
+c2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxl
+PSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9u
+dC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+ClRoYW5rIHlvdSBmb3IgdGhlIGFu
+c3dlci4mbmJzcDs8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
+LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAw
+LCAwKTsiPgpJJ3ZlIGRvbmUgc29tZSBpbnZlc3RpZ2F0aW9uIGFuZCBmb3VuZCB0aGF0IHBhc3Np
+bmcgZGV2aWNlIC9kZXYvdHBtcm0wIHRvIHRoZSBjb250YWluZXJzIHdpbGwgZG8gdGhlIGpvYi4g
+QWxzbyBwcm9ibGVtIHdpdGggdHBtX2NsZWFyIGNhbiBiZSBzb2x2ZWQgYnkgcmVzcnRpY3Rpb24g
+b3duZXIgYWNjZXNzIHRvIHRoZSB0cG0uIFNvIGVhY2ggY29udGFpbmVyIGNhbiB1c2Uga2V5cyBp
+biBUUE0gYnV0IHRhbGsgdG8gb3duZXIgaWYgYW55IGNoYW5nZXMKIGlzIG5lZWRlZC48L2Rpdj4K
+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMt
+c2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2
+Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fu
+cy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CkkgaGF2ZSBh
+bm90aGVyIHF1ZXN0aW9uOiBBY2NvcmRpbmcgdG8gdGhlIGRvY3VtZW50YXRpb24gLSBUUE0gaXMg
+aGF2aW5nIHVuaXF1ZSBlbmRvcmVzZW1lbnQga2V5LCBlbWJlZGRlZCB0byB0aGUgZGV2aWNlIGR1
+cmluZyBtYW51ZmFjdHVyaW5nLiBTbyBlYWNoIG1vZHVsZSBjYW4gYmUgaWRlbnRpZmllZCBieSB0
+aGlzIGtleS48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
+ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAw
+KTsiPgpIb3cgY2FuIEkgcmV0cmlldmUgdGhpcyBrZXkgZW1iZWRkZWQgdG8gdGhlIFRQTSBtb2R1
+bGU/Jm5ic3A7PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwg
+SGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwg
+MCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
+LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAw
+LCAwKTsiPgpCZXN0IHJlZ2FyZHMsPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
+YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
+OiByZ2IoMCwgMCwgMCk7Ij4KT2xla3NpaS48L2Rpdj4KPGRpdiBpZD0iYXBwZW5kb25zZW5kIj48
+L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3aWR0aDo5OCUiIHRhYmluZGV4
+PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRyIj48Zm9udCBmYWNlPSJDYWxp
+YnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQiIGNvbG9yPSIjMDAwMDAwIj48
+Yj5Gcm9tOjwvYj4gVGFkZXVzeiBTdHJ1ayAmbHQ7dGFkZXVzei5zdHJ1a0BpbnRlbC5jb20mZ3Q7
+PGJyPgo8Yj5TZW50OjwvYj4gRnJpZGF5LCBKdW5lIDUsIDIwMjAgODoxNiBQTTxicj4KPGI+VG86
+PC9iPiBPbGVrc2lpIE1vaXNpZWlldiAmbHQ7T2xla3NpaV9Nb2lzaWVpZXZAZXBhbS5jb20mZ3Q7
+OyB0cG0yQGxpc3RzLjAxLm9yZyAmbHQ7dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PGJyPgo8Yj5TdWJq
+ZWN0OjwvYj4gUmU6IFt0cG0yXSBTaGFyaW5nIFRQTSAyLjAgYmV0d2VlbiBjb250YWluZXJzIHdp
+dGggYWNjZXNzIHBvbGljeTwvZm9udD4KPGRpdj4mbmJzcDs8L2Rpdj4KPC9kaXY+CjxkaXYgY2xh
+c3M9IkJvZHlGcmFnbWVudCI+PGZvbnQgc2l6ZT0iMiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTox
+MXB0OyI+CjxkaXYgY2xhc3M9IlBsYWluVGV4dCI+T24gNi81LzIwIDEyOjUyIEFNLCBPbGVrc2lp
+IE1vaXNpZWlldiB3cm90ZTo8YnI+CiZndDsgSGVsbG8gYWxsLDxicj4KJmd0OyA8YnI+CiZndDsg
+SSBoYXZlIGFuIGVtYmVkZGVkIGRldmljZSwgd2l0aCBEb2NrZXIgY29udGFpbmVycyBiYXNlZCBh
+cmNoaXRlY3R1cmUuPGJyPgomZ3Q7IFRoaXMgZGV2aWNlIGlzIG9wZXJhdGluZyBieSBzb2Z0d2Fy
+ZSwgaW5zdGFsbGVkIGluIHNlcGFyYXRlIGNvbnRhaW5lcnMuPGJyPgomZ3Q7IDxicj4KJmd0OyA8
+YnI+CiZndDsgSSB3b3VsZCBsaWtlIHRvIHNoYXJlIFRQTTIuMCBhY2Nlc3MgYmV0d2VlbiB0aGlz
+IGNvbnRhaW5lcnMgd2l0aCB0aGU8YnI+CiZndDsgZm9sbG93aW5nIHJlc3RyaWN0aW9uczo8YnI+
+CiZndDsgPGJyPgomZ3Q7IDEpIEZvcmJpZCBDbGVhciBUUE0gY29tbWFuZCBmb3IgdGhlIGNvbnRh
+aW5lcnM7PGJyPgomZ3Q7IDIpIEVhY2ggY29udGFpbmVyIHNob3VsZCBoYXZlIGFuIGFjY2VzcyBv
+bmx5IHRvIHRoZSBzZXQgb2Yga2V5cyBpdCBvd25zLjxicj4KJmd0OyAzKSBFYWNoIGNvbnRhaW5l
+ciBjYW4gY3JlYXRlIGtleXMsIGJ1dCBub3Qgb3ZlcndyaXRlIGV4aXN0aW5nIGtleXMgdGhhdDxi
+cj4KJmd0OyBkb2VzIG5vdCByZWxhdGVkIHRvIHRoaXMgY29udGFpbmVyLjxicj4KJmd0OyA8YnI+
+CiZndDsgQWNjb3JkaW5nIHRvIHRoZSAmcXVvdDtUQ0cgVFNTIDIuMCBUQUIgYW5kIFJlc291cmNl
+IE1hbmFnZXIgU3BlY2lmaWNhdGlvbiZxdW90OyAtPGJyPgomZ3Q7IFRQTSBSZXNvdXJjZSBtYW5h
+Z2VyIGRvZXNuJ3QgaW1wbGVtZW50IGFjY2VzcyByZXN0cmljdGlvbnMgcmlnaHQgbm93Ljxicj4K
+PGJyPgpJIHRoaW5rIHlvdSBjb3VsZCBydW4gYSBzZXBhcmF0ZSBpbnN0YW5jZSBvZiBSTSBpbiBw
+ZXIgY29udGFpbmVyIHRvIGdldDxicj4KMiAmYW1wOyAzLiBBcyBmb3IgMSwgdGhpcyB3b3VsZCBu
+ZWVkIHRvIGJlIHByZXZlbnRlZCBvbiBhIHBsYXRmb3JtPGJyPgpjb25maWd1cmF0aW9uIGxldmVs
+LCBsaWtlIGluIEJJT1Mgb3IgZXF1aXZhbGVudC48YnI+Cjxicj4KVGhhbmtzLDxicj4KLS0gPGJy
+PgpUYWRldXN6PGJyPgo8L2Rpdj4KPC9zcGFuPjwvZm9udD48L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+
+Cg==
 
---===============7458867654285588350==--
+--===============8715860033811541696==--
 
