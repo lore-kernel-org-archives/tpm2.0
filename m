@@ -1,138 +1,100 @@
-Content-Type: multipart/mixed; boundary="===============8715860033811541696=="
+Content-Type: multipart/mixed; boundary="===============5714530047987702100=="
 MIME-Version: 1.0
-From: Oleksii Moisieiev <Oleksii_Moisieiev at epam.com>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: Sharing TPM 2.0 between containers with access policy
-Date: Thu, 18 Jun 2020 18:20:57 +0000
-Message-ID: <
- <AM0PR03MB416242FDEC6CFFC947E97C4DE39B0@AM0PR03MB4162.eurprd03.prod.outlook.com>>
-In-Reply-To: 18096ca7-42ac-fd5f-faa4-118adcf11140@intel.com
+Date: Thu, 18 Jun 2020 19:48:07 +0000
+Message-ID: <DM6PR11MB34349B68ADB0500A2DC1B08DB89B0@DM6PR11MB3434.namprd11.prod.outlook.com>
+In-Reply-To: AM0PR03MB416242FDEC6CFFC947E97C4DE39B0@AM0PR03MB4162.eurprd03.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8715860033811541696==
+--===============5714530047987702100==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Tadeusz.
 
-Thank you for the answer.
-I've done some investigation and found that passing device /dev/tpmrm0 to t=
-he containers will do the job. Also problem with tpm_clear can be solved by=
- resrtiction owner access to the tpm. So each container can use keys in TPM=
- but talk to owner if any changes is needed.
 
-I have another question: According to the documentation - TPM is having uni=
-que endoresement key, embedded to the device during manufacturing. So each =
-module can be identified by this key.
-How can I retrieve this key embedded to the TPM module?
+> -----Original Message-----
+> From: Oleksii Moisieiev <Oleksii_Moisieiev(a)epam.com>
+> Sent: Thursday, June 18, 2020 1:21 PM
+> To: Struk, Tadeusz <tadeusz.struk(a)intel.com>
+> Cc: tpm2(a)lists.01.org
+> Subject: [tpm2] Re: Sharing TPM 2.0 between containers with access policy
+> =
 
-Best regards,
-Oleksii.
-________________________________
-From: Tadeusz Struk <tadeusz.struk(a)intel.com>
-Sent: Friday, June 5, 2020 8:16 PM
-To: Oleksii Moisieiev <Oleksii_Moisieiev(a)epam.com>; tpm2(a)lists.01.org <=
-tpm2(a)lists.01.org>
-Subject: Re: [tpm2] Sharing TPM 2.0 between containers with access policy
+> Hello Tadeusz.
+> =
 
-On 6/5/20 12:52 AM, Oleksii Moisieiev wrote:
-> Hello all,
->
-> I have an embedded device, with Docker containers based architecture.
-> This device is operating by software, installed in separate containers.
->
->
-> I would like to share TPM2.0 access between this containers with the
-> following restrictions:
->
-> 1) Forbid Clear TPM command for the containers;
-> 2) Each container should have an access only to the set of keys it owns.
-> 3) Each container can create keys, but not overwrite existing keys that
-> does not related to this container.
->
-> According to the "TCG TSS 2.0 TAB and Resource Manager Specification" -
-> TPM Resource manager doesn't implement access restrictions right now.
+> Thank you for the answer.
+> I've done some investigation and found that passing device /dev/tpmrm0 to=
+ the
+> containers will do the job. Also problem with tpm_clear can be solved by
+> restriction owner access to the tpm. So each container can use keys in TP=
+M but
+> talk to owner if any changes is needed.
+> =
 
-I think you could run a separate instance of RM in per container to get
-2 & 3. As for 1, this would need to be prevented on a platform
-configuration level, like in BIOS or equivalent.
+> I have another question: According to the documentation - TPM is having u=
+nique
+> endoresement key, embedded to the device during manufacturing. So each
+> module can be identified by this key.
+> How can I retrieve this key embedded to the TPM module?
 
-Thanks,
---
-Tadeusz
+Only the  endorsement hierarchy primary seed (EPS) is embedded at manufactu=
+ring time. So
+Calls to tpm2_createprimary with the proper inputs will yield the same key =
+every time. Calls
+to tpm2_createek should create this for you. The calls to tpm2_getekcertifi=
+cate should give you
+that manufacturer certificate.
 
---===============8715860033811541696==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+Details on this process can be found in this spec:
+  - https://trustedcomputinggroup.org/wp-content/uploads/Credential_Profile=
+_EK_V2.0_R14_published.pdf
 
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
-ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
-ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7Ij4KSGVsbG8gVGFkZXVzei4mbmJzcDs8L2Rpdj4KPGRpdiBzdHlsZT0i
-Zm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQt
-c2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxl
-PSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9u
-dC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+ClRoYW5rIHlvdSBmb3IgdGhlIGFu
-c3dlci4mbmJzcDs8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
-LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAw
-LCAwKTsiPgpJJ3ZlIGRvbmUgc29tZSBpbnZlc3RpZ2F0aW9uIGFuZCBmb3VuZCB0aGF0IHBhc3Np
-bmcgZGV2aWNlIC9kZXYvdHBtcm0wIHRvIHRoZSBjb250YWluZXJzIHdpbGwgZG8gdGhlIGpvYi4g
-QWxzbyBwcm9ibGVtIHdpdGggdHBtX2NsZWFyIGNhbiBiZSBzb2x2ZWQgYnkgcmVzcnRpY3Rpb24g
-b3duZXIgYWNjZXNzIHRvIHRoZSB0cG0uIFNvIGVhY2ggY29udGFpbmVyIGNhbiB1c2Uga2V5cyBp
-biBUUE0gYnV0IHRhbGsgdG8gb3duZXIgaWYgYW55IGNoYW5nZXMKIGlzIG5lZWRlZC48L2Rpdj4K
-PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMt
-c2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2
-Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fu
-cy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CkkgaGF2ZSBh
-bm90aGVyIHF1ZXN0aW9uOiBBY2NvcmRpbmcgdG8gdGhlIGRvY3VtZW50YXRpb24gLSBUUE0gaXMg
-aGF2aW5nIHVuaXF1ZSBlbmRvcmVzZW1lbnQga2V5LCBlbWJlZGRlZCB0byB0aGUgZGV2aWNlIGR1
-cmluZyBtYW51ZmFjdHVyaW5nLiBTbyBlYWNoIG1vZHVsZSBjYW4gYmUgaWRlbnRpZmllZCBieSB0
-aGlzIGtleS48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
-ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAw
-KTsiPgpIb3cgY2FuIEkgcmV0cmlldmUgdGhpcyBrZXkgZW1iZWRkZWQgdG8gdGhlIFRQTSBtb2R1
-bGU/Jm5ic3A7PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwg
-SGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwg
-MCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
-LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAw
-LCAwKTsiPgpCZXN0IHJlZ2FyZHMsPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7Ij4KT2xla3NpaS48L2Rpdj4KPGRpdiBpZD0iYXBwZW5kb25zZW5kIj48
-L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3aWR0aDo5OCUiIHRhYmluZGV4
-PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRyIj48Zm9udCBmYWNlPSJDYWxp
-YnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQiIGNvbG9yPSIjMDAwMDAwIj48
-Yj5Gcm9tOjwvYj4gVGFkZXVzeiBTdHJ1ayAmbHQ7dGFkZXVzei5zdHJ1a0BpbnRlbC5jb20mZ3Q7
-PGJyPgo8Yj5TZW50OjwvYj4gRnJpZGF5LCBKdW5lIDUsIDIwMjAgODoxNiBQTTxicj4KPGI+VG86
-PC9iPiBPbGVrc2lpIE1vaXNpZWlldiAmbHQ7T2xla3NpaV9Nb2lzaWVpZXZAZXBhbS5jb20mZ3Q7
-OyB0cG0yQGxpc3RzLjAxLm9yZyAmbHQ7dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PGJyPgo8Yj5TdWJq
-ZWN0OjwvYj4gUmU6IFt0cG0yXSBTaGFyaW5nIFRQTSAyLjAgYmV0d2VlbiBjb250YWluZXJzIHdp
-dGggYWNjZXNzIHBvbGljeTwvZm9udD4KPGRpdj4mbmJzcDs8L2Rpdj4KPC9kaXY+CjxkaXYgY2xh
-c3M9IkJvZHlGcmFnbWVudCI+PGZvbnQgc2l6ZT0iMiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTox
-MXB0OyI+CjxkaXYgY2xhc3M9IlBsYWluVGV4dCI+T24gNi81LzIwIDEyOjUyIEFNLCBPbGVrc2lp
-IE1vaXNpZWlldiB3cm90ZTo8YnI+CiZndDsgSGVsbG8gYWxsLDxicj4KJmd0OyA8YnI+CiZndDsg
-SSBoYXZlIGFuIGVtYmVkZGVkIGRldmljZSwgd2l0aCBEb2NrZXIgY29udGFpbmVycyBiYXNlZCBh
-cmNoaXRlY3R1cmUuPGJyPgomZ3Q7IFRoaXMgZGV2aWNlIGlzIG9wZXJhdGluZyBieSBzb2Z0d2Fy
-ZSwgaW5zdGFsbGVkIGluIHNlcGFyYXRlIGNvbnRhaW5lcnMuPGJyPgomZ3Q7IDxicj4KJmd0OyA8
-YnI+CiZndDsgSSB3b3VsZCBsaWtlIHRvIHNoYXJlIFRQTTIuMCBhY2Nlc3MgYmV0d2VlbiB0aGlz
-IGNvbnRhaW5lcnMgd2l0aCB0aGU8YnI+CiZndDsgZm9sbG93aW5nIHJlc3RyaWN0aW9uczo8YnI+
-CiZndDsgPGJyPgomZ3Q7IDEpIEZvcmJpZCBDbGVhciBUUE0gY29tbWFuZCBmb3IgdGhlIGNvbnRh
-aW5lcnM7PGJyPgomZ3Q7IDIpIEVhY2ggY29udGFpbmVyIHNob3VsZCBoYXZlIGFuIGFjY2VzcyBv
-bmx5IHRvIHRoZSBzZXQgb2Yga2V5cyBpdCBvd25zLjxicj4KJmd0OyAzKSBFYWNoIGNvbnRhaW5l
-ciBjYW4gY3JlYXRlIGtleXMsIGJ1dCBub3Qgb3ZlcndyaXRlIGV4aXN0aW5nIGtleXMgdGhhdDxi
-cj4KJmd0OyBkb2VzIG5vdCByZWxhdGVkIHRvIHRoaXMgY29udGFpbmVyLjxicj4KJmd0OyA8YnI+
-CiZndDsgQWNjb3JkaW5nIHRvIHRoZSAmcXVvdDtUQ0cgVFNTIDIuMCBUQUIgYW5kIFJlc291cmNl
-IE1hbmFnZXIgU3BlY2lmaWNhdGlvbiZxdW90OyAtPGJyPgomZ3Q7IFRQTSBSZXNvdXJjZSBtYW5h
-Z2VyIGRvZXNuJ3QgaW1wbGVtZW50IGFjY2VzcyByZXN0cmljdGlvbnMgcmlnaHQgbm93Ljxicj4K
-PGJyPgpJIHRoaW5rIHlvdSBjb3VsZCBydW4gYSBzZXBhcmF0ZSBpbnN0YW5jZSBvZiBSTSBpbiBw
-ZXIgY29udGFpbmVyIHRvIGdldDxicj4KMiAmYW1wOyAzLiBBcyBmb3IgMSwgdGhpcyB3b3VsZCBu
-ZWVkIHRvIGJlIHByZXZlbnRlZCBvbiBhIHBsYXRmb3JtPGJyPgpjb25maWd1cmF0aW9uIGxldmVs
-LCBsaWtlIGluIEJJT1Mgb3IgZXF1aXZhbGVudC48YnI+Cjxicj4KVGhhbmtzLDxicj4KLS0gPGJy
-PgpUYWRldXN6PGJyPgo8L2Rpdj4KPC9zcGFuPjwvZm9udD48L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+
-Cg==
+> =
 
---===============8715860033811541696==--
+> Best regards,
+> Oleksii.
+> ________________________________
+> =
+
+> From: Tadeusz Struk <tadeusz.struk(a)intel.com>
+> Sent: Friday, June 5, 2020 8:16 PM
+> To: Oleksii Moisieiev <Oleksii_Moisieiev(a)epam.com>; tpm2(a)lists.01.org
+> <tpm2(a)lists.01.org>
+> Subject: Re: [tpm2] Sharing TPM 2.0 between containers with access policy
+> =
+
+> On 6/5/20 12:52 AM, Oleksii Moisieiev wrote:
+> > Hello all,
+> >
+> > I have an embedded device, with Docker containers based architecture.
+> > This device is operating by software, installed in separate containers.
+> >
+> >
+> > I would like to share TPM2.0 access between this containers with the
+> > following restrictions:
+> >
+> > 1) Forbid Clear TPM command for the containers;
+> > 2) Each container should have an access only to the set of keys it owns.
+> > 3) Each container can create keys, but not overwrite existing keys
+> > that does not related to this container.
+> >
+> > According to the "TCG TSS 2.0 TAB and Resource Manager Specification"
+> > - TPM Resource manager doesn't implement access restrictions right now.
+> =
+
+> I think you could run a separate instance of RM in per container to get
+> 2 & 3. As for 1, this would need to be prevented on a platform configurat=
+ion level,
+> like in BIOS or equivalent.
+> =
+
+> Thanks,
+> --
+> Tadeusz
+
+--===============5714530047987702100==--
 
