@@ -1,87 +1,28 @@
-Content-Type: multipart/mixed; boundary="===============0374146367180500020=="
+Content-Type: multipart/mixed; boundary="===============3386145895795325292=="
 MIME-Version: 1.0
-From: Thompson, Kent <kent.thompson at intel.com>
-Subject: [tpm2] Re: Question: How should I provide "OwnerAuth" on Windows?
-Date: Tue, 30 Jun 2020 15:56:32 +0000
-Message-ID: <BY5PR11MB3912C0E98BE6C0405F3B293EE96F0@BY5PR11MB3912.namprd11.prod.outlook.com>
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: [tpm2] tpm2-tss v2.4.2-rc2
+Date: Thu, 02 Jul 2020 20:01:04 -0700
+Message-ID: <95a3ee16-e47e-977b-879c-5bc14c719046@intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0374146367180500020==
+--===============3386145895795325292==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Based on some limited debugging on Windows 10 1809, it appears that Windows=
- does not require the owner auth.  Running the application "as administrato=
-r" and providing an empty TPM2B_AUTH (with auths[0].sessionHandle =3D TPM2_=
-RW_PW) allows me to successfully call functions like...
+Hello,
+I'm happy to announce that a new release candidate for tpm2-tss
+v2.4.2-rc2 is out.
+https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.2-rc2
 
-Tss2_Sys_NV_DefineSpace
-Tss2_Sys_NV_UndefineSpace
-Tss2_Sys_NV_ReadPublic
-Tss2_Sys_NV_Write
-Tss2_Sys_StartAuthSession
-Tss2_Sys_PolicySecret
-Tss2_Sys_Create
-Tss2_Sys_FlushContext
-Tss2_Sys_PolicySecret
-Tss2_Sys_Load
-Tss2_Sys_EvictControl
+All changes and fixes are listed in the CHANGELOG.md file.
+Any feedback welcomed.
 
+Thanks,
+-- =
 
---===============0374146367180500020==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNv
-SHlwZXJsaW5rCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6IzA1NjNDMTsKCXRleHQt
-ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQphOnZpc2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93
-ZWQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0
-aW9uOnVuZGVybGluZTt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29u
-YWwtY29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2lu
-ZG93dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglm
-b250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3Np
-emU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2Lldv
-cmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBt
-c28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIg
-Lz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5
-b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+Cjwvbzpz
-aGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIg
-bGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5CYXNlZCBvbiBzb21lIGxpbWl0ZWQgZGVidWdnaW5nIG9u
-IFdpbmRvd3MgMTAgMTgwOSwgaXQgYXBwZWFycyB0aGF0IFdpbmRvd3MgZG9lcyBub3QgcmVxdWly
-ZSB0aGUgb3duZXIgYXV0aC4mbmJzcDsgUnVubmluZyB0aGUgYXBwbGljYXRpb24gJiM4MjIwO2Fz
-IGFkbWluaXN0cmF0b3ImIzgyMjE7IGFuZCBwcm92aWRpbmcgYW4gZW1wdHkgVFBNMkJfQVVUSCAo
-d2l0aCBhdXRoc1swXS5zZXNzaW9uSGFuZGxlID0gVFBNMl9SV19QVykgYWxsb3dzCiBtZSB0byBz
-dWNjZXNzZnVsbHkgY2FsbCBmdW5jdGlvbnMgbGlrZSYjODIzMDs8bzpwPjwvbzpwPjwvcD4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPlRzczJfU3lzX05WX0RlZmluZVNwYWNlPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPlRzczJfU3lzX05WX1VuZGVmaW5lU3BhY2U8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+VHNzMl9TeXNfTlZfUmVhZFB1YmxpYzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj5Uc3MyX1N5c19OVl9Xcml0ZTxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj5Uc3MyX1N5c19TdGFydEF1dGhTZXNzaW9uPG86cD48L286cD48L3A+CjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPlRzczJfU3lzX1BvbGljeVNlY3JldDxvOnA+PC9vOnA+PC9wPgo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj5Uc3MyX1N5c19DcmVhdGU8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+VHNzMl9TeXNfRmx1c2hDb250ZXh0PG86cD48L286cD48L3A+CjxwIGNsYXNz
-PSJNc29Ob3JtYWwiPlRzczJfU3lzX1BvbGljeVNlY3JldDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj5Uc3MyX1N5c19Mb2FkPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
-b3JtYWwiPlRzczJfU3lzX0V2aWN0Q29udHJvbDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
-
---===============0374146367180500020==--
+Tadeusz
+--===============3386145895795325292==--
 
