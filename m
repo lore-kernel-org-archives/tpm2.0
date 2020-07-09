@@ -1,20 +1,104 @@
-Content-Type: multipart/mixed; boundary="===============2639830220354258874=="
+Content-Type: multipart/mixed; boundary="===============6429090450795247899=="
 MIME-Version: 1.0
-From: Imran Desai <imran.desai at intel.com>
-Subject: [tpm2] Re: tpm2_createak fails. Error code: 0x184. Reboot doesn't
- help!
-Date: Wed, 08 Jul 2020 20:44:55 +0000
-Message-ID: <20200708204455.2823.42404@ml01.vlan13.01.org>
-In-Reply-To: 20200708063906.2823.15430@ml01.vlan13.01.org
+From: CHOTARD Clement <clement.chotard at thalesgroup.com>
+Subject: [tpm2] Loading certificate inside TPM
+Date: Thu, 09 Jul 2020 13:48:41 +0000
+Message-ID: <b50a2d94cc92409fa5bed6acf7453fe3@thalesgroup.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2639830220354258874==
+--===============6429090450795247899==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Simply R\unning ```tpm2_clear``` should suffice and it should both clear th=
-e TPM and also flush the persistent handles
---===============2639830220354258874==--
+Hi,
+
+I am trying to load a certificate in the TPM through this command:
+tpm2pkcs11-tool -l --pin $PIN --write-object "$device_dir/client.der" --typ=
+e cert --id 01 --label devicecert
+
+I have tried with both .pem and .der format but it triggers the following e=
+rror:
+
+Using slot 0 with a present token (0x1)
+ERROR: Expected attribute CKA_KEY_TYPE
+error: PKCS11 function C_CreateObject failed: rv =3D CKR_TEMPLATE_INCOMPLET=
+E (0xd0)
+Aborting.
+
+Is it a bug or the feature is yet to be implemented?
+
+Thanks,
+Clement
+
+--===============6429090450795247899==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgltc28tZmFyZWFzdC1sYW5n
+dWFnZTpFTi1VUzt9CmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3Jp
+dHk6OTk7Cgljb2xvcjojMDU2M0MxOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlz
+aXRlZCwgc3Bhbi5Nc29IeXBlcmxpbmtGb2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsK
+CWNvbG9yOiM5NTRGNzI7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30Kc3Bhbi5FbWFpbFN0
+eWxlMTcKCXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1jb21wb3NlOwoJZm9udC1mYW1pbHk6IkNh
+bGlicmkiLHNhbnMtc2VyaWY7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0NocERlZmF1bHQKCXtt
+c28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCW1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTO30K
+QHBhZ2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo2MTIuMHB0IDc5Mi4wcHQ7CgltYXJnaW46NzAuODVw
+dCA3MC44NXB0IDcwLjg1cHQgNzAuODVwdDt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRT
+ZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVm
+YXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwh
+LS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlk
+bWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5k
+aWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRlIiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0
+RjcyIj4KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
+YW4gc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkZSIj5IaSw8bzpwPjwvbzpwPjwvc3Bhbj48
+L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0i
+TXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+SSBhbSB0cnlpbmcgdG8gbG9hZCBhIGNlcnRp
+ZmljYXRlIGluIHRoZSBUUE0gdGhyb3VnaCB0aGlzIGNvbW1hbmQ6PG86cD48L286cD48L3NwYW4+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij50cG0ycGtjczExLXRvb2wgLWwgLS1waW4g
+JFBJTiAtLXdyaXRlLW9iamVjdCAmcXVvdDskZGV2aWNlX2Rpci9jbGllbnQuZGVyJnF1b3Q7IC0t
+dHlwZSBjZXJ0IC0taWQgMDEgLS1sYWJlbCBkZXZpY2VjZXJ0PG86cD48L286cD48L3NwYW4+PC9w
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+PG86cD4mbmJzcDs8L286
+cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+SSBo
+YXZlIHRyaWVkIHdpdGggYm90aCAucGVtIGFuZCAuZGVyIGZvcm1hdCBidXQgaXQgdHJpZ2dlcnMg
+dGhlIGZvbGxvd2luZyBlcnJvcjo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q291cmll
+ciBOZXcmcXVvdDsiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDb3VyaWVy
+IE5ldyZxdW90OyI+VXNpbmcgc2xvdCAwIHdpdGggYSBwcmVzZW50IHRva2VuICgweDEpCjxvOnA+
+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMi
+IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+RVJST1I6IEV4cGVj
+dGVkIGF0dHJpYnV0ZSBDS0FfS0VZX1RZUEUKPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90
+O0NvdXJpZXIgTmV3JnF1b3Q7Ij5lcnJvcjogUEtDUzExIGZ1bmN0aW9uIENfQ3JlYXRlT2JqZWN0
+IGZhaWxlZDogcnYgPSBDS1JfVEVNUExBVEVfSU5DT01QTEVURSAoMHhkMCkKPG86cD48L286cD48
+L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9
+ImZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5BYm9ydGluZy48bzpwPjwvbzpw
+Pjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHls
+ZT0iZm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPjxvOnA+Jm5ic3A7PC9vOnA+
+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPklzIGl0
+IGEgYnVnIG9yIHRoZSBmZWF0dXJlIGlzIHlldCB0byBiZSBpbXBsZW1lbnRlZD88bzpwPjwvbzpw
+Pjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj48bzpw
+PiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9
+IkVOLVVTIj5UaGFua3MsPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij48c3BhbiBsYW5nPSJFTi1VUyI+Q2xlbWVudDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPC9kaXY+
+CjwvYm9keT4KPC9odG1sPgo=
+
+--===============6429090450795247899==--
 
