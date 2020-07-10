@@ -1,127 +1,116 @@
-Content-Type: multipart/mixed; boundary="===============1633062865294100902=="
+Content-Type: multipart/mixed; boundary="===============8981572726673938087=="
 MIME-Version: 1.0
-From: Diego Santa Cruz <Diego.SantaCruz at spinetix.com>
-Subject: [tpm2] NV index counter rollback
-Date: Fri, 10 Jul 2020 13:44:40 +0000
-Message-ID: <
- <VI1PR01MB5167F3B93DE8C0D22FE3E85C88650@VI1PR01MB5167.eurprd01.prod.exchangelabs.com>>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: NV index counter rollback
+Date: Fri, 10 Jul 2020 16:12:54 +0000
+Message-ID: <SN6PR11MB34378579C14C72303159D284B8650@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: VI1PR01MB5167F3B93DE8C0D22FE3E85C88650@VI1PR01MB5167.eurprd01.prod.exchangelabs.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1633062865294100902==
+--===============8981572726673938087==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Sounds like there is indeed a defect, I was unaware of it. But it sounds li=
+ke updates have been issued but the specific
+TPM's you tested against have not been updated to the version with the fix?=
+ Or did I misunderstand and an updated
+Firmware has never been issued?
 
-During some testing with an NV index of counter type on a TPM 2.0 I got a c=
-ounter to rollback on two hardware TPMs (both 2.0 rev 1.16, same manufactur=
-er, different model).
+I would imagine you just want to update the TPM FW ASAP.
 
-From what I understand of the TPM2 Library Specification an NV index of cou=
-nter type should never roll back.
+Bill
 
-Reading through the reference code in the TPM 2.0 Library Specification rev=
- 1.16 it appears to be a defect that is apparently no longer present in the=
- reference code of the spec rev 1.38 and rev 1.59.
+> -----Original Message-----
+> From: Diego Santa Cruz <Diego.SantaCruz(a)spinetix.com>
+> Sent: Friday, July 10, 2020 8:45 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] NV index counter rollback
+> =
 
-I contacted the manufacturer of my hardware TPMs a few days ago to see if i=
-t was a known problem and if there was any fix or workaround but they have =
-remained silent so far (I do not have a specific contact, I just reported t=
-he problem via their support site).
+> Hello,
+> =
 
-Is this a known problem? I did not find any mention of it googling around. =
-Or did I misunderstand how an NV index of counter type works?
+> =
 
-I have an easy reproducer using tpm2-tools.
+> =
 
-Best,
+> During some testing with an NV index of counter type on a TPM 2.0 I got a
+> counter to rollback on two hardware TPMs (both 2.0 rev 1.16, same
+> manufacturer, different model).
+> =
 
-Diego
---
-Diego Santa Cruz, PhD
-Technology Architect
-spinetix.com
+> =
 
+> =
 
---===============1633062865294100902==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+> From what I understand of the TPM2 Library Specification an NV index of c=
+ounter
+> type should never roll back.
+> =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
-U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
-cm1hbAoJe21hcmdpbjowY207CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgltc28tZmFyZWFzdC1sYW5n
-dWFnZTpFTi1VUzt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwt
-Y29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93
-dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250
-LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCW1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVT
-O30KQHBhZ2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo2MTIuMHB0IDc5Mi4wcHQ7CgltYXJnaW46NzIu
-MHB0IDcyLjBwdCA3Mi4wcHQgNzIuMHB0O30KZGl2LldvcmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNl
-Y3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZh
-dWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEt
-LVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRt
-YXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRp
-Zl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1HQiIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5
-NTRGNzIiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-c3BhbiBsYW5nPSJFTi1VUyI+SGVsbG8sPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9w
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+RHVyaW5nIHNvbWUgdGVz
-dGluZyB3aXRoIGFuIE5WIGluZGV4IG9mIGNvdW50ZXIgdHlwZSBvbiBhIFRQTSAyLjAgSSBnb3Qg
-YSBjb3VudGVyIHRvIHJvbGxiYWNrIG9uIHR3byBoYXJkd2FyZSBUUE1zIChib3RoIDIuMCByZXYg
-MS4xNiwgc2FtZSBtYW51ZmFjdHVyZXIsIGRpZmZlcmVudCBtb2RlbCkuPG86cD48L286cD48L3Nw
-YW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+PG86cD4mbmJz
-cDs8L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1V
-UyI+RnJvbSB3aGF0IEkgdW5kZXJzdGFuZCBvZiB0aGUgVFBNMiBMaWJyYXJ5IFNwZWNpZmljYXRp
-b24gYW4gTlYgaW5kZXggb2YgY291bnRlciB0eXBlIHNob3VsZCBuZXZlciByb2xsIGJhY2suPG86
-cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1V
-UyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBsYW5nPSJFTi1VUyI+UmVhZGluZyB0aHJvdWdoIHRoZSByZWZlcmVuY2UgY29kZSBpbiB0aGUg
-VFBNIDIuMCBMaWJyYXJ5IFNwZWNpZmljYXRpb24gcmV2IDEuMTYgaXQgYXBwZWFycyB0byBiZSBh
-IGRlZmVjdCB0aGF0IGlzIGFwcGFyZW50bHkgbm8gbG9uZ2VyIHByZXNlbnQgaW4gdGhlIHJlZmVy
-ZW5jZSBjb2RlIG9mIHRoZSBzcGVjIHJldiAxLjM4IGFuZCByZXYgMS41OS48bzpwPjwvbzpwPjwv
-c3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj48bzpwPiZu
-YnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVO
-LVVTIj5JIGNvbnRhY3RlZCB0aGUgbWFudWZhY3R1cmVyIG9mIG15IGhhcmR3YXJlIFRQTXMgYSBm
-ZXcgZGF5cyBhZ28gdG8gc2VlIGlmIGl0IHdhcyBhIGtub3duIHByb2JsZW0gYW5kIGlmIHRoZXJl
-IHdhcyBhbnkgZml4IG9yIHdvcmthcm91bmQgYnV0IHRoZXkgaGF2ZSByZW1haW5lZCBzaWxlbnQg
-c28gZmFyIChJIGRvIG5vdCBoYXZlIGEgc3BlY2lmaWMgY29udGFjdCwgSSBqdXN0IHJlcG9ydGVk
-CiB0aGUgcHJvYmxlbSB2aWEgdGhlaXIgc3VwcG9ydCBzaXRlKS48bzpwPjwvbzpwPjwvc3Bhbj48
-L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj48bzpwPiZuYnNwOzwv
-bzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5J
-cyB0aGlzIGEga25vd24gcHJvYmxlbT8gSSBkaWQgbm90IGZpbmQgYW55IG1lbnRpb24gb2YgaXQg
-Z29vZ2xpbmcgYXJvdW5kLiBPciBkaWQgSSBtaXN1bmRlcnN0YW5kIGhvdyBhbiBOViBpbmRleCBv
-ZiBjb3VudGVyIHR5cGUgd29ya3M/PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+SSBoYXZlIGFuIGVhc3kgcmVw
-cm9kdWNlciB1c2luZyB0cG0yLXRvb2xzLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPkJlc3QsPG86cD48L286
-cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+PG86
-cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5n
-PSJFTi1VUyI+RGllZ288bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-IHN0eWxlPSJtc28tbWFyZ2luLXRvcC1hbHQ6YXV0bzttc28tbWFyZ2luLWJvdHRvbS1hbHQ6YXV0
-byI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5LjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZx
-dW90OyxzYW5zLXNlcmlmO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLUdCIj4tLQo8YnI+CjxiPkRp
-ZWdvIFNhbnRhIENydXosIFBoRDxicj4KPC9iPjxzcGFuIHN0eWxlPSJjb2xvcjpncmF5Ij5UZWNo
-bm9sb2d5IEFyY2hpdGVjdDxicj4Kc3BpbmV0aXguY29tPC9zcGFuPjwvc3Bhbj48c3BhbiBsYW5n
-PSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMi4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7VGltZXMg
-TmV3IFJvbWFuJnF1b3Q7LHNlcmlmO2NvbG9yOmdyYXk7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4t
-R0IiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFu
-Zz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9o
-dG1sPgo=
+> =
 
---===============1633062865294100902==--
+> =
+
+> Reading through the reference code in the TPM 2.0 Library Specification r=
+ev 1.16
+> it appears to be a defect that is apparently no longer present in the ref=
+erence
+> code of the spec rev 1.38 and rev 1.59.
+> =
+
+> =
+
+> =
+
+> I contacted the manufacturer of my hardware TPMs a few days ago to see if=
+ it
+> was a known problem and if there was any fix or workaround but they have
+> remained silent so far (I do not have a specific contact, I just reported=
+ the
+> problem via their support site).
+> =
+
+> =
+
+> =
+
+> Is this a known problem? I did not find any mention of it googling around=
+. Or did I
+> misunderstand how an NV index of counter type works?
+> =
+
+> =
+
+> =
+
+> I have an easy reproducer using tpm2-tools.
+> =
+
+> =
+
+> =
+
+> Best,
+> =
+
+> =
+
+> =
+
+> Diego
+> =
+
+> --
+> Diego Santa Cruz, PhD
+> Technology Architect
+> spinetix.com
+> =
+
+>=20
+
+--===============8981572726673938087==--
 
