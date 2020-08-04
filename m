@@ -1,54 +1,88 @@
-Content-Type: multipart/mixed; boundary="===============3264452934792920921=="
+Content-Type: multipart/mixed; boundary="===============6182224728728785794=="
 MIME-Version: 1.0
-From: Brijesh Patel <bripatel12 at gmail.com>
-Subject: [tpm2] Obtain Public Key
-Date: Tue, 04 Aug 2020 15:04:37 -0700
-Message-ID: <CAA=c2_a=nEX=f3zuUvGDXGSv5KEW5MfW0DKTdF35fOY=_=cJmQ@mail.gmail.com>
+From: Tadeusz Struk <tadeusz.struk at intel.com>
+Subject: [tpm2] tpm2-tss v2.4.2
+Date: Tue, 04 Aug 2020 16:53:58 -0700
+Message-ID: <2d2ba134-677d-ae27-ea99-f1eaef0a75ad@intel.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3264452934792920921==
+--===============6182224728728785794==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi All,
+Hello,
+I'm happy to announce the tpm2-tss v2.4.2 release.
+It can be found here:
+https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.2
 
-Slightly general question.
+The changes are:
 
-   - Want to retrieve a public certificate from the TPM (don't really care
-   which EK or SRK as long as the private key is only known to the TPM).
-   - Will use the public certificate to encrypt other keys off of the
-   device.
-   - Want to be able to decrypt these keys on the device with the TPM.
+### Fixed
+- Fixed double json_object_put call in event log processing.
+- Fixed memory leaks on error paths in FAPI
+- Fixed setting of FAPI app data.
+- Fixed size check for Fapi_Encrypt.
+- Fixed computation of PCR logs and PCR digest of PCR logs.
+- Improved comments for FAPI authentication.
+- Fixed segfault and leaks in FAPI
+- Fixed Fapi_GetCertificate for objects which are not of type key
+- Fixed hierarchy usage in Fapi_Provision
+- Fixed ESYS Shared secret calculation
+- Fixed doxygen warnings for FAPI docs
+- Fixed copying of primary template during key loading.
+- Fixed some wrong format directives in debug statements.
+- Fixed usage of hierarchy and authentication in Fapi_GetCertificate and
+Fapi_Delete
+- Fixed unallocated return buffers which may have lead to segfaults in
+tooling
+- Fixed usage of persistent handles.
+- Fixed computation of the size of a PCR selection (Fixes #1737).
+- Fixed missing hierarchy authentication for Fapi_Delete.
+- Fixed uninitialized context of FAPI command Fapi_ChangeAuth.
+- Fixed computation of random value for objects used for sealing.
+- Fixed return code for event parsing errors.
+- Fixed NV index and path handling in NV creation.
+- Fixed path checking for keys.
+- Fixed Fapi_GetInfo function.
+- Fixed path usage in Fapi_Import.
+- Fixed invalid settings of default flags for keys creation.
+- Fixed handle usage in Fapi_ChangeAuth
 
-I saw the following:
-https://github.com/tpm2-software/tpm2-tools/issues/1765 which
-is using AIKs and OpenSSL to try and achieve this.
+### CHANGED
+- Enabled all PCR registers for SHA256 bank in the distribution profiles.
+- Added some checks to Fapi_Provisioning to avoid nasty failure states
+- Added a check to prevent overwrite or delete FAPI storage objects and
+directories
+- Remove obsolete test fapi-key-create-policy-password-sign.int.c
+- Checked hierarchy needed for EvictControl for deleting objects in FAPI.
+- Checked event log file before calling the TPM in Fapi_PcrExtend.
+- Adapted integration tests to SRK delete checking.
+- Improved presentation of Fapi_GetInfo.
+- Silenced expected errors from Esys_TestParams
 
-Any suggestions?
+### Added
+- Added man pages for FAPI json config files
+- Added a check that prevents deleting default directories
+- Added a check if primary keys already exist for Fapi_Provision
+- Added tests for derived persistent keys.
+- Added test policy PCR with PCR register 8.
+- Added check for deleting of the SRK.
+- Added test for sealing a random value.
+- Added content of the config file to FAPI Info.
+- Added a check for valid pathnames in keystore module.
 
-Thanks!
+### Removed
+- Removed unecassary code from Fapi_ExportKey
+- Removed obsolete LIBDL_LDFLAGS and replace it with LIBADD_DL
+- Removed superfluous policies/pol_password.json file
 
---===============3264452934792920921==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+Thanks,
+-- =
 
-PGRpdiBkaXI9Imx0ciI+SGkgQWxsLDxkaXY+PGJyPjwvZGl2PjxkaXY+U2xpZ2h0bHkgZ2VuZXJh
-bCBxdWVzdGlvbi7CoDxicj48dWw+PGxpPldhbnQgdG8gcmV0cmlldmXCoGEgcHVibGljIGNlcnRp
-ZmljYXRlIGZyb20gdGhlIFRQTSAoZG9uJiMzOTt0IHJlYWxseSBjYXJlIHdoaWNoIEVLIG9yIFNS
-SyBhcyBsb25nIGFzIHRoZSBwcml2YXRlIGtleSBpcyBvbmx5IGtub3duIHRvIHRoZSBUUE0pLjwv
-bGk+PGxpPldpbGwgdXNlIHRoZSBwdWJsaWMgY2VydGlmaWNhdGUgdG8gZW5jcnlwdCBvdGhlciBr
-ZXlzIG9mZiBvZiB0aGUgZGV2aWNlLjwvbGk+PGxpPldhbnQgdG8gYmUgYWJsZSB0byBkZWNyeXB0
-IHRoZXNlIGtleXMgb24gdGhlIGRldmljZSB3aXRoIHRoZSBUUE0uPC9saT48L3VsPjxkaXY+SSBz
-YXcgdGhlIGZvbGxvd2luZzrCoDxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3
-YXJlL3RwbTItdG9vbHMvaXNzdWVzLzE3NjUiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3
-YXJlL3RwbTItdG9vbHMvaXNzdWVzLzE3NjU8L2E+wqB3aGljaCBpcyB1c2luZyBBSUtzIGFuZCBP
-cGVuU1NMIHRvIHRyeSBhbmQgYWNoaWV2ZSB0aGlzLsKgPGJyPjxicj5Bbnkgc3VnZ2VzdGlvbnM/
-PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFua3MhPC9kaXY+PGRpdj48YnI+PC9kaXY+PC9k
-aXY+PC9kaXY+Cg==
+Tadeusz
 
---===============3264452934792920921==--
+
+--===============6182224728728785794==--
 
