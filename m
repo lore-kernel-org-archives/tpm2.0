@@ -1,20 +1,169 @@
-Content-Type: multipart/mixed; boundary="===============4705160289143083120=="
+Content-Type: multipart/mixed; boundary="===============3088832669997019142=="
 MIME-Version: 1.0
-From: Imran Desai <imran.desai at intel.com>
-Subject: [tpm2] Re: Obtain Public Key
-Date: Wed, 05 Aug 2020 04:26:02 +0000
-Message-ID: <20200805042602.2837.58964@ml01.vlan13.01.org>
-In-Reply-To: CAA=c2_a=nEX=f3zuUvGDXGSv5KEW5MfW0DKTdF35fOY=_=cJmQ@mail.gmail.com
+From: Phani Srinivas <phani.srinivas at in.abb.com>
+Subject: [tpm2] Debugging tpm2 tools based of FAPI
+Date: Thu, 06 Aug 2020 13:17:06 +0000
+Message-ID: <
+ <AM6PR06MB49473C091CF10AFAF7BFA8DFA6480@AM6PR06MB4947.eurprd06.prod.outlook.com>>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4705160289143083120==
+--===============3088832669997019142==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Take a look at the faq and the way an aik is created in the tutorial https:=
-//tpm2-software.github.io/2020/06/12/Remote-Attestation-With-tpm2-tools.htm=
-l#FAQ
---===============4705160289143083120==--
+Hello All,
+
+I was successful in making the FAPI integration tests  work and tried out s=
+ome of the scenarios in creating the keys and perform the key operations
+
+But when I used the tools based out of FAPI, I see the following errors
+
+export TPM20TEST_TCTI=3Dmssim:host=3D127.0.0.1,port=3D2321
+root(a)edgesec101:/home/edgesec100/phaniWS/tpm2_tools/tpm2-tools/tools/fapi=
+# ./tss2_provision
+WARNING:tcti:src/tss2-tcti/tcti-device.c:186:tcti_device_receive() The unde=
+rlying IPC mechanism does not support asynchronous I/O. The 'timeout' param=
+eter is set to TSS2_TCTI_TIMEOUT_BLOCK
+WARNING:esys:src/tss2-esys/api/Esys_DictionaryAttackParameters.c:310:Esys_D=
+ictionaryAttackParameters_Finish() Received TPM Error
+ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:277:Fapi_Provision_Finish() E=
+rrorCode (0x0000098e) DictionaryAttackParameters_Finish
+ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:120:Fapi_Provision() ErrorCod=
+e (0x0000098e) Provision
+Fapi_Provision(0x98E) - tpm:session(1):the authorization HMAC check failed =
+and DA counter incremented
+
+And later I have  removed the NVChip created in simulator dir, and ran agai=
+n I see a different error
+
+./tss2_provision
+WARNING:tcti:src/tss2-tcti/tcti-device.c:186:tcti_device_receive() The unde=
+rlying IPC mechanism does not support asynchronous I/O. The 'timeout' param=
+eter is set to TSS2_TCTI_TIMEOUT_BLOCK
+WARNING:esys:src/tss2-esys/api/Esys_DictionaryAttackParameters.c:310:Esys_D=
+ictionaryAttackParameters_Finish() Received TPM Error
+ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:277:Fapi_Provision_Finish() E=
+rrorCode (0x00000921) DictionaryAttackParameters_Finish
+ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:120:Fapi_Provision() ErrorCod=
+e (0x00000921) Provision
+Fapi_Provision(0x921) - tpm:warn(2.0): authorizations for objects subject t=
+o DA protection are not allowed at this time because the TPM is in DA locko=
+ut mode
+
+
+Couldn't get from the documentation any pre-requisites to follow to make th=
+e tpm2 tools based out of  fapi  to make them work.
+
+I see some RM configuration to be done, but not successful in my trials, an=
+y suggestions how the environment shall be set up to make the tpm2 tools ba=
+sed out of fapi to work.
+
+
+Regards
+Phani Srinivas S
+R&D Prinicipal Engineer ABB
+
+
+--===============3088832669997019142==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6eD0idXJuOnNjaGVtYXMtbWljcm9z
+b2Z0LWNvbTpvZmZpY2U6ZXhjZWwiIHhtbG5zOm09Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5j
+b20vb2ZmaWNlLzIwMDQvMTIvb21tbCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnL1RSL1JFQy1o
+dG1sNDAiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0
+ZXh0L2h0bWw7IGNoYXJzZXQ9dXMtYXNjaWkiPgo8bWV0YSBuYW1lPSJHZW5lcmF0b3IiIGNvbnRl
+bnQ9Ik1pY3Jvc29mdCBXb3JkIDE1IChmaWx0ZXJlZCBtZWRpdW0pIj4KPHN0eWxlPjwhLS0KLyog
+Rm9udCBEZWZpbml0aW9ucyAqLwpAZm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6IkNhbWJyaWEgTWF0
+aCI7CglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMgMiA0O30KQGZvbnQtZmFjZQoJe2ZvbnQtZmFt
+aWx5OkNhbGlicmk7CglwYW5vc2UtMToyIDE1IDUgMiAyIDIgNCAzIDIgNDt9Ci8qIFN0eWxlIERl
+ZmluaXRpb25zICovCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWwsIGRpdi5Nc29Ob3JtYWwKCXtt
+YXJnaW46MGluOwoJbWFyZ2luLWJvdHRvbTouMDAwMXB0OwoJZm9udC1zaXplOjExLjBwdDsKCWZv
+bnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGlu
+awoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOiMwNTYzQzE7Cgl0ZXh0LWRlY29yYXRp
+b246dW5kZXJsaW5lO30KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0ZvbGxvd2VkCgl7bXNv
+LXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6Izk1NEY3MjsKCXRleHQtZGVjb3JhdGlvbjp1bmRl
+cmxpbmU7fQpzcGFuLkVtYWlsU3R5bGUxNwoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLWNvbXBv
+c2U7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7
+fQouTXNvQ2hwRGVmYXVsdAoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5OwoJZm9udC1mYW1p
+bHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWlu
+IDExLjBpbjsKCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlv
+bjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4
+bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1s
+PjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4
+dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlv
+dXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9IiMw
+NTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+SGVsbG8gQWxsLDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSB3YXMgc3Vj
+Y2Vzc2Z1bCBpbiBtYWtpbmcgdGhlIEZBUEkgaW50ZWdyYXRpb24gdGVzdHMgJm5ic3A7d29yayBh
+bmQgdHJpZWQgb3V0IHNvbWUgb2YgdGhlIHNjZW5hcmlvcyBpbiBjcmVhdGluZyB0aGUga2V5cyBh
+bmQgcGVyZm9ybSB0aGUga2V5IG9wZXJhdGlvbnM8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkJ1dCB3
+aGVuIEkgdXNlZCB0aGUgdG9vbHMgYmFzZWQgb3V0IG9mIEZBUEksIEkgc2VlIHRoZSBmb2xsb3dp
+bmcgZXJyb3JzPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7
+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5leHBvcnQgVFBNMjBURVNUX1RDVEk9bXNz
+aW06aG9zdD0xMjcuMC4wLjEscG9ydD0yMzIxPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiPnJvb3RAZWRnZXNlYzEwMTovaG9tZS9lZGdlc2VjMTAwL3BoYW5pV1MvdHBtMl90b29s
+cy90cG0yLXRvb2xzL3Rvb2xzL2ZhcGkjCjxiPi4vdHNzMl9wcm92aXNpb248bzpwPjwvbzpwPjwv
+Yj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPldBUk5JTkc6dGN0aTpzcmMvdHNzMi10Y3RpL3Rj
+dGktZGV2aWNlLmM6MTg2OnRjdGlfZGV2aWNlX3JlY2VpdmUoKSBUaGUgdW5kZXJseWluZyBJUEMg
+bWVjaGFuaXNtIGRvZXMgbm90IHN1cHBvcnQgYXN5bmNocm9ub3VzIEkvTy4gVGhlICd0aW1lb3V0
+JyBwYXJhbWV0ZXIgaXMgc2V0IHRvIFRTUzJfVENUSV9USU1FT1VUX0JMT0NLPG86cD48L286cD48
+L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPldBUk5JTkc6ZXN5czpzcmMvdHNzMi1lc3lzL2FwaS9F
+c3lzX0RpY3Rpb25hcnlBdHRhY2tQYXJhbWV0ZXJzLmM6MzEwOkVzeXNfRGljdGlvbmFyeUF0dGFj
+a1BhcmFtZXRlcnNfRmluaXNoKCkgUmVjZWl2ZWQgVFBNIEVycm9yPG86cD48L286cD48L3A+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPkVSUk9SOmZhcGk6c3JjL3RzczItZmFwaS9hcGkvRmFwaV9Qcm92
+aXNpb24uYzoyNzc6RmFwaV9Qcm92aXNpb25fRmluaXNoKCkgRXJyb3JDb2RlICgweDAwMDAwOThl
+KSBEaWN0aW9uYXJ5QXR0YWNrUGFyYW1ldGVyc19GaW5pc2g8bzpwPjwvbzpwPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+RVJST1I6ZmFwaTpzcmMvdHNzMi1mYXBpL2FwaS9GYXBpX1Byb3Zpc2lv
+bi5jOjEyMDpGYXBpX1Byb3Zpc2lvbigpIEVycm9yQ29kZSAoMHgwMDAwMDk4ZSkgUHJvdmlzaW9u
+PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkZhcGlfUHJvdmlzaW9uKDB4OThF
+KSAtIHRwbTpzZXNzaW9uKDEpOnRoZSBhdXRob3JpemF0aW9uIEhNQUMgY2hlY2sgZmFpbGVkIGFu
+ZCBEQSBjb3VudGVyIGluY3JlbWVudGVkPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5BbmQgbGF0ZXIg
+SSBoYXZlICZuYnNwO3JlbW92ZWQgdGhlIE5WQ2hpcCBjcmVhdGVkIGluIHNpbXVsYXRvciBkaXIs
+IGFuZCByYW4gYWdhaW4gSSBzZWUgYSBkaWZmZXJlbnQgZXJyb3I8bzpwPjwvbzpwPjwvcD4KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPi4vdHNzMl9wcm92aXNpb248bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+V0FSTklORzp0Y3RpOnNyYy90c3MyLXRjdGkvdGN0aS1kZXZpY2UuYzoxODY6dGN0aV9kZXZpY2Vf
+cmVjZWl2ZSgpIFRoZSB1bmRlcmx5aW5nIElQQyBtZWNoYW5pc20gZG9lcyBub3Qgc3VwcG9ydCBh
+c3luY2hyb25vdXMgSS9PLiBUaGUgJ3RpbWVvdXQnIHBhcmFtZXRlciBpcyBzZXQgdG8gVFNTMl9U
+Q1RJX1RJTUVPVVRfQkxPQ0s8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+V0FS
+TklORzplc3lzOnNyYy90c3MyLWVzeXMvYXBpL0VzeXNfRGljdGlvbmFyeUF0dGFja1BhcmFtZXRl
+cnMuYzozMTA6RXN5c19EaWN0aW9uYXJ5QXR0YWNrUGFyYW1ldGVyc19GaW5pc2goKSBSZWNlaXZl
+ZCBUUE0gRXJyb3I8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RVJST1I6ZmFw
+aTpzcmMvdHNzMi1mYXBpL2FwaS9GYXBpX1Byb3Zpc2lvbi5jOjI3NzpGYXBpX1Byb3Zpc2lvbl9G
+aW5pc2goKSBFcnJvckNvZGUgKDB4MDAwMDA5MjEpIERpY3Rpb25hcnlBdHRhY2tQYXJhbWV0ZXJz
+X0ZpbmlzaDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5FUlJPUjpmYXBpOnNy
+Yy90c3MyLWZhcGkvYXBpL0ZhcGlfUHJvdmlzaW9uLmM6MTIwOkZhcGlfUHJvdmlzaW9uKCkgRXJy
+b3JDb2RlICgweDAwMDAwOTIxKSBQcm92aXNpb248bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+RmFwaV9Qcm92aXNpb24oMHg5MjEpIC0gdHBtOndhcm4oMi4wKTogYXV0aG9yaXph
+dGlvbnMgZm9yIG9iamVjdHMgc3ViamVjdCB0byBEQSBwcm90ZWN0aW9uIGFyZSBub3QgYWxsb3dl
+ZCBhdCB0aGlzIHRpbWUgYmVjYXVzZSB0aGUgVFBNIGlzIGluIERBIGxvY2tvdXQgbW9kZTxvOnA+
+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPkNvdWxkbiYjODIxNzt0IGdldCBmcm9tIHRoZSBkb2N1bWVudGF0aW9uIGFueSBwcmUtcmVx
+dWlzaXRlcyB0byBmb2xsb3cgdG8gbWFrZSB0aGUgdHBtMiB0b29scyBiYXNlZCBvdXQgb2YgJm5i
+c3A7ZmFwaSAmbmJzcDt0byBtYWtlIHRoZW0gd29yay48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkg
+c2VlIHNvbWUgUk0gY29uZmlndXJhdGlvbiB0byBiZSBkb25lLCBidXQgbm90IHN1Y2Nlc3NmdWwg
+aW4gbXkgdHJpYWxzLCBhbnkgc3VnZ2VzdGlvbnMgaG93IHRoZSBlbnZpcm9ubWVudCBzaGFsbCBi
+ZSBzZXQgdXAgdG8gbWFrZSB0aGUgdHBtMiB0b29scyBiYXNlZCBvdXQgb2YgZmFwaSB0byB3b3Jr
+LjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJjb2xvcjojNDQ3MkM0Ij5SZWdhcmRzPG86cD48L286cD48
+L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iY29sb3I6IzQ0NzJD
+NCI+UGhhbmkgU3Jpbml2YXMgUzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOiM0NDcyQzQiPlImYW1wO0QgUHJpbmljaXBhbCBFbmdp
+bmVlciBBQkI8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+
+Jm5ic3A7PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============3088832669997019142==--
 
