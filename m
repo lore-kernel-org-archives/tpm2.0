@@ -1,41 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============4704434426799937535=="
+Content-Type: multipart/mixed; boundary="===============6780610949795755239=="
 MIME-Version: 1.0
-From: sidtechnical at gmail.com
-Subject: [tpm2] Take part in TPM libraries usability study (by Aalto
- University and Nokia Bell Labs)
-Date: Fri, 07 Aug 2020 07:38:04 +0000
-Message-ID: <20200807073804.2837.26378@ml01.vlan13.01.org>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] [RELEASE] tpm2-pkcs11: 1.3.2
+Date: Mon, 10 Aug 2020 14:41:33 +0000
+Message-ID: <DM6PR11MB34341AE731BA9A28DF775568B8440@DM6PR11MB3434.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4704434426799937535==
+--===============6780610949795755239==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
+Hello,
 
-I am Sid Rao, a security researcher from Aalto University, Finland. Along w=
-ith my colleague Gabriela Limonta from Nokia Bell Labs, we are conducting a=
- study on the usability of TPM libraries.
+I would like to announce the release of tpm2-pkcs11 version 1.3.2 with the =
+following changelog:
 
-We want to understand the current trends and usage of the libraries in day-=
-to-day life. Right now, we are doing a preliminary survey to identify volun=
-teers for participating in our study. Your efforts will be compensated in t=
-he next phase of our study. Here is the link to that:
+### 1.3.2 - 2020-08-10
+  * Fix C\_InitToken, ensure no embedded nul byte.
+  * Fix free of mutex being held in C\_InitToken failures: #573
+  * Fix C\_Login CKU\_USER login attempt before pin is setup: #563
+  * Fix C\_InitToken double init issues #577
 
-https://bit.ly/2CBI7oB
+The release can be found here:
+https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.3.2
 
-It would be very much helpful if you take part in our study. Also, please s=
-hare this survey with people in your network who also work on trusted compu=
-ting. [Retweet (https://twitter.com/sidnext2none/status/1286246151709130753=
-), if you are on Twitter] =
-
-
-Feel free to contact me (siddharth.rao(a)aalto.fi) or Gabriela (gabriela.li=
-monta(a)nokia-bell-labs.com) if you have any questions!
-
-Best regards,
-Sid
---===============4704434426799937535==--
+Thanks,
+Bill
+--===============6780610949795755239==--
 
