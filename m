@@ -1,58 +1,110 @@
-Content-Type: multipart/mixed; boundary="===============5394044150713014052=="
+Content-Type: multipart/mixed; boundary="===============8476836772345560861=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-tools 4.3.0-rc0
-Date: Thu, 13 Aug 2020 17:03:45 +0000
-Message-ID: <DM6PR11MB343470E04FF0A83A14DE39C5B8430@DM6PR11MB3434.namprd11.prod.outlook.com>
+From: Duc Duong <duc.duong at non.keysight.com>
+Subject: [tpm2] Need some suggestions about tpm2-tss in Windows
+Date: Thu, 13 Aug 2020 19:57:39 +0000
+Message-ID: <
+ <BN7PR17MB2356B2FBC28A38DDA8419A58C9430@BN7PR17MB2356.namprd17.prod.outlook.com>>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5394044150713014052==
+--===============8476836772345560861==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi,
 
-I would like to announce tpm2-tools release 4.3.0-rc0, with the following c=
-hangelog:
-4.3.0-rc0 - 2020-08-13
+I just start doing research in tpm-software, I had a running instance in Ub=
+untu, build and install four projects: tpm2-tss, tpm2-tss-engine, tpm2-tool=
+s and tpm2-abrmd
 
- * tss2_*: Fix double-free errors in commands asking for password authoriza=
-tion
+For professional purposes, I'd like to use this TPM TSS to generate key and=
+ CSR with OpenSSL and I've already proof the concept in Ubuntu, but actuall=
+y trying to do the same thing in Windows is the final goal.
 
- * tss2_*: Fix shorthand command -f that was falsely requiring an argument
+The first challenge I met is how to build tpm2-tss in Windows, other projec=
+ts are even not VS project.
 
- * tss2_*: Update tss2_encrypt to the new FAPI interface
-   - The argument 'policyPath' is removed which was never read anyway
+I'm trying to build tpm2-tss with the environment they have tested, like VS=
+ 2017 + v141 clang/c2 + UCRT 10.0.16299.0.
 
- * tss2_*: Remove the additional '\n' that was appended when redirecting to=
- stdout
+But after that, how can I install it and test it? Cause without tpm2-tss-en=
+gine I can not test it through command right?
 
- * tss2_*: Update mandatory vs optional treatment of arguments according to=
- latest Fapi spec
+If it's not too tedious, please give me some suggestion, the more the bette=
+r.
 
- * tss2_*: tss2_getinfo now retrieves the correct FAPI version from Fapi_Ge=
-tInfo
+Like, it there a better way to build tpm2-tss and other project in Windows.
 
- * tss2_*: Fix the error handling in case of multiple inputs and/or outputs=
- from stdin/stdout
+Thanks!
 
- * tss2_*: Fix syntax errors and update content of man pages according to l=
-atest Fapi spec
+Paul
 
- * tss2_*: Add parameter types to all man page
+--===============8476836772345560861==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
- * tss2_*: tss2_setappdata now reads from file or stdin allowing to store a=
-lso binary data
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiPgpIaSw8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTog
+Q2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
+b2xvcjogcmdiKDAsIDAsIDApOyI+CkkganVzdCBzdGFydCBkb2luZyByZXNlYXJjaCBpbiB0cG0t
+c29mdHdhcmUsIEkgaGFkIGEgcnVubmluZyBpbnN0YW5jZSBpbiBVYnVudHUsIGJ1aWxkIGFuZCBp
+bnN0YWxsIGZvdXIgcHJvamVjdHM6IHRwbTItdHNzLCB0cG0yLXRzcy1lbmdpbmUsIHRwbTItdG9v
+bHMgYW5kIHRwbTItYWJybWQ8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmks
+IEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJn
+YigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJy
+aSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjog
+cmdiKDAsIDAsIDApOyI+CkZvciBwcm9mZXNzaW9uYWwgcHVycG9zZXMsIEknZCBsaWtlIHRvIHVz
+ZSB0aGlzIFRQTSBUU1MgdG8gZ2VuZXJhdGUga2V5IGFuZCBDU1Igd2l0aCBPcGVuU1NMIGFuZCBJ
+J3ZlIGFscmVhZHkgcHJvb2YgdGhlIGNvbmNlcHQgaW4gVWJ1bnR1LCBidXQgYWN0dWFsbHkgdHJ5
+aW5nIHRvIGRvIHRoZSBzYW1lIHRoaW5nIGluIFdpbmRvd3MgaXMgdGhlIGZpbmFsIGdvYWwuPC9k
+aXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBz
+YW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8
+L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2Es
+IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpUaGUg
+Zmlyc3QgY2hhbGxlbmdlIEkgbWV0IGlzIGhvdyB0byBidWlsZCB0cG0yLXRzcyBpbiBXaW5kb3dz
+LCBvdGhlciBwcm9qZWN0cyBhcmUgZXZlbiBub3QgVlMgcHJvamVjdC48L2Rpdj4KPGRpdiBzdHls
+ZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZv
+bnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0
+eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsg
+Zm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CkknbSB0cnlpbmcgdG8gYnVp
+bGQgdHBtMi10c3Mgd2l0aCB0aGUgZW52aXJvbm1lbnQgdGhleSBoYXZlIHRlc3RlZCwgbGlrZSBW
+UyAyMDE3ICsgdjE0MSBjbGFuZy9jMiArIFVDUlQgMTAuMC4xNjI5OS4wLjwvZGl2Pgo8ZGl2IHN0
+eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsg
+Zm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+Cjxicj4KPC9kaXY+CjxkaXYg
+c3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlm
+OyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KQnV0IGFmdGVyIHRoYXQs
+IGhvdyBjYW4gSSBpbnN0YWxsIGl0IGFuZCB0ZXN0IGl0PyBDYXVzZSB3aXRob3V0IHRwbTItdHNz
+LWVuZ2luZSBJIGNhbiBub3QgdGVzdCBpdCB0aHJvdWdoIGNvbW1hbmQgcmlnaHQ/PC9kaXY+Cjxk
+aXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNl
+cmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4K
+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMt
+c2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpJZiBpdCdzIG5v
+dCB0b28gdGVkaW91cywgcGxlYXNlIGdpdmUgbWUgc29tZSBzdWdnZXN0aW9uLCB0aGUgbW9yZSB0
+aGUgYmV0dGVyLjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWws
+IEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAs
+IDApOyI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlh
+bCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwg
+MCwgMCk7Ij4KTGlrZSwgaXQgdGhlcmUgYSBiZXR0ZXIgd2F5IHRvIGJ1aWxkIHRwbTItdHNzIGFu
+ZCBvdGhlciBwcm9qZWN0IGluIFdpbmRvd3MuPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5
+OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7
+IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1p
+bHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJw
+dDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpUaGFua3MhPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
+dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
+ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpQYXVsPC9kaXY+CjwvYm9keT4KPC9odG1s
+Pgo=
 
- * tss2_*: Memory leaks are fixed in cases when a returned empty non-char o=
-utput value was passed to file output
-
-The release can be found here:
-  - https://github.com/tpm2-software/tpm2-tools/releases/tag/4.3.0-rc0
-
-Bill
-
---===============5394044150713014052==--
+--===============8476836772345560861==--
 
