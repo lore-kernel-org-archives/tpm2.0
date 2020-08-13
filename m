@@ -1,167 +1,58 @@
-Content-Type: multipart/mixed; boundary="===============2033223033218840973=="
+Content-Type: multipart/mixed; boundary="===============5394044150713014052=="
 MIME-Version: 1.0
-From: Phani Srinivas <phani.srinivas at in.abb.com>
-Subject: [tpm2] FAPI delete issue
-Date: Wed, 12 Aug 2020 15:33:31 +0000
-Message-ID: <
- <AM6PR06MB4947FC71C54AF4E04EC6000CA6420@AM6PR06MB4947.eurprd06.prod.outlook.com>>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] [RELEASE CANDIDATE] tpm2-tools 4.3.0-rc0
+Date: Thu, 13 Aug 2020 17:03:45 +0000
+Message-ID: <DM6PR11MB343470E04FF0A83A14DE39C5B8430@DM6PR11MB3434.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2033223033218840973==
+--===============5394044150713014052==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello All,
+Hello,
 
-Having using FAPI API's for a while for some exploratory work, I have provi=
-sioning the FAPI with a password using the following call and used  macro s=
-et to PASSWORD set as "1234"
+I would like to announce tpm2-tools release 4.3.0-rc0, with the following c=
+hangelog:
+4.3.0-rc0 - 2020-08-13
 
-rc =3D Fapi_Provision(global_fapi_context,PASSWORD,PASSWORD,PASSWORD);
+ * tss2_*: Fix double-free errors in commands asking for password authoriza=
+tion
 
+ * tss2_*: Fix shorthand command -f that was falsely requiring an argument
 
-Again tried to clear the TPM using the following calls after doing the FAPI=
-_Initialize.
+ * tss2_*: Update tss2_encrypt to the new FAPI interface
+   - The argument 'policyPath' is removed which was never read anyway
 
+ * tss2_*: Remove the additional '\n' that was appended when redirecting to=
+ stdout
 
-rc =3D Fapi_SetAuthCB(global_fapi_context, auth_callback, NULL);
-        if (rc !=3D TSS2_RC_SUCCESS){
-          printf("Failed to set the callback \n");
-        }
+ * tss2_*: Update mandatory vs optional treatment of arguments according to=
+ latest Fapi spec
 
-        printf("clearing the TPM \n");
-        rc =3D Fapi_Delete(global_fapi_context, "/");
-        if (rc !=3D TSS2_RC_SUCCESS){
-          printf("Failed to clear TPM\n");
-          ret =3D ERR_FAIL;
-        }
+ * tss2_*: tss2_getinfo now retrieves the correct FAPI version from Fapi_Ge=
+tInfo
 
+ * tss2_*: Fix the error handling in case of multiple inputs and/or outputs=
+ from stdin/stdout
 
-But I see the following error,
+ * tss2_*: Fix syntax errors and update content of man pages according to l=
+atest Fapi spec
 
-ERROR:esys:src/tss2-esys/esys_iutil.c:1070:esys_GetResourceObject() Error: =
-Esys handle does not exist (70018).
-ERROR:fapi:src/tss2-fapi/fapi_util.c:380:ifapi_set_auth() Set auth value. E=
-rrorCode (0x00070018)
-ERROR:fapi:src/tss2-fapi/api/Fapi_Delete.c:377:Fapi_Delete_Finish() ErrorCo=
-de (0x00070018) Set owner authorization
-ERROR:fapi:src/tss2-fapi/api/Fapi_Delete.c:89:Fapi_Delete() ErrorCode (0x00=
-070018) Entity_Delete
-Failed to clear TPM
+ * tss2_*: Add parameter types to all man page
 
+ * tss2_*: tss2_setappdata now reads from file or stdin allowing to store a=
+lso binary data
 
-Any thoughts what went wrong here.
+ * tss2_*: Memory leaks are fixed in cases when a returned empty non-char o=
+utput value was passed to file output
 
-Regards
-Phani Srinivas S
+The release can be found here:
+  - https://github.com/tpm2-software/tpm2-tools/releases/tag/4.3.0-rc0
 
+Bill
 
---===============2033223033218840973==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KQGZv
-bnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNvbnNvbGFzOwoJcGFub3NlLTE6MiAxMSA2IDkgMiAyIDQg
-MyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFs
-LCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBpbjsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZv
-bnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CmE6bGlu
-aywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojMDU2
-M0MxOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBl
-cmxpbmtGb2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOiM5NTRGNzI7Cgl0
-ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30Kc3Bhbi5FbWFpbFN0eWxlMTcKCXttc28tc3R5bGUt
-dHlwZTpwZXJzb25hbC1jb21wb3NlOwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7
-Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0NocERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBv
-cnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30KQHBhZ2UgV29yZFNl
-Y3Rpb24xCgl7c2l6ZTo4LjVpbiAxMS4waW47CgltYXJnaW46MS4waW4gMS4waW4gMS4waW4gMS4w
-aW47fQpkaXYuV29yZFNlY3Rpb24xCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQotLT48L3N0eWxlPjwh
-LS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlk
-bWF4PSIxMDI2IiAvPgo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4K
-PG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPgo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0i
-MSIgLz4KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPgo8L2hlYWQ+Cjxib2R5IGxh
-bmc9IkVOLVVTIiBsaW5rPSIjMDU2M0MxIiB2bGluaz0iIzk1NEY3MiI+CjxkaXYgY2xhc3M9Ildv
-cmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkhlbGxvIEFsbCw8bzpwPjwvbzpwPjwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPkhhdmluZyB1c2luZyBGQVBJIEFQSSYjODIxNztzIGZvciBhIHdoaWxlIGZvciBz
-b21lIGV4cGxvcmF0b3J5IHdvcmssIEkgaGF2ZSBwcm92aXNpb25pbmcgdGhlIEZBUEkgd2l0aCBh
-IHBhc3N3b3JkIHVzaW5nIHRoZSBmb2xsb3dpbmcgY2FsbCBhbmQgdXNlZCAmbmJzcDttYWNybyBz
-ZXQgdG8gUEFTU1dPUkQgc2V0IGFzICYjODIyMDsxMjM0JiM4MjIxOzxvOnA+PC9vOnA+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+PGI+cmMgPSBGYXBpX1Byb3Zpc2lvbihnbG9iYWxfZmFwaV9jb250ZXh0LFBBU1NXT1JE
-LFBBU1NXT1JELFBBU1NXT1JEKTs8bzpwPjwvbzpwPjwvYj48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxiPjxvOnA+Jm5ic3A7PC9vOnA+PC9iPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+
-PG86cD4mbmJzcDs8L286cD48L2I+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5BZ2FpbiB0cmll
-ZCB0byBjbGVhciB0aGUgVFBNIHVzaW5nIHRoZSBmb2xsb3dpbmcgY2FsbHMgYWZ0ZXIgZG9pbmcg
-dGhlIEZBUElfSW5pdGlhbGl6ZS48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9v
-OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6Q29u
-c29sYXMiPnJjID0gRmFwaV9TZXRBdXRoQ0IoZ2xvYmFsX2ZhcGlfY29udGV4dCwgYXV0aF9jYWxs
-YmFjaywgTlVMTCk7PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXMiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyBpZiAocmMgIT0gVFNTMl9SQ19TVUNDRVNTKXs8bzpwPjwvbzpw
-Pjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWls
-eTpDb25zb2xhcyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7IHByaW50ZigmcXVvdDtGYWlsZWQgdG8gc2V0IHRoZSBjYWxsYmFjayBcbiZxdW90
-Oyk7PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHls
-ZT0iZm9udC1mYW1pbHk6Q29uc29sYXMiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyB9PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFu
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OkNvbnNv
-bGFzIj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgcHJpbnRmKCZx
-dW90O2NsZWFyaW5nIHRoZSBUUE0gXG4mcXVvdDspOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OkNvbnNvbGFzIj4mbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgcmMgPSBGYXBpX0RlbGV0ZShn
-bG9iYWxfZmFwaV9jb250ZXh0LCAmcXVvdDsvJnF1b3Q7KTs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTpDb25zb2xhcyI+
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGlmIChyYyAhPSBUU1My
-X1JDX1NVQ0NFU1MpezxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OkNvbnNvbGFzIj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgcHJpbnRmKCZxdW90O0ZhaWxlZCB0byBj
-bGVhciBUUE1cbiZxdW90Oyk7PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXMiPiZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyByZXQgPSBFUlJfRkFJTDs8bzpw
-PjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250
-LWZhbWlseTpDb25zb2xhcyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7IH08bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5i
-c3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+QnV0IEkgc2VlIHRoZSBmb2xsb3dpbmcgZXJyb3IsIDxvOnA+
-PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1RpbWVzIE5l
-dyBSb21hbiZxdW90OyxzZXJpZiI+RVJST1I6ZXN5czpzcmMvdHNzMi1lc3lzL2VzeXNfaXV0aWwu
-YzoxMDcwOmVzeXNfR2V0UmVzb3VyY2VPYmplY3QoKSBFcnJvcjogRXN5cyBoYW5kbGUgZG9lcyBu
-b3QgZXhpc3QgKDcwMDE4KS48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDss
-c2VyaWYiPkVSUk9SOmZhcGk6c3JjL3RzczItZmFwaS9mYXBpX3V0aWwuYzozODA6aWZhcGlfc2V0
-X2F1dGgoKSBTZXQgYXV0aCB2YWx1ZS4gRXJyb3JDb2RlICgweDAwMDcwMDE4KTxvOnA+PC9vOnA+
-PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5
-OiZxdW90O1RpbWVzIE5ldyBSb21hbiZxdW90OyxzZXJpZiI+RVJST1I6ZmFwaTpzcmMvdHNzMi1m
-YXBpL2FwaS9GYXBpX0RlbGV0ZS5jOjM3NzpGYXBpX0RlbGV0ZV9GaW5pc2goKSBFcnJvckNvZGUg
-KDB4MDAwNzAwMTgpIFNldCBvd25lciBhdXRob3JpemF0aW9uPG86cD48L286cD48L3NwYW4+PC9w
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7VGlt
-ZXMgTmV3IFJvbWFuJnF1b3Q7LHNlcmlmIj5FUlJPUjpmYXBpOnNyYy90c3MyLWZhcGkvYXBpL0Zh
-cGlfRGVsZXRlLmM6ODk6RmFwaV9EZWxldGUoKSBFcnJvckNvZGUgKDB4MDAwNzAwMTgpIEVudGl0
-eV9EZWxldGU8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDssc2VyaWYiPkZh
-aWxlZCB0byBjbGVhciBUUE08bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
-OzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+QW55IHRob3VnaHRzIHdoYXQgd2VudCB3
-cm9uZyBoZXJlLjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
-OzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+UmVnYXJkczxvOnA+PC9vOnA+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj5QaGFuaSBTcmluaXZhcyBTPG86cD48L286cD48L3A+CjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0
-bWw+Cg==
-
---===============2033223033218840973==--
+--===============5394044150713014052==--
 
