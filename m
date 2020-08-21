@@ -1,204 +1,164 @@
-Content-Type: multipart/mixed; boundary="===============3106347695607195325=="
+Content-Type: multipart/mixed; boundary="===============0447564080135914236=="
 MIME-Version: 1.0
-From: FIXED-TERM Schick Felix (CR/APA3) <fixed-term.Felix.Schick3 at bosch.com>
-Subject: [tpm2] Esys primary key creation error
-Date: Thu, 20 Aug 2020 13:53:41 +0000
-Message-ID: <f82e7dfe9a2e4f5a8e3b1eb4a9a93bbc@bosch.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: Esys primary key creation error
+Date: Fri, 21 Aug 2020 15:58:45 +0000
+Message-ID: <SN6PR11MB3437FFD7F49D27E2BF0D286EB85B0@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: f82e7dfe9a2e4f5a8e3b1eb4a9a93bbc@bosch.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3106347695607195325==
+--===============0447564080135914236==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Everybody,
+You have ESYS_TR_NONE for the 3 session handles, you need
+someway to authorize yourself to the hierarchy. This is accomplished
+via session handles. If you just need to use a password, set the
+first session parameter to ESYS_TR_PASSWORD. Then you will
+authorize to the hierarchy using the implicit password session
+and an empty or blank password. If you need a specific
+password, you can use Esys_TR_SetAuth, and use the hierarchy
+as parameter 2 and the auth structure populated as argument 3.
 
-I am currently experimenting with the Esys-API and have encountered a probl=
-em during the primary key creation.
+Something like this:
+rc =3D Esys_CreatePrimary(esysContext, ESYS_TR_RH_OWNER,
+  ESYS_TR_PASSWORD, ESYS_TR_NONE, ESYS_TR_NONE,
+  &primaryInSensitive, &primaryInPublic, &outsideInfo, &creationPCR,
+  &primaryObjectHandle, &primaryOutPublic, &primaryCreationData,
+  &primaryCreationHash, &primaryCreationTicket);
 
-    TPM2B_PUBLIC * primaryOutPublic;
-    TPM2B_CREATION_DATA * primaryCreationData;
-    TPM2B_DIGEST * primaryCreationHash;
-    TPMT_TK_CREATION  * primaryCreationTicket;
-    ESYS_TR primaryObjectHandle;
+> -----Original Message-----
+> From: FIXED-TERM Schick Felix (CR/APA3) <fixed-
+> term.Felix.Schick3(a)bosch.com>
+> Sent: Thursday, August 20, 2020 8:54 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Esys primary key creation error
+> =
 
-    // Create primary key
-    rc =3D Esys_CreatePrimary(esysContext, ESYS_TR_RH_OWNER, ESYS_TR_NONE, =
-ESYS_TR_NONE, ESYS_TR_NONE,
-            &primaryInSensitive, &primaryInPublic, &outsideInfo, &creationP=
-CR,
-            &primaryObjectHandle, &primaryOutPublic, &primaryCreationData, =
-&primaryCreationHash, &primaryCreationTicket);
+> Hello Everybody,
+> =
 
-    if( rc !=3D TSS2_RC_SUCCESS){
-        std::cerr << "Creation of primary key failed with " <<
-                  "response code: 0x"<< std::hex << rc << std::endl;
-        Esys_Finalize(&esysContext);
-        return EXIT_FAILURE;
-    }
+> =
+
+> =
+
+> I am currently experimenting with the Esys-API and have encountered a pro=
+blem
+> during the primary key creation.
+> =
+
+> =
+
+> =
+
+>     TPM2B_PUBLIC * primaryOutPublic;
+> =
+
+>     TPM2B_CREATION_DATA * primaryCreationData;
+> =
+
+>     TPM2B_DIGEST * primaryCreationHash;
+> =
+
+>     TPMT_TK_CREATION  * primaryCreationTicket;
+> =
+
+>     ESYS_TR primaryObjectHandle;
+> =
+
+> =
+
+> =
+
+>     // Create primary key
+> =
+
+>     rc =3D Esys_CreatePrimary(esysContext, ESYS_TR_RH_OWNER, ESYS_TR_NONE,
+> ESYS_TR_NONE, ESYS_TR_NONE,
+> =
+
+>             &primaryInSensitive, &primaryInPublic, &outsideInfo, &creatio=
+nPCR,
+> =
+
+>             &primaryObjectHandle, &primaryOutPublic, &primaryCreationData,
+> &primaryCreationHash, &primaryCreationTicket);
+> =
+
+> =
+
+> =
+
+>     if( rc !=3D TSS2_RC_SUCCESS){
+> =
+
+>         std::cerr << "Creation of primary key failed with " <<
+> =
+
+>                   "response code: 0x"<< std::hex << rc << std::endl;
+> =
+
+>         Esys_Finalize(&esysContext);
+> =
+
+>         return EXIT_FAILURE;
+> =
+
+>     }
+> =
+
+> =
+
+> =
+
+> =
+
+> =
+
+> I get the following error:
+> =
+
+> =
+
+> =
+
+> ERROR:esys:src/tss2-esys/esys_iutil.c:1178:check_session_feasibility() Not
+> enough sessions provided for the command.
+> =
+
+> ERROR:esys:src/tss2-
+> esys/api/Esys_CreatePrimary.c:208:Esys_CreatePrimary_Async() Check session
+> usage ErrorCode (0x0007000b)
+> =
+
+> ERROR:esys:src/tss2-esys/api/Esys_CreatePrimary.c:110:Esys_CreatePrimary()
+> Error in async function ErrorCode (0x0007000b)
+> =
+
+> =
+
+> =
+
+> I hope this is enough context for the trained eye, I would be very gratef=
+ul for
+> help with this issue.
+> =
+
+> Thank you very much
+> =
+
+> =
+
+> =
+
+> Felix Schick
+> =
+
+> =
 
 
-I get the following error:
 
-ERROR:esys:src/tss2-esys/esys_iutil.c:1178:check_session_feasibility() Not =
-enough sessions provided for the command.
-ERROR:esys:src/tss2-esys/api/Esys_CreatePrimary.c:208:Esys_CreatePrimary_As=
-ync() Check session usage ErrorCode (0x0007000b)
-ERROR:esys:src/tss2-esys/api/Esys_CreatePrimary.c:110:Esys_CreatePrimary() =
-Error in async function ErrorCode (0x0007000b)
-
-I hope this is enough context for the trained eye, I would be very grateful=
- for help with this issue.
-Thank you very much
-
-Felix Schick
-
-
---===============3106347695607195325==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
-Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
-OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
-cjojMDU2M0MxOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFu
-Lk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjoj
-OTU0RjcyOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0Kc3Bhbi5FLU1haWxGb3JtYXR2
-b3JsYWdlMTcNCgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtY29tcG9zZTsNCglmb250LWZhbWls
-eToiQXJpYWwiLHNhbnMtc2VyaWY7DQoJY29sb3I6d2luZG93dGV4dDsNCglmb250LXdlaWdodDpu
-b3JtYWw7DQoJZm9udC1zdHlsZTpub3JtYWw7fQ0KLk1zb0NocERlZmF1bHQNCgl7bXNvLXN0eWxl
-LXR5cGU6ZXhwb3J0LW9ubHk7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQ0K
-QHBhZ2UgV29yZFNlY3Rpb24xDQoJe3NpemU6NjEyLjBwdCA3OTIuMHB0Ow0KCW1hcmdpbjo3Mi4w
-cHQgNzIuMHB0IDcyLjBwdCA3Mi4wcHQ7fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRT
-ZWN0aW9uMTt9DQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVk
-ZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0t
-PjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0K
-PG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+
-PCFbZW5kaWZdLS0+DQo8L2hlYWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIg
-dmxpbms9IiM5NTRGNzIiPg0KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90
-O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPkhlbGxvIEV2ZXJ5Ym9keSw8bzpwPjwvbzpwPjwvc3Bh
-bj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBw
-dDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj48bzpwPiZuYnNwOzwv
-bzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1z
-aXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj5JIGFt
-IGN1cnJlbnRseSBleHBlcmltZW50aW5nIHdpdGggdGhlIEVzeXMtQVBJIGFuZCBoYXZlIGVuY291
-bnRlcmVkIGEgcHJvYmxlbSBkdXJpbmcgdGhlIHByaW1hcnkga2V5IGNyZWF0aW9uLjxvOnA+PC9v
-OnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNp
-emU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPjxvOnA+
-Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxl
-PSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2Vy
-aWYiPiZuYnNwOyZuYnNwOyZuYnNwOyBUUE0yQl9QVUJMSUMgKiBwcmltYXJ5T3V0UHVibGljOzxv
-OnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
-b250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYi
-PiZuYnNwOyZuYnNwOyZuYnNwOyBUUE0yQl9DUkVBVElPTl9EQVRBICogcHJpbWFyeUNyZWF0aW9u
-RGF0YTs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBz
-dHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5z
-LXNlcmlmIj4mbmJzcDsmbmJzcDsmbmJzcDsgVFBNMkJfRElHRVNUICogcHJpbWFyeUNyZWF0aW9u
-SGFzaDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBz
-dHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5z
-LXNlcmlmIj4mbmJzcDsmbmJzcDsmbmJzcDsgVFBNVF9US19DUkVBVElPTiZuYnNwOyAqIHByaW1h
-cnlDcmVhdGlvblRpY2tldDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlh
-bCZxdW90OyxzYW5zLXNlcmlmIj4mbmJzcDsmbmJzcDsmbmJzcDsgRVNZU19UUiBwcmltYXJ5T2Jq
-ZWN0SGFuZGxlOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxz
-cGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7
-LHNhbnMtc2VyaWYiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0Fy
-aWFsJnF1b3Q7LHNhbnMtc2VyaWYiPiZuYnNwOyZuYnNwOyZuYnNwOyAvLyBDcmVhdGUgcHJpbWFy
-eSBrZXk8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBz
-dHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5z
-LXNlcmlmIj4mbmJzcDsmbmJzcDsmbmJzcDsgcmMgPSBFc3lzX0NyZWF0ZVByaW1hcnkoZXN5c0Nv
-bnRleHQsIEVTWVNfVFJfUkhfT1dORVIsIEVTWVNfVFJfTk9ORSwgRVNZU19UUl9OT05FLCBFU1lT
-X1RSX05PTkUsPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
-YW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDss
-c2Fucy1zZXJpZiI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZhbXA7cHJpbWFyeUluU2Vuc2l0aXZlLCAmYW1wO3ByaW1h
-cnlJblB1YmxpYywgJmFtcDtvdXRzaWRlSW5mbywgJmFtcDtjcmVhdGlvblBDUiw8bzpwPjwvbzpw
-Pjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXpl
-OjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj4mbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsgJmFtcDtwcmltYXJ5T2JqZWN0SGFuZGxlLCAmYW1wO3ByaW1hcnlPdXRQdWJsaWMsICZhbXA7
-cHJpbWFyeUNyZWF0aW9uRGF0YSwgJmFtcDtwcmltYXJ5Q3JlYXRpb25IYXNoLCAmYW1wO3ByaW1h
-cnlDcmVhdGlvblRpY2tldCk7PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJp
-YWwmcXVvdDssc2Fucy1zZXJpZiI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6
-JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IGlmKCByYyAh
-PSBUU1MyX1JDX1NVQ0NFU1MpezxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0Fy
-aWFsJnF1b3Q7LHNhbnMtc2VyaWYiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyBzdGQ6OmNlcnIgJmx0OyZsdDsgJnF1b3Q7Q3JlYXRpb24gb2YgcHJpbWFyeSBrZXkg
-ZmFpbGVkIHdpdGggJnF1b3Q7ICZsdDsmbHQ7PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6
-JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7ICZxdW90O3Jlc3BvbnNlIGNvZGU6IDB4JnF1b3Q7Jmx0OyZsdDsg
-c3RkOjpoZXggJmx0OyZsdDsgcmMgJmx0OyZsdDsgc3RkOjplbmRsOzxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0
-O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPiZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBFc3lzX0ZpbmFsaXplKCZhbXA7ZXN5c0NvbnRl
-eHQpOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0
-eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMt
-c2VyaWYiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyByZXR1cm4g
-RVhJVF9GQUlMVVJFOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1
-b3Q7LHNhbnMtc2VyaWYiPiZuYnNwOyZuYnNwOyZuYnNwOyB9PG86cD48L286cD48L3NwYW4+PC9w
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+PG86cD4mbmJzcDs8L286cD48
-L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTox
-MC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+PG86cD4mbmJz
-cDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZv
-bnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+
-SSBnZXQgdGhlIGZvbGxvd2luZyBlcnJvcjo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTom
-cXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+
-DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250
-LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj5FUlJPUjplc3lzOnNyYy90c3My
-LWVzeXMvZXN5c19pdXRpbC5jOjExNzg6Y2hlY2tfc2Vzc2lvbl9mZWFzaWJpbGl0eSgpIE5vdCBl
-bm91Z2ggc2Vzc2lvbnMgcHJvdmlkZWQgZm9yIHRoZSBjb21tYW5kLg0KPG86cD48L286cD48L3Nw
-YW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4w
-cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+RVJST1I6ZXN5czpz
-cmMvdHNzMi1lc3lzL2FwaS9Fc3lzX0NyZWF0ZVByaW1hcnkuYzoyMDg6RXN5c19DcmVhdGVQcmlt
-YXJ5X0FzeW5jKCkgQ2hlY2sgc2Vzc2lvbiB1c2FnZSBFcnJvckNvZGUgKDB4MDAwNzAwMGIpDQo8
-bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0i
-Zm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlm
-Ij5FUlJPUjplc3lzOnNyYy90c3MyLWVzeXMvYXBpL0VzeXNfQ3JlYXRlUHJpbWFyeS5jOjExMDpF
-c3lzX0NyZWF0ZVByaW1hcnkoKSBFcnJvciBpbiBhc3luYyBmdW5jdGlvbiBFcnJvckNvZGUgKDB4
-MDAwNzAwMGIpPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
-YW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDss
-c2Fucy1zZXJpZiI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJp
-YWwmcXVvdDssc2Fucy1zZXJpZiI+SSBob3BlIHRoaXMgaXMgZW5vdWdoIGNvbnRleHQgZm9yIHRo
-ZSB0cmFpbmVkIGV5ZSwgSSB3b3VsZCBiZSB2ZXJ5IGdyYXRlZnVsIGZvciBoZWxwIHdpdGggdGhp
-cyBpc3N1ZS48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBsYW5nPSJERSIgc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJp
-YWwmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibGFjayI+VGhhbmsgeW91IHZlcnkgbXVjaDxvOnA+
-PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkRFIiBz
-dHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5z
-LXNlcmlmO2NvbG9yOmJsYWNrIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJERSIgc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibGFjayI+RmVsaXgg
-U2NoaWNrPC9zcGFuPjxzcGFuIGxhbmc9IkRFIiBzdHlsZT0iZm9udC1zaXplOjEyLjBwdDtmb250
-LWZhbWlseTomcXVvdDtUaW1lcyBOZXcgUm9tYW4mcXVvdDssc2VyaWYiPg0KPC9zcGFuPjxzcGFu
-IGxhbmc9IkRFIiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDtmb250LWZhbWlseTomcXVvdDtBcmlh
-bCZxdW90OyxzYW5zLXNlcmlmO2NvbG9yOmJsYWNrIj48YnI+DQo8YnI+DQo8L3NwYW4+PHNwYW4g
-bGFuZz0iREUiPjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1s
-Pg0K
-
---===============3106347695607195325==--
+--===============0447564080135914236==--
 
