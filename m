@@ -1,68 +1,80 @@
-Content-Type: multipart/mixed; boundary="===============6800948211311450909=="
+Content-Type: multipart/mixed; boundary="===============6468017060205145931=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-tools: 4.3.0-rc1
-Date: Fri, 21 Aug 2020 18:03:23 +0000
-Message-ID: <SN6PR11MB3437DAA254F7A5B326F2A198B85B0@SN6PR11MB3437.namprd11.prod.outlook.com>
+From: Duc Duong <duc.duong at non.keysight.com>
+Subject: [tpm2] Want some help for tpm2-tss-engine in Windows
+Date: Mon, 24 Aug 2020 14:27:22 +0000
+Message-ID: <
+ <BN7PR17MB2356B4240D3C7E50B286F10BC9560@BN7PR17MB2356.namprd17.prod.outlook.com>>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6800948211311450909==
+--===============6468017060205145931==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi everyone,
 
-I would like to announce tpm2-tools release candidate 4.3.0-rc1 with the fo=
-llowing changes over rc0:
-With the following changes between rc0:
+Currently I'm trying to get tpm2-tss-engine work with OpenSSL in Windows, b=
+ut as we know tpm2-tss-engine is built for Linux for now.
 
-tss2_pcrextend: fix extending PCR 0
+I've already went through the whole process of how to run it in Linux, but =
+I need to work with Windows in the future.
 
-tss2_quote: fix unused TSS2_RC in LOG_ERR
+I've already built tpm2-tss in Windows but got stuck by building and config=
+uring tpm2-tss-engine.
 
-With the full changelog being:
-
-4.3.0-rc1 - 2020-08-21
-tss2_*: Fix double-free errors in commands asking for password authorization
-
-tss2_*: Fix shorthand command -f that was falsely requiring an argument
-
-tss2_*: Update tss2_encrypt to the new FAPI interface
-
-The argument 'policyPath' is removed which was never read anyway
-tss2_*: Remove the additional '\n' that was appended when redirecting to st=
-dout
-
-tss2_*: Update mandatory vs optional treatment of arguments according to la=
-test Fapi spec
-
-tss2_*: tss2_getinfo now retrieves the correct FAPI version from Fapi_GetIn=
-fo
-
-tss2_*: Fix the error handling in case of multiple inputs and/or outputs fr=
-om stdin/stdout
-
-tss2_*: Fix syntax errors and update content of man pages according to late=
-st Fapi spec
-
-tss2_*: Add parameter types to all man page
-
-tss2_*: tss2_setappdata now reads from file or stdin allowing to store also=
- binary data
-
-tss2_*: Memory leaks are fixed in cases when a returned empty non-char outp=
-ut value was passed to file output
-
-tss2_pcrextend: fix extending PCR 0
-
-tss2_quote: fix unused TSS2_RC in LOG_ERR
-
-The release can be found here:
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.3.0-rc1
+Also. if anyone know how to install IBM TPM simulator in Windows that will =
+help a lot too!
 
 Thanks,
-Bill
---===============6800948211311450909==--
+
+Paul
+
+--===============6468017060205145931==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiPgpIaSBldmVyeW9uZSw8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1m
+YW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTog
+MTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250
+LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXpl
+OiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CkN1cnJlbnRseSBJJ20gdHJ5aW5nIHRvIGdl
+dCB0cG0yLXRzcy1lbmdpbmUgd29yayB3aXRoIE9wZW5TU0wgaW4gV2luZG93cywgYnV0IGFzIHdl
+IGtub3cgdHBtMi10c3MtZW5naW5lIGlzIGJ1aWx0IGZvciBMaW51eCBmb3Igbm93LjwvZGl2Pgo8
+ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1z
+ZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+Cjxicj4KPC9kaXY+
+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5z
+LXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KSSd2ZSBhbHJl
+YWR5IHdlbnQgdGhyb3VnaCB0aGUgd2hvbGUgcHJvY2VzcyBvZiBob3cgdG8gcnVuIGl0IGluIExp
+bnV4LCBidXQgSSBuZWVkIHRvIHdvcmsgd2l0aCBXaW5kb3dzIGluIHRoZSBmdXR1cmUuPC9kaXY+
+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5z
+LXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rp
+dj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNh
+bnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpJJ3ZlIGFs
+cmVhZHkgYnVpbHQgdHBtMi10c3MgaW4gV2luZG93cyBidXQgZ290IHN0dWNrIGJ5IGJ1aWxkaW5n
+IGFuZCBjb25maWd1cmluZyB0cG0yLXRzcy1lbmdpbmUuPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
+dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
+ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpBbHNvLiBpZiBhbnlvbmUga25vdyBob3cg
+dG8gaW5zdGFsbCBJQk0gVFBNIHNpbXVsYXRvciBpbiBXaW5kb3dzIHRoYXQgd2lsbCBoZWxwIGEg
+bG90IHRvbyE8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
+ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAw
+KTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWws
+IEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAs
+IDApOyI+ClRoYW5rcyw8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFy
+aWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
+LCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwg
+QXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdi
+KDAsIDAsIDApOyI+ClBhdWw8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============6468017060205145931==--
 
