@@ -1,78 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============0415978516835896660=="
+Content-Type: multipart/mixed; boundary="===============5363496956674130552=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: IMA determinism
-Date: Wed, 02 Sep 2020 20:31:33 +0000
-Message-ID: <SN6PR11MB3437752697818609D040F9CAB82F0@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 20200902153515.2753.6393@ml01.vlan13.01.org
+From: Jonas Witschel <diabonas at gmx.de>
+Subject: [tpm2] tpm2-totp v0.3.0_rc0
+Date: Thu, 03 Sep 2020 17:19:35 +0200
+Message-ID: <20200903151935.tv2gld4wbpk3jf6d@gmx.de>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0415978516835896660==
+--===============5363496956674130552==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Section three is the relevant bit:
+Hi everyone,
 
-"Every user generates and uses a new key (ephemeral key) every time an atte=
-station blob has to be signed. There are some unique challenges with this. =
-If every attestation blob is signed with a brand-new key, how to infer the =
-anonymous identity at the minimum to determine the genuineness of the platf=
-orm and hence the attestation. It then follows that we need an anonymous id=
-entity that is cryptographically bound to a unique trusted identity and tha=
-t the unique identity is never revealed to any entity other than the Privac=
-y-CA."
+I have published a release candidate for tpm2-totp 0.3.0:
 
-You generate a new AIK every-time.
+https://github.com/tpm2-software/tpm2-totp/releases/tag/v0.3.0_rc0
 
-You would follow the flow as illustrated by:
-"Service request Part 1 (Platform Anonymous Identity Validation)"
+This release features the following changes:
 
-The takeaway here, is that the privacy-ca always knows who it is, but the s=
-ervice provider does not. So you trust the privacy CA with your privacy in =
-that model.
- =
+- New option --label to specify the label to use in the TOTP authenticator =
+app.
+- User-friendly error messages for common error conditions.
+- Support for running the integration tests with the swtpm simulator.
 
-Bill
+Any testing and feedback is very welcome.
 
+Cheers,
+Jonas
 
-> -----Original Message-----
-> From: Eduardo Falc=C3=A3o <eduardolfalcao(a)gmail.com>
-> Sent: Wednesday, September 2, 2020 10:35 AM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] Re: IMA determinism
-> =
+--===============5363496956674130552==
+Content-Type: application/pgp-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="signature.asc"
 
-> Thanks, Roberts and Nicolas.
-> =
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSXpCQUFCQ2dBZEZpRUUwWkduanhpQjg0
+UjFQSlorYUdzR09zUzhEc2tGQWw5UkNZQUFDZ2tRYUdzR09zUzgKRHNtUVd3Ly9lTHlwVUZvRTVn
+N1BHVFVDMGFzVkVGRGJ3eW5LMmFWVGZlSjc3WFVBd2hUbFhjRWs5TzV0MStlUgpydk10YmVVSGJa
+UlhxL1BRdmk3Y0c0d2c4ZmVNUWNFUnZGSVlBU1J6UjdPdnlYeldIalE5SzE3NXNROW84d3A2CnRP
+TE12OU5CdXhiRTVjbEdrUDdRMmxySVVnMStVTUhiS2ZWWW1ibUZXb0hlSFZsbUVKZ2ZtaGlPMWcy
+dm1qcTMKbHVqUWJjMWdhL2NxcWNlb2dSMnc5d3lBRU5RRDMzaXZ4OTdCVkF0TURlcE5vVCtkdDZm
+SHhxSXdvZXN2WDEzYgpBc2QvMWdPZmFzeEZOZHFZQlpyZVYyYW56U0RiZUpVemFzSmUreVVFVHFU
+cW8vQS9hbG11cEhtNXNaMlpkWDJMCjFXaUFxSzVwYjFZam9xVndSWCtYbVA5MEUvMENsSTdDdnRQ
+WGlrNytFSmR1T1JHQ3pRekxCYTdwdlBWN0RFOGsKbEhtaXBReXlHcnhrdzZQakp6NGxYL0JyU0FK
+WnBxN0FrWm5WZ1Y4QklQMCsvMFgyZ255cFlIK3BONENQbUd1dgpvU282UGhWNGRjdGNIcHh1MmEr
+OTFuS01NWEpLRzdqc2w3TlJ5MHpRYTMwUndwTGQrNnd5QWhDQ2JRU05JY2tkCjA0Yjkwdm9qZmNu
+WDlidFRJVklVYmRidTJUWU5yaVJSVVk3aXBuMnJJUU1qWnpNb2JELzJ0T3dhZXRaWG9PeUUKd1Rn
+V1liRTlYanBweEplQ011cGJHUDV3dm0zS2xKclFJSHh0WTFVNEt0WUpDazJ0c1RiSWZEWHZrcVE1
+WVZ0QgpxY2N1K0VpNTFYMHdVZ2ptdEdFQjhuM3owTFJnNzIzNkVTSjNjaVZBOHlMMVg2ZnNFZVk9
+Cj1xUDFJCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
 
-> Other doubt that arose here is about privacy...
-> =
-
-> In the attestation process, the machine being attested sends the public p=
-ortion
-> of its EK to the Attestor, and thus the Attestor could identify the machi=
-ne by this
-> key (if it requests attestation multiple times).
-> Some considerations are pointed here (https://tpm2-
-> software.github.io/2020/06/12/Remote-Attestation-With-tpm2-
-> tools.html#privacy-considerations), where different AIK, for instance, co=
-uld be
-> generated for each user, but they apply only for scenarios where the mach=
-ine
-> being attested has multiple users. If the machine itself doesn't have any=
- user,
-> then using multiple AIK will not make any difference.
-> =
-
-> Do you have any alternative or thoughts for this situation?
-> =
-
-> Best regards
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============0415978516835896660==--
+--===============5363496956674130552==--
 
