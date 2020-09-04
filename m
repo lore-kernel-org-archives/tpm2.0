@@ -1,107 +1,81 @@
-Content-Type: multipart/mixed; boundary="===============8001442900280073128=="
+Content-Type: multipart/mixed; boundary="===============9182923688732197632=="
 MIME-Version: 1.0
-From: Juncor <juncor.wu at gmail.com>
-Subject: [tpm2] Help for tpm-tools comand sequence
-Date: Fri, 04 Sep 2020 09:22:10 +0800
-Message-ID: <CAKjtTmwowXKgNPznvkT5qVP7yPDVCSTfWJb7MPq6p-nvPrymow@mail.gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: Help for tpm-tools comand sequence
+Date: Fri, 04 Sep 2020 16:41:26 +0000
+Message-ID: <SN6PR11MB3437107E6BA2E6E4D2F8057FB82D0@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: CAKjtTmwowXKgNPznvkT5qVP7yPDVCSTfWJb7MPq6p-nvPrymow@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8001442900280073128==
+--===============9182923688732197632==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Sir:
+It looks like you created this issue as well:
+https://github.com/tpm2-software/tpm2-tools/issues/218
 
-I had a embeded linux system project.
-SOC: AM3352.
-KERNEL 4.9.59 with slb9670 driver.
+The takeaway here is that your major versions of tpm2-tools
+Command line options are not compatible. =
 
-I can see the /dev/tpm0.
-I build the tpm-tss 1.x and tpm-tools 2.X.
-I didn't running tpm-abrmd and any resourcemgr.
-I access direct to /dev/tpm.
 
-I export two environment.
-export TPM2TOOLS_TCTI_NAME=3Ddevice
-export TPM2TOOLS_DEVICE_FILE=3D/dev/tpm0
+The best bet is to always use tpm2-tools 4.0 or greater, or write your scri=
+pt
+To handle each different version of the tools.
 
-I want check the sign and verify.
-Here is my command.
-tpm2_createprimary -A e -g 0x000B -G 0x0001 -C primary_ctx
-tpm2_create -g 0x000B -G 0x0001 -c primary_ctx -o kry_pub -O key_priv
-tpm2_load -c primary_ctx -u kry_pub -r key_priv -n name -C
-eccsinging_key_ctx
-tpm2_sing -c eccsigning_key_ctx -g 0x000B -m input_data -s signature
+As of tpm2-tools 4.0, we froze the command line interface and it will always
+be backwards compatible.
 
-I alway got error after tpm2_sign command:
-ERROR: ContextLoad Error. TPM Error:0x902.
+Thanks,
+Bill
 
-I have no idea which step error?
+> -----Original Message-----
+> From: Juncor <juncor.wu(a)gmail.com>
+> Sent: Thursday, September 3, 2020 8:22 PM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Help for tpm-tools comand sequence
+> =
 
-Thanks for help.
+> Hi Sir:
+> =
 
-Juncor
+> I had a embeded linux system project.
+> SOC: AM3352.
+> KERNEL 4.9.59 with slb9670 driver.
+> =
 
---===============8001442900280073128==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+> I can see the /dev/tpm0.
+> I build the tpm-tss 1.x and tpm-tools 2.X.
+> I didn't running tpm-abrmd and any resourcemgr.
+> I access direct to /dev/tpm.
+> =
 
-PGRpdiBkaXI9ImF1dG8iPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQt
-c2l6ZToxMi44cHgiPkhpIFNpcjo8L3NwYW4+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZh
-bWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44cHgiPjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0
-byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweCI+SSBoYWQg
-YSBlbWJlZGVkIGxpbnV4IHN5c3RlbSBwcm9qZWN0LjwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHls
-ZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij5TT0M6IEFNMzM1Mi48
-L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1z
-aXplOjEyLjhweCI+S0VSTkVMIDQuOS41OSB3aXRoIHNsYjk2NzAgZHJpdmVyLjwvZGl2PjxkaXYg
-ZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4
-Ij48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlm
-O2ZvbnQtc2l6ZToxMi44cHgiPkkgY2FuIHNlZSB0aGUgL2Rldi90cG0wLjwvZGl2PjxkaXYgZGly
-PSJhdXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij5J
-IGJ1aWxkIHRoZSB0cG0tdHNzIDEueCBhbmQgdHBtLXRvb2xzIDIuWC48L2Rpdj48ZGl2IGRpcj0i
-YXV0byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweCI+SSBk
-aWRuJiMzOTt0IHJ1bm5pbmcgdHBtLWFicm1kIGFuZCBhbnkgcmVzb3VyY2VtZ3IuPC9kaXY+PGRp
-diBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44
-cHgiPkkgYWNjZXNzIGRpcmVjdCB0byAvZGV2L3RwbS48L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5
-bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweCI+PGJyPjwvZGl2Pjxk
-aXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIu
-OHB4Ij5JIGV4cG9ydCB0d28gZW52aXJvbm1lbnQuPC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxl
-PSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44cHgiPmV4cG9ydCBUUE0yVE9P
-TFNfVENUSV9OQU1FPWRldmljZTwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1p
-bHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij5leHBvcnQgVFBNMlRPT0xTX0RFVklDRV9G
-SUxFPS9kZXYvdHBtMDwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fu
-cy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxl
-PSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44cHgiPkkgd2FudCBjaGVjayB0
-aGUgc2lnbiBhbmQgdmVyaWZ5LjwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1p
-bHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij5IZXJlIGlzIG15IGNvbW1hbmQuPC9kaXY+
-PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZTox
-Mi44cHgiPnRwbTJfY3JlYXRlcHJpbWFyeSAtQSBlIC1nIDB4MDAwQiAtRyAweDAwMDEgLUMgcHJp
-bWFyeV9jdHg8L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2Vy
-aWY7Zm9udC1zaXplOjEyLjhweCI+dHBtMl9jcmVhdGUgLWcgMHgwMDBCIC1HIDB4MDAwMSAtYyBw
-cmltYXJ5X2N0eCAtbyBrcnlfcHViIC1PIGtleV9wcml2PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0
-eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44cHgiPnRwbTJfbG9hZCAt
-YyBwcmltYXJ5X2N0eCAtdSBrcnlfcHViIC1yIGtleV9wcml2IC1uIG5hbWUgLUMgZWNjc2luZ2lu
-Z19rZXlfY3R4PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNl
-cmlmO2ZvbnQtc2l6ZToxMi44cHgiPnRwbTJfc2luZyAtYyBlY2NzaWduaW5nX2tleV9jdHggLWcg
-MHgwMDBCIC1tIGlucHV0X2RhdGEgLXMgc2lnbmF0dXJlPC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0
-eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44cHgiPjxicj48L2Rpdj48
-ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1zaXplOjEy
-LjhweCI+SSBhbHdheSBnb3QgZXJyb3IgYWZ0ZXIgdHBtMl9zaWduIGNvbW1hbmQ6PC9kaXY+PGRp
-diBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44
-cHgiPkVSUk9SOiBDb250ZXh0TG9hZCBFcnJvci4gVFBNIEVycm9yOjB4OTAyLjwvZGl2PjxkaXYg
-ZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4
-Ij48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlm
-O2ZvbnQtc2l6ZToxMi44cHgiPkkgaGF2ZSBubyBpZGVhIHdoaWNoIHN0ZXAgZXJyb3I/PC9kaXY+
-PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZTox
-Mi44cHgiPjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMt
-c2VyaWY7Zm9udC1zaXplOjEyLjhweCI+VGhhbmtzIGZvciBoZWxwLjwvZGl2PjxkaXYgZGlyPSJh
-dXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij48YnI+
-PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQt
-c2l6ZToxMi44cHgiPkp1bmNvcjwvZGl2PjwvZGl2Pgo=
+> I export two environment.
+> export TPM2TOOLS_TCTI_NAME=3Ddevice
+> export TPM2TOOLS_DEVICE_FILE=3D/dev/tpm0
+> =
 
---===============8001442900280073128==--
+> I want check the sign and verify.
+> Here is my command.
+> tpm2_createprimary -A e -g 0x000B -G 0x0001 -C primary_ctx tpm2_create -g
+> 0x000B -G 0x0001 -c primary_ctx -o kry_pub -O key_priv tpm2_load -c
+> primary_ctx -u kry_pub -r key_priv -n name -C eccsinging_key_ctx tpm2_sin=
+g -c
+> eccsigning_key_ctx -g 0x000B -m input_data -s signature
+> =
+
+> I alway got error after tpm2_sign command:
+> ERROR: ContextLoad Error. TPM Error:0x902.
+> =
+
+> I have no idea which step error?
+> =
+
+> Thanks for help.
+> =
+
+> Juncor
+
+--===============9182923688732197632==--
 
