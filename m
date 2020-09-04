@@ -1,56 +1,107 @@
-Content-Type: multipart/mixed; boundary="===============5363496956674130552=="
+Content-Type: multipart/mixed; boundary="===============8001442900280073128=="
 MIME-Version: 1.0
-From: Jonas Witschel <diabonas at gmx.de>
-Subject: [tpm2] tpm2-totp v0.3.0_rc0
-Date: Thu, 03 Sep 2020 17:19:35 +0200
-Message-ID: <20200903151935.tv2gld4wbpk3jf6d@gmx.de>
+From: Juncor <juncor.wu at gmail.com>
+Subject: [tpm2] Help for tpm-tools comand sequence
+Date: Fri, 04 Sep 2020 09:22:10 +0800
+Message-ID: <CAKjtTmwowXKgNPznvkT5qVP7yPDVCSTfWJb7MPq6p-nvPrymow@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5363496956674130552==
+--===============8001442900280073128==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi everyone,
+Hi Sir:
 
-I have published a release candidate for tpm2-totp 0.3.0:
+I had a embeded linux system project.
+SOC: AM3352.
+KERNEL 4.9.59 with slb9670 driver.
 
-https://github.com/tpm2-software/tpm2-totp/releases/tag/v0.3.0_rc0
+I can see the /dev/tpm0.
+I build the tpm-tss 1.x and tpm-tools 2.X.
+I didn't running tpm-abrmd and any resourcemgr.
+I access direct to /dev/tpm.
 
-This release features the following changes:
+I export two environment.
+export TPM2TOOLS_TCTI_NAME=3Ddevice
+export TPM2TOOLS_DEVICE_FILE=3D/dev/tpm0
 
-- New option --label to specify the label to use in the TOTP authenticator =
-app.
-- User-friendly error messages for common error conditions.
-- Support for running the integration tests with the swtpm simulator.
+I want check the sign and verify.
+Here is my command.
+tpm2_createprimary -A e -g 0x000B -G 0x0001 -C primary_ctx
+tpm2_create -g 0x000B -G 0x0001 -c primary_ctx -o kry_pub -O key_priv
+tpm2_load -c primary_ctx -u kry_pub -r key_priv -n name -C
+eccsinging_key_ctx
+tpm2_sing -c eccsigning_key_ctx -g 0x000B -m input_data -s signature
 
-Any testing and feedback is very welcome.
+I alway got error after tpm2_sign command:
+ERROR: ContextLoad Error. TPM Error:0x902.
 
-Cheers,
-Jonas
+I have no idea which step error?
 
---===============5363496956674130552==
-Content-Type: application/pgp-signature
+Thanks for help.
+
+Juncor
+
+--===============8001442900280073128==
+Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="signature.asc"
+Content-Disposition: attachment; filename="attachment.htm"
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSXpCQUFCQ2dBZEZpRUUwWkduanhpQjg0
-UjFQSlorYUdzR09zUzhEc2tGQWw5UkNZQUFDZ2tRYUdzR09zUzgKRHNtUVd3Ly9lTHlwVUZvRTVn
-N1BHVFVDMGFzVkVGRGJ3eW5LMmFWVGZlSjc3WFVBd2hUbFhjRWs5TzV0MStlUgpydk10YmVVSGJa
-UlhxL1BRdmk3Y0c0d2c4ZmVNUWNFUnZGSVlBU1J6UjdPdnlYeldIalE5SzE3NXNROW84d3A2CnRP
-TE12OU5CdXhiRTVjbEdrUDdRMmxySVVnMStVTUhiS2ZWWW1ibUZXb0hlSFZsbUVKZ2ZtaGlPMWcy
-dm1qcTMKbHVqUWJjMWdhL2NxcWNlb2dSMnc5d3lBRU5RRDMzaXZ4OTdCVkF0TURlcE5vVCtkdDZm
-SHhxSXdvZXN2WDEzYgpBc2QvMWdPZmFzeEZOZHFZQlpyZVYyYW56U0RiZUpVemFzSmUreVVFVHFU
-cW8vQS9hbG11cEhtNXNaMlpkWDJMCjFXaUFxSzVwYjFZam9xVndSWCtYbVA5MEUvMENsSTdDdnRQ
-WGlrNytFSmR1T1JHQ3pRekxCYTdwdlBWN0RFOGsKbEhtaXBReXlHcnhrdzZQakp6NGxYL0JyU0FK
-WnBxN0FrWm5WZ1Y4QklQMCsvMFgyZ255cFlIK3BONENQbUd1dgpvU282UGhWNGRjdGNIcHh1MmEr
-OTFuS01NWEpLRzdqc2w3TlJ5MHpRYTMwUndwTGQrNnd5QWhDQ2JRU05JY2tkCjA0Yjkwdm9qZmNu
-WDlidFRJVklVYmRidTJUWU5yaVJSVVk3aXBuMnJJUU1qWnpNb2JELzJ0T3dhZXRaWG9PeUUKd1Rn
-V1liRTlYanBweEplQ011cGJHUDV3dm0zS2xKclFJSHh0WTFVNEt0WUpDazJ0c1RiSWZEWHZrcVE1
-WVZ0QgpxY2N1K0VpNTFYMHdVZ2ptdEdFQjhuM3owTFJnNzIzNkVTSjNjaVZBOHlMMVg2ZnNFZVk9
-Cj1xUDFJCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
+PGRpdiBkaXI9ImF1dG8iPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQt
+c2l6ZToxMi44cHgiPkhpIFNpcjo8L3NwYW4+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZh
+bWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44cHgiPjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0
+byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweCI+SSBoYWQg
+YSBlbWJlZGVkIGxpbnV4IHN5c3RlbSBwcm9qZWN0LjwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHls
+ZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij5TT0M6IEFNMzM1Mi48
+L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1z
+aXplOjEyLjhweCI+S0VSTkVMIDQuOS41OSB3aXRoIHNsYjk2NzAgZHJpdmVyLjwvZGl2PjxkaXYg
+ZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4
+Ij48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlm
+O2ZvbnQtc2l6ZToxMi44cHgiPkkgY2FuIHNlZSB0aGUgL2Rldi90cG0wLjwvZGl2PjxkaXYgZGly
+PSJhdXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij5J
+IGJ1aWxkIHRoZSB0cG0tdHNzIDEueCBhbmQgdHBtLXRvb2xzIDIuWC48L2Rpdj48ZGl2IGRpcj0i
+YXV0byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweCI+SSBk
+aWRuJiMzOTt0IHJ1bm5pbmcgdHBtLWFicm1kIGFuZCBhbnkgcmVzb3VyY2VtZ3IuPC9kaXY+PGRp
+diBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44
+cHgiPkkgYWNjZXNzIGRpcmVjdCB0byAvZGV2L3RwbS48L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5
+bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1zaXplOjEyLjhweCI+PGJyPjwvZGl2Pjxk
+aXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIu
+OHB4Ij5JIGV4cG9ydCB0d28gZW52aXJvbm1lbnQuPC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxl
+PSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44cHgiPmV4cG9ydCBUUE0yVE9P
+TFNfVENUSV9OQU1FPWRldmljZTwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1p
+bHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij5leHBvcnQgVFBNMlRPT0xTX0RFVklDRV9G
+SUxFPS9kZXYvdHBtMDwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fu
+cy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxl
+PSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44cHgiPkkgd2FudCBjaGVjayB0
+aGUgc2lnbiBhbmQgdmVyaWZ5LjwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1p
+bHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij5IZXJlIGlzIG15IGNvbW1hbmQuPC9kaXY+
+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZTox
+Mi44cHgiPnRwbTJfY3JlYXRlcHJpbWFyeSAtQSBlIC1nIDB4MDAwQiAtRyAweDAwMDEgLUMgcHJp
+bWFyeV9jdHg8L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2Vy
+aWY7Zm9udC1zaXplOjEyLjhweCI+dHBtMl9jcmVhdGUgLWcgMHgwMDBCIC1HIDB4MDAwMSAtYyBw
+cmltYXJ5X2N0eCAtbyBrcnlfcHViIC1PIGtleV9wcml2PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0
+eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44cHgiPnRwbTJfbG9hZCAt
+YyBwcmltYXJ5X2N0eCAtdSBrcnlfcHViIC1yIGtleV9wcml2IC1uIG5hbWUgLUMgZWNjc2luZ2lu
+Z19rZXlfY3R4PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNl
+cmlmO2ZvbnQtc2l6ZToxMi44cHgiPnRwbTJfc2luZyAtYyBlY2NzaWduaW5nX2tleV9jdHggLWcg
+MHgwMDBCIC1tIGlucHV0X2RhdGEgLXMgc2lnbmF0dXJlPC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0
+eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44cHgiPjxicj48L2Rpdj48
+ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7Zm9udC1zaXplOjEy
+LjhweCI+SSBhbHdheSBnb3QgZXJyb3IgYWZ0ZXIgdHBtMl9zaWduIGNvbW1hbmQ6PC9kaXY+PGRp
+diBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMi44
+cHgiPkVSUk9SOiBDb250ZXh0TG9hZCBFcnJvci4gVFBNIEVycm9yOjB4OTAyLjwvZGl2PjxkaXYg
+ZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4
+Ij48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlm
+O2ZvbnQtc2l6ZToxMi44cHgiPkkgaGF2ZSBubyBpZGVhIHdoaWNoIHN0ZXAgZXJyb3I/PC9kaXY+
+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQtc2l6ZTox
+Mi44cHgiPjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtZmFtaWx5OnNhbnMt
+c2VyaWY7Zm9udC1zaXplOjEyLjhweCI+VGhhbmtzIGZvciBoZWxwLjwvZGl2PjxkaXYgZGlyPSJh
+dXRvIiBzdHlsZT0iZm9udC1mYW1pbHk6c2Fucy1zZXJpZjtmb250LXNpemU6MTIuOHB4Ij48YnI+
+PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJmb250LWZhbWlseTpzYW5zLXNlcmlmO2ZvbnQt
+c2l6ZToxMi44cHgiPkp1bmNvcjwvZGl2PjwvZGl2Pgo=
 
---===============5363496956674130552==--
+--===============8001442900280073128==--
 
