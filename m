@@ -1,255 +1,134 @@
-Content-Type: multipart/mixed; boundary="===============1299268693133916074=="
+Content-Type: multipart/mixed; boundary="===============8653026013184647051=="
 MIME-Version: 1.0
-From: Florian.Schreiner at infineon.com
-Subject: [tpm2] Re: Help for tpm-tools comand sequence
-Date: Mon, 07 Sep 2020 18:22:29 +0000
-Message-ID: <8bc5325178244d5db47b6bb83fc80c96@infineon.com>
-In-Reply-To: CAKjtTmwowXKgNPznvkT5qVP7yPDVCSTfWJb7MPq6p-nvPrymow@mail.gmail.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: Remote Attestation With Tpm2 Tools
+Date: Tue, 08 Sep 2020 14:53:18 +0000
+Message-ID: <SN6PR11MB34372574521A9368860DCB41B8290@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: CABWgujaDpGkTfwdv-Ln69-UeQ_ohe--=0u83ypkKSci3OdFjjQ@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1299268693133916074==
+--===============8653026013184647051==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-you could check the documents and instructions on the page: https://www.inf=
-ineon.com/cms/en/product/promopages/tpm-tss-quickstarter/
-At the bottom of the page you can find a Appnote document, which shows the =
-usage of the tpm-tools on a working setup and you can find the difference t=
-o your system. Section 5.2 shows the usage of the FAPI tpm2-tools and secti=
-on 6.3.1. presents the ESAPI tpm2-tools.
-
-Best,
-Florian
 
 
-From: Juncor <juncor.wu(a)gmail.com>
-Sent: Freitag, 4. September 2020 03:22
-To: tpm2(a)lists.01.org
-Subject: [tpm2] Help for tpm-tools comand sequence
+> -----Original Message-----
+> From: Hanson Char <hanson.char(a)gmail.com>
+> Sent: Sunday, September 6, 2020 12:55 AM
+> To: tpm2(a)lists.01.org
+> Subject: [tpm2] Remote Attestation With Tpm2 Tools
+> =
 
-Caution: This e-mail originated outside Infineon Technologies. Do not click=
- on links or open attachments unless you validate it is safe<http://iweb.in=
-fineon.com/en-US/Support/security/CDC/pse/Pages/pce.aspx>.
+> I just managed to get the 3 scripts provided at
+> =
 
+>   https://tpm2-software.github.io/2020/06/12/Remote-Attestation-With-tpm2-
+> tools.html#scripts-for-implementation-of-the-simple-attestation-framework
+> =
 
-Hi Sir:
+> to work with the latest tpm2-tss (built from the latest master branches) =
+in
+> Ubuntu 20.04 (x86-64 with Infineon TPM SLB9670) so I thought I would share
+> some of what I've found.
+> =
 
-I had a embeded linux system project.
-SOC: AM3352.
-KERNEL 4.9.59 with slb9670 driver.
+> 1. For the Infineon TPM device SLB9670, I realized the version of the TPM
+> firmware needed to be upgraded (e.g. to the latest version 7.85.4555.0). =
+ The
+> tpm2_create command in the script would fail when executed against the TPM
+> firmware version 7.63.3353.0.
+> =
 
-I can see the /dev/tpm0.
-I build the tpm-tss 1.x and tpm-tools 2.X.
-I didn't running tpm-abrmd and any resourcemgr.
-I access direct to /dev/tpm.
+> 2. The three scripts need to be in their individual directories.  For exa=
+mple:
+> =
 
-I export two environment.
-export TPM2TOOLS_TCTI_NAME=3Ddevice
-export TPM2TOOLS_DEVICE_FILE=3D/dev/tpm0
+>     =E2=94=9C=E2=94=80=E2=94=80 DN
+>     =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 device_node.sh
+>     =E2=94=9C=E2=94=80=E2=94=80 PCA
+>     =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 private_ca.sh
+>     =E2=94=94=E2=94=80=E2=94=80 SP
+>         =E2=94=94=E2=94=80=E2=94=80 service_provider.sh
+> =
 
-I want check the sign and verify.
-Here is my command.
-tpm2_createprimary -A e -g 0x000B -G 0x0001 -C primary_ctx
-tpm2_create -g 0x000B -G 0x0001 -c primary_ctx -o kry_pub -O key_priv
-tpm2_load -c primary_ctx -u kry_pub -r key_priv -n name -C eccsinging_key_c=
-tx
-tpm2_sing -c eccsigning_key_ctx -g 0x000B -m input_data -s signature
+> =
 
-I alway got error after tpm2_sign command:
-ERROR: ContextLoad Error. TPM Error:0x902.
+> 3. I needed to modify the specific golden PCR value, and the location of =
+pcr.bin in
+> service_provider.sh.  In particular:
+> =
 
-I have no idea which step error?
+> diff --git a/SP/service_provider.sh b/SP/service_provider.sh index
+> a0b40ec..b6433d6 100755
+> --- a/SP/service_provider.sh
+> +++ b/SP/service_provider.sh
+> @@ -13,7 +13,8 @@ device_service_request=3D0
+> =
 
-Thanks for help.
+>  # Attestation Data
+>  GOLDEN_PCR_SELECTION=3D"sha1:0,1,2+sha256:0,1,2"
+> -
+> GOLDEN_PCR=3D"59bf9091f4cbbd2a8796bfe086a501c57226c42739dcf8ad323e7493a
+> d51e38f"
+> +#
+> GOLDEN_PCR=3D"59bf9091f4cbbd2a8796bfe086a501c57226c42739dcf8ad323e7493a
+> d51e38f"
+> +GOLDEN_PCR=3D"c7b544e0359614c896ed32b0fd7fad43c32ba7e19d4b613cdbda16
+> 2f784b5781"
+> =
 
-Juncor
+>  # Service Data
+>  SERVICE_CONTENT=3D"Hello world!"
+> @@ -175,7 +176,7 @@ system_software_state_validation() {
+>     software_status_string=3D"Attestation quote signature validation"
+>     tpm2_checkquote --public d_s_service_aik.pub  --qualification "$NONCE=
+" \
+>     --message attestation_quote.dat --signature attestation_quote.signatu=
+re \
+> -   --pcr pcr.bin -Q
+> +   --pcr ../DN/pcr.bin -Q
+>     retval=3D$?
+>     rm -f attestation_quote.signature
+>     if [ $retval =3D=3D 1 ];then
+> =
 
---===============1299268693133916074==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+> =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
-Zm9udC1zaXplOjEyLjBwdDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIixzZXJpZjt9
-DQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCglj
-b2xvcjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFu
-Lk1zb0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpw
-dXJwbGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwLm1zb25vcm1hbDAsIGxpLm1z
-b25vcm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1uYW1lOm1zb25vcm1hbDsNCglt
-c28tbWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGNtOw0KCW1zby1tYXJnaW4t
-Ym90dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBjbTsNCglmb250LXNpemU6MTIuMHB0Ow0K
-CWZvbnQtZmFtaWx5OiJUaW1lcyBOZXcgUm9tYW4iLHNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE5
-DQoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsOw0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5z
-LXNlcmlmOw0KCWNvbG9yOiMxRjQ5N0Q7fQ0Kc3Bhbi5FbWFpbFN0eWxlMjANCgl7bXNvLXN0eWxl
-LXR5cGU6cGVyc29uYWwtY29tcG9zZTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJp
-ZjsNCgljb2xvcjp3aW5kb3d0ZXh0O30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBl
-OmV4cG9ydC1vbmx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOw0KCW1zby1m
-YXJlYXN0LWxhbmd1YWdlOkVOLVVTO30NCkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtzaXplOjYxMi4w
-cHQgNzkyLjBwdDsNCgltYXJnaW46NzIuMHB0IDcyLjBwdCA3Mi4wcHQgNzIuMHB0O30NCmRpdi5X
-b3JkU2VjdGlvbjENCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQ0KLS0+PC9zdHlsZT48IS0tW2lmIGd0
-ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEw
-MjYiIC8+DQo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNo
-YXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4NCjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAv
-Pg0KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPg0KPC9oZWFkPg0KPGJvZHkgbGFu
-Zz0iREUiIGxpbms9ImJsdWUiIHZsaW5rPSJwdXJwbGUiPg0KPGRpdiBjbGFzcz0iV29yZFNlY3Rp
-b24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTEuMHB0
-O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjttc28tZmFyZWFzdC1s
-YW5ndWFnZTpFTi1VUyI+SGksPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2Fs
-aWJyaSZxdW90OyxzYW5zLXNlcmlmO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpwPiZu
-YnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJF
-Ti1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZx
-dW90OyxzYW5zLXNlcmlmO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj55b3UgY291bGQgY2hl
-Y2sgdGhlIGRvY3VtZW50cyBhbmQgaW5zdHJ1Y3Rpb25zIG9uIHRoZSBwYWdlPC9zcGFuPjxzcGFu
-IGxhbmc9IkVOLVVTIiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtD
-YWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWY7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPjoNCjwv
-c3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxp
-YnJpJnF1b3Q7LHNhbnMtc2VyaWYiPjxhIGhyZWY9Imh0dHBzOi8vd3d3LmluZmluZW9uLmNvbS9j
-bXMvZW4vcHJvZHVjdC9wcm9tb3BhZ2VzL3RwbS10c3MtcXVpY2tzdGFydGVyLyI+PHNwYW4gbGFu
-Zz0iRU4tVVMiPmh0dHBzOi8vd3d3LmluZmluZW9uLmNvbS9jbXMvZW4vcHJvZHVjdC9wcm9tb3Bh
-Z2VzL3RwbS10c3MtcXVpY2tzdGFydGVyLzwvc3Bhbj48L2E+PC9zcGFuPjxvOnA+PC9vOnA+PC9w
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJmb250LXNp
-emU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZjttc28t
-ZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+QXQgdGhlIGJvdHRvbSBvZiB0aGUgcGFnZSB5b3UgY2Fu
-IGZpbmQgYSBBcHBub3RlIGRvY3VtZW50LCB3aGljaCBzaG93cyB0aGUgdXNhZ2Ugb2YgdGhlIHRw
-bS10b29scyBvbiBhIHdvcmtpbmcgc2V0dXAgYW5kIHlvdSBjYW4gZmluZA0KIHRoZSBkaWZmZXJl
-bmNlIHRvIHlvdXIgc3lzdGVtLiBTZWN0aW9uIDUuMiBzaG93cyB0aGUgdXNhZ2Ugb2YgdGhlIEZB
-UEkgdHBtMi10b29scyBhbmQgc2VjdGlvbiA2LjMuMS4gcHJlc2VudHMgdGhlIEVTQVBJIHRwbTIt
-dG9vbHMuDQo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7
-Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpw
-PiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5n
-PSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJy
-aSZxdW90OyxzYW5zLXNlcmlmO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5CZXN0LDxvOnA+
-PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVT
-IiBzdHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7
-LHNhbnMtc2VyaWY7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPkZsb3JpYW4NCjxvOnA+PC9v
-OnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBz
-dHlsZT0iZm9udC1zaXplOjExLjBwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNh
-bnMtc2VyaWY7Y29sb3I6IzFGNDk3RDttc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4m
-bmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0i
-RU4tVVMiIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
-cXVvdDssc2Fucy1zZXJpZjtjb2xvcjojMUY0OTdEO21zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVT
-Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48Yj48
-c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1
-b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj5Gcm9tOjwvc3Bhbj48L2I+PHNwYW4gbGFuZz0i
-RU4tVVMiIHN0eWxlPSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
-cXVvdDssc2Fucy1zZXJpZiI+IEp1bmNvciAmbHQ7anVuY29yLnd1QGdtYWlsLmNvbSZndDsNCjxi
-cj4NCjxiPlNlbnQ6PC9iPiBGcmVpdGFnLCA0LiBTZXB0ZW1iZXIgMjAyMCAwMzoyMjxicj4NCjxi
-PlRvOjwvYj4gdHBtMkBsaXN0cy4wMS5vcmc8YnI+DQo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIEhl
-bHAgZm9yIHRwbS10b29scyBjb21hbmQgc2VxdWVuY2U8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxkaXY+DQo8dGFibGUg
-Y2xhc3M9Ik1zb05vcm1hbFRhYmxlIiBib3JkZXI9IjAiIGNlbGxzcGFjaW5nPSIzIiBjZWxscGFk
-ZGluZz0iMCIgd2lkdGg9IjAiIHN0eWxlPSJ3aWR0aDowY207YmFja2dyb3VuZDptb2NjYXNpbiI+
-DQo8dGJvZHk+DQo8dHI+DQo8dGQgc3R5bGU9InBhZGRpbmc6Ljc1cHQgLjc1cHQgLjc1cHQgLjc1
-cHQiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHN0cm9uZz48c3BhbiBzdHlsZT0iZm9udC1zaXpl
-OjEwLjVwdCI+Q2F1dGlvbjwvc3Bhbj48L3N0cm9uZz48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEw
-LjVwdCI+OiBUaGlzIGUtbWFpbCBvcmlnaW5hdGVkIG91dHNpZGUgSW5maW5lb24gVGVjaG5vbG9n
-aWVzLiBEbyBub3QgY2xpY2sgb24gbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91
-DQo8YSBocmVmPSJodHRwOi8vaXdlYi5pbmZpbmVvbi5jb20vZW4tVVMvU3VwcG9ydC9zZWN1cml0
-eS9DREMvcHNlL1BhZ2VzL3BjZS5hc3B4Ij4NCnZhbGlkYXRlIGl0IGlzIHNhZmU8L2E+LjxvOnA+
-PC9vOnA+PC9zcGFuPjwvcD4NCjwvdGQ+DQo8L3RyPg0KPC90Ym9keT4NCjwvdGFibGU+DQo8L2Rp
-dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRpdj4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OS41cHQ7Zm9udC1mYW1p
-bHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+SGkgU2lyOjwvc3Bhbj48bzpwPjwvbzpw
-PjwvcD4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXpl
-OjkuNXB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPjxvOnA+Jm5i
-c3A7PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6OS41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVv
-dDssc2Fucy1zZXJpZiI+SSBoYWQgYSBlbWJlZGVkIGxpbnV4IHN5c3RlbSBwcm9qZWN0LjxvOnA+
-PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxz
-cGFuIHN0eWxlPSJmb250LXNpemU6OS41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDss
-c2Fucy1zZXJpZiI+U09DOiBBTTMzNTIuPG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8
-ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5LjVwdDtm
-b250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj5LRVJORUwgNC45LjU5IHdp
-dGggc2xiOTY3MCBkcml2ZXIuPG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5LjVwdDtmb250LWZh
-bWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bh
-bj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0i
-Zm9udC1zaXplOjkuNXB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYi
-PkkgY2FuIHNlZSB0aGUgL2Rldi90cG0wLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0K
-PGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OS41cHQ7
-Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+SSBidWlsZCB0aGUgdHBt
-LXRzcyAxLnggYW5kIHRwbS10b29scyAyLlguPG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+
-DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5LjVw
-dDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj5JIGRpZG4ndCBydW5u
-aW5nIHRwbS1hYnJtZCBhbmQgYW55IHJlc291cmNlbWdyLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4N
-CjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNp
-emU6OS41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+SSBhY2Nl
-c3MgZGlyZWN0IHRvIC9kZXYvdHBtLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRp
-dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OS41cHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+PG86cD4mbmJzcDs8L286cD48
-L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5
-bGU9ImZvbnQtc2l6ZTo5LjVwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNl
-cmlmIj5JIGV4cG9ydCB0d28gZW52aXJvbm1lbnQuPG86cD48L286cD48L3NwYW4+PC9wPg0KPC9k
-aXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5
-LjVwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj5leHBvcnQgVFBN
-MlRPT0xTX1RDVElfTkFNRT1kZXZpY2U8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxk
-aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjkuNXB0O2Zv
-bnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPmV4cG9ydCBUUE0yVE9PTFNf
-REVWSUNFX0ZJTEU9L2Rldi90cG0wPG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5LjVwdDtmb250
-LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj48bzpwPiZuYnNwOzwvbzpwPjwv
-c3Bhbj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHls
-ZT0iZm9udC1zaXplOjkuNXB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2Vy
-aWYiPkkgd2FudCBjaGVjayB0aGUgc2lnbiBhbmQgdmVyaWZ5LjxvOnA+PC9vOnA+PC9zcGFuPjwv
-cD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6OS41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+SGVy
-ZSBpcyBteSBjb21tYW5kLjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OS41cHQ7Zm9udC1mYW1p
-bHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+dHBtMl9jcmVhdGVwcmltYXJ5IC1BIGUg
-LWcgMHgwMDBCIC1HIDB4MDAwMSAtQyBwcmltYXJ5X2N0eDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4N
-CjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNp
-emU6OS41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+dHBtMl9j
-cmVhdGUgLWcgMHgwMDBCIC1HIDB4MDAwMSAtYyBwcmltYXJ5X2N0eCAtbyBrcnlfcHViIC1PIGtl
-eV9wcml2PG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5LjVwdDtmb250LWZhbWlseTomcXVvdDtB
-cmlhbCZxdW90OyxzYW5zLXNlcmlmIj50cG0yX2xvYWQgLWMgcHJpbWFyeV9jdHggLXUga3J5X3B1
-YiAtciBrZXlfcHJpdiAtbiBuYW1lIC1DIGVjY3Npbmdpbmdfa2V5X2N0eDxvOnA+PC9vOnA+PC9z
-cGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxl
-PSJmb250LXNpemU6OS41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJp
-ZiI+dHBtMl9zaW5nIC1jIGVjY3NpZ25pbmdfa2V5X2N0eCAtZyAweDAwMEIgLW0gaW5wdXRfZGF0
-YSAtcyBzaWduYXR1cmU8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjkuNXB0O2ZvbnQtZmFtaWx5
-OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwv
-cD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6OS41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+SSBh
-bHdheSBnb3QgZXJyb3IgYWZ0ZXIgdHBtMl9zaWduIGNvbW1hbmQ6PG86cD48L286cD48L3NwYW4+
-PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZv
-bnQtc2l6ZTo5LjVwdDtmb250LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj5F
-UlJPUjogQ29udGV4dExvYWQgRXJyb3IuIFRQTSBFcnJvcjoweDkwMi48bzpwPjwvbzpwPjwvc3Bh
-bj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0i
-Zm9udC1zaXplOjkuNXB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYi
-PjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OS41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7
-QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+SSBoYXZlIG5vIGlkZWEgd2hpY2ggc3RlcCBlcnJvcj88
-bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjkuNXB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1
-b3Q7LHNhbnMtc2VyaWYiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRp
-dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OS41cHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZiI+VGhhbmtzIGZvciBoZWxwLjxv
-OnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxzcGFuIHN0eWxlPSJmb250LXNpemU6OS41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7QXJpYWwmcXVv
-dDssc2Fucy1zZXJpZiI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5LjVwdDtmb250
-LWZhbWlseTomcXVvdDtBcmlhbCZxdW90OyxzYW5zLXNlcmlmIj5KdW5jb3I8bzpwPjwvbzpwPjwv
-c3Bhbj48L3A+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
+> =
 
---===============1299268693133916074==--
+> Hope this helps anyone who may try to run the scripts.
+> =
+
+> Meanwhile, I wonder how the sequence diagram and the scripts may differ w=
+hen
+> privacy is not a concern; and would appreciate any pointers or hints.
+
+Yeah you can skip the whole makecredential and activate credential parts, a=
+nd you could just
+sign the quote with a fixed AIK (Attestation Identity Key). That would remo=
+ve annonimity, but
+you would know that key is the TPM by:
+1. Knowing on the server side receiving the quote that this public key is v=
+alid known to a TPM.
+2. Using TPM2_Cerfify to certify that the key with name X is loaded into th=
+e TPM, and you trust
+     Its parents and that name. The name of the signing key for the quote i=
+s in the attestation data.
+     So you could certify the key is in the TPM using the certify command a=
+nd another known public key,
+     Like the endorsement key, and then verify the public structure is cons=
+istent with your expected
+     template through the name.
+
+    1 is the easier solution.
+
+> =
+
+> Regards,
+> Hanson
+
+--===============8653026013184647051==--
 
