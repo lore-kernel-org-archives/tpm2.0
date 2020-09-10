@@ -1,112 +1,115 @@
-Content-Type: multipart/mixed; boundary="===============1474392509707082699=="
+Content-Type: multipart/mixed; boundary="===============0541194932518570189=="
 MIME-Version: 1.0
-From: Diego Santa Cruz <Diego.SantaCruz at spinetix.com>
-Subject: [tpm2] Re: unable to take ownership of TPM2.0 device
-Date: Thu, 10 Sep 2020 09:46:53 +0000
-Message-ID: <
- <HE1PR0102MB26344FB44EC4E0D1083140C388270@HE1PR0102MB2634.eurprd01.prod.exchangelabs.com>>
-In-Reply-To: 20200909214921.2828.69714@ml01.vlan13.01.org
+From: John Connett <jrc at skylon.me.uk>
+Subject: [tpm2] Building tpm2-tss-3.0.1-rc0 on OmniOS?
+Date: Thu, 10 Sep 2020 11:48:03 +0100
+Message-ID: <481a4469-deb2-760c-19b9-f6ca367978b7@skylon.me.uk>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1474392509707082699==
+--===============0541194932518570189==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+I'm attempting to build tpm2-tss-3.0.1-rc0 on the latest version of
+OmniOS (https://omniosce.org/).
 
-If you have lost the lockout password then you can request the BIOS to clea=
-r the TPM via the Physical Presence Interface (PPI), of course you will loo=
-se all data on the TPM and any saved keys will be invalidated.
+    $ cat /etc/os-release
+    NAME=3D"OmniOS"
+    PRETTY_NAME=3D"OmniOS Community Edition v11 r151034r"
+    CPE_NAME=3D"cpe:/o:omniosce:omnios:11:151034:18"
+    ID=3Domnios
+    VERSION=3Dr151034r
+    VERSION_ID=3Dr151034r
+    BUILD_ID=3D151034.18.2020.08.29
+    HOME_URL=3D"https://omniosce.org/"
+    SUPPORT_URL=3D"https://omniosce.org/"
+    BUG_REPORT_URL=3D"https://github.com/omniosorg/omnios-build/issues/new"
+    $
 
-The clear operation is 5 and you can queue the requests are via /sys/class/=
-tpm/tpm0/ppi/request, so the following should do it
+I think I have the prerequisites installed either from the release or
+from pkgsrc (https://pkgsrc.joyent.com/). I have also set the following
+environment variables:
 
-echo 5 > /sys/class/tpm/tpm0/ppi/request
-reboot
+    export PATH=3D/opt/local/sbin:/opt/local/bin:$PATH
+    export MANPATH=3D/opt/local/man:/usr/share/man
+    export PKG_CONFIG_PATH=3D/opt/local/lib/pkgconfig
+    export MAKE=3Dgmake
 
-Upon reboot the BIOS may pause the boot and request a confirmation on the k=
-eyboard, it depends on the BIOS settings.
+I have made the following modification to recognise the OS:
 
-Best,
+$ diff -u configure.ac.orig configure.ac
+--- configure.ac.orig   Wed Sep  9 08:01:43 2020
++++ configure.ac        Thu Sep 10 10:53:18 2020
+@@ -44,6 +44,11 @@
+         HOSTOS=3D'BSD'
+         LIBSOCKET_LDFLAGS=3D""
+         ;;
++    *solaris*)
++        HOSTOS=3D'SOLARIS'
++        ADD_COMPILER_FLAG([-D__EXTENSIONS__])
++        LIBSOCKET_LDFLAGS=3D"-lsocket -lnsl"
++        ;;
+     *)
+         #Assume linux
+         HOSTOS=3D'Linux'
+$
 
-Diego
+This is what I see when I run bootstrap:
 
--- =
+$ ./bootstrap
+Generating file lists: src_vars.mk
+aclocal: installing 'm4/libtool.m4' from '/usr/share/aclocal/libtool.m4'
+aclocal: installing 'm4/ltdl.m4' from '/usr/share/aclocal/ltdl.m4'
+aclocal: installing 'm4/ltoptions.m4' from '/usr/share/aclocal/ltoptions.m4'
+aclocal: installing 'm4/ltsugar.m4' from '/usr/share/aclocal/ltsugar.m4'
+aclocal: installing 'm4/ltversion.m4' from '/usr/share/aclocal/ltversion.m4'
+aclocal: installing 'm4/lt~obsolete.m4' from
+'/usr/share/aclocal/lt~obsolete.m4'
+aclocal: installing 'm4/pkg.m4' from '/usr/share/aclocal/pkg.m4'
+libtoolize: putting auxiliary files in '.'.
+libtoolize: linking file './ltmain.sh'
+configure.ac:21: error: possibly undefined macro: AC_SUBST
+      If this token and others are legitimate, please use m4_pattern_allow.
+      See the Autoconf documentation.
+configure.ac:68: error: possibly undefined macro: AS_IF
+configure.ac:101: error: possibly undefined macro: AC_MSG_ERROR
+configure.ac:130: error: possibly undefined macro: AC_MSG_WARN
+autoreconf: /usr/bin/autoconf failed with exit status: 1
+$
 
-Diego Santa Cruz, PhD
-Technology Architect
-spinetix.com
+I don't have much experience with autotools. Can anyone spot if I have
+made an obvious mistake. The first error reported is for this line:
 
------Original Message-----
-From: Chenxi Z <cxzhang1981(a)hotmail.com> =
+AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],[$ac_configure_args])
 
-Sent: 09 September 2020 23:49
-To: tpm2(a)lists.01.org
-Subject: [tpm2] unable to take ownership of TPM2.0 device
+I am aware of other issues with OmniOS: make =3D> gmake; tar =3D> gtar;
+doesn't have _DIRENT_HAVE_D_TYPE defined; requires explicit use of
+"#include <stdarg.h>" on more files. However, there seems a good chance
+it could be made to work with the simulators (OmniOS doesn't yet have a
+TPM2 device driver).
 
-Hi,
-
-I am encountering an issue that TPM2 device in DA lockout mode, and I am un=
-able to take ownership or unlock it.
-Could anyone help me how to resolve it?
-
-TPM2 tools version:
-[root(a)myhost ~]# rpm -qa | grep tpm2
-tpm2-tss-1.0.
-tpm2-abrmd-1.0
-tpm2-tools-1.1
-
-
-[root(a)myhost ~]# tpm2_dump_capability -c properties-variable
-TPM_PT_PERSISTENT:
-  ownerAuthSet:              clear
-  endorsementAuthSet:   clear
-  lockoutAuthSet:            clear
-  reserved1:                    clear
-  disableClear:                clear
-  inLockout:                     clear
-  tpmGeneratedEPS:      clear
-  reserved2:                 clear
-TPM_PT_STARTUP_CLEAR:
-  phEnable:                  set
-  shEnable:                  set
-  ehEnable:                  set
-  phEnableNV:              set
-  reserved1:                 clear
-  orderly:                   clear
-TPM_PT_HR_NV_INDEX:          0x00000008
-TPM_PT_HR_LOADED:            0x00000000
-TPM_PT_HR_LOADED_AVAIL:      0x00000004
-TPM_PT_HR_ACTIVE:            0x00000000
-TPM_PT_HR_ACTIVE_AVAIL:      0x00000040
-TPM_PT_HR_TRANSIENT_AVAIL:   0x00000005
-TPM_PT_HR_PERSISTENT:        0x00000001
-TPM_PT_HR_PERSISTENT_AVAIL:  0x00000007
-TPM_PT_NV_COUNTERS:          0x00000000
-TPM_PT_NV_COUNTERS_AVAIL:    0x00000008
-TPM_PT_ALGORITHM_SET:        0x00000000
-TPM_PT_LOADED_CURVES:        0x00000003
-TPM_PT_LOCKOUT_COUNTER:      0x00000000
-TPM_PT_MAX_AUTH_FAIL:        0x00000020
-TPM_PT_LOCKOUT_INTERVAL:     0x00001c20
-TPM_PT_LOCKOUT_RECOVERY:     0x00015180
-TPM_PT_NV_WRITE_RECOVERY:    0x00000000
-TPM_PT_AUDIT_COUNTER_0:      0x00000000
-TPM_PT_AUDIT_COUNTER_1:      0x00000000
-
-
-Here is the issue:
-[root(a)myhost ~]# tpm2_takeownership -c -L <PWD>  -O <PWD>  -E <PWD>
-ERROR: Clearing Failed! TPM error code: 0x921
+Has anyone else tried building on other flavours of Illumos/Solaris?
+--
+John
 
 
-[root(a)myhost ~]# tpm2_dictionarylockout -c --lockout-passwd <PWD>
-ERROR: 0x921 Error clearing dictionary lockout.
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org %(web_page_url)sl=
-istinfo%(cgiext)s/%(_internal_name)s
---===============1474392509707082699==--
+--===============0541194932518570189==
+Content-Type: application/pgp-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="signature.asc"
+
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRRXpCQUVCQ0FBZEZpRUV4d09hcXJvNWNp
+bkdkRS9YanpFVkVTNjQyMVFGQWw5YUJHNEFDZ2tRanpFVkVTNjQKMjFTZ29nZ0FpQnVQS21YSVYx
+akRacG5vT2VMaktnZURXdGxwQXZudlpjcHAxeTh4cVh3TElDYm5OMUhoQWVnbgpwNUxhZDcwVG93
+K0E2cTBSSWNjd3hmSHlObDFleEpzVmdCcVhjUUt5eURsblpXWHl5SGxiSmlxVW9yOG5Gci9ICk8y
+OENFUkNDZklTVTk2bGZUdmx4VjhNZ1ZJSEZoaEpNWlVyME03TWoyazRoT0xuSHZTeFE5eThUb3ky
+NzYwQTkKWlNSWkpQajFJTkNweVdRODUvU2xoaFBnWncwNWcxZk1MN0ZCNFN1WUJ3QlArOGQ1NXVF
+cWlXclFaSDhweTg4ZgoySENJazJWYTFTU1l2YlBBOFJCSmRuYkpDdHN3eDFBTmdCZTNMRmE2bzJ4
+SlA1TVc5VlZHV1BwYzdRMjhGeUVhClhtMFZIT2FGMk1rcFBVdFgyOGlwWW1hMlJwdlpDUT09Cj1F
+RkRoCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
+
+--===============0541194932518570189==--
 
