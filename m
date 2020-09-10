@@ -1,36 +1,48 @@
-Content-Type: multipart/mixed; boundary="===============4601347808742974894=="
+Content-Type: multipart/mixed; boundary="===============1474392509707082699=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+From: Diego Santa Cruz <Diego.SantaCruz at spinetix.com>
 Subject: [tpm2] Re: unable to take ownership of TPM2.0 device
-Date: Thu, 10 Sep 2020 07:50:16 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171BADABC@exch2010c.sit.fraunhofer.de>
+Date: Thu, 10 Sep 2020 09:46:53 +0000
+Message-ID: <
+ <HE1PR0102MB26344FB44EC4E0D1083140C388270@HE1PR0102MB2634.eurprd01.prod.exchangelabs.com>>
 In-Reply-To: 20200909214921.2828.69714@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4601347808742974894==
+--===============1474392509707082699==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi...
+Hi,
 
-these version are soooooo old and unsupported unfortunately.
-1.0 was still quite buggy and we change a lot of the architecture.
+If you have lost the lockout password then you can request the BIOS to clea=
+r the TPM via the Physical Presence Interface (PPI), of course you will loo=
+se all data on the TPM and any saved keys will be invalidated.
 
-Please upgrade to tpm2-tss-3.0.0 or 3.0.1 (in a few days), tools 4.3.0 and =
-abrmd 2..3.3
+The clear operation is 5 and you can queue the requests are via /sys/class/=
+tpm/tpm0/ppi/request, so the following should do it
 
-Also note, that there is no takeownership command anymore.
-The TPM 2.0 comes active and available.
+echo 5 > /sys/class/tpm/tpm0/ppi/request
+reboot
 
-But you can use tss2_provision to set passwords and populate the keystore.
+Upon reboot the BIOS may pause the boot and request a confirmation on the k=
+eyboard, it depends on the BIOS settings.
 
-Cheers,
-Andreas
-________________________________________
-From: Chenxi Z [cxzhang1981(a)hotmail.com]
-Sent: Wednesday, September 09, 2020 23:49
+Best,
+
+Diego
+
+-- =
+
+Diego Santa Cruz, PhD
+Technology Architect
+spinetix.com
+
+-----Original Message-----
+From: Chenxi Z <cxzhang1981(a)hotmail.com> =
+
+Sent: 09 September 2020 23:49
 To: tpm2(a)lists.01.org
 Subject: [tpm2] unable to take ownership of TPM2.0 device
 
@@ -94,8 +106,7 @@ ERROR: Clearing Failed! TPM error code: 0x921
 ERROR: 0x921 Error clearing dictionary lockout.
 _______________________________________________
 tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============4601347808742974894==--
+To unsubscribe send an email to tpm2-leave(a)lists.01.org %(web_page_url)sl=
+istinfo%(cgiext)s/%(_internal_name)s
+--===============1474392509707082699==--
 
