@@ -1,57 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============6438354521960920321=="
+Content-Type: multipart/mixed; boundary="===============6132412950532790203=="
 MIME-Version: 1.0
-From: Jonas Witschel <diabonas at gmx.de>
-Subject: [tpm2] tpm2-totp v0.3.0
-Date: Sun, 13 Sep 2020 12:54:38 +0200
-Message-ID: <20200913105438.cuim3cs74m76lsz6@gmx.de>
-In-Reply-To: 20200903151935.tv2gld4wbpk3jf6d@gmx.de
+From: Millsap, Michael G <michael.g.millsap at intel.com>
+Subject: [tpm2] Configure tss2_esys libs and header file locations?
+Date: Fri, 18 Sep 2020 18:20:23 +0000
+Message-ID: <DM6PR11MB3500B036D5CACD4C973B7697A93F0@DM6PR11MB3500.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6438354521960920321==
+--===============6132412950532790203==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-tpm2-totp 0.3.0 is now available at
+I'm building TPM2 TSS & Tools in a container, similar to building it to cre=
+ate a package, and Tools is failing because it can't find the esys libs and=
+ header file. Is there a './configure' option to point to the location wher=
+e I have them? The TSS install doc documents many configure options, but th=
+e tools install doc doesn't.
 
-https://github.com/tpm2-software/tpm2-totp/releases/tag/v0.3.0
+Thanks,
+Mike
 
-On 2020-09-03 17:19, Jonas Witschel wrote:
-> This release features the following changes:
-> =
-
-> - New option --label to specify the label to use in the TOTP authenticato=
-r app.
-> - User-friendly error messages for common error conditions.
-> - Support for running the integration tests with the swtpm simulator.
-
-Best,
-Jonas
-
---===============6438354521960920321==
-Content-Type: application/pgp-signature
+--===============6132412950532790203==
+Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="signature.asc"
+Content-Disposition: attachment; filename="attachment.htm"
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRSXpCQUFCQ2dBZEZpRUVlWjl5UXdQQ2x2
-eklVUm5LblBsdFR1NURlMkFGQWw5ZCttNEFDZ2tRblBsdFR1NUQKZTJDMmRBLytMdVdvVlhuSnpk
-NTRkaFZUNlUrakp6dFpVakRaZDY0ZDdVQ1l5TkN6MWtPT0xOTXJCbUhUMzJzeQpMZFdQZ0Vldk5l
-eTdkS0FkM1U2T0RQNFJyZTB5dXYvOVFvNSt2SGEvRFUrbDFuQXZ1aURCaUJPVE1aekVtcDlSCjQ3
-TFZkTDd4WXRWUHBHQXBxcFluRmlJc0pycU9RSkRYU0pCUTJCTjNsYllhOWFOdVU0alE2RDBUTS9J
-d202ZVIKOE1sMkMwVDVWYVpFUDV1RXN4TW1SbnowWXRCdmJkOVNMcHFzZEZZQkF5MG9TNUw2QTE3
-eFZpZzdOTUIxWWxUcwpzNExIeDVXaTNWZi9pQzZCMGZMbkNacUtzeFBEYWU3SGlnM0xDeXhsSjRE
-clN6STdDa3FWKzMzaVU4OXRZdlp0Citvbk51dTR1UVhENkg0cFRIeEQvelk0TUlOZ1pBL04rb2tY
-M3ZTNG56bmRqekJsM0RndmxicGJVOHdJaE1YZGcKUEtjbmN3QWhQanN5NjRLZlluaHA0T0R5Ykgv
-ang0UTV2bGJFckExSC8wRDMwSjZRekxuQ3RLYkt2Tzh5a0NkYQpIVmFkOEdGTWRjOFhpWjc5dTBP
-SE5jalVXQVc4bm5Oalg0cE5TMDJMWGN4bFg3MUk1V2NkR3hOK3g2U0NvaUtGCkZBUDVnUCtXbE81
-ZldqQzdnSFVyT1JCckVFM3FEcW9EdU1RaURUZ1lqZTcyblJYL201STRUZ1pnbEFLMWIvc00KUVdh
-ZkpHbndINDh0OEdHdVM2NG14dkV1WFBuSTFBc3BFMzlpTEd4UHN1d1g5bDFlK3lJNkhSU1FUdlhi
-WWRJbQo5UVFlTXNSMGx5UWp5WHZhcHJZRHB2MTJVblJ0bU9MeVhoUTlxOXFYUUwxclEvMmdDVGM9
-Cj0xWnpVCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpzcGFuLkVtYWlsU3R5bGUx
+NwoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7Cglmb250LWZhbWlseToiQ2FsaWJy
+aSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7fQouTXNvQ2hwRGVmYXVsdAoJe21zby1z
+dHlsZS10eXBlOmV4cG9ydC1vbmx5OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7
+fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjguNWluIDExLjBpbjsKCW1hcmdpbjoxLjBpbiAx
+LjBpbiAxLjBpbiAxLjBpbjt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9
+Ci0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpl
+eHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3Rl
+IG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0
+PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+Cjwv
+aGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4K
+PGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGVsbG8sPG86
+cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj5JJ20gYnVpbGRpbmcgVFBNMiBUU1MgJmFtcDsgVG9vbHMgaW4g
+YSBjb250YWluZXIsIHNpbWlsYXIgdG8gYnVpbGRpbmcgaXQgdG8gY3JlYXRlIGEgcGFja2FnZSwg
+YW5kIFRvb2xzIGlzIGZhaWxpbmcgYmVjYXVzZSBpdCBjYW4mIzgyMTc7dCBmaW5kIHRoZSBlc3lz
+IGxpYnMgYW5kIGhlYWRlciBmaWxlLiBJcyB0aGVyZSBhICYjODIxNjsuL2NvbmZpZ3VyZSYjODIx
+Nzsgb3B0aW9uIHRvIHBvaW50IHRvIHRoZSBsb2NhdGlvbiB3aGVyZSBJIGhhdmUgdGhlbT8KIFRo
+ZSBUU1MgaW5zdGFsbCBkb2MgZG9jdW1lbnRzIG1hbnkgY29uZmlndXJlIG9wdGlvbnMsIGJ1dCB0
+aGUgdG9vbHMgaW5zdGFsbCBkb2MgZG9lc24mIzgyMTc7dC48bzpwPjwvbzpwPjwvcD4KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PlRoYW5rcyw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+TWlrZTxvOnA+PC9v
+OnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
---===============6438354521960920321==--
+--===============6132412950532790203==--
 
