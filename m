@@ -1,29 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============6132412950532790203=="
+Content-Type: multipart/mixed; boundary="===============9061219814680614217=="
 MIME-Version: 1.0
 From: Millsap, Michael G <michael.g.millsap at intel.com>
-Subject: [tpm2] Configure tss2_esys libs and header file locations?
-Date: Fri, 18 Sep 2020 18:20:23 +0000
-Message-ID: <DM6PR11MB3500B036D5CACD4C973B7697A93F0@DM6PR11MB3500.namprd11.prod.outlook.com>
+Subject: [tpm2] Re: Configure tss2_esys libs and header file locations?
+Date: Fri, 18 Sep 2020 22:05:28 +0000
+Message-ID: <DM6PR11MB350045CE27FA5E692638E300A93F0@DM6PR11MB3500.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6132412950532790203==
+--===============9061219814680614217==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Disregard, I realized I needed to run './configure --help' to obtain the co=
+nfig settings.
 
-I'm building TPM2 TSS & Tools in a container, similar to building it to cre=
-ate a package, and Tools is failing because it can't find the esys libs and=
- header file. Is there a './configure' option to point to the location wher=
-e I have them? The TSS install doc documents many configure options, but th=
-e tools install doc doesn't.
+-Mike
 
-Thanks,
-Mike
-
---===============6132412950532790203==
+--===============9061219814680614217==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -52,18 +46,12 @@ eHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3Rl
 IG1zbyA5XT48eG1sPgo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0
 PSJlZGl0IiBkYXRhPSIxIiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+Cjwv
 aGVhZD4KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIj4K
-PGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGVsbG8sPG86
-cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj5JJ20gYnVpbGRpbmcgVFBNMiBUU1MgJmFtcDsgVG9vbHMgaW4g
-YSBjb250YWluZXIsIHNpbWlsYXIgdG8gYnVpbGRpbmcgaXQgdG8gY3JlYXRlIGEgcGFja2FnZSwg
-YW5kIFRvb2xzIGlzIGZhaWxpbmcgYmVjYXVzZSBpdCBjYW4mIzgyMTc7dCBmaW5kIHRoZSBlc3lz
-IGxpYnMgYW5kIGhlYWRlciBmaWxlLiBJcyB0aGVyZSBhICYjODIxNjsuL2NvbmZpZ3VyZSYjODIx
-Nzsgb3B0aW9uIHRvIHBvaW50IHRvIHRoZSBsb2NhdGlvbiB3aGVyZSBJIGhhdmUgdGhlbT8KIFRo
-ZSBUU1MgaW5zdGFsbCBkb2MgZG9jdW1lbnRzIG1hbnkgY29uZmlndXJlIG9wdGlvbnMsIGJ1dCB0
-aGUgdG9vbHMgaW5zdGFsbCBkb2MgZG9lc24mIzgyMTc7dC48bzpwPjwvbzpwPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PlRoYW5rcyw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+TWlrZTxvOnA+PC9v
-OnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+PGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RGlzcmVnYXJk
+LCBJIHJlYWxpemVkIEkgbmVlZGVkIHRvIHJ1biA8c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1
+b3Q7Q291cmllciBOZXcmcXVvdDsiPgomIzgyMTY7Li9jb25maWd1cmUgLS1oZWxwJiM4MjE3Ozwv
+c3Bhbj4gdG8gb2J0YWluIHRoZSBjb25maWcgc2V0dGluZ3MuIDxvOnA+PC9vOnA+PC9wPgo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+LU1pa2U8bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
 
---===============6132412950532790203==--
+--===============9061219814680614217==--
 
