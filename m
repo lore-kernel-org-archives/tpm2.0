@@ -1,108 +1,32 @@
-Content-Type: multipart/mixed; boundary="===============8320072328774758561=="
+Content-Type: multipart/mixed; boundary="===============6839674262397940875=="
 MIME-Version: 1.0
-From: Diego Santa Cruz <Diego.SantaCruz at spinetix.com>
-Subject: [tpm2] How to use a salted HMAC session with Esys_TR_FromTPMPublic ?
-Date: Mon, 21 Sep 2020 17:43:05 +0000
-Message-ID: <
- <DB6PR0102MB26301745E2835C433E29D92C883A0@DB6PR0102MB2630.eurprd01.prod.exchangelabs.com>>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: [tpm2] [RC / SECURITY] tpm2-tss 2.4.3-rc2 & 3.0.1-rc2
+Date: Tue, 22 Sep 2020 12:21:25 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171BB3881@EXCH2010B.sit.fraunhofer.de>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8320072328774758561==
+--===============6839674262397940875==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi there,
+Hi all,
 
-I am using Esys_TR_FromTPMPublic() in an application to get a Esys TR handl=
-e for an NV-index, it works well when I use no sessions but the ESYS spec r=
-ecommends to use a salted HMAC session when reading NV-index with this comm=
-and.
+tpm2-tss 2.4.3-rc2 and 3.0.1-rc2 are now available:
+https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.3-rc2
+https://github.com/tpm2-software/tpm2-tss/releases/tag/3.0.1-rc2
 
-But when I use a salted HMAC session I get an "attribute mismatch" error on=
- the session from the TPM. Looking through the library specification I unde=
-rstand that the NV_ReadPublic command, which is used by Esys_TR_FromTPMPubl=
-ic(), only accepts audit and encrypting sessions, but not simple salted HMA=
-C sessions.
+Please not that these rcs include a fix for CVE-2020-24455.
+That bug concerns the PolicyPCR elements in FAPI that sometimes
+just ommited PCR tests if currentPCRs or currentPCRandBanks was used.
+ALL of these objects (keys and NV indices an hierarchyPolicies) need to be
+recreated.
 
-So how should I go about using Esys_TR_FromTPMPublic() with salted HMAC ses=
-sions? Or how should I go about ensuring the data I get from the TPM (e.g.,=
- name) for the NV-index can be trusted?
-
-BTW, the tpm2-tss version installed on my test system is 2.3.2
+This will be a very short RC and I will push the final release tomorrow.
 
 Thanks,
-
-Diego
---
-Diego Santa Cruz, PhD
-Technology Architect
-spinetix.com
-
-
---===============8320072328774758561==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6ZHQ9InV1aWQ6QzJGNDEwMTAtNjVC
-My0xMWQxLUEyOUYtMDBBQTAwQzE0ODgyIiB4bWxuczptPSJodHRwOi8vc2NoZW1hcy5taWNyb3Nv
-ZnQuY29tL29mZmljZS8yMDA0LzEyL29tbWwiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy9UUi9S
-RUMtaHRtbDQwIj4KPGhlYWQ+CjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVu
-dD0idGV4dC9odG1sOyBjaGFyc2V0PXVzLWFzY2lpIj4KPG1ldGEgbmFtZT0iR2VuZXJhdG9yIiBj
-b250ZW50PSJNaWNyb3NvZnQgV29yZCAxNSAoZmlsdGVyZWQgbWVkaXVtKSI+CjxzdHlsZT48IS0t
-Ci8qIEZvbnQgRGVmaW5pdGlvbnMgKi8KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OiJDYW1icmlh
-IE1hdGgiOwoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9CkBmb250LWZhY2UKCXtmb250
-LWZhbWlseTpDYWxpYnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQovKiBTdHls
-ZSBEZWZpbml0aW9ucyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFs
-Cgl7bWFyZ2luOjBjbTsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIs
-c2Fucy1zZXJpZjt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwt
-Y29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93
-dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250
-LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3NpemU6
-NjEyLjBwdCA3OTIuMHB0OwoJbWFyZ2luOjcyLjBwdCA3Mi4wcHQgNzIuMHB0IDcyLjBwdDt9CmRp
-di5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEtLVtpZiBn
-dGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRtYXg9IjEw
-MjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFw
-ZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPgo8
-L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+CjwvaGVhZD4KPGJvZHkgbGFuZz0iRU4t
-VVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIiBzdHlsZT0id29yZC13cmFwOmJyZWFr
-LXdvcmQiPgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5I
-aSB0aGVyZSw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8
-L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkgYW0gdXNpbmcgRXN5c19UUl9Gcm9tVFBN
-UHVibGljKCkgaW4gYW4gYXBwbGljYXRpb24gdG8gZ2V0IGEgRXN5cyBUUiBoYW5kbGUgZm9yIGFu
-IE5WLWluZGV4LCBpdCB3b3JrcyB3ZWxsIHdoZW4gSSB1c2Ugbm8gc2Vzc2lvbnMgYnV0IHRoZSBF
-U1lTIHNwZWMgcmVjb21tZW5kcyB0byB1c2UgYSBzYWx0ZWQgSE1BQyBzZXNzaW9uIHdoZW4gcmVh
-ZGluZyBOVi1pbmRleCB3aXRoIHRoaXMgY29tbWFuZC48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkJ1
-dCB3aGVuIEkgdXNlIGEgc2FsdGVkIEhNQUMgc2Vzc2lvbiBJIGdldCBhbiAmIzgyMjA7YXR0cmli
-dXRlIG1pc21hdGNoJiM4MjIxOyBlcnJvciBvbiB0aGUgc2Vzc2lvbiBmcm9tIHRoZSBUUE0uIExv
-b2tpbmcgdGhyb3VnaCB0aGUgbGlicmFyeSBzcGVjaWZpY2F0aW9uIEkgdW5kZXJzdGFuZCB0aGF0
-IHRoZSBOVl9SZWFkUHVibGljIGNvbW1hbmQsIHdoaWNoIGlzIHVzZWQgYnkgRXN5c19UUl9Gcm9t
-VFBNUHVibGljKCksIG9ubHkKIGFjY2VwdHMgYXVkaXQgYW5kIGVuY3J5cHRpbmcgc2Vzc2lvbnMs
-IGJ1dCBub3Qgc2ltcGxlIHNhbHRlZCBITUFDIHNlc3Npb25zLjxvOnA+PC9vOnA+PC9wPgo8cCBj
-bGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+U28gaG93IHNob3VsZCBJIGdvIGFib3V0IHVzaW5nIEVzeXNfVFJfRnJvbVRQTVB1YmxpYygp
-IHdpdGggc2FsdGVkIEhNQUMgc2Vzc2lvbnM/IE9yIGhvdyBzaG91bGQgSSBnbyBhYm91dCBlbnN1
-cmluZyB0aGUgZGF0YSBJIGdldCBmcm9tIHRoZSBUUE0gKGUuZy4sIG5hbWUpIGZvciB0aGUgTlYt
-aW5kZXggY2FuIGJlIHRydXN0ZWQ/PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5CVFcsIHRoZSB0cG0y
-LXRzcyB2ZXJzaW9uIGluc3RhbGxlZCBvbiBteSB0ZXN0IHN5c3RlbSBpcyAyLjMuMjxvOnA+PC9v
-OnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xh
-c3M9Ik1zb05vcm1hbCI+VGhhbmtzLDxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RGllZ288bzpwPjwv
-bzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1zby1tYXJnaW4tdG9wLWFsdDph
-dXRvO21zby1tYXJnaW4tYm90dG9tLWFsdDphdXRvIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjku
-MHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWYiPi0tCjxicj4KPGI+
-RGllZ28gU2FudGEgQ3J1eiwgUGhEPGJyPgo8L2I+PHNwYW4gc3R5bGU9ImNvbG9yOmdyYXkiPlRl
-Y2hub2xvZ3kgQXJjaGl0ZWN0PGJyPgpzcGluZXRpeC5jb208L3NwYW4+PC9zcGFuPjxzcGFuIHN0
-eWxlPSJmb250LXNpemU6MTIuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O1RpbWVzIE5ldyBSb21hbiZx
-dW90OyxzZXJpZjtjb2xvcjpncmF5Ij48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
-
---===============8320072328774758561==--
+Andreas
+--===============6839674262397940875==--
 
