@@ -1,32 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============5995423167980818802=="
+Content-Type: multipart/mixed; boundary="===============2040413173263287533=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] [RELEASE / SECURITY] tpm2-tss 2.4.3 & 3.0.1
-Date: Wed, 23 Sep 2020 15:55:36 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171BBAE21@EXCH2010B.sit.fraunhofer.de>
+From: John Connett <jrc at skylon.me.uk>
+Subject: [tpm2] Ubuntu repository for binary packages?
+Date: Mon, 28 Sep 2020 15:26:12 +0100
+Message-ID: <6f33110f-c4b9-d649-2102-819fc390e6ee@skylon.me.uk>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5995423167980818802==
+--===============2040413173263287533==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Is there an Ubuntu 3rd party repository for tpm2 binary packages?
 
-releases tpm2-tss 2.4.3 and 3.0.1 are now available:
-https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.3
-https://github.com/tpm2-software/tpm2-tss/releases/tag/3.0.1
+They can be very useful. For example, Visual Studio Code is available
+from the official Microsoft Apt repositories
+(https://code.visualstudio.com/docs/setup/linux).
 
-They include a fix for CVE-2020-24455.
-That bug concerns the PolicyPCR elements in FAPI that sometimes
-just ommited PCR tests if currentPCRs or currentPCRandBanks was used.
-ALL of these objects (keys and NV indices an hierarchyPolicies) need to be
-recreated.
 
-This will be a very short RC and I will push the final release tomorrow.
 
-Thanks,
-Andreas
---===============5995423167980818802==--
+--===============2040413173263287533==
+Content-Type: application/pgp-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="signature.asc"
+
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRRXpCQUVCQ0FBZEZpRUV4d09hcXJvNWNp
+bkdkRS9YanpFVkVTNjQyMVFGQWw5eDhvc0FDZ2tRanpFVkVTNjQKMjFUUlp3Zi9iSlBFRHJMWko4
+N0ZnckNaV3U0eFQ2WnV0VEk5WDVvYVJ3eS9iUndzaVJ4U1FsV0RONXcrNWNyKwpKR3p4L0dqcjRv
+QWJ2YXB5ditNUThaNE1BTnljMGpZVU1yTzZLUFh1VEJ0UmQvcDZVcmUxdkN0S0V4cnlOcy9wClFB
+aWNjTitnTmxrZFVTc1hka0g4RVJmaW5aY2haMllGcmZrK0tTeXpITTZQWVZ2RU04NjNobGlGQk0z
+V0RIVzEKRFRFdk1xQmIyTUZqc1BHdXBVbDV4c0hHQTV4S3FkV3owQ0tpYkRHekx3dlVYcnFSQ055
+bDB5c0tFUWEwb3V0ZgpSSG5IWGk4dTZzS3pXNzN5bEo4VnNrNDVwby8wbG1uTlYxcGtDWXdPQmRh
+dndmNnkzY2c2bkVhbVlRclpySUVrCktlRDFHOE9JdTJlRjh1T0RyVU5NSXIyVWo0N0prZz09Cj0z
+d3VYCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
+
+--===============2040413173263287533==--
 
