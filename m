@@ -1,40 +1,178 @@
-Content-Type: multipart/mixed; boundary="===============2040413173263287533=="
+Content-Type: multipart/mixed; boundary="===============7190206950918133616=="
 MIME-Version: 1.0
-From: John Connett <jrc at skylon.me.uk>
-Subject: [tpm2] Ubuntu repository for binary packages?
-Date: Mon, 28 Sep 2020 15:26:12 +0100
-Message-ID: <6f33110f-c4b9-d649-2102-819fc390e6ee@skylon.me.uk>
+From: Graham Bartlett <graham.ietf at gmail.com>
+Subject: [tpm2] tpm2_getpubek
+Date: Mon, 05 Oct 2020 15:43:47 +0100
+Message-ID: <CAO4D2DNvyg-2O8rJwEFHA-_L6yA_eGPV-5VqcuXsD6PQ+4CgvQ@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2040413173263287533==
+--===============7190206950918133616==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Is there an Ubuntu 3rd party repository for tpm2 binary packages?
+Hi
 
-They can be very useful. For example, Visual Studio Code is available
-from the official Microsoft Apt repositories
-(https://code.visualstudio.com/docs/setup/linux).
+I'm new to TPMs and am trying to follow some of the online examples.
 
+In many of these the command 'tpm2_getpubek' is shown, however I'm running
+this on Ubuntu, I built this from source and I have a number of TPM2
+commands, but not 'tpm2_getpubek'.
 
+Would anyone know if I'm missing something? Or if there's a new CLI for
+'tpm2_getpubek'.
 
---===============2040413173263287533==
-Content-Type: application/pgp-signature
+The following is the commands I have;
+
+many thanks
+
+$ tpm2 --help
+ERROR: --help: unknown tool. Available tpm2 commands:
+certifyX509certutil
+checkquote
+eventlog
+print
+rc_decode
+activatecredential
+certify
+changeauth
+changeeps
+changepps
+clear
+clearcontrol
+clockrateadjust
+create
+createak
+createek
+createpolicy
+setprimarypolicy
+createprimary
+dictionarylockout
+duplicate
+getcap
+gettestresult
+encryptdecrypt
+evictcontrol
+flushcontext
+getekcertificate
+getrandom
+gettime
+hash
+hierarchycontrol
+hmac
+import
+incrementalselftest
+load
+loadexternal
+makecredential
+nvdefine
+nvextend
+nvincrement
+nvreadpublic
+nvread
+nvreadlock
+nvundefine
+nvwrite
+nvwritelock
+nvsetbits
+pcrallocate
+pcrevent
+pcrextend
+pcrread
+pcrreset
+policypcr
+policyauthorize
+policyauthorizenv
+policynv
+policycountertimer
+policyor
+policynamehash
+policytemplate
+policycphash
+policypassword
+policysigned
+policyticket
+policyauthvalue
+policysecret
+policyrestart
+policycommandcode
+policynvwritten
+policyduplicationselect
+policylocality
+quote
+readclock
+readpublic
+rsadecrypt
+rsaencrypt
+send
+selftest
+setclock
+shutdown
+sign
+certifycreation
+nvcertify
+startauthsession
+startup
+stirrandom
+testparms
+unseal
+verifysignature
+setcommandauditstatus
+getcommandauditdigest
+getsessionauditdigest
+geteccparameters
+ecephermal
+commit
+ecdhkeygen
+ecdhzgen
+zgen2phase
+
+--===============7190206950918133616==
+Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="signature.asc"
+Content-Disposition: attachment; filename="attachment.htm"
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCmlRRXpCQUVCQ0FBZEZpRUV4d09hcXJvNWNp
-bkdkRS9YanpFVkVTNjQyMVFGQWw5eDhvc0FDZ2tRanpFVkVTNjQKMjFUUlp3Zi9iSlBFRHJMWko4
-N0ZnckNaV3U0eFQ2WnV0VEk5WDVvYVJ3eS9iUndzaVJ4U1FsV0RONXcrNWNyKwpKR3p4L0dqcjRv
-QWJ2YXB5ditNUThaNE1BTnljMGpZVU1yTzZLUFh1VEJ0UmQvcDZVcmUxdkN0S0V4cnlOcy9wClFB
-aWNjTitnTmxrZFVTc1hka0g4RVJmaW5aY2haMllGcmZrK0tTeXpITTZQWVZ2RU04NjNobGlGQk0z
-V0RIVzEKRFRFdk1xQmIyTUZqc1BHdXBVbDV4c0hHQTV4S3FkV3owQ0tpYkRHekx3dlVYcnFSQ055
-bDB5c0tFUWEwb3V0ZgpSSG5IWGk4dTZzS3pXNzN5bEo4VnNrNDVwby8wbG1uTlYxcGtDWXdPQmRh
-dndmNnkzY2c2bkVhbVlRclpySUVrCktlRDFHOE9JdTJlRjh1T0RyVU5NSXIyVWo0N0prZz09Cj0z
-d3VYCi0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLQo=
+PGRpdiBkaXI9Imx0ciI+PGRpdj5IaTwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+SSYjMzk7bSBu
+ZXcgdG8gVFBNcyBhbmQgYW0gdHJ5aW5nIHRvIGZvbGxvdyBzb21lIG9mIHRoZSBvbmxpbmUgZXhh
+bXBsZXMuPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5JbiBtYW55IG9mIHRoZXNlIHRoZSBjb21t
+YW5kIDxjb2RlPiYjMzk7dHBtMl9nZXRwdWJlayYjMzk7IGlzIHNob3duLCBob3dldmVyIEkmIzM5
+O20gcnVubmluZyB0aGlzIG9uIFVidW50dSwgSSBidWlsdCB0aGlzIGZyb20gc291cmNlIGFuZCBJ
+IGhhdmUgYSBudW1iZXIgb2YgVFBNMiBjb21tYW5kcywgYnV0IG5vdCAmIzM5OzwvY29kZT48Y29k
+ZT50cG0yX2dldHB1YmVrJiMzOTsuPC9jb2RlPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+V291
+bGQgYW55b25lIGtub3cgaWYgSSYjMzk7bSBtaXNzaW5nIHNvbWV0aGluZz8gT3IgaWYgdGhlcmUm
+IzM5O3MgYSBuZXcgQ0xJIGZvciAmIzM5O3RwbTJfZ2V0cHViZWsmIzM5Oy48L2Rpdj48ZGl2Pjxi
+cj48L2Rpdj48ZGl2PlRoZSBmb2xsb3dpbmcgaXMgdGhlIGNvbW1hbmRzIEkgaGF2ZTs8L2Rpdj48
+ZGl2Pjxicj48L2Rpdj48ZGl2Pm1hbnkgdGhhbmtzPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj4k
+IHRwbTIgLS1oZWxwPGJyPkVSUk9SOiAtLWhlbHA6IHVua25vd24gdG9vbC4gQXZhaWxhYmxlIHRw
+bTIgY29tbWFuZHM6PGJyPmNlcnRpZnlYNTA5Y2VydHV0aWw8YnI+Y2hlY2txdW90ZTxicj5ldmVu
+dGxvZzxicj5wcmludDxicj5yY19kZWNvZGU8YnI+YWN0aXZhdGVjcmVkZW50aWFsPGJyPmNlcnRp
+Znk8YnI+Y2hhbmdlYXV0aDxicj5jaGFuZ2VlcHM8YnI+Y2hhbmdlcHBzPGJyPmNsZWFyPGJyPmNs
+ZWFyY29udHJvbDxicj5jbG9ja3JhdGVhZGp1c3Q8YnI+Y3JlYXRlPGJyPmNyZWF0ZWFrPGJyPmNy
+ZWF0ZWVrPGJyPmNyZWF0ZXBvbGljeTxicj5zZXRwcmltYXJ5cG9saWN5PGJyPmNyZWF0ZXByaW1h
+cnk8YnI+ZGljdGlvbmFyeWxvY2tvdXQ8YnI+ZHVwbGljYXRlPGJyPmdldGNhcDxicj5nZXR0ZXN0
+cmVzdWx0PGJyPmVuY3J5cHRkZWNyeXB0PGJyPmV2aWN0Y29udHJvbDxicj5mbHVzaGNvbnRleHQ8
+YnI+Z2V0ZWtjZXJ0aWZpY2F0ZTxicj5nZXRyYW5kb208YnI+Z2V0dGltZTxicj5oYXNoPGJyPmhp
+ZXJhcmNoeWNvbnRyb2w8YnI+aG1hYzxicj5pbXBvcnQ8YnI+aW5jcmVtZW50YWxzZWxmdGVzdDxi
+cj5sb2FkPGJyPmxvYWRleHRlcm5hbDxicj5tYWtlY3JlZGVudGlhbDxicj5udmRlZmluZTxicj5u
+dmV4dGVuZDxicj5udmluY3JlbWVudDxicj5udnJlYWRwdWJsaWM8YnI+bnZyZWFkPGJyPm52cmVh
+ZGxvY2s8YnI+bnZ1bmRlZmluZTxicj5udndyaXRlPGJyPm52d3JpdGVsb2NrPGJyPm52c2V0Yml0
+czxicj5wY3JhbGxvY2F0ZTxicj5wY3JldmVudDxicj5wY3JleHRlbmQ8YnI+cGNycmVhZDxicj5w
+Y3JyZXNldDxicj5wb2xpY3lwY3I8YnI+cG9saWN5YXV0aG9yaXplPGJyPnBvbGljeWF1dGhvcml6
+ZW52PGJyPnBvbGljeW52PGJyPnBvbGljeWNvdW50ZXJ0aW1lcjxicj5wb2xpY3lvcjxicj5wb2xp
+Y3luYW1laGFzaDxicj5wb2xpY3l0ZW1wbGF0ZTxicj5wb2xpY3ljcGhhc2g8YnI+cG9saWN5cGFz
+c3dvcmQ8YnI+cG9saWN5c2lnbmVkPGJyPnBvbGljeXRpY2tldDxicj5wb2xpY3lhdXRodmFsdWU8
+YnI+cG9saWN5c2VjcmV0PGJyPnBvbGljeXJlc3RhcnQ8YnI+cG9saWN5Y29tbWFuZGNvZGU8YnI+
+cG9saWN5bnZ3cml0dGVuPGJyPnBvbGljeWR1cGxpY2F0aW9uc2VsZWN0PGJyPnBvbGljeWxvY2Fs
+aXR5PGJyPnF1b3RlPGJyPnJlYWRjbG9jazxicj5yZWFkcHVibGljPGJyPnJzYWRlY3J5cHQ8YnI+
+cnNhZW5jcnlwdDxicj5zZW5kPGJyPnNlbGZ0ZXN0PGJyPnNldGNsb2NrPGJyPnNodXRkb3duPGJy
+PnNpZ248YnI+Y2VydGlmeWNyZWF0aW9uPGJyPm52Y2VydGlmeTxicj5zdGFydGF1dGhzZXNzaW9u
+PGJyPnN0YXJ0dXA8YnI+c3RpcnJhbmRvbTxicj50ZXN0cGFybXM8YnI+dW5zZWFsPGJyPnZlcmlm
+eXNpZ25hdHVyZTxicj5zZXRjb21tYW5kYXVkaXRzdGF0dXM8YnI+Z2V0Y29tbWFuZGF1ZGl0ZGln
+ZXN0PGJyPmdldHNlc3Npb25hdWRpdGRpZ2VzdDxicj5nZXRlY2NwYXJhbWV0ZXJzPGJyPmVjZXBo
+ZXJtYWw8YnI+Y29tbWl0PGJyPmVjZGhrZXlnZW48YnI+ZWNkaHpnZW48YnI+emdlbjJwaGFzZTxi
+cj48L2Rpdj48L2Rpdj4K
 
---===============2040413173263287533==--
+--===============7190206950918133616==--
 
