@@ -1,20 +1,132 @@
-Content-Type: multipart/mixed; boundary="===============7309133608895332506=="
+Content-Type: multipart/mixed; boundary="===============1967946745750547438=="
 MIME-Version: 1.0
-From: Imran Desai <imran.desai at intel.com>
-Subject: [tpm2] Re: Retrieving Context/Object attributes
-Date: Mon, 12 Oct 2020 18:56:39 +0000
-Message-ID: <20201012185639.2619.87741@ml01.vlan13.01.org>
-In-Reply-To: 20201006141628.2619.82668@ml01.vlan13.01.org
+From: FIXED-TERM Schick Felix (CR/APA3) <fixed-term.Felix.Schick3 at bosch.com>
+Subject: [tpm2] authentication error
+Date: Tue, 13 Oct 2020 10:17:36 +0000
+Message-ID: <7009d2305bde499ab0ffeb7b4b16339e@bosch.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7309133608895332506==
+--===============1967946745750547438==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Take a look at Tss2_Sys_Readpublic=1F=1F=1F=E2=80=94https://github.com/tpm2=
--software/tpm2-tss/blob/master/src/tss2-sys/api/Tss2_Sys_ReadPublic.c#L75-#=
-L83
---===============7309133608895332506==--
+Hello everyone,
+
+I am currently struggling with the usage of tpm2-tss and co. on an Raspberr=
+y Pi 3.
+I've been using  the Stack on a Software TPM for a while now and never had =
+any big issues, but after I started working with an Infineon Hardware TPM o=
+n an Raspberry Pi 3 I ran into some problems.
+
+I have not run into errors while compiling and installing the stack but I k=
+ept getting the linker error:
+
+undefined symbol: Esys_TRSess_GetAuthRequired
+
+for libtss2-fapi.so.
+
+I was able to work around this error by just disabling the FAPI before comp=
+iling, but now I get the following error on every command call:
+
+ERROR:esys:src/tss2-esys/api/Esys_ReadClock.c:170:Esys_ReadClock_Async() SA=
+PI error on SetCmdAuths ErrorCode (0x00080010)
+ERROR:esys:src/tss2-esys/api/Esys_ReadClock.c:68:Esys_ReadClock() Error in =
+async function ErrorCode (0x00080010)
+ERROR: Esys_ReadClock(0x80010) - sys:If size of a parameter is incorrect
+ERROR: Unable to run tpm2_readclock
+
+I guess both have something to do with the Authentication.
+I would be very grateful if someone could help me with this issue.
+
+Thank you very much and Best regards
+
+Felix Schick
+
+
+
+--===============1967946745750547438==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KQGZv
+bnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNvbnNvbGFzOwoJcGFub3NlLTE6MiAxMSA2IDkgMiAyIDQg
+MyAyIDQ7fQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFs
+LCBkaXYuTXNvTm9ybWFsCgl7bWFyZ2luOjBjbTsKCW1hcmdpbi1ib3R0b206LjAwMDFwdDsKCWZv
+bnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CmE6bGlu
+aywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgljb2xvcjojMDU2
+M0MxOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBl
+cmxpbmtGb2xsb3dlZAoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsKCWNvbG9yOiM5NTRGNzI7Cgl0
+ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lO30Kc3Bhbi5FLU1haWxGb3JtYXR2b3JsYWdlMTcKCXtt
+c28tc3R5bGUtdHlwZTpwZXJzb25hbC1jb21wb3NlOwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNh
+bnMtc2VyaWY7Cgljb2xvcjp3aW5kb3d0ZXh0O30KLk1zb0NocERlZmF1bHQKCXttc28tc3R5bGUt
+dHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30KQHBh
+Z2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo2MTIuMHB0IDc5Mi4wcHQ7CgltYXJnaW46NzIuMHB0IDcy
+LjBwdCA3Mi4wcHQgNzIuMHB0O30KZGl2LldvcmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24x
+O30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2
+OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBn
+dGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpl
+eHQ9ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4K
+PC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIi
+Pgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5IZWxsbyBl
+dmVyeW9uZSw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8
+L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkgYW0gY3VycmVudGx5IHN0cnVnZ2xpbmcg
+d2l0aCB0aGUgdXNhZ2Ugb2YgdHBtMi10c3MgYW5kIGNvLiBvbiBhbiBSYXNwYmVycnkgUGkgMy48
+bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSYjODIxNzt2ZSBiZWVuIHVzaW5n
+Jm5ic3A7IHRoZSBTdGFjayBvbiBhIFNvZnR3YXJlIFRQTSBmb3IgYSB3aGlsZSBub3cgYW5kIG5l
+dmVyIGhhZCBhbnkgYmlnIGlzc3VlcywgYnV0IGFmdGVyIEkgc3RhcnRlZCB3b3JraW5nIHdpdGgg
+YW4gSW5maW5lb24gSGFyZHdhcmUgVFBNIG9uIGFuIFJhc3BiZXJyeSBQaSAzIEkgcmFuIGludG8g
+c29tZSBwcm9ibGVtcy48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4m
+bmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkgaGF2ZSBub3QgcnVuIGludG8g
+ZXJyb3JzIHdoaWxlIGNvbXBpbGluZyBhbmQgaW5zdGFsbGluZyB0aGUgc3RhY2sgYnV0IEkga2Vw
+dCBnZXR0aW5nIHRoZSBsaW5rZXIgZXJyb3I6PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBz
+dHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXMiPnVuZGVmaW5lZCBzeW1ib2w6IEVzeXNfVFJTZXNz
+X0dldEF1dGhSZXF1aXJlZDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OkNvbnNvbGFzIj48bzpwPiZuYnNwOzwvbzpwPjwv
+c3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPmZvcjxzcGFuIHN0eWxlPSJmb250LWZhbWls
+eTpDb25zb2xhcyI+IGxpYnRzczItZmFwaS5zby48bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij5JIHdhcyBhYmxlIHRvIHdvcmsgYXJvdW5kIHRoaXMgZXJyb3IgYnkganVzdCBkaXNhYmxpbmcg
+dGhlIEZBUEkgYmVmb3JlIGNvbXBpbGluZywgYnV0IG5vdyBJIGdldCB0aGUgZm9sbG93aW5nIGVy
+cm9yIG9uIGV2ZXJ5IGNvbW1hbmQgY2FsbDo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0
+eWxlPSJmb250LWZhbWlseTpDb25zb2xhcyI+RVJST1I6ZXN5czpzcmMvdHNzMi1lc3lzL2FwaS9F
+c3lzX1JlYWRDbG9jay5jOjE3MDpFc3lzX1JlYWRDbG9ja19Bc3luYygpIFNBUEkgZXJyb3Igb24g
+U2V0Q21kQXV0aHMgRXJyb3JDb2RlICgweDAwMDgwMDEwKQo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTpDb25zb2xhcyI+
+RVJST1I6ZXN5czpzcmMvdHNzMi1lc3lzL2FwaS9Fc3lzX1JlYWRDbG9jay5jOjY4OkVzeXNfUmVh
+ZENsb2NrKCkgRXJyb3IgaW4gYXN5bmMgZnVuY3Rpb24gRXJyb3JDb2RlICgweDAwMDgwMDEwKQo8
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
+b250LWZhbWlseTpDb25zb2xhcyI+RVJST1I6IEVzeXNfUmVhZENsb2NrKDB4ODAwMTApIC0gc3lz
+OklmIHNpemUgb2YgYSBwYXJhbWV0ZXIgaXMgaW5jb3JyZWN0PG86cD48L286cD48L3NwYW4+PC9w
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXMi
+PkVSUk9SOiBVbmFibGUgdG8gcnVuIHRwbTJfcmVhZGNsb2NrPG86cD48L286cD48L3NwYW4+PC9w
+Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXMi
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSBndWVz
+cyBib3RoIGhhdmUgc29tZXRoaW5nIHRvIGRvIHdpdGggdGhlIEF1dGhlbnRpY2F0aW9uLjxvOnA+
+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JIHdvdWxkIGJlIHZlcnkgZ3JhdGVmdWwg
+aWYgc29tZW9uZSBjb3VsZCBoZWxwIG1lIHdpdGggdGhpcyBpc3N1ZS48bzpwPjwvbzpwPjwvcD4K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29O
+b3JtYWwiPlRoYW5rIHlvdSB2ZXJ5IG11Y2ggYW5kIDxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAu
+MHB0O2ZvbnQtZmFtaWx5OiZxdW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWY7Y29sb3I6YmxhY2si
+PgpCZXN0IHJlZ2FyZHM8YnI+Cjxicj4KPGI+RmVsaXggU2NoaWNrPC9iPjwvc3Bhbj48c3BhbiBz
+dHlsZT0iZm9udC1zaXplOjEyLjBwdDtmb250LWZhbWlseTomcXVvdDtUaW1lcyBOZXcgUm9tYW4m
+cXVvdDssc2VyaWYiPgo8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1m
+YW1pbHk6JnF1b3Q7QXJpYWwmcXVvdDssc2Fucy1zZXJpZjtjb2xvcjpibGFjayI+PGJyPgo8YnI+
+Cjxicj4KPC9zcGFuPjxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============1967946745750547438==--
 
