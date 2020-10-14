@@ -1,142 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============3394570778085670339=="
+Content-Type: multipart/mixed; boundary="===============7209169233493808525=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] Re: authentication error
-Date: Tue, 13 Oct 2020 10:24:35 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171BC01D5@EXCH2010B.sit.fraunhofer.de>
-In-Reply-To: 7009d2305bde499ab0ffeb7b4b16339e@bosch.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] QUEMU and TPM2 device emulation
+Date: Wed, 14 Oct 2020 15:27:53 +0000
+Message-ID: <SN6PR11MB34372D6EA769E056632095CFB8050@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3394570778085670339==
+--===============7209169233493808525==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Do you have a (very) old version of the TSS still hanging around on your sy=
-stem ?
+Has anyone ever setup a QUEMU instance with a virtualized TPM? I need to tr=
+y and replicate an issue with the in-kernel Resource manager. My goal is to=
+ use the integrated QUEMU support
+To bring up an emulated TPM device and it's associated RM node @ /dev/tpmrm=
+0.
 
-maybe call ldd on your executable and on the libraries and see what they li=
-nk against.
+I am looking at:
+https://android.googlesource.com/platform/external/qemu/+/emu-master-dev/do=
+cs/specs/tpm.txt
 
-________________________________
-From: FIXED-TERM Schick Felix (CR/APA3) [fixed-term.Felix.Schick3(a)bosch.c=
-om]
-Sent: Tuesday, October 13, 2020 12:17
-To: tpm2(a)lists.01.org
-Subject: [tpm2] authentication error
+Which shows this command:
 
-Hello everyone,
+qemu-system-x86_64 -display sdl -enable-kvm \
+  -m 1024 -boot d -bios bios-256k.bin -boot menu=3Don \
+  -chardev socket,id=3Dchrtpm,path=3D/tmp/mytpm1/swtpm-sock \
+  -tpmdev emulator,id=3Dtpm0,chardev=3Dchrtpm \
+  -device tpm-tis,tpmdev=3Dtpm0 test.img
 
-I am currently struggling with the usage of tpm2-tss and co. on an Raspberr=
-y Pi 3.
-I=E2=80=99ve been using  the Stack on a Software TPM for a while now and ne=
-ver had any big issues, but after I started working with an Infineon Hardwa=
-re TPM on an Raspberry Pi 3 I ran into some problems.
+<snip>
+#> dmesg | grep -i tpm
+[    0.711310] tpm_tis 00:06: 1.2 TPM (device=3Did 0x1, rev-id 1)
 
-I have not run into errors while compiling and installing the stack but I k=
-ept getting the linker error:
+I have a few questions around this that I cannot seem to dig up any documen=
+tation on:
+1. How to specify TPM2.0 device? The project https://github.com/stefanberge=
+r/swtpm/wiki seems to indicate it would be supported.
 
-undefined symbol: Esys_TRSess_GetAuthRequired
+2. Does anyone know the minimum QUEMU version for this support? I looked in=
+ the CHANGELOG here, https://wiki.qemu.org/ChangeLog from version 2.8 to 5.=
+2 and never saw anything
+Call out TPM 2.0 specifically.
 
-for libtss2-fapi.so.
+3. Does anyone have or know of better documentation to set this up? If thei=
+r isn't better documentation, should we (read I) create it? This seems like=
+ a pretty handy feature.
 
-I was able to work around this error by just disabling the FAPI before comp=
-iling, but now I get the following error on every command call:
-
-ERROR:esys:src/tss2-esys/api/Esys_ReadClock.c:170:Esys_ReadClock_Async() SA=
-PI error on SetCmdAuths ErrorCode (0x00080010)
-ERROR:esys:src/tss2-esys/api/Esys_ReadClock.c:68:Esys_ReadClock() Error in =
-async function ErrorCode (0x00080010)
-ERROR: Esys_ReadClock(0x80010) - sys:If size of a parameter is incorrect
-ERROR: Unable to run tpm2_readclock
-
-I guess both have something to do with the Authentication.
-I would be very grateful if someone could help me with this issue.
-
-Thank you very much and Best regards
-
-Felix Schick
-
-
-
---===============3394570778085670339==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9V2luZG93cy0xMjUyIj4KPHN0eWxlPgo8IS0tCkBm
-b250LWZhY2UKCXtmb250LWZhbWlseToiQ2FtYnJpYSBNYXRoIn0KQGZvbnQtZmFjZQoJe2ZvbnQt
-ZmFtaWx5OkNhbGlicml9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDb25zb2xhc30KcC5Nc29O
-b3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowY207CgltYXJnaW4t
-Ym90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmki
-LHNhbnMtc2VyaWZ9CmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsKCXtjb2xvcjojMDU2M0MxOwoJ
-dGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZX0KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0Zv
-bGxvd2VkCgl7Y29sb3I6Izk1NEY3MjsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmV9CnNwYW4u
-RS1NYWlsRm9ybWF0dm9ybGFnZTE3Cgl7Zm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7
-Cgljb2xvcjp3aW5kb3d0ZXh0fQouTXNvQ2hwRGVmYXVsdAoJe2ZvbnQtZmFtaWx5OiJDYWxpYnJp
-IixzYW5zLXNlcmlmfQpAcGFnZSBXb3JkU2VjdGlvbjEKCXttYXJnaW46NzIuMHB0IDcyLjBwdCA3
-Mi4wcHQgNzIuMHB0fQotLT4KPC9zdHlsZT48c3R5bGUgdHlwZT0idGV4dC9jc3MiIGlkPSJvd2FQ
-YXJhU3R5bGUiPjwvc3R5bGU+CjwvaGVhZD4KPGJvZHkgZnBzdHlsZT0iMSIgb2NzaT0iMCIgdmxp
-bms9IiM5NTRGNzIiIGxpbms9IiMwNTYzQzEiIGxhbmc9IkVOLVVTIj4KPGRpdiBzdHlsZT0iZGly
-ZWN0aW9uOiBsdHI7Zm9udC1mYW1pbHk6IFRhaG9tYTtjb2xvcjogIzAwMDAwMDtmb250LXNpemU6
-IDEwcHQ7Ij4KPGRpdj5EbyB5b3UgaGF2ZSBhICh2ZXJ5KSBvbGQgdmVyc2lvbiBvZiB0aGUgVFNT
-IHN0aWxsIGhhbmdpbmcgYXJvdW5kIG9uIHlvdXIgc3lzdGVtID88L2Rpdj4KPGRpdj48YnI+Cjwv
-ZGl2Pgo8ZGl2Pm1heWJlIGNhbGwgbGRkIG9uIHlvdXIgZXhlY3V0YWJsZSBhbmQgb24gdGhlIGxp
-YnJhcmllcyBhbmQgc2VlIHdoYXQgdGhleSBsaW5rIGFnYWluc3QuPC9kaXY+CjxkaXY+PGJyPgo8
-L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IFRpbWVzIE5ldyBSb21hbjsgY29sb3I6ICMw
-MDAwMDA7IGZvbnQtc2l6ZTogMTZweCI+CjxociB0YWJpbmRleD0iLTEiPgo8ZGl2IGlkPSJkaXZS
-cEY4NzI1NDAiIHN0eWxlPSJkaXJlY3Rpb246IGx0cjsiPjxmb250IHNpemU9IjIiIGZhY2U9IlRh
-aG9tYSIgY29sb3I9IiMwMDAwMDAiPjxiPkZyb206PC9iPiBGSVhFRC1URVJNIFNjaGljayBGZWxp
-eCAoQ1IvQVBBMykgW2ZpeGVkLXRlcm0uRmVsaXguU2NoaWNrM0Bib3NjaC5jb21dPGJyPgo8Yj5T
-ZW50OjwvYj4gVHVlc2RheSwgT2N0b2JlciAxMywgMjAyMCAxMjoxNzxicj4KPGI+VG86PC9iPiB0
-cG0yQGxpc3RzLjAxLm9yZzxicj4KPGI+U3ViamVjdDo8L2I+IFt0cG0yXSBhdXRoZW50aWNhdGlv
-biBlcnJvcjxicj4KPC9mb250Pjxicj4KPC9kaXY+CjxkaXY+PC9kaXY+CjxkaXY+CjxkaXYgY2xh
-c3M9IldvcmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkhlbGxvIGV2ZXJ5b25lLDwv
-cD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5J
-IGFtIGN1cnJlbnRseSBzdHJ1Z2dsaW5nIHdpdGggdGhlIHVzYWdlIG9mIHRwbTItdHNzIGFuZCBj
-by4gb24gYW4gUmFzcGJlcnJ5IFBpIDMuPC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JknZlIGJl
-ZW4gdXNpbmcmbmJzcDsgdGhlIFN0YWNrIG9uIGEgU29mdHdhcmUgVFBNIGZvciBhIHdoaWxlIG5v
-dyBhbmQgbmV2ZXIgaGFkIGFueSBiaWcgaXNzdWVzLCBidXQgYWZ0ZXIgSSBzdGFydGVkIHdvcmtp
-bmcgd2l0aCBhbiBJbmZpbmVvbiBIYXJkd2FyZSBUUE0gb24gYW4gUmFzcGJlcnJ5IFBpIDMgSSBy
-YW4gaW50byBzb21lIHByb2JsZW1zLjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7PC9w
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JIGhhdmUgbm90IHJ1biBpbnRvIGVycm9ycyB3aGlsZSBj
-b21waWxpbmcgYW5kIGluc3RhbGxpbmcgdGhlIHN0YWNrIGJ1dCBJIGtlcHQgZ2V0dGluZyB0aGUg
-bGlua2VyIGVycm9yOjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7PC9wPgo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXMiPnVuZGVmaW5l
-ZCBzeW1ib2w6IEVzeXNfVFJTZXNzX0dldEF1dGhSZXF1aXJlZDwvc3Bhbj48L3A+CjxwIGNsYXNz
-PSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTpDb25zb2xhcyI+Jm5ic3A7PC9z
-cGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Zm9yPHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5
-OkNvbnNvbGFzIj4gbGlidHNzMi1mYXBpLnNvLjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPiZuYnNwOzwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSB3YXMgYWJsZSB0byB3b3JrIGFy
-b3VuZCB0aGlzIGVycm9yIGJ5IGp1c3QgZGlzYWJsaW5nIHRoZSBGQVBJIGJlZm9yZSBjb21waWxp
-bmcsIGJ1dCBub3cgSSBnZXQgdGhlIGZvbGxvd2luZyBlcnJvciBvbiBldmVyeSBjb21tYW5kIGNh
-bGw6PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDs8L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTpDb25zb2xhcyI+RVJST1I6ZXN5czpzcmMvdHNz
-Mi1lc3lzL2FwaS9Fc3lzX1JlYWRDbG9jay5jOjE3MDpFc3lzX1JlYWRDbG9ja19Bc3luYygpIFNB
-UEkgZXJyb3Igb24gU2V0Q21kQXV0aHMgRXJyb3JDb2RlICgweDAwMDgwMDEwKQo8L3NwYW4+PC9w
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXMi
-PkVSUk9SOmVzeXM6c3JjL3RzczItZXN5cy9hcGkvRXN5c19SZWFkQ2xvY2suYzo2ODpFc3lzX1Jl
-YWRDbG9jaygpIEVycm9yIGluIGFzeW5jIGZ1bmN0aW9uIEVycm9yQ29kZSAoMHgwMDA4MDAxMCkK
-PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5
-OkNvbnNvbGFzIj5FUlJPUjogRXN5c19SZWFkQ2xvY2soMHg4MDAxMCkgLSBzeXM6SWYgc2l6ZSBv
-ZiBhIHBhcmFtZXRlciBpcyBpbmNvcnJlY3Q8L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6Q29uc29sYXMiPkVSUk9SOiBVbmFibGUgdG8gcnVu
-IHRwbTJfcmVhZGNsb2NrPC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5
-bGU9ImZvbnQtZmFtaWx5OkNvbnNvbGFzIj4mbmJzcDs8L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIj5JIGd1ZXNzIGJvdGggaGF2ZSBzb21ldGhpbmcgdG8gZG8gd2l0aCB0aGUgQXV0aGVu
-dGljYXRpb24uPC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JIHdvdWxkIGJlIHZlcnkgZ3JhdGVm
-dWwgaWYgc29tZW9uZSBjb3VsZCBoZWxwIG1lIHdpdGggdGhpcyBpc3N1ZS48L3A+CjxwIGNsYXNz
-PSJNc29Ob3JtYWwiPiZuYnNwOzwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhhbmsgeW91IHZl
-cnkgbXVjaCBhbmQgPHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZvbnQtZmFtaWx5OiZx
-dW90O0FyaWFsJnF1b3Q7LHNhbnMtc2VyaWY7IGNvbG9yOmJsYWNrIj4KQmVzdCByZWdhcmRzPGJy
-Pgo8YnI+CjxiPkZlbGl4IFNjaGljazwvYj48L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTox
-Mi4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O1RpbWVzIE5ldyBSb21hbiZxdW90OyxzZXJpZiI+Cjwv
-c3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7QXJp
-YWwmcXVvdDssc2Fucy1zZXJpZjsgY29sb3I6YmxhY2siPjxicj4KPGJyPgo8YnI+Cjwvc3Bhbj48
-L3A+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
-
---===============3394570778085670339==--
+Thanks,
+Bill
+--===============7209169233493808525==--
 
