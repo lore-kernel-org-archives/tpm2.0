@@ -1,81 +1,66 @@
-Content-Type: multipart/mixed; boundary="===============7618836381555290386=="
+Content-Type: multipart/mixed; boundary="===============0344621888319637718=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: QUEMU and TPM2 device emulation
-Date: Wed, 14 Oct 2020 19:44:56 +0000
-Message-ID: <SN6PR11MB34376F61682669164004284EB8050@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 20201014155815.GA7562@mail.hallyn.com
+From: matthew at giassa.net
+Subject: [tpm2] Question: missing "tpm0" in securityfs/sysfs,
+ trying to parse TPM2 event log.
+Date: Fri, 16 Oct 2020 19:55:12 +0000
+Message-ID: <20201016195512.2619.75439@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7618836381555290386==
+--===============0344621888319637718==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Good day,
+
+I have a setup with Ubuntu 20.04 "focal" x86_64 running in a QEMU based VM.=
+ I've upgraded the default kernel to 5.8.15, mainly to leverage the patch n=
+oted below (bottom of message). My understanding (please correct me if I'm =
+off) is that it would allow a userspace application (i.e. "tpm2_eventlog") =
+to access the TPM2 event log once the OS has fully booted. The QEMU instanc=
+e itself connects to a Unix domain socket that's owned by a TPM2 simulator =
+running in a Docker container (i.e. https://www.qemu.org/docs/master/specs/=
+tpm.html).
+
+I can run various "tpm2_*" binaries in my QEMU VM, and view the low-level l=
+ogs in the simulator, so this setup appears to be working. However, there a=
+re no "/sys/kernel/security/tpm0" objects, or anything I can find in "sysfs=
+" and/or "securityfs" to get a handle to the TPM2 event logs. My ultimate g=
+oal is to be able to acquire these logs, and have a service of mine parse t=
+hem, and validate each message against the TPM (i.e. verify it it's legitim=
+ate TPM_GENERATED content).
+
+To my questions:
+1. How would I go about getting access to the TPM2 event logs on a running =
+system (i.e. are certain kernel build-time parameters needed, or does QEMU =
+require specific flags in order to run, or does the simulator need to be ex=
+ecuted in a certain manner).
+2. Is my appraisal of the features provided by the kernel patch (below) cor=
+rect?
+3. In general, is a UEFI-enabled BIOS required to get access to the TPM2 ev=
+ent log (i.e. for BIOS' other than SeaBios, for example)?
 
 
-> -----Original Message-----
-> From: Serge E. Hallyn <serge(a)hallyn.com>
-> Sent: Wednesday, October 14, 2020 10:58 AM
-> To: Roberts, William C <william.c.roberts(a)intel.com>
-> Cc: tpm2(a)lists.01.org; ryaharpe(a)cisco.com; scmoser(a)cisco.com; linux-
-> integrity(a)vger.kernel.org
-> Subject: Re: QUEMU and TPM2 device emulation
-> =
 
-> On Wed, Oct 14, 2020 at 03:27:53PM +0000, Roberts, William C wrote:
-> > Has anyone ever setup a QUEMU instance with a virtualized TPM? I need
-> > to try and replicate an issue with the in-kernel Resource manager. My g=
-oal is to
-> use the integrated QUEMU support To bring up an emulated TPM device and i=
-t's
-> associated RM node @ /dev/tpmrm0.
-> >
-> > I am looking at:
-> > https://android.googlesource.com/platform/external/qemu/+/emu-master-d
-> > ev/docs/specs/tpm.txt
-> >
-> > Which shows this command:
-> >
-> > qemu-system-x86_64 -display sdl -enable-kvm \
-> >   -m 1024 -boot d -bios bios-256k.bin -boot menu=3Don \
-> >   -chardev socket,id=3Dchrtpm,path=3D/tmp/mytpm1/swtpm-sock \
-> >   -tpmdev emulator,id=3Dtpm0,chardev=3Dchrtpm \
-> >   -device tpm-tis,tpmdev=3Dtpm0 test.img
-> >
-> > <snip>
-> > #> dmesg | grep -i tpm
-> > [    0.711310] tpm_tis 00:06: 1.2 TPM (device=3Did 0x1, rev-id 1)
-> >
-> > I have a few questions around this that I cannot seem to dig up any
-> documentation on:
-> > 1. How to specify TPM2.0 device? The project
-> https://github.com/stefanberger/swtpm/wiki seems to indicate it would be
-> supported.
-> >
-> > 2. Does anyone know the minimum QUEMU version for this support? I
-> > looked in the CHANGELOG here, https://wiki.qemu.org/ChangeLog from
-> version 2.8 to 5.2 and never saw anything Call out TPM 2.0 specifically.
-> =
 
-> 2.11 should suffice.
-> =
 
-> > 3. Does anyone have or know of better documentation to set this up? If =
-their
-> isn't better documentation, should we (read I) create it? This seems like=
- a pretty
-> handy feature.
-> =
+commit 85467f63a05c43364ba0b90d0c05bb89191543fa
+Author: Stefan Berger <stefanb(a)linux.ibm.com>
+Date:   Mon Jul 6 19:58:07 2020 -0400
 
-> I'm not sure how relevant this is any more, but I did this about two year=
-s ago and
-> documented it at https://s3hh.wordpress.com/2018/06/03/tpm-2-0-in-qemu/
+    tpm: Add support for event log pointer found in TPM2 ACPI table
 
-Thanks, yeah I stumbled into this, it was super helpful. I got it working a=
-nd posted back
-With my commands.
+    In case a TPM2 is attached, search for a TPM2 ACPI table when trying
+    to get the event log from ACPI. If one is found, use it to get the
+    start and length of the log area. This allows non-UEFI systems, such
+    as SeaBIOS, to pass an event log when using a TPM2.
 
---===============7618836381555290386==--
+    Cc: Peter Huewe <peterhuewe(a)gmx.de>
+    Cc: Jason Gunthorpe <jgg(a)ziepe.ca>
+    Signed-off-by: Stefan Berger <stefanb(a)linux.ibm.com>
+    Reviewed-by: Jerry Snitselaar <jsnitsel(a)redhat.com>
+    Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen(a)linux.intel.com>
+--===============0344621888319637718==--
 
