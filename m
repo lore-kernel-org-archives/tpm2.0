@@ -1,52 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============8149669679803010276=="
+Content-Type: multipart/mixed; boundary="===============6191940279386963348=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Question: standardized development environment for TPM2
- testing, regressions, etc.
-Date: Mon, 19 Oct 2020 14:38:11 +0000
-Message-ID: <SN6PR11MB3437885D999C060D9D5E665AB81E0@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 20201016222948.2619.86448@ml01.vlan13.01.org
+From: nicolasoliver03 at gmail.com
+Subject: [tpm2] Re: QUEMU and TPM2 device emulation
+Date: Mon, 19 Oct 2020 16:10:35 +0000
+Message-ID: <20201019161035.2812.82050@ml01.vlan13.01.org>
+In-Reply-To: SN6PR11MB34376F61682669164004284EB8050@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8149669679803010276==
+--===============6191940279386963348==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-We have a bunch of docker images that we use for our testing, but they don'=
-t use the
-In-kernel RM like a QEMU virtualized TPM can do or any kernel provided inte=
-rfaces like
-sysfs.
+This is how I do it on Fedora with virt-install
 
-Some projects use the SWTPM simulator, others still use the IBM TPM simulat=
-or.
+dnf install -y @virtualization
+dnf install -y swtpm swtpm-tools
 
-It would be nice to add a test to the CI that used the in-kernel RM and sys=
-fs interfaces to add some
-more test coverage against externally provided pieces.
+virt-install --name FedoraServer32 \
+  --description 'Fedora Server 32' \
+  --ram 4096 \
+  --vcpus 2 \
+  --disk size=3D20 \
+  --os-type linux \
+  --os-variant fedora32 \
+  --network bridge=3Dvirbr0 \
+  --graphics vnc,listen=3D127.0.0.1,port=3D5901 \
+  --location /var/lib/libvirt/images/Fedora-Server-dvd-x86_64-32-1.6.iso \
+  --initrd-inject=3D/root/ks.cfg \
+  --extra-args "ks=3Dfile:/ks.cfg" \
+  --boot loader=3D/usr/share/OVMF/OVMF_CODE.secboot.fd,loader.readonly=3Dye=
+s,loader.type=3Dpflash,nvram.template=3D/usr/share/OVMF/OVMF_VARS.secboot.f=
+d,loader_secure=3Dyes \
+  --features smm.state=3Don \
+  --noautoconsole \
+  --tpm emulator,model=3Dtpm-tis,backend.version=3D2.0
 
-> -----Original Message-----
-> From: matthew(a)giassa.net <matthew(a)giassa.net>
-> Sent: Friday, October 16, 2020 5:30 PM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] Re: Question: standardized development environment for TP=
-M2
-> testing, regressions, etc.
-> =
-
-> I guess I should be more specific: I'm writing some test utilities that d=
-irectly
-> communicate with the TPM2 module, and some other OS-supplied pieces (i.e.
-> sysfs), so this would be relevant for "end-to-end" testing s/w apps that =
-operate
-> similarly. It isn't meant to be any sort of replacement for the existing =
-test suite
-> and/or unit tests.
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============8149669679803010276==--
+That command creates a Fedora Server VM with the specified resources, injec=
+ts a kickstart configuration file for automatic installation (e.g. to insta=
+ll tpm2-tools ), set up UEFI boot (so I get TPM measurements), and add the =
+TPM 2.0 emulator. I believe it uses qemu under the hood.
+--===============6191940279386963348==--
 
