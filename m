@@ -1,72 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============6768600521376562423=="
+Content-Type: multipart/mixed; boundary="===============1544138468169758837=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: nicolasoliver03 at gmail.com
 Subject: [tpm2] Re: QUEMU and TPM2 device emulation
-Date: Tue, 20 Oct 2020 15:04:43 +0000
-Message-ID: <SN6PR11MB34372A59356E8390604E9872B81F0@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 20201019161035.2812.82050@ml01.vlan13.01.org
+Date: Tue, 20 Oct 2020 16:54:48 +0000
+Message-ID: <20201020165448.2812.39560@ml01.vlan13.01.org>
+In-Reply-To: SN6PR11MB34372A59356E8390604E9872B81F0@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6768600521376562423==
+--===============1544138468169758837==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Oh I wonder if you could also use the cloud images directly? I did this wit=
-h =
+This is the Kickstart I use:
 
-SELinux:
-  - https://github.com/SELinuxProject/selinux/tree/master/scripts/ci
+#version=3DDEVEL
+# Use graphical install
+graphical
+# Use CDROM installation media
+cdrom
 
 
+%packages
+@^server-product-environment
 
-> -----Original Message-----
-> From: nicolasoliver03(a)gmail.com <nicolasoliver03(a)gmail.com>
-> Sent: Monday, October 19, 2020 11:11 AM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] Re: QUEMU and TPM2 device emulation
-> =
+%end
 
-> This is how I do it on Fedora with virt-install
-> =
+# Keyboard layouts
+keyboard --xlayouts=3D'us'
+# System language
+lang en_US
 
-> dnf install -y @virtualization
-> dnf install -y swtpm swtpm-tools
-> =
+# Network information
+network --hostname=3Dfedora-server.mshome.net
 
-> virt-install --name FedoraServer32 \
->   --description 'Fedora Server 32' \
->   --ram 4096 \
->   --vcpus 2 \
->   --disk size=3D20 \
->   --os-type linux \
->   --os-variant fedora32 \
->   --network bridge=3Dvirbr0 \
->   --graphics vnc,listen=3D127.0.0.1,port=3D5901 \
->   --location /var/lib/libvirt/images/Fedora-Server-dvd-x86_64-32-1.6.iso \
->   --initrd-inject=3D/root/ks.cfg \
->   --extra-args "ks=3Dfile:/ks.cfg" \
->   --boot
-> loader=3D/usr/share/OVMF/OVMF_CODE.secboot.fd,loader.readonly=3Dyes,loade=
-r.t
-> ype=3Dpflash,nvram.template=3D/usr/share/OVMF/OVMF_VARS.secboot.fd,loader_
-> secure=3Dyes \
->   --features smm.state=3Don \
->   --noautoconsole \
->   --tpm emulator,model=3Dtpm-tis,backend.version=3D2.0
-> =
+# Run the Setup Agent on first boot
+firstboot --enable
+# System services
+services --enabled=3D"chronyd" =
 
-> That command creates a Fedora Server VM with the specified resources, inj=
-ects a
-> kickstart configuration file for automatic installation (e.g. to install =
-tpm2-tools ),
-> set up UEFI boot (so I get TPM measurements), and add the TPM 2.0 emulato=
-r. I
-> believe it uses qemu under the hood.
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============6768600521376562423==--
+
+ignoredisk --only-use=3Dsda
+autopart
+# Partition clearing information
+clearpart --drives=3Dsda --all
+
+# System timezone
+timezone America/Los_Angeles --utc
+
+# Root password
+rootpw --iscrypted <Encrypted Password>
+user --groups=3Dwheel --name=3Dtest --password=3D<Encrypted Password> --isc=
+rypted --gecos=3D"test"
+
+%addon com_redhat_kdump --disable --reserve-mb=3D'128'
+
+%end
+
+%anaconda
+pwpolicy root --minlen=3D6 --minquality=3D1 --notstrict --nochanges --notem=
+pty
+pwpolicy user --minlen=3D6 --minquality=3D1 --notstrict --nochanges --empty=
+ok
+pwpolicy luks --minlen=3D6 --minquality=3D1 --notstrict --nochanges --notem=
+pty
+%end
+
+%post --erroronfail --log=3D/root/post-install.log
+echo "test ALL=3D(ALL) NOPASSWD:ALL" >> /etc/sudoers
+%end
+
+%post --erroronfail --log=3D/root/additional-packages.log
+dnf -y install tpm2-tss tpm2-tools tpm2-tss-engine tpm2-pkcs11 tpm2-pkcs11-=
+tools gnutls-utils tmux nano
+%end
+
+That works in HyperV and actual devices with "sda" as the disk name.
+For KVM/QEMU/LibVirt, changing the drive name to "vda" works (never figured=
+ out how to make the disk name be "sda" by default in LibVirt)
+--===============1544138468169758837==--
 
