@@ -1,45 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============7582402882115004068=="
+Content-Type: multipart/mixed; boundary="===============1283564976497213414=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-pkcs11 1.5.0-rc0
-Date: Thu, 05 Nov 2020 01:13:28 +0000
-Message-ID: <SN6PR11MB3437455F268D31292A1B937DB8EE0@SN6PR11MB3437.namprd11.prod.outlook.com>
+Subject: [tpm2] New Tutorial For Setting up TPM2 with QEMU
+Date: Thu, 05 Nov 2020 16:28:13 +0000
+Message-ID: <SN6PR11MB34376B906E9E63DE20EC58B2B8EE0@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7582402882115004068==
+--===============1283564976497213414==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello, I would like to announce the release candidate for tpm2-pkcs11 versi=
-on 1.5.0-rc0 with the following changelog:
+Hello,
 
-### 1.5.0-rc0 - 2020-11-04
-  * C_Decrypt: Fix CKM_RSA_PKCS11 scheme not removing PKCS v1.5 block paddi=
-ng from returned plaintext.
-  * C_Digest/C_DigestFinal: Fix Section 5.2 style returns.
-  * C_OpenSession: fix valid session handles starting at 0, 0 is invalid pe=
-r the spec.
-  * C_OpenSession: fix handle issuance bug where handles could be exhausted=
- at out of bounds.
-  * Support swtpm in testing infrastructure.
-  * Fix C_Encrypt/C_Decrypt interface not setting size when output buffer i=
-n NULL.
-  * Fix warning ../configure: line 14383: ]: command not found
-  * Fix CKM_RSA_PKCS_PSS mechanism.
-  * C_GetMechanismList: Fix index 0 of the returned list being invalid.
-  * C_GetMechanismInfo: Fix errors like ERROR: Unknown mechanism, got: 0xd.
-  * Docs: use full paths from project root to help fix 404 errors.
-  * tpm2_ptool init to attempt to persistent created primary object at 0x81=
-000001 and fallback to
-    first available address on failure.
+I would just like to announce a new tutorial on setting up TPM2.0 simulator=
+ and exposing it as a TPM 2.0 device to a guest VM using QEMU.
+https://tpm2-software.github.io/2020/10/19/TPM2-Device-Emulation-With-QEMU.=
+html
 
-This RC will be slower than previous RC cycles. Baring any changes that nee=
-d to be made, the release is tentatively
-scheduled for Nov 16 2020.
+The take away is you can get a TPM 2.0 Simulator you can run in a debugger,=
+ along with using a kernel level /dev/tpm0 or /dev/tpmrm0 device node
+and debug a guest VM.
+
+There are existing tutorials, but I was missing a few things and it took me=
+ a little while to get it working. Hopefully this helps others out
+And saves some time.
 
 Thanks,
 Bill
---===============7582402882115004068==--
+--===============1283564976497213414==--
 
