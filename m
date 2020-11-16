@@ -1,19 +1,28 @@
-Content-Type: multipart/mixed; boundary="===============4345503416038607391=="
+Content-Type: multipart/mixed; boundary="===============2093115909768315859=="
 MIME-Version: 1.0
-From: Matthew Giassa <matthew at giassa.net>
-Subject: [tpm2] Re: Question: TPM2.0 auditing services/programs for S/W
- solutions using TPM chips.
-Date: Mon, 16 Nov 2020 18:44:23 +0000
-Message-ID: <20201116184423.2865.25010@ml01.vlan13.01.org>
-In-Reply-To: SN6PR11MB34373BFA52649F701CE3072FB8E30@SN6PR11MB3437.namprd11.prod.outlook.com
+From: Imran Desai <imran.desai at intel.com>
+Subject: [tpm2] [Release] tpm2-tools v5.0
+Date: Mon, 16 Nov 2020 21:38:27 +0000
+Message-ID: <20201116213827.2865.98728@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4345503416038607391==
+--===============2093115909768315859==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thank you.
---===============4345503416038607391==--
+Hello all,
+
+I am pleased to announce the release of tpm2-tools version 5.0.
+
+For release details, please visit https://github.com/tpm2-software/tpm2-too=
+ls/releases/tag/5.0
+
+Thank you to all the contributors for participating in this release.
+
+Thanks and Regards,
+
+Imran Desai
+--===============2093115909768315859==--
 
