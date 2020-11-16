@@ -1,53 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============4214548904853090169=="
+Content-Type: multipart/mixed; boundary="===============4216157631257565620=="
 MIME-Version: 1.0
-From: Matthew Giassa <matthew at giassa.net>
-Subject: [tpm2] Question: TPM2.0 auditing services/programs for S/W solutions
- using TPM chips.
-Date: Mon, 16 Nov 2020 17:16:36 +0000
-Message-ID: <20201116171636.2865.49328@ml01.vlan13.01.org>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] [RELEASE] tpm2-pkcs11 1.5.0
+Date: Mon, 16 Nov 2020 18:21:18 +0000
+Message-ID: <SN6PR11MB3437A38B615EA1B4365F8D6CB8E30@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4214548904853090169==
+--===============4216157631257565620==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Good day,
+Hello,
 
-I'm trying to find a specific type of guideline and/or certification relati=
-ng to TPM-based (software) product, and wasn't able to find what I'm lookin=
-g for here (so far), or at other sites I was advised to check out (i.e. [1]=
-, [2]), so I'm reaching out here for guidance/advice. =
+I would like to announce the release of tpm2-pkcs11 version 1.5.0 with the =
+following changelog:
 
+### 1.5.0 - 2020-11-16
+  * C_Decrypt: Fix CKM_RSA_PKCS11 scheme not removing PKCS v1.5 block paddi=
+ng from returned plaintext.
+  * C_Digest/C_DigestFinal: Fix Section 5.2 style returns.
+  * C_OpenSession: fix valid session handles starting at 0, 0 is invalid pe=
+r the spec.
+  * C_OpenSession: fix handle issuance bug where handles could be exhausted=
+ at out of bounds.
+  * Support swtpm in testing infrastructure.
+  * Fix C_Encrypt/C_Decrypt interface not setting size when output buffer i=
+n NULL.
+  * Fix warning ../configure: line 14383: ]: command not found
+  * Fix CKM_RSA_PKCS_PSS mechanism.
+  * C_GetMechanismList: Fix index 0 of the returned list being invalid.
+  * C_GetMechanismInfo: Fix errors like ERROR: Unknown mechanism, got: 0xd.
+  * Docs: use full paths from project root to help fix 404 errors.
+  * tpm2_ptool init to attempt to persistent created primary object at 0x81=
+000001 and fallback to
+    first available address on failure.
 
-Are there companies or programs (i.e. formally recognized or recommended by=
- TCG or a similar authority) that pen-test/assess the quality of a software=
--based solution that depends on a TPM (i.e. 2.0) chip? Or, failing that, ar=
-e there guidelines or certification/assessment programs for qualifying soft=
-ware solutions (i.e. Linux-based) that make use of a TPM device?
+The release can be found here:
+https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.5.0
 
-I'm putting together some proof-of-concept examples, and while the design s=
-eems sound, it's my opinion that the person implementing the solution shoul=
-dn't be the same person assessing it for weaknesses. It's effectively a mea=
-sured-boot-based solution to support full disk encryption via LUKS, and lat=
-er, remote attestation. I started considering the topic after coming across=
- a post [3], which strikes me as a bit of a "gotcha" (i.e. secret can be un=
-sealed due to accidentally leaving a blank/default password enabled; "oops"=
-). =
-
-
-Any documentation/guides/resources that can help with assessing the quality=
- of a s/w-based solution and "keeping it on the rails" is appreciated.
-
-Thank you.
-
-
-1. "TPMDeveloper - Topics", <https://developers.tpm.dev/topics>, last acces=
-sed 2020-11-16.
-2. "Trusted Computing Group - Resources", <https://trustedcomputinggroup.or=
-g/resources?>, last accessed 2020-11-16.
-3. "Unsealing data despite PCR policy", <https://github.com/tpm2-software/t=
-pm2-tools/issues/1123>, last accessed 2020-11-16.
---===============4214548904853090169==--
+Thanks,
+Bill
+--===============4216157631257565620==--
 
