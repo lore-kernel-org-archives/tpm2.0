@@ -1,28 +1,26 @@
-Content-Type: multipart/mixed; boundary="===============2093115909768315859=="
+Content-Type: multipart/mixed; boundary="===============7459220324565025348=="
 MIME-Version: 1.0
-From: Imran Desai <imran.desai at intel.com>
-Subject: [tpm2] [Release] tpm2-tools v5.0
-Date: Mon, 16 Nov 2020 21:38:27 +0000
-Message-ID: <20201116213827.2865.98728@ml01.vlan13.01.org>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: [tpm2] RELEASE CANDIDATE tpm2-tss 2.4.4-rc1 and 3.0.2-rc1
+Date: Wed, 18 Nov 2020 16:20:02 +0000
+Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171BD41C6@exch2010c.sit.fraunhofer.de>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2093115909768315859==
+--===============7459220324565025348==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello all,
+Hi all,
 
-I am pleased to announce the release of tpm2-tools version 5.0.
+I just tagged tpm2-tss release candidates 2.4.4-rc1 and 3.0.2-rc1.
 
-For release details, please visit https://github.com/tpm2-software/tpm2-too=
-ls/releases/tag/5.0
+You can find them here:
+https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.4-rc1
+https://github.com/tpm2-software/tpm2-tss/releases/tag/3.0.2-rc1
 
-Thank you to all the contributors for participating in this release.
-
-Thanks and Regards,
-
-Imran Desai
---===============2093115909768315859==--
+Cheers,
+Andreas
+--===============7459220324565025348==--
 
