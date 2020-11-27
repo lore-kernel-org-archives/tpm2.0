@@ -1,27 +1,35 @@
-Content-Type: multipart/mixed; boundary="===============5413362992094554754=="
+Content-Type: multipart/mixed; boundary="===============4314679140187849069=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] RELEASE tpm2-tss 3.0.3 and 2.4.5
-Date: Wed, 25 Nov 2020 14:15:56 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171BDA2BC@exch2010c.sit.fraunhofer.de>
+From: Dafna Hirschfeld <dafna.hirschfeld at collabora.com>
+Subject: [tpm2] question: how to test a case where the selftest command fails
+Date: Fri, 27 Nov 2020 14:45:12 +0100
+Message-ID: <63cc0593-732b-5423-922d-cf5b16c8c958@collabora.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5413362992094554754==
+--===============4314679140187849069==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi,
+I am working for Collabora on a list of patches in the Chromeos kernel.
+I want to check if I can upstream those patches to the mainline kernel.
+There is one patch [1] to ignore the case that the 'selftest' command failed
+when adding the '/dev/tpm' device. The idea is that userspace could still i=
+nteract with the
+device to some extent event if it fails.
+I was wandering how do I test such a case.
+I thought that I can test it with a tpm emulator and change the emulator co=
+de
+to fail on 'selftest'.
+I am new to TPM and still know little about it so I thought maybe
+some of the people here have better ideas?
 
-I'm happy to announce the releases 3.0.3 and 2.4.5 of tpm2-tss
-that fixes some regression of the previous version.
+[1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/1065c=
+2fe54d6%5E%21/
 
-You can find them here:
-https://github.com/tpm2-software/tpm2-tss/releases/tag/3.0.3
-https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.5
-
-Thanks,
-Andreas
---===============5413362992094554754==--
+Thanks a lot,
+Dafna Hirschfeld.
+--===============4314679140187849069==--
 
