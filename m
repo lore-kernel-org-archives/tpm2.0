@@ -1,60 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============1943021389384627988=="
+Content-Type: multipart/mixed; boundary="===============6893629817821178799=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: question: how to test a case where the selftest command
- fails
-Date: Fri, 27 Nov 2020 14:38:53 +0000
-Message-ID: <SN6PR11MB343716ACC62B57C0C97A75EAB8F80@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 63cc0593-732b-5423-922d-cf5b16c8c958@collabora.com
+From: Paul Moore <paul at paul-moore.com>
+Subject: [tpm2] Help combining multiple policy assertions (logical AND)
+Date: Thu, 03 Dec 2020 16:42:22 -0500
+Message-ID: <CAHC9VhR14+w9422gQMd=8FTWqunTEQKDuJn79H2VPbAwH0Fdcg@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1943021389384627988==
+--===============6893629817821178799==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-That's possible, but then you would have to maintain a patched emulator. Yo=
-u could just use something
-like cmocka and wrap the TPM call so it never hits the TPM and return an er=
-ror.
+Hello,
 
-> -----Original Message-----
-> From: Dafna Hirschfeld <dafna.hirschfeld(a)collabora.com>
-> Sent: Friday, November 27, 2020 7:45 AM
-> To: tpm2(a)lists.01.org
-> Cc: Enric Balletbo i Serra <enric.balletbo(a)collabora.com>
-> Subject: [tpm2] question: how to test a case where the selftest command f=
-ails
-> =
+I'm currently attempting to combine multiple policy assertions
+together using a logical AND into a single signed policy that can be
+used to control access to a TPM2 nvindex.  I currently have a working
+simple example with a single policy assertion based on PCR values, but
+I'm struggling trying to add an additional policy assertion (I would
+like to control access both based on PCR values and a second nvindex
+value).
 
-> Hi,
-> I am working for Collabora on a list of patches in the Chromeos kernel.
-> I want to check if I can upstream those patches to the mainline kernel.
-> There is one patch [1] to ignore the case that the 'selftest' command fai=
-led when
-> adding the '/dev/tpm' device. The idea is that userspace could still inte=
-ract with
-> the device to some extent event if it fails.
-> I was wandering how do I test such a case.
-> I thought that I can test it with a tpm emulator and change the emulator =
-code to
-> fail on 'selftest'.
-> I am new to TPM and still know little about it so I thought maybe some of=
- the
-> people here have better ideas?
-> =
+My current, single assertion example is shown below, any help you can
+provide on how to add a tpm2_policynv assertion would be greatly appreciate=
+d.
 
-> [1]
-> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/1065c2f
-> e54d6%5E%21/
-> =
 
-> Thanks a lot,
-> Dafna Hirschfeld.
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============1943021389384627988==--
+*** locking/sealing the nvindex
+
+
+tpm2_pcrread $PCRS -o /tmp/pcr.bin
+
+tpm2_startauthsession -S /tmp/session.ctx
+tpm2_policypcr -S /tmp/session.ctx \
+  -l $PCRS -f /tmp/pcr.bin -L /tmp/pcr.policy
+tpm2_policyauthorize -S /tmp/session.ctx \
+  -L /tmp/nvindex.policy -n signing_key.name
+tpm2_nvdefine -a "ownerwrite|ownerread|policyread" \
+  -P $PASSWD -L /tmp/nvindex.policy $NVINDEX
+tpm2_flushcontext /tmp/session.ctx
+
+openssl dgst -sha256 --sign signing_key_private.pem \
+  -out pcr.signature /tmp/pcr.policy
+
+echo "storedsecret" | tpm2_nvwrite -C o -P $PASSWD \
+  -i- $NVINDEX
+
+
+*** reading the nvindex using the signed policy
+
+
+tpm2_loadexternal -C o -G rsa -u signing_key_public.pem \
+  -c /tmp/key.ctx -n /tmp/key.name
+
+tpm2_startauthsession -S /tmp/session.ctx --policy-session
+tpm2_policypcr -S /tmp/session.ctx \
+  -l $PCRS -L /tmp/pcr.policy
+tpm2_verifysignature -c /tmp/key.ctx \
+  -f rsassa -g sha256 \
+  -m /tmp/pcr.policy -s pcr.signature -t /tmp/sigverify.tkt
+tpm2_policyauthorize -S /tmp/session.ctx \
+  -i /tmp/pcr.policy -n /tmp/key.name -t /tmp/sigverify.tkt
+tpm2_nvread -P "session:/tmp/session.ctx" -s 64 $NVINDEX
+tpm2_flushcontext /tmp/session.ctx
+rm -f /tmp/sigverify.tkt
+
+
+--
+paul moore
+www.paul-moore.com
+--===============6893629817821178799==--
 
