@@ -1,39 +1,67 @@
-Content-Type: multipart/mixed; boundary="===============0880831037041878088=="
+Content-Type: multipart/mixed; boundary="===============0756547473005051889=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: tpm2_pcrread is not working because of tcti-abrmd
-Date: Thu, 17 Dec 2020 16:06:46 +0000
-Message-ID: <SN6PR11MB3437D96707D5FDD126C3F5D9B8C40@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 20201216010008.4749.60976@ml01.vlan13.01.org
+From: Phani Srinivas <phani.srinivas at in.abb.com>
+Subject: [tpm2] TPM2 TSS on Android
+Date: Sat, 19 Dec 2020 08:23:51 +0000
+Message-ID: <
+ <AM6PR06MB49476FA898E45AD95D21671FA6C20@AM6PR06MB4947.eurprd06.prod.outlook.com>>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0880831037041878088==
+--===============0756547473005051889==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Not that I am aware of. If tpm2_pcrread isn't working, then I doubt if a co=
-mmand existed to
-do what you want, that the command would even reach the TPM.
+Hello All,
 
-> -----Original Message-----
-> From: Chenxi Z <cxzhang1981(a)hotmail.com>
-> Sent: Tuesday, December 15, 2020 7:00 PM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] Re: tpm2_pcrread is not working because of tcti-abrmd
-> =
+We are trying to use  TPM2.0 on Android, would like to port TPM2 TSS on to =
+it,
+could any of you suggest any tutorials on the NDK Build compilation of TPM2=
+ TSS and relevant details to use TPM2 TSS on Android
 
-> rebooting the host helped and resolved this issue. Tpm2-pcrread is back t=
-o work
-> well.
-> I have multiple hosts having the same issue. Rebooting is a heavy operati=
-on.
-> Other than rebooting hosts, Is there a way to reset TPM HW through command
-> line?
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============0880831037041878088==--
+Regards
+Phani Srinivas S
+
+--===============0756547473005051889==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
+YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
+Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyog
+U3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05v
+cm1hbAoJe21hcmdpbjowaW47CgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEu
+MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpzcGFuLkVtYWlsU3R5bGUx
+NwoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7Cglmb250LWZhbWlseToiQ2FsaWJy
+aSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7fQouTXNvQ2hwRGVmYXVsdAoJe21zby1z
+dHlsZS10eXBlOmV4cG9ydC1vbmx5O30KQHBhZ2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo4LjVpbiAx
+MS4waW47CgltYXJnaW46MS4waW4gMS4waW4gMS4waW4gMS4waW47fQpkaXYuV29yZFNlY3Rpb24x
+Cgl7cGFnZTpXb3JkU2VjdGlvbjE7fQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1s
+Pgo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPgo8L3htbD48
+IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVsYXlvdXQgdjpleHQ9
+ImVkaXQiPgo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4KPC9vOnNoYXBlbGF5b3V0
+PjwveG1sPjwhW2VuZGlmXS0tPgo8L2hlYWQ+Cjxib2R5IGxhbmc9IkVOLVVTIiBsaW5rPSIjMDU2
+M0MxIiB2bGluaz0iIzk1NEY3MiI+CjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+CjxwIGNsYXNz
+PSJNc29Ob3JtYWwiPkhlbGxvIEFsbCw8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1h
+bCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPldlIGFyZSB0cnlp
+bmcgdG8gdXNlJm5ic3A7IFRQTTIuMCBvbiBBbmRyb2lkLCB3b3VsZCBsaWtlIHRvIHBvcnQgVFBN
+MiBUU1Mgb24gdG8gaXQsCjxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5jb3Vs
+ZCBhbnkgb2YgeW91IHN1Z2dlc3QgYW55IHR1dG9yaWFscyBvbiB0aGUgTkRLIEJ1aWxkIGNvbXBp
+bGF0aW9uIG9mIFRQTTIgVFNTIGFuZCByZWxldmFudCBkZXRhaWxzIHRvIHVzZSBUUE0yIFRTUyBv
+biBBbmRyb2lkPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7
+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5SZWdhcmRzPG86cD48L286cD48L3A+Cjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPlBoYW5pIFNyaW5pdmFzIFM8bzpwPjwvbzpwPjwvcD4KPC9kaXY+
+CjwvYm9keT4KPC9odG1sPgo=
+
+--===============0756547473005051889==--
 
