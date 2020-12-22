@@ -1,146 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============3485109972268116424=="
+Content-Type: multipart/mixed; boundary="===============0752761856713612472=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] Re: TPM2 TSS on Android
-Date: Tue, 22 Dec 2020 10:47:54 +0000
-Message-ID: <9F48E1A823B03B4790B7E6E69430724D0171BF0630@exch2010c.sit.fraunhofer.de>
-In-Reply-To: bf55ff3670ca4a04ac4e6cbf01026ddf@infineon.com
+From: Auriga7 <Auriga7 at protonmail.com>
+Subject: [tpm2] Ensure the link between an unrestricted signing key and a TPM
+Date: Tue, 22 Dec 2020 14:37:16 +0000
+Message-ID: <1xY442AjNtSF-2-2Z0wAmaNt7Ls9WJ3wDa28g8RkC0rUzkOZ8-NKN2ElubfvSApUmifoBspVU4-w_R19ag9C-gOFinvFOipyKcf-wXt3mJU=@protonmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3485109972268116424==
+--===============0752761856713612472==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-In terms of calling the tss from java you might then want to look at tpm2-s=
-wig
-for bindings: https://github.com/tpm2-software/tpm2-swig
+Hi,
 
-Cheers,
-Andreas
-________________________________
-From: Florian.Schreiner(a)infineon.com [Florian.Schreiner(a)infineon.com]
-Sent: Monday, December 21, 2020 12:04
-To: phani.srinivas(a)in.abb.com; tpm2(a)lists.01.org
-Subject: [tpm2] Re: TPM2 TSS on Android
+I would like to know how i can certiffy that a non restricted signing key b=
+elongs to a real TPM in the same way that an AIK key can guarantee it is fr=
+om a TPM using EK and the EK certificate of the TPM. I've tried using the m=
+akecredential and activatecredential commands of tpm2-tools on a non restri=
+cted signing key created with the create command. However those commands se=
+ems to only work for an AIK key created using createak command. How can I c=
+reate a non restricted signing key and then ensure that this key is linked =
+to real TPM using the tpm2-tools.
 
-Hi Phani,
+Thank you.
 
-after a quick research, I have found the following: https://android.googles=
-ource.com/platform/external/tpm2-tss/
-I would be curious to get to know if that fits to your request.
-
-Best,
-Florian
-
-From: Phani Srinivas <phani.srinivas(a)in.abb.com>
-Sent: Samstag, 19. Dezember 2020 09:24
-To: tpm2(a)lists.01.org
-Subject: [tpm2] TPM2 TSS on Android
-
-Caution: This e-mail originated outside Infineon Technologies. Do not click=
- on links or open attachments unless you validate it is safe<https://goto.i=
-nfineon.com/SocialEngineering>.
-
-
-Hello All,
-
-We are trying to use  TPM2.0 on Android, would like to port TPM2 TSS on to =
-it,
-could any of you suggest any tutorials on the NDK Build compilation of TPM2=
- TSS and relevant details to use TPM2 TSS on Android
-
-Regards
-Phani Srinivas S
-
---===============3485109972268116424==
+--===============0752761856713612472==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWwgZGlyPSJsdHIiPgo8aGVhZD4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBj
-b250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9aXNvLTg4NTktMSI+CjxzdHlsZT4KPCEtLQpAZm9u
-dC1mYWNlCgl7Zm9udC1mYW1pbHk6IkNhbWJyaWEgTWF0aCJ9CkBmb250LWZhY2UKCXtmb250LWZh
-bWlseTpDYWxpYnJpfQpAZm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6IlNlZ29lIFVJIn0KcC5Nc29O
-b3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowY207CgltYXJnaW4t
-Ym90dG9tOi4wMDAxcHQ7Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmki
-LHNhbnMtc2VyaWZ9CmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsKCXtjb2xvcjojMDU2M0MxOwoJ
-dGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZX0KYTp2aXNpdGVkLCBzcGFuLk1zb0h5cGVybGlua0Zv
-bGxvd2VkCgl7Y29sb3I6Izk1NEY3MjsKCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmV9CnAubXNv
-bm9ybWFsMCwgbGkubXNvbm9ybWFsMCwgZGl2Lm1zb25vcm1hbDAKCXttYXJnaW4tcmlnaHQ6MGNt
-OwoJbWFyZ2luLWxlZnQ6MGNtOwoJZm9udC1zaXplOjExLjBwdDsKCWZvbnQtZmFtaWx5OiJDYWxp
-YnJpIixzYW5zLXNlcmlmfQpzcGFuLkVtYWlsU3R5bGUxOAoJe2ZvbnQtZmFtaWx5OiJDYWxpYnJp
-IixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93dGV4dH0Kc3Bhbi5FbWFpbFN0eWxlMjAKCXtmb250
-LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHR9Ci5Nc29DaHBE
-ZWZhdWx0Cgl7Zm9udC1zaXplOjEwLjBwdH0KQHBhZ2UgV29yZFNlY3Rpb24xCgl7bWFyZ2luOjcy
-LjBwdCA3Mi4wcHQgNzIuMHB0IDcyLjBwdH0KLS0+Cjwvc3R5bGU+PHN0eWxlIHR5cGU9InRleHQv
-Y3NzIiBpZD0ib3dhUGFyYVN0eWxlIj48L3N0eWxlPgo8L2hlYWQ+Cjxib2R5IGZwc3R5bGU9IjEi
-IG9jc2k9IjAiIHZsaW5rPSIjOTU0RjcyIiBsaW5rPSIjMDU2M0MxIiBsYW5nPSJERSI+CjxkaXYg
-c3R5bGU9ImRpcmVjdGlvbjogbHRyO2ZvbnQtZmFtaWx5OiBUYWhvbWE7Y29sb3I6ICMwMDAwMDA7
-Zm9udC1zaXplOiAxMHB0OyI+CjxkaXY+SW4gdGVybXMgb2YgY2FsbGluZyB0aGUgdHNzIGZyb20g
-amF2YSB5b3UgbWlnaHQgdGhlbiB3YW50IHRvIGxvb2sgYXQgdHBtMi1zd2lnPC9kaXY+CjxkaXY+
-Zm9yIGJpbmRpbmdzOiA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90
-cG0yLXN3aWciIHRhcmdldD0iX2JsYW5rIj4KaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdh
-cmUvdHBtMi1zd2lnPC9hPjwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+Q2hlZXJzLDwvZGl2
-Pgo8ZGl2PkFuZHJlYXM8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogVGltZXMg
-TmV3IFJvbWFuOyBjb2xvcjogIzAwMDAwMDsgZm9udC1zaXplOiAxNnB4Ij4KPGhyIHRhYmluZGV4
-PSItMSI+CjxkaXYgaWQ9ImRpdlJwRjg2MDA0OCIgc3R5bGU9ImRpcmVjdGlvbjogbHRyOyI+PGZv
-bnQgc2l6ZT0iMiIgZmFjZT0iVGFob21hIiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IEZs
-b3JpYW4uU2NocmVpbmVyQGluZmluZW9uLmNvbSBbRmxvcmlhbi5TY2hyZWluZXJAaW5maW5lb24u
-Y29tXTxicj4KPGI+U2VudDo8L2I+IE1vbmRheSwgRGVjZW1iZXIgMjEsIDIwMjAgMTI6MDQ8YnI+
-CjxiPlRvOjwvYj4gcGhhbmkuc3Jpbml2YXNAaW4uYWJiLmNvbTsgdHBtMkBsaXN0cy4wMS5vcmc8
-YnI+CjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gUmU6IFRQTTIgVFNTIG9uIEFuZHJvaWQ8YnI+Cjwv
-Zm9udD48YnI+CjwvZGl2Pgo8ZGl2PjwvZGl2Pgo8ZGl2Pgo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlv
-bjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iIj5IaSBQaGFuaSw8L3NwYW4+
-PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iIj4mbmJzcDs8L3NwYW4+PC9w
-Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iIiBsYW5nPSJFTi1VUyI+YWZ0ZXIg
-YSBxdWljayByZXNlYXJjaCwgSSBoYXZlIGZvdW5kIHRoZSBmb2xsb3dpbmc6Cjwvc3Bhbj48YSBo
-cmVmPSJodHRwczovL2FuZHJvaWQuZ29vZ2xlc291cmNlLmNvbS9wbGF0Zm9ybS9leHRlcm5hbC90
-cG0yLXRzcy8iIHRhcmdldD0iX2JsYW5rIiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIiPjxzcGFu
-IHN0eWxlPSJmb250LXNpemU6MTAuNXB0OyBmb250LWZhbWlseTomcXVvdDtTZWdvZSBVSSZxdW90
-OyxzYW5zLXNlcmlmOyBiYWNrZ3JvdW5kOndoaXRlOyB0ZXh0LWRlY29yYXRpb246bm9uZSIgbGFu
-Zz0iRU4tVVMiPmh0dHBzOi8vYW5kcm9pZC5nb29nbGVzb3VyY2UuY29tL3BsYXRmb3JtL2V4dGVy
-bmFsL3RwbTItdHNzLzwvc3Bhbj48L2E+PHNwYW4gbGFuZz0iRU4tVVMiPjwvc3Bhbj48L3A+Cjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSIiIGxhbmc9IkVOLVVTIj5JIHdvdWxkIGJl
-IGN1cmlvdXMgdG8gZ2V0IHRvIGtub3cgaWYgdGhhdCBmaXRzIHRvIHlvdXIgcmVxdWVzdC4KPC9z
-cGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9IiIgbGFuZz0iRU4tVVMi
-PiZuYnNwOzwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSIiIGxh
-bmc9IkVOLVVTIj5CZXN0LDwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0
-eWxlPSIiIGxhbmc9IkVOLVVTIj5GbG9yaWFuIDwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxzcGFuIHN0eWxlPSIiIGxhbmc9IkVOLVVTIj4mbmJzcDs8L3NwYW4+PC9wPgo8ZGl2Pgo8
-ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTsgYm9yZGVyLXRvcDpzb2xpZCAjRTFFMUUxIDEuMHB0OyBw
-YWRkaW5nOjMuMHB0IDBjbSAwY20gMGNtIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4g
-bGFuZz0iRU4tVVMiPkZyb206PC9zcGFuPjwvYj48c3BhbiBsYW5nPSJFTi1VUyI+IFBoYW5pIFNy
-aW5pdmFzICZsdDtwaGFuaS5zcmluaXZhc0Bpbi5hYmIuY29tJmd0Owo8YnI+CjxiPlNlbnQ6PC9i
-PiBTYW1zdGFnLCAxOS4gRGV6ZW1iZXIgMjAyMCAwOToyNDxicj4KPGI+VG86PC9iPiB0cG0yQGxp
-c3RzLjAxLm9yZzxicj4KPGI+U3ViamVjdDo8L2I+IFt0cG0yXSBUUE0yIFRTUyBvbiBBbmRyb2lk
-PC9zcGFuPjwvcD4KPC9kaXY+CjwvZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDs8L3A+
-CjxkaXY+Cjx0YWJsZSBjbGFzcz0iTXNvTm9ybWFsVGFibGUiIHN0eWxlPSJ3aWR0aDowY207IGJh
-Y2tncm91bmQ6bW9jY2FzaW4iIHdpZHRoPSIwIiBjZWxsc3BhY2luZz0iMyIgY2VsbHBhZGRpbmc9
-IjAiIGJvcmRlcj0iMCI+Cjx0Ym9keT4KPHRyPgo8dGQgc3R5bGU9InBhZGRpbmc6Ljc1cHQgLjc1
-cHQgLjc1cHQgLjc1cHQiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Ryb25nPjxzcGFuIHN0eWxl
-PSJmb250LXNpemU6MTAuNXB0OyBmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMt
-c2VyaWYiPkNhdXRpb248L3NwYW4+PC9zdHJvbmc+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC41
-cHQiPjogVGhpcyBlLW1haWwgb3JpZ2luYXRlZCBvdXRzaWRlIEluZmluZW9uIFRlY2hub2xvZ2ll
-cy4gRG8gbm90IGNsaWNrIG9uIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdQo8
-YSBocmVmPSJodHRwczovL2dvdG8uaW5maW5lb24uY29tL1NvY2lhbEVuZ2luZWVyaW5nIiB0YXJn
-ZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIj4KdmFsaWRhdGUgaXQgaXMgc2Fm
-ZTwvYT4uPC9zcGFuPjwvcD4KPC90ZD4KPC90cj4KPC90Ym9keT4KPC90YWJsZT4KPC9kaXY+Cjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mbmJzcDs8L3NwYW4+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+SGVsbG8gQWxsLDwvc3Bhbj48
-L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mbmJzcDs8L3NwYW4+
-PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+V2UgYXJlIHRyeWlu
-ZyB0byB1c2UmbmJzcDsgVFBNMi4wIG9uIEFuZHJvaWQsIHdvdWxkIGxpa2UgdG8gcG9ydCBUUE0y
-IFRTUyBvbiB0byBpdCwKPC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFu
-Zz0iRU4tVVMiPmNvdWxkIGFueSBvZiB5b3Ugc3VnZ2VzdCBhbnkgdHV0b3JpYWxzIG9uIHRoZSBO
-REsgQnVpbGQgY29tcGlsYXRpb24gb2YgVFBNMiBUU1MgYW5kIHJlbGV2YW50IGRldGFpbHMgdG8g
-dXNlIFRQTTIgVFNTIG9uIEFuZHJvaWQ8L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-c3BhbiBsYW5nPSJFTi1VUyI+Jm5ic3A7PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PHNwYW4gbGFuZz0iRU4tVVMiPlJlZ2FyZHM8L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij48c3BhbiBsYW5nPSJFTi1VUyI+UGhhbmkgU3Jpbml2YXMgUzwvc3Bhbj48L3A+CjwvZGl2Pgo8
-L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
-
---===============3485109972268116424==--
+PGRpdj5IaSw8YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5JIHdvdWxkIGxpa2UgdG8ga25v
+dyBob3cgaSBjYW4gY2VydGlmZnkgdGhhdCBhIG5vbiByZXN0cmljdGVkIHNpZ25pbmcga2V5IGJl
+bG9uZ3MgdG8gYSByZWFsIFRQTSBpbiB0aGUgc2FtZSB3YXkgdGhhdCBhbiBBSUsga2V5IGNhbiBn
+dWFyYW50ZWUgaXQgaXMgZnJvbSBhIFRQTSB1c2luZyBFSyBhbmQgdGhlIEVLIGNlcnRpZmljYXRl
+IG9mIHRoZSBUUE0uIEkndmUgdHJpZWQgdXNpbmcgdGhlIG1ha2VjcmVkZW50aWFsIGFuZCBhY3Rp
+dmF0ZWNyZWRlbnRpYWwgY29tbWFuZHMgb2YgdHBtMi10b29scyBvbiBhIG5vbiByZXN0cmljdGVk
+IHNpZ25pbmcga2V5IGNyZWF0ZWQgd2l0aCB0aGUgY3JlYXRlIGNvbW1hbmQuIEhvd2V2ZXIgdGhv
+c2UgY29tbWFuZHMgc2VlbXMgdG8gb25seSB3b3JrIGZvciBhbiBBSUsga2V5IGNyZWF0ZWQgdXNp
+bmcgY3JlYXRlYWsgY29tbWFuZC4gSG93IGNhbiBJIGNyZWF0ZSBhIG5vbiByZXN0cmljdGVkIHNp
+Z25pbmcga2V5IGFuZCB0aGVuIGVuc3VyZSB0aGF0IHRoaXMga2V5IGlzIGxpbmtlZCB0byByZWFs
+IFRQTSB1c2luZyB0aGUgdHBtMi10b29scy48YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5U
+aGFuayB5b3UuPGJyPjwvZGl2Pg==
+--===============0752761856713612472==--
 
