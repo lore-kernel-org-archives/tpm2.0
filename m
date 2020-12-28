@@ -1,132 +1,208 @@
-Content-Type: multipart/mixed; boundary="===============0146963607159556163=="
+Content-Type: multipart/mixed; boundary="===============2765256516030364035=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Ensure the link between an unrestricted signing key and a
- TPM
-Date: Mon, 28 Dec 2020 17:00:51 +0000
-Message-ID: <SN6PR11MB34370566B0996D2133455F4EB8D90@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: D4yzi2HNWDWJ_7gCUWtAr6noTPvOuJFL_IP7FMrmSX7rJC1QTm-MhXjsvEzXIy6Y9JBFpTkF_MBK2Uu_yTkESAuD7f1KWhWdKkVaj9z4JBY=@protonmail.com
+Subject: [tpm2] Re: TPM2 TSS on Android
+Date: Mon, 28 Dec 2020 19:19:21 +0000
+Message-ID: <SN6PR11MB343783C1E3DDAC606ACB29BCB8D90@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: AM6PR06MB494782617BEAAAA487C650D9A6DC0@AM6PR06MB4947.eurprd06.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0146963607159556163==
+--===============2765256516030364035==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Couldn't you just use certify?
-
-https://github.com/tpm2-software/tpm2-tools/blob/master/man/tpm2_certify.1.=
-md
-
+The example Andreas shows is built using a "Blueprint" file. It was part of=
+ the switch that occurred
+to in-aosp-tree projects when they went to this Ninja Kata build system. Ho=
+wever, AFAIK, the NDK
+has stayed Make. So that example, won't really be a drop in for an NDK buil=
+d. I can throw together
+a proper Android.mk and add it to the project. We can probably setup a buil=
+t in Github Actions for
+it as well.
 
 > -----Original Message-----
-> From: Auriga7 <Auriga7(a)protonmail.com>
-> Sent: Wednesday, December 23, 2020 10:06 AM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] Re: Ensure the link between an unrestricted signing key a=
-nd a
-> TPM
+> From: Phani Srinivas <phani.srinivas(a)in.abb.com>
+> Sent: Friday, December 25, 2020 1:37 AM
+> To: Fuchs, Andreas <andreas.fuchs(a)sit.fraunhofer.de>; tpm2(a)lists.01.o=
+rg
+> Subject: [tpm2] Re: TPM2 TSS on Android
 > =
 
-> I think I've figured out how to do it. Here an example :
-> =
-
-> =
-
-> tpm2_createek -c ek.handle -G rsa -u ek.pub
-> =
-
-> =
-
-> tpm2_startauthsession --policy-session -S session.ctx
-> =
-
-> tpm2_policysecret -S session.ctx -c e
-> =
-
-> tpm2_create -C ek.handle -c ak.ctx -u ak.pub -r ak.priv -P session:sessio=
-n.ctx
-> =
-
-> tpm2_readpublic -c ak.ctx -o ak.pem -n ak.name -f pem
-> =
-
-> tpm2_flushcontext session.ctx
-> =
-
-> =
-
-> file_size=3D`stat --printf=3D"%s" ak.name`
-> =
-
-> loaded_key_name=3D`cat ak.name | xxd -p -c $file_size`
-> =
-
-> echo "secret" > secret.data
-> =
-
-> tpm2_makecredential -e ek.pub -s secret.data -n $loaded_key_name -o cred.=
-out
-> =
-
-> =
-
-> tpm2_startauthsession --policy-session -S session.ctx
-> =
-
-> tpm2_policysecret -S session.ctx -c e
-> =
-
-> tpm2_activatecredential -c ak.ctx -C ek.handle -i cred.out -o decrypt_sec=
-ret.data
-> -P "session:session.ctx"
-> =
-
-> tpm2_flushcontext session.ctx
+> Hello Andreas,
 > =
 
 > =
 
 > =
 
-> =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original =
-Message =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+> Thank you for the links, will follow them and see if it works for us and
 > =
 
-> Le mardi 22 d=C3=A9cembre 2020 15:37, Auriga7 <Auriga7(a)protonmail.com
-> <mailto:Auriga7(a)protonmail.com> > a =C3=A9crit :
-> =
-
+> post on this forum the feedback.
 > =
 
 > =
 
-> 	Hi,
+> =
+
+> Regards
+> =
+
+> Phani Srinivas S
 > =
 
 > =
 
-> 	I would like to know how i can certiffy that a non restricted signing key
-> belongs to a real TPM in the same way that an AIK key can guarantee it is=
- from a
-> TPM using EK and the EK certificate of the TPM. I've tried using the
-> makecredential and activatecredential commands of tpm2-tools on a non
-> restricted signing key created with the create command. However those
-> commands seems to only work for an AIK key created using createak command.
-> How can I create a non restricted signing key and then ensure that this k=
-ey is
-> linked to real TPM using the tpm2-tools.
+> =
+
+> From: Fuchs, Andreas <andreas.fuchs(a)sit.fraunhofer.de>
+> Sent: Tuesday, December 22, 2020 4:18 PM
+> To: Phani Srinivas <phani.srinivas(a)in.abb.com>; tpm2(a)lists.01.org
+> Subject: RE: TPM2 TSS on Android
 > =
 
 > =
 
-> 	Thank you.
+> =
+
+> 	This email originated from outside of your organization. Please do not
+> click on links or open attachments unless you recognize the sender and kn=
+ow the
+> content is safe.
 > =
 
 > =
 
+> =
 
+> In terms of calling the tss from java you might then want to look at tpm2=
+-swig
+> =
 
---===============0146963607159556163==--
+> for bindings: https://github.com/tpm2-software/tpm2-swig
+> <https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgith=
+ub.c
+> om%2Ftpm2-software%2Ftpm2-
+> swig&data=3D04%7C01%7Cphani.srinivas%40in.abb.com%7C6846451297664907e5ba
+> 08d8a6670c45%7C372ee9e09ce04033a64ac07073a91ecd%7C0%7C0%7C637442308
+> 817499576%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2l
+> uMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&sdata=3DAVD9sR8I9jU7eRe9w6
+> tUOgLJVLe%2Bz4Kpm5IAibUP9dc%3D&reserved=3D0>
+> =
+
+> =
+
+> =
+
+> Cheers,
+> =
+
+> Andreas
+> =
+
+> ________________________________
+> =
+
+> From: Florian.Schreiner(a)infineon.com <mailto:Florian.Schreiner(a)infine=
+on.com>
+> [Florian.Schreiner(a)infineon.com]
+> Sent: Monday, December 21, 2020 12:04
+> To: phani.srinivas(a)in.abb.com <mailto:phani.srinivas(a)in.abb.com> ;
+> tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> Subject: [tpm2] Re: TPM2 TSS on Android
+> =
+
+> Hi Phani,
+> =
+
+> =
+
+> =
+
+> after a quick research, I have found the following:
+> https://android.googlesource.com/platform/external/tpm2-tss/
+> <https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fandr=
+oid.
+> googlesource.com%2Fplatform%2Fexternal%2Ftpm2-
+> tss%2F&data=3D04%7C01%7Cphani.srinivas%40in.abb.com%7C6846451297664907e5
+> ba08d8a6670c45%7C372ee9e09ce04033a64ac07073a91ecd%7C0%7C0%7C6374423
+> 08817509567%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoi
+> V2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&sdata=3DUFmq4RNyalzYbG
+> %2F1kopjBi98R%2BCTTZlWZcr12B38oAA%3D&reserved=3D0>
+> =
+
+> I would be curious to get to know if that fits to your request.
+> =
+
+> =
+
+> =
+
+> Best,
+> =
+
+> Florian
+> =
+
+> =
+
+> =
+
+> From: Phani Srinivas <phani.srinivas(a)in.abb.com
+> <mailto:phani.srinivas(a)in.abb.com> >
+> Sent: Samstag, 19. Dezember 2020 09:24
+> To: tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org>
+> Subject: [tpm2] TPM2 TSS on Android
+> =
+
+> =
+
+> =
+
+> Caution: This e-mail originated outside Infineon Technologies. Do not cli=
+ck on links
+> or open attachments unless you validate it is safe
+> <https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgoto=
+.infi
+> neon.com%2FSocialEngineering&data=3D04%7C01%7Cphani.srinivas%40in.abb.com
+> %7C6846451297664907e5ba08d8a6670c45%7C372ee9e09ce04033a64ac07073a91e
+> cd%7C0%7C0%7C637442308817509567%7CUnknown%7CTWFpbGZsb3d8eyJWIjoi
+> MC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&s
+> data=3DLRPYzyge%2F0biY%2F2sw75R5p0HDniEVH2qPEOSyyEn6KE%3D&reserved=3D0
+> > .
+> =
+
+> =
+
+> =
+
+> Hello All,
+> =
+
+> =
+
+> =
+
+> We are trying to use  TPM2.0 on Android, would like to port TPM2 TSS on t=
+o it,
+> =
+
+> could any of you suggest any tutorials on the NDK Build compilation of TP=
+M2 TSS
+> and relevant details to use TPM2 TSS on Android
+> =
+
+> =
+
+> =
+
+> Regards
+> =
+
+> Phani Srinivas S
+
+--===============2765256516030364035==--
 
