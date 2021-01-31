@@ -1,39 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============1655433387415203842=="
+Content-Type: multipart/mixed; boundary="===============5746626815292888390=="
 MIME-Version: 1.0
-From: kuba.michal.n at gmail.com
-Subject: [tpm2] Re: Calculating name of created AK- server side
-Date: Fri, 29 Jan 2021 18:44:44 +0000
-Message-ID: <20210129184444.2975.25320@ml01.vlan13.01.org>
-In-Reply-To: 20210129161232.2975.41007@ml01.vlan13.01.org
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] [RELEASE CANDIDATE] tpm2-abrmd: 2.4.0-rc0
+Date: Sun, 31 Jan 2021 16:18:43 +0000
+Message-ID: <SN6PR11MB34379CC4304090ACB5988241B8B79@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1655433387415203842==
+--===============5746626815292888390==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Imran! Thank You for your response =
+Hello,
 
+I would like to announce release candidate 2.4.0-rc0 for tpm2-abrmd located=
+ here:
+https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.4.0-rc0
 
-I have read this tutorial before writing my question. It's just amazing :D
-My question relates to this command:
+The changelog is as follows:
+### 2.4.0-rc0 - 2021-01-31
+### Added
+  - configure option --enable-asan which will cause the build to produce
+    ASAN enabled binaries.
+  - CI runs with clang enable asan for tests.
+  - Service start depends on systemd device unit: dev-tpm0.device.
+  - Testing support with swtpm.
 
-tpm2_makecredential \
---tcti none \
---encryption-key rsa_ek.pub \
---secret file_input.data \
---name $loaded_key_name \ # this line :)
---credential-blob cred.out
+### Fixed
+  - Numerous memory leaks.
+  - udev settle service deprecation warnings.
+  - StandardOutput=3Dsyslog deprecation warnings.
 
-Anonymity is not our concern. We want to ensure that only those computers w=
-hich were handed by us to our employees can access internal resources. My i=
-dea was to generate EK and AK just like in tutorial, and then send EK certi=
-ficate and public part of AK to some auth server. Then server would calcula=
-te the name and make use of tpm2_makecredential.
+### Changed
+  - StandardOutput=3Dsyslog removed from systemd service file as syslog is
+    deprecated since systemd version 246.
+  - Requires tpm2-tss version 2.4.0 or greater for udev TAG=3Dsystemd rules.
 
-I have probably overlooked something really important.
+As always please report bugs via the github project, thank you.
 
-Thank you in advance :D
---===============1655433387415203842==--
+Bill
+--===============5746626815292888390==--
 
