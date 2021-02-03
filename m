@@ -1,44 +1,29 @@
-Content-Type: multipart/mixed; boundary="===============5746626815292888390=="
+Content-Type: multipart/mixed; boundary="===============0316725641316701128=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-abrmd: 2.4.0-rc0
-Date: Sun, 31 Jan 2021 16:18:43 +0000
-Message-ID: <SN6PR11MB34379CC4304090ACB5988241B8B79@SN6PR11MB3437.namprd11.prod.outlook.com>
+From: Imran Desai <imran.desai at intel.com>
+Subject: [tpm2] Re: Calculating name of created AK- server side
+Date: Wed, 03 Feb 2021 18:28:34 +0000
+Message-ID: <20210203182834.2958.36571@ml01.vlan13.01.org>
+In-Reply-To: 20210129184444.2975.25320@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5746626815292888390==
+--===============0316725641316701128==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+I see. A quick explainer :)
 
-I would like to announce release candidate 2.4.0-rc0 for tpm2-abrmd located=
- here:
-https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.4.0-rc0
+So AKname is not a secret. Neither is it possible to fake one. And so can b=
+e handed from the client to the server anytime. (tpm2_readpublic -c ak.ctx =
+-n ak.name)
 
-The changelog is as follows:
-### 2.4.0-rc0 - 2021-01-31
-### Added
-  - configure option --enable-asan which will cause the build to produce
-    ASAN enabled binaries.
-  - CI runs with clang enable asan for tests.
-  - Service start depends on systemd device unit: dev-tpm0.device.
-  - Testing support with swtpm.
+The credential challenge posed by the server (makecredential) wraps and enc=
+rypts a plaintext-credential using the EKpublic and AKname.
 
-### Fixed
-  - Numerous memory leaks.
-  - udev settle service deprecation warnings.
-  - StandardOutput=3Dsyslog deprecation warnings.
-
-### Changed
-  - StandardOutput=3Dsyslog removed from systemd service file as syslog is
-    deprecated since systemd version 246.
-  - Requires tpm2-tss version 2.4.0 or greater for udev TAG=3Dsystemd rules.
-
-As always please report bugs via the github project, thank you.
-
-Bill
---===============5746626815292888390==--
+Only a client with access to the respective sensitive(private) portions of =
+the EK and AK will have to load the keys on the TPM and it is then able to =
+unwrap/decrypt the credentialBlob with credential-activation.
+--===============0316725641316701128==--
 
