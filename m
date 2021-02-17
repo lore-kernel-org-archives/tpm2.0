@@ -1,28 +1,19 @@
-Content-Type: multipart/mixed; boundary="===============1502139556409560078=="
+Content-Type: multipart/mixed; boundary="===============2944405389566451376=="
 MIME-Version: 1.0
 From: Imran Desai <imran.desai at intel.com>
-Subject: [tpm2] Re: building tpm tools - only built one tool?
-Date: Wed, 17 Feb 2021 16:45:04 +0000
-Message-ID: <20210217164504.2937.47739@ml01.vlan13.01.org>
-In-Reply-To: OF2ABF8AAD.CC53FE67-ON0025867E.00776245-8525867E.0077F86F@notes.na.collabserv.com
+Subject: [tpm2] Re: building tpm tools
+Date: Wed, 17 Feb 2021 16:47:01 +0000
+Message-ID: <20210217164701.2937.47482@ml01.vlan13.01.org>
+In-Reply-To: OF2E6A37E0.E33BD89F-ON0025867E.00772D83-8525867E.00775D2F@notes.na.collabserv.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1502139556409560078==
+--===============2944405389566451376==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-tpm2_tools and tss2_tools are now a busybox style commandlet. Ie
-tpm2_getrandom becomes tpm2 getrandom. make install will install symlinks
-to the old tool names and the tpm2 commandlet will interrogate argv[0] for
-the command to run. This will provide backwards compatibility if they are
-installed. If you wish to use the old names not installed system wide, set
-DESTDIR during install to a separate path and set the proper directory on
-PATH.
-
-Thanks and regards,
-
-Imran Desai
---===============1502139556409560078==--
+Hi Ken, if you do not intend to run the unit/ integration tests, you can si=
+mply run ./configure by itself.
+--===============2944405389566451376==--
 
