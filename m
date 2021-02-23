@@ -1,108 +1,167 @@
-Content-Type: multipart/mixed; boundary="===============3426854586672386912=="
+Content-Type: multipart/mixed; boundary="===============3623076156254561383=="
 MIME-Version: 1.0
-From: Kenneth Goldman <kgoldman at us.ibm.com>
-Subject: [tpm2] Re: policies in conjunctive normal form
-Date: Wed, 17 Feb 2021 17:32:07 -0500
-Message-ID: <OFFCE1D34D.95FFF320-ON0025867F.007B4A24-8525867F.007BCA5B@notes.na.collabserv.com>
-In-Reply-To: 20210217203616.2937.51368@ml01.vlan13.01.org
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: Error on service tpm2-abrmd start
+Date: Tue, 23 Feb 2021 20:16:27 +0000
+Message-ID: <SN6PR11MB3437CC31669D04CF4AB1B8A3B8809@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: OFFF041332.ABD619F9-ON0025867D.007F45E6-8525867D.00801DF2@notes.na.collabserv.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3426854586672386912==
+--===============3623076156254561383==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I actually really liked this question.  I had to think about it.
-The answer is separate from any particular TSS.
 
-AFAIK, You could do
+  1.  Yes you can start tpme-abrmd like so:
+tpm2-abrmd --tcti=3Dmssim
 
-((A or B) and C) or ((A or B) and D))
+mssim will connect to the ibmtpm simulator, or you can use swtpm to connect=
+ to stefanberger's swtpm.
 
-However, this would require 5 calls to the TPM:
-	A, B, or, C, or
+If you want to run as root, you can pass --allow-root, but usually you don'=
+t need root to run the daemon. /dev/tpm0 should be labelled as user tss2 an=
+d /dev/tpmrm0 should be user and group tss2.
 
-Your plan B only requires 3 TPM commands.  I.e., it looks
-more complicated but it will perform better.
+I configure this so I can own the Dbus name for debugging by modyfing:
+/etc/dbus-1/system.d/tpm2-abrmd.conf
+to add my username to the list
 
-> From: narcis2004(a)yahoo.com
-> To: tpm2(a)lists.01.org
-> Date: 02/17/2021 03:36 PM
-> Subject: [EXTERNAL] [tpm2] policies in conjunctive normal form
->
-> Question: is it possible to structure a policy using tpm2-tools in
-> the following form?
->   policy =3D (a OR b) AND (c OR d)
->   - where a, b, c, d are simple pcr policies.
->
-> I tried this, and apparently creating an *AND* of policy *OR* did
-> not work as i thought. "and.policy" will contain the hash of the
-> second tpm2_policyor instead of generating a new hash
->   tpm2_startauthsession --session session.ctx
->   tpm2_policyor --session session.ctx sha256:a.policy,b.policy
->   tpm2_policyor --session session.ctx sha256:c.policy,d.policy --
-> policy and.policy
->   tpm2_flushcontext session.ctx
->
->
-> Plan B would be to structure the policy in the equivalent
-> disjunctive normal form, which works but is less scalable. i.e.:
->   policy =3D (a AND c) OR (a AND d) OR (b AND c) OR (b AND d)
->
-> Thanks,
-> Narcis
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
->
+  2.  Not sure about 2, how do you not have tpm2-abrmd and get the results =
+from 1?
+  3.  for tpm2-tools, you can pass the --tcti option, just like for tpm2-ab=
+rmd
+for tss2 libraries:
+   SAPI: you need to pass a TCTI_CONTEXT *, which you can get via the TCTI_=
+LDR API:
+      https://github.com/tpm2-software/tpm2-tss/blob/master/include/tss2/ts=
+s2_tctildr.h#L25
+      That API takes those --tcti=3D<string> values.
+   ESAPI: Just send NULL as the TCTI_CONTEXT, it will fall back using TCTI =
+Ldr API which has a search routine built into it.
+   FAPI: Its configured in the config file, but I think defaults to searchi=
+ng around.
 
---===============3426854586672386912==
+________________________________
+From: Kenneth Goldman <kgoldman(a)us.ibm.com>
+Sent: Monday, February 15, 2021 5:19 PM
+To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+Subject: [tpm2] Error on service tpm2-abrmd start
+
+
+Two questions actually, trying to run the Intel TSS with a SW TPM
+
+1
+
+Instructions for a project say to run
+service tpm2-abrmd start
+When I do that, I get
+
+* Starting TPM2 Access Broker and Resource Management Daemon tpm2-abrmd
+** (process:19039): WARNING **: 18:06:45.480: tcti_conf before: "device:/de=
+v/tpm0"
+
+** (tpm2-abrmd:19039): WARNING **: 18:06:45.488: tcti_conf after: "device:/=
+dev/tpm0"
+Refusing to run as root. Pass --allow-root if you know what you are doing.
+
+This probably fails because I don't have /dev/tpm0,ight?
+
+2
+
+Later instructions says to
+
+sudo -u tss /usr/local/sbin/tpm2-abrmd --tcti=3Dmssim &
+
+which fails because I don't have tpm2-abrmd. I did install the packages - U=
+buntu 20.
+
+3
+
+Finally, if I'm using the SW TPM, can I simply skip the abrmd complexity an=
+d somehow point the Intel TSS to the SW TPM socket.
+
+
+
+
+
+
+--
+Ken Goldman kgoldman(a)us.ibm.com
+914-945-2415 (862-2415)
+
+
+--===============3623076156254561383==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWw+PGJvZHk+PHA+PHR0Pjxmb250IHNpemU9IjIiPkkgYWN0dWFsbHkgcmVhbGx5IGxpa2Vk
-IHRoaXMgcXVlc3Rpb24uICZuYnNwO0kgaGFkIHRvIHRoaW5rIGFib3V0IGl0LjwvZm9udD48L3R0
-Pjxicj48dHQ+PGZvbnQgc2l6ZT0iMiI+VGhlIGFuc3dlciBpcyBzZXBhcmF0ZSBmcm9tIGFueSBw
-YXJ0aWN1bGFyIFRTUy48L2ZvbnQ+PC90dD48YnI+PGJyPjx0dD48Zm9udCBzaXplPSIyIj5BRkFJ
-SywgWW91IGNvdWxkIGRvPC9mb250PjwvdHQ+PGJyPjxicj48dHQ+PGZvbnQgc2l6ZT0iMiI+KChB
-IG9yIEIpIGFuZCBDKSBvciAoKEEgb3IgQikgYW5kIEQpKTwvZm9udD48L3R0Pjxicj48YnI+PHR0
-Pjxmb250IHNpemU9IjIiPkhvd2V2ZXIsIHRoaXMgd291bGQgcmVxdWlyZSA1IGNhbGxzIHRvIHRo
-ZSBUUE06PC9mb250PjwvdHQ+PGJyPjx0dD48Zm9udCBzaXplPSIyIj4gICAgICAgIEEsIEIsIG9y
-LCBDLCBvcjwvZm9udD48L3R0Pjxicj48YnI+PHR0Pjxmb250IHNpemU9IjIiPllvdXIgcGxhbiBC
-IG9ubHkgcmVxdWlyZXMgMyBUUE0gY29tbWFuZHMuICZuYnNwO0kuZS4sIGl0IGxvb2tzPC9mb250
-PjwvdHQ+PGJyPjx0dD48Zm9udCBzaXplPSIyIj5tb3JlIGNvbXBsaWNhdGVkIGJ1dCBpdCB3aWxs
-IHBlcmZvcm0gYmV0dGVyLjxicj48YnI+Jmd0OyBGcm9tOiBuYXJjaXMyMDA0QHlhaG9vLmNvbTwv
-Zm9udD48L3R0Pjxicj48dHQ+PGZvbnQgc2l6ZT0iMiI+Jmd0OyBUbzogdHBtMkBsaXN0cy4wMS5v
-cmc8L2ZvbnQ+PC90dD48YnI+PHR0Pjxmb250IHNpemU9IjIiPiZndDsgRGF0ZTogMDIvMTcvMjAy
-MSAwMzozNiBQTTwvZm9udD48L3R0Pjxicj48dHQ+PGZvbnQgc2l6ZT0iMiI+Jmd0OyBTdWJqZWN0
-OiBbRVhURVJOQUxdIFt0cG0yXSBwb2xpY2llcyBpbiBjb25qdW5jdGl2ZSBub3JtYWwgZm9ybTwv
-Zm9udD48L3R0Pjxicj48dHQ+PGZvbnQgc2l6ZT0iMiI+Jmd0OyA8YnI+Jmd0OyBRdWVzdGlvbjog
-aXMgaXQgcG9zc2libGUgdG8gc3RydWN0dXJlIGEgcG9saWN5IHVzaW5nIHRwbTItdG9vbHMgaW4g
-PGJyPiZndDsgdGhlIGZvbGxvd2luZyBmb3JtPzxicj4mZ3Q7ICZuYnNwOyBwb2xpY3kgPSAoYSBP
-UiBiKSBBTkQgKGMgT1IgZCk8YnI+Jmd0OyAmbmJzcDsgLSB3aGVyZSBhLCBiLCBjLCBkIGFyZSBz
-aW1wbGUgcGNyIHBvbGljaWVzLjxicj4mZ3Q7IDxicj4mZ3Q7IEkgdHJpZWQgdGhpcywgYW5kIGFw
-cGFyZW50bHkgY3JlYXRpbmcgYW4gKkFORCogb2YgcG9saWN5ICpPUiogZGlkIDxicj4mZ3Q7IG5v
-dCB3b3JrIGFzIGkgdGhvdWdodC4gJnF1b3Q7YW5kLnBvbGljeSZxdW90OyB3aWxsIGNvbnRhaW4g
-dGhlIGhhc2ggb2YgdGhlIDxicj4mZ3Q7IHNlY29uZCB0cG0yX3BvbGljeW9yIGluc3RlYWQgb2Yg
-Z2VuZXJhdGluZyBhIG5ldyBoYXNoPGJyPiZndDsgJm5ic3A7IHRwbTJfc3RhcnRhdXRoc2Vzc2lv
-biAtLXNlc3Npb24gc2Vzc2lvbi5jdHg8YnI+Jmd0OyAmbmJzcDsgdHBtMl9wb2xpY3lvciAtLXNl
-c3Npb24gc2Vzc2lvbi5jdHggc2hhMjU2OmEucG9saWN5LGIucG9saWN5PGJyPiZndDsgJm5ic3A7
-IHRwbTJfcG9saWN5b3IgLS1zZXNzaW9uIHNlc3Npb24uY3R4IHNoYTI1NjpjLnBvbGljeSxkLnBv
-bGljeSAtLTxicj4mZ3Q7IHBvbGljeSBhbmQucG9saWN5PGJyPiZndDsgJm5ic3A7IHRwbTJfZmx1
-c2hjb250ZXh0IHNlc3Npb24uY3R4PGJyPiZndDsgPGJyPiZndDsgPGJyPiZndDsgUGxhbiBCIHdv
-dWxkIGJlIHRvIHN0cnVjdHVyZSB0aGUgcG9saWN5IGluIHRoZSBlcXVpdmFsZW50IDxicj4mZ3Q7
-IGRpc2p1bmN0aXZlIG5vcm1hbCBmb3JtLCB3aGljaCB3b3JrcyBidXQgaXMgbGVzcyBzY2FsYWJs
-ZS4gaS5lLjo8YnI+Jmd0OyAmbmJzcDsgcG9saWN5ID0gKGEgQU5EIGMpIE9SIChhIEFORCBkKSBP
-UiAoYiBBTkQgYykgT1IgKGIgQU5EIGQpPGJyPiZndDsgPGJyPiZndDsgVGhhbmtzLDxicj4mZ3Q7
-IE5hcmNpczxicj4mZ3Q7IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fPGJyPiZndDsgdHBtMiBtYWlsaW5nIGxpc3QgLS0gdHBtMkBsaXN0cy4wMS5vcmc8YnI+
-Jmd0OyBUbyB1bnN1YnNjcmliZSBzZW5kIGFuIGVtYWlsIHRvIHRwbTItbGVhdmVAbGlzdHMuMDEu
-b3JnPGJyPiZndDsgJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQpcy8lKF9pbnRlcm5h
-bF9uYW1lKXM8YnI+Jmd0OyA8YnI+PC9mb250PjwvdHQ+PEJSPgo8L2JvZHk+PC9odG1sPgo=
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IGlkPSJhcHBlbmRvbnNlbmQiPjwv
+ZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5z
+LXNlcmlmOyBmb250LXNpemU6MTJwdDsgY29sb3I6cmdiKDAsMCwwKSI+CjxvbD4KPGxpPjxzcGFu
+PlllcyB5b3UgY2FuIHN0YXJ0IHRwbWUtYWJybWQgbGlrZSBzbzo8YnI+CnRwbTItYWJybWQgLS10
+Y3RpPW1zc2ltPGJyPgo8YnI+Cm1zc2ltIHdpbGwgY29ubmVjdCB0byB0aGUgaWJtdHBtIHNpbXVs
+YXRvciwgb3IgeW91IGNhbiB1c2Ugc3d0cG0gdG8gY29ubmVjdCB0byBzdGVmYW5iZXJnZXIncyBz
+d3RwbS48YnI+Cjxicj4KSWYgeW91IHdhbnQgdG8gcnVuIGFzIHJvb3QsIHlvdSBjYW4gcGFzcyAt
+LWFsbG93LXJvb3QsIGJ1dCB1c3VhbGx5IHlvdSBkb24ndCBuZWVkIHJvb3QgdG8gcnVuIHRoZSBk
+YWVtb24uIC9kZXYvdHBtMCBzaG91bGQgYmUgbGFiZWxsZWQgYXMgdXNlciB0c3MyIGFuZCAvZGV2
+L3RwbXJtMCBzaG91bGQgYmUgdXNlciBhbmQgZ3JvdXAgdHNzMi48YnI+Cjxicj4KSSBjb25maWd1
+cmUgdGhpcyBzbyBJIGNhbiBvd24gdGhlIERidXMgbmFtZSBmb3IgZGVidWdnaW5nIGJ5IG1vZHlm
+aW5nOjxicj4KL2V0Yy9kYnVzLTEvc3lzdGVtLmQvdHBtMi1hYnJtZC5jb25mPGJyPgp0byBhZGQg
+bXkgdXNlcm5hbWUgdG8gdGhlIGxpc3Q8YnI+Cjxicj4KPC9zcGFuPjwvbGk+PGxpPjxzcGFuPk5v
+dCBzdXJlIGFib3V0IDIsIGhvdyBkbyB5b3Ugbm90IGhhdmUgdHBtMi1hYnJtZCBhbmQgZ2V0IHRo
+ZSByZXN1bHRzIGZyb20gMT88L3NwYW4+PC9saT48bGk+PHNwYW4+Zm9yIHRwbTItdG9vbHMsIHlv
+dSBjYW4gcGFzcyB0aGUgLS10Y3RpIG9wdGlvbiwganVzdCBsaWtlIGZvciB0cG0yLWFicm1kPGJy
+Pgpmb3IgdHNzMiBsaWJyYXJpZXM6PGJyPgombmJzcDsgJm5ic3A7U0FQSTogeW91IG5lZWQgdG8g
+cGFzcyBhIFRDVElfQ09OVEVYVCAqLCB3aGljaCB5b3UgY2FuIGdldCB2aWEgdGhlIFRDVElfTERS
+IEFQSTo8YnI+CiZuYnNwOyAmbmJzcDsgJm5ic3A7Jm5ic3A7PGEgaHJlZj0iaHR0cHM6Ly9naXRo
+dWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3MvYmxvYi9tYXN0ZXIvaW5jbHVkZS90c3MyL3Rz
+czJfdGN0aWxkci5oI0wyNSIgaWQ9IkxQbG5rMzg4NDcwIj5odHRwczovL2dpdGh1Yi5jb20vdHBt
+Mi1zb2Z0d2FyZS90cG0yLXRzcy9ibG9iL21hc3Rlci9pbmNsdWRlL3RzczIvdHNzMl90Y3RpbGRy
+LmgjTDI1PC9hPjxicj4KJm5ic3A7ICZuYnNwOyAmbmJzcDsgVGhhdCBBUEkgdGFrZXMgdGhvc2Ug
+LS10Y3RpPSZsdDtzdHJpbmcmZ3Q7IHZhbHVlcy48YnI+CiZuYnNwOyAmbmJzcDtFU0FQSTogSnVz
+dCBzZW5kIE5VTEwgYXMgdGhlIFRDVElfQ09OVEVYVCwgaXQgd2lsbCBmYWxsIGJhY2sgdXNpbmcg
+VENUSSBMZHIgQVBJIHdoaWNoIGhhcyBhIHNlYXJjaCByb3V0aW5lIGJ1aWx0IGludG8gaXQuPGJy
+PgombmJzcDsgJm5ic3A7RkFQSTogSXRzIGNvbmZpZ3VyZWQgaW4gdGhlIGNvbmZpZyBmaWxlLCBi
+dXQgSSB0aGluayBkZWZhdWx0cyB0byBzZWFyY2hpbmcgYXJvdW5kLjwvc3Bhbj48L2xpPjwvb2w+
+CjxkaXY+PHNwYW4+PGJyPgo8L3NwYW4+PC9kaXY+CjwvZGl2Pgo8aHIgdGFiaW5kZXg9Ii0xIiBz
+dHlsZT0iZGlzcGxheTppbmxpbmUtYmxvY2s7IHdpZHRoOjk4JSI+CjxkaXYgaWQ9ImRpdlJwbHlG
+d2RNc2ciIGRpcj0ibHRyIj48Zm9udCBmYWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIiBjb2xvcj0i
+IzAwMDAwMCIgc3R5bGU9ImZvbnQtc2l6ZToxMXB0Ij48Yj5Gcm9tOjwvYj4gS2VubmV0aCBHb2xk
+bWFuICZsdDtrZ29sZG1hbkB1cy5pYm0uY29tJmd0Ozxicj4KPGI+U2VudDo8L2I+IE1vbmRheSwg
+RmVicnVhcnkgMTUsIDIwMjEgNToxOSBQTTxicj4KPGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9y
+ZyAmbHQ7dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIEVy
+cm9yIG9uIHNlcnZpY2UgdHBtMi1hYnJtZCBzdGFydDwvZm9udD4KPGRpdj4mbmJzcDs8L2Rpdj4K
+PC9kaXY+CjxkaXY+CjxwPjxmb250IGZhY2U9IkFyaWFsIj5Ud28gcXVlc3Rpb25zIGFjdHVhbGx5
+LCB0cnlpbmcgdG8gcnVuIHRoZSBJbnRlbCBUU1Mgd2l0aCBhIFNXIFRQTTwvZm9udD48YnI+Cjxi
+cj4KPGZvbnQgZmFjZT0iQXJpYWwiPjE8L2ZvbnQ+PGJyPgo8YnI+Cjxmb250IGZhY2U9IkFyaWFs
+Ij5JbnN0cnVjdGlvbnMgZm9yIGEgcHJvamVjdCBzYXkgdG8gcnVuIDwvZm9udD48YnI+Cjxmb250
+IGZhY2U9IkFyaWFsIj5zZXJ2aWNlIHRwbTItYWJybWQgc3RhcnQ8L2ZvbnQ+PGJyPgo8Zm9udCBm
+YWNlPSJBcmlhbCI+V2hlbiBJIGRvIHRoYXQsIEkgZ2V0PC9mb250Pjxicj4KPGJyPgoqIFN0YXJ0
+aW5nIFRQTTIgQWNjZXNzIEJyb2tlciBhbmQgUmVzb3VyY2UgTWFuYWdlbWVudCBEYWVtb24gdHBt
+Mi1hYnJtZCA8YnI+CioqIChwcm9jZXNzOjE5MDM5KTogV0FSTklORyAqKjogMTg6MDY6NDUuNDgw
+OiB0Y3RpX2NvbmYgYmVmb3JlOiAmcXVvdDtkZXZpY2U6L2Rldi90cG0wJnF1b3Q7PGJyPgo8YnI+
+CioqICh0cG0yLWFicm1kOjE5MDM5KTogV0FSTklORyAqKjogMTg6MDY6NDUuNDg4OiB0Y3RpX2Nv
+bmYgYWZ0ZXI6ICZxdW90O2RldmljZTovZGV2L3RwbTAmcXVvdDs8YnI+ClJlZnVzaW5nIHRvIHJ1
+biBhcyByb290LiBQYXNzIC0tYWxsb3ctcm9vdCBpZiB5b3Uga25vdyB3aGF0IHlvdSBhcmUgZG9p
+bmcuPGJyPgo8YnI+ClRoaXMgcHJvYmFibHkgZmFpbHMgYmVjYXVzZSBJIGRvbid0IGhhdmUgL2Rl
+di90cG0wLGlnaHQ/PGJyPgo8YnI+CjI8YnI+Cjxicj4KTGF0ZXIgaW5zdHJ1Y3Rpb25zIHNheXMg
+dG8gPGJyPgo8YnI+CnN1ZG8gLXUgdHNzIC91c3IvbG9jYWwvc2Jpbi90cG0yLWFicm1kIC0tdGN0
+aT1tc3NpbSAmYW1wOzxicj4KPGJyPgp3aGljaCBmYWlscyBiZWNhdXNlIEkgZG9uJ3QgaGF2ZSB0
+cG0yLWFicm1kLiBJIGRpZCBpbnN0YWxsIHRoZSBwYWNrYWdlcyAtIFVidW50dSAyMC48YnI+Cjxi
+cj4KMzxicj4KPGJyPgpGaW5hbGx5LCBpZiBJJ20gdXNpbmcgdGhlIFNXIFRQTSwgY2FuIEkgc2lt
+cGx5IHNraXAgdGhlIGFicm1kIGNvbXBsZXhpdHkgYW5kIHNvbWVob3cgcG9pbnQgdGhlIEludGVs
+IFRTUyB0byB0aGUgU1cgVFBNIHNvY2tldC48YnI+Cjxicj4KPGJyPgo8YnI+Cjxicj4KPGJyPgo8
+YnI+Ci0tPGZvbnQgc2l6ZT0iMiI+PGJyPgpLZW4gR29sZG1hbiBrZ29sZG1hbkB1cy5pYm0uY29t
+IDxicj4KOTE0LTk0NS0yNDE1ICg4NjItMjQxNSk8YnI+CjwvZm9udD48YnI+CjwvcD4KPC9kaXY+
+CjwvYm9keT4KPC9odG1sPgo=
 
---===============3426854586672386912==--
+--===============3623076156254561383==--
 
