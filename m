@@ -1,114 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============3862037395224301137=="
+Content-Type: multipart/mixed; boundary="===============6048820721473223917=="
 MIME-Version: 1.0
 From: Kenneth Goldman <kgoldman at us.ibm.com>
-Subject: [tpm2] Re: Error on service tpm2-abrmd start - WARNING **:
- 16:41:13.089: tcti_conf before: "(null)"
-Date: Wed, 24 Feb 2021 16:15:01 -0500
-Message-ID: <OF25443825.9823765F-ON00258686.0074602C-85258686.0074BB58@notes.na.collabserv.com>
-In-Reply-To: SN6PR11MB3437854834FE46BC9F6FD8D9B89F9@SN6PR11MB3437.namprd11.prod.outlook.com
+Subject: [tpm2] tpm2_abrmd: Intel tools with abrmd?
+Date: Wed, 24 Feb 2021 17:07:27 -0500
+Message-ID: <OFF8EAB942.0DE27369-ON00258686.00764B04-85258686.0079881E@notes.na.collabserv.com>
+In-Reply-To: OF25443825.9823765F-ON00258686.0074602C-85258686.0074BB58@notes.na.collabserv.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3862037395224301137==
+--===============6048820721473223917==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+I have the Intel tools working with no abrmd and setenv TPM2TOOLS_TCTI
+"mssim:host=3Dlocalhost,port=3D2321"
+
+What would I set the env variable to for abrmd?
+
+The docs at https://www.mankier.com/1/tpm2_getrandom
+
+discuss command line argument but not the env variable.
+
+1 - Should I use bus_name or bus_type?
+
+"abrmd:bus_type=3Dsession" gives me this.
+
+ERROR: Could not load tcti, got: "abrmd:bus_type=3Dsession"
+
+2 - bus_name requires a name.  The example uses
+bus_name=3Dcom.example.FooBar:
+but I doubt foobar is correct.
+
+--
+Ken Goldman   kgoldman(a)us.ibm.com
+914-945-2415 (862-2415)
 
 
 
-From:	"Roberts, William C" <william.c.roberts(a)intel.com>
-To:	Kenneth Goldman <kgoldman(a)us.ibm.com>
-Cc:	"tpm2(a)lists.01.org" <tpm2(a)lists.01.org>
-Date:	02/24/2021 08:44 AM
-Subject:	[EXTERNAL] [tpm2] Re: Error on service tpm2-abrmd start
 
 
-
-QRYFpfptBannerEnd
-      1. Yes you can start tpme-abrmd like so:
-      tpm2-abrmd --tcti=3Dmssim
-
-      mssim will connect to the ibmtpm simulator, or you can use swtpm to
-      connect to stefanberger's swtpm.
-
-      When I try this, I get:
-
-      # tpm2-abrmd --tcti=3Dmssim --allow-root
-
-** (process:2552): WARNING **: 16:41:13.089: tcti_conf before: "(null)"
-
-** (tpm2-abrmd:2552): WARNING **: 16:41:13.090: tcti_conf after: "mssim"
-
-I don't know where tcti_conf is. Perhaps I didn't install it. Advice?
-
-[Bill] =E2=80=8BI get the same warnings; I think the logging is just overly=
- pedantic
-and can probably be silenced.
-
-Thanks.  That's sort of a bug.  A warning in all caps pointing to a
-mysterious file lacking a path.  No obvious way to fix it.
-
-
-
---===============3862037395224301137==
+--===============6048820721473223917==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWw+PGJvZHk+PHA+PGltZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHNyYz0iY2lkOjFfXz04
-RkJCMEMxNURGRTdFNkJDOGY5ZThhOTNkZjkzODY5MDkxOGM4RkJAIiBib3JkZXI9IjAiIGFsdD0i
-SW5hY3RpdmUgaGlkZSBkZXRhaWxzIGZvciAmcXVvdDtSb2JlcnRzLCBXaWxsaWFtIEMmcXVvdDsg
-LS0tMDIvMjQvMjAyMSAwODo0NDo0NCBBTS0tLU9XQSBzdWNrcyBhdCBpbmxpbmUgcmVwbGllcywg
-YnV0IEknbGwgZ2l2ZSBpdCBteSBiZXMiPjxmb250IHNpemU9IjIiIGNvbG9yPSIjNDI0MjgyIj4m
-cXVvdDtSb2JlcnRzLCBXaWxsaWFtIEMmcXVvdDsgLS0tMDIvMjQvMjAyMSAwODo0NDo0NCBBTS0t
-LU9XQSBzdWNrcyBhdCBpbmxpbmUgcmVwbGllcywgYnV0IEknbGwgZ2l2ZSBpdCBteSBiZXN0IHNo
-b3QuLi4gWmpRY21RUllGcGZwdEJhbm5lckVuZDwvZm9udD48YnI+PGJyPjxmb250IHNpemU9IjIi
-IGNvbG9yPSIjNUY1RjVGIj5Gcm9tOiAgICAgICAgPC9mb250Pjxmb250IHNpemU9IjIiPiZxdW90
-O1JvYmVydHMsIFdpbGxpYW0gQyZxdW90OyAmbHQ7d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29t
-Jmd0OzwvZm9udD48YnI+PGZvbnQgc2l6ZT0iMiIgY29sb3I9IiM1RjVGNUYiPlRvOiAgICAgICAg
-PC9mb250Pjxmb250IHNpemU9IjIiPktlbm5ldGggR29sZG1hbiAmbHQ7a2dvbGRtYW5AdXMuaWJt
-LmNvbSZndDs8L2ZvbnQ+PGJyPjxmb250IHNpemU9IjIiIGNvbG9yPSIjNUY1RjVGIj5DYzogICAg
-ICAgIDwvZm9udD48Zm9udCBzaXplPSIyIj4mcXVvdDt0cG0yQGxpc3RzLjAxLm9yZyZxdW90OyAm
-bHQ7dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PC9mb250Pjxicj48Zm9udCBzaXplPSIyIiBjb2xvcj0i
-IzVGNUY1RiI+RGF0ZTogICAgICAgIDwvZm9udD48Zm9udCBzaXplPSIyIj4wMi8yNC8yMDIxIDA4
-OjQ0IEFNPC9mb250Pjxicj48Zm9udCBzaXplPSIyIiBjb2xvcj0iIzVGNUY1RiI+U3ViamVjdDog
-ICAgICAgIDwvZm9udD48Zm9udCBzaXplPSIyIj5bRVhURVJOQUxdIFt0cG0yXSBSZTogRXJyb3Ig
-b24gc2VydmljZSB0cG0yLWFicm1kIHN0YXJ0PC9mb250Pjxicj48aHIgd2lkdGg9IjEwMCUiIHNp
-emU9IjIiIGFsaWduPSJsZWZ0IiBub3NoYWRlIHN0eWxlPSJjb2xvcjojODA5MUE1OyAiPjxicj48
-YnI+PGJyPjxmb250IHNpemU9IjEiIGNvbG9yPSIjRkZGRkZGIj5RUllGcGZwdEJhbm5lckVuZDwv
-Zm9udD48dWw+PHVsPjxmb250IHNpemU9IjIiPjEuIDwvZm9udD48Zm9udCBmYWNlPSJDYWxpYnJp
-Ij5ZZXMgeW91IGNhbiBzdGFydCB0cG1lLWFicm1kIGxpa2Ugc286PGJyPnRwbTItYWJybWQgLS10
-Y3RpPW1zc2ltPGJyPjxicj5tc3NpbSB3aWxsIGNvbm5lY3QgdG8gdGhlIGlibXRwbSBzaW11bGF0
-b3IsIG9yIHlvdSBjYW4gdXNlIHN3dHBtIHRvIGNvbm5lY3QgdG8gc3RlZmFuYmVyZ2VyJ3Mgc3d0
-cG0uPC9mb250Pjxicj48Yj48Zm9udCBjb2xvcj0iIzAwOUY4MiI+PGJyPldoZW4gSSB0cnkgdGhp
-cywgSSBnZXQ6PC9mb250PjwvYj48YnI+PGI+PGZvbnQgY29sb3I9IiMwMDlGODIiPjxicj4jPC9m
-b250PjwvYj48Yj48Zm9udCBjb2xvcj0iIzNGODAzRiIgZmFjZT0iQ2FsaWJyaSI+IHRwbTItYWJy
-bWQgLS10Y3RpPW1zc2ltIC0tYWxsb3ctcm9vdDwvZm9udD48L2I+PC91bD48L3VsPjxiPjxmb250
-IGNvbG9yPSIjM0Y4MDNGIiBmYWNlPSJDYWxpYnJpIj48YnI+KiogKHByb2Nlc3M6MjU1Mik6IFdB
-Uk5JTkcgKio6IDE2OjQxOjEzLjA4OTogdGN0aV9jb25mIGJlZm9yZTogJnF1b3Q7KG51bGwpJnF1
-b3Q7PC9mb250PjwvYj48YnI+PGI+PGZvbnQgY29sb3I9IiMzRjgwM0YiIGZhY2U9IkNhbGlicmki
-Pjxicj4qKiAodHBtMi1hYnJtZDoyNTUyKTogV0FSTklORyAqKjogMTY6NDE6MTMuMDkwOiB0Y3Rp
-X2NvbmYgYWZ0ZXI6ICZxdW90O21zc2ltJnF1b3Q7PC9mb250PjwvYj48YnI+PGI+PGZvbnQgY29s
-b3I9IiMwMDlGODIiPjxicj5JIGRvbid0IGtub3cgd2hlcmUgdGN0aV9jb25mIGlzLiBQZXJoYXBz
-IEkgZGlkbid0IGluc3RhbGwgaXQuIEFkdmljZT88L2ZvbnQ+PC9iPjxmb250IGZhY2U9IkNhbGli
-cmkiPjxicj48L2ZvbnQ+PGZvbnQgY29sb3I9IiNDODI2MTMiIGZhY2U9IkNhbGlicmkiPjxicj5b
-QmlsbF0g4oCLSSBnZXQgdGhlIHNhbWUgd2FybmluZ3M7IEkgdGhpbmsgdGhlIGxvZ2dpbmcgaXMg
-anVzdCBvdmVybHkgcGVkYW50aWMgYW5kIGNhbiBwcm9iYWJseSBiZSBzaWxlbmNlZC4gPC9mb250
-Pjxicj48YnI+PGI+PGZvbnQgY29sb3I9IiMwMDlGODIiPlRoYW5rcy4gIFRoYXQncyBzb3J0IG9m
-IGEgYnVnLiAgQSB3YXJuaW5nIGluIGFsbCBjYXBzIHBvaW50aW5nIHRvIGEgbXlzdGVyaW91cyA8
-L2ZvbnQ+PC9iPjxiPjxmb250IGNvbG9yPSIjMDA5RjgyIj5maWxlIGxhY2tpbmcgYSBwYXRoLiAg
-Tm8gb2J2aW91cyB3YXkgdG8gZml4IGl0LjwvZm9udD48L2I+PGZvbnQgZmFjZT0iQ2FsaWJyaSI+
-PGJyPjxicj48L2ZvbnQ+PGJyPjxCUj4NCjwvYm9keT48L2h0bWw+DQo=
+PGh0bWw+PGJvZHk+PHA+PGZvbnQgc2l6ZT0iMiI+SSBoYXZlIHRoZSBJbnRlbCB0b29scyB3b3Jr
+aW5nIHdpdGggbm8gYWJybWQgYW5kIHNldGVudiBUUE0yVE9PTFNfVENUSSAmcXVvdDttc3NpbTpo
+b3N0PWxvY2FsaG9zdCxwb3J0PTIzMjEmcXVvdDs8L2ZvbnQ+PGJyPjxicj48Zm9udCBzaXplPSIy
+Ij5XaGF0IHdvdWxkIEkgc2V0IHRoZSBlbnYgdmFyaWFibGUgdG8gZm9yIGFicm1kPzwvZm9udD48
+YnI+PGJyPjxmb250IHNpemU9IjIiPlRoZSBkb2NzIGF0IDwvZm9udD48YSBocmVmPSJodHRwczov
+L3d3dy5tYW5raWVyLmNvbS8xL3RwbTJfZ2V0cmFuZG9tIj48Zm9udCBzaXplPSIyIj5odHRwczov
+L3d3dy5tYW5raWVyLmNvbS8xL3RwbTJfZ2V0cmFuZG9tPC9mb250PjwvYT48YnI+PGJyPjxmb250
+IHNpemU9IjIiPmRpc2N1c3MgY29tbWFuZCBsaW5lIGFyZ3VtZW50IGJ1dCBub3QgdGhlIGVudiB2
+YXJpYWJsZS4gIDwvZm9udD48YnI+PGJyPjxmb250IHNpemU9IjIiPjEgLSBTaG91bGQgSSB1c2Ug
+YnVzX25hbWUgb3IgYnVzX3R5cGU/PC9mb250Pjxicj48YnI+PGZvbnQgc2l6ZT0iMiI+JnF1b3Q7
+YWJybWQ6YnVzX3R5cGU9c2Vzc2lvbiZxdW90OyBnaXZlcyBtZSB0aGlzLjwvZm9udD48YnI+PGJy
+Pjxmb250IHNpemU9IjIiPkVSUk9SOiBDb3VsZCBub3QgbG9hZCB0Y3RpLCBnb3Q6ICZxdW90O2Fi
+cm1kOmJ1c190eXBlPXNlc3Npb24mcXVvdDs8L2ZvbnQ+PGJyPjxicj48Zm9udCBzaXplPSIyIj4y
+IC0gYnVzX25hbWUgcmVxdWlyZXMgYSBuYW1lLiAgVGhlIGV4YW1wbGUgdXNlcyBidXNfbmFtZT1j
+b20uZXhhbXBsZS5Gb29CYXI6PC9mb250Pjxicj48Zm9udCBzaXplPSIyIj5idXQgSSBkb3VidCBm
+b29iYXIgaXMgY29ycmVjdC4gPC9mb250Pjxicj48Zm9udCBzaXplPSIyIj48YnI+LS08YnI+S2Vu
+IEdvbGRtYW4gICBrZ29sZG1hbkB1cy5pYm0uY29tICAgPGJyPjkxNC05NDUtMjQxNSAoODYyLTI0
+MTUpPGJyPjwvZm9udD48YnI+CjxwPjxCUj4KPC9ib2R5PjwvaHRtbD4K
 
---===============3862037395224301137==
-Content-Type: image/gif
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="graycol.gif"
-
-R0lGODlhEAAQAKECAMzMzAAAAP///wAAACH5BAEAAAIALAAAAAAQABAAAAIXlI+py+0PopwxUbpu
-ZRfKZ2zgSJbmSRYAIf4fT3B0aW1pemVkIGJ5IFVsZWFkIFNtYXJ0U2F2ZXIhAAA7
---===============3862037395224301137==--
+--===============6048820721473223917==--
 
