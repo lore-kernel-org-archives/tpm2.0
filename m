@@ -1,232 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============4861992329007453318=="
+Content-Type: multipart/mixed; boundary="===============6202589433330074670=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Error on service tpm2-abrmd start
-Date: Wed, 24 Feb 2021 13:44:33 +0000
-Message-ID: <SN6PR11MB3437854834FE46BC9F6FD8D9B89F9@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: OF6AE6360B.876E854A-ON00258685.007702C1-85258685.007A19BF@notes.na.collabserv.com
+From: Ted Kim <ted.h.kim at oracle.com>
+Subject: [tpm2] Re: [External] : Re: Error on service tpm2-abrmd start
+Date: Wed, 24 Feb 2021 08:46:32 -0800
+Message-ID: <12cd4499-d0c5-3497-67d7-29853b7b6c62@oracle.com>
+In-Reply-To: SN6PR11MB3437854834FE46BC9F6FD8D9B89F9@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4861992329007453318==
+--===============6202589433330074670==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-OWA sucks at inline replies, but I'll give it my best shot...
-ZjQcmQRYFpfptBannerEnd
+Kenneth,
 
-1. Yes you can start tpme-abrmd like so:
-tpm2-abrmd --tcti=3Dmssim
+> If you want to run as root, you can pass --allow-root, but usually you =
 
-mssim will connect to the ibmtpm simulator, or you can use swtpm to connect=
- to stefanberger's swtpm.
+> don't need root to run the daemon. /dev/tpm0 should be labelled as =
 
-When I try this, I get:
+> user tss2 and /dev/tpmrm0 should be user and group tss2.
 
-# tpm2-abrmd --tcti=3Dmssim --allow-root
+Not sure if this is your issue, but in some Linux environments, SELinux =
 
-** (process:2552): WARNING **: 16:41:13.089: tcti_conf before: "(null)"
+integration can be an issue on this point. Either there has to be a =
 
-** (tpm2-abrmd:2552): WARNING **: 16:41:13.090: tcti_conf after: "mssim"
+proper selinux package (e.g. tpm2-abrmd-selinux in Fedora) to use with =
 
-I don't know where tcti_conf is. Perhaps I didn't install it. Advice?
+abrmd which takes care of these type of issues or it has to be set to be =
 
-[Bill] =E2=80=8BI get the same warnings; I think the logging is just overly=
- pedantic and can probably be silenced.
+permissive.
 
-If you want to run as root, you can pass --allow-root, but usually you don'=
-t need root to run the daemon. /dev/tpm0 should be labelled as user tss2 an=
-d /dev/tpmrm0 should be user and group tss2.
+-ted
 
-This would be step 2, but how would I do this with the 'mssim'? FWIW, when =
-I try to run as not root: I get
+-- =
 
-> tpm2-abrmd --tcti=3Dmssim
-
-** (process:2666): WARNING **: 17:09:58.744: tcti_conf before: "(null)"
-
-** (tpm2-abrmd:2666): WARNING **: 17:09:58.745: tcti_conf after: "mssim"
-
-** (tpm2-abrmd:2666): CRITICAL **: 17:09:58.752: Failed to acquire DBus nam=
-e com.intel.tss2.Tabrmd. UID 1000 must be allowed to "own" this name. Check=
- DBus config and check that this is running as user tss or root.
-
-I configure this so I can own the Dbus name for debugging by modyfing:
-/etc/dbus-1/system.d/tpm2-abrmd.conf
-to add my username to the list
-
-[Bill] =E2=80=8BI sent more details I think on that private thread, but for=
- completeness here you would add another policy block to allow your user id=
-. Mine looks like this:
-  <policy user=3D"wcrobert">
-    <allow own=3D"com.intel.tss2.Tabrmd"/>
-  </policy>
-
-You just drop that in the XML document under the <busconfig> </busconfig> t=
-ags with the others.
+Ted H. Kim, PhD
+ted.h.kim(a)oracle.com
++1 310-258-7515
 
 
-It's not obvious what 'the list' is. Is there documentation. I have xml-lin=
-e text with several <policy> items.
-
-2. Not sure about 2, how do you not have tpm2-abrmd and get the results fro=
-m 1?
-3. for tpm2-tools, you can pass the --tcti option, just like for tpm2-abrmd
-for tss2 libraries:
-SAPI: you need to pass a TCTI_CONTEXT *, which you can get via the TCTI_LDR=
- API:
-https://github.com/tpm2-software/tpm2-tss/blob/master/include/tss2/tss2_tct=
-ildr.h#L25<https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__github.co=
-m_tpm2-2Dsoftware_tpm2-2Dtss_blob_master_include_tss2_tss2-5Ftctildr.h-23L2=
-5&d=3DDwMFAw&c=3Djf_iaSHvJObTbx-siA1ZOg&r=3DDZCVG43VcL8GTneMZb8k8lEwb-O1GZk=
-tFfre1-mlmiA&m=3D95mr2loPsAlpwnBMFy79eDrKvMlyMeQSJblsQMR5tsE&s=3DhtlB9HDs9j=
-pKGrJ_TFN8Bb9OjYFOHoqAEDBrjS3m8UQ&e=3D>
-That API takes those --tcti=3D<string> values.
-ESAPI: Just send NULL as the TCTI_CONTEXT, it will fall back using TCTI Ldr=
- API which has a search routine built into it.
-FAPI: Its configured in the config file, but I think defaults to searching =
-around.
-
-That would be step 3. Do I have to be concerned with TCTI_LDR if I'm just u=
-sing the command line tools? I was hoping for just:
-
-setenv TPM2TOOLS_TCTI "mssim:host=3Dlocalhost,port=3D2321"
-
-[Bill] TCTI Ldr is the library the tpm2-tools uses to find a TCTI, ie go fr=
-om the string "mssim:host=3Dlocalhost,port=3D2321" to an actual TCTI. *BOTH=
-=E2=80=8B* the -T/--tcti and
-environment variable TPM2TOOLS_TCTI all map to the string passed in. So the=
-y all work the same, but the command line options can override the env vari=
-able if needed.
-You also can just do: export TPM2TOOLS_TCTI=3Dmssim as the other parts are =
-the default values, so they are not needed.
-
-
-
-
---===============4861992329007453318==
+--===============6202589433330074670==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
-dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
-ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
-ZT4NCjwvaGVhZD4NCjxib2R5IGRpcj0ibHRyIj4NCjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBD
-YWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNv
-bG9yOiByZ2IoMCwgMCwgMCk7Ij4NCk9XQSBzdWNrcyBhdCBpbmxpbmUgcmVwbGllcywgYnV0IEkn
-bGwgZ2l2ZSBpdCBteSBiZXN0IHNob3QuLi48L2Rpdj4NCjxkaXY+PGZvbnQgc2l6ZT0iMSIgY29s
-b3I9IiNGRkZGRkYiPlpqUWNtUVJZRnBmcHRCYW5uZXJFbmQ8L2ZvbnQ+PGJyPg0KPHVsPg0KPGZv
-bnQgc2l6ZT0iMiI+MS4gPC9mb250Pjxmb250IGZhY2U9IkNhbGlicmkiPlllcyB5b3UgY2FuIHN0
-YXJ0IHRwbWUtYWJybWQgbGlrZSBzbzo8YnI+DQp0cG0yLWFicm1kIC0tdGN0aT1tc3NpbTxicj4N
-Cjxicj4NCm1zc2ltIHdpbGwgY29ubmVjdCB0byB0aGUgaWJtdHBtIHNpbXVsYXRvciwgb3IgeW91
-IGNhbiB1c2Ugc3d0cG0gdG8gY29ubmVjdCB0byBzdGVmYW5iZXJnZXIncyBzd3RwbS48L2ZvbnQ+
-PGJyPg0KPGJyPg0KPGI+PGZvbnQgY29sb3I9IiMwMDlGODIiPldoZW4gSSB0cnkgdGhpcywgSSBn
-ZXQ6PC9mb250PjwvYj48YnI+DQo8YnI+DQo8Yj48Zm9udCBjb2xvcj0iIzAwOUY4MiI+IzwvZm9u
-dD48L2I+PGI+PGZvbnQgY29sb3I9IiMzRjgwM0YiIGZhY2U9IkNhbGlicmkiPiB0cG0yLWFicm1k
-IC0tdGN0aT1tc3NpbSAtLWFsbG93LXJvb3Q8L2ZvbnQ+PC9iPjwvdWw+DQo8YnI+DQo8Yj48Zm9u
-dCBjb2xvcj0iIzNGODAzRiIgZmFjZT0iQ2FsaWJyaSI+KiogKHByb2Nlc3M6MjU1Mik6IFdBUk5J
-TkcgKio6IDE2OjQxOjEzLjA4OTogdGN0aV9jb25mIGJlZm9yZTogJnF1b3Q7KG51bGwpJnF1b3Q7
-PC9mb250PjwvYj48YnI+DQo8YnI+DQo8Yj48Zm9udCBjb2xvcj0iIzNGODAzRiIgZmFjZT0iQ2Fs
-aWJyaSI+KiogKHRwbTItYWJybWQ6MjU1Mik6IFdBUk5JTkcgKio6IDE2OjQxOjEzLjA5MDogdGN0
-aV9jb25mIGFmdGVyOiAmcXVvdDttc3NpbSZxdW90OzwvZm9udD48L2I+PGJyPg0KPGJyPg0KPGI+
-PGZvbnQgY29sb3I9IiMwMDlGODIiPkkgZG9uJ3Qga25vdyB3aGVyZSB0Y3RpX2NvbmYgaXMuIFBl
-cmhhcHMgSSBkaWRuJ3QgaW5zdGFsbCBpdC48L2ZvbnQ+PC9iPjxiPjxmb250IGNvbG9yPSIjMDA5
-RjgyIj4gQWR2aWNlPzwvZm9udD48L2I+PGZvbnQgZmFjZT0iQ2FsaWJyaSI+PGJyPg0KPGJyPg0K
-PHNwYW4gc3R5bGU9ImNvbG9yOiByZ2IoMjAwLCAzOCwgMTkpOyI+W0JpbGxdIOKAi0kgZ2V0IHRo
-ZSBzYW1lIHdhcm5pbmdzOyBJIHRoaW5rIHRoZSBsb2dnaW5nIGlzIGp1c3Qgb3Zlcmx5IHBlZGFu
-dGljIGFuZCBjYW4gcHJvYmFibHkgYmUgc2lsZW5jZWQuJm5ic3A7PC9zcGFuPjxicj4NCjxicj4N
-CklmIHlvdSB3YW50IHRvIHJ1biBhcyByb290LCB5b3UgY2FuIHBhc3MgLS1hbGxvdy1yb290LCBi
-dXQgdXN1YWxseSB5b3UgZG9uJ3QgbmVlZCByb290IHRvIHJ1biB0aGUgZGFlbW9uLiAvZGV2L3Rw
-bTAgc2hvdWxkIGJlIGxhYmVsbGVkIGFzIHVzZXIgdHNzMiBhbmQgL2Rldi90cG1ybTAgc2hvdWxk
-IGJlIHVzZXIgYW5kIGdyb3VwIHRzczIuPC9mb250Pg0KPHVsPg0KPGJyPg0KPGI+PGZvbnQgY29s
-b3I9IiMwMDlGODIiPlRoaXMgd291bGQgYmUgc3RlcCAyLCBidXQgaG93IHdvdWxkIEkgZG8gdGhp
-cyB3aXRoIHRoZSAnbXNzaW0nPzwvZm9udD48L2I+PGI+PGZvbnQgY29sb3I9IiMwMDlGODIiPiBG
-V0lXLCB3aGVuIEkgdHJ5IHRvIHJ1biBhcyBub3Qgcm9vdDogSSBnZXQ8L2ZvbnQ+PC9iPjxicj4N
-CjwvdWw+DQo8Yj48Zm9udCBjb2xvcj0iIzAwOUY4MiI+Jmd0OyB0cG0yLWFicm1kIC0tdGN0aT1t
-c3NpbTwvZm9udD48L2I+PGJyPg0KPGJyPg0KPGI+PGZvbnQgY29sb3I9IiMwMDlGODIiPioqIChw
-cm9jZXNzOjI2NjYpOiBXQVJOSU5HICoqOiAxNzowOTo1OC43NDQ6IHRjdGlfY29uZiBiZWZvcmU6
-ICZxdW90OyhudWxsKSZxdW90OzwvZm9udD48L2I+PGJyPg0KPGJyPg0KPGI+PGZvbnQgY29sb3I9
-IiMwMDlGODIiPioqICh0cG0yLWFicm1kOjI2NjYpOiBXQVJOSU5HICoqOiAxNzowOTo1OC43NDU6
-IHRjdGlfY29uZiBhZnRlcjogJnF1b3Q7bXNzaW0mcXVvdDs8L2ZvbnQ+PC9iPjxicj4NCjxicj4N
-CjxiPjxmb250IGNvbG9yPSIjMDA5RjgyIj4qKiAodHBtMi1hYnJtZDoyNjY2KTogQ1JJVElDQUwg
-Kio6IDE3OjA5OjU4Ljc1MjogRmFpbGVkIHRvIGFjcXVpcmUgREJ1cyBuYW1lIGNvbS5pbnRlbC50
-c3MyLlRhYnJtZC4gVUlEIDEwMDAgbXVzdCBiZSBhbGxvd2VkIHRvICZxdW90O293biZxdW90OyB0
-aGlzIG5hbWUuIENoZWNrIERCdXMgY29uZmlnIGFuZCBjaGVjayB0aGF0IHRoaXMgaXMgcnVubmlu
-ZyBhcyB1c2VyIHRzcyBvciByb290LjwvZm9udD48L2I+PGZvbnQgZmFjZT0iQ2FsaWJyaSI+PGJy
-Pg0KPGJyPg0KSSBjb25maWd1cmUgdGhpcyBzbyBJIGNhbiBvd24gdGhlIERidXMgbmFtZSBmb3Ig
-ZGVidWdnaW5nIGJ5IG1vZHlmaW5nOjxicj4NCi9ldGMvZGJ1cy0xL3N5c3RlbS5kL3RwbTItYWJy
-bWQuY29uZjxicj4NCnRvIGFkZCBteSB1c2VybmFtZSB0byB0aGUgbGlzdDwvZm9udD48L2Rpdj4N
-CjxkaXY+PGJyPg0KPC9kaXY+DQo8ZGl2PjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjAwLCAzOCwg
-MTkpO2ZvbnQtZmFtaWx5OkNhbGlicmk7Zm9udC1zaXplOjE0cHg7YmFja2dyb3VuZC1jb2xvcjpy
-Z2IoMjU1LCAyNTUsIDI1NSk7ZGlzcGxheTppbmxpbmUgIWltcG9ydGFudCI+W0JpbGxdIOKAi0kg
-c2VudCBtb3JlIGRldGFpbHMgSSB0aGluayBvbiB0aGF0IHByaXZhdGUgdGhyZWFkLCBidXQgZm9y
-IGNvbXBsZXRlbmVzcyBoZXJlIHlvdSB3b3VsZCBhZGQgYW5vdGhlciBwb2xpY3kgYmxvY2sNCiB0
-byBhbGxvdyB5b3VyIHVzZXIgaWQuIE1pbmUgbG9va3MgbGlrZSB0aGlzOjwvc3Bhbj48YnI+DQo8
-L2Rpdj4NCjxkaXY+PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigyMDAsIDM4LCAxOSk7Zm9udC1mYW1p
-bHk6Q2FsaWJyaTtmb250LXNpemU6MTRweDtiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsIDI1NSwg
-MjU1KTtkaXNwbGF5OmlubGluZSAhaW1wb3J0YW50Ij4mbmJzcDsgJmx0O3BvbGljeSB1c2VyPSZx
-dW90O3djcm9iZXJ0JnF1b3Q7Jmd0Ow0KPGRpdj4mbmJzcDsgJm5ic3A7ICZsdDthbGxvdyBvd249
-JnF1b3Q7Y29tLmludGVsLnRzczIuVGFicm1kJnF1b3Q7LyZndDs8L2Rpdj4NCjxkaXY+Jm5ic3A7
-ICZsdDsvcG9saWN5Jmd0OzwvZGl2Pg0KPGJyPg0KPC9zcGFuPjwvZGl2Pg0KPGRpdj48c3BhbiBz
-dHlsZT0iY29sb3I6cmdiKDIwMCwgMzgsIDE5KTtmb250LWZhbWlseTpDYWxpYnJpO2ZvbnQtc2l6
-ZToxNHB4O2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwgMjU1LCAyNTUpO2Rpc3BsYXk6aW5saW5l
-ICFpbXBvcnRhbnQiPllvdSBqdXN0IGRyb3AgdGhhdCBpbiB0aGUgWE1MIGRvY3VtZW50IHVuZGVy
-IHRoZSAmbHQ7YnVzY29uZmlnJmd0OyAmbHQ7L2J1c2NvbmZpZyZndDsgdGFncyB3aXRoIHRoZSBv
-dGhlcnMuPC9zcGFuPjwvZGl2Pg0KPGRpdj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIwMCwgMzgs
-IDE5KTtmb250LWZhbWlseTpDYWxpYnJpO2ZvbnQtc2l6ZToxNHB4O2JhY2tncm91bmQtY29sb3I6
-cmdiKDI1NSwgMjU1LCAyNTUpO2Rpc3BsYXk6aW5saW5lICFpbXBvcnRhbnQiPjxicj4NCjwvc3Bh
-bj48L2Rpdj4NCjxkaXY+DQo8dWw+DQo8Yj48Zm9udCBjb2xvcj0iIzAwOUY4MiI+SXQncyBub3Qg
-b2J2aW91cyB3aGF0ICd0aGUgbGlzdCcgaXMuIElzIHRoZXJlIGRvY3VtZW50YXRpb24uIEkgaGF2
-ZSB4bWwtbGluZSB0ZXh0IHdpdGggc2V2ZXJhbCAmbHQ7cG9saWN5Jmd0OyBpdGVtcy48L2ZvbnQ+
-PC9iPjxmb250IGZhY2U9IkNhbGlicmkiPjxicj4NCjwvZm9udD48YnI+DQo8Zm9udCBzaXplPSIy
-Ij4yLiA8L2ZvbnQ+PGZvbnQgZmFjZT0iQ2FsaWJyaSI+Tm90IHN1cmUgYWJvdXQgMiwgaG93IGRv
-IHlvdSBub3QgaGF2ZSB0cG0yLWFicm1kIGFuZCBnZXQgdGhlIHJlc3VsdHMgZnJvbSAxPzwvZm9u
-dD48YnI+DQo8Zm9udCBzaXplPSIyIj4zLiA8L2ZvbnQ+PGZvbnQgZmFjZT0iQ2FsaWJyaSI+Zm9y
-IHRwbTItdG9vbHMsIHlvdSBjYW4gcGFzcyB0aGUgLS10Y3RpIG9wdGlvbiwganVzdCBsaWtlIGZv
-ciB0cG0yLWFicm1kPGJyPg0KZm9yIHRzczIgbGlicmFyaWVzOjxicj4NClNBUEk6IHlvdSBuZWVk
-IHRvIHBhc3MgYSBUQ1RJX0NPTlRFWFQgKiwgd2hpY2ggeW91IGNhbiBnZXQgdmlhIHRoZSBUQ1RJ
-X0xEUiBBUEk6PGJyPg0KPC9mb250PjxhIGhyZWY9Imh0dHBzOi8vdXJsZGVmZW5zZS5wcm9vZnBv
-aW50LmNvbS92Mi91cmw/dT1odHRwcy0zQV9fZ2l0aHViLmNvbV90cG0yLTJEc29mdHdhcmVfdHBt
-Mi0yRHRzc19ibG9iX21hc3Rlcl9pbmNsdWRlX3RzczJfdHNzMi01RnRjdGlsZHIuaC0yM0wyNSZh
-bXA7ZD1Ed01GQXcmYW1wO2M9amZfaWFTSHZKT2JUYngtc2lBMVpPZyZhbXA7cj1EWkNWRzQzVmNM
-OEdUbmVNWmI4azhsRXdiLU8xR1prdEZmcmUxLW1sbWlBJmFtcDttPTk1bXIybG9Qc0FscHduQk1G
-eTc5ZURyS3ZNbHlNZVFTSmJsc1FNUjV0c0UmYW1wO3M9aHRsQjlIRHM5anBLR3JKX1RGTjhCYjlP
-allGT0hvcUFFREJyalMzbThVUSZhbXA7ZT0iPjx1Pjxmb250IGNvbG9yPSIjMDAwMEZGIiBmYWNl
-PSJDYWxpYnJpIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9ibG9i
-L21hc3Rlci9pbmNsdWRlL3RzczIvdHNzMl90Y3RpbGRyLmgjTDI1PC9mb250PjwvdT48L2E+PGZv
-bnQgZmFjZT0iQ2FsaWJyaSI+PGJyPg0KVGhhdCBBUEkgdGFrZXMgdGhvc2UgLS10Y3RpPSZsdDtz
-dHJpbmcmZ3Q7IHZhbHVlcy48YnI+DQpFU0FQSTogSnVzdCBzZW5kIE5VTEwgYXMgdGhlIFRDVElf
-Q09OVEVYVCwgaXQgd2lsbCBmYWxsIGJhY2sgdXNpbmcgVENUSSBMZHIgQVBJIHdoaWNoIGhhcyBh
-IHNlYXJjaCByb3V0aW5lIGJ1aWx0IGludG8gaXQuPGJyPg0KRkFQSTogSXRzIGNvbmZpZ3VyZWQg
-aW4gdGhlIGNvbmZpZyBmaWxlLCBidXQgSSB0aGluayBkZWZhdWx0cyB0byBzZWFyY2hpbmcgYXJv
-dW5kLjwvZm9udD48YnI+DQo8YnI+DQo8Yj48Zm9udCBjb2xvcj0iIzAwOUY4MiI+VGhhdCB3b3Vs
-ZCBiZSBzdGVwIDMuIERvIEkgaGF2ZSB0byBiZSBjb25jZXJuZWQgd2l0aCBUQ1RJX0xEUiBpZiBJ
-J20ganVzdCB1c2luZyB0aGUgY29tbWFuZCBsaW5lIHRvb2xzPyBJIHdhcyBob3BpbmcgZm9yIGp1
-c3Q6PC9mb250PjwvYj48YnI+DQo8L3VsPg0KPGI+PGZvbnQgY29sb3I9IiMwMDlGODIiPnNldGVu
-diBUUE0yVE9PTFNfVENUSSAmcXVvdDttc3NpbTpob3N0PWxvY2FsaG9zdCxwb3J0PTIzMjEmcXVv
-dDs8L2ZvbnQ+PC9iPjxicj4NCjxicj4NCjxiPjxmb250IGZhY2U9IkNhbGlicmkiPjxzcGFuIHN0
-eWxlPSJjb2xvcjpyZ2IoMjAwLCAzOCwgMTkpO2ZvbnQtc2l6ZToxNHB4O2ZvbnQtd2VpZ2h0OjQw
-MDtiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsIDI1NSwgMjU1KTtkaXNwbGF5OmlubGluZSAhaW1w
-b3J0YW50Ij5bQmlsbF0gVENUSSBMZHIgaXMgdGhlIGxpYnJhcnkgdGhlIHRwbTItdG9vbHMgdXNl
-cyB0byBmaW5kIGEgVENUSSwgaWUgZ28gZnJvbSB0aGUgc3RyaW5nICZxdW90O21zc2ltOmhvc3Q9
-bG9jYWxob3N0LHBvcnQ9MjMyMSZxdW90Ow0KIHRvIGFuIGFjdHVhbCBUQ1RJLiA8Yj4qQk9USDwv
-Yj7igIsqIHRoZSAtVC8tLXRjdGkgYW5kPC9zcGFuPjwvZm9udD48L2I+PC9kaXY+DQo8ZGl2Pjxi
-Pjxmb250IGZhY2U9IkNhbGlicmkiPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMjAwLCAzOCwgMTkp
-O2ZvbnQtc2l6ZToxNHB4O2ZvbnQtd2VpZ2h0OjQwMDtiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUs
-IDI1NSwgMjU1KTtkaXNwbGF5OmlubGluZSAhaW1wb3J0YW50Ij5lbnZpcm9ubWVudCB2YXJpYWJs
-ZSBUUE0yVE9PTFNfVENUSSBhbGwgbWFwIHRvIHRoZSBzdHJpbmcgcGFzc2VkIGluLiBTbyB0aGV5
-IGFsbCB3b3JrIHRoZSBzYW1lLCBidXQNCiB0aGUgY29tbWFuZCBsaW5lIG9wdGlvbnMgY2FuIG92
-ZXJyaWRlIHRoZSBlbnYgdmFyaWFibGUgaWYgbmVlZGVkLjwvc3Bhbj48L2ZvbnQ+PC9iPjwvZGl2
-Pg0KPGRpdj48Yj48Zm9udCBmYWNlPSJDYWxpYnJpIj48c3BhbiBzdHlsZT0iY29sb3I6cmdiKDIw
-MCwgMzgsIDE5KTtmb250LXNpemU6MTRweDtmb250LXdlaWdodDo0MDA7YmFja2dyb3VuZC1jb2xv
-cjpyZ2IoMjU1LCAyNTUsIDI1NSk7ZGlzcGxheTppbmxpbmUgIWltcG9ydGFudCI+WW91IGFsc28g
-Y2FuIGp1c3QgZG86IGV4cG9ydCBUUE0yVE9PTFNfVENUST1tc3NpbSBhcyB0aGUgb3RoZXIgcGFy
-dHMgYXJlIHRoZSBkZWZhdWx0IHZhbHVlcywgc28gdGhleQ0KIGFyZSBub3QgbmVlZGVkLjxicj4N
-Cjwvc3Bhbj48YnI+DQo8L2ZvbnQ+PC9iPjxicj4NCjxicj4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9o
-dG1sPg0K
+PGh0bWw+PGhlYWQ+CjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0idGV4
+dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4KICA8L2hlYWQ+CiAgPGJvZHk+CiAgICA8cD5LZW5uZXRo
+LDwvcD4KICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNpdGU9Im1pZDpTTjZQUjExTUIzNDM3
+ODU0ODM0RkU0NkJDOUY2RkQ4RDlCODlGOUBTTjZQUjExTUIzNDM3Lm5hbXByZDExLnByb2Qub3V0
+bG9vay5jb20iPgogICAgICA8ZGl2Pjxmb250IGZhY2U9IkNhbGlicmkiPgogICAgICAgICAgSWYg
+eW91IHdhbnQgdG8gcnVuIGFzIHJvb3QsIHlvdSBjYW4gcGFzcyAtLWFsbG93LXJvb3QsIGJ1dAog
+ICAgICAgICAgdXN1YWxseSB5b3UgZG9uJ3QgbmVlZCByb290IHRvIHJ1biB0aGUgZGFlbW9uLiAv
+ZGV2L3RwbTAKICAgICAgICAgIHNob3VsZCBiZSBsYWJlbGxlZCBhcyB1c2VyIHRzczIgYW5kIC9k
+ZXYvdHBtcm0wIHNob3VsZCBiZSB1c2VyCiAgICAgICAgICBhbmQgZ3JvdXAgdHNzMi48L2ZvbnQ+
+PC9kaXY+CiAgICA8L2Jsb2NrcXVvdGU+CiAgICA8cD5Ob3Qgc3VyZSBpZiB0aGlzIGlzIHlvdXIg
+aXNzdWUsIGJ1dCBpbiBzb21lIExpbnV4IGVudmlyb25tZW50cywKICAgICAgU0VMaW51eCBpbnRl
+Z3JhdGlvbiBjYW4gYmUgYW4gaXNzdWUgb24gdGhpcyBwb2ludC4gRWl0aGVyIHRoZXJlCiAgICAg
+IGhhcyB0byBiZSBhIHByb3BlciBzZWxpbnV4IHBhY2thZ2UgKGUuZy4gdHBtMi1hYnJtZC1zZWxp
+bnV4IGluCiAgICAgIEZlZG9yYSkgdG8gdXNlIHdpdGggYWJybWQgd2hpY2ggdGFrZXMgY2FyZSBv
+ZiB0aGVzZSB0eXBlIG9mIGlzc3VlcwogICAgICBvciBpdCBoYXMgdG8gYmUgc2V0IHRvIGJlIHBl
+cm1pc3NpdmUuIDxicj4KICAgIDwvcD4KICAgIDxwPi10ZWQ8YnI+CiAgICA8L3A+CiAgICA8cHJl
+IGNsYXNzPSJtb3otc2lnbmF0dXJlIiBjb2xzPSI3MiI+LS0gClRlZCBILiBLaW0sIFBoRAo8YSBj
+bGFzcz0ibW96LXR4dC1saW5rLWFiYnJldmlhdGVkIiBocmVmPSJtYWlsdG86dGVkLmgua2ltQG9y
+YWNsZS5jb20iPnRlZC5oLmtpbUBvcmFjbGUuY29tPC9hPgorMSAzMTAtMjU4LTc1MTU8L3ByZT4K
+ICA8L2JvZHk+CjwvaHRtbD4K
 
---===============4861992329007453318==--
+--===============6202589433330074670==--
 
