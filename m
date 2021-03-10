@@ -1,86 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============9074695336212008240=="
+Content-Type: multipart/mixed; boundary="===============3199391509962704024=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: tpm2-abrmd bootstrap error
-Date: Tue, 09 Mar 2021 23:24:27 +0000
-Message-ID: <SN6PR11MB3437611018CB1D11972E04D9B8929@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: OF5329FB9F.2FB13C3C-ON00258692.007017CC-85258692.007061BC@notes.na.collabserv.com
+Subject: [tpm2] Dockerhub images gone, use Github Container Registry
+Date: Wed, 10 Mar 2021 19:36:01 +0000
+Message-ID: <SN6PR11MB343728EE64D6A7184EB946DAB8919@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9074695336212008240==
+--===============3199391509962704024==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Dockerhub is no longer, all the images are on Github Container registry:
+https://github.com/orgs/tpm2-software/packages
 
+Update your docker pull URLs to:
+docker pull ghcr.io/tpm2-software/<image name>
 
-> -----Original Message-----
-> From: Kenneth Goldman <kgoldman(a)us.ibm.com>
-> Sent: Monday, March 8, 2021 2:28 PM
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] tpm2-abrmd bootstrap error
-> =
+Where <image name> was the tag name in the older Docker image land.
 
-> Does anyone have working instructions to build abrmd from source on =
+I meant to drop the Docker Hub a while ago, as those images were not gettin=
+g updated once Dockerhub switched its billing model. When they did that,
+the project had to move to Github Actions and the Github Container Registry.
 
-> Ubuntu 16 xenial?
+Just as a warning for anyone using them, they are really intended for the C=
+I systems and have never been evaluated beyond that
+capacity. Use at your own risk and know they can disappear at any time.
 
-This script example works on an ubuntu:16.04 docker image. Which I would im=
-agine will be close to WSL.
-It also deals with the fact that docker images don't really have dbus/syste=
-md and all that. Which might be your WSL issues.
-https://gist.github.com/williamcroberts/cd5dce68ff3c8d6608a0b336b968da79
+--===============3199391509962704024==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-Take a look through that and try it, email me if you have questions.
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiPgpEb2NrZXJodWIgaXMgbm8gbG9uZ2VyLCBhbGwgdGhlIGltYWdl
+cyBhcmUgb24gR2l0aHViIENvbnRhaW5lciByZWdpc3RyeTo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
+dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
+ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YSBocmVmPSJodHRwczovL2dpdGh1Yi5j
+b20vb3Jncy90cG0yLXNvZnR3YXJlL3BhY2thZ2VzIiBpZD0iTFBsbmszOTEyOTgiPmh0dHBzOi8v
+Z2l0aHViLmNvbS9vcmdzL3RwbTItc29mdHdhcmUvcGFja2FnZXM8L2E+PGJyPgo8L2Rpdj4KPGRp
+diBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2Vy
+aWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8
+ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1z
+ZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+ClVwZGF0ZSB5b3Vy
+IGRvY2tlciBwdWxsIFVSTHMgdG86PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
+YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
+OiByZ2IoMCwgMCwgMCk7Ij4KZG9ja2VyIHB1bGwgZ2hjci5pby90cG0yLXNvZnR3YXJlLyZsdDtp
+bWFnZSBuYW1lJmd0Ozxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJp
+LCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiBy
+Z2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGli
+cmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6
+IHJnYigwLCAwLCAwKTsiPgpXaGVyZSAmbHQ7aW1hZ2UgbmFtZSZndDsgd2FzIHRoZSB0YWcgbmFt
+ZSBpbiB0aGUgb2xkZXIgRG9ja2VyIGltYWdlIGxhbmQuPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
+dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
+ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpJIG1lYW50IHRvIGRyb3AgdGhlIERvY2tl
+ciBIdWIgYSB3aGlsZSBhZ28sIGFzIHRob3NlIGltYWdlcyB3ZXJlIG5vdCBnZXR0aW5nIHVwZGF0
+ZWQgb25jZSBEb2NrZXJodWIgc3dpdGNoZWQgaXRzIGJpbGxpbmcgbW9kZWwuIFdoZW4gdGhleSBk
+aWQgdGhhdCw8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
+ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAw
+KTsiPgp0aGUgcHJvamVjdCBoYWQgdG8gbW92ZSB0byBHaXRodWIgQWN0aW9ucyBhbmQgdGhlIEdp
+dGh1YiBDb250YWluZXIgUmVnaXN0cnkuPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBD
+YWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNv
+bG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
+IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsg
+Y29sb3I6IHJnYigwLCAwLCAwKTsiPgpKdXN0IGFzIGEgd2FybmluZyBmb3IgYW55b25lIHVzaW5n
+IHRoZW0sIHRoZXkgYXJlIHJlYWxseSBpbnRlbmRlZCBmb3IgdGhlIENJIHN5c3RlbXMgYW5kIGhh
+dmUgbmV2ZXIgYmVlbiBldmFsdWF0ZWQgYmV5b25kIHRoYXQ8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
+dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
+ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpjYXBhY2l0eS4gVXNlIGF0IHlvdXIgb3du
+IHJpc2sgYW5kIGtub3cgdGhleSBjYW4gZGlzYXBwZWFyIGF0IGFueSB0aW1lLjwvZGl2Pgo8L2Jv
+ZHk+CjwvaHRtbD4K
 
-> =
-
-> I did this, =
-
-> http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-
-> 2019.01.06.tar.xz =
-
-> <http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-
-> 2019.01.06.tar.xz>  fix, then got this:
-
-Commented here:
-https://github.com/tpm2-software/tpm2-abrmd/issues/766
-
-It' superfluous automake warnings with us dealing with their bugs.
-
-> =
-
-> libtoolize: putting auxiliary files in '.'.
-> libtoolize: linking file './ltmain.sh'
-> configure.ac:10: installing './compile'
-> configure.ac:13: installing './config.guess'
-> configure.ac:13: installing './config.sub'
-> configure.ac:15: installing './install-sh'
-> configure.ac:15: installing './missing'
-> aminclude_static.am:126: warning: .PHONY was already defined in =
-
-> condition TRUE, which includes condition AUTOCONF_CODE_COVERAGE_2019_01_0=
-6 ...
-> Makefile.am:175: 'aminclude_static.am' included from here
-> Makefile.am:6: ... '.PHONY' previously defined here
-> Makefile.am:182: warning: AM_DISTCHECK_CONFIGURE_FLAGS multiply =
-
-> defined in condition AUTOCONF_CODE_COVERAGE_2019_01_06 and =
-
-> CODE_COVERAGE_ENABLED ...
-> aminclude_static.am:100: ... 'AM_DISTCHECK_CONFIGURE_FLAGS' previously =
-
-> defined here
-> Makefile.am:175: 'aminclude_static.am' included from here
-> Makefile.am: installing './depcomp'
-> parallel-tests: installing './test-driver'
-> =
-
-> --
-> Ken Goldman kgoldman(a)us.ibm.com
-> 914-945-2415 (862-2415)
->=20
-
---===============9074695336212008240==--
+--===============3199391509962704024==--
 
