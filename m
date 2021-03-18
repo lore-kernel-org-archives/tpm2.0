@@ -1,114 +1,210 @@
-Content-Type: multipart/mixed; boundary="===============5473853455952604483=="
+Content-Type: multipart/mixed; boundary="===============4587306194838495236=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: does "unique-data" really work?
-Date: Thu, 18 Mar 2021 15:27:10 +0000
-Message-ID: <SN6PR11MB34377FB2842E1B3B29D2CF48B8699@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 976f8d0f-75c0-acc8-8700-16fc11351e3f@oracle.com
+Subject: [tpm2] Re: FAPI Provision Could not open: /HN
+Date: Thu, 18 Mar 2021 15:28:26 +0000
+Message-ID: <SN6PR11MB3437490C5DB270BA928B7D94B8699@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: AM0P194MB0307B76E98CE00F17C8D13B8A66C9@AM0P194MB0307.EURP194.PROD.OUTLOOK.COM
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5473853455952604483==
+--===============4587306194838495236==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Their are some examples in the integration tests:
-https://github.com/tpm2-software/tpm2-tools/blob/master/test/integration/te=
-sts/createprimary.sh#L55
+HEAD commit is: c651d559d
 
-It requires the hand jamming of specific data structures unique to the key =
-type. Eventually we want to get a better
-interface on that option.
+find /home/wcrobert/.local/share/tpm2-tss
+/home/wcrobert/.local/share/tpm2-tss
+/home/wcrobert/.local/share/tpm2-tss/user
+/home/wcrobert/.local/share/tpm2-tss/user/keystore
 
-I thought we had an open bug for this, but I couldn't find one, so I create=
-d a new one:
-https://github.com/tpm2-software/tpm2-tools/issues/2378
+{
+     "profile_name": "P_ECCP256SHA256",
+     "profile_dir": "/usr/local/etc/tpm2-tss/fapi-profiles/",
+     "user_dir": "~/.local/share/tpm2-tss/user/keystore",
+     "system_dir": "/usr/local/var/lib/tpm2-tss/system/keystore",
+     "tcti": "",
+     "system_pcrs" : [],
+     "log_dir" : "/usr/local/var/run/tpm2-tss/eventlog/"
+}
 
 ________________________________
-From: Ted Kim <ted.h.kim(a)oracle.com>
-Sent: Friday, March 12, 2021 1:48 PM
-To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
-Subject: [tpm2] does "unique-data" really work?
+From: Fuchs, Andreas <andreas.fuchs(a)sit.fraunhofer.de>
+Sent: Monday, March 15, 2021 4:00 AM
+To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.org=
+ <tpm2(a)lists.01.org>
+Subject: AW: FAPI Provision Could not open: /HN
 
-Folks,
+What does a "find /home/wcrobert/.local/share/tpm2-tss" give back ?
+And what's your fapi-config.json ?
 
-Does unique-data option really work?
-It did not seem to work for me in that the keys with different
-"unique-data" seem identical.
+________________________________________
+Von: Roberts, William C <william.c.roberts(a)intel.com>
+Gesendet: Donnerstag, 11. M=C3=A4rz 2021 21:30
+An: tpm2(a)lists.01.org
+Betreff: [tpm2] FAPI Provision Could not open: /HN
 
-If it does work, what version is needed?
+I have never been able to run a successfull tss2 provision command (ever), =
+the most current error is this:
 
-Thanks,
--ted
+$ tss2 provision
 
---
-Ted H. Kim, PhD
-ted.h.kim(a)oracle.com
-+1 310-258-7515
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+ERROR:fapijson:src/tss2-fapi/ifapi_json_serialize.c:529:ifapi_json_IFAPI_OB=
+JECT_serialize() Invalid call get_json ErrorCode (0x00060001)
+ERROR:fapi:src/tss2-fapi/ifapi_keystore.c:710:ifapi_keystore_store_async() =
+ErrorCode (0x00060001) Object for /home/wcrobert/.local/share/tpm2-tss/user=
+/keystore//P_ECCP256SHA256/HN/object.json could not be serialized.
+ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:1290:Fapi_Provision_Finish() =
+ErrorCode (0x00060001) Could not open: /HN
+WARNING:fapi:src/tss2-fapi/ifapi_io.c:421:ifapi_io_remove_directories() Rem=
+oving: /usr/local/var/lib/tpm2-tss/system/keystore/P_ECCP256SHA256/HS/SRK/o=
+bject.json
+WARNING:fapi:src/tss2-fapi/ifapi_io.c:421:ifapi_io_remove_directories() Rem=
+oving: /usr/local/var/lib/tpm2-tss/system/keystore/P_ECCP256SHA256/HS/objec=
+t.json
+WARNING:fapi:src/tss2-fapi/ifapi_io.c:421:ifapi_io_remove_directories() Rem=
+oving: /usr/local/var/lib/tpm2-tss/system/keystore/P_ECCP256SHA256/LOCKOUT/=
+object.json
+WARNING:fapi:src/tss2-fapi/ifapi_io.c:421:ifapi_io_remove_directories() Rem=
+oving: /usr/local/var/lib/tpm2-tss/system/keystore/P_ECCP256SHA256/HE/EK/ob=
+ject.json
+WARNING:fapi:src/tss2-fapi/ifapi_io.c:421:ifapi_io_remove_directories() Rem=
+oving: /usr/local/var/lib/tpm2-tss/system/keystore/P_ECCP256SHA256/HE/objec=
+t.json
+ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:168:Fapi_Provision() ErrorCod=
+e (0x00060001) Provision
+Fapi_Provision(0x60001) - fapi:Catch all for all errors not otherwise speci=
+fied
 
---===============5473853455952604483==
+Any ideas?
+
+System Details Below:
+
+tpm2-tss version
+pkg-config --modversion tss2-fapi
+3.1.0-dev
+
+tpm2-tss$ git describe 3.0.0-136-gc651d559d036
+
+tpm2-tools version:
+tss2 getrandom --version
+tool=3D"getrandom" version=3D"5.0-92-g46ffe7eed571"
+
+I have a working connection to a swtpm via tpm2-abrmd as confirmed by:'
+tpm2 getrandom --hex --tcti=3Dtabrmd 4
+
+I have modified my /usr/local/etc/tpm2-tss/fapi-config.json to include:
+"ek_cert_less" : "yes"
+"tcti": "tabrmd"
+
+My user wcrobert is part of tss group:
+
+$groups
+wcrobert adm cdrom sudo dip plugdev lpadmin sambashare kvm libvirt tss dock=
+er
+
+
+
+
+--===============4587306194838495236==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
 PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
-ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
-ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7Ij4KVGhlaXIgYXJlIHNvbWUgZXhhbXBsZXMgaW4gdGhlIGludGVncmF0
-aW9uIHRlc3RzOjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWws
-IEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAs
-IDApOyI+CjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdG9v
-bHMvYmxvYi9tYXN0ZXIvdGVzdC9pbnRlZ3JhdGlvbi90ZXN0cy9jcmVhdGVwcmltYXJ5LnNoI0w1
-NSIgaWQ9IkxQbG5rMjMwMTAxIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0y
-LXRvb2xzL2Jsb2IvbWFzdGVyL3Rlc3QvaW50ZWdyYXRpb24vdGVzdHMvY3JlYXRlcHJpbWFyeS5z
-aCNMNTU8L2E+PGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFy
-aWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
-LCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwg
-QXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdi
-KDAsIDAsIDApOyI+Ckl0IHJlcXVpcmVzIHRoZSBoYW5kIGphbW1pbmcgb2Ygc3BlY2lmaWMgZGF0
-YSBzdHJ1Y3R1cmVzIHVuaXF1ZSB0byB0aGUga2V5IHR5cGUuIEV2ZW50dWFsbHkgd2Ugd2FudCB0
-byBnZXQgYSBiZXR0ZXI8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFy
-aWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
-LCAwLCAwKTsiPgppbnRlcmZhY2Ugb24gdGhhdCBvcHRpb24uPC9kaXY+CjxkaXYgc3R5bGU9ImZv
-bnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNp
-emU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0i
-Zm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQt
-c2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpJIHRob3VnaHQgd2UgaGFkIGFuIG9w
-ZW4gYnVnIGZvciB0aGlzLCBidXQgSSBjb3VsZG4ndCBmaW5kIG9uZSwgc28gSSBjcmVhdGVkIGEg
-bmV3IG9uZTo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
-ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAw
-KTsiPgo8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xz
-L2lzc3Vlcy8yMzc4IiBpZD0iTFBsbmsiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJl
-L3RwbTItdG9vbHMvaXNzdWVzLzIzNzg8L2E+PGJyPgo8L2Rpdj4KPGRpdiBjbGFzcz0iX0VudGl0
-eSBfRVR5cGVfT1dBTGlua1ByZXZpZXcgX0VJZF9PV0FMaW5rUHJldmlldyBfRVJlYWRvbmx5XzEi
-PjwvZGl2Pgo8YnI+CjxkaXYgaWQ9ImFwcGVuZG9uc2VuZCI+PC9kaXY+CjxociBzdHlsZT0iZGlz
-cGxheTppbmxpbmUtYmxvY2s7d2lkdGg6OTglIiB0YWJpbmRleD0iLTEiPgo8ZGl2IGlkPSJkaXZS
-cGx5RndkTXNnIiBkaXI9Imx0ciI+PGZvbnQgZmFjZT0iQ2FsaWJyaSwgc2Fucy1zZXJpZiIgc3R5
-bGU9ImZvbnQtc2l6ZToxMXB0IiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IFRlZCBLaW0g
-Jmx0O3RlZC5oLmtpbUBvcmFjbGUuY29tJmd0Ozxicj4KPGI+U2VudDo8L2I+IEZyaWRheSwgTWFy
-Y2ggMTIsIDIwMjEgMTo0OCBQTTxicj4KPGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9yZyAmbHQ7
-dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIGRvZXMgJnF1
-b3Q7dW5pcXVlLWRhdGEmcXVvdDsgcmVhbGx5IHdvcms/PC9mb250Pgo8ZGl2PiZuYnNwOzwvZGl2
-Pgo8L2Rpdj4KPGRpdiBjbGFzcz0iQm9keUZyYWdtZW50Ij48Zm9udCBzaXplPSIyIj48c3BhbiBz
-dHlsZT0iZm9udC1zaXplOjExcHQ7Ij4KPGRpdiBjbGFzcz0iUGxhaW5UZXh0Ij5Gb2xrcyw8YnI+
-Cjxicj4KRG9lcyB1bmlxdWUtZGF0YSBvcHRpb24gcmVhbGx5IHdvcms/PGJyPgpJdCBkaWQgbm90
-IHNlZW0gdG8gd29yayBmb3IgbWUgaW4gdGhhdCB0aGUga2V5cyB3aXRoIGRpZmZlcmVudCA8YnI+
-CiZxdW90O3VuaXF1ZS1kYXRhJnF1b3Q7IHNlZW0gaWRlbnRpY2FsLjxicj4KPGJyPgpJZiBpdCBk
-b2VzIHdvcmssIHdoYXQgdmVyc2lvbiBpcyBuZWVkZWQ/PGJyPgo8YnI+ClRoYW5rcyw8YnI+Ci10
-ZWQ8YnI+Cjxicj4KLS0gPGJyPgpUZWQgSC4gS2ltLCBQaEQ8YnI+CnRlZC5oLmtpbUBvcmFjbGUu
-Y29tPGJyPgorMSAzMTAtMjU4LTc1MTU8YnI+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fPGJyPgp0cG0yIG1haWxpbmcgbGlzdCAtLSB0cG0yQGxpc3RzLjAx
-Lm9yZzxicj4KVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0byB0cG0yLWxlYXZlQGxpc3Rz
-LjAxLm9yZzxicj4KJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQpcy8lKF9pbnRlcm5h
-bF9uYW1lKXM8YnI+CjwvZGl2Pgo8L3NwYW4+PC9mb250PjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiPgpIRUFEIGNvbW1pdCBpczombmJzcDtjNjUxZDU1OWQ8L2Rpdj4K
+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMt
+c2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2
+Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fu
+cy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CmZpbmQgL2hv
+bWUvd2Nyb2JlcnQvLmxvY2FsL3NoYXJlL3RwbTItdHNzPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGRpdj4vaG9tZS93Y3JvYmVydC8ubG9jYWwv
+c2hhcmUvdHBtMi10c3M8L2Rpdj4KPGRpdj4vaG9tZS93Y3JvYmVydC8ubG9jYWwvc2hhcmUvdHBt
+Mi10c3MvdXNlcjwvZGl2PgovaG9tZS93Y3JvYmVydC8ubG9jYWwvc2hhcmUvdHBtMi10c3MvdXNl
+ci9rZXlzdG9yZTxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBB
+cmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2Io
+MCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmks
+IEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJn
+YigwLCAwLCAwKTsiPgp7CjxkaXY+Jm5ic3A7ICZuYnNwOyAmbmJzcDsmcXVvdDtwcm9maWxlX25h
+bWUmcXVvdDs6ICZxdW90O1BfRUNDUDI1NlNIQTI1NiZxdW90Oyw8L2Rpdj4KPGRpdj4mbmJzcDsg
+Jm5ic3A7ICZuYnNwOyZxdW90O3Byb2ZpbGVfZGlyJnF1b3Q7OiAmcXVvdDsvdXNyL2xvY2FsL2V0
+Yy90cG0yLXRzcy9mYXBpLXByb2ZpbGVzLyZxdW90Oyw8L2Rpdj4KPGRpdj4mbmJzcDsgJm5ic3A7
+ICZuYnNwOyZxdW90O3VzZXJfZGlyJnF1b3Q7OiAmcXVvdDt+Ly5sb2NhbC9zaGFyZS90cG0yLXRz
+cy91c2VyL2tleXN0b3JlJnF1b3Q7LDwvZGl2Pgo8ZGl2PiZuYnNwOyAmbmJzcDsgJm5ic3A7JnF1
+b3Q7c3lzdGVtX2RpciZxdW90OzogJnF1b3Q7L3Vzci9sb2NhbC92YXIvbGliL3RwbTItdHNzL3N5
+c3RlbS9rZXlzdG9yZSZxdW90Oyw8L2Rpdj4KPGRpdj4mbmJzcDsgJm5ic3A7ICZuYnNwOyZxdW90
+O3RjdGkmcXVvdDs6ICZxdW90OyZxdW90Oyw8L2Rpdj4KPGRpdj4mbmJzcDsgJm5ic3A7ICZuYnNw
+OyZxdW90O3N5c3RlbV9wY3JzJnF1b3Q7IDogW10sPC9kaXY+CjxkaXY+Jm5ic3A7ICZuYnNwOyAm
+bmJzcDsmcXVvdDtsb2dfZGlyJnF1b3Q7IDogJnF1b3Q7L3Vzci9sb2NhbC92YXIvcnVuL3RwbTIt
+dHNzL2V2ZW50bG9nLyZxdW90OzwvZGl2Pgo8ZGl2Pn08L2Rpdj4KPGJyPgo8L2Rpdj4KPGRpdiBp
+ZD0iYXBwZW5kb25zZW5kIj48L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3
+aWR0aDo5OCUiIHRhYmluZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRy
+Ij48Zm9udCBmYWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQi
+IGNvbG9yPSIjMDAwMDAwIj48Yj5Gcm9tOjwvYj4gRnVjaHMsIEFuZHJlYXMgJmx0O2FuZHJlYXMu
+ZnVjaHNAc2l0LmZyYXVuaG9mZXIuZGUmZ3Q7PGJyPgo8Yj5TZW50OjwvYj4gTW9uZGF5LCBNYXJj
+aCAxNSwgMjAyMSA0OjAwIEFNPGJyPgo8Yj5Ubzo8L2I+IFJvYmVydHMsIFdpbGxpYW0gQyAmbHQ7
+d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29tJmd0OzsgdHBtMkBsaXN0cy4wMS5vcmcgJmx0O3Rw
+bTJAbGlzdHMuMDEub3JnJmd0Ozxicj4KPGI+U3ViamVjdDo8L2I+IEFXOiBGQVBJIFByb3Zpc2lv
+biBDb3VsZCBub3Qgb3BlbjogL0hOPC9mb250Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8L2Rpdj4KPGRp
+diBjbGFzcz0iQm9keUZyYWdtZW50Ij48Zm9udCBzaXplPSIyIj48c3BhbiBzdHlsZT0iZm9udC1z
+aXplOjExcHQ7Ij4KPGRpdiBjbGFzcz0iUGxhaW5UZXh0Ij5XaGF0IGRvZXMgYSAmcXVvdDtmaW5k
+IC9ob21lL3djcm9iZXJ0Ly5sb2NhbC9zaGFyZS90cG0yLXRzcyZxdW90OyBnaXZlIGJhY2sgPzxi
+cj4KQW5kIHdoYXQncyB5b3VyIGZhcGktY29uZmlnLmpzb24gPzxicj4KPGJyPgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fPGJyPgpWb246IFJvYmVydHMsIFdpbGxpYW0g
+QyAmbHQ7d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29tJmd0Ozxicj4KR2VzZW5kZXQ6IERvbm5l
+cnN0YWcsIDExLiBN5HJ6IDIwMjEgMjE6MzA8YnI+CkFuOiB0cG0yQGxpc3RzLjAxLm9yZzxicj4K
+QmV0cmVmZjogW3RwbTJdIEZBUEkgUHJvdmlzaW9uIENvdWxkIG5vdCBvcGVuOiAvSE48YnI+Cjxi
+cj4KSSBoYXZlIG5ldmVyIGJlZW4gYWJsZSB0byBydW4gYSBzdWNjZXNzZnVsbCB0c3MyIHByb3Zp
+c2lvbiBjb21tYW5kIChldmVyKSwgdGhlIG1vc3QgY3VycmVudCBlcnJvciBpcyB0aGlzOjxicj4K
+PGJyPgokIHRzczIgcHJvdmlzaW9uPGJyPgo8YnI+CkVSUk9SOmZhcGlqc29uOnNyYy90c3MyLWZh
+cGkvaWZhcGlfanNvbl9zZXJpYWxpemUuYzo1Mjk6aWZhcGlfanNvbl9JRkFQSV9PQkpFQ1Rfc2Vy
+aWFsaXplKCkgSW52YWxpZCBjYWxsIGdldF9qc29uIEVycm9yQ29kZSAoMHgwMDA2MDAwMSk8YnI+
+CkVSUk9SOmZhcGk6c3JjL3RzczItZmFwaS9pZmFwaV9rZXlzdG9yZS5jOjcxMDppZmFwaV9rZXlz
+dG9yZV9zdG9yZV9hc3luYygpIEVycm9yQ29kZSAoMHgwMDA2MDAwMSkgT2JqZWN0IGZvciAvaG9t
+ZS93Y3JvYmVydC8ubG9jYWwvc2hhcmUvdHBtMi10c3MvdXNlci9rZXlzdG9yZS8vUF9FQ0NQMjU2
+U0hBMjU2L0hOL29iamVjdC5qc29uIGNvdWxkIG5vdCBiZSBzZXJpYWxpemVkLjxicj4KRVJST1I6
+ZmFwaTpzcmMvdHNzMi1mYXBpL2FwaS9GYXBpX1Byb3Zpc2lvbi5jOjEyOTA6RmFwaV9Qcm92aXNp
+b25fRmluaXNoKCkgRXJyb3JDb2RlICgweDAwMDYwMDAxKSBDb3VsZCBub3Qgb3BlbjogL0hOPGJy
+PgpXQVJOSU5HOmZhcGk6c3JjL3RzczItZmFwaS9pZmFwaV9pby5jOjQyMTppZmFwaV9pb19yZW1v
+dmVfZGlyZWN0b3JpZXMoKSBSZW1vdmluZzogL3Vzci9sb2NhbC92YXIvbGliL3RwbTItdHNzL3N5
+c3RlbS9rZXlzdG9yZS9QX0VDQ1AyNTZTSEEyNTYvSFMvU1JLL29iamVjdC5qc29uPGJyPgpXQVJO
+SU5HOmZhcGk6c3JjL3RzczItZmFwaS9pZmFwaV9pby5jOjQyMTppZmFwaV9pb19yZW1vdmVfZGly
+ZWN0b3JpZXMoKSBSZW1vdmluZzogL3Vzci9sb2NhbC92YXIvbGliL3RwbTItdHNzL3N5c3RlbS9r
+ZXlzdG9yZS9QX0VDQ1AyNTZTSEEyNTYvSFMvb2JqZWN0Lmpzb248YnI+CldBUk5JTkc6ZmFwaTpz
+cmMvdHNzMi1mYXBpL2lmYXBpX2lvLmM6NDIxOmlmYXBpX2lvX3JlbW92ZV9kaXJlY3Rvcmllcygp
+IFJlbW92aW5nOiAvdXNyL2xvY2FsL3Zhci9saWIvdHBtMi10c3Mvc3lzdGVtL2tleXN0b3JlL1Bf
+RUNDUDI1NlNIQTI1Ni9MT0NLT1VUL29iamVjdC5qc29uPGJyPgpXQVJOSU5HOmZhcGk6c3JjL3Rz
+czItZmFwaS9pZmFwaV9pby5jOjQyMTppZmFwaV9pb19yZW1vdmVfZGlyZWN0b3JpZXMoKSBSZW1v
+dmluZzogL3Vzci9sb2NhbC92YXIvbGliL3RwbTItdHNzL3N5c3RlbS9rZXlzdG9yZS9QX0VDQ1Ay
+NTZTSEEyNTYvSEUvRUsvb2JqZWN0Lmpzb248YnI+CldBUk5JTkc6ZmFwaTpzcmMvdHNzMi1mYXBp
+L2lmYXBpX2lvLmM6NDIxOmlmYXBpX2lvX3JlbW92ZV9kaXJlY3RvcmllcygpIFJlbW92aW5nOiAv
+dXNyL2xvY2FsL3Zhci9saWIvdHBtMi10c3Mvc3lzdGVtL2tleXN0b3JlL1BfRUNDUDI1NlNIQTI1
+Ni9IRS9vYmplY3QuanNvbjxicj4KRVJST1I6ZmFwaTpzcmMvdHNzMi1mYXBpL2FwaS9GYXBpX1By
+b3Zpc2lvbi5jOjE2ODpGYXBpX1Byb3Zpc2lvbigpIEVycm9yQ29kZSAoMHgwMDA2MDAwMSkgUHJv
+dmlzaW9uPGJyPgpGYXBpX1Byb3Zpc2lvbigweDYwMDAxKSAtIGZhcGk6Q2F0Y2ggYWxsIGZvciBh
+bGwgZXJyb3JzIG5vdCBvdGhlcndpc2Ugc3BlY2lmaWVkPGJyPgo8YnI+CkFueSBpZGVhcz88YnI+
+Cjxicj4KU3lzdGVtIERldGFpbHMgQmVsb3c6PGJyPgo8YnI+CnRwbTItdHNzIHZlcnNpb248YnI+
+CnBrZy1jb25maWcgLS1tb2R2ZXJzaW9uIHRzczItZmFwaTxicj4KMy4xLjAtZGV2PGJyPgo8YnI+
+CnRwbTItdHNzJCBnaXQgZGVzY3JpYmUgMy4wLjAtMTM2LWdjNjUxZDU1OWQwMzY8YnI+Cjxicj4K
+dHBtMi10b29scyB2ZXJzaW9uOjxicj4KdHNzMiBnZXRyYW5kb20gLS12ZXJzaW9uPGJyPgp0b29s
+PSZxdW90O2dldHJhbmRvbSZxdW90OyB2ZXJzaW9uPSZxdW90OzUuMC05Mi1nNDZmZmU3ZWVkNTcx
+JnF1b3Q7PGJyPgo8YnI+CkkgaGF2ZSBhIHdvcmtpbmcgY29ubmVjdGlvbiB0byBhIHN3dHBtIHZp
+YSB0cG0yLWFicm1kIGFzIGNvbmZpcm1lZCBieTonPGJyPgp0cG0yIGdldHJhbmRvbSAtLWhleCAt
+LXRjdGk9dGFicm1kIDQ8YnI+Cjxicj4KSSBoYXZlIG1vZGlmaWVkIG15IC91c3IvbG9jYWwvZXRj
+L3RwbTItdHNzL2ZhcGktY29uZmlnLmpzb24gdG8gaW5jbHVkZTo8YnI+CiZxdW90O2VrX2NlcnRf
+bGVzcyZxdW90OyA6ICZxdW90O3llcyZxdW90Ozxicj4KJnF1b3Q7dGN0aSZxdW90OzogJnF1b3Q7
+dGFicm1kJnF1b3Q7PGJyPgo8YnI+Ck15IHVzZXIgd2Nyb2JlcnQgaXMgcGFydCBvZiB0c3MgZ3Jv
+dXA6PGJyPgo8YnI+CiRncm91cHM8YnI+Cndjcm9iZXJ0IGFkbSBjZHJvbSBzdWRvIGRpcCBwbHVn
+ZGV2IGxwYWRtaW4gc2FtYmFzaGFyZSBrdm0gbGlidmlydCB0c3MgZG9ja2VyPGJyPgo8YnI+Cjxi
+cj4KPGJyPgo8L2Rpdj4KPC9zcGFuPjwvZm9udD48L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
---===============5473853455952604483==--
+--===============4587306194838495236==--
 
