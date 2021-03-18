@@ -1,52 +1,114 @@
-Content-Type: multipart/mixed; boundary="===============8797919144130784681=="
+Content-Type: multipart/mixed; boundary="===============5473853455952604483=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tadeusz.struk at intel.com>
-Subject: [tpm2] Re: abrmd crashing - how to debug? - dbus logs?
-Date: Tue, 16 Mar 2021 11:46:43 -0700
-Message-ID: <e486a1d0-92bd-1625-1d63-0cb87cbad021@intel.com>
-In-Reply-To: OF919BF68A.8F376E7D-ON0025869A.0055CAA8-8525869A.00563DE3@notes.na.collabserv.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: does "unique-data" really work?
+Date: Thu, 18 Mar 2021 15:27:10 +0000
+Message-ID: <SN6PR11MB34377FB2842E1B3B29D2CF48B8699@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: 976f8d0f-75c0-acc8-8700-16fc11351e3f@oracle.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8797919144130784681==
+--===============5473853455952604483==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 3/16/21 8:41 AM, Kenneth Goldman wrote:
-> This fixes the startup problem, where abrmd expected one handle and
-> receives two.
-> =
+Their are some examples in the integration tests:
+https://github.com/tpm2-software/tpm2-tools/blob/master/test/integration/te=
+sts/createprimary.sh#L55
 
-> It does not fix the crash.
-> =
+It requires the hand jamming of specific data structures unique to the key =
+type. Eventually we want to get a better
+interface on that option.
 
-> On a loop of pcrread, it fails after 695, 324, 951, and 26 passes. This
-> looks random to me, not some hard limit.
+I thought we had an open bug for this, but I couldn't find one, so I create=
+d a new one:
+https://github.com/tpm2-software/tpm2-tools/issues/2378
 
-Thanks Ken,
-So what I've found so far is that some the functions we are using to
-interact with dbus, like
-g_dbus_method_invocation_return_value_with_unix_fd_list() [1], which use
-the AF_LOCAL aka Unix type sockets, behave differently on WSL compering
-to a native Linux system. After some investigation I found out that WSL
-has its own problems with the Unix sockets [2] and socketpair()
-implementation [3], which we rely on.
-To fix that would require some redesigning of the underlined dbus
-back-end and validation time, which we can't afford at the moment.
-All the validation for for tpm2-abrmd was done on Linux and FreeBSD and
-these are the systems we support and recommend.
-I would consider running tpm2-abrmd on WSL as experimental.
+________________________________
+From: Ted Kim <ted.h.kim(a)oracle.com>
+Sent: Friday, March 12, 2021 1:48 PM
+To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+Subject: [tpm2] does "unique-data" really work?
 
-[1]
-https://developer.gnome.org/gio/stable/GDBusMethodInvocation.html#g-dbus-me=
-thod-invocation-return-value-with-unix-fd-list
-[2] https://github.com/microsoft/WSL/issues/4240
-[3] https://github.com/microsoft/WSL/issues/3100
+Folks,
+
+Does unique-data option really work?
+It did not seem to work for me in that the keys with different
+"unique-data" seem identical.
+
+If it does work, what version is needed?
 
 Thanks,
--- =
+-ted
 
-Tadeusz
---===============8797919144130784681==--
+--
+Ted H. Kim, PhD
+ted.h.kim(a)oracle.com
++1 310-258-7515
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============5473853455952604483==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
+ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
+ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
+YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
+OiByZ2IoMCwgMCwgMCk7Ij4KVGhlaXIgYXJlIHNvbWUgZXhhbXBsZXMgaW4gdGhlIGludGVncmF0
+aW9uIHRlc3RzOjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWws
+IEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAs
+IDApOyI+CjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdG9v
+bHMvYmxvYi9tYXN0ZXIvdGVzdC9pbnRlZ3JhdGlvbi90ZXN0cy9jcmVhdGVwcmltYXJ5LnNoI0w1
+NSIgaWQ9IkxQbG5rMjMwMTAxIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0y
+LXRvb2xzL2Jsb2IvbWFzdGVyL3Rlc3QvaW50ZWdyYXRpb24vdGVzdHMvY3JlYXRlcHJpbWFyeS5z
+aCNMNTU8L2E+PGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFy
+aWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
+LCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwg
+QXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdi
+KDAsIDAsIDApOyI+Ckl0IHJlcXVpcmVzIHRoZSBoYW5kIGphbW1pbmcgb2Ygc3BlY2lmaWMgZGF0
+YSBzdHJ1Y3R1cmVzIHVuaXF1ZSB0byB0aGUga2V5IHR5cGUuIEV2ZW50dWFsbHkgd2Ugd2FudCB0
+byBnZXQgYSBiZXR0ZXI8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFy
+aWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
+LCAwLCAwKTsiPgppbnRlcmZhY2Ugb24gdGhhdCBvcHRpb24uPC9kaXY+CjxkaXYgc3R5bGU9ImZv
+bnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNp
+emU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0i
+Zm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQt
+c2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpJIHRob3VnaHQgd2UgaGFkIGFuIG9w
+ZW4gYnVnIGZvciB0aGlzLCBidXQgSSBjb3VsZG4ndCBmaW5kIG9uZSwgc28gSSBjcmVhdGVkIGEg
+bmV3IG9uZTo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBI
+ZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAw
+KTsiPgo8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xz
+L2lzc3Vlcy8yMzc4IiBpZD0iTFBsbmsiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJl
+L3RwbTItdG9vbHMvaXNzdWVzLzIzNzg8L2E+PGJyPgo8L2Rpdj4KPGRpdiBjbGFzcz0iX0VudGl0
+eSBfRVR5cGVfT1dBTGlua1ByZXZpZXcgX0VJZF9PV0FMaW5rUHJldmlldyBfRVJlYWRvbmx5XzEi
+PjwvZGl2Pgo8YnI+CjxkaXYgaWQ9ImFwcGVuZG9uc2VuZCI+PC9kaXY+CjxociBzdHlsZT0iZGlz
+cGxheTppbmxpbmUtYmxvY2s7d2lkdGg6OTglIiB0YWJpbmRleD0iLTEiPgo8ZGl2IGlkPSJkaXZS
+cGx5RndkTXNnIiBkaXI9Imx0ciI+PGZvbnQgZmFjZT0iQ2FsaWJyaSwgc2Fucy1zZXJpZiIgc3R5
+bGU9ImZvbnQtc2l6ZToxMXB0IiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IFRlZCBLaW0g
+Jmx0O3RlZC5oLmtpbUBvcmFjbGUuY29tJmd0Ozxicj4KPGI+U2VudDo8L2I+IEZyaWRheSwgTWFy
+Y2ggMTIsIDIwMjEgMTo0OCBQTTxicj4KPGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9yZyAmbHQ7
+dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIGRvZXMgJnF1
+b3Q7dW5pcXVlLWRhdGEmcXVvdDsgcmVhbGx5IHdvcms/PC9mb250Pgo8ZGl2PiZuYnNwOzwvZGl2
+Pgo8L2Rpdj4KPGRpdiBjbGFzcz0iQm9keUZyYWdtZW50Ij48Zm9udCBzaXplPSIyIj48c3BhbiBz
+dHlsZT0iZm9udC1zaXplOjExcHQ7Ij4KPGRpdiBjbGFzcz0iUGxhaW5UZXh0Ij5Gb2xrcyw8YnI+
+Cjxicj4KRG9lcyB1bmlxdWUtZGF0YSBvcHRpb24gcmVhbGx5IHdvcms/PGJyPgpJdCBkaWQgbm90
+IHNlZW0gdG8gd29yayBmb3IgbWUgaW4gdGhhdCB0aGUga2V5cyB3aXRoIGRpZmZlcmVudCA8YnI+
+CiZxdW90O3VuaXF1ZS1kYXRhJnF1b3Q7IHNlZW0gaWRlbnRpY2FsLjxicj4KPGJyPgpJZiBpdCBk
+b2VzIHdvcmssIHdoYXQgdmVyc2lvbiBpcyBuZWVkZWQ/PGJyPgo8YnI+ClRoYW5rcyw8YnI+Ci10
+ZWQ8YnI+Cjxicj4KLS0gPGJyPgpUZWQgSC4gS2ltLCBQaEQ8YnI+CnRlZC5oLmtpbUBvcmFjbGUu
+Y29tPGJyPgorMSAzMTAtMjU4LTc1MTU8YnI+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fPGJyPgp0cG0yIG1haWxpbmcgbGlzdCAtLSB0cG0yQGxpc3RzLjAx
+Lm9yZzxicj4KVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0byB0cG0yLWxlYXZlQGxpc3Rz
+LjAxLm9yZzxicj4KJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQpcy8lKF9pbnRlcm5h
+bF9uYW1lKXM8YnI+CjwvZGl2Pgo8L3NwYW4+PC9mb250PjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
+
+--===============5473853455952604483==--
 
