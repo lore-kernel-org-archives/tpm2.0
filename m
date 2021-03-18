@@ -1,210 +1,40 @@
-Content-Type: multipart/mixed; boundary="===============4587306194838495236=="
+Content-Type: multipart/mixed; boundary="===============4050876581098360524=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: FAPI Provision Could not open: /HN
-Date: Thu, 18 Mar 2021 15:28:26 +0000
-Message-ID: <SN6PR11MB3437490C5DB270BA928B7D94B8699@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: AM0P194MB0307B76E98CE00F17C8D13B8A66C9@AM0P194MB0307.EURP194.PROD.OUTLOOK.COM
+From: Tadeusz Struk <tstruk at gmail.com>
+Subject: [tpm2] Re: abrmd crashing - how to debug? - dbus logs?
+Date: Thu, 18 Mar 2021 09:47:56 -0700
+Message-ID: <e3e37052-36a4-0946-a8d8-bfc0ad6e6706@gmail.com>
+In-Reply-To: e486a1d0-92bd-1625-1d63-0cb87cbad021@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4587306194838495236==
+--===============4050876581098360524==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-HEAD commit is: c651d559d
+On 3/16/21 11:46 AM, Tadeusz Struk wrote:
+> After some investigation I found out that WSL
+> has its own problems with the Unix sockets [2] and socketpair()
+> implementation [3], which we rely on.
+> To fix that would require some redesigning of the underlined dbus
+> back-end and validation time, which we can't afford at the moment.
+> All the validation for for tpm2-abrmd was done on Linux and FreeBSD and
+> these are the systems we support and recommend.
+> I would consider running tpm2-abrmd on WSL as experimental.
+> =
 
-find /home/wcrobert/.local/share/tpm2-tss
-/home/wcrobert/.local/share/tpm2-tss
-/home/wcrobert/.local/share/tpm2-tss/user
-/home/wcrobert/.local/share/tpm2-tss/user/keystore
-
-{
-     "profile_name": "P_ECCP256SHA256",
-     "profile_dir": "/usr/local/etc/tpm2-tss/fapi-profiles/",
-     "user_dir": "~/.local/share/tpm2-tss/user/keystore",
-     "system_dir": "/usr/local/var/lib/tpm2-tss/system/keystore",
-     "tcti": "",
-     "system_pcrs" : [],
-     "log_dir" : "/usr/local/var/run/tpm2-tss/eventlog/"
-}
-
-________________________________
-From: Fuchs, Andreas <andreas.fuchs(a)sit.fraunhofer.de>
-Sent: Monday, March 15, 2021 4:00 AM
-To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)lists.01.org=
- <tpm2(a)lists.01.org>
-Subject: AW: FAPI Provision Could not open: /HN
-
-What does a "find /home/wcrobert/.local/share/tpm2-tss" give back ?
-And what's your fapi-config.json ?
-
-________________________________________
-Von: Roberts, William C <william.c.roberts(a)intel.com>
-Gesendet: Donnerstag, 11. M=C3=A4rz 2021 21:30
-An: tpm2(a)lists.01.org
-Betreff: [tpm2] FAPI Provision Could not open: /HN
-
-I have never been able to run a successfull tss2 provision command (ever), =
-the most current error is this:
-
-$ tss2 provision
-
-ERROR:fapijson:src/tss2-fapi/ifapi_json_serialize.c:529:ifapi_json_IFAPI_OB=
-JECT_serialize() Invalid call get_json ErrorCode (0x00060001)
-ERROR:fapi:src/tss2-fapi/ifapi_keystore.c:710:ifapi_keystore_store_async() =
-ErrorCode (0x00060001) Object for /home/wcrobert/.local/share/tpm2-tss/user=
-/keystore//P_ECCP256SHA256/HN/object.json could not be serialized.
-ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:1290:Fapi_Provision_Finish() =
-ErrorCode (0x00060001) Could not open: /HN
-WARNING:fapi:src/tss2-fapi/ifapi_io.c:421:ifapi_io_remove_directories() Rem=
-oving: /usr/local/var/lib/tpm2-tss/system/keystore/P_ECCP256SHA256/HS/SRK/o=
-bject.json
-WARNING:fapi:src/tss2-fapi/ifapi_io.c:421:ifapi_io_remove_directories() Rem=
-oving: /usr/local/var/lib/tpm2-tss/system/keystore/P_ECCP256SHA256/HS/objec=
-t.json
-WARNING:fapi:src/tss2-fapi/ifapi_io.c:421:ifapi_io_remove_directories() Rem=
-oving: /usr/local/var/lib/tpm2-tss/system/keystore/P_ECCP256SHA256/LOCKOUT/=
-object.json
-WARNING:fapi:src/tss2-fapi/ifapi_io.c:421:ifapi_io_remove_directories() Rem=
-oving: /usr/local/var/lib/tpm2-tss/system/keystore/P_ECCP256SHA256/HE/EK/ob=
-ject.json
-WARNING:fapi:src/tss2-fapi/ifapi_io.c:421:ifapi_io_remove_directories() Rem=
-oving: /usr/local/var/lib/tpm2-tss/system/keystore/P_ECCP256SHA256/HE/objec=
-t.json
-ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:168:Fapi_Provision() ErrorCod=
-e (0x00060001) Provision
-Fapi_Provision(0x60001) - fapi:Catch all for all errors not otherwise speci=
-fied
-
-Any ideas?
-
-System Details Below:
-
-tpm2-tss version
-pkg-config --modversion tss2-fapi
-3.1.0-dev
-
-tpm2-tss$ git describe 3.0.0-136-gc651d559d036
-
-tpm2-tools version:
-tss2 getrandom --version
-tool=3D"getrandom" version=3D"5.0-92-g46ffe7eed571"
-
-I have a working connection to a swtpm via tpm2-abrmd as confirmed by:'
-tpm2 getrandom --hex --tcti=3Dtabrmd 4
-
-I have modified my /usr/local/etc/tpm2-tss/fapi-config.json to include:
-"ek_cert_less" : "yes"
-"tcti": "tabrmd"
-
-My user wcrobert is part of tss group:
-
-$groups
-wcrobert adm cdrom sudo dip plugdev lpadmin sambashare kvm libvirt tss dock=
-er
+> [1]
+> https://developer.gnome.org/gio/stable/GDBusMethodInvocation.html#g-dbus-=
+method-invocation-return-value-with-unix-fd-list
+> [2] https://github.com/microsoft/WSL/issues/4240
+> [3] https://github.com/microsoft/WSL/issues/3100
+> =
 
 
-
-
---===============4587306194838495236==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
-ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
-eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
-bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
-b3I6IHJnYigwLCAwLCAwKTsiPgpIRUFEIGNvbW1pdCBpczombmJzcDtjNjUxZDU1OWQ8L2Rpdj4K
-PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMt
-c2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2
-Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fu
-cy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CmZpbmQgL2hv
-bWUvd2Nyb2JlcnQvLmxvY2FsL3NoYXJlL3RwbTItdHNzPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
-ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
-IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGRpdj4vaG9tZS93Y3JvYmVydC8ubG9jYWwv
-c2hhcmUvdHBtMi10c3M8L2Rpdj4KPGRpdj4vaG9tZS93Y3JvYmVydC8ubG9jYWwvc2hhcmUvdHBt
-Mi10c3MvdXNlcjwvZGl2PgovaG9tZS93Y3JvYmVydC8ubG9jYWwvc2hhcmUvdHBtMi10c3MvdXNl
-ci9rZXlzdG9yZTxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBB
-cmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2Io
-MCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmks
-IEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJn
-YigwLCAwLCAwKTsiPgp7CjxkaXY+Jm5ic3A7ICZuYnNwOyAmbmJzcDsmcXVvdDtwcm9maWxlX25h
-bWUmcXVvdDs6ICZxdW90O1BfRUNDUDI1NlNIQTI1NiZxdW90Oyw8L2Rpdj4KPGRpdj4mbmJzcDsg
-Jm5ic3A7ICZuYnNwOyZxdW90O3Byb2ZpbGVfZGlyJnF1b3Q7OiAmcXVvdDsvdXNyL2xvY2FsL2V0
-Yy90cG0yLXRzcy9mYXBpLXByb2ZpbGVzLyZxdW90Oyw8L2Rpdj4KPGRpdj4mbmJzcDsgJm5ic3A7
-ICZuYnNwOyZxdW90O3VzZXJfZGlyJnF1b3Q7OiAmcXVvdDt+Ly5sb2NhbC9zaGFyZS90cG0yLXRz
-cy91c2VyL2tleXN0b3JlJnF1b3Q7LDwvZGl2Pgo8ZGl2PiZuYnNwOyAmbmJzcDsgJm5ic3A7JnF1
-b3Q7c3lzdGVtX2RpciZxdW90OzogJnF1b3Q7L3Vzci9sb2NhbC92YXIvbGliL3RwbTItdHNzL3N5
-c3RlbS9rZXlzdG9yZSZxdW90Oyw8L2Rpdj4KPGRpdj4mbmJzcDsgJm5ic3A7ICZuYnNwOyZxdW90
-O3RjdGkmcXVvdDs6ICZxdW90OyZxdW90Oyw8L2Rpdj4KPGRpdj4mbmJzcDsgJm5ic3A7ICZuYnNw
-OyZxdW90O3N5c3RlbV9wY3JzJnF1b3Q7IDogW10sPC9kaXY+CjxkaXY+Jm5ic3A7ICZuYnNwOyAm
-bmJzcDsmcXVvdDtsb2dfZGlyJnF1b3Q7IDogJnF1b3Q7L3Vzci9sb2NhbC92YXIvcnVuL3RwbTIt
-dHNzL2V2ZW50bG9nLyZxdW90OzwvZGl2Pgo8ZGl2Pn08L2Rpdj4KPGJyPgo8L2Rpdj4KPGRpdiBp
-ZD0iYXBwZW5kb25zZW5kIj48L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3
-aWR0aDo5OCUiIHRhYmluZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRy
-Ij48Zm9udCBmYWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQi
-IGNvbG9yPSIjMDAwMDAwIj48Yj5Gcm9tOjwvYj4gRnVjaHMsIEFuZHJlYXMgJmx0O2FuZHJlYXMu
-ZnVjaHNAc2l0LmZyYXVuaG9mZXIuZGUmZ3Q7PGJyPgo8Yj5TZW50OjwvYj4gTW9uZGF5LCBNYXJj
-aCAxNSwgMjAyMSA0OjAwIEFNPGJyPgo8Yj5Ubzo8L2I+IFJvYmVydHMsIFdpbGxpYW0gQyAmbHQ7
-d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29tJmd0OzsgdHBtMkBsaXN0cy4wMS5vcmcgJmx0O3Rw
-bTJAbGlzdHMuMDEub3JnJmd0Ozxicj4KPGI+U3ViamVjdDo8L2I+IEFXOiBGQVBJIFByb3Zpc2lv
-biBDb3VsZCBub3Qgb3BlbjogL0hOPC9mb250Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8L2Rpdj4KPGRp
-diBjbGFzcz0iQm9keUZyYWdtZW50Ij48Zm9udCBzaXplPSIyIj48c3BhbiBzdHlsZT0iZm9udC1z
-aXplOjExcHQ7Ij4KPGRpdiBjbGFzcz0iUGxhaW5UZXh0Ij5XaGF0IGRvZXMgYSAmcXVvdDtmaW5k
-IC9ob21lL3djcm9iZXJ0Ly5sb2NhbC9zaGFyZS90cG0yLXRzcyZxdW90OyBnaXZlIGJhY2sgPzxi
-cj4KQW5kIHdoYXQncyB5b3VyIGZhcGktY29uZmlnLmpzb24gPzxicj4KPGJyPgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fPGJyPgpWb246IFJvYmVydHMsIFdpbGxpYW0g
-QyAmbHQ7d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29tJmd0Ozxicj4KR2VzZW5kZXQ6IERvbm5l
-cnN0YWcsIDExLiBN5HJ6IDIwMjEgMjE6MzA8YnI+CkFuOiB0cG0yQGxpc3RzLjAxLm9yZzxicj4K
-QmV0cmVmZjogW3RwbTJdIEZBUEkgUHJvdmlzaW9uIENvdWxkIG5vdCBvcGVuOiAvSE48YnI+Cjxi
-cj4KSSBoYXZlIG5ldmVyIGJlZW4gYWJsZSB0byBydW4gYSBzdWNjZXNzZnVsbCB0c3MyIHByb3Zp
-c2lvbiBjb21tYW5kIChldmVyKSwgdGhlIG1vc3QgY3VycmVudCBlcnJvciBpcyB0aGlzOjxicj4K
-PGJyPgokIHRzczIgcHJvdmlzaW9uPGJyPgo8YnI+CkVSUk9SOmZhcGlqc29uOnNyYy90c3MyLWZh
-cGkvaWZhcGlfanNvbl9zZXJpYWxpemUuYzo1Mjk6aWZhcGlfanNvbl9JRkFQSV9PQkpFQ1Rfc2Vy
-aWFsaXplKCkgSW52YWxpZCBjYWxsIGdldF9qc29uIEVycm9yQ29kZSAoMHgwMDA2MDAwMSk8YnI+
-CkVSUk9SOmZhcGk6c3JjL3RzczItZmFwaS9pZmFwaV9rZXlzdG9yZS5jOjcxMDppZmFwaV9rZXlz
-dG9yZV9zdG9yZV9hc3luYygpIEVycm9yQ29kZSAoMHgwMDA2MDAwMSkgT2JqZWN0IGZvciAvaG9t
-ZS93Y3JvYmVydC8ubG9jYWwvc2hhcmUvdHBtMi10c3MvdXNlci9rZXlzdG9yZS8vUF9FQ0NQMjU2
-U0hBMjU2L0hOL29iamVjdC5qc29uIGNvdWxkIG5vdCBiZSBzZXJpYWxpemVkLjxicj4KRVJST1I6
-ZmFwaTpzcmMvdHNzMi1mYXBpL2FwaS9GYXBpX1Byb3Zpc2lvbi5jOjEyOTA6RmFwaV9Qcm92aXNp
-b25fRmluaXNoKCkgRXJyb3JDb2RlICgweDAwMDYwMDAxKSBDb3VsZCBub3Qgb3BlbjogL0hOPGJy
-PgpXQVJOSU5HOmZhcGk6c3JjL3RzczItZmFwaS9pZmFwaV9pby5jOjQyMTppZmFwaV9pb19yZW1v
-dmVfZGlyZWN0b3JpZXMoKSBSZW1vdmluZzogL3Vzci9sb2NhbC92YXIvbGliL3RwbTItdHNzL3N5
-c3RlbS9rZXlzdG9yZS9QX0VDQ1AyNTZTSEEyNTYvSFMvU1JLL29iamVjdC5qc29uPGJyPgpXQVJO
-SU5HOmZhcGk6c3JjL3RzczItZmFwaS9pZmFwaV9pby5jOjQyMTppZmFwaV9pb19yZW1vdmVfZGly
-ZWN0b3JpZXMoKSBSZW1vdmluZzogL3Vzci9sb2NhbC92YXIvbGliL3RwbTItdHNzL3N5c3RlbS9r
-ZXlzdG9yZS9QX0VDQ1AyNTZTSEEyNTYvSFMvb2JqZWN0Lmpzb248YnI+CldBUk5JTkc6ZmFwaTpz
-cmMvdHNzMi1mYXBpL2lmYXBpX2lvLmM6NDIxOmlmYXBpX2lvX3JlbW92ZV9kaXJlY3Rvcmllcygp
-IFJlbW92aW5nOiAvdXNyL2xvY2FsL3Zhci9saWIvdHBtMi10c3Mvc3lzdGVtL2tleXN0b3JlL1Bf
-RUNDUDI1NlNIQTI1Ni9MT0NLT1VUL29iamVjdC5qc29uPGJyPgpXQVJOSU5HOmZhcGk6c3JjL3Rz
-czItZmFwaS9pZmFwaV9pby5jOjQyMTppZmFwaV9pb19yZW1vdmVfZGlyZWN0b3JpZXMoKSBSZW1v
-dmluZzogL3Vzci9sb2NhbC92YXIvbGliL3RwbTItdHNzL3N5c3RlbS9rZXlzdG9yZS9QX0VDQ1Ay
-NTZTSEEyNTYvSEUvRUsvb2JqZWN0Lmpzb248YnI+CldBUk5JTkc6ZmFwaTpzcmMvdHNzMi1mYXBp
-L2lmYXBpX2lvLmM6NDIxOmlmYXBpX2lvX3JlbW92ZV9kaXJlY3RvcmllcygpIFJlbW92aW5nOiAv
-dXNyL2xvY2FsL3Zhci9saWIvdHBtMi10c3Mvc3lzdGVtL2tleXN0b3JlL1BfRUNDUDI1NlNIQTI1
-Ni9IRS9vYmplY3QuanNvbjxicj4KRVJST1I6ZmFwaTpzcmMvdHNzMi1mYXBpL2FwaS9GYXBpX1By
-b3Zpc2lvbi5jOjE2ODpGYXBpX1Byb3Zpc2lvbigpIEVycm9yQ29kZSAoMHgwMDA2MDAwMSkgUHJv
-dmlzaW9uPGJyPgpGYXBpX1Byb3Zpc2lvbigweDYwMDAxKSAtIGZhcGk6Q2F0Y2ggYWxsIGZvciBh
-bGwgZXJyb3JzIG5vdCBvdGhlcndpc2Ugc3BlY2lmaWVkPGJyPgo8YnI+CkFueSBpZGVhcz88YnI+
-Cjxicj4KU3lzdGVtIERldGFpbHMgQmVsb3c6PGJyPgo8YnI+CnRwbTItdHNzIHZlcnNpb248YnI+
-CnBrZy1jb25maWcgLS1tb2R2ZXJzaW9uIHRzczItZmFwaTxicj4KMy4xLjAtZGV2PGJyPgo8YnI+
-CnRwbTItdHNzJCBnaXQgZGVzY3JpYmUgMy4wLjAtMTM2LWdjNjUxZDU1OWQwMzY8YnI+Cjxicj4K
-dHBtMi10b29scyB2ZXJzaW9uOjxicj4KdHNzMiBnZXRyYW5kb20gLS12ZXJzaW9uPGJyPgp0b29s
-PSZxdW90O2dldHJhbmRvbSZxdW90OyB2ZXJzaW9uPSZxdW90OzUuMC05Mi1nNDZmZmU3ZWVkNTcx
-JnF1b3Q7PGJyPgo8YnI+CkkgaGF2ZSBhIHdvcmtpbmcgY29ubmVjdGlvbiB0byBhIHN3dHBtIHZp
-YSB0cG0yLWFicm1kIGFzIGNvbmZpcm1lZCBieTonPGJyPgp0cG0yIGdldHJhbmRvbSAtLWhleCAt
-LXRjdGk9dGFicm1kIDQ8YnI+Cjxicj4KSSBoYXZlIG1vZGlmaWVkIG15IC91c3IvbG9jYWwvZXRj
-L3RwbTItdHNzL2ZhcGktY29uZmlnLmpzb24gdG8gaW5jbHVkZTo8YnI+CiZxdW90O2VrX2NlcnRf
-bGVzcyZxdW90OyA6ICZxdW90O3llcyZxdW90Ozxicj4KJnF1b3Q7dGN0aSZxdW90OzogJnF1b3Q7
-dGFicm1kJnF1b3Q7PGJyPgo8YnI+Ck15IHVzZXIgd2Nyb2JlcnQgaXMgcGFydCBvZiB0c3MgZ3Jv
-dXA6PGJyPgo8YnI+CiRncm91cHM8YnI+Cndjcm9iZXJ0IGFkbSBjZHJvbSBzdWRvIGRpcCBwbHVn
-ZGV2IGxwYWRtaW4gc2FtYmFzaGFyZSBrdm0gbGlidmlydCB0c3MgZG9ja2VyPGJyPgo8YnI+Cjxi
-cj4KPGJyPgo8L2Rpdj4KPC9zcGFuPjwvZm9udD48L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
-
---===============4587306194838495236==--
+FWIW I was running the same tests on native Linux with many processes
+talking to tabrmd on the session bus for hours. It looks pretty stable.
+With the same thing running on WSL the dbus daemon crashes after 5-10
+minutes and with it I'm crashing my whole mate-session.
+--===============4050876581098360524==--
 
