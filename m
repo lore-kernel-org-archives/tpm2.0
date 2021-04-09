@@ -1,21 +1,21 @@
-Content-Type: multipart/mixed; boundary="===============2997779820803073379=="
+Content-Type: multipart/mixed; boundary="===============5306662748756504614=="
 MIME-Version: 1.0
 From: Chat Overlay Streaming <benzhu88899 at gmail.com>
-Subject: [tpm2] Help - Invalid count value
-Date: Fri, 09 Apr 2021 10:57:16 -0700
-Message-ID: <CAGjyWPKgQ+zzJBEF8xDgJF1kDDi4oYBdZZncxSDhE1uMLB+1Cg@mail.gmail.com>
+Subject: [tpm2] Help - invalid count value
+Date: Fri, 09 Apr 2021 11:11:39 -0700
+Message-ID: <CAGjyWPJcSuEo7ewLh-Mz5KXgSccWK7X52EpTSJGjFez1ozytFQ@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2997779820803073379==
+--===============5306662748756504614==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hi there,
-I tried to use the TPM AES256/AES256CTR to encrypt a file. When I ran the
-following command, I got an error message in an infinite loop and had to
-reboot my machine.
+I tried to use the TPM2 AES256 / AES256CTR to encrypt a file. When I ran
+the following command, I got an error message in an infinite loop and had
+to reboot my machine.
 
 $ tpm2_encryptdecrypt -c 0x81010000 --iv=3Div.input:iv.output -p ${pswd} -o
 enc_test.data test.data
@@ -48,11 +48,11 @@ struct tpm_header *header =3D buf;
 ....
 }
 
-My question is how I can debug the problem? or did someone meet the same
+My question is did someone meet the same problem? And how can I debug this
 problem?
+I double checked the tpm2-abrmd service. It was running okay.
 
-I double checked the tpm2-abrmd service. It was running well.
-The builds for my test:
+The builds for my test are:
 1. rpi-kernel: 5.4.y
 2. tpm2-tss: 3.0.x
 3. tpm2-abrmd: 2.3.2
@@ -68,53 +68,53 @@ Attached is my test script.
 Thanks a lot,
 Ben
 
---===============2997779820803073379==
+--===============5306662748756504614==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGNsYXNzPSJnbWFpbC1hU0giPjxkaXYgaWQ9ImdtYWls
-LTpybyIgY2xhc3M9ImdtYWlsLWFZdiI+SGkgdGhlcmUsPGJyPjwvZGl2PjwvZGl2PjwvZGl2Pjxk
-aXY+SSB0cmllZCB0byB1c2UgdGhlIFRQTSBBRVMyNTYvQUVTMjU2Q1RSIHRvIGVuY3J5cHQgYSBm
-aWxlLiBXaGVuIEkgcmFuIHRoZSBmb2xsb3dpbmcgY29tbWFuZCwgSSBnb3QgYW4gZXJyb3IgbWVz
-c2FnZSBpbiBhbiBpbmZpbml0ZSBsb29wIGFuZCBoYWQgdG8gcmVib290IG15IG1hY2hpbmUuPC9k
-aXY+PGRpdj48YnI+PC9kaXY+PGRpdj4kIHRwbTJfZW5jcnlwdGRlY3J5cHQgLWMgMHg4MTAxMDAw
-MCAtLWl2PWl2LmlucHV0Oml2Lm91dHB1dCAtcCAke3Bzd2R9IC1vIGVuY190ZXN0LmRhdGEgdGVz
-dC5kYXRhPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj48ZGl2PlRoZSBlcnJvciBtZXNzYWdlIHdh
-czwvZGl2PjxkaXY+wqAgwqB0cG0gdHBtMCBpbnZhbGlkIGNvdW50IHZhbHVlIGZmZmZmZmZmIDEw
-MDA8L2Rpdj48ZGl2PsKgIMKgdHBtIHRwbTAgaW52YWxpZCBjb3VudCB2YWx1ZSBmZmZmZmZmZiAx
-MDAwwqA8L2Rpdj48ZGl2PsKgIMKgLi4uPC9kaXY+PGRpdj7CoCDCoHRwbSB0cG0wIGludmFsaWQg
-Y291bnQgdmFsdWUgZmZmZmZmZmYgMTAwMDwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+RGlnZ2lu
-ZyB0aGUgbG9jYXRpb24gd2hlcmUgdGhlIGVycm9yIG1lc3NhZ2UgY29tZXMgZnJvbSwgSSBmb3Vu
-ZCBpdCB3YXMgaW4gdGhlIHRwbSBkcml2ZXIgZmlsZTogZmlsZSB0cG0taW50ZXJmYWNlLmM8L2Rp
-dj48YnI+c3RhdGljIHNzaXplX3TCoDxiPnRwbV90cnlfdHJhbnNtaXQ8L2I+KHN0cnVjdCB0cG1f
-Y2hpcCAqY2hpcCwgdm9pZCAqYnVmLCBzaXplX3QgYnVmc2l6KTxicj57PGJyPnN0cnVjdCB0cG1f
-aGVhZGVyICpoZWFkZXIgPSBidWY7PGJyPi4uLjxicj48YnI+PGI+Y291bnQgPSBiZTMyX3RvX2Nw
-dShoZWFkZXItJmd0O2xlbmd0aCk7IC8vIC0tLSZndDsgY291bnQgPSBmZmZmZmZmZsKgPC9iPsKg
-PGRpdj4uLi48YnI+PC9kaXY+PGRpdj48ZGl2Pjxicj48Yj5pZiAoY291bnQgJmd0OyBidWZzaXop
-IHsgwqAgLy8gLS0tJmd0OyBidWZzaXogPSAxMDAwPGJyPsKgIMKgIGRldl9lcnIoJmFtcDtjaGlw
-LSZndDtkZXYsPGJyPsKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICZxdW90O2ludmFsaWQgY291
-bnQgdmFsdWUgJXggJXp4XG4mcXVvdDssIGNvdW50LCBidWZzaXopOzxicj7CoCDCoCDCoDwvYj5y
-ZXR1cm4gLUUyQklHOzxicj48Yj7CoH08L2I+PGJyPi4uLi48YnI+fTwvZGl2PjwvZGl2PjwvZGl2
-PjxkaXY+PGJyPjwvZGl2PjxkaXY+PGRpdj5NeSBxdWVzdGlvbiBpcyBob3cgSSBjYW4gZGVidWcg
-dGhlIHByb2JsZW0/IG9yIGRpZCBzb21lb25lIG1lZXQgdGhlIHNhbWUgcHJvYmxlbT88L2Rpdj48
-ZGl2PjwvZGl2PjxkaXY+PC9kaXY+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5JIGRvdWJsZSBj
-aGVja2VkwqB0aGUgdHBtMi1hYnJtZCBzZXJ2aWNlLiBJdCB3YXMgcnVubmluZyB3ZWxsLsKgPC9k
-aXY+PGRpdj5UaGUgYnVpbGRzIGZvciBteSB0ZXN0Ojxicj48L2Rpdj48ZGl2PjEuIHJwaS1rZXJu
-ZWw6IDUuNC55PC9kaXY+PGRpdj4yLiB0cG0yLXRzczogMy4wLng8L2Rpdj4zLiB0cG0yLWFicm1k
-OiAyLjMuMjxicj40LiB0cG0yLXRvb2xzOiA0LjIuWDxicj41LiB0cG0yLXRzcy1lbmdpbmU6IHYx
-LjEueDxkaXY+PGJyPjwvZGl2PjxkaXY+TXkgdGVzdCBlbnZpcm9ubWVudHM6PC9kaXY+PGRpdj5S
-UEkgM0IgJmFtcDsgNEI8L2Rpdj48ZGl2PkFFUyBpbiB0aGUgVFBNIHdhcyBlbmFibGVkLjwvZGl2
-PjxkaXY+PGJyPjwvZGl2PjxkaXY+QXR0YWNoZWQgaXMgbXkgdGVzdCBzY3JpcHQuPC9kaXY+PGRp
-dj48YnI+PC9kaXY+PGRpdj48ZGl2PlRoYW5rcyBhIGxvdCw8L2Rpdj48ZGl2PkJlbjwvZGl2Pjxk
-aXY+PGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjwvZGl2PjwvZGl2Pgo=
+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2PjxkaXYgaWQ9ImdtYWlsLW1fMzM4Mjg5MjUxNzc3NDEy
+NjI0NGdtYWlsLTpybyI+SGkgdGhlcmUsPGJyPjwvZGl2PjwvZGl2PjwvZGl2PjxkaXY+SSB0cmll
+ZCB0byB1c2UgdGhlIFRQTTIgQUVTMjU2IC8gQUVTMjU2Q1RSIHRvIGVuY3J5cHQgYSBmaWxlLiBX
+aGVuIEkgcmFuIHRoZSBmb2xsb3dpbmcgY29tbWFuZCwgSSBnb3QgYW4gZXJyb3IgbWVzc2FnZSBp
+biBhbiBpbmZpbml0ZSBsb29wIGFuZCBoYWQgdG8gcmVib290IG15IG1hY2hpbmUuPC9kaXY+PGRp
+dj48YnI+PC9kaXY+PGRpdj4kIHRwbTJfZW5jcnlwdGRlY3J5cHQgLWMgMHg4MTAxMDAwMCAtLWl2
+PWl2LmlucHV0Oml2Lm91dHB1dCAtcCAke3Bzd2R9IC1vIGVuY190ZXN0LmRhdGEgdGVzdC5kYXRh
+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj48ZGl2PlRoZSBlcnJvciBtZXNzYWdlIHdhczwvZGl2
+PjxkaXY+wqAgwqB0cG0gdHBtMCBpbnZhbGlkIGNvdW50IHZhbHVlIGZmZmZmZmZmIDEwMDA8L2Rp
+dj48ZGl2PsKgIMKgdHBtIHRwbTAgaW52YWxpZCBjb3VudCB2YWx1ZSBmZmZmZmZmZiAxMDAwwqA8
+L2Rpdj48ZGl2PsKgIMKgLi4uPC9kaXY+PGRpdj7CoCDCoHRwbSB0cG0wIGludmFsaWQgY291bnQg
+dmFsdWUgZmZmZmZmZmYgMTAwMDwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+RGlnZ2luZyB0aGUg
+bG9jYXRpb24gd2hlcmUgdGhlIGVycm9yIG1lc3NhZ2UgY29tZXMgZnJvbSwgSSBmb3VuZCBpdCB3
+YXMgaW4gdGhlIHRwbSBkcml2ZXIgZmlsZTogZmlsZSB0cG0taW50ZXJmYWNlLmM8L2Rpdj48YnI+
+c3RhdGljIHNzaXplX3TCoDxiPnRwbV90cnlfdHJhbnNtaXQ8L2I+KHN0cnVjdCB0cG1fY2hpcCAq
+Y2hpcCwgdm9pZCAqYnVmLCBzaXplX3QgYnVmc2l6KTxicj57PGJyPnN0cnVjdCB0cG1faGVhZGVy
+ICpoZWFkZXIgPSBidWY7PGJyPi4uLjxicj48YnI+PGI+Y291bnQgPSBiZTMyX3RvX2NwdShoZWFk
+ZXItJmd0O2xlbmd0aCk7IC8vIC0tLSZndDsgY291bnQgPSBmZmZmZmZmZsKgPC9iPsKgPGRpdj4u
+Li48YnI+PC9kaXY+PGRpdj48ZGl2Pjxicj48Yj5pZiAoY291bnQgJmd0OyBidWZzaXopIHsgwqAg
+Ly8gLS0tJmd0OyBidWZzaXogPSAxMDAwPGJyPsKgIMKgIGRldl9lcnIoJmFtcDtjaGlwLSZndDtk
+ZXYsPGJyPsKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICZxdW90O2ludmFsaWQgY291bnQgdmFs
+dWUgJXggJXp4XG4mcXVvdDssIGNvdW50LCBidWZzaXopOzxicj7CoCDCoCDCoDwvYj5yZXR1cm4g
+LUUyQklHOzxicj48Yj7CoH08L2I+PGJyPi4uLi48YnI+fTwvZGl2PjwvZGl2PjwvZGl2PjxkaXY+
+PGJyPjwvZGl2PjxkaXY+PGRpdj5NeSBxdWVzdGlvbiBpcyBkaWQgc29tZW9uZSBtZWV0IHRoZSBz
+YW1lIHByb2JsZW0/IEFuZCBob3cgY2FuIEkgZGVidWcgdGhpcyBwcm9ibGVtPzwvZGl2PjxkaXY+
+PC9kaXY+PGRpdj48L2Rpdj48L2Rpdj48ZGl2PkkgZG91YmxlIGNoZWNrZWTCoHRoZSB0cG0yLWFi
+cm1kIHNlcnZpY2UuIEl0IHdhcyBydW5uaW5nIG9rYXkuPGJyPjwvZGl2PjxkaXY+PGJyPjwvZGl2
+PjxkaXY+VGhlIGJ1aWxkcyBmb3IgbXkgdGVzdCBhcmU6PGJyPjwvZGl2PjxkaXY+MS4gcnBpLWtl
+cm5lbDogNS40Lnk8L2Rpdj48ZGl2PjIuIHRwbTItdHNzOiAzLjAueDwvZGl2PjMuIHRwbTItYWJy
+bWQ6IDIuMy4yPGJyPjQuIHRwbTItdG9vbHM6IDQuMi5YPGJyPjUuIHRwbTItdHNzLWVuZ2luZTog
+djEuMS54PGRpdj48YnI+PC9kaXY+PGRpdj5NeSB0ZXN0IGVudmlyb25tZW50czo8L2Rpdj48ZGl2
+PlJQSSAzQiAmYW1wOyA0QjwvZGl2PjxkaXY+QUVTIGluIHRoZSBUUE0gd2FzIGVuYWJsZWQuPC9k
+aXY+PGRpdj48YnI+PC9kaXY+PGRpdj5BdHRhY2hlZCBpcyBteSB0ZXN0IHNjcmlwdC48L2Rpdj48
+ZGl2Pjxicj48L2Rpdj48ZGl2PjxkaXY+VGhhbmtzIGEgbG90LDwvZGl2PjxkaXY+QmVuPC9kaXY+
+PGRpdj48YnI+PC9kaXY+PGRpdj48L2Rpdj48L2Rpdj48L2Rpdj4K
 
---===============2997779820803073379==
-Content-Type: text/x-sh
+--===============5306662748756504614==
+Content-Type: application/octet-stream
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="aes_test.sh"
+Content-Disposition: attachment; filename="aes_test_sh.obj"
 
 IyEvYmluL2VudiBiYXNoDQoNCmZ1bmN0aW9uIHBhdXNlKCkgew0KICAgcmVhZCAtcyAtbiAxIC1w
 ICJQcmVzcyBhbnkga2V5IHRvIGNvbnRpbnVlIC4uLiINCiAgIGVjaG8gIiINCn0NCg0KZnVuY3Rp
@@ -156,5 +156,5 @@ IHRoZW4NCiAgIGVjaG8gdHBtMiBlbmNyeXB0L2RlY3J5cHQgd2l0aCBrZXkgaGFuZGxlIGZhaWxl
 ZCENCiAgIGV4aXQgMQ0KZmkNCmVjaG8NCmVjaG8gPT09PT09PT09PT09PT09PT09RT1OPUQ9PT09
 PT09PT09PT09PT09PT09PT0NCmVjaG8NCg==
 
---===============2997779820803073379==--
+--===============5306662748756504614==--
 
