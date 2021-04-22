@@ -1,17 +1,27 @@
-Content-Type: multipart/mixed; boundary="===============6843713605113737646=="
+Content-Type: multipart/mixed; boundary="===============4572982949220998992=="
 MIME-Version: 1.0
-From: Kenneth Goldman <kgoldman at us.ibm.com>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
 Subject: [tpm2] Re: How to use tpm2 tool to unload an external key
-Date: Wed, 21 Apr 2021 18:29:39 -0400
-Message-ID: <OF598DC7D8.2FBE889E-ON002586BE.007B771F-852586BE.007B906F@notes.na.collabserv.com>
-In-Reply-To: 20210421221317.2848.4149@ml01.vlan13.01.org
+Date: Thu, 22 Apr 2021 10:04:40 +0000
+Message-ID: <AM8P194MB1675FC4A2BC6BB2699D1BE73A6469@AM8P194MB1675.EURP194.PROD.OUTLOOK.COM>
+In-Reply-To: OF598DC7D8.2FBE889E-ON002586BE.007B771F-852586BE.007B906F@notes.na.collabserv.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6843713605113737646==
+--===============4572982949220998992==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+tpm2_flushcontent --transient-object
+
+this removes all key object currently loaded into the TPM's RAM.
+
+________________________________________
+Von: Kenneth Goldman <kgoldman(a)us.ibm.com>
+Gesendet: Donnerstag, 22. April 2021 00:29
+Cc: tpm2(a)lists.01.org
+Betreff: [tpm2] Re: How to use tpm2 tool to unload an external key
 
 > From: "Chenxi Z" <cxzhang1981(a)hotmail.com>
 >
@@ -21,32 +31,11 @@ Content-Transfer-Encoding: quoted-printable
 > to unload the external key?
 > I am assuming if I don't unload the key, the key context/memory will
 > forever be held by TPM (unless reboot). If I never release that and
-> I keep loading new keys into TPM, the TPM will eventually run out of
-memory.
+> I keep loading new keys into TPM, the TPM will eventually run out of memo=
+ry.
 >
 
 Look for something like 'flushcontext'.
 
---===============6843713605113737646==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+PGJvZHk+PHA+PHR0Pjxmb250IHNpemU9IjIiPiZndDsgRnJvbTogJnF1b3Q7Q2hlbnhp
-IFomcXVvdDsgJmx0O2N4emhhbmcxOTgxQGhvdG1haWwuY29tJmd0OzwvZm9udD48L3R0Pjxicj48
-dHQ+PGZvbnQgc2l6ZT0iMiI+Jmd0OyA8YnI+Jmd0OyBJIGxvYWRlZCBhbiBlY2RzYSBQMjU2IGtl
-eSwgd2hpY2ggd2FzIGdlbmVyYXRlZCBieSBvcGVuc3NsLCBpbnRvIDxicj4mZ3Q7IFRQTS4gT25j
-ZSB0aGUga2V5IGlzIG5vdCBsb25nZXIgbmVlZGVkIGZvciBteSB1c2UgY2FzZSwgSSB3b3VsZCBs
-aWtlPGJyPiZndDsgdG8gdW5sb2FkIHRoZSBrZXkuIENhbiBJIGtub3cgd2hhdCB0cG0yIHRvb2wg
-Y29tbWFuZCB0aGF0IEkgY2FuIHVzZSA8YnI+Jmd0OyB0byB1bmxvYWQgdGhlIGV4dGVybmFsIGtl
-eT88YnI+Jmd0OyBJIGFtIGFzc3VtaW5nIGlmIEkgZG9uJ3QgdW5sb2FkIHRoZSBrZXksIHRoZSBr
-ZXkgY29udGV4dC9tZW1vcnkgd2lsbDxicj4mZ3Q7IGZvcmV2ZXIgYmUgaGVsZCBieSBUUE0gKHVu
-bGVzcyByZWJvb3QpLiBJZiBJIG5ldmVyIHJlbGVhc2UgdGhhdCBhbmQgPGJyPiZndDsgSSBrZWVw
-IGxvYWRpbmcgbmV3IGtleXMgaW50byBUUE0sIHRoZSBUUE0gd2lsbCBldmVudHVhbGx5IHJ1biBv
-dXQgb2YgbWVtb3J5Ljxicj4mZ3Q7IDxicj48L2ZvbnQ+PC90dD48YnI+PHR0Pjxmb250IHNpemU9
-IjIiPkxvb2sgZm9yIHNvbWV0aGluZyBsaWtlICdmbHVzaGNvbnRleHQnLjxicj48L2ZvbnQ+PC90
-dD48QlI+CjwvYm9keT48L2h0bWw+Cg==
-
---===============6843713605113737646==--
+--===============4572982949220998992==--
 
