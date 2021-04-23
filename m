@@ -1,42 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============8301325716935168827=="
+Content-Type: multipart/mixed; boundary="===============0980507996986923069=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] Re: How to use tpm2 tool to unload an external key
-Date: Fri, 23 Apr 2021 08:00:20 +0000
-Message-ID: <AM8P194MB1675FD3B89F235D920106D6BA6459@AM8P194MB1675.EURP194.PROD.OUTLOOK.COM>
-In-Reply-To: 20210422181309.2814.98834@ml01.vlan13.01.org
+From: Kenneth Goldman <kgoldman at us.ibm.com>
+Subject: [tpm2] Failing to build tss tools - Ubuntu groovy
+Date: Fri, 23 Apr 2021 15:24:45 -0400
+Message-ID: <OF7EB02048.E3CBA041-ON002586C0.0069F203-852586C0.006AA32B@notes.na.collabserv.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8301325716935168827==
+--===============0980507996986923069==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-You are probably going through a resource manager and that removes transien=
-t handles when a program (such as tpm2_loadexternal) exits.
-That also makes sense and is the default way of doing things.
-For subseuent usage of the loaded key you will be using eckey.ctx anyways.
 
-________________________________________
-Von: Chenxi Z <cxzhang1981(a)hotmail.com>
-Gesendet: Donnerstag, 22. April 2021 20:13
-An: tpm2(a)lists.01.org
-Betreff: [tpm2] Re: How to use tpm2 tool to unload an external key
+My project specifies branch 3.X, which fails because it uses python, not
+python3.
 
-Thank you, Andreas,
+checking for module yaml in python... Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: No module named yaml
 
-Would you know what command is used to list all objects currently loaded in=
-to the TPM?
-"tpm2_getcap handles-transient" doesn't work.
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Steps:
-openssl ecparam -genkey -name prime256v1 -noout -out ec256-key-pair.pem
-tpm2_loadexternal -C n -G ecc -r ec256-key-pair.pem -c eckey.ctx
-tpm2_getcap handles-transient ----> return nonthing.
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============8301325716935168827==--
+I tried instead branch 3.0.x.  Is that newer or older than 3.X.
+
+This one failed because - what - sapi is not installed or it's the wrong
+version???
+
+checking for sapi >=3D 1.3.0 sapi < 2.0.0... no
+
+The tpm2-tss is 2.4.x.  The project wants 2.0.x but that did not build.
+
+~~~
+
+Is there a patch for 3.X or 3.0.X that I can use to build?
+
+
+--
+Ken Goldman   kgoldman(a)us.ibm.com
+914-945-2415 (862-2415)
+
+--===============0980507996986923069==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWw+PGJvZHk+PHA+PGZvbnQgc2l6ZT0iMiI+TXkgcHJvamVjdCBzcGVjaWZpZXMgYnJhbmNo
+IDMuWCwgd2hpY2ggZmFpbHMgYmVjYXVzZSBpdCB1c2VzIHB5dGhvbiwgbm90IHB5dGhvbjMuPC9m
+b250Pjxicj48YnI+PGZvbnQgc2l6ZT0iMiI+Y2hlY2tpbmcgZm9yIG1vZHVsZSB5YW1sIGluIHB5
+dGhvbi4uLiBUcmFjZWJhY2sgKG1vc3QgcmVjZW50IGNhbGwgbGFzdCk6PC9mb250Pjxicj48Zm9u
+dCBzaXplPSIyIj4gIEZpbGUgJnF1b3Q7Jmx0O3N0ZGluJmd0OyZxdW90OywgbGluZSAxLCBpbiAm
+bHQ7bW9kdWxlJmd0OzwvZm9udD48YnI+PGZvbnQgc2l6ZT0iMiI+SW1wb3J0RXJyb3I6IE5vIG1v
+ZHVsZSBuYW1lZCB5YW1sPC9mb250Pjxicj48YnI+PGZvbnQgc2l6ZT0iMiI+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn48L2ZvbnQ+PGJyPjxicj48Zm9udCBzaXplPSIyIj5JIHRyaWVkIGluc3Rl
+YWQgYnJhbmNoIDMuMC54LiAgSXMgdGhhdCBuZXdlciBvciBvbGRlciB0aGFuIDMuWC48L2ZvbnQ+
+PGJyPjxicj48Zm9udCBzaXplPSIyIj5UaGlzIG9uZSBmYWlsZWQgYmVjYXVzZSAtIHdoYXQgLSBz
+YXBpIGlzIG5vdCBpbnN0YWxsZWQgb3IgaXQncyB0aGUgd3JvbmcgdmVyc2lvbj8/PzwvZm9udD48
+YnI+PGJyPjxmb250IHNpemU9IjIiPmNoZWNraW5nIGZvciBzYXBpICZndDs9IDEuMy4wIHNhcGkg
+Jmx0OyAyLjAuMC4uLiBubzwvZm9udD48YnI+PGJyPjxmb250IHNpemU9IjIiPlRoZSB0cG0yLXRz
+cyBpcyAyLjQueC4gIFRoZSBwcm9qZWN0IHdhbnRzIDIuMC54IGJ1dCB0aGF0IGRpZCBub3QgYnVp
+bGQuPC9mb250Pjxicj48YnI+PGZvbnQgc2l6ZT0iMiI+fn5+PC9mb250Pjxicj48YnI+PGZvbnQg
+c2l6ZT0iMiI+SXMgdGhlcmUgYSBwYXRjaCBmb3IgMy5YIG9yIDMuMC5YIHRoYXQgSSBjYW4gdXNl
+IHRvIGJ1aWxkPzwvZm9udD48YnI+PGZvbnQgc2l6ZT0iMiI+PGJyPjxicj4tLTxicj5LZW4gR29s
+ZG1hbiAgIGtnb2xkbWFuQHVzLmlibS5jb20gICA8YnI+OTE0LTk0NS0yNDE1ICg4NjItMjQxNSk8
+YnI+PC9mb250PjxCUj4KPC9ib2R5PjwvaHRtbD4K
+
+--===============0980507996986923069==--
 
