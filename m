@@ -1,87 +1,28 @@
-Content-Type: multipart/mixed; boundary="===============8628492246581009053=="
+Content-Type: multipart/mixed; boundary="===============1092018120688168359=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] tpm2-tss v3.0.4-rc0
-Date: Mon, 26 Apr 2021 18:59:04 +0000
-Message-ID: <SN6PR11MB343781EFA6961564BFD4FF4CB8429@SN6PR11MB3437.namprd11.prod.outlook.com>
+Subject: [tpm2] tpm2-tss v3.1.0-rc0
+Date: Mon, 26 Apr 2021 19:00:26 +0000
+Message-ID: <SN6PR11MB34374F765468BCDF4F3F0C05B8429@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: SN6PR11MB343781EFA6961564BFD4FF4CB8429@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8628492246581009053==
+--===============1092018120688168359==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-A new release candidate for tpm2-tss 3.0.4 is out. It can be found here:
-https://github.com/tpm2-software/tpm2-tss/releases/tag/3.0.4-rc0
+A new release candidate for tpm2-tss 3.1.0 is out. It can be found here:
+https://github.com/tpm2-software/tpm2-tss/releases/tag/3.1.0-rc0
+
 
 All changes and fixed issues are listed in the CHANGELOG.md file.
 Please give it some testing. Any feedback is appreciated.
 
 Thanks,
 Bill
-
---===============8628492246581009053==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
-ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
-eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
-bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
-b3I6IHJnYigwLCAwLCAwKTsiPgo8c3BhbiBzdHlsZT0ibWFyZ2luOjBweDtmb250LXNpemU6MTJw
-dCI+PHNwYW4gc3R5bGU9Im1hcmdpbjowcHg7Zm9udC1zaXplOjE0cHg7Zm9udC1mYW1pbHk6JnF1
-b3Q7SGVsdmV0aWNhIE5ldWUmcXVvdDssIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7Y29s
-b3I6cmdiKDUxLCA1MSwgNTEpO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwgMjU1LCAyNTUpO2Rp
-c3BsYXk6aW5saW5lICFpbXBvcnRhbnQiPkhlbGxvLDwvc3Bhbj48L3NwYW4+CjxkaXYgc3R5bGU9
-Im1hcmdpbjowcHg7Zm9udC1zaXplOjEycHQiPjxzcGFuIHN0eWxlPSJtYXJnaW46MHB4O2ZvbnQt
-c2l6ZToxNHB4O2ZvbnQtZmFtaWx5OiZxdW90O0hlbHZldGljYSBOZXVlJnF1b3Q7LCBIZWx2ZXRp
-Y2EsIEFyaWFsLCBzYW5zLXNlcmlmO2NvbG9yOnJnYig1MSwgNTEsIDUxKTtiYWNrZ3JvdW5kLWNv
-bG9yOnJnYigyNTUsIDI1NSwgMjU1KTtkaXNwbGF5OmlubGluZSAhaW1wb3J0YW50Ij48YnI+Cjwv
-c3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luOjBweDtmb250LXNpemU6MTJwdCI+PHNwYW4g
-c3R5bGU9Im1hcmdpbjowcHg7Zm9udC1zaXplOjE0cHg7Zm9udC1mYW1pbHk6JnF1b3Q7SGVsdmV0
-aWNhIE5ldWUmcXVvdDssIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7Y29sb3I6cmdiKDUx
-LCA1MSwgNTEpO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwgMjU1LCAyNTUpO2Rpc3BsYXk6aW5s
-aW5lICFpbXBvcnRhbnQiPkEgbmV3IHJlbGVhc2UgY2FuZGlkYXRlIGZvciB0cG0yLXRzcwogMy4w
-LjQgaXMgb3V0LiBJdCBjYW4gYmUgZm91bmQgaGVyZTo8L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9
-Im1hcmdpbjowcHg7Zm9udC1zaXplOjEycHQiPjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90
-cG0yLXNvZnR3YXJlL3RwbTItdHNzL3JlbGVhc2VzL3RhZy8zLjAuNC1yYzAiIGlkPSJMUGxuazQ4
-NTU5OCI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3MvcmVsZWFzZXMv
-dGFnLzMuMC40LXJjMDwvYT48L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luOjBweDtmb250LXNpemU6
-MTJwdCI+PHNwYW4gc3R5bGU9Im1hcmdpbjowcHg7Zm9udC1zaXplOjE0cHg7Zm9udC1mYW1pbHk6
-JnF1b3Q7SGVsdmV0aWNhIE5ldWUmcXVvdDssIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7
-Y29sb3I6cmdiKDUxLCA1MSwgNTEpO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwgMjU1LCAyNTUp
-O2Rpc3BsYXk6aW5saW5lICFpbXBvcnRhbnQiPjxicj4KPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxl
-PSJtYXJnaW46MHB4O2ZvbnQtc2l6ZToxMnB0Ij48c3BhbiBzdHlsZT0ibWFyZ2luOjBweDtmb250
-LXNpemU6MTRweDtmb250LWZhbWlseTomcXVvdDtIZWx2ZXRpY2EgTmV1ZSZxdW90OywgSGVsdmV0
-aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjtjb2xvcjpyZ2IoNTEsIDUxLCA1MSk7YmFja2dyb3VuZC1j
-b2xvcjpyZ2IoMjU1LCAyNTUsIDI1NSk7ZGlzcGxheTppbmxpbmUgIWltcG9ydGFudCI+QWxsIGNo
-YW5nZXMgYW5kIGZpeGVkIGlzc3VlcyBhcmUgbGlzdGVkCiBpbiB0aGUgQ0hBTkdFTE9HLm1kIGZp
-bGUuPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJtYXJnaW46MHB4O2ZvbnQtc2l6ZToxMnB0Ij48
-c3BhbiBzdHlsZT0ibWFyZ2luOjBweDtmb250LXNpemU6MTRweDtmb250LWZhbWlseTomcXVvdDtI
-ZWx2ZXRpY2EgTmV1ZSZxdW90OywgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjtjb2xvcjpy
-Z2IoNTEsIDUxLCA1MSk7YmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LCAyNTUsIDI1NSk7ZGlzcGxh
-eTppbmxpbmUgIWltcG9ydGFudCI+UGxlYXNlIGdpdmUgaXQgc29tZSB0ZXN0aW5nLiBBbnkgZmVl
-ZGJhY2sKIGlzIGFwcHJlY2lhdGVkLjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0ibWFyZ2luOjBw
-eDtmb250LXNpemU6MTJwdCI+PHNwYW4gc3R5bGU9Im1hcmdpbjowcHg7Zm9udC1zaXplOjE0cHg7
-Zm9udC1mYW1pbHk6JnF1b3Q7SGVsdmV0aWNhIE5ldWUmcXVvdDssIEhlbHZldGljYSwgQXJpYWws
-IHNhbnMtc2VyaWY7Y29sb3I6cmdiKDUxLCA1MSwgNTEpO2JhY2tncm91bmQtY29sb3I6cmdiKDI1
-NSwgMjU1LCAyNTUpO2Rpc3BsYXk6aW5saW5lICFpbXBvcnRhbnQiPjxicj4KPC9zcGFuPjwvZGl2
-Pgo8ZGl2IHN0eWxlPSJtYXJnaW46MHB4O2ZvbnQtc2l6ZToxMnB0Ij48c3BhbiBzdHlsZT0ibWFy
-Z2luOjBweDtmb250LXNpemU6MTRweDtmb250LWZhbWlseTomcXVvdDtIZWx2ZXRpY2EgTmV1ZSZx
-dW90OywgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjtjb2xvcjpyZ2IoNTEsIDUxLCA1MSk7
-YmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LCAyNTUsIDI1NSk7ZGlzcGxheTppbmxpbmUgIWltcG9y
-dGFudCI+VGhhbmtzLDwvc3Bhbj48YnI+CjwvZGl2Pgo8c3BhbiBzdHlsZT0ibWFyZ2luOjBweDtm
-b250LXNpemU6MTJwdCI+PHNwYW4gc3R5bGU9Im1hcmdpbjowcHg7Zm9udC1zaXplOjE0cHg7Zm9u
-dC1mYW1pbHk6JnF1b3Q7SGVsdmV0aWNhIE5ldWUmcXVvdDssIEhlbHZldGljYSwgQXJpYWwsIHNh
-bnMtc2VyaWY7Y29sb3I6cmdiKDUxLCA1MSwgNTEpO2JhY2tncm91bmQtY29sb3I6cmdiKDI1NSwg
-MjU1LCAyNTUpO2Rpc3BsYXk6aW5saW5lICFpbXBvcnRhbnQiPkJpbGw8L3NwYW4+PC9zcGFuPjxi
-cj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
-
---===============8628492246581009053==--
+--===============1092018120688168359==--
 
