@@ -1,63 +1,74 @@
-Content-Type: multipart/mixed; boundary="===============1565284659902894211=="
+Content-Type: multipart/mixed; boundary="===============2891991232540606881=="
 MIME-Version: 1.0
 From: Kenneth Goldman <kgoldman at us.ibm.com>
-Subject: [tpm2] Re: : AW: Re: get TPM applications to happily co-exist
-Date: Wed, 28 Apr 2021 16:42:04 -0400
-Message-ID: <OFB94B9CF3.92C5DD99-ON002586C5.007154A7-852586C5.0071B716@notes.na.collabserv.com>
-In-Reply-To: 6002bce5-70ec-6ec9-eab0-3e7b3ccb6294@oracle.com
+Subject: [tpm2] Failed to acquire DBus name com.intel.tss2.Tabrmd
+Date: Fri, 30 Apr 2021 14:54:00 -0400
+Message-ID: <OFD21FE05E.520EF7F2-ON002586C7.0067AFCF-852586C7.0067D264@notes.na.collabserv.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1565284659902894211==
+--===============2891991232540606881==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-> From: Ted Kim <ted.h.kim(a)oracle.com>
->
-> OK, but then the problem of preventing other applications from evicting
-> persistent objects from our application doesn't seem to have a solution,
-> except by locking down the owner hierarchy (e.g. my application has the
-> password) - which doesn't seem very friendly. How does any other
-> application create a primary object, etc. ?
 
-A typical design has the owner create a primary storage key with an empty
-password and make it persistent at a standard handle.
+This is my variation on what seems to be a frequent issue. Ubuntu groovy,
+abrmd installed with apt.
 
-	That's similar to the TPM 1.2 SRK.
 
-Each application creates a key hierarchy under that storage key, with
-whatever authorization they want.
+      tpm2-abrmd --tcti=3Dmssim (not as root)
 
-The problem with a well-known owner auth is that everyone can Dos
-the TPM.
 
---===============1565284659902894211==
+Gives this error:
+
+
+** (tpm2-abrmd:2275): CRITICAL **: 14:38:22.835: Failed to acquire DBus
+name com.intel.tss2.Tabrmd. UID 1000 must be allowed to "own" this name.
+Check DBus config and check that this is running as user tss or root.
+      How should I 'own' this name?
+      What's 'DBUS config' and what should be checked
+      What is 'this' that should be running as user tss or root?
+
+
+UID 1000 is kgold
+
+
+My tpm2-abrmd.conf was edited to add:
+
+
+/etc/group has
+
+
+
+tss:111:kgold
+
+
+--
+Ken Goldman   kgoldman(a)us.ibm.com
+914-945-2415 (862-2415)
+
+--===============2891991232540606881==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWw+PGJvZHk+PHA+PHR0Pjxmb250IHNpemU9IjIiPiZndDsgRnJvbTogVGVkIEtpbSAmbHQ7
-dGVkLmgua2ltQG9yYWNsZS5jb20mZ3Q7PC9mb250PjwvdHQ+PGJyPjx0dD48Zm9udCBzaXplPSIy
-Ij4mZ3Q7IDxicj4mZ3Q7IE9LLCBidXQgdGhlbiB0aGUgcHJvYmxlbSBvZiBwcmV2ZW50aW5nIG90
-aGVyIGFwcGxpY2F0aW9ucyBmcm9tIGV2aWN0aW5nIDxicj4mZ3Q7IHBlcnNpc3RlbnQgb2JqZWN0
-cyBmcm9tIG91ciBhcHBsaWNhdGlvbiBkb2Vzbid0IHNlZW0gdG8gaGF2ZSBhIHNvbHV0aW9uLCA8
-YnI+Jmd0OyBleGNlcHQgYnkgbG9ja2luZyBkb3duIHRoZSBvd25lciBoaWVyYXJjaHkgKGUuZy4g
-bXkgYXBwbGljYXRpb24gaGFzIHRoZSA8YnI+Jmd0OyBwYXNzd29yZCkgLSB3aGljaCBkb2Vzbid0
-IHNlZW0gdmVyeSBmcmllbmRseS4gSG93IGRvZXMgYW55IG90aGVyIDxicj4mZ3Q7IGFwcGxpY2F0
-aW9uIGNyZWF0ZSBhIHByaW1hcnkgb2JqZWN0LCBldGMuID88YnI+PGJyPkEgdHlwaWNhbCBkZXNp
-Z24gaGFzIHRoZSBvd25lciBjcmVhdGUgYSBwcmltYXJ5IHN0b3JhZ2Uga2V5IHdpdGggYW4gZW1w
-dHk8L2ZvbnQ+PC90dD48YnI+PHR0Pjxmb250IHNpemU9IjIiPnBhc3N3b3JkIGFuZCBtYWtlIGl0
-IHBlcnNpc3RlbnQgYXQgYSBzdGFuZGFyZCBoYW5kbGUuPC9mb250PjwvdHQ+PGJyPjxicj48dHQ+
-PGZvbnQgc2l6ZT0iMiI+ICAgICAgICBUaGF0J3Mgc2ltaWxhciB0byB0aGUgVFBNIDEuMiBTUksu
-PC9mb250PjwvdHQ+PGJyPjxicj48dHQ+PGZvbnQgc2l6ZT0iMiI+RWFjaCBhcHBsaWNhdGlvbiBj
-cmVhdGVzIGEga2V5IGhpZXJhcmNoeSB1bmRlciB0aGF0IHN0b3JhZ2Uga2V5LCB3aXRoPC9mb250
-PjwvdHQ+PGJyPjx0dD48Zm9udCBzaXplPSIyIj53aGF0ZXZlciBhdXRob3JpemF0aW9uIHRoZXkg
-d2FudC48L2ZvbnQ+PC90dD48YnI+PGJyPjx0dD48Zm9udCBzaXplPSIyIj5UaGUgcHJvYmxlbSB3
-aXRoIGEgd2VsbC1rbm93biBvd25lciBhdXRoIGlzIHRoYXQgZXZlcnlvbmUgY2FuIERvczwvZm9u
-dD48L3R0Pjxicj48dHQ+PGZvbnQgc2l6ZT0iMiI+dGhlIFRQTS48L2ZvbnQ+PC90dD48YnI+PEJS
-Pgo8L2JvZHk+PC9odG1sPgo=
+PGh0bWw+PGJvZHk+PHA+VGhpcyBpcyBteSB2YXJpYXRpb24gb24gd2hhdCBzZWVtcyB0byBiZSBh
+IGZyZXF1ZW50IGlzc3VlLiBVYnVudHUgZ3Jvb3Z5LCBhYnJtZCBpbnN0YWxsZWQgd2l0aCBhcHQu
+Cjx1bD48dWw+dHBtMi1hYnJtZCAtLXRjdGk9bXNzaW0gKG5vdCBhcyByb290KTwvdWw+PC91bD5H
+aXZlcyB0aGlzIGVycm9yOgo8cD4qKiAodHBtMi1hYnJtZDoyMjc1KTogQ1JJVElDQUwgKio6IDE0
+OjM4OjIyLjgzNTogRmFpbGVkIHRvIGFjcXVpcmUgREJ1cyBuYW1lIGNvbS5pbnRlbC50c3MyLlRh
+YnJtZC4gVUlEIDEwMDAgbXVzdCBiZSBhbGxvd2VkIHRvICZxdW90O293biZxdW90OyB0aGlzIG5h
+bWUuIENoZWNrIERCdXMgY29uZmlnIGFuZCBjaGVjayB0aGF0IHRoaXMgaXMgcnVubmluZyBhcyB1
+c2VyIHRzcyBvciByb290Lgo8dWw+PHVsIHR5cGU9ImRpc2MiPjxsaT5Ib3cgc2hvdWxkIEkgJ293
+bicgdGhpcyBuYW1lPwo8bGk+V2hhdCdzICdEQlVTIGNvbmZpZycgYW5kIHdoYXQgc2hvdWxkIGJl
+IGNoZWNrZWQKPGxpPldoYXQgaXMgJ3RoaXMnIHRoYXQgc2hvdWxkIGJlIHJ1bm5pbmcgYXMgdXNl
+ciB0c3Mgb3Igcm9vdD88L3VsPjwvdWw+VUlEIDEwMDAgaXMga2dvbGQKPHA+TXkgdHBtMi1hYnJt
+ZC5jb25mIHdhcyBlZGl0ZWQgdG8gYWRkOgo8cD4vZXRjL2dyb3VwIGhhcwo8cD48YnI+dHNzOjEx
+MTprZ29sZCA8YnI+PGZvbnQgc2l6ZT0iMiI+PGJyPjxicj4tLTxicj5LZW4gR29sZG1hbiAgIGtn
+b2xkbWFuQHVzLmlibS5jb20gICA8YnI+OTE0LTk0NS0yNDE1ICg4NjItMjQxNSk8YnI+PC9mb250
+PjxCUj4KPC9ib2R5PjwvaHRtbD4K
 
---===============1565284659902894211==--
+--===============2891991232540606881==--
 
