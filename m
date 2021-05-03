@@ -1,65 +1,30 @@
-Content-Type: multipart/mixed; boundary="===============8694054279306153678=="
+Content-Type: multipart/mixed; boundary="===============7499334628776928490=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-tss v2.4.6-rc1
-Date: Mon, 03 May 2021 16:25:26 +0000
-Message-ID: <SN6PR11MB3437306626405716ECBBD4D0B85B9@SN6PR11MB3437.namprd11.prod.outlook.com>
+Subject: [tpm2] [RELEASE CANDIDATE] tpm2-tss v3.0.4-rc1
+Date: Mon, 03 May 2021 16:30:08 +0000
+Message-ID: <SN6PR11MB3437E9F165081CD95B8DA4F0B85B9@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: SN6PR11MB3437306626405716ECBBD4D0B85B9@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8694054279306153678==
+--===============7499334628776928490==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
-I would like to announce that tpm2-tss 2.4.6-rc1 has been released:
-https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.6-rc1
+I would like to announce that tpm2-tss 3.0.4-rc1 has been released:
+https://github.com/tpm2-software/tpm2-tss/releases/tag/3.0.4-rc1
 
 Which contains the following changes over rc0:
-- Fixed unused variable warnings when maxloglevel was set to lower default.
-- Fixed issue where nonceTPM was include twice in HMAC calculation.
+- Fixed fix doxygen header of function iesys_update_session_flags
+- Fixed issue where nonceTPM was included twice in HMAC.
+- Fixed issue of unused variable when enabling lower default log levels.
+- Fixed tcti-device: 'partial' may be used uninitialized.
+- Fixed double define in tss2_mu.h.
 
 ---
 Bill
-
---===============8694054279306153678==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
-ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
-eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
-bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
-b3I6IHJnYigwLCAwLCAwKTsiPgpIZWxsbyw8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
-IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsg
-Y29sb3I6IHJnYigwLCAwLCAwKTsiPgpJIHdvdWxkIGxpa2UgdG8gYW5ub3VuY2UgdGhhdCB0cG0y
-LXRzcyAyLjQuNi1yYzEgaGFzIGJlZW4gcmVsZWFzZWQ6PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
-ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
-IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29t
-L3RwbTItc29mdHdhcmUvdHBtMi10c3MvcmVsZWFzZXMvdGFnLzIuNC42LXJjMSIgaWQ9IkxQbG5r
-IiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2Vy
-aWY7IGZvbnQtc2l6ZTogMTJwdDsiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3Rw
-bTItdHNzL3JlbGVhc2VzL3RhZy8yLjQuNi1yYzE8L2E+PGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0i
-Zm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQt
-c2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxl
-PSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9u
-dC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CldoaWNoIGNvbnRhaW5zIHRoZSBm
-b2xsb3dpbmcgY2hhbmdlcyBvdmVyIHJjMDo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
-IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsg
-Y29sb3I6IHJnYigwLCAwLCAwKTsiPgotIEZpeGVkIHVudXNlZCB2YXJpYWJsZSB3YXJuaW5ncyB3
-aGVuIG1heGxvZ2xldmVsIHdhcyBzZXQgdG8gbG93ZXIgZGVmYXVsdC4KPGRpdj4tIEZpeGVkIGlz
-c3VlIHdoZXJlIG5vbmNlVFBNIHdhcyBpbmNsdWRlIHR3aWNlIGluIEhNQUMgY2FsY3VsYXRpb24u
-PC9kaXY+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlh
-bCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwg
-MCwgMCk7Ij4KLS0tPC9kaXY+CjxkaXY+QmlsbDwvZGl2Pgo8ZGl2IGNsYXNzPSJfRW50aXR5IF9F
-VHlwZV9PV0FMaW5rUHJldmlldyBfRUlkX09XQUxpbmtQcmV2aWV3IF9FUmVhZG9ubHlfMSIgc3R5
-bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBm
-b250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPC9kaXY+CjwvYm9keT4KPC9o
-dG1sPgo=
-
---===============8694054279306153678==--
+--===============7499334628776928490==--
 
