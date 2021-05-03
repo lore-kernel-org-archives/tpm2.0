@@ -1,74 +1,65 @@
-Content-Type: multipart/mixed; boundary="===============2891991232540606881=="
+Content-Type: multipart/mixed; boundary="===============8694054279306153678=="
 MIME-Version: 1.0
-From: Kenneth Goldman <kgoldman at us.ibm.com>
-Subject: [tpm2] Failed to acquire DBus name com.intel.tss2.Tabrmd
-Date: Fri, 30 Apr 2021 14:54:00 -0400
-Message-ID: <OFD21FE05E.520EF7F2-ON002586C7.0067AFCF-852586C7.0067D264@notes.na.collabserv.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] [RELEASE CANDIDATE] tpm2-tss v2.4.6-rc1
+Date: Mon, 03 May 2021 16:25:26 +0000
+Message-ID: <SN6PR11MB3437306626405716ECBBD4D0B85B9@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2891991232540606881==
+--===============8694054279306153678==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
+I would like to announce that tpm2-tss 2.4.6-rc1 has been released:
+https://github.com/tpm2-software/tpm2-tss/releases/tag/2.4.6-rc1
 
-This is my variation on what seems to be a frequent issue. Ubuntu groovy,
-abrmd installed with apt.
+Which contains the following changes over rc0:
+- Fixed unused variable warnings when maxloglevel was set to lower default.
+- Fixed issue where nonceTPM was include twice in HMAC calculation.
 
+---
+Bill
 
-      tpm2-abrmd --tcti=3Dmssim (not as root)
-
-
-Gives this error:
-
-
-** (tpm2-abrmd:2275): CRITICAL **: 14:38:22.835: Failed to acquire DBus
-name com.intel.tss2.Tabrmd. UID 1000 must be allowed to "own" this name.
-Check DBus config and check that this is running as user tss or root.
-      How should I 'own' this name?
-      What's 'DBUS config' and what should be checked
-      What is 'this' that should be running as user tss or root?
-
-
-UID 1000 is kgold
-
-
-My tpm2-abrmd.conf was edited to add:
-
-
-/etc/group has
-
-
-
-tss:111:kgold
-
-
---
-Ken Goldman   kgoldman(a)us.ibm.com
-914-945-2415 (862-2415)
-
---===============2891991232540606881==
+--===============8694054279306153678==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWw+PGJvZHk+PHA+VGhpcyBpcyBteSB2YXJpYXRpb24gb24gd2hhdCBzZWVtcyB0byBiZSBh
-IGZyZXF1ZW50IGlzc3VlLiBVYnVudHUgZ3Jvb3Z5LCBhYnJtZCBpbnN0YWxsZWQgd2l0aCBhcHQu
-Cjx1bD48dWw+dHBtMi1hYnJtZCAtLXRjdGk9bXNzaW0gKG5vdCBhcyByb290KTwvdWw+PC91bD5H
-aXZlcyB0aGlzIGVycm9yOgo8cD4qKiAodHBtMi1hYnJtZDoyMjc1KTogQ1JJVElDQUwgKio6IDE0
-OjM4OjIyLjgzNTogRmFpbGVkIHRvIGFjcXVpcmUgREJ1cyBuYW1lIGNvbS5pbnRlbC50c3MyLlRh
-YnJtZC4gVUlEIDEwMDAgbXVzdCBiZSBhbGxvd2VkIHRvICZxdW90O293biZxdW90OyB0aGlzIG5h
-bWUuIENoZWNrIERCdXMgY29uZmlnIGFuZCBjaGVjayB0aGF0IHRoaXMgaXMgcnVubmluZyBhcyB1
-c2VyIHRzcyBvciByb290Lgo8dWw+PHVsIHR5cGU9ImRpc2MiPjxsaT5Ib3cgc2hvdWxkIEkgJ293
-bicgdGhpcyBuYW1lPwo8bGk+V2hhdCdzICdEQlVTIGNvbmZpZycgYW5kIHdoYXQgc2hvdWxkIGJl
-IGNoZWNrZWQKPGxpPldoYXQgaXMgJ3RoaXMnIHRoYXQgc2hvdWxkIGJlIHJ1bm5pbmcgYXMgdXNl
-ciB0c3Mgb3Igcm9vdD88L3VsPjwvdWw+VUlEIDEwMDAgaXMga2dvbGQKPHA+TXkgdHBtMi1hYnJt
-ZC5jb25mIHdhcyBlZGl0ZWQgdG8gYWRkOgo8cD4vZXRjL2dyb3VwIGhhcwo8cD48YnI+dHNzOjEx
-MTprZ29sZCA8YnI+PGZvbnQgc2l6ZT0iMiI+PGJyPjxicj4tLTxicj5LZW4gR29sZG1hbiAgIGtn
-b2xkbWFuQHVzLmlibS5jb20gICA8YnI+OTE0LTk0NS0yNDE1ICg4NjItMjQxNSk8YnI+PC9mb250
-PjxCUj4KPC9ib2R5PjwvaHRtbD4K
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiPgpIZWxsbyw8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
+IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsg
+Y29sb3I6IHJnYigwLCAwLCAwKTsiPgpJIHdvdWxkIGxpa2UgdG8gYW5ub3VuY2UgdGhhdCB0cG0y
+LXRzcyAyLjQuNi1yYzEgaGFzIGJlZW4gcmVsZWFzZWQ6PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29t
+L3RwbTItc29mdHdhcmUvdHBtMi10c3MvcmVsZWFzZXMvdGFnLzIuNC42LXJjMSIgaWQ9IkxQbG5r
+IiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2Vy
+aWY7IGZvbnQtc2l6ZTogMTJwdDsiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3Rw
+bTItdHNzL3JlbGVhc2VzL3RhZy8yLjQuNi1yYzE8L2E+PGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0i
+Zm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQt
+c2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxl
+PSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9u
+dC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CldoaWNoIGNvbnRhaW5zIHRoZSBm
+b2xsb3dpbmcgY2hhbmdlcyBvdmVyIHJjMDo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6
+IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsg
+Y29sb3I6IHJnYigwLCAwLCAwKTsiPgotIEZpeGVkIHVudXNlZCB2YXJpYWJsZSB3YXJuaW5ncyB3
+aGVuIG1heGxvZ2xldmVsIHdhcyBzZXQgdG8gbG93ZXIgZGVmYXVsdC4KPGRpdj4tIEZpeGVkIGlz
+c3VlIHdoZXJlIG5vbmNlVFBNIHdhcyBpbmNsdWRlIHR3aWNlIGluIEhNQUMgY2FsY3VsYXRpb24u
+PC9kaXY+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlh
+bCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwg
+MCwgMCk7Ij4KLS0tPC9kaXY+CjxkaXY+QmlsbDwvZGl2Pgo8ZGl2IGNsYXNzPSJfRW50aXR5IF9F
+VHlwZV9PV0FMaW5rUHJldmlldyBfRUlkX09XQUxpbmtQcmV2aWV3IF9FUmVhZG9ubHlfMSIgc3R5
+bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBm
+b250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPC9kaXY+CjwvYm9keT4KPC9o
+dG1sPgo=
 
---===============2891991232540606881==--
+--===============8694054279306153678==--
 
