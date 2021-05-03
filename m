@@ -1,34 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============3616433671668474868=="
+Content-Type: multipart/mixed; boundary="===============4551861094175418561=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-tss v3.0.4-rc1
-Date: Mon, 03 May 2021 17:00:07 +0000
-Message-ID: <SN6PR11MB3437C7F9EFA27B1E949E40AFB85B9@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: SN6PR11MB3437E9F165081CD95B8DA4F0B85B9@SN6PR11MB3437.namprd11.prod.outlook.com
+From: Imran Desai <imran.desai at intel.com>
+Subject: [tpm2] [Release] tpm2-tools v4.3.1-rc0
+Date: Mon, 03 May 2021 18:00:49 +0000
+Message-ID: <20210503180049.2812.9279@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3616433671668474868==
+--===============4551861094175418561==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello all,
 
-Hello,
-I would like to announce that tpm2-tss 3.1.0-rc1 has been released:
-https://github.com/tpm2-software/tpm2-tss/releases/tag/3.1.0-rc1
+Pleased to announce the release of tpm2-tools version 4.3.1-rc0.
+You can find it here: https://github.com/tpm2-software/tpm2-tools/releases/=
+tag/4.3.1-rc0
 
-Which contains the following changes over rc0:
-- Fixed bug in FAPI NV creation with custom index values.
-- Fixed leftover sessions in error cases in FAPI.
-- Fixed execution of FAPI policies in some cases.
-- Fixed  handling 0x hex prefixes for TPMU_HA in JSON encoding.
-- Fixed fix doxygen header of function iesys_update_session_flags.
-- Fixed issue where nonceTPM was included twice in HMAC.
-- Fixed issue of unused variable when enabling lower default log levels.
-- Fixed 'partial' may be used uninitialized in tcti-device.
+1. tpm2_dictionarylockout: Fix issue where setting value reset other parame=
+ters.
+2. tpm2_create.c: Fix an issue where userwithauth attr cleared if policy sp=
+ecified.
+3. tss2_quote: Tool now correctly supports to quote against a list of passe=
+d PCR registers.
+4. Fix fapi-branch-select integration test to correctly use the PolicyRef p=
+arameter (triggered by recent bug-fix in tpm2-tss).
+5. Fix an outdated parameter in the fapi-provision integration test.
+6. tpm2_getekcertificate: Fix tool failing to return error/non-zero  for HT=
+TP 404.
 
----
-Bill
---===============3616433671668474868==--
+We'd appreciate your feedback.
+
+Thanks and regards,
+
+Imran Desai
+--===============4551861094175418561==--
 
