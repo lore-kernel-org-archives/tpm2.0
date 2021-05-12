@@ -1,75 +1,127 @@
-Content-Type: multipart/mixed; boundary="===============1292952878118752539=="
+Content-Type: multipart/mixed; boundary="===============4641976400435900919=="
 MIME-Version: 1.0
 From: Kenneth Goldman <kgoldman at us.ibm.com>
-Subject: [tpm2] abrmd crash
-Date: Wed, 12 May 2021 15:40:47 -0400
-Message-ID: <OF5D487F7C.8847A990-ON002586D3.006C07B8-852586D3.006C1AC5@notes.na.collabserv.com>
+Subject: [tpm2] tpm2_quote - unexpected TPM commands - from where?
+Date: Wed, 12 May 2021 18:20:14 -0400
+Message-ID: <OF00EF9886.41B16198-ON002586D3.00792A71-852586D3.007AB406@notes.na.collabserv.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1292952878118752539==
+--===============4641976400435900919==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
 
-New install, Fedora 34.
-TPM2TOOLS_TCTI=3Dtabrmd:bus_name=3Dcom.intel.tss2.Tabrmd
 
+The application is running a quote with this (python wrapped) command:
 
-tpm2-abrmd --tcti=3Dmssim
-connects to the SW TPM.
-When I try
-tpm2_getrandom --hex 8
-abrmd exits, with no error message.
+['tpm2_quote', '-c', '/var/lib/keylime/secure/tmpptoera_c', '-l',
+'sha256:15,16,22', '-q', '645442426a4c3456786a4b767465424432357659', '-m',
+'/tmp/tmprc17whih', '-s', '/tmp/tmp9vlpv1k2', '-o', '/tmp/tmpd3tl0nxn',
+'-g', 'sha256', '-p', 'T5dKvXj1wGIFbp5brLUz']
 
+Even with the implicit HMAC session, I would expect
 
-The result of tpm2_getrandom is
+startauthsession 02000000
+loadcontext 80000000 (the quote key)
+quote with session 02000000 and key 80000000
+flushcontext 80000000
+flushcontext 02000000
 
+I see this.  Is there something wrong with the call, is there a lot more
+implicit in the quote tool, or is abrmd doing a lot of extra calls?
 
-** (process:3031): WARNING **: 15:33:25.743: Failed to create connection
-with service: GDBus.Error:org.freedesktop.DBus.Error.NoReply: Remote peer
-disconnected
-WARNING:tcti:src/tss2-tcti/tctildr.c:79:tcti_from_init() TCTI init for
-function 0x7f0122633210 failed with a0008
-WARNING:tcti:src/tss2-tcti/tctildr.c:109:tcti_from_info() Could not
-initialize TCTI named: tcti-abrmd
-ERROR:tcti:src/tss2-tcti/tctildr-dl.c:154:tcti_from_file() Could not
-initialize TCTI file: tabrmd
-ERROR:tcti:src/tss2-tcti/tctildr.c:416:Tss2_TctiLdr_Initialize_Ex() Failed
-to instantiate TCTI
-ERROR: Could not load tcti, got: "tabrmd:bus_name=3Dcom.intel.tss2.Tabrmd"
+1 - It keeps loading and flushing the key and the session.
+2 - It contextsave the key a few times, but it was already context saved
+before the command started
+3 - There's an unexpected getcapability, and a really unexpected readpublic
+4 - A PCR read at the end
 
+StartAuthSession: 02000000			OK
+ContextSave: 02000000				???
+ContextLoad: 80000000				OK
+ContextSave: 80000000				???
+FlushContext: 80000000				really unexpected
+GetCapability: 00000005				unexpected
+ContextLoad: 80000000				??? because of the flushcontext
+ReadPublic: objectHandle 80000000		really unexpected
+ContextSave: 80000000				???
+FlushContext: 80000000				really unexpected
+ContextLoad: 80000000				??? because of the flushcontext
+ContextLoad: 02000000				??? because of the save
+Quote with Session 0 handle 02000000		OK
+	signHandle 80000000
+ContextSave: 02000000				???
+ContextSave: 80000000				???
+FlushContext: 80000000				OK
+PCR_Read:					unexpected
+FlushContext: 02000000				OK
 
 --
 Ken Goldman   kgoldman(a)us.ibm.com
 914-945-2415 (862-2415)
 
---===============1292952878118752539==
+--===============4641976400435900919==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWw+PGJvZHk+PHA+TmV3IGluc3RhbGwsIEZlZG9yYSAzNC48YnI+VFBNMlRPT0xTX1RDVEk9
-dGFicm1kOmJ1c19uYW1lPWNvbS5pbnRlbC50c3MyLlRhYnJtZAo8cD50cG0yLWFicm1kIC0tdGN0
-aT1tc3NpbTxicj5jb25uZWN0cyB0byB0aGUgU1cgVFBNLjxicj5XaGVuIEkgdHJ5PGJyPnRwbTJf
-Z2V0cmFuZG9tIC0taGV4IDg8YnI+YWJybWQgZXhpdHMsIHdpdGggbm8gZXJyb3IgbWVzc2FnZS4K
-PHA+VGhlIHJlc3VsdCBvZiB0cG0yX2dldHJhbmRvbSBpcwo8cD4qKiAocHJvY2VzczozMDMxKTog
-V0FSTklORyAqKjogMTU6MzM6MjUuNzQzOiBGYWlsZWQgdG8gY3JlYXRlIGNvbm5lY3Rpb24gd2l0
-aCBzZXJ2aWNlOiBHREJ1cy5FcnJvcjpvcmcuZnJlZWRlc2t0b3AuREJ1cy5FcnJvci5Ob1JlcGx5
-OiBSZW1vdGUgcGVlciBkaXNjb25uZWN0ZWQ8YnI+V0FSTklORzp0Y3RpOnNyYy90c3MyLXRjdGkv
-dGN0aWxkci5jOjc5OnRjdGlfZnJvbV9pbml0KCkgVENUSSBpbml0IGZvciBmdW5jdGlvbiAweDdm
-MDEyMjYzMzIxMCBmYWlsZWQgd2l0aCBhMDAwODxicj5XQVJOSU5HOnRjdGk6c3JjL3RzczItdGN0
-aS90Y3RpbGRyLmM6MTA5OnRjdGlfZnJvbV9pbmZvKCkgQ291bGQgbm90IGluaXRpYWxpemUgVENU
-SSBuYW1lZDogdGN0aS1hYnJtZDxicj5FUlJPUjp0Y3RpOnNyYy90c3MyLXRjdGkvdGN0aWxkci1k
-bC5jOjE1NDp0Y3RpX2Zyb21fZmlsZSgpIENvdWxkIG5vdCBpbml0aWFsaXplIFRDVEkgZmlsZTog
-dGFicm1kPGJyPkVSUk9SOnRjdGk6c3JjL3RzczItdGN0aS90Y3RpbGRyLmM6NDE2OlRzczJfVGN0
-aUxkcl9Jbml0aWFsaXplX0V4KCkgRmFpbGVkIHRvIGluc3RhbnRpYXRlIFRDVEk8YnI+RVJST1I6
-IENvdWxkIG5vdCBsb2FkIHRjdGksIGdvdDogJnF1b3Q7dGFicm1kOmJ1c19uYW1lPWNvbS5pbnRl
-bC50c3MyLlRhYnJtZCZxdW90Ozxicj48Zm9udCBzaXplPSIyIj48YnI+PGJyPi0tPGJyPktlbiBH
-b2xkbWFuICAga2dvbGRtYW5AdXMuaWJtLmNvbSAgIDxicj45MTQtOTQ1LTI0MTUgKDg2Mi0yNDE1
-KTxicj48L2ZvbnQ+PEJSPgo8L2JvZHk+PC9odG1sPgo=
+PGh0bWw+PGJvZHk+PHA+PGZvbnQgc2l6ZT0iMiI+VGhlIGFwcGxpY2F0aW9uIGlzIHJ1bm5pbmcg
+YSBxdW90ZSB3aXRoIHRoaXMgKHB5dGhvbiB3cmFwcGVkKSBjb21tYW5kOjwvZm9udD48YnI+PGJy
+Pjxmb250IHNpemU9IjIiPlsndHBtMl9xdW90ZScsICctYycsICcvdmFyL2xpYi9rZXlsaW1lL3Nl
+Y3VyZS90bXBwdG9lcmFfYycsICctbCcsICdzaGEyNTY6MTUsMTYsMjInLCAnLXEnLCAnNjQ1NDQy
+NDI2YTRjMzQ1Njc4NmE0Yjc2NzQ2NTQyNDQzMjM1NzY1OScsICctbScsICcvdG1wL3RtcHJjMTd3
+aGloJywgJy1zJywgJy90bXAvdG1wOXZscHYxazInLCAnLW8nLCAnL3RtcC90bXBkM3RsMG54bics
+ICctZycsICdzaGEyNTYnLCAnLXAnLCAnVDVkS3ZYajF3R0lGYnA1YnJMVXonXTwvZm9udD48YnI+
+PGJyPjxmb250IHNpemU9IjIiPkV2ZW4gd2l0aCB0aGUgaW1wbGljaXQgSE1BQyBzZXNzaW9uLCBJ
+IHdvdWxkIGV4cGVjdDwvZm9udD48YnI+PGJyPjxmb250IHNpemU9IjIiPnN0YXJ0YXV0aHNlc3Np
+b24gMDIwMDAwMDA8L2ZvbnQ+PGJyPjxmb250IHNpemU9IjIiPmxvYWRjb250ZXh0IDgwMDAwMDAw
+ICh0aGUgcXVvdGUga2V5KTwvZm9udD48YnI+PGZvbnQgc2l6ZT0iMiI+cXVvdGUgd2l0aCBzZXNz
+aW9uIDAyMDAwMDAwIGFuZCBrZXkgODAwMDAwMDA8L2ZvbnQ+PGJyPjxmb250IHNpemU9IjIiPmZs
+dXNoY29udGV4dCA4MDAwMDAwMDwvZm9udD48YnI+PGZvbnQgc2l6ZT0iMiI+Zmx1c2hjb250ZXh0
+IDAyMDAwMDAwPC9mb250Pjxicj48YnI+PGZvbnQgc2l6ZT0iMiI+SSBzZWUgdGhpcy4gIElzIHRo
+ZXJlIHNvbWV0aGluZyB3cm9uZyB3aXRoIHRoZSBjYWxsLCBpcyB0aGVyZSBhIGxvdCBtb3JlIGlt
+cGxpY2l0IGluIHRoZSBxdW90ZSB0b29sLCBvciBpcyBhYnJtZCBkb2luZyBhIGxvdCBvZiBleHRy
+YSBjYWxscz88L2ZvbnQ+PGJyPjxicj48Zm9udCBzaXplPSIyIj4xIC0gSXQga2VlcHMgbG9hZGlu
+ZyBhbmQgZmx1c2hpbmcgdGhlIGtleSBhbmQgdGhlIHNlc3Npb24uPC9mb250Pjxicj48Zm9udCBz
+aXplPSIyIj4yIC0gSXQgY29udGV4dHNhdmUgdGhlIGtleSBhIGZldyB0aW1lcywgYnV0IGl0IHdh
+cyBhbHJlYWR5IGNvbnRleHQgc2F2ZWQgYmVmb3JlIHRoZSBjb21tYW5kIHN0YXJ0ZWQ8L2ZvbnQ+
+PGJyPjxmb250IHNpemU9IjIiPjMgLSBUaGVyZSdzIGFuIHVuZXhwZWN0ZWQgZ2V0Y2FwYWJpbGl0
+eSwgYW5kIGEgcmVhbGx5IHVuZXhwZWN0ZWQgcmVhZHB1YmxpYzwvZm9udD48YnI+PGZvbnQgc2l6
+ZT0iMiI+NCAtIEEgUENSIHJlYWQgYXQgdGhlIGVuZDwvZm9udD48YnI+PGJyPjxmb250IHNpemU9
+IjIiPlN0YXJ0QXV0aFNlc3Npb246IDAyMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgT0s8
+L2ZvbnQ+PGJyPjxmb250IHNpemU9IjIiPkNvbnRleHRTYXZlOiAwMjAwMDAwMCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgPz8/PC9mb250Pjxicj48Zm9udCBzaXplPSIyIj5Db250ZXh0
+TG9hZDogODAwMDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE9LPC9mb250Pjxi
+cj48Zm9udCBzaXplPSIyIj5Db250ZXh0U2F2ZTogODAwMDAwMDAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgID8/PzwvZm9udD48YnI+PGZvbnQgc2l6ZT0iMiI+Rmx1c2hDb250ZXh0OiA4
+MDAwMDAwMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVhbGx5IHVuZXhwZWN0ZWQ8
+L2ZvbnQ+PGJyPjxmb250IHNpemU9IjIiPkdldENhcGFiaWxpdHk6IDAwMDAwMDA1ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB1bmV4cGVjdGVkPC9mb250Pjxicj48Zm9udCBzaXplPSIy
+Ij5Db250ZXh0TG9hZDogODAwMDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID8/
+PyBiZWNhdXNlIG9mIHRoZSBmbHVzaGNvbnRleHQ8L2ZvbnQ+PGJyPjxmb250IHNpemU9IjIiPlJl
+YWRQdWJsaWM6IG9iamVjdEhhbmRsZSA4MDAwMDAwMCAgICAgICAgICAgICAgICByZWFsbHkgdW5l
+eHBlY3RlZDwvZm9udD48YnI+PGZvbnQgc2l6ZT0iMiI+Q29udGV4dFNhdmU6IDgwMDAwMDAwICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA/Pz88L2ZvbnQ+PGJyPjxmb250IHNpemU9IjIi
+PkZsdXNoQ29udGV4dDogODAwMDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
+YWxseSB1bmV4cGVjdGVkPC9mb250Pjxicj48Zm9udCBzaXplPSIyIj5Db250ZXh0TG9hZDogODAw
+MDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID8/PyBiZWNhdXNlIG9mIHRoZSBm
+bHVzaGNvbnRleHQ8L2ZvbnQ+PGJyPjxmb250IHNpemU9IjIiPkNvbnRleHRMb2FkOiAwMjAwMDAw
+MCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPz8/IGJlY2F1c2Ugb2YgdGhlIHNhdmU8
+L2ZvbnQ+PGJyPjxmb250IHNpemU9IjIiPlF1b3RlIHdpdGggU2Vzc2lvbiAwIGhhbmRsZSAwMjAw
+MDAwMCAgICAgICAgICAgICAgICBPSzwvZm9udD48YnI+PGZvbnQgc2l6ZT0iMiI+ICAgICAgICBz
+aWduSGFuZGxlIDgwMDAwMDAwPC9mb250Pjxicj48Zm9udCBzaXplPSIyIj5Db250ZXh0U2F2ZTog
+MDIwMDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID8/PyAgICAgICAgICAgICAg
+ICAgICAgICAgIDwvZm9udD48YnI+PGZvbnQgc2l6ZT0iMiI+Q29udGV4dFNhdmU6IDgwMDAwMDAw
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA/Pz88L2ZvbnQ+PGJyPjxmb250IHNpemU9
+IjIiPkZsdXNoQ29udGV4dDogODAwMDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IE9LPC9mb250Pjxicj48Zm9udCBzaXplPSIyIj5QQ1JfUmVhZDogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgdW5leHBlY3RlZDwvZm9udD48YnI+PGZvbnQgc2l6ZT0iMiI+
+Rmx1c2hDb250ZXh0OiAwMjAwMDAwMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgT0s8
+YnI+PGJyPi0tPGJyPktlbiBHb2xkbWFuICAga2dvbGRtYW5AdXMuaWJtLmNvbSAgIDxicj45MTQt
+OTQ1LTI0MTUgKDg2Mi0yNDE1KTxicj48L2ZvbnQ+PEJSPgo8L2JvZHk+PC9odG1sPgo=
 
---===============1292952878118752539==--
+--===============4641976400435900919==--
 
