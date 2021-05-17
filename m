@@ -1,26 +1,25 @@
-Content-Type: multipart/mixed; boundary="===============3243445991216139025=="
+Content-Type: multipart/mixed; boundary="===============6433854460795007261=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE] tpm2-tss v3.1.0
-Date: Mon, 17 May 2021 19:11:11 +0000
-Message-ID: <SN6PR11MB3437941ED319CA6DFEFDEC64B82D9@SN6PR11MB3437.namprd11.prod.outlook.com>
+From: craigpetrus420 at gmail.com
+Subject: [tpm2] Best CBD Oils For Dogs With Arthritis
+Date: Mon, 17 May 2021 21:28:27 +0000
+Message-ID: <20210517212827.2829.72631@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3243445991216139025==
+--===============6433854460795007261==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Feline Arthritis (FAA) affects millions of canines worldwide. In cats, it m=
+anifests as stiffness and decreased appetite, while in dogs it results in i=
+nflammation of the joints. This condition is generally mild, and responds w=
+ell to dietary management and relatively low doses of NSAIDs (non-steroidal=
+ anti-inflammatory drugs). However, for more severe cases of arthritis, inc=
+luding the arthritic condition that affects doggies, CBD pet oils may be an=
+ appropriate choice, as it contains a high level of plant sterols.
 
-I would like to announce the release of tpm2-tss version 3.1.0. Their were =
-no changes over rc2.
-
-The release can be found here:
-=C2=A0 -=C2=A0https://github.com/tpm2-software/tpm2-tss/releases/tag/3.1.0
-
-Thanks,
-Bill
---===============3243445991216139025==--
+Visit: https://dailycbd.com/en/best-cbd/oil-for-dogs/arthritis/
+--===============6433854460795007261==--
 
