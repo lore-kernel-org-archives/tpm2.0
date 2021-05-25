@@ -1,58 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============4251452794802216542=="
+Content-Type: multipart/mixed; boundary="===============6907755057830050140=="
 MIME-Version: 1.0
-From: Petr Gotthard <petr.gotthard at centrum.cz>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: tpm2-tools, tpm2-pkcs11, and OpenSSL 3.0
-Date: Tue, 25 May 2021 12:18:26 +0200
-Message-ID: <20210525121826.59350073@centrum.cz>
-In-Reply-To: SN6PR11MB3437381D3FE7A9F0E5940DD9B8269@sn6pr11mb3437.namprd11.prod.outlook.com
+Date: Tue, 25 May 2021 15:41:58 +0000
+Message-ID: <SN6PR11MB3437EEE48904AF1744F092F1B8259@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: 20210525121826.59350073@centrum.cz
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4251452794802216542==
+--===============6907755057830050140==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I spent some time with OpenSSL 3.0 so I could help.
-=C2=A0
-In generall, all EC_KEY and RSA_KEY functions are deprecated for public use=
- as this is a low-level API. There is no easy fix though-- the low-level fu=
-nctions need to be replaced by the high-level EVP API and there is no simpl=
-e 1:1 mapping. The affected functions need to be rewritten almost completel=
-y, but in case of tpm2-tools and tpm2-pkcs11 the impact is not so high.
-=C2=A0
-The good thing is that the EVP API is not(!) new. It has been there since O=
-penSSL 1.1.0, so one could write an implementation that works with both Ope=
-nSSL 1.1.x and OpenSSL 3.0. In fact, the OpenSSL 3.0 aims to have a very li=
-mited impact on "well-behaved" applications that refrain from using the (no=
-w deprecated) low-level APIs. An app that uses the EVP API from 1.1.x shall=
- work with the 3.0 too.
-=C2=A0
-=C2=A0
-The crucial question is: is it acceptable to require the OpenSSL 1.1.1 as t=
-he minimum version for tpm2-tools and tpm2-pkcs11?
-=C2=A0
-The OpenSSL release strategy indicates the OpenSSL 1.1.1 is now the _only_ =
-supported version! The 1.0.2 is no longer supported and also the 1.1.0 is n=
-o longer supported.
-https://www.openssl.org/policies/releasestrat.html
-=C2=A0
-Maintaining the support for the EOL OpenSSL (prior 1.1.1) would make the su=
-pport for OpenSSL 3.0 more complicated, harder to review and maintain.
-Even the tpm2-tools RELEASE.md says that "supporting an EOL crypto library =
-is not a good idea".
-https://github.com/tpm2-software/tpm2-tools/blob/master/doc/RELEASE.md#open=
-ssl
-=C2=A0
-=C2=A0
-So, my recommendation would be to set OpenSSL 1.1.1 as the minimum version =
-and then simply rewrite the affected functions using the EVP API from 1.1.1=
-, which works also in 3.0. What do you think?
-=C2=A0
-=C2=A0
-Regards,
-Petr
-=C2=A0
+> I spent some time with OpenSSL 3.0 so I could help.
+
+>
+
+> In generall, all EC_KEY and RSA_KEY functions are deprecated for public u=
+se as this is a low-level API. There is no easy fix though-- the low-level =
+functions need to be replaced by the high-level EVP API and there is > no s=
+imple 1:1 mapping. The affected functions need to be rewritten almost compl=
+etely, but in case of tpm2-tools and tpm2-pkcs11 the impact is not so high.
+
+>
+
+> The good thing is that the EVP API is not(!) new. It has been there since=
+ OpenSSL 1.1.0, so one could write an implementation that works with both O=
+penSSL 1.1.x and OpenSSL 3.0. In fact, the OpenSSL 3.0 aims to > have a ver=
+y limited impact on "well-behaved" applications that refrain from using the=
+ (now deprecated) low-level APIs. An app that uses the EVP API from 1.1.x s=
+hall work with the 3.0 too.
+
+>
+
+
+Interesting I did not know that
+
+
+
+ > The crucial question is: is it acceptable to require the OpenSSL 1.1.1 a=
+s the minimum version for tpm2-tools and tpm2-pkcs11?
+
+
+Now that ubuntu-16.04 is EOL, yes. I think theirs tickets in the various pr=
+ojects bug trackers to address that. That was the major hold up, while Open=
+SSL declared 1.0.2
+
+dead, the rest of the world is still on it.
+
+
+> The OpenSSL release strategy indicates the OpenSSL 1.1.1 is now the _only=
+_ supported version! The 1.0.2 is no longer supported and also the 1.1.0 is=
+ no longer supported.
+
+> https://www.openssl.org/policies/releasestrat.html
+
+
+
+> Maintaining the support for the EOL OpenSSL (prior 1.1.1) would make the =
+support for OpenSSL 3.0 more complicated, harder to review and maintain.
+
+> Even the tpm2-tools RELEASE.md says that "supporting an EOL crypto librar=
+y is not a good idea".
+
+> https://github.com/tpm2-software/tpm2-tools/blob/master/doc/RELEASE.md#op=
+enssl
+
+
+
+ > So, my recommendation would be to set OpenSSL 1.1.1 as the minimum versi=
+on and then simply rewrite the affected functions using the EVP API from 1.=
+1.1, which works also in 3.0. What do you think?
+
+
+
+I agree. I think considering all the various factors, this is an appropriat=
+e time to ditch OSSL < 1.1.1
+
+
+
+
+
 ______________________________________________________________
 > Od: "Roberts, William C" <william.c.roberts(a)intel.com>
 > Komu: "Jerry Snitselaar" <jsnitsel(a)redhat.com>, "tpm2(a)lists.01.org" <=
@@ -60,213 +89,217 @@ tpm2(a)lists.01.org>
 > Datum: 25.05.2021 01:41
 > P=C5=99edm=C4=9Bt: [tpm2] Re: tpm2-tools, tpm2-pkcs11, and OpenSSL 3.0
 >
+
 I can look at compiling with OpenSSL 3.0, I haven't even tried yet. But I w=
-ould imagineit's all fixable. I don't see anything in the do_sig_verify tha=
-t requires a non-const key. I would imagineit's just as simple as updating =
-the call sites to match the signatures.I filed bugs:=C2=A0 -=C2=A0https://g=
-ithub.com/tpm2-software/tpm2-pkcs11/issues/686 <https://github.com/tpm2-sof=
-tware/tpm2-pkcs11/issues/686>=C2=A0 -=C2=A0https://github.com/tpm2-software=
-/tpm2-tools/issues/2737 <https://github.com/tpm2-software/tpm2-tools/issues=
-/2737>We'll try to get to these soon, as I would imagine distros are eager =
-to start the process of transitioning over.BillFrom: Jerry Snitselaar <jsni=
-tsel(a)redhat.com>
- Sent: Monday, May 24, 2021 4:34 PM
- To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
- Subject: [tpm2] tpm2-tools, tpm2-pkcs11, and OpenSSL 3.0=C2=A0
- Both tpm2-tools and tpm2-pkcs11 make use of some functions that are
- being deprecated in openssl 3.0. Are there plans to move away from using
- those deprecated functions? Currently tpm2-tools will build with
- -Wno-error=3Ddeprecated-declarations, but tpm2-pkcs11 trips over
- EVP_PKEY_get0_EC_KEY now returning a const EC_KEY *, and ECDSA_do_verify
- taking a non const parameter. Someone suggested doing something like:
- =
+ould imagine
+it's all fixable. I don't see anything in the do_sig_verify that requires a=
+ non-const key. I would imagine
+it's just as simple as updating the call sites to match the signatures.
+I filed bugs:
+  - https://github.com/tpm2-software/tpm2-pkcs11/issues/686
+  - https://github.com/tpm2-software/tpm2-tools/issues/2737
+We'll try to get to these soon, as I would imagine distros are eager to sta=
+rt the process of transitioning over.
+Bill
+________________________________
+From: Jerry Snitselaar <jsnitsel(a)redhat.com>
+Sent: Monday, May 24, 2021 4:34 PM
+To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+Subject: [tpm2] tpm2-tools, tpm2-pkcs11, and OpenSSL 3.0
 
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EVP_PKEY_CTX=C2=A0=C2=A0=C2=A0 *pctx =
-=3D NULL;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((pctx =3D EVP_PKEY_CTX_new(pkey, =
-NULL)) =3D=3D NULL) {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 goto fail;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
- =
 
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (EVP_PKEY_verify_init(pctx) !=3D 1=
- ||
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EVP_PKEY_veri=
-fy(pctx, sigbuf, siglen,
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dgstbuf, dgst=
-len) !=3D 1) {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 goto fail;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
- =C2=A0fail:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EVP_PKEY_CTX_free(pctx);
- =
+Both tpm2-tools and tpm2-pkcs11 make use of some functions that are
+being deprecated in openssl 3.0. Are there plans to move away from using
+those deprecated functions? Currently tpm2-tools will build with
+-Wno-error=3Ddeprecated-declarations, but tpm2-pkcs11 trips over
+EVP_PKEY_get0_EC_KEY now returning a const EC_KEY *, and ECDSA_do_verify
+taking a non const parameter. Someone suggested doing something like:
 
- =
+       EVP_PKEY_CTX    *pctx =3D NULL;
+       if ((pctx =3D EVP_PKEY_CTX_new(pkey, NULL)) =3D=3D NULL) {
+               goto fail;
+       }
 
- but I imagine the ASN.1 framing stuff mentioned in do_sig_verify_ec()
- would still be an issue, yes? I don't know openssl, so I don't know
- if you could get away with casting the pointer to EC_KEY *.
- =
+       if (EVP_PKEY_verify_init(pctx) !=3D 1 ||
+           EVP_PKEY_verify(pctx, sigbuf, siglen,
+           dgstbuf, dgstlen) !=3D 1) {
+               goto fail;
+       }
+ fail:
+       EVP_PKEY_CTX_free(pctx);
 
- There is work going on to support openssl 3.0 in RHEL9, so this came up.
- =
 
- Regards,
- Jerry
- _______________________________________________
- tpm2 mailing list -- tpm2(a)lists.01.org
- To unsubscribe send an email to tpm2-leave(a)lists.01.org
- %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
- =
+but I imagine the ASN.1 framing stuff mentioned in do_sig_verify_ec()
+would still be an issue, yes? I don't know openssl, so I don't know
+if you could get away with casting the pointer to EC_KEY *.
 
- ----------
- =
+There is work going on to support openssl 3.0 in RHEL9, so this came up.
 
- _______________________________________________
- tpm2 mailing list -- tpm2(a)lists.01.org
- To unsubscribe send an email to tpm2-leave(a)lists.01.org
- %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+Regards,
+Jerry
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 
---===============4251452794802216542==
+
+----------
+
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============6907755057830050140==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij5JIHNwZW50IHNvbWUg
-dGltZSB3aXRoIE9wZW5TU0wgMy4wIHNvIEkgY291bGQgaGVscC48L3A+Cgo8cCBzdHlsZT0icGFk
-ZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPiZuYnNwOzwvcD4KCjxwIHN0eWxlPSJwYWRk
-aW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+SW4gZ2VuZXJhbGwsIGFsbCBFQ19LRVkgYW5k
-IFJTQV9LRVkgZnVuY3Rpb25zIGFyZSBkZXByZWNhdGVkIGZvciBwdWJsaWMgdXNlIGFzIHRoaXMg
-aXMgYSBsb3ctbGV2ZWwgQVBJLiBUaGVyZSBpcyBubyBlYXN5IGZpeCB0aG91Z2gtLSB0aGUgbG93
-LWxldmVsIGZ1bmN0aW9ucyBuZWVkIHRvIGJlIHJlcGxhY2VkIGJ5IHRoZSBoaWdoLWxldmVsIEVW
-UCBBUEkgYW5kIHRoZXJlIGlzIG5vIHNpbXBsZSAxOjEgbWFwcGluZy4gVGhlIGFmZmVjdGVkIGZ1
-bmN0aW9ucyBuZWVkIHRvIGJlIHJld3JpdHRlbiBhbG1vc3QgY29tcGxldGVseSwgYnV0IGluIGNh
-c2Ugb2YgdHBtMi10b29scyBhbmQgdHBtMi1wa2NzMTEgdGhlIGltcGFjdCBpcyBub3Qgc28gaGln
-aC48L3A+Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPiZuYnNw
-OzwvcD4KCjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+VGhlIGdv
-b2QgdGhpbmcgaXMgdGhhdCB0aGUgRVZQIEFQSSBpcyBub3QoISkgbmV3LiBJdCBoYXMgYmVlbiB0
-aGVyZSBzaW5jZSBPcGVuU1NMIDEuMS4wLCBzbyBvbmUgY291bGQgd3JpdGUgYW4gaW1wbGVtZW50
-YXRpb24gdGhhdCB3b3JrcyB3aXRoIGJvdGggT3BlblNTTCAxLjEueCBhbmQgT3BlblNTTCAzLjAu
-IEluIGZhY3QsIHRoZSBPcGVuU1NMIDMuMCBhaW1zIHRvIGhhdmUgYSB2ZXJ5IGxpbWl0ZWQgaW1w
-YWN0IG9uICJ3ZWxsLWJlaGF2ZWQiIGFwcGxpY2F0aW9ucyB0aGF0IHJlZnJhaW4gZnJvbSB1c2lu
-ZyB0aGUgKG5vdyBkZXByZWNhdGVkKSBsb3ctbGV2ZWwgQVBJcy4gQW4gYXBwIHRoYXQgdXNlcyB0
-aGUgRVZQIEFQSSBmcm9tIDEuMS54IHNoYWxsIHdvcmsgd2l0aCB0aGUgMy4wIHRvby48L3A+Cgo8
-cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPiZuYnNwOzwvcD4KCjxw
-IHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+Jm5ic3A7PC9wPgoKPHAg
-c3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij5UaGUgY3J1Y2lhbCBxdWVz
-dGlvbiBpczogaXMgaXQgYWNjZXB0YWJsZSB0byByZXF1aXJlIHRoZSBPcGVuU1NMIDEuMS4xIGFz
-IHRoZSBtaW5pbXVtIHZlcnNpb24gZm9yIHRwbTItdG9vbHMgYW5kIHRwbTItcGtjczExPzwvcD4K
-CjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+Jm5ic3A7PC9wPgoK
-PHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij5UaGUgT3BlblNTTCBy
-ZWxlYXNlIHN0cmF0ZWd5IGluZGljYXRlcyB0aGUgT3BlblNTTCAxLjEuMSBpcyBub3cgdGhlIF9v
-bmx5XyBzdXBwb3J0ZWQgdmVyc2lvbiEgVGhlIDEuMC4yIGlzIG5vIGxvbmdlciBzdXBwb3J0ZWQg
-YW5kIGFsc28gdGhlIDEuMS4wIGlzIG5vIGxvbmdlciBzdXBwb3J0ZWQuPC9wPgoKPHAgc3R5bGU9
-InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij5odHRwczovL3d3dy5vcGVuc3NsLm9y
-Zy9wb2xpY2llcy9yZWxlYXNlc3RyYXQuaHRtbDwvcD4KCjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAw
-IDA7IG1hcmdpbjowIDAgMCAwOyI+Jm5ic3A7PC9wPgoKPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAg
-MDsgbWFyZ2luOjAgMCAwIDA7Ij5NYWludGFpbmluZyB0aGUgc3VwcG9ydCBmb3IgdGhlIEVPTCBP
-cGVuU1NMIChwcmlvciAxLjEuMSkgd291bGQgbWFrZSB0aGUgc3VwcG9ydCBmb3IgT3BlblNTTCAz
-LjAgbW9yZSBjb21wbGljYXRlZCwgaGFyZGVyIHRvIHJldmlldyBhbmQgbWFpbnRhaW4uPC9wPgoK
-PHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij5FdmVuIHRoZSB0cG0y
-LXRvb2xzIFJFTEVBU0UubWQgc2F5cyB0aGF0ICJzdXBwb3J0aW5nIGFuIEVPTCBjcnlwdG8gbGli
-cmFyeSBpcyBub3QgYSBnb29kIGlkZWEiLjwvcD4KCjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7
-IG1hcmdpbjowIDAgMCAwOyI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10
-b29scy9ibG9iL21hc3Rlci9kb2MvUkVMRUFTRS5tZCNvcGVuc3NsPC9wPgoKPHAgc3R5bGU9InBh
-ZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij4mbmJzcDs8L3A+Cgo8cCBzdHlsZT0icGFk
-ZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPiZuYnNwOzwvcD4KCjxwIHN0eWxlPSJwYWRk
-aW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+U28sIG15IHJlY29tbWVuZGF0aW9uIHdvdWxk
-IGJlIHRvIHNldCBPcGVuU1NMIDEuMS4xIGFzIHRoZSBtaW5pbXVtIHZlcnNpb24gYW5kIHRoZW4g
-c2ltcGx5IHJld3JpdGUgdGhlIGFmZmVjdGVkIGZ1bmN0aW9ucyB1c2luZyB0aGUgRVZQIEFQSSBm
-cm9tIDEuMS4xLCB3aGljaCB3b3JrcyBhbHNvIGluIDMuMC4gV2hhdCBkbyB5b3UgdGhpbms/PC9w
-PgoKPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij4mbmJzcDs8L3A+
-Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPiZuYnNwOzwvcD4K
-CjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+UmVnYXJkcyw8L3A+
-Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPlBldHI8L3A+Cgo8
-cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPiZuYnNwOzwvcD4KCjxw
-IHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+X19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188YnIgLz4KJmd0
-OyBPZDogIlJvYmVydHMsIFdpbGxpYW0gQyIgJmx0O3dpbGxpYW0uYy5yb2JlcnRzQGludGVsLmNv
-bSZndDs8YnIgLz4KJmd0OyBLb211OiAiSmVycnkgU25pdHNlbGFhciIgJmx0O2pzbml0c2VsQHJl
-ZGhhdC5jb20mZ3Q7LCAidHBtMkBsaXN0cy4wMS5vcmciICZsdDt0cG0yQGxpc3RzLjAxLm9yZyZn
-dDs8YnIgLz4KJmd0OyBEYXR1bTogMjUuMDUuMjAyMSAwMTo0MTxiciAvPgomZ3Q7IFDFmWVkbcSb
-dDogW3RwbTJdIFJlOiB0cG0yLXRvb2xzLCB0cG0yLXBrY3MxMSwgYW5kIE9wZW5TU0wgMy4wPGJy
-IC8+CiZndDs8L3A+Cgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhl
-bHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogIzAwMDAwMDsiPkkg
-Y2FuIGxvb2sgYXQgY29tcGlsaW5nIHdpdGggT3BlblNTTCAzLjAsIEkgaGF2ZW4ndCBldmVuIHRy
-aWVkIHlldC4gQnV0IEkgd291bGQgaW1hZ2luZTwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWls
-eTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0
-OyBjb2xvcjogIzAwMDAwMDsiPml0J3MgYWxsIGZpeGFibGUuIEkgZG9uJ3Qgc2VlIGFueXRoaW5n
-IGluIHRoZSBkb19zaWdfdmVyaWZ5IHRoYXQgcmVxdWlyZXMgYSBub24tY29uc3Qga2V5LiBJIHdv
-dWxkIGltYWdpbmU8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
-LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6ICMwMDAwMDA7
-Ij5pdCdzIGp1c3QgYXMgc2ltcGxlIGFzIHVwZGF0aW5nIHRoZSBjYWxsIHNpdGVzIHRvIG1hdGNo
-IHRoZSBzaWduYXR1cmVzLjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwg
-QXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogIzAw
-MDAwMDsiPkkgZmlsZWQgYnVnczo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGli
-cmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6
-ICMwMDAwMDA7Ij4mbmJzcDsgLSZuYnNwOzxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0y
-LXNvZnR3YXJlL3RwbTItcGtjczExL2lzc3Vlcy82ODYiPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0y
-LXNvZnR3YXJlL3RwbTItcGtjczExL2lzc3Vlcy82ODY8L2E+PC9kaXY+CjxkaXYgc3R5bGU9ImZv
-bnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNp
-emU6IDEycHQ7IGNvbG9yOiAjMDAwMDAwOyI+Jm5ic3A7IC0mbmJzcDs8YSBocmVmPSJodHRwczov
-L2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL2lzc3Vlcy8yNzM3Ij5odHRwczov
-L2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL2lzc3Vlcy8yNzM3PC9hPjwvZGl2
-Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fu
-cy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogIzAwMDAwMDsiPldlJ2xsIHRyeSB0byBn
-ZXQgdG8gdGhlc2Ugc29vbiwgYXMgSSB3b3VsZCBpbWFnaW5lIGRpc3Ryb3MgYXJlIGVhZ2VyIHRv
-IHN0YXJ0IHRoZSBwcm9jZXNzIG9mIHRyYW5zaXRpb25pbmcgb3Zlci48L2Rpdj4KPGRpdiBzdHls
-ZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZv
-bnQtc2l6ZTogMTJwdDsgY29sb3I6ICMwMDAwMDA7Ij5CaWxsPC9kaXY+CjxociAvPgo8ZGl2IGRp
-cj0ibHRyIj48Zm9udCBmYWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIiBjb2xvcj0iIzAwMDAwMCIg
-c3R5bGU9ImZvbnQtc2l6ZTogMTFwdDsiPjxzdHJvbmc+RnJvbTo8L3N0cm9uZz4gSmVycnkgU25p
-dHNlbGFhciAmbHQ7anNuaXRzZWxAcmVkaGF0LmNvbSZndDs8YnIgLz4KIDxzdHJvbmc+U2VudDo8
-L3N0cm9uZz4gTW9uZGF5LCBNYXkgMjQsIDIwMjEgNDozNCBQTTxiciAvPgogPHN0cm9uZz5Ubzo8
-L3N0cm9uZz4gdHBtMkBsaXN0cy4wMS5vcmcgJmx0O3RwbTJAbGlzdHMuMDEub3JnJmd0OzxiciAv
-PgogPHN0cm9uZz5TdWJqZWN0Ojwvc3Ryb25nPiBbdHBtMl0gdHBtMi10b29scywgdHBtMi1wa2Nz
-MTEsIGFuZCBPcGVuU1NMIDMuMDwvZm9udD4KPGRpdj4mbmJzcDs8L2Rpdj4KPC9kaXY+CjxkaXYg
-Y2xhc3M9IkJvZHlGcmFnbWVudCI+CjxkaXYgY2xhc3M9IlBsYWluVGV4dCI+PGJyIC8+CiBCb3Ro
-IHRwbTItdG9vbHMgYW5kIHRwbTItcGtjczExIG1ha2UgdXNlIG9mIHNvbWUgZnVuY3Rpb25zIHRo
-YXQgYXJlPGJyIC8+CiBiZWluZyBkZXByZWNhdGVkIGluIG9wZW5zc2wgMy4wLiBBcmUgdGhlcmUg
-cGxhbnMgdG8gbW92ZSBhd2F5IGZyb20gdXNpbmc8YnIgLz4KIHRob3NlIGRlcHJlY2F0ZWQgZnVu
-Y3Rpb25zPyBDdXJyZW50bHkgdHBtMi10b29scyB3aWxsIGJ1aWxkIHdpdGg8YnIgLz4KIC1Xbm8t
-ZXJyb3I9ZGVwcmVjYXRlZC1kZWNsYXJhdGlvbnMsIGJ1dCB0cG0yLXBrY3MxMSB0cmlwcyBvdmVy
-PGJyIC8+CiBFVlBfUEtFWV9nZXQwX0VDX0tFWSBub3cgcmV0dXJuaW5nIGEgY29uc3QgRUNfS0VZ
-ICosIGFuZCBFQ0RTQV9kb192ZXJpZnk8YnIgLz4KIHRha2luZyBhIG5vbiBjb25zdCBwYXJhbWV0
-ZXIuIFNvbWVvbmUgc3VnZ2VzdGVkIGRvaW5nIHNvbWV0aGluZyBsaWtlOjxiciAvPgogPGJyIC8+
-CiAmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgRVZQX1BLRVlfQ1RYJm5ic3A7
-Jm5ic3A7Jm5ic3A7ICpwY3R4ID0gTlVMTDs8YnIgLz4KICZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyBpZiAoKHBjdHggPSBFVlBfUEtFWV9DVFhfbmV3KHBrZXksIE5VTEwpKSA9
-PSBOVUxMKSB7PGJyIC8+CiAmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgZ290byBmYWlsOzxi
-ciAvPgogJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IH08YnIgLz4KIDxiciAv
-PgogJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGlmIChFVlBfUEtFWV92ZXJp
-ZnlfaW5pdChwY3R4KSAhPSAxIHx8PGJyIC8+CiAmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgRVZQX1BLRVlfdmVyaWZ5KHBjdHgsIHNp
-Z2J1Ziwgc2lnbGVuLDxiciAvPgogJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGRnc3RidWYsIGRnc3RsZW4pICE9IDEpIHs8YnIgLz4K
-ICZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBnb3RvIGZhaWw7PGJyIC8+CiAmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgfTxiciAvPgogJm5ic3A7ZmFpbDo8YnIgLz4KICZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBFVlBfUEtFWV9DVFhfZnJlZShwY3R4
-KTs8YnIgLz4KIDxiciAvPgogPGJyIC8+CiBidXQgSSBpbWFnaW5lIHRoZSBBU04uMSBmcmFtaW5n
-IHN0dWZmIG1lbnRpb25lZCBpbiBkb19zaWdfdmVyaWZ5X2VjKCk8YnIgLz4KIHdvdWxkIHN0aWxs
-IGJlIGFuIGlzc3VlLCB5ZXM/IEkgZG9uJ3Qga25vdyBvcGVuc3NsLCBzbyBJIGRvbid0IGtub3c8
-YnIgLz4KIGlmIHlvdSBjb3VsZCBnZXQgYXdheSB3aXRoIGNhc3RpbmcgdGhlIHBvaW50ZXIgdG8g
-RUNfS0VZICouPGJyIC8+CiA8YnIgLz4KIFRoZXJlIGlzIHdvcmsgZ29pbmcgb24gdG8gc3VwcG9y
-dCBvcGVuc3NsIDMuMCBpbiBSSEVMOSwgc28gdGhpcyBjYW1lIHVwLjxiciAvPgogPGJyIC8+CiBS
-ZWdhcmRzLDxiciAvPgogSmVycnk8YnIgLz4KIF9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fPGJyIC8+CiB0cG0yIG1haWxpbmcgbGlzdCAtLSB0cG0yQGxpc3Rz
-LjAxLm9yZzxiciAvPgogVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0byB0cG0yLWxlYXZl
-QGxpc3RzLjAxLm9yZzxiciAvPgogJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQpcy8l
-KF9pbnRlcm5hbF9uYW1lKXM8L2Rpdj4KPC9kaXY+CjxiciAvPgogPGJyIC8+CiAtLS0tLS0tLS0t
-PGJyIC8+CiA8YnIgLz4KIF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fPGJyIC8+CiB0cG0yIG1haWxpbmcgbGlzdCAtLSB0cG0yQGxpc3RzLjAxLm9yZzxiciAv
-PgogVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0byB0cG0yLWxlYXZlQGxpc3RzLjAxLm9y
-ZzxiciAvPgogJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQpcy8lKF9pbnRlcm5hbF9u
-YW1lKXMK
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0yIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiPgo8L2Rpdj4KPGRpdiBpZD0iZGl2UnBseUZ3ZE1zZyIgZGlyPSJs
+dHIiPiZndDsgSSBzcGVudCBzb21lIHRpbWUgd2l0aCBPcGVuU1NMIDMuMCBzbyBJIGNvdWxkIGhl
+bHAuPGJyPgo8L2Rpdj4KPGRpdj4KPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAg
+MCAwIDAiPiZndDsmbmJzcDs8L3A+CjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjow
+IDAgMCAwIj4mZ3Q7IEluIGdlbmVyYWxsLCBhbGwgRUNfS0VZIGFuZCBSU0FfS0VZIGZ1bmN0aW9u
+cyBhcmUgZGVwcmVjYXRlZCBmb3IgcHVibGljIHVzZSBhcyB0aGlzIGlzIGEgbG93LWxldmVsIEFQ
+SS4gVGhlcmUgaXMgbm8gZWFzeSBmaXggdGhvdWdoLS0gdGhlIGxvdy1sZXZlbCBmdW5jdGlvbnMg
+bmVlZCB0byBiZSByZXBsYWNlZCBieSB0aGUgaGlnaC1sZXZlbCBFVlAgQVBJIGFuZCB0aGVyZQog
+aXMgJmd0OyBubyBzaW1wbGUgMToxIG1hcHBpbmcuIFRoZSBhZmZlY3RlZCBmdW5jdGlvbnMgbmVl
+ZCB0byBiZSByZXdyaXR0ZW4gYWxtb3N0IGNvbXBsZXRlbHksIGJ1dCBpbiBjYXNlIG9mIHRwbTIt
+dG9vbHMgYW5kIHRwbTItcGtjczExIHRoZSBpbXBhY3QgaXMgbm90IHNvIGhpZ2guPC9wPgo8cCBz
+dHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMCI+Jmd0OzwvcD4KPHAgc3R5bGU9
+InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDAiPiZndDsgVGhlIGdvb2QgdGhpbmcgaXMg
+dGhhdCB0aGUgRVZQIEFQSSBpcyBub3QoISkgbmV3LiBJdCBoYXMgYmVlbiB0aGVyZSBzaW5jZSBP
+cGVuU1NMIDEuMS4wLCBzbyBvbmUgY291bGQgd3JpdGUgYW4gaW1wbGVtZW50YXRpb24gdGhhdCB3
+b3JrcyB3aXRoIGJvdGggT3BlblNTTCAxLjEueCBhbmQgT3BlblNTTCAzLjAuIEluIGZhY3QsIHRo
+ZSBPcGVuU1NMIDMuMCBhaW1zIHRvICZndDsKIGhhdmUgYSB2ZXJ5IGxpbWl0ZWQgaW1wYWN0IG9u
+ICZxdW90O3dlbGwtYmVoYXZlZCZxdW90OyBhcHBsaWNhdGlvbnMgdGhhdCByZWZyYWluIGZyb20g
+dXNpbmcgdGhlIChub3cgZGVwcmVjYXRlZCkgbG93LWxldmVsIEFQSXMuIEFuIGFwcCB0aGF0IHVz
+ZXMgdGhlIEVWUCBBUEkgZnJvbSAxLjEueCBzaGFsbCB3b3JrIHdpdGggdGhlIDMuMCB0b28uPC9w
+Pgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMCI+Jmd0OzwvcD4KPHAg
+c3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDAiPjxicj4KPC9wPgo8cCBzdHls
+ZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMCI+SW50ZXJlc3RpbmcgSSBkaWQgbm90
+IGtub3cgdGhhdDwvcD4KPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDAi
+PiZuYnNwOzwvcD4KPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDAiPiZu
+YnNwOyZndDsgVGhlIGNydWNpYWwgcXVlc3Rpb24gaXM6IGlzIGl0IGFjY2VwdGFibGUgdG8gcmVx
+dWlyZSB0aGUgT3BlblNTTCAxLjEuMSBhcyB0aGUgbWluaW11bSB2ZXJzaW9uIGZvciB0cG0yLXRv
+b2xzIGFuZCB0cG0yLXBrY3MxMT88L3A+CjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdp
+bjowIDAgMCAwIj48YnI+CjwvcD4KPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAg
+MCAwIDAiPk5vdyB0aGF0IHVidW50dS0xNi4wNCBpcyBFT0wsIHllcy4gSSB0aGluayB0aGVpcnMg
+dGlja2V0cyBpbiB0aGUgdmFyaW91cyBwcm9qZWN0cyBidWcgdHJhY2tlcnMgdG8gYWRkcmVzcyB0
+aGF0LiBUaGF0IHdhcyB0aGUgbWFqb3IgaG9sZCB1cCwgd2hpbGUgT3BlblNTTCBkZWNsYXJlZCAx
+LjAuMjwvcD4KPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDAiPmRlYWQs
+IHRoZSByZXN0IG9mIHRoZSB3b3JsZCBpcyBzdGlsbCBvbiBpdC48L3A+CjxwIHN0eWxlPSJwYWRk
+aW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwIj48YnI+CjwvcD4KPHAgc3R5bGU9InBhZGRpbmc6
+MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDAiPiZndDsgVGhlIE9wZW5TU0wgcmVsZWFzZSBzdHJhdGVn
+eSBpbmRpY2F0ZXMgdGhlIE9wZW5TU0wgMS4xLjEgaXMgbm93IHRoZSBfb25seV8gc3VwcG9ydGVk
+IHZlcnNpb24hIFRoZSAxLjAuMiBpcyBubyBsb25nZXIgc3VwcG9ydGVkIGFuZCBhbHNvIHRoZSAx
+LjEuMCBpcyBubyBsb25nZXIgc3VwcG9ydGVkLjwvcD4KPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAg
+MDsgbWFyZ2luOjAgMCAwIDAiPiZndDsgaHR0cHM6Ly93d3cub3BlbnNzbC5vcmcvcG9saWNpZXMv
+cmVsZWFzZXN0cmF0Lmh0bWw8L3A+CjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjow
+IDAgMCAwIj4mbmJzcDs8L3A+CjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAg
+MCAwIj4mZ3Q7IE1haW50YWluaW5nIHRoZSBzdXBwb3J0IGZvciB0aGUgRU9MIE9wZW5TU0wgKHBy
+aW9yIDEuMS4xKSB3b3VsZCBtYWtlIHRoZSBzdXBwb3J0IGZvciBPcGVuU1NMIDMuMCBtb3JlIGNv
+bXBsaWNhdGVkLCBoYXJkZXIgdG8gcmV2aWV3IGFuZCBtYWludGFpbi48L3A+CjxwIHN0eWxlPSJw
+YWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwIj4mZ3Q7IEV2ZW4gdGhlIHRwbTItdG9vbHMg
+UkVMRUFTRS5tZCBzYXlzIHRoYXQgJnF1b3Q7c3VwcG9ydGluZyBhbiBFT0wgY3J5cHRvIGxpYnJh
+cnkgaXMgbm90IGEgZ29vZCBpZGVhJnF1b3Q7LjwvcD4KPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAg
+MDsgbWFyZ2luOjAgMCAwIDAiPiZndDsgaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUv
+dHBtMi10b29scy9ibG9iL21hc3Rlci9kb2MvUkVMRUFTRS5tZCNvcGVuc3NsPC9wPgo8cCBzdHls
+ZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMCI+Jm5ic3A7PC9wPgo8cCBzdHlsZT0i
+cGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMCI+Jm5ic3A7Jmd0OyBTbywgbXkgcmVjb21t
+ZW5kYXRpb24gd291bGQgYmUgdG8gc2V0IE9wZW5TU0wgMS4xLjEgYXMgdGhlIG1pbmltdW0gdmVy
+c2lvbiBhbmQgdGhlbiBzaW1wbHkgcmV3cml0ZSB0aGUgYWZmZWN0ZWQgZnVuY3Rpb25zIHVzaW5n
+IHRoZSBFVlAgQVBJIGZyb20gMS4xLjEsIHdoaWNoIHdvcmtzIGFsc28gaW4gMy4wLiBXaGF0IGRv
+IHlvdSB0aGluaz88L3A+CjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAw
+Ij4mbmJzcDs8L3A+CjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwIj5J
+IGFncmVlLiBJIHRoaW5rIGNvbnNpZGVyaW5nIGFsbCB0aGUgdmFyaW91cyBmYWN0b3JzLCB0aGlz
+IGlzIGFuIGFwcHJvcHJpYXRlIHRpbWUgdG8gZGl0Y2ggT1NTTCAmbHQ7IDEuMS4xPC9wPgo8cCBz
+dHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMCI+Jm5ic3A7PC9wPgo8cCBzdHls
+ZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMCI+Jm5ic3A7PGJyPgo8L3A+CjxwIHN0
+eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwIj5fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXzxicj4KJmd0OyBPZDog
+JnF1b3Q7Um9iZXJ0cywgV2lsbGlhbSBDJnF1b3Q7ICZsdDt3aWxsaWFtLmMucm9iZXJ0c0BpbnRl
+bC5jb20mZ3Q7PGJyPgomZ3Q7IEtvbXU6ICZxdW90O0plcnJ5IFNuaXRzZWxhYXImcXVvdDsgJmx0
+O2pzbml0c2VsQHJlZGhhdC5jb20mZ3Q7LCAmcXVvdDt0cG0yQGxpc3RzLjAxLm9yZyZxdW90OyAm
+bHQ7dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PGJyPgomZ3Q7IERhdHVtOiAyNS4wNS4yMDIxIDAxOjQx
+PGJyPgomZ3Q7IFD4ZWRt7HQ6IFt0cG0yXSBSZTogdHBtMi10b29scywgdHBtMi1wa2NzMTEsIGFu
+ZCBPcGVuU1NMIDMuMDxicj4KJmd0OzwvcD4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJy
+aSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsgZm9udC1zaXplOjEycHQ7IGNvbG9yOiMwMDAw
+MDAiPgpJIGNhbiBsb29rIGF0IGNvbXBpbGluZyB3aXRoIE9wZW5TU0wgMy4wLCBJIGhhdmVuJ3Qg
+ZXZlbiB0cmllZCB5ZXQuIEJ1dCBJIHdvdWxkIGltYWdpbmU8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
+dC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsgZm9udC1zaXplOjEy
+cHQ7IGNvbG9yOiMwMDAwMDAiPgppdCdzIGFsbCBmaXhhYmxlLiBJIGRvbid0IHNlZSBhbnl0aGlu
+ZyBpbiB0aGUgZG9fc2lnX3ZlcmlmeSB0aGF0IHJlcXVpcmVzIGEgbm9uLWNvbnN0IGtleS4gSSB3
+b3VsZCBpbWFnaW5lPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWws
+SGVsdmV0aWNhLHNhbnMtc2VyaWY7IGZvbnQtc2l6ZToxMnB0OyBjb2xvcjojMDAwMDAwIj4KaXQn
+cyBqdXN0IGFzIHNpbXBsZSBhcyB1cGRhdGluZyB0aGUgY2FsbCBzaXRlcyB0byBtYXRjaCB0aGUg
+c2lnbmF0dXJlcy48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxI
+ZWx2ZXRpY2Esc2Fucy1zZXJpZjsgZm9udC1zaXplOjEycHQ7IGNvbG9yOiMwMDAwMDAiPgpJIGZp
+bGVkIGJ1Z3M6PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVs
+dmV0aWNhLHNhbnMtc2VyaWY7IGZvbnQtc2l6ZToxMnB0OyBjb2xvcjojMDAwMDAwIj4KJm5ic3A7
+IC0mbmJzcDs8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXBr
+Y3MxMS9pc3N1ZXMvNjg2Ij5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXBr
+Y3MxMS9pc3N1ZXMvNjg2PC9hPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJp
+LEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmOyBmb250LXNpemU6MTJwdDsgY29sb3I6IzAwMDAw
+MCI+CiZuYnNwOyAtJm5ic3A7PGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdh
+cmUvdHBtMi10b29scy9pc3N1ZXMvMjczNyI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdh
+cmUvdHBtMi10b29scy9pc3N1ZXMvMjczNzwvYT48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1p
+bHk6Q2FsaWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsgZm9udC1zaXplOjEycHQ7IGNv
+bG9yOiMwMDAwMDAiPgpXZSdsbCB0cnkgdG8gZ2V0IHRvIHRoZXNlIHNvb24sIGFzIEkgd291bGQg
+aW1hZ2luZSBkaXN0cm9zIGFyZSBlYWdlciB0byBzdGFydCB0aGUgcHJvY2VzcyBvZiB0cmFuc2l0
+aW9uaW5nIG92ZXIuPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWws
+SGVsdmV0aWNhLHNhbnMtc2VyaWY7IGZvbnQtc2l6ZToxMnB0OyBjb2xvcjojMDAwMDAwIj4KQmls
+bDwvZGl2Pgo8aHI+CjxkaXYgZGlyPSJsdHIiPjxmb250IGZhY2U9IkNhbGlicmksIHNhbnMtc2Vy
+aWYiIGNvbG9yPSIjMDAwMDAwIiBzdHlsZT0iZm9udC1zaXplOjExcHQiPjxzdHJvbmc+RnJvbTo8
+L3N0cm9uZz4gSmVycnkgU25pdHNlbGFhciAmbHQ7anNuaXRzZWxAcmVkaGF0LmNvbSZndDs8YnI+
+CjxzdHJvbmc+U2VudDo8L3N0cm9uZz4gTW9uZGF5LCBNYXkgMjQsIDIwMjEgNDozNCBQTTxicj4K
+PHN0cm9uZz5Ubzo8L3N0cm9uZz4gdHBtMkBsaXN0cy4wMS5vcmcgJmx0O3RwbTJAbGlzdHMuMDEu
+b3JnJmd0Ozxicj4KPHN0cm9uZz5TdWJqZWN0Ojwvc3Ryb25nPiBbdHBtMl0gdHBtMi10b29scywg
+dHBtMi1wa2NzMTEsIGFuZCBPcGVuU1NMIDMuMDwvZm9udD4KPGRpdj4mbmJzcDs8L2Rpdj4KPC9k
+aXY+CjxkaXYgY2xhc3M9InhfQm9keUZyYWdtZW50Ij4KPGRpdiBjbGFzcz0ieF9QbGFpblRleHQi
+Pjxicj4KQm90aCB0cG0yLXRvb2xzIGFuZCB0cG0yLXBrY3MxMSBtYWtlIHVzZSBvZiBzb21lIGZ1
+bmN0aW9ucyB0aGF0IGFyZTxicj4KYmVpbmcgZGVwcmVjYXRlZCBpbiBvcGVuc3NsIDMuMC4gQXJl
+IHRoZXJlIHBsYW5zIHRvIG1vdmUgYXdheSBmcm9tIHVzaW5nPGJyPgp0aG9zZSBkZXByZWNhdGVk
+IGZ1bmN0aW9ucz8gQ3VycmVudGx5IHRwbTItdG9vbHMgd2lsbCBidWlsZCB3aXRoPGJyPgotV25v
+LWVycm9yPWRlcHJlY2F0ZWQtZGVjbGFyYXRpb25zLCBidXQgdHBtMi1wa2NzMTEgdHJpcHMgb3Zl
+cjxicj4KRVZQX1BLRVlfZ2V0MF9FQ19LRVkgbm93IHJldHVybmluZyBhIGNvbnN0IEVDX0tFWSAq
+LCBhbmQgRUNEU0FfZG9fdmVyaWZ5PGJyPgp0YWtpbmcgYSBub24gY29uc3QgcGFyYW1ldGVyLiBT
+b21lb25lIHN1Z2dlc3RlZCBkb2luZyBzb21ldGhpbmcgbGlrZTo8YnI+Cjxicj4KJm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IEVWUF9QS0VZX0NUWCZuYnNwOyZuYnNwOyZuYnNw
+OyAqcGN0eCA9IE5VTEw7PGJyPgombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsg
+aWYgKChwY3R4ID0gRVZQX1BLRVlfQ1RYX25ldyhwa2V5LCBOVUxMKSkgPT0gTlVMTCkgezxicj4K
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGdvdG8gZmFpbDs8YnI+CiZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB9PGJyPgo8YnI+CiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyBpZiAoRVZQX1BLRVlfdmVyaWZ5X2luaXQocGN0eCkgIT0gMSB8fDxicj4K
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7IEVWUF9QS0VZX3ZlcmlmeShwY3R4LCBzaWdidWYsIHNpZ2xlbiw8YnI+CiZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBkZ3N0YnVm
+LCBkZ3N0bGVuKSAhPSAxKSB7PGJyPgombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgZ290byBm
+YWlsOzxicj4KJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IH08YnI+CiZuYnNw
+O2ZhaWw6PGJyPgombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgRVZQX1BLRVlf
+Q1RYX2ZyZWUocGN0eCk7PGJyPgo8YnI+Cjxicj4KYnV0IEkgaW1hZ2luZSB0aGUgQVNOLjEgZnJh
+bWluZyBzdHVmZiBtZW50aW9uZWQgaW4gZG9fc2lnX3ZlcmlmeV9lYygpPGJyPgp3b3VsZCBzdGls
+bCBiZSBhbiBpc3N1ZSwgeWVzPyBJIGRvbid0IGtub3cgb3BlbnNzbCwgc28gSSBkb24ndCBrbm93
+PGJyPgppZiB5b3UgY291bGQgZ2V0IGF3YXkgd2l0aCBjYXN0aW5nIHRoZSBwb2ludGVyIHRvIEVD
+X0tFWSAqLjxicj4KPGJyPgpUaGVyZSBpcyB3b3JrIGdvaW5nIG9uIHRvIHN1cHBvcnQgb3BlbnNz
+bCAzLjAgaW4gUkhFTDksIHNvIHRoaXMgY2FtZSB1cC48YnI+Cjxicj4KUmVnYXJkcyw8YnI+Ckpl
+cnJ5PGJyPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXzxi
+cj4KdHBtMiBtYWlsaW5nIGxpc3QgLS0gdHBtMkBsaXN0cy4wMS5vcmc8YnI+ClRvIHVuc3Vic2Ny
+aWJlIHNlbmQgYW4gZW1haWwgdG8gdHBtMi1sZWF2ZUBsaXN0cy4wMS5vcmc8YnI+CiUod2ViX3Bh
+Z2VfdXJsKXNsaXN0aW5mbyUoY2dpZXh0KXMvJShfaW50ZXJuYWxfbmFtZSlzPC9kaXY+CjwvZGl2
+Pgo8YnI+Cjxicj4KLS0tLS0tLS0tLTxicj4KPGJyPgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXzxicj4KdHBtMiBtYWlsaW5nIGxpc3QgLS0gdHBtMkBsaXN0
+cy4wMS5vcmc8YnI+ClRvIHVuc3Vic2NyaWJlIHNlbmQgYW4gZW1haWwgdG8gdHBtMi1sZWF2ZUBs
+aXN0cy4wMS5vcmc8YnI+CiUod2ViX3BhZ2VfdXJsKXNsaXN0aW5mbyUoY2dpZXh0KXMvJShfaW50
+ZXJuYWxfbmFtZSlzIDwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
 
---===============4251452794802216542==--
+--===============6907755057830050140==--
 
