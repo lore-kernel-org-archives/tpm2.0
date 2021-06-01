@@ -1,104 +1,121 @@
-Content-Type: multipart/mixed; boundary="===============8307798418616184668=="
+Content-Type: multipart/mixed; boundary="===============4044530166079885109=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Lost/blocked when trying to setup a symmetric
- decryption/encryption scheme using the tpm...
-Date: Tue, 01 Jun 2021 14:45:07 +0000
-Message-ID: <SN6PR11MB3437EED5D84922AE861FE978B83E9@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 5627ff076acbafb56d940e1dd85bdff6@kngnt.org
+From: Anthony Arrascue <AArrascue at neuroloop.de>
+Subject: [tpm2] Resetting TPM Optiga Infineon SLB 9670
+Date: Tue, 01 Jun 2021 17:17:35 +0000
+Message-ID: <14aa5cd0c7834380b34cc318f318c85d@neuroloop.de>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8307798418616184668==
+--===============4044530166079885109==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-For symmetric encryption, it would use tpm2_encryptdecrypt command.
-Then for the data, just pass whatever to encrypt, in this case your ASCII s=
-tring.
+Hello,
 
-But I am not really sure I follow your use case or that using symmetric enc=
-ryption gives you
-a better set of security properties or even what you want. Also note, that =
-not all TPMs support
-symmetric encryption. So you would want to check tpm2_getcap commands, whic=
-h I think for
-version 3.X offhand would be tpm2_getcap -c commands.
+I know this question is not directly related to the TSS project, but maybe =
+there is one someone in this community who can help me with this.
+I am using a TPM Optiga Infineon SLB 9670 on a Raspberry pi 4 I/O board wit=
+h a compute module 4.
+https://www.infineon.com/dgdl/Infineon-SLB%209670VQ2.0-DataSheet-v01_04-EN.=
+pdf?fileId=3D5546d4626fc1ce0b016fc78270350cd6
 
-I think it would be better to look at more complex policies and tie it to a=
- policy signed command
-so as PCR states change you can re-sign policies corresponding to that. You=
- could also do a policy
-OR approach, and say something like this PCR state or this password, and th=
-en use the password
-to re-create the object with your sealed data as needed to the new PCR's.
+This TPM has a physical reset button. The problem is that I cannot manage t=
+o reset the TPM.  No matter how I place the jumper or how long I press the =
+button, the TPM is not resetting.
+I believe the reset is not carried out, because when I try to re-provision =
+with tss2_provision I get the message =E2=80=9CSRK persistent handle alread=
+y defined=E2=80=9D.
+Moreover, if I call =E2=80=9Csudo tpm2_getcap handles-persistent=E2=80=9D I=
+ get the handles which I have already previously occupied (I am assuming he=
+re that after a reset they will be emptied).
 
-Bear in mind that when you do policy signed, that nothing prevents old poli=
-cies by default from being used.
-So you want to ensure you do something like policyauthorizenv or an nv inde=
-x counter you can increment.
+Has anyone done a physical reset of a TPM?
 
-From: Felix Rubio <felix(a)kngnt.org>
-Sent: Saturday, May 29, 2021 2:14 AM
-To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
-Subject: [tpm2] Lost/blocked when trying to setup a symmetric decryption/en=
-cryption scheme using the tpm... =
+Thanks for your help.
 
-=C2=A0
-Hi everybody!
+Anthony Arrascue
 
-I am giving a try in setting up an encryption system for one of my =
 
-computers, by making use of the TPM 2.0. I am completely stuck for two =
 
-days now, and... maybe somebody can give me a hand?
 
-My first experiment was to seal the disk encryption key, using a PCR =
+--===============4044530166079885109==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-policy. This worked:
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZvbnQt
+ZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOw0KCW1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVT
+O30NCmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsNCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0K
+CWNvbG9yOiMwNTYzQzE7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpzcGFuLkVtYWls
+U3R5bGUxNw0KCXttc28tc3R5bGUtdHlwZTpwZXJzb25hbC1jb21wb3NlOw0KCWZvbnQtZmFtaWx5
+OiJDYWxpYnJpIixzYW5zLXNlcmlmOw0KCWNvbG9yOndpbmRvd3RleHQ7fQ0KLk1zb0NocERlZmF1
+bHQNCgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7DQoJbXNvLWZhcmVhc3QtbGFuZ3VhZ2U6
+RU4tVVM7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3NpemU6NjEyLjBwdCA3OTIuMHB0Ow0KCW1h
+cmdpbjo3Mi4wcHQgNzIuMHB0IDcyLjBwdCA3Mi4wcHQ7fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtw
+YWdlOldvcmRTZWN0aW9uMTt9DQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0K
+PG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwh
+W2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9
+ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlv
+dXQ+PC94bWw+PCFbZW5kaWZdLS0+DQo8L2hlYWQ+DQo8Ym9keSBsYW5nPSJlbi1ERSIgbGluaz0i
+IzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiIHN0eWxlPSJ3b3JkLXdyYXA6YnJlYWstd29yZCI+DQo8
+ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFu
+Zz0iREUiPkhlbGxvLDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxzcGFuIGxhbmc9IkRFIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0i
+TXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+SSBrbm93IHRoaXMgcXVlc3Rpb24gaXMgbm90
+IGRpcmVjdGx5IHJlbGF0ZWQgdG8gdGhlIFRTUyBwcm9qZWN0LCBidXQgbWF5YmUgdGhlcmUgaXMg
+b25lIHNvbWVvbmUgaW4gdGhpcyBjb21tdW5pdHkgd2hvIGNhbiBoZWxwIG1lIHdpdGggdGhpcy48
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJF
+Ti1VUyI+SSBhbSB1c2luZyBhIFRQTSBPcHRpZ2EgSW5maW5lb24gU0xCIDk2NzAgb24gYSBSYXNw
+YmVycnkgcGkgNCBJL08gYm9hcmQgd2l0aCBhIGNvbXB1dGUgbW9kdWxlIDQuPG86cD48L286cD48
+L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPjxhIGhy
+ZWY9Imh0dHBzOi8vd3d3LmluZmluZW9uLmNvbS9kZ2RsL0luZmluZW9uLVNMQiUyMDk2NzBWUTIu
+MC1EYXRhU2hlZXQtdjAxXzA0LUVOLnBkZj9maWxlSWQ9NTU0NmQ0NjI2ZmMxY2UwYjAxNmZjNzgy
+NzAzNTBjZDYiPmh0dHBzOi8vd3d3LmluZmluZW9uLmNvbS9kZ2RsL0luZmluZW9uLVNMQiUyMDk2
+NzBWUTIuMC1EYXRhU2hlZXQtdjAxXzA0LUVOLnBkZj9maWxlSWQ9NTU0NmQ0NjI2ZmMxY2UwYjAx
+NmZjNzgyNzAzNTBjZDY8L2E+PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5UaGlzIFRQTSBoYXMgYSBwaHlz
+aWNhbCByZXNldCBidXR0b24uIFRoZSBwcm9ibGVtIGlzIHRoYXQgSSBjYW5ub3QgbWFuYWdlIHRv
+IHJlc2V0IHRoZSBUUE0uICZuYnNwO05vIG1hdHRlciBob3cgSSBwbGFjZSB0aGUganVtcGVyIG9y
+IGhvdyBsb25nIEkgcHJlc3MgdGhlIGJ1dHRvbiwgdGhlIFRQTSBpcyBub3QgcmVzZXR0aW5nLjxv
+OnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVO
+LVVTIj5JIGJlbGlldmUgdGhlIHJlc2V0IGlzIG5vdCBjYXJyaWVkIG91dCwgYmVjYXVzZSB3aGVu
+IEkgdHJ5IHRvIHJlLXByb3Zpc2lvbiB3aXRoIHRzczJfcHJvdmlzaW9uIEkgZ2V0IHRoZSBtZXNz
+YWdlIOKAnFNSSyBwZXJzaXN0ZW50IGhhbmRsZSBhbHJlYWR5IGRlZmluZWTigJ0uPG86cD48L286
+cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPk1v
+cmVvdmVyLCBpZiBJIGNhbGwg4oCcc3VkbyB0cG0yX2dldGNhcCBoYW5kbGVzLXBlcnNpc3RlbnTi
+gJ0gSSBnZXQgdGhlIGhhbmRsZXMgd2hpY2ggSSBoYXZlIGFscmVhZHkgcHJldmlvdXNseSBvY2N1
+cGllZCAoSSBhbSBhc3N1bWluZyBoZXJlIHRoYXQgYWZ0ZXIgYSByZXNldCB0aGV5IHdpbGwgYmUg
+ZW1wdGllZCkuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
+YW4gbGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5IYXMgYW55b25lIGRvbmUgYSBwaHlzaWNhbCBy
+ZXNldCBvZiBhIFRQTT88bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij48c3BhbiBsYW5nPSJFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPlRoYW5rcyBmb3IgeW91ciBoZWxwLjxv
+OnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVO
+LVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
+c3BhbiBsYW5nPSJERSIgc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Y29sb3I6YmxhY2s7bXNvLWZh
+cmVhc3QtbGFuZ3VhZ2U6REUiPkFudGhvbnkgQXJyYXNjdWU8bzpwPjwvbzpwPjwvc3Bhbj48L3A+
+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJERSIgc3R5bGU9ImZvbnQtc2l6ZTox
+MC4wcHQ7Y29sb3I6YmxhY2s7bXNvLWZhcmVhc3QtbGFuZ3VhZ2U6REUiPjxicj4NCjxicj4NCjwv
+c3Bhbj48c3BhbiBsYW5nPSJERSIgc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOiMyMDAwIj48
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJl
+bi1ERSI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8L2JvZHk+DQo8L2h0
+bWw+DQo=
 
-a) To seal the key
-=C2=A0=C2=A0=C2=A0=C2=A0 tpm2_takeownership -c
-=C2=A0=C2=A0=C2=A0=C2=A0 tpm2_pcrlist -L sha1:0,1,7 -o pcr_state.bin
-=C2=A0=C2=A0=C2=A0=C2=A0 tpm2_createpolicy -P -L sha1:0,1,7 -F pcr_state.bi=
-n -f policy.bin
-=C2=A0=C2=A0=C2=A0=C2=A0 tpm2_createprimary -H e -g sha1 -G rsa
-=C2=A0=C2=A0=C2=A0=C2=A0 tpm2_create -g sha256 -G keyedhash -u key.pub -r k=
-ey.priv -H =
-
-0x80000000 -L policy.bin -A "fixedtpm|fixedparent|noda|adminwithpolicy" =
-
--I /dev/shm/key.bin
-=C2=A0=C2=A0=C2=A0=C2=A0 tpm2_load -H 0x80000000 -u key.pub -r key.priv
-=C2=A0=C2=A0=C2=A0=C2=A0 tpm2_evictcontrol -A o -H 0x80000001 -S 0x81010002
-
-b) to unseal it:
-=C2=A0=C2=A0=C2=A0=C2=A0 tpm2_unseal -H 0x81010002 -L sha1:0,1,7 > key.bin
-
-However, in case the TPM has an issue (or I need to restore a backup,=C2=A0 =
-
-use a rescue disk, etc.), I want to give it another twist: to use the =
-
-TPM to encrypt/decrypt a regular ascii string... still tying it to the =
-
-pcr registers. And... I do not manage to get it right. I have been =
-
-looking for two days around on the internet, and I do not get to find an =
-
-example doing something similar to what I need (I am running tpm2-tools =
-
-3.1 on debian stable). I know I can just seal an ascii passphrase and =
-
-use my previous approach... but I'd really like to understand how it =
-
-should be done.
-
-Regards!
-Felix
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============8307798418616184668==--
+--===============4044530166079885109==--
 
