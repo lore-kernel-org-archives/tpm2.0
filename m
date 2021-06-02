@@ -1,34 +1,28 @@
-Content-Type: multipart/mixed; boundary="===============8299294949694031112=="
+Content-Type: multipart/mixed; boundary="===============8845578643452923875=="
 MIME-Version: 1.0
-From: Imran Desai <imran.desai at intel.com>
-Subject: [tpm2] [Release] tpm2-tools v5.1.1-rc0 and v4.3.2-rc0 for
- CVE-2021-3565 fix
-Date: Wed, 02 Jun 2021 18:46:16 +0000
-Message-ID: <20210602184616.2822.24289@ml01.vlan13.01.org>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Dropping OSSL 1.0.2 support
+Date: Wed, 02 Jun 2021 19:54:18 +0000
+Message-ID: <SN6PR11MB343732ADB043E6266542EBB6B83D9@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8299294949694031112==
+--===============8845578643452923875==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello all,
+With OpenSSL 3.0 in alpha releases and soon to be beta releases, we have un=
+dergone looking at the work it will take to port to openssl 3.0. 3.0 essent=
+ially forces our hands away from the lower level APIs and into the EVP api'=
+s, AFAIK. Because of this, supporting openssl 1.0.2 will be more difficult.=
+ OSSL 1.0.2 is EOL, and most distros I am aware of that have 1.0.2 are EOL =
+as well.
 
-Announcing the release of tpm2-tools versions 5.1.1-rc0 and 4.3.2-rc0 in re=
-sponse to CVE-2021-3565.
+So the question is, if we kill OSSL < 1.1.0 support, how many folks will be=
+ disrupted by that?
 
-You can find more details on the CVE here: https://access.redhat.com/securi=
-ty/cve/cve-2021-3565
-
-The releases with fixes for the CVE are here:
-
-https://github.com/tpm2-software/tpm2-tools/releases/tag/4.3.2-rc0
-and
-https://github.com/tpm2-software/tpm2-tools/releases/tag/5.1.1-rc0
-
-Thanks and regards,
-
-Imran Desai
---===============8299294949694031112==--
+Thanks,
+Bill
+--===============8845578643452923875==--
 
