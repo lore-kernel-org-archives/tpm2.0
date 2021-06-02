@@ -1,300 +1,34 @@
-Content-Type: multipart/mixed; boundary="===============7058916279343210077=="
+Content-Type: multipart/mixed; boundary="===============8299294949694031112=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Resetting TPM Optiga Infineon SLB 9670
-Date: Wed, 02 Jun 2021 12:18:21 +0000
-Message-ID: <SN6PR11MB3437316E262343D277492695B83D9@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 966aece2-3758-dd47-2afe-3529f0fe1c4d@gproudler.plus.com
+From: Imran Desai <imran.desai at intel.com>
+Subject: [tpm2] [Release] tpm2-tools v5.1.1-rc0 and v4.3.2-rc0 for
+ CVE-2021-3565 fix
+Date: Wed, 02 Jun 2021 18:46:16 +0000
+Message-ID: <20210602184616.2822.24289@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7058916279343210077==
+--===============8299294949694031112==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The bash command to invoke the TPM2_Clear command is tpm2_clear.
-________________________________
-From: Graeme Proudler <graeme(a)gproudler.plus.com>
-Sent: Wednesday, June 2, 2021 3:48 AM
-To: AArrascue(a)neuroloop.de <AArrascue(a)neuroloop.de>; tpm2(a)lists.01.or=
-g <tpm2(a)lists.01.org>
-Subject: [tpm2] Re: Resetting TPM Optiga Infineon SLB 9670
+Hello all,
 
+Announcing the release of tpm2-tools versions 5.1.1-rc0 and 4.3.2-rc0 in re=
+sponse to CVE-2021-3565.
 
-Anthony,
+You can find more details on the CVE here: https://access.redhat.com/securi=
+ty/cve/cve-2021-3565
 
-> re-provision [the TPM2]
+The releases with fixes for the CVE are here:
 
-I suspect you are looking for the TPM's TPM2_Clear() command. Unfortunately=
- I am unable to recommend which TSS command to use to execute TPM2_Clear().
+https://github.com/tpm2-software/tpm2-tools/releases/tag/4.3.2-rc0
+and
+https://github.com/tpm2-software/tpm2-tools/releases/tag/5.1.1-rc0
 
-You may or may not be interested in this simplified architectural explanati=
-on:
+Thanks and regards,
 
-  *       the (electrical) reset signal instructs the TPM2 that its host pl=
-atform has been reset, to make the TPM reset its PCRs (because PCRS are ess=
-entially a history of the execution of software on the platform since reset=
-).
-  *       a (software) TPM2_Clear() command instructs the TPM2 to revert to=
- its default state (in other words, remove personalisation of TPM state by =
-the previous TPM "owner").
-
-Apologies if this type of information shouldn't be posted to this reflector.
-
-Regards,
-
-G.Proudler
-
-----------------------------
-
-On 02/06/2021 08:31, Peter.Huewe(a)infineon.com<mailto:Peter.Huewe(a)infine=
-on.com> wrote:
-
-Hi,
-
-Pressing the reset (or doing it via GPIO if the jumper is in the other posi=
-tion), does only send an =E2=80=98electrical=E2=80=99 reset to the TPM.
-
-
-
-This does NOT *clear* the tpm ,( and also of course does not de-provision t=
-he fapi.)
-
-A reset only resets the volatile states.
-
-You can verify that the reset is working, by using any regular esapi tool (=
-tpm2_xxxx) and you will get an error RC_INITIALIZE 0x100.
-
-Then you would need to send a tpm2_startup command.
-
-
-
-FAPI tools (tss2_xxxx) do send the startup automatically.
-
-
-
-
-
-Thanks,
-Peter
-
-
-
-From: Anthony Arrascue <AArrascue(a)neuroloop.de><mailto:AArrascue(a)neurol=
-oop.de>
-Sent: Dienstag, 1. Juni 2021 19:18
-To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-Subject: [tpm2] Resetting TPM Optiga Infineon SLB 9670
-
-
-
-Caution: This e-mail originated outside Infineon Technologies. Do not click=
- on links or open attachments unless you validate it is safe<https://goto.i=
-nfineon.com/SocialEngineering>.
-
-
-
-Hello,
-
-
-
-I know this question is not directly related to the TSS project, but maybe =
-there is one someone in this community who can help me with this.
-
-I am using a TPM Optiga Infineon SLB 9670 on a Raspberry pi 4 I/O board wit=
-h a compute module 4.
-
-https://www.infineon.com/dgdl/Infineon-SLB%209670VQ2.0-DataSheet-v01_04-EN.=
-pdf?fileId=3D5546d4626fc1ce0b016fc78270350cd6
-
-
-
-This TPM has a physical reset button. The problem is that I cannot manage t=
-o reset the TPM.  No matter how I place the jumper or how long I press the =
-button, the TPM is not resetting.
-
-I believe the reset is not carried out, because when I try to re-provision =
-with tss2_provision I get the message =E2=80=9CSRK persistent handle alread=
-y defined=E2=80=9D.
-
-Moreover, if I call =E2=80=9Csudo tpm2_getcap handles-persistent=E2=80=9D I=
- get the handles which I have already previously occupied (I am assuming he=
-re that after a reset they will be emptied).
-
-
-
-Has anyone done a physical reset of a TPM?
-
-
-
-Thanks for your help.
-
-
-
-Anthony Arrascue
-
-
-
-
-
-
-
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
-To unsubscribe send an email to tpm2-leave(a)lists.01.org<mailto:tpm2-leave=
-(a)lists.01.org>
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============7058916279343210077==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1XaW5kb3dzLTEyNTIiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiIHN0
-eWxlPSJkaXNwbGF5Om5vbmU7Ij4gUCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9IDwv
-c3R5bGU+CjwvaGVhZD4KPGJvZHkgZGlyPSJsdHIiPgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTog
-Q2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
-b2xvcjogcmdiKDAsIDAsIDApOyI+ClRoZSBiYXNoIGNvbW1hbmQgdG8gaW52b2tlIHRoZSBUUE0y
-X0NsZWFyIGNvbW1hbmQgaXMgdHBtMl9jbGVhci48L2Rpdj4KPGRpdiBpZD0iYXBwZW5kb25zZW5k
-Ij48L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3aWR0aDo5OCUiIHRhYmlu
-ZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRyIj48Zm9udCBmYWNlPSJD
-YWxpYnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQiIGNvbG9yPSIjMDAwMDAw
-Ij48Yj5Gcm9tOjwvYj4gR3JhZW1lIFByb3VkbGVyICZsdDtncmFlbWVAZ3Byb3VkbGVyLnBsdXMu
-Y29tJmd0Ozxicj4KPGI+U2VudDo8L2I+IFdlZG5lc2RheSwgSnVuZSAyLCAyMDIxIDM6NDggQU08
-YnI+CjxiPlRvOjwvYj4gQUFycmFzY3VlQG5ldXJvbG9vcC5kZSAmbHQ7QUFycmFzY3VlQG5ldXJv
-bG9vcC5kZSZndDs7IHRwbTJAbGlzdHMuMDEub3JnICZsdDt0cG0yQGxpc3RzLjAxLm9yZyZndDs8
-YnI+CjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gUmU6IFJlc2V0dGluZyBUUE0gT3B0aWdhIEluZmlu
-ZW9uIFNMQiA5NjcwPC9mb250Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8L2Rpdj4KPGRpdj4KPHA+QW50
-aG9ueSw8YnI+Cjxicj4KJmd0OyByZS1wcm92aXNpb24gW3RoZSBUUE0yXTxicj4KPGJyPgpJIHN1
-c3BlY3QgeW91IGFyZSBsb29raW5nIGZvciB0aGUgVFBNJ3MgVFBNMl9DbGVhcigpIGNvbW1hbmQu
-IFVuZm9ydHVuYXRlbHkgSSBhbSB1bmFibGUgdG8gcmVjb21tZW5kIHdoaWNoIFRTUyBjb21tYW5k
-IHRvIHVzZSB0byBleGVjdXRlIFRQTTJfQ2xlYXIoKS48YnI+Cjxicj4KWW91IG1heSBvciBtYXkg
-bm90IGJlIGludGVyZXN0ZWQgaW4gdGhpcyBzaW1wbGlmaWVkIGFyY2hpdGVjdHVyYWwgZXhwbGFu
-YXRpb246PGJyPgo8L3A+Cjx1bD4KPGxpPiZuYnNwOyZuYnNwOyZuYnNwOyB0aGUgKGVsZWN0cmlj
-YWwpIHJlc2V0IHNpZ25hbCBpbnN0cnVjdHMgdGhlIFRQTTIgdGhhdCBpdHMgaG9zdCBwbGF0Zm9y
-bSBoYXMgYmVlbgo8dT5yZXNldDwvdT4sIHRvIG1ha2UgdGhlIFRQTSByZXNldCBpdHMgUENScyAo
-YmVjYXVzZSBQQ1JTIGFyZSBlc3NlbnRpYWxseSBhIGhpc3Rvcnkgb2YgdGhlIGV4ZWN1dGlvbiBv
-ZiBzb2Z0d2FyZSBvbiB0aGUgcGxhdGZvcm0gc2luY2UgcmVzZXQpLjwvbGk+PGxpPiZuYnNwOyZu
-YnNwOyZuYnNwOyBhIChzb2Z0d2FyZSkgVFBNMl9DbGVhcigpIGNvbW1hbmQgaW5zdHJ1Y3RzIHRo
-ZSBUUE0yIHRvIHJldmVydCB0byBpdHMgZGVmYXVsdAo8dT5zdGF0ZTwvdT4gKGluIG90aGVyIHdv
-cmRzLCByZW1vdmUgcGVyc29uYWxpc2F0aW9uIG9mIFRQTSBzdGF0ZSBieSB0aGUgcHJldmlvdXMg
-VFBNICZxdW90O293bmVyJnF1b3Q7KS4KPC9saT48L3VsPgo8cD5BcG9sb2dpZXMgaWYgdGhpcyB0
-eXBlIG9mIGluZm9ybWF0aW9uIHNob3VsZG4ndCBiZSBwb3N0ZWQgdG8gdGhpcyByZWZsZWN0b3Iu
-PGJyPgo8YnI+ClJlZ2FyZHMsPGJyPgo8YnI+CkcuUHJvdWRsZXI8YnI+Cjxicj4KLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLTxicj4KPC9wPgo8ZGl2IGNsYXNzPSJ4X21vei1jaXRlLXByZWZp
-eCI+T24gMDIvMDYvMjAyMSAwODozMSwgPGEgY2xhc3M9InhfbW96LXR4dC1saW5rLWFiYnJldmlh
-dGVkIiBocmVmPSJtYWlsdG86UGV0ZXIuSHVld2VAaW5maW5lb24uY29tIj4KUGV0ZXIuSHVld2VA
-aW5maW5lb24uY29tPC9hPiB3cm90ZTo8YnI+CjwvZGl2Pgo8YmxvY2txdW90ZSB0eXBlPSJjaXRl
-Ij4KPG1ldGEgbmFtZT0iR2VuZXJhdG9yIiBjb250ZW50PSJNaWNyb3NvZnQgV29yZCAxNSAoZmls
-dGVyZWQKICAgICAgICBtZWRpdW0pIj4KPHN0eWxlPgo8IS0tCkBmb250LWZhY2UKCXtmb250LWZh
-bWlseToiQ2FtYnJpYSBNYXRoIn0KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNhbGlicml9CnAu
-eF9Nc29Ob3JtYWwsIGxpLnhfTXNvTm9ybWFsLCBkaXYueF9Nc29Ob3JtYWwKCXttYXJnaW46MGNt
-OwoJbWFyZ2luLWJvdHRvbTouMDAwMXB0OwoJZm9udC1zaXplOjExLjBwdDsKCWZvbnQtZmFtaWx5
-OiJDYWxpYnJpIixzYW5zLXNlcmlmfQphOmxpbmssIHNwYW4ueF9Nc29IeXBlcmxpbmsKCXtjb2xv
-cjojMDU2M0MxOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZX0KYTp2aXNpdGVkLCBzcGFuLnhf
-TXNvSHlwZXJsaW5rRm9sbG93ZWQKCXtjb2xvcjojOTU0RjcyOwoJdGV4dC1kZWNvcmF0aW9uOnVu
-ZGVybGluZX0KcC54X21zb25vcm1hbDAsIGxpLnhfbXNvbm9ybWFsMCwgZGl2LnhfbXNvbm9ybWFs
-MAoJe21hcmdpbi1yaWdodDowY207CgltYXJnaW4tbGVmdDowY207Cglmb250LXNpemU6MTIuMHB0
-OwoJZm9udC1mYW1pbHk6IlRpbWVzIE5ldyBSb21hbiIsc2VyaWZ9CnNwYW4ueF9FbWFpbFN0eWxl
-MTgKCXtmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHR9
-CnNwYW4ueF9FbWFpbFN0eWxlMjAKCXtmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsK
-CWNvbG9yOiMxRjQ5N0R9Ci54X01zb0NocERlZmF1bHQKCXtmb250LXNpemU6MTAuMHB0fQpkaXYu
-eF9Xb3JkU2VjdGlvbjEKCXt9Ci0tPgo8L3N0eWxlPgo8ZGl2IGNsYXNzPSJ4X1dvcmRTZWN0aW9u
-MSI+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xv
-cjojMUY0OTdEIj5IaSw8L3NwYW4+PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPjxzcGFuIGxh
-bmc9IkVOLVVTIiBzdHlsZT0iY29sb3I6IzFGNDk3RCI+UHJlc3NpbmcgdGhlIHJlc2V0IChvciBk
-b2luZyBpdCB2aWEgR1BJTyBpZiB0aGUganVtcGVyIGlzIGluIHRoZSBvdGhlciBwb3NpdGlvbiks
-IGRvZXMgb25seSBzZW5kIGFuIJFlbGVjdHJpY2FskiByZXNldCB0byB0aGUgVFBNLjwvc3Bhbj48
-L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xv
-cjojMUY0OTdEIj4mbmJzcDs8L3NwYW4+PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPjxzcGFu
-IGxhbmc9IkVOLVVTIiBzdHlsZT0iY29sb3I6IzFGNDk3RCI+VGhpcyBkb2VzIE5PVCAqY2xlYXIq
-IHRoZSB0cG0gLCggYW5kIGFsc28gb2YgY291cnNlIGRvZXMgbm90IGRlLXByb3Zpc2lvbiB0aGUg
-ZmFwaS4pPC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1V
-UyIgc3R5bGU9ImNvbG9yOiMxRjQ5N0QiPkEgcmVzZXQgb25seSByZXNldHMgdGhlIHZvbGF0aWxl
-IHN0YXRlcy48L3NwYW4+PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVO
-LVVTIiBzdHlsZT0iY29sb3I6IzFGNDk3RCI+PGJyPgpZb3UgY2FuIHZlcmlmeSB0aGF0IHRoZSBy
-ZXNldCBpcyB3b3JraW5nLCBieSB1c2luZyBhbnkgcmVndWxhciBlc2FwaSB0b29sICh0cG0yX3h4
-eHgpIGFuZCB5b3Ugd2lsbCBnZXQgYW4gZXJyb3IgUkNfSU5JVElBTElaRSAweDEwMC48L3NwYW4+
-PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iY29s
-b3I6IzFGNDk3RCI+VGhlbiB5b3Ugd291bGQgbmVlZCB0byBzZW5kIGEgdHBtMl9zdGFydHVwIGNv
-bW1hbmQuPC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1V
-UyIgc3R5bGU9ImNvbG9yOiMxRjQ5N0QiPiZuYnNwOzwvc3Bhbj48L3A+CjxwIGNsYXNzPSJ4X01z
-b05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojMUY0OTdEIj5GQVBJIHRv
-b2xzICh0c3MyX3h4eHgpIGRvIHNlbmQgdGhlIHN0YXJ0dXAgYXV0b21hdGljYWxseS48L3NwYW4+
-PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iY29s
-b3I6IzFGNDk3RCI+Jm5ic3A7PC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3Bh
-biBsYW5nPSJFTi1VUyIgc3R5bGU9ImNvbG9yOiMxRjQ5N0QiPiZuYnNwOzwvc3Bhbj48L3A+Cjxw
-IGNsYXNzPSJ4X01zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojMUY0
-OTdEIj5UaGFua3MsPGJyPgpQZXRlcjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+
-PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJjb2xvcjojMUY0OTdEIj4mbmJzcDs8L3NwYW4+PC9w
-Pgo8ZGl2Pgo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTsgYm9yZGVyLXRvcDpzb2xpZCAjRTFFMUUx
-CiAgICAgICAgICAgIDEuMHB0OyBwYWRkaW5nOjMuMHB0IDBjbSAwY20gMGNtIj4KPHAgY2xhc3M9
-InhfTXNvTm9ybWFsIj48Yj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9IiI+RnJvbTo8L3NwYW4+
-PC9iPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0iIj4gQW50aG9ueSBBcnJhc2N1ZQo8YSBjbGFz
-cz0ieF9tb3otdHh0LWxpbmstcmZjMjM5NkUiIGhyZWY9Im1haWx0bzpBQXJyYXNjdWVAbmV1cm9s
-b29wLmRlIj4mbHQ7QUFycmFzY3VlQG5ldXJvbG9vcC5kZSZndDs8L2E+Cjxicj4KPGI+U2VudDo8
-L2I+IERpZW5zdGFnLCAxLiBKdW5pIDIwMjEgMTk6MTg8YnI+CjxiPlRvOjwvYj4gPGEgY2xhc3M9
-InhfbW96LXR4dC1saW5rLWFiYnJldmlhdGVkIiBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5v
-cmciPgp0cG0yQGxpc3RzLjAxLm9yZzwvYT48YnI+CjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gUmVz
-ZXR0aW5nIFRQTSBPcHRpZ2EgSW5maW5lb24gU0xCIDk2NzA8L3NwYW4+PC9wPgo8L2Rpdj4KPC9k
-aXY+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+Jm5ic3A7PC9wPgo8ZGl2Pgo8dGFibGUgY2xhc3M9
-InhfTXNvTm9ybWFsVGFibGUiIHdpZHRoPSIwIiBjZWxscGFkZGluZz0iMCIgYm9yZGVyPSIwIiBz
-dHlsZT0id2lkdGg6MGNtOyBiYWNrZ3JvdW5kOm1vY2Nhc2luIj4KPHRib2R5Pgo8dHI+Cjx0ZCBz
-dHlsZT0icGFkZGluZzouNzVwdCAuNzVwdCAuNzVwdCAuNzVwdCI+CjxwIGNsYXNzPSJ4X01zb05v
-cm1hbCI+PHN0cm9uZz48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjVwdCI+Q2F1dGlvbjwvc3Bh
-bj48L3N0cm9uZz48c3BhbiBzdHlsZT0iIj46IFRoaXMgZS1tYWlsIG9yaWdpbmF0ZWQgb3V0c2lk
-ZSBJbmZpbmVvbiBUZWNobm9sb2dpZXMuIERvIG5vdCBjbGljayBvbiBsaW5rcyBvciBvcGVuIGF0
-dGFjaG1lbnRzIHVubGVzcyB5b3UKPGEgaHJlZj0iaHR0cHM6Ly9nb3RvLmluZmluZW9uLmNvbS9T
-b2NpYWxFbmdpbmVlcmluZyI+dmFsaWRhdGUgaXQgaXMgc2FmZTwvYT4uPC9zcGFuPjwvcD4KPC90
-ZD4KPC90cj4KPC90Ym9keT4KPC90YWJsZT4KPC9kaXY+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+
-PHNwYW4gc3R5bGU9IiI+Jm5ic3A7PC9zcGFuPjwvcD4KPGRpdj4KPHAgY2xhc3M9InhfTXNvTm9y
-bWFsIj5IZWxsbyw8L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+Jm5ic3A7PC9wPgo8cCBjbGFz
-cz0ieF9Nc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5JIGtub3cgdGhpcyBxdWVzdGlvbiBp
-cyBub3QgZGlyZWN0bHkgcmVsYXRlZCB0byB0aGUgVFNTIHByb2plY3QsIGJ1dCBtYXliZSB0aGVy
-ZSBpcyBvbmUgc29tZW9uZSBpbiB0aGlzIGNvbW11bml0eSB3aG8gY2FuIGhlbHAgbWUgd2l0aCB0
-aGlzLjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMi
-PkkgYW0gdXNpbmcgYSBUUE0gT3B0aWdhIEluZmluZW9uIFNMQiA5NjcwIG9uIGEgUmFzcGJlcnJ5
-IHBpIDQgSS9PIGJvYXJkIHdpdGggYSBjb21wdXRlIG1vZHVsZSA0Ljwvc3Bhbj48L3A+CjxwIGNs
-YXNzPSJ4X01zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPjxhIGhyZWY9Imh0dHBzOi8vd3d3
-LmluZmluZW9uLmNvbS9kZ2RsL0luZmluZW9uLVNMQiUyMDk2NzBWUTIuMC1EYXRhU2hlZXQtdjAx
-XzA0LUVOLnBkZj9maWxlSWQ9NTU0NmQ0NjI2ZmMxY2UwYjAxNmZjNzgyNzAzNTBjZDYiPmh0dHBz
-Oi8vd3d3LmluZmluZW9uLmNvbS9kZ2RsL0luZmluZW9uLVNMQiUyMDk2NzBWUTIuMC1EYXRhU2hl
-ZXQtdjAxXzA0LUVOLnBkZj9maWxlSWQ9NTU0NmQ0NjI2ZmMxY2UwYjAxNmZjNzgyNzAzNTBjZDY8
-L2E+PC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+
-Jm5ic3A7PC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1V
-UyI+VGhpcyBUUE0gaGFzIGEgcGh5c2ljYWwgcmVzZXQgYnV0dG9uLiBUaGUgcHJvYmxlbSBpcyB0
-aGF0IEkgY2Fubm90IG1hbmFnZSB0byByZXNldCB0aGUgVFBNLiAmbmJzcDtObyBtYXR0ZXIgaG93
-IEkgcGxhY2UgdGhlIGp1bXBlciBvciBob3cgbG9uZyBJIHByZXNzIHRoZSBidXR0b24sIHRoZSBU
-UE0gaXMgbm90IHJlc2V0dGluZy48L3NwYW4+PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPjxz
-cGFuIGxhbmc9IkVOLVVTIj5JIGJlbGlldmUgdGhlIHJlc2V0IGlzIG5vdCBjYXJyaWVkIG91dCwg
-YmVjYXVzZSB3aGVuIEkgdHJ5IHRvIHJlLXByb3Zpc2lvbiB3aXRoIHRzczJfcHJvdmlzaW9uIEkg
-Z2V0IHRoZSBtZXNzYWdlIJNTUksgcGVyc2lzdGVudCBoYW5kbGUgYWxyZWFkeSBkZWZpbmVklC48
-L3NwYW4+PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5Nb3Jl
-b3ZlciwgaWYgSSBjYWxsIJNzdWRvIHRwbTJfZ2V0Y2FwIGhhbmRsZXMtcGVyc2lzdGVudJQgSSBn
-ZXQgdGhlIGhhbmRsZXMgd2hpY2ggSSBoYXZlIGFscmVhZHkgcHJldmlvdXNseSBvY2N1cGllZCAo
-SSBhbSBhc3N1bWluZyBoZXJlIHRoYXQgYWZ0ZXIgYSByZXNldCB0aGV5IHdpbGwgYmUgZW1wdGll
-ZCkuPC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+
-Jm5ic3A7PC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1V
-UyI+SGFzIGFueW9uZSBkb25lIGEgcGh5c2ljYWwgcmVzZXQgb2YgYSBUUE0/PC9zcGFuPjwvcD4K
-PHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jm5ic3A7PC9zcGFuPjwv
-cD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+VGhhbmtzIGZvciB5
-b3VyIGhlbHAuPC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJF
-Ti1VUyI+Jm5ic3A7PC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj48c3BhbiBzdHls
-ZT0iZm9udC1zaXplOjEwLjBwdDsgY29sb3I6YmxhY2siPkFudGhvbnkgQXJyYXNjdWU8L3NwYW4+
-PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjEyLjBwdCI+
-PHNwYW4gc3R5bGU9IiI+Jm5ic3A7PC9zcGFuPjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj4m
-bmJzcDs8L3A+CjwvZGl2Pgo8L2Rpdj4KPGJyPgo8ZmllbGRzZXQgY2xhc3M9InhfbWltZUF0dGFj
-aG1lbnRIZWFkZXIiPjwvZmllbGRzZXQ+CjxwcmUgY2xhc3M9InhfbW96LXF1b3RlLXByZSI+X19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KdHBtMiBtYWlsaW5n
-IGxpc3QgLS0gPGEgY2xhc3M9InhfbW96LXR4dC1saW5rLWFiYnJldmlhdGVkIiBocmVmPSJtYWls
-dG86dHBtMkBsaXN0cy4wMS5vcmciPnRwbTJAbGlzdHMuMDEub3JnPC9hPgpUbyB1bnN1YnNjcmli
-ZSBzZW5kIGFuIGVtYWlsIHRvIDxhIGNsYXNzPSJ4X21vei10eHQtbGluay1hYmJyZXZpYXRlZCIg
-aHJlZj0ibWFpbHRvOnRwbTItbGVhdmVAbGlzdHMuMDEub3JnIj50cG0yLWxlYXZlQGxpc3RzLjAx
-Lm9yZzwvYT4KJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQpcy8lKF9pbnRlcm5hbF9u
-YW1lKXM8L3ByZT4KPC9ibG9ja3F1b3RlPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
-
---===============7058916279343210077==--
+Imran Desai
+--===============8299294949694031112==--
 
