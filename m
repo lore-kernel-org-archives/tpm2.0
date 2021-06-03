@@ -1,28 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============8845578643452923875=="
+Content-Type: multipart/mixed; boundary="===============0581531505400730470=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Dropping OSSL 1.0.2 support
-Date: Wed, 02 Jun 2021 19:54:18 +0000
-Message-ID: <SN6PR11MB343732ADB043E6266542EBB6B83D9@SN6PR11MB3437.namprd11.prod.outlook.com>
+From: Ted Kim <ted.h.kim at oracle.com>
+Subject: [tpm2] Java support for TPM2 ?
+Date: Wed, 02 Jun 2021 17:00:19 -0700
+Message-ID: <d48b6048-a98a-b237-0b3f-93fed4ecc35a@oracle.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8845578643452923875==
+--===============0581531505400730470==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-With OpenSSL 3.0 in alpha releases and soon to be beta releases, we have un=
-dergone looking at the work it will take to port to openssl 3.0. 3.0 essent=
-ially forces our hands away from the lower level APIs and into the EVP api'=
-s, AFAIK. Because of this, supporting openssl 1.0.2 will be more difficult.=
- OSSL 1.0.2 is EOL, and most distros I am aware of that have 1.0.2 are EOL =
-as well.
+Folks,
 
-So the question is, if we kill OSSL < 1.1.0 support, how many folks will be=
- disrupted by that?
+Does anyone know of any current projects to support Java with TPM2 ?
+
+
+I saw TSS.Java over at Microsoft TSS.MSR (last commit 7 months ago).
+
+But aside from that I only saw projects which look really old (several =
+
+years since last update).
+
+Any leads ?
+
 
 Thanks,
-Bill
---===============8845578643452923875==--
+-ted
+
+-- =
+
+Ted H. Kim, PhD
+ted.h.kim(a)oracle.com
++1 310-258-7515
+
+--===============0581531505400730470==--
 
