@@ -1,39 +1,23 @@
-Content-Type: multipart/mixed; boundary="===============0581531505400730470=="
+Content-Type: multipart/mixed; boundary="===============3790439378585160843=="
 MIME-Version: 1.0
-From: Ted Kim <ted.h.kim at oracle.com>
-Subject: [tpm2] Java support for TPM2 ?
-Date: Wed, 02 Jun 2021 17:00:19 -0700
-Message-ID: <d48b6048-a98a-b237-0b3f-93fed4ecc35a@oracle.com>
+From: zoett25 at gmail.com
+Subject: [tpm2] All is conected poster-presentation-guidelines
+Date: Thu, 03 Jun 2021 13:12:52 +0000
+Message-ID: <20210603131252.2822.60314@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0581531505400730470==
+--===============3790439378585160843==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Folks,
-
-Does anyone know of any current projects to support Java with TPM2 ?
-
-
-I saw TSS.Java over at Microsoft TSS.MSR (last commit 7 months ago).
-
-But aside from that I only saw projects which look really old (several =
-
-years since last update).
-
-Any leads ?
-
-
-Thanks,
--ted
-
--- =
-
-Ted H. Kim, PhD
-ted.h.kim(a)oracle.com
-+1 310-258-7515
-
---===============0581531505400730470==--
+Hello and nice to meet you))
+I prepare a new kind of studying work. And during understanding this theme =
+I realize that all is conected poster-presentation-guidelines. But at first=
+ when you prepare this have understood and do everything separately. But on=
+ly then combine everything in one. You also can find more information about=
+ it here https://prime-essay.net/poster-presentation-guidelines I hope that=
+ it can be useful for some of you))
+--===============3790439378585160843==--
 
