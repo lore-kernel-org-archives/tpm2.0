@@ -1,122 +1,98 @@
-Content-Type: multipart/mixed; boundary="===============3557246370536981747=="
+Content-Type: multipart/mixed; boundary="===============7677372847003490937=="
 MIME-Version: 1.0
-From: Anthony Arrascue <AArrascue at neuroloop.de>
-Subject: [tpm2] Re: TPM for SSH authentication
-Date: Tue, 20 Jul 2021 07:11:02 +0000
-Message-ID: <24d95ca71a8f4f35b609fb81fbf09205@neuroloop.de>
-In-Reply-To: 20210720033618.2743.54921@ml01.vlan13.01.org
+From: Andy Purcell <andy_purcell at keysight.com>
+Subject: [tpm2] Want to use c++ to get TPM Serial Number - how do it? 
+Date: Tue, 20 Jul 2021 17:18:43 +0000
+Message-ID: <
+ <SA1PR17MB5432DD01C2498B7B1F50486E9FE29@SA1PR17MB5432.namprd17.prod.outlook.com>>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3557246370536981747==
+--===============7677372847003490937==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Scott,
+I have a need to use C++ to obtain the unique TPM information - like a Seri=
+al Number.
+My system is running Windows 10/64. This is on an HP Desktop PC with TPM 2.=
+0 chip.
 
-Yes, if you are searching how to re-provision your TPM take a look at this =
-thread (for an older version of the tools though):
-https://lists.01.org/hyperkitty/list/tpm2(a)lists.01.org/thread/4LVFPEUGMA5=
-GMQJCZV5N7GW7WMEDYCRO/
+I can use PowerShell
+Get-TpmEndorsementKeyInfo -hashalgorithm sha256
 
-I sketched some steps and other users pointed other ways of doing it.
+To get this output:
+                ...
+ManufacturerCertificates : {[Subject]
+                             TPMVersion=3Did:073E, TPMModel=3DSLB 9670 TPM2=
+.0, TPMManufacturer=3Did:49465800
+                           [Issuer]
+                             CN=3DInfineon OPTIGA(TM) RSA Manufacturing CA =
+034, OU=3DOPTIGA(TM) TPM2.0, O=3DInfineon Technologies AG, C=3DDE
+      ...
+                           [Serial Number]
+                             4880DE8E
+                           [Thumbprint]
+                             B8395DA6A1D661C8CCD35D47E3DA6E9532EFFEC4
 
-I hope this helps.
+But how can I get this same Serial Number information using C++?
 
-Best, =
-
-Anthony
+ap
 
 
-> -----Original Message-----
-> From: scott.r.eisele(a)gmail.com <scott.r.eisele(a)gmail.com>
-> Sent: Tuesday, 20 July 2021 05:36
-> To: tpm2(a)lists.01.org
-> Subject: [tpm2] TPM for SSH authentication
-> =
+--===============7677372847003490937==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-> Hi everyone!
-> I'm trying to use a TPM to secure ssh keys, following the example here:
-> https://incenp.org/notes/2020/tpm-based-ssh-key.html
-> First, is this a standard way to secure ssh keys? Or is there another met=
-hod
-> that is preferred?
-> =
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRvciIgY29udGVu
+dD0iTWljcm9zb2Z0IEV4Y2hhbmdlIFNlcnZlciI+CjwhLS0gY29udmVydGVkIGZyb20gcnRmIC0t
+Pgo8c3R5bGU+PCEtLSAuRW1haWxRdW90ZSB7IG1hcmdpbi1sZWZ0OiAxcHQ7IHBhZGRpbmctbGVm
+dDogNHB0OyBib3JkZXItbGVmdDogIzgwMDAwMCAycHggc29saWQ7IH0gLS0+PC9zdHlsZT4KPC9o
+ZWFkPgo8Ym9keT4KPGZvbnQgZmFjZT0iQ2FsaWJyaSIgc2l6ZT0iMiI+PHNwYW4gc3R5bGU9ImZv
+bnQtc2l6ZToxMXB0OyI+CjxkaXY+SSBoYXZlIGEgbmVlZCB0byB1c2UgQysrIHRvIG9idGFpbiB0
+aGUgdW5pcXVlIFRQTSBpbmZvcm1hdGlvbiAmIzgyMTE7IGxpa2UgYSBTZXJpYWwgTnVtYmVyLiA8
+L2Rpdj4KPGRpdj5NeSBzeXN0ZW0gaXMgcnVubmluZyBXaW5kb3dzIDEwLzY0LiBUaGlzIGlzIG9u
+IGFuIEhQIERlc2t0b3AgUEMgd2l0aCBUUE0gMi4wIGNoaXAuIDwvZGl2Pgo8ZGl2PiZuYnNwOzwv
+ZGl2Pgo8ZGl2PkkgY2FuIHVzZSBQb3dlclNoZWxsIDwvZGl2Pgo8ZGl2IHN0eWxlPSJ0ZXh0LWlu
+ZGVudDozNnB0OyI+R2V0LVRwbUVuZG9yc2VtZW50S2V5SW5mbyAtaGFzaGFsZ29yaXRobSBzaGEy
+NTY8L2Rpdj4KPGRpdj4mbmJzcDs8L2Rpdj4KPGRpdj5UbyBnZXQgdGhpcyBvdXRwdXQ6IDwvZGl2
+Pgo8ZGl2PiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAmIzgyMzA7IDwvZGl2Pgo8
+ZGl2IHN0eWxlPSJ0ZXh0LWluZGVudDozNnB0OyI+TWFudWZhY3R1cmVyQ2VydGlmaWNhdGVzIDog
+e1tTdWJqZWN0XTwvZGl2Pgo8ZGl2PiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyBUUE1WZXJzaW9uPWlkOjA3M0UsIFRQTU1vZGVsPVNMQiA5Njcw
+IFRQTTIuMCwgVFBNTWFudWZhY3R1cmVyPWlkOjQ5NDY1ODAwPC9kaXY+CjxkaXY+Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IFtJc3N1ZXJdPC9kaXY+CjxkaXY+Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IENOPUlu
+ZmluZW9uIE9QVElHQShUTSkgUlNBIE1hbnVmYWN0dXJpbmcgQ0EgMDM0LCBPVT1PUFRJR0EoVE0p
+IFRQTTIuMCwgTz1JbmZpbmVvbiBUZWNobm9sb2dpZXMgQUcsIEM9REU8L2Rpdj4KPGRpdiBzdHls
+ZT0idGV4dC1pbmRlbnQ6MzZwdDtwYWRkaW5nLWxlZnQ6MzZwdDsiPiYjODIzMDs8L2Rpdj4KPGRp
+dj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgW1NlcmlhbCBOdW1i
+ZXJdPC9kaXY+CjxkaXY+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7IDQ4ODBERThFPC9kaXY+CjxkaXY+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7IFtUaHVtYnByaW50XTwvZGl2Pgo8ZGl2PiZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBCODM5NURBNkExRDY2MUM4
+Q0NEMzVENDdFM0RBNkU5NTMyRUZGRUM0PC9kaXY+CjxkaXY+Jm5ic3A7PC9kaXY+CjxkaXY+QnV0
+IGhvdyBjYW4gSSBnZXQgdGhpcyBzYW1lIFNlcmlhbCBOdW1iZXIgaW5mb3JtYXRpb24gdXNpbmcg
+QysrPzwvZGl2Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8ZGl2PmFwPC9kaXY+CjxkaXY+Jm5ic3A7PC9k
+aXY+Cjwvc3Bhbj48L2ZvbnQ+CjwvYm9keT4KPC9odG1sPgo=
 
-> Assuming this method is acceptable, I made it to the point of extracting =
-the
-> public key from the PKCS11 token but ran into an issue.
-> =
-
-> $ ssh-keygen -vvv -D /usr/local/lib/libtpm2_pkcs11.so > tpm2key1.pub
-> WARNING:fapi:src/tss2-fapi/api/Fapi_List.c:226:Fapi_List_Finish() Profile=
- of
-> path not provisioned: /HS/SRK
-> ERROR:fapi:src/tss2-fapi/api/Fapi_List.c:81:Fapi_List() ErrorCode
-> (0x00060034) Entities_List
-> ERROR: Listing FAPI token objects failed.
-> debug1: provider /usr/local/lib/libtpm2_pkcs11.so: manufacturerID <tpm2-
-> software.github.io> cryptokiVersion 2.40 libraryDescription <TPM2.0
-> Cryptoki> libraryVersion 0.0
-> debug1: provider /usr/local/lib/libtpm2_pkcs11.so slot 0: label <firstTok=
-en>
-> manufacturerID <Infineon> model <SLB9670> serial <000000000000000> flags
-> 0x40d
-> debug1: have 1 keys
-> debug2: pkcs11_register_provider: ignoring uninitialised token in provider
-> /usr/local/lib/libtpm2_pkcs11.so slot 1
-> debug1: pkcs11_k11_free: parent 0xaaaaf0703630 ptr 0xaaaaf06ed350 idx 1
-> debug1: pkcs11_provider_unref: 0xaaaaf0692300 refcount 2
-> debug1: pkcs11_provider_finalize: 0xaaaaf0692300 refcount 1 valid 1
-> debug1: pkcs11_provider_unref: 0xaaaaf0692300 refcount 1
-> =
-
-> I then tried running Fapi_List() directly:
-> =
-
-> $ sudo tss2_list
-> WARNING:fapi:src/tss2-fapi/api/Fapi_List.c:216:Fapi_List_Finish() Path not
-> found:
-> ERROR:fapi:src/tss2-fapi/api/Fapi_List.c:81:Fapi_List() ErrorCode
-> (0x00060034) Entities_List
-> Fapi_List(0x60034) - fapi:Provisioning was not executed.
-> =
-
-> And assumed that provisioning was required. So I attempted that:
-> =
-
-> $ sudo tss2_provision
-> ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:520:Fapi_Provision_Finish()
-> ErrorCode (0x0006000b) SRK persistent handle already defined
-> ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:168:Fapi_Provision() ErrorC=
-ode
-> (0x0006000b) Provision
-> Fapi_Provision(0x6000B) - fapi:A parameter has a bad value
-> =
-
-> At this point, I'm at a loss as to what the state of the TPM is and how to
-> properly provision it and establish the Storage Hierarchy.
-> I've looked at https://trustedcomputinggroup.org/wp-
-> content/uploads/TCG-TPM-v2.0-Provisioning-Guidance-Published-v1r1.pdf
-> but it's not clear to me how to apply it.
-> =
-
-> Any help would be great. Thanks!
-> =
-
-> My platform configuration is:
-> raspberry pi 3b+
-> Infineon OPTIGA=E2=84=A2 TPM SLx 9670
-> ubuntu 20.04
-> tpm2-tss-3.1.0
-> tpm2-tools-5.1.1
-> tpm2-abrmd-2.4.0
-> tpm2-pkcs11-1.6.0
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============3557246370536981747==--
+--===============7677372847003490937==--
 
