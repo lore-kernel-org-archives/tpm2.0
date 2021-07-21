@@ -1,98 +1,208 @@
-Content-Type: multipart/mixed; boundary="===============7677372847003490937=="
+Content-Type: multipart/mixed; boundary="===============0369223394434764831=="
 MIME-Version: 1.0
-From: Andy Purcell <andy_purcell at keysight.com>
-Subject: [tpm2] Want to use c++ to get TPM Serial Number - how do it? 
-Date: Tue, 20 Jul 2021 17:18:43 +0000
-Message-ID: <
- <SA1PR17MB5432DD01C2498B7B1F50486E9FE29@SA1PR17MB5432.namprd17.prod.outlook.com>>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: TPM for SSH authentication
+Date: Wed, 21 Jul 2021 17:03:04 +0000
+Message-ID: <SN6PR11MB3437F8CC917EF93CFA4765ECB8E39@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: 20210720033618.2743.54921@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7677372847003490937==
+--===============0369223394434764831==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I have a need to use C++ to obtain the unique TPM information - like a Seri=
-al Number.
-My system is running Windows 10/64. This is on an HP Desktop PC with TPM 2.=
-0 chip.
+The tpm2-pkcs11 project supports two backends:
+  - The original backend (sqlite3)
+  - The FAPI backend (file system stores)
 
-I can use PowerShell
-Get-TpmEndorsementKeyInfo -hashalgorithm sha256
+Their is a document describing how to set up SSH using the original backend:
+https://github.com/tpm2-software/tpm2-pkcs11/blob/master/docs/SSH.md
 
-To get this output:
-                ...
-ManufacturerCertificates : {[Subject]
-                             TPMVersion=3Did:073E, TPMModel=3DSLB 9670 TPM2=
-.0, TPMManufacturer=3Did:49465800
-                           [Issuer]
-                             CN=3DInfineon OPTIGA(TM) RSA Manufacturing CA =
-034, OU=3DOPTIGA(TM) TPM2.0, O=3DInfineon Technologies AG, C=3DDE
-      ...
-                           [Serial Number]
-                             4880DE8E
-                           [Thumbprint]
-                             B8395DA6A1D661C8CCD35D47E3DA6E9532EFFEC4
-
-But how can I get this same Serial Number information using C++?
-
-ap
+If you really want to use the FAPI backend, you need to get tss2_provision =
+to work, not exactly sure what the error is there.
+But perhaps others will know.
 
 
---===============7677372847003490937==
+________________________________
+From: scott.r.eisele(a)gmail.com <scott.r.eisele(a)gmail.com>
+Sent: Monday, July 19, 2021 10:36 PM
+To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+Subject: [tpm2] TPM for SSH authentication
+
+Hi everyone!
+I'm trying to use a TPM to secure ssh keys, following the example here: htt=
+ps://incenp.org/notes/2020/tpm-based-ssh-key.html
+First, is this a standard way to secure ssh keys? Or is there another metho=
+d that is preferred?
+
+Assuming this method is acceptable, I made it to the point of extracting th=
+e public key from the PKCS11 token but ran into an issue.
+
+$ ssh-keygen -vvv -D /usr/local/lib/libtpm2_pkcs11.so > tpm2key1.pub
+WARNING:fapi:src/tss2-fapi/api/Fapi_List.c:226:Fapi_List_Finish() Profile o=
+f path not provisioned: /HS/SRK
+ERROR:fapi:src/tss2-fapi/api/Fapi_List.c:81:Fapi_List() ErrorCode (0x000600=
+34) Entities_List
+ERROR: Listing FAPI token objects failed.
+debug1: provider /usr/local/lib/libtpm2_pkcs11.so: manufacturerID <tpm2-sof=
+tware.github.io> cryptokiVersion 2.40 libraryDescription <TPM2.0 Cryptoki> =
+libraryVersion 0.0
+debug1: provider /usr/local/lib/libtpm2_pkcs11.so slot 0: label <firstToken=
+> manufacturerID <Infineon> model <SLB9670> serial <000000000000000> flags =
+0x40d
+debug1: have 1 keys
+debug2: pkcs11_register_provider: ignoring uninitialised token in provider =
+/usr/local/lib/libtpm2_pkcs11.so slot 1
+debug1: pkcs11_k11_free: parent 0xaaaaf0703630 ptr 0xaaaaf06ed350 idx 1
+debug1: pkcs11_provider_unref: 0xaaaaf0692300 refcount 2
+debug1: pkcs11_provider_finalize: 0xaaaaf0692300 refcount 1 valid 1
+debug1: pkcs11_provider_unref: 0xaaaaf0692300 refcount 1
+
+I then tried running Fapi_List() directly:
+
+$ sudo tss2_list
+WARNING:fapi:src/tss2-fapi/api/Fapi_List.c:216:Fapi_List_Finish() Path not =
+found:
+ERROR:fapi:src/tss2-fapi/api/Fapi_List.c:81:Fapi_List() ErrorCode (0x000600=
+34) Entities_List
+Fapi_List(0x60034) - fapi:Provisioning was not executed.
+
+And assumed that provisioning was required. So I attempted that:
+
+$ sudo tss2_provision
+ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:520:Fapi_Provision_Finish() E=
+rrorCode (0x0006000b) SRK persistent handle already defined
+ERROR:fapi:src/tss2-fapi/api/Fapi_Provision.c:168:Fapi_Provision() ErrorCod=
+e (0x0006000b) Provision
+Fapi_Provision(0x6000B) - fapi:A parameter has a bad value
+
+At this point, I'm at a loss as to what the state of the TPM is and how to =
+properly provision it and establish the Storage Hierarchy.
+I've looked at https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM=
+-v2.0-Provisioning-Guidance-Published-v1r1.pdf
+but it's not clear to me how to apply it.
+
+Any help would be great. Thanks!
+
+My platform configuration is:
+raspberry pi 3b+
+Infineon OPTIGA=E2=84=A2 TPM SLx 9670
+ubuntu 20.04
+tpm2-tss-3.1.0
+tpm2-tools-5.1.1
+tpm2-abrmd-2.4.0
+tpm2-pkcs11-1.6.0
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============0369223394434764831==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
 PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRvciIgY29udGVu
-dD0iTWljcm9zb2Z0IEV4Y2hhbmdlIFNlcnZlciI+CjwhLS0gY29udmVydGVkIGZyb20gcnRmIC0t
-Pgo8c3R5bGU+PCEtLSAuRW1haWxRdW90ZSB7IG1hcmdpbi1sZWZ0OiAxcHQ7IHBhZGRpbmctbGVm
-dDogNHB0OyBib3JkZXItbGVmdDogIzgwMDAwMCAycHggc29saWQ7IH0gLS0+PC9zdHlsZT4KPC9o
-ZWFkPgo8Ym9keT4KPGZvbnQgZmFjZT0iQ2FsaWJyaSIgc2l6ZT0iMiI+PHNwYW4gc3R5bGU9ImZv
-bnQtc2l6ZToxMXB0OyI+CjxkaXY+SSBoYXZlIGEgbmVlZCB0byB1c2UgQysrIHRvIG9idGFpbiB0
-aGUgdW5pcXVlIFRQTSBpbmZvcm1hdGlvbiAmIzgyMTE7IGxpa2UgYSBTZXJpYWwgTnVtYmVyLiA8
-L2Rpdj4KPGRpdj5NeSBzeXN0ZW0gaXMgcnVubmluZyBXaW5kb3dzIDEwLzY0LiBUaGlzIGlzIG9u
-IGFuIEhQIERlc2t0b3AgUEMgd2l0aCBUUE0gMi4wIGNoaXAuIDwvZGl2Pgo8ZGl2PiZuYnNwOzwv
-ZGl2Pgo8ZGl2PkkgY2FuIHVzZSBQb3dlclNoZWxsIDwvZGl2Pgo8ZGl2IHN0eWxlPSJ0ZXh0LWlu
-ZGVudDozNnB0OyI+R2V0LVRwbUVuZG9yc2VtZW50S2V5SW5mbyAtaGFzaGFsZ29yaXRobSBzaGEy
-NTY8L2Rpdj4KPGRpdj4mbmJzcDs8L2Rpdj4KPGRpdj5UbyBnZXQgdGhpcyBvdXRwdXQ6IDwvZGl2
-Pgo8ZGl2PiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAmIzgyMzA7IDwvZGl2Pgo8
-ZGl2IHN0eWxlPSJ0ZXh0LWluZGVudDozNnB0OyI+TWFudWZhY3R1cmVyQ2VydGlmaWNhdGVzIDog
-e1tTdWJqZWN0XTwvZGl2Pgo8ZGl2PiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyBUUE1WZXJzaW9uPWlkOjA3M0UsIFRQTU1vZGVsPVNMQiA5Njcw
-IFRQTTIuMCwgVFBNTWFudWZhY3R1cmVyPWlkOjQ5NDY1ODAwPC9kaXY+CjxkaXY+Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IFtJc3N1ZXJdPC9kaXY+CjxkaXY+Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IENOPUlu
-ZmluZW9uIE9QVElHQShUTSkgUlNBIE1hbnVmYWN0dXJpbmcgQ0EgMDM0LCBPVT1PUFRJR0EoVE0p
-IFRQTTIuMCwgTz1JbmZpbmVvbiBUZWNobm9sb2dpZXMgQUcsIEM9REU8L2Rpdj4KPGRpdiBzdHls
-ZT0idGV4dC1pbmRlbnQ6MzZwdDtwYWRkaW5nLWxlZnQ6MzZwdDsiPiYjODIzMDs8L2Rpdj4KPGRp
-dj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgW1NlcmlhbCBOdW1i
-ZXJdPC9kaXY+CjxkaXY+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7IDQ4ODBERThFPC9kaXY+CjxkaXY+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7IFtUaHVtYnByaW50XTwvZGl2Pgo8ZGl2PiZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBCODM5NURBNkExRDY2MUM4
-Q0NEMzVENDdFM0RBNkU5NTMyRUZGRUM0PC9kaXY+CjxkaXY+Jm5ic3A7PC9kaXY+CjxkaXY+QnV0
-IGhvdyBjYW4gSSBnZXQgdGhpcyBzYW1lIFNlcmlhbCBOdW1iZXIgaW5mb3JtYXRpb24gdXNpbmcg
-QysrPzwvZGl2Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8ZGl2PmFwPC9kaXY+CjxkaXY+Jm5ic3A7PC9k
-aXY+Cjwvc3Bhbj48L2ZvbnQ+CjwvYm9keT4KPC9odG1sPgo=
+eHQvaHRtbDsgY2hhcnNldD1XaW5kb3dzLTEyNTIiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiIHN0
+eWxlPSJkaXNwbGF5Om5vbmU7Ij4gUCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9IDwv
+c3R5bGU+CjwvaGVhZD4KPGJvZHkgZGlyPSJsdHIiPgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTog
+Q2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
+b2xvcjogcmdiKDAsIDAsIDApOyI+ClRoZSB0cG0yLXBrY3MxMSBwcm9qZWN0IHN1cHBvcnRzIHR3
+byBiYWNrZW5kczo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
+LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAw
+LCAwKTsiPgombmJzcDsgLSBUaGUgb3JpZ2luYWwgYmFja2VuZCAoc3FsaXRlMyk8L2Rpdj4KPGRp
+diBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2Vy
+aWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgombmJzcDsgLSBUaGUg
+RkFQSSBiYWNrZW5kIChmaWxlIHN5c3RlbSBzdG9yZXMpPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
+dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
+ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpUaGVpciBpcyBhIGRvY3VtZW50IGRlc2Ny
+aWJpbmcgaG93IHRvIHNldCB1cCBTU0ggdXNpbmcgdGhlIG9yaWdpbmFsIGJhY2tlbmQ6PC9kaXY+
+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5z
+LXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGEgaHJlZj0i
+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi1wa2NzMTEvYmxvYi9tYXN0ZXIv
+ZG9jcy9TU0gubWQiIGlkPSJMUGxuayI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUv
+dHBtMi1wa2NzMTEvYmxvYi9tYXN0ZXIvZG9jcy9TU0gubWQ8L2E+PGJyPgo8L2Rpdj4KPGRpdiBz
+dHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7
+IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2
+PklmIHlvdSByZWFsbHkgd2FudCB0byB1c2UgdGhlIEZBUEkgYmFja2VuZCwgeW91IG5lZWQgdG8g
+Z2V0IHRzczJfcHJvdmlzaW9uIHRvIHdvcmssIG5vdCBleGFjdGx5IHN1cmUgd2hhdCB0aGUgZXJy
+b3IgaXMgdGhlcmUuPC9kaXY+CjxkaXY+QnV0IHBlcmhhcHMgb3RoZXJzIHdpbGwga25vdy48L2Rp
+dj4KPGRpdiBjbGFzcz0iX0VudGl0eSBfRVR5cGVfT1dBTGlua1ByZXZpZXcgX0VJZF9PV0FMaW5r
+UHJldmlldyBfRVJlYWRvbmx5XzEiPjwvZGl2Pgo8YnI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5
+OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7
+IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBpZD0iYXBwZW5kb25zZW5k
+Ij48L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3aWR0aDo5OCUiIHRhYmlu
+ZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRyIj48Zm9udCBmYWNlPSJD
+YWxpYnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQiIGNvbG9yPSIjMDAwMDAw
+Ij48Yj5Gcm9tOjwvYj4gc2NvdHQuci5laXNlbGVAZ21haWwuY29tICZsdDtzY290dC5yLmVpc2Vs
+ZUBnbWFpbC5jb20mZ3Q7PGJyPgo8Yj5TZW50OjwvYj4gTW9uZGF5LCBKdWx5IDE5LCAyMDIxIDEw
+OjM2IFBNPGJyPgo8Yj5Ubzo8L2I+IHRwbTJAbGlzdHMuMDEub3JnICZsdDt0cG0yQGxpc3RzLjAx
+Lm9yZyZndDs8YnI+CjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gVFBNIGZvciBTU0ggYXV0aGVudGlj
+YXRpb248L2ZvbnQ+CjxkaXY+Jm5ic3A7PC9kaXY+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJCb2R5RnJh
+Z21lbnQiPjxmb250IHNpemU9IjIiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTFwdDsiPgo8ZGl2
+IGNsYXNzPSJQbGFpblRleHQiPkhpIGV2ZXJ5b25lITxicj4KSSdtIHRyeWluZyB0byB1c2UgYSBU
+UE0gdG8gc2VjdXJlIHNzaCBrZXlzLCBmb2xsb3dpbmcgdGhlIGV4YW1wbGUgaGVyZTogPGEgaHJl
+Zj0iaHR0cHM6Ly9pbmNlbnAub3JnL25vdGVzLzIwMjAvdHBtLWJhc2VkLXNzaC1rZXkuaHRtbCI+
+Cmh0dHBzOi8vaW5jZW5wLm9yZy9ub3Rlcy8yMDIwL3RwbS1iYXNlZC1zc2gta2V5Lmh0bWw8L2E+
+PGJyPgpGaXJzdCwgaXMgdGhpcyBhIHN0YW5kYXJkIHdheSB0byBzZWN1cmUgc3NoIGtleXM/IE9y
+IGlzIHRoZXJlIGFub3RoZXIgbWV0aG9kIHRoYXQgaXMgcHJlZmVycmVkPwo8YnI+Cjxicj4KQXNz
+dW1pbmcgdGhpcyBtZXRob2QgaXMgYWNjZXB0YWJsZSwgSSBtYWRlIGl0IHRvIHRoZSBwb2ludCBv
+ZiBleHRyYWN0aW5nIHRoZSBwdWJsaWMga2V5IGZyb20gdGhlIFBLQ1MxMSB0b2tlbiBidXQgcmFu
+IGludG8gYW4gaXNzdWUuPGJyPgo8YnI+CiQgc3NoLWtleWdlbiAtdnZ2IC1EIC91c3IvbG9jYWwv
+bGliL2xpYnRwbTJfcGtjczExLnNvICZndDsgdHBtMmtleTEucHViPGJyPgpXQVJOSU5HOmZhcGk6
+c3JjL3RzczItZmFwaS9hcGkvRmFwaV9MaXN0LmM6MjI2OkZhcGlfTGlzdF9GaW5pc2goKSBQcm9m
+aWxlIG9mIHBhdGggbm90IHByb3Zpc2lvbmVkOiAvSFMvU1JLCjxicj4KRVJST1I6ZmFwaTpzcmMv
+dHNzMi1mYXBpL2FwaS9GYXBpX0xpc3QuYzo4MTpGYXBpX0xpc3QoKSBFcnJvckNvZGUgKDB4MDAw
+NjAwMzQpIEVudGl0aWVzX0xpc3QKPGJyPgpFUlJPUjogTGlzdGluZyBGQVBJIHRva2VuIG9iamVj
+dHMgZmFpbGVkLjxicj4KZGVidWcxOiBwcm92aWRlciAvdXNyL2xvY2FsL2xpYi9saWJ0cG0yX3Br
+Y3MxMS5zbzogbWFudWZhY3R1cmVySUQgJmx0O3RwbTItc29mdHdhcmUuZ2l0aHViLmlvJmd0OyBj
+cnlwdG9raVZlcnNpb24gMi40MCBsaWJyYXJ5RGVzY3JpcHRpb24gJmx0O1RQTTIuMCBDcnlwdG9r
+aSZndDsgbGlicmFyeVZlcnNpb24gMC4wPGJyPgpkZWJ1ZzE6IHByb3ZpZGVyIC91c3IvbG9jYWwv
+bGliL2xpYnRwbTJfcGtjczExLnNvIHNsb3QgMDogbGFiZWwgJmx0O2ZpcnN0VG9rZW4mZ3Q7IG1h
+bnVmYWN0dXJlcklEICZsdDtJbmZpbmVvbiZndDsgbW9kZWwgJmx0O1NMQjk2NzAmZ3Q7IHNlcmlh
+bCAmbHQ7MDAwMDAwMDAwMDAwMDAwJmd0OyBmbGFncyAweDQwZDxicj4KZGVidWcxOiBoYXZlIDEg
+a2V5czxicj4KZGVidWcyOiBwa2NzMTFfcmVnaXN0ZXJfcHJvdmlkZXI6IGlnbm9yaW5nIHVuaW5p
+dGlhbGlzZWQgdG9rZW4gaW4gcHJvdmlkZXIgL3Vzci9sb2NhbC9saWIvbGlidHBtMl9wa2NzMTEu
+c28gc2xvdCAxPGJyPgpkZWJ1ZzE6IHBrY3MxMV9rMTFfZnJlZTogcGFyZW50IDB4YWFhYWYwNzAz
+NjMwIHB0ciAweGFhYWFmMDZlZDM1MCBpZHggMTxicj4KZGVidWcxOiBwa2NzMTFfcHJvdmlkZXJf
+dW5yZWY6IDB4YWFhYWYwNjkyMzAwIHJlZmNvdW50IDI8YnI+CmRlYnVnMTogcGtjczExX3Byb3Zp
+ZGVyX2ZpbmFsaXplOiAweGFhYWFmMDY5MjMwMCByZWZjb3VudCAxIHZhbGlkIDE8YnI+CmRlYnVn
+MTogcGtjczExX3Byb3ZpZGVyX3VucmVmOiAweGFhYWFmMDY5MjMwMCByZWZjb3VudCAxPGJyPgo8
+YnI+CkkgdGhlbiB0cmllZCBydW5uaW5nIEZhcGlfTGlzdCgpIGRpcmVjdGx5Ojxicj4KPGJyPgok
+IHN1ZG8gdHNzMl9saXN0PGJyPgpXQVJOSU5HOmZhcGk6c3JjL3RzczItZmFwaS9hcGkvRmFwaV9M
+aXN0LmM6MjE2OkZhcGlfTGlzdF9GaW5pc2goKSBQYXRoIG5vdCBmb3VuZDombmJzcDsKPGJyPgpF
+UlJPUjpmYXBpOnNyYy90c3MyLWZhcGkvYXBpL0ZhcGlfTGlzdC5jOjgxOkZhcGlfTGlzdCgpIEVy
+cm9yQ29kZSAoMHgwMDA2MDAzNCkgRW50aXRpZXNfTGlzdAo8YnI+CkZhcGlfTGlzdCgweDYwMDM0
+KSAtIGZhcGk6UHJvdmlzaW9uaW5nIHdhcyBub3QgZXhlY3V0ZWQuPGJyPgo8YnI+CkFuZCBhc3N1
+bWVkIHRoYXQgcHJvdmlzaW9uaW5nIHdhcyByZXF1aXJlZC4gU28gSSBhdHRlbXB0ZWQgdGhhdDo8
+YnI+Cjxicj4KJCBzdWRvIHRzczJfcHJvdmlzaW9uIDxicj4KRVJST1I6ZmFwaTpzcmMvdHNzMi1m
+YXBpL2FwaS9GYXBpX1Byb3Zpc2lvbi5jOjUyMDpGYXBpX1Byb3Zpc2lvbl9GaW5pc2goKSBFcnJv
+ckNvZGUgKDB4MDAwNjAwMGIpIFNSSyBwZXJzaXN0ZW50IGhhbmRsZSBhbHJlYWR5IGRlZmluZWQK
+PGJyPgpFUlJPUjpmYXBpOnNyYy90c3MyLWZhcGkvYXBpL0ZhcGlfUHJvdmlzaW9uLmM6MTY4OkZh
+cGlfUHJvdmlzaW9uKCkgRXJyb3JDb2RlICgweDAwMDYwMDBiKSBQcm92aXNpb24KPGJyPgpGYXBp
+X1Byb3Zpc2lvbigweDYwMDBCKSAtIGZhcGk6QSBwYXJhbWV0ZXIgaGFzIGEgYmFkIHZhbHVlPGJy
+Pgo8YnI+CkF0IHRoaXMgcG9pbnQsIEknbSBhdCBhIGxvc3MgYXMgdG8gd2hhdCB0aGUgc3RhdGUg
+b2YgdGhlIFRQTSBpcyBhbmQgaG93IHRvIHByb3Blcmx5IHByb3Zpc2lvbiBpdCBhbmQgZXN0YWJs
+aXNoIHRoZSBTdG9yYWdlIEhpZXJhcmNoeS4KPGJyPgpJJ3ZlIGxvb2tlZCBhdCA8YSBocmVmPSJo
+dHRwczovL3RydXN0ZWRjb21wdXRpbmdncm91cC5vcmcvd3AtY29udGVudC91cGxvYWRzL1RDRy1U
+UE0tdjIuMC1Qcm92aXNpb25pbmctR3VpZGFuY2UtUHVibGlzaGVkLXYxcjEucGRmIj4KaHR0cHM6
+Ly90cnVzdGVkY29tcHV0aW5nZ3JvdXAub3JnL3dwLWNvbnRlbnQvdXBsb2Fkcy9UQ0ctVFBNLXYy
+LjAtUHJvdmlzaW9uaW5nLUd1aWRhbmNlLVB1Ymxpc2hlZC12MXIxLnBkZjwvYT48YnI+CmJ1dCBp
+dCdzIG5vdCBjbGVhciB0byBtZSBob3cgdG8gYXBwbHkgaXQuIDxicj4KPGJyPgpBbnkgaGVscCB3
+b3VsZCBiZSBncmVhdC4gVGhhbmtzITxicj4KPGJyPgpNeSBwbGF0Zm9ybSBjb25maWd1cmF0aW9u
+IGlzOiA8YnI+CnJhc3BiZXJyeSBwaSAzYis8YnI+CkluZmluZW9uIE9QVElHQZkgVFBNIFNMeCA5
+NjcwPGJyPgp1YnVudHUgMjAuMDQ8YnI+CnRwbTItdHNzLTMuMS4wPGJyPgp0cG0yLXRvb2xzLTUu
+MS4xPGJyPgp0cG0yLWFicm1kLTIuNC4wPGJyPgp0cG0yLXBrY3MxMS0xLjYuMDxicj4KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188YnI+CnRwbTIgbWFpbGlu
+ZyBsaXN0IC0tIHRwbTJAbGlzdHMuMDEub3JnPGJyPgpUbyB1bnN1YnNjcmliZSBzZW5kIGFuIGVt
+YWlsIHRvIHRwbTItbGVhdmVAbGlzdHMuMDEub3JnPGJyPgolKHdlYl9wYWdlX3VybClzbGlzdGlu
+Zm8lKGNnaWV4dClzLyUoX2ludGVybmFsX25hbWUpczwvZGl2Pgo8L3NwYW4+PC9mb250PjwvZGl2
+Pgo8L2JvZHk+CjwvaHRtbD4K
 
---===============7677372847003490937==--
+--===============0369223394434764831==--
 
