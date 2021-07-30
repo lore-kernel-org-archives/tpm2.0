@@ -1,186 +1,30 @@
-Content-Type: multipart/mixed; boundary="===============4364909768517341111=="
+Content-Type: multipart/mixed; boundary="===============1015501324969306972=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Want to use c++ to get TPM Serial Number - how do it? 
-Date: Wed, 21 Jul 2021 17:08:57 +0000
-Message-ID: <SN6PR11MB3437698905C8A0D3F6967623B8E39@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: SA1PR17MB5432DD01C2498B7B1F50486E9FE29@SA1PR17MB5432.namprd17.prod.outlook.com
+From: Ravi Sharma <acedivino.group111 at gmail.com>
+Subject: [tpm2] Luxurious 2/3/4Bhk Apartments & Penthouse in Ace Divino at
+ Greater noida
+Date: Fri, 30 Jul 2021 08:58:39 +0000
+Message-ID: <20210730085839.2797.67922@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4364909768517341111==
+--===============1015501324969306972==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Getting the EK is not as easy as one would expect, it depends on how the TPM
-manufacturer provisions it. Some require that you generate the EK and then
-get a hash and look it up online, some store it in NV indices. IIRC, Infine=
-on
-TPM's store them in NV incidces. The tpm2_getekcertificate tool looks in th=
-e following NV indices:
-#define RSA_EK_CERT_NV_INDEX 0x01C00002
-#define ECC_EK_CERT_NV_INDEX 0x01C0000A
-
-Since the EK is a primary key, you usually need to create it with a templat=
-e defined in the link below.
-This will then create a key that matches the manufacturer generated EK Cert=
-ificate.
-
-IIRC the NV indices and templates needed are covered in:
-  - https://trustedcomputinggroup.org/wp-content/uploads/TCG_IWG_Credential=
-_Profile_EK_V2.1_R13.pdf
-
-So this would involve a NV read using the C API would look like calling the=
- function
-Esys_NV_Read().
+Ace has a growing array of various exceptional private ventures and now the=
+y showcase one of the ongoing =
 
 
-________________________________
-From: Andy Purcell <andy_purcell(a)keysight.com>
-Sent: Tuesday, July 20, 2021 12:18 PM
-To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
-Subject: [tpm2] Want to use c++ to get TPM Serial Number - how do it?
-
-I have a need to use C++ to obtain the unique TPM information =E2=80=93 lik=
-e a Serial Number.
-My system is running Windows 10/64. This is on an HP Desktop PC with TPM 2.=
-0 chip.
-
-I can use PowerShell
-Get-TpmEndorsementKeyInfo -hashalgorithm sha256
-
-To get this output:
-                =E2=80=A6
-ManufacturerCertificates : {[Subject]
-                             TPMVersion=3Did:073E, TPMModel=3DSLB 9670 TPM2=
-.0, TPMManufacturer=3Did:49465800
-                           [Issuer]
-                             CN=3DInfineon OPTIGA(TM) RSA Manufacturing CA =
-034, OU=3DOPTIGA(TM) TPM2.0, O=3DInfineon Technologies AG, C=3DDE
-=E2=80=A6
-                           [Serial Number]
-                             4880DE8E
-                           [Thumbprint]
-                             B8395DA6A1D661C8CCD35D47E3DA6E9532EFFEC4
-
-But how can I get this same Serial Number information using C++?
-
-ap
+projectsin Noida Extension. Project Ace Divino has an excellent site plan a=
+nd format configuration, =
 
 
---===============4364909768517341111==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+guaranteed to provide a cool, dynamic, energetic and secure gated experienc=
+e.If you have any Query visit =
 
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1XaW5kb3dzLTEyNTIiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiIHN0
-eWxlPSJkaXNwbGF5Om5vbmU7Ij4gUCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9IDwv
-c3R5bGU+CjwvaGVhZD4KPGJvZHkgZGlyPSJsdHIiPgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTog
-Q2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
-b2xvcjogcmdiKDAsIDAsIDApOyI+CkdldHRpbmcgdGhlIEVLIGlzIG5vdCBhcyBlYXN5IGFzIG9u
-ZSB3b3VsZCBleHBlY3QsIGl0IGRlcGVuZHMgb24gaG93IHRoZSBUUE08L2Rpdj4KPGRpdiBzdHls
-ZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZv
-bnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgptYW51ZmFjdHVyZXIgcHJvdmlz
-aW9ucyBpdC4gU29tZSByZXF1aXJlIHRoYXQgeW91IGdlbmVyYXRlIHRoZSBFSyBhbmQgdGhlbjwv
-ZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwg
-c2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CmdldCBh
-IGhhc2ggYW5kIGxvb2sgaXQgdXAgb25saW5lLCBzb21lIHN0b3JlIGl0IGluIE5WIGluZGljZXMu
-IElJUkMsIEluZmluZW9uPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBB
-cmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2Io
-MCwgMCwgMCk7Ij4KVFBNJ3Mgc3RvcmUgdGhlbSBpbiBOViBpbmNpZGNlcy4gVGhlIHRwbTJfZ2V0
-ZWtjZXJ0aWZpY2F0ZSB0b29sIGxvb2tzIGluIHRoZSBmb2xsb3dpbmcgTlYgaW5kaWNlczo8L2Rp
-dj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNh
-bnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgojZGVmaW5l
-IFJTQV9FS19DRVJUX05WX0lOREVYIDB4MDFDMDAwMDI8YnI+CjxzcGFuPiNkZWZpbmUgRUNDX0VL
-X0NFUlRfTlZfSU5ERVggMHgwMUMwMDAwQTwvc3Bhbj48YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJm
-b250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1z
-aXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CjxzcGFuPjxicj4KPC9zcGFuPjwvZGl2
-Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fu
-cy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CjxzcGFuPlNp
-bmNlIHRoZSBFSyBpcyBhIHByaW1hcnkga2V5LCB5b3UgdXN1YWxseSBuZWVkIHRvIGNyZWF0ZSBp
-dCB3aXRoIGEgdGVtcGxhdGUgZGVmaW5lZCBpbiB0aGUgbGluayBiZWxvdy48L3NwYW4+PC9kaXY+
-CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5z
-LXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPHNwYW4+VGhp
-cyB3aWxsIHRoZW4gY3JlYXRlIGEga2V5IHRoYXQgbWF0Y2hlcyB0aGUgbWFudWZhY3R1cmVyIGdl
-bmVyYXRlZCBFSyBDZXJ0aWZpY2F0ZS48L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFt
-aWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEy
-cHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPHNwYW4+PGJyPgo8L3NwYW4+PC9kaXY+CjxkaXYg
-c3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlm
-OyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KSUlSQyB0aGUgTlYgaW5k
-aWNlcyBhbmQgdGVtcGxhdGVzIG5lZWRlZCBhcmUgY292ZXJlZCBpbjo8YnI+CjwvZGl2Pgo8ZGl2
-IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJp
-ZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CjxzcGFuPiZuYnNwOyAt
-Jm5ic3A7PGEgaHJlZj0iaHR0cHM6Ly90cnVzdGVkY29tcHV0aW5nZ3JvdXAub3JnL3dwLWNvbnRl
-bnQvdXBsb2Fkcy9UQ0dfSVdHX0NyZWRlbnRpYWxfUHJvZmlsZV9FS19WMi4xX1IxMy5wZGYiIGlk
-PSJMUGxuazI4NDM1OSI+aHR0cHM6Ly90cnVzdGVkY29tcHV0aW5nZ3JvdXAub3JnL3dwLWNvbnRl
-bnQvdXBsb2Fkcy9UQ0dfSVdHX0NyZWRlbnRpYWxfUHJvZmlsZV9FS19WMi4xX1IxMy5wZGY8L2E+
-PC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhl
-bHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDAp
-OyI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwg
-SGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwg
-MCk7Ij4KU28gdGhpcyB3b3VsZCBpbnZvbHZlIGEgTlYgcmVhZCB1c2luZyB0aGUgQyBBUEkgd291
-bGQgbG9vayBsaWtlIGNhbGxpbmcgdGhlIGZ1bmN0aW9uPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
-ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
-IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KRXN5c19OVl9SZWFkKCkuPC9kaXY+CjxkaXYg
-c3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlm
-OyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRp
-diBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2Vy
-aWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8
-ZGl2IGlkPSJhcHBlbmRvbnNlbmQiPjwvZGl2Pgo8aHIgc3R5bGU9ImRpc3BsYXk6aW5saW5lLWJs
-b2NrO3dpZHRoOjk4JSIgdGFiaW5kZXg9Ii0xIj4KPGRpdiBpZD0iZGl2UnBseUZ3ZE1zZyIgZGly
-PSJsdHIiPjxmb250IGZhY2U9IkNhbGlicmksIHNhbnMtc2VyaWYiIHN0eWxlPSJmb250LXNpemU6
-MTFwdCIgY29sb3I9IiMwMDAwMDAiPjxiPkZyb206PC9iPiBBbmR5IFB1cmNlbGwgJmx0O2FuZHlf
-cHVyY2VsbEBrZXlzaWdodC5jb20mZ3Q7PGJyPgo8Yj5TZW50OjwvYj4gVHVlc2RheSwgSnVseSAy
-MCwgMjAyMSAxMjoxOCBQTTxicj4KPGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9yZyAmbHQ7dHBt
-MkBsaXN0cy4wMS5vcmcmZ3Q7PGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIFdhbnQgdG8gdXNl
-IGMrKyB0byBnZXQgVFBNIFNlcmlhbCBOdW1iZXIgLSBob3cgZG8gaXQ/IDwvZm9udD4KPGRpdj4m
-bmJzcDs8L2Rpdj4KPC9kaXY+CjxzdHlsZT4KPCEtLQoueF9FbWFpbFF1b3RlCgl7bWFyZ2luLWxl
-ZnQ6MXB0OwoJcGFkZGluZy1sZWZ0OjRwdDsKCWJvcmRlci1sZWZ0OiM4MDAwMDAgMnB4IHNvbGlk
-fQotLT4KPC9zdHlsZT4KPGRpdj48Zm9udCBmYWNlPSJDYWxpYnJpIiBzaXplPSIyIj48c3BhbiBz
-dHlsZT0iZm9udC1zaXplOjExcHQiPgo8ZGl2PkkgaGF2ZSBhIG5lZWQgdG8gdXNlIEMrKyB0byBv
-YnRhaW4gdGhlIHVuaXF1ZSBUUE0gaW5mb3JtYXRpb24gliBsaWtlIGEgU2VyaWFsIE51bWJlci4K
-PC9kaXY+CjxkaXY+TXkgc3lzdGVtIGlzIHJ1bm5pbmcgV2luZG93cyAxMC82NC4gVGhpcyBpcyBv
-biBhbiBIUCBEZXNrdG9wIFBDIHdpdGggVFBNIDIuMCBjaGlwLgo8L2Rpdj4KPGRpdj4mbmJzcDs8
-L2Rpdj4KPGRpdj5JIGNhbiB1c2UgUG93ZXJTaGVsbCA8L2Rpdj4KPGRpdiBzdHlsZT0idGV4dC1p
-bmRlbnQ6MzZwdCI+R2V0LVRwbUVuZG9yc2VtZW50S2V5SW5mbyAtaGFzaGFsZ29yaXRobSBzaGEy
-NTY8L2Rpdj4KPGRpdj4mbmJzcDs8L2Rpdj4KPGRpdj5UbyBnZXQgdGhpcyBvdXRwdXQ6IDwvZGl2
-Pgo8ZGl2PiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyCFIDwvZGl2Pgo8ZGl2IHN0
-eWxlPSJ0ZXh0LWluZGVudDozNnB0Ij5NYW51ZmFjdHVyZXJDZXJ0aWZpY2F0ZXMgOiB7W1N1Ympl
-Y3RdPC9kaXY+CjxkaXY+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7IFRQTVZlcnNpb249aWQ6MDczRSwgVFBNTW9kZWw9U0xCIDk2NzAgVFBNMi4w
-LCBUUE1NYW51ZmFjdHVyZXI9aWQ6NDk0NjU4MDA8L2Rpdj4KPGRpdj4mbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgW0lzc3Vlcl08L2Rpdj4KPGRpdj4mbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgQ049SW5maW5lb24g
-T1BUSUdBKFRNKSBSU0EgTWFudWZhY3R1cmluZyBDQSAwMzQsIE9VPU9QVElHQShUTSkgVFBNMi4w
-LCBPPUluZmluZW9uIFRlY2hub2xvZ2llcyBBRywgQz1ERTwvZGl2Pgo8ZGl2IHN0eWxlPSJ0ZXh0
-LWluZGVudDozNnB0OyBwYWRkaW5nLWxlZnQ6MzZwdCI+hTwvZGl2Pgo8ZGl2PiZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBbU2VyaWFsIE51bWJlcl08L2Rpdj4KPGRp
-dj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsg
-NDg4MERFOEU8L2Rpdj4KPGRpdj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsgW1RodW1icHJpbnRdPC9kaXY+CjxkaXY+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IEI4Mzk1REE2QTFENjYxQzhDQ0QzNUQ0N0UzREE2
-RTk1MzJFRkZFQzQ8L2Rpdj4KPGRpdj4mbmJzcDs8L2Rpdj4KPGRpdj5CdXQgaG93IGNhbiBJIGdl
-dCB0aGlzIHNhbWUgU2VyaWFsIE51bWJlciBpbmZvcm1hdGlvbiB1c2luZyBDKys/PC9kaXY+Cjxk
-aXY+Jm5ic3A7PC9kaXY+CjxkaXY+YXA8L2Rpdj4KPGRpdj4mbmJzcDs8L2Rpdj4KPC9zcGFuPjwv
-Zm9udD48L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
---===============4364909768517341111==--
+Now:- http://acedivino.org/
+--===============1015501324969306972==--
 
