@@ -1,136 +1,28 @@
-Content-Type: multipart/mixed; boundary="===============4625518667848021478=="
+Content-Type: multipart/mixed; boundary="===============2489958194944937708=="
 MIME-Version: 1.0
-From: Joseph Lee (ZeronsoftN) <joseph at zeronsoftn.com>
-Subject: [tpm2] Is the tpm2_create command safe against sniffing attacks?
-Date: Fri, 30 Jul 2021 23:09:59 +0000
-Message-ID: <em4a42a75d-49fb-4d27-a52f-27f13c57a40c@desktop-hihridj>
+From: Ravi Sharma <acedivino.group111 at gmail.com>
+Subject: [tpm2] Re: Luxurious 2/3/4Bhk Apartments & Penthouse in Ace Divino at
+ Greater noida
+Date: Sat, 31 Jul 2021 06:48:35 +0000
+Message-ID: <20210731064835.2797.1543@ml01.vlan13.01.org>
+In-Reply-To: 20210730085839.2797.67922@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4625518667848021478==
+--===============2489958194944937708==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Ace Divino is providing you by making a very beautiful and comfortable home=
+ so thatyour life can be happy
+ and enjoy living life And it is giving an excellent return for the investo=
+r.The specialty of Ace Divino's =
 
-https://pulsesecurity.co.nz/articles/TPM-sniffing
-In this article, can see that communication with the TPM is vulnerable =
+projects is that it is providing 70% greenery area so that you can live in =
+a fresh environment.If you have =
 
-to sniffing if not careful.
-
-https://tpm2-software.github.io/2020/04/13/Disk-Encryption.html
-Is the disk encryption described in tpm2-software's blog safe against =
-
-these attacks?
-
-tpm2_createprimary -Q -C o -c prim.ctx
-dd if=3D/dev/urandom bs=3D1 count=3D32 status=3Dnone | tpm2_create -Q -g sh=
-a256 =
-
--u seal.pub -r seal.priv -i- -C prim.ctx
-tpm2_load -Q -C prim.ctx -u seal.pub -r seal.priv -n seal.name -c =
-
-seal.ctx
-tpm2_evictcontrol -C o -c seal.ctx 0x81010001
-
-My question is:
-     1. Is there a tool in linux that can sniff communication with the =
-
-current system's TPM?
-     2. How to encrypt communications if the methods described above are =
-
-not secure?
-         It seems that encryption is possible through =
-
-tpm2_startauthsession , but I do not know how to apply it to tpm2_create =
-
- (The -S option simply did not work.)
-
-Thank you.
-
---===============4625518667848021478==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+PGhlYWQ+Cgo8c3R5bGUgaWQ9ImNzc19zdHlsZXMiPiAKYmxvY2txdW90ZS5jaXRlIHsg
-bWFyZ2luLWxlZnQ6IDVweDsgbWFyZ2luLXJpZ2h0OiAwcHg7IHBhZGRpbmctbGVmdDogMTBweDsg
-cGFkZGluZy1yaWdodDowcHg7IGJvcmRlci1sZWZ0OiAxcHggc29saWQgI2NjY2NjYyB9CmJsb2Nr
-cXVvdGUuY2l0ZTIge21hcmdpbi1sZWZ0OiA1cHg7IG1hcmdpbi1yaWdodDogMHB4OyBwYWRkaW5n
-LWxlZnQ6IDEwcHg7IHBhZGRpbmctcmlnaHQ6MHB4OyBib3JkZXItbGVmdDogMXB4IHNvbGlkICNj
-Y2NjY2M7IG1hcmdpbi10b3A6IDNweDsgcGFkZGluZy10b3A6IDBweDsgfQphIGltZyB7IGJvcmRl
-cjogMHB4OyB9CmxpW3N0eWxlPSd0ZXh0LWFsaWduOiBjZW50ZXI7J10sIGxpW3N0eWxlPSd0ZXh0
-LWFsaWduOiBjZW50ZXI7ICddLCBsaVtzdHlsZT0ndGV4dC1hbGlnbjogcmlnaHQ7J10sIGxpW3N0
-eWxlPSd0ZXh0LWFsaWduOiByaWdodDsgJ10geyAgbGlzdC1zdHlsZS1wb3NpdGlvbjogaW5zaWRl
-O30KYm9keSB7IGZvbnQtZmFtaWx5OiBTZWdvZSBVSTsgZm9udC1zaXplOiAxMnB0OyAgIH0gCnF1
-b3RlIHsgbWFyZ2luLWxlZnQ6IDFlbTsgbWFyZ2luLXJpZ2h0OiAxZW07IGJvcmRlci1sZWZ0OiA1
-cHggI2ViZWJlYiBzb2xpZDsgcGFkZGluZy1sZWZ0OiAwLjNlbTsgfQogPC9zdHlsZT4KPC9oZWFk
-Pgo8Ym9keT5IZWxsbyw8ZGl2Pjxicj48L2Rpdj48ZGl2PjxhIGhyZWY9Imh0dHBzOi8vcHVsc2Vz
-ZWN1cml0eS5jby5uei9hcnRpY2xlcy9UUE0tc25pZmZpbmciPmh0dHBzOi8vcHVsc2VzZWN1cml0
-eS5jby5uei9hcnRpY2xlcy9UUE0tc25pZmZpbmc8L2E+PC9kaXY+PGRpdj5JbiB0aGlzIGFydGlj
-bGUsIGNhbiBzZWUgdGhhdCBjb21tdW5pY2F0aW9uIHdpdGggdGhlIFRQTSBpcyB2dWxuZXJhYmxl
-IHRvIHNuaWZmaW5nIGlmIG5vdCBjYXJlZnVsLjxicj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxzcGFu
-IHN0eWxlPSJjb2xvcjojMDBFO2JhY2tncm91bmQtY29sb3I6cmdiYSgwLDAsMCwwKTt0ZXh0LWRl
-Y29yYXRpb246dW5kZXJsaW5lIHNvbGlkICMwMEU7Ij48YSBocmVmPSJodHRwczovL3RwbTItc29m
-dHdhcmUuZ2l0aHViLmlvLzIwMjAvMDQvMTMvRGlzay1FbmNyeXB0aW9uLmh0bWwiPmh0dHBzOi8v
-dHBtMi1zb2Z0d2FyZS5naXRodWIuaW8vMjAyMC8wNC8xMy9EaXNrLUVuY3J5cHRpb24uaHRtbDwv
-YT48L3NwYW4+PC9kaXY+PGRpdj5JcyB0aGUgZGlzayBlbmNyeXB0aW9uIGRlc2NyaWJlZCBpbiB0
-cG0yLXNvZnR3YXJlJ3MgYmxvZyBzYWZlIGFnYWluc3QgdGhlc2UgYXR0YWNrcz88L2Rpdj48ZGl2
-Pjxicj48L2Rpdj48b2wgc3R5bGU9Im1hcmdpbjogMHB4IDBweCAxNXB4IDMwcHg7IHBhZGRpbmc6
-IDBweDsgY29sb3I6IHJnYigxNywgMTcsIDE3KTsgZm9udC1mYW1pbHk6IC1hcHBsZS1zeXN0ZW0s
-IEJsaW5rTWFjU3lzdGVtRm9udCwgJnF1b3Q7U2Vnb2UgVUkmcXVvdDssIFJvYm90bywgSGVsdmV0
-aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiwgJnF1b3Q7QXBwbGUgQ29sb3IgRW1vamkmcXVvdDssICZx
-dW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LCAmcXVvdDtTZWdvZSBVSSBTeW1ib2wmcXVvdDs7IGJh
-Y2tncm91bmQtY29sb3I6IHJnYigyNTMsIDI1MywgMjUzKTsgdGV4dC1zaGFkb3c6IHRyYW5zcGFy
-ZW50IDBweCAwcHggMHB4LCByZ2JhKDAsIDAsIDAsIDAuNjgpIDBweCAwcHggMHB4ICFpbXBvcnRh
-bnQ7Ij48bGkgc3R5bGU9InRleHQtc2hhZG93OnRyYW5zcGFyZW50IDBweCAwcHggMHB4LHJnYmEo
-MCwwLDAsMC42OCkgMHB4IDBweCAwcHggICFpbXBvcnRhbnQ7Ij48Y29kZSBjbGFzcz0ibGFuZ3Vh
-Z2UtcGxhaW50ZXh0IGhpZ2hsaWdodGVyLXJvdWdlIiBzdHlsZT0idGV4dC1zaGFkb3c6dHJhbnNw
-YXJlbnQgMHB4IDBweCAwcHgscmdiYSgwLDAsMCwwLjY4KSAwcHggMHB4IDBweCAgIWltcG9ydGFu
-dDtmb250LXNpemU6MTVweDtib3JkZXI6MXB4IHNvbGlkICNFOEU4RTg7Ym9yZGVyLXJhZGl1czoz
-cHg7YmFja2dyb3VuZC1jb2xvcjojRUVGO3BhZGRpbmc6MXB4IDVweDsiPnRwbTJfY3JlYXRlcHJp
-bWFyeSAtUSAtQyBvIC1jIHByaW0uY3R4PC9jb2RlPjxiciBzdHlsZT0idGV4dC1zaGFkb3c6dHJh
-bnNwYXJlbnQgMHB4IDBweCAwcHgscmdiYSgwLDAsMCwwLjY4KSAwcHggMHB4IDBweCAgIWltcG9y
-dGFudDsiPjwvbGk+PGxpIHN0eWxlPSJ0ZXh0LXNoYWRvdzp0cmFuc3BhcmVudCAwcHggMHB4IDBw
-eCxyZ2JhKDAsMCwwLDAuNjgpIDBweCAwcHggMHB4ICAhaW1wb3J0YW50OyI+PGNvZGUgY2xhc3M9
-Imxhbmd1YWdlLXBsYWludGV4dCBoaWdobGlnaHRlci1yb3VnZSIgc3R5bGU9InRleHQtc2hhZG93
-OnRyYW5zcGFyZW50IDBweCAwcHggMHB4LHJnYmEoMCwwLDAsMC42OCkgMHB4IDBweCAwcHggICFp
-bXBvcnRhbnQ7Zm9udC1zaXplOjE1cHg7Ym9yZGVyOjFweCBzb2xpZCAjRThFOEU4O2JvcmRlci1y
-YWRpdXM6M3B4O2JhY2tncm91bmQtY29sb3I6I0VFRjtwYWRkaW5nOjFweCA1cHg7Ij5kZCBpZj0v
-ZGV2L3VyYW5kb20gYnM9MSBjb3VudD0zMiBzdGF0dXM9bm9uZSB8IHRwbTJfY3JlYXRlIC1RIC1n
-IHNoYTI1NiAtdSBzZWFsLnB1YiAtciBzZWFsLnByaXYgLWktIC1DIHByaW0uY3R4PC9jb2RlPjxi
-ciBzdHlsZT0idGV4dC1zaGFkb3c6dHJhbnNwYXJlbnQgMHB4IDBweCAwcHgscmdiYSgwLDAsMCww
-LjY4KSAwcHggMHB4IDBweCAgIWltcG9ydGFudDsiPjwvbGk+PGxpIHN0eWxlPSJ0ZXh0LXNoYWRv
-dzp0cmFuc3BhcmVudCAwcHggMHB4IDBweCxyZ2JhKDAsMCwwLDAuNjgpIDBweCAwcHggMHB4ICAh
-aW1wb3J0YW50OyI+PGNvZGUgY2xhc3M9Imxhbmd1YWdlLXBsYWludGV4dCBoaWdobGlnaHRlci1y
-b3VnZSIgc3R5bGU9InRleHQtc2hhZG93OnRyYW5zcGFyZW50IDBweCAwcHggMHB4LHJnYmEoMCww
-LDAsMC42OCkgMHB4IDBweCAwcHggICFpbXBvcnRhbnQ7Zm9udC1zaXplOjE1cHg7Ym9yZGVyOjFw
-eCBzb2xpZCAjRThFOEU4O2JvcmRlci1yYWRpdXM6M3B4O2JhY2tncm91bmQtY29sb3I6I0VFRjtw
-YWRkaW5nOjFweCA1cHg7Ij50cG0yX2xvYWQgLVEgLUMgcHJpbS5jdHggLXUgc2VhbC5wdWIgLXIg
-c2VhbC5wcml2IC1uIHNlYWwubmFtZSAtYyBzZWFsLmN0eDwvY29kZT48YnIgc3R5bGU9InRleHQt
-c2hhZG93OnRyYW5zcGFyZW50IDBweCAwcHggMHB4LHJnYmEoMCwwLDAsMC42OCkgMHB4IDBweCAw
-cHggICFpbXBvcnRhbnQ7Ij48L2xpPjxsaSBzdHlsZT0idGV4dC1zaGFkb3c6dHJhbnNwYXJlbnQg
-MHB4IDBweCAwcHgscmdiYSgwLDAsMCwwLjY4KSAwcHggMHB4IDBweCAgIWltcG9ydGFudDsiPjxj
-b2RlIGNsYXNzPSJsYW5ndWFnZS1wbGFpbnRleHQgaGlnaGxpZ2h0ZXItcm91Z2UiIHN0eWxlPSJ0
-ZXh0LXNoYWRvdzp0cmFuc3BhcmVudCAwcHggMHB4IDBweCxyZ2JhKDAsMCwwLDAuNjgpIDBweCAw
-cHggMHB4ICAhaW1wb3J0YW50O2ZvbnQtc2l6ZToxNXB4O2JvcmRlcjoxcHggc29saWQgI0U4RThF
-ODtib3JkZXItcmFkaXVzOjNweDtiYWNrZ3JvdW5kLWNvbG9yOiNFRUY7cGFkZGluZzoxcHggNXB4
-OyI+dHBtMl9ldmljdGNvbnRyb2wgLUMgbyAtYyBzZWFsLmN0eCAweDgxMDEwMDAxPC9jb2RlPjwv
-bGk+PC9vbD48ZGl2Pjxicj48L2Rpdj48ZGl2Pk15IHF1ZXN0aW9uIGlzOjwvZGl2PjxkaXY+Jm5i
-c3A7ICZuYnNwOyAxLiBJcyB0aGVyZSBhIHRvb2wgaW4gbGludXggdGhhdCBjYW4gc25pZmYgY29t
-bXVuaWNhdGlvbiB3aXRoIHRoZSBjdXJyZW50IHN5c3RlbSdzIFRQTT88L2Rpdj48ZGl2PiZuYnNw
-OyAmbmJzcDsgMi4gSG93IHRvIGVuY3J5cHQgY29tbXVuaWNhdGlvbnMgaWYgdGhlIG1ldGhvZHMg
-ZGVzY3JpYmVkIGFib3ZlIGFyZSBub3Qgc2VjdXJlPzxicj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDtJdCBzZWVtcyB0aGF0IGVuY3J5cHRpb24gaXMgcG9z
-c2libGUgdGhyb3VnaCB0cG0yX3N0YXJ0YXV0aHNlc3Npb24gLCBidXQgSSBkbyBub3Qga25vdyBo
-b3cgdG8gYXBwbHkgaXQgdG8gdHBtMl9jcmVhdGUgLiAoVGhlIC1TIG9wdGlvbiBzaW1wbHkgZGlk
-IG5vdCB3b3JrLik8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRoYW5rIHlvdS48L2Rpdj48ZGl2
-Pjxicj48L2Rpdj4KPC9kaXY+PGRpdj48YnI+PGJyPjxicj48aW1nIHNyYz0iaHR0cHM6Ly9tYWls
-Lnplcm9uc29mdG4uY29tL210aHVtYm5haWwvZmZiZDEwMDAtYjhiNi00NGVhLWI2NjAtMzUzMzM5
-NjdhZTZlLnBuZyIgc3R5bGU9Im1heC1oZWlnaHQ6IDMycHgiPjwvZGl2PjwvYm9keT48L2h0bWw+
-Cg==
-
---===============4625518667848021478==--
+any Query visit Now:- <a href=3D"http://acedivino.org/">Ace Divino price li=
+st</a>
+--===============2489958194944937708==--
 
