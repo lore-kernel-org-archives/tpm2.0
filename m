@@ -1,82 +1,97 @@
-Content-Type: multipart/mixed; boundary="===============0090815197949915276=="
+Content-Type: multipart/mixed; boundary="===============7257998386355517983=="
 MIME-Version: 1.0
-From: parimalanitesh at gmail.com
-Subject: [tpm2] TPM2 PKCS11 intergration error for Openstack Barbican
-Date: Mon, 09 Aug 2021 14:34:54 +0000
-Message-ID: <20210809143454.2797.189@ml01.vlan13.01.org>
+From: parimala nitesh <parimalanitesh at gmail.com>
+Subject: [tpm2] Fwd: Re: authentication error
+Date: Mon, 09 Aug 2021 20:07:06 +0530
+Message-ID: <CAEMZ=CUHiBy+t413c=vKfakPBwnjhh58oBGruHyx5Xj5UonRbw@mail.gmail.com>
+In-Reply-To: CAEMZ=CUvwXJ4V8w-xLQ9ZjRc8srpCdZZyvVqcn834UpnE4bDkg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0090815197949915276==
+--===============7257998386355517983==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello Everyone,
+Hi Fuchs  Andreas,
 
-This is Nitesh. I'm working on integrating TPM as a backend to store keys f=
-or Openstack Barbican project.
 
-Existing PKCS11 Crytpo Plugin procedure to generate the hmac and mkek is ht=
-tps://docs.openstack.org/barbican/stein/install/barbican-backend.html#pkcs-=
-11-crypto-plugin.
 
-I'm trying to integrate TPM as backend with TPM2-PKCS11 package for Opensta=
-ck Barbican. https://github.com/tpm2-software/tpm2-pkcs11
+I=E2=80=99m also getting the same error. In my case it is lined against tpm=
+-tss2.3.
+I=E2=80=99m getting the below error.
 
-When i try to run "barbican-manage  hsm gen_hmac --library-path /usr/lib64/=
-pkcs11/libtpm2_pkcs11.so.0 --passphrase stack --slot-id 1 --label my_hmac_l=
-abel"
-ERROR: cannot load library '/usr/lib64/pkcs11/libtpm2_pkcs11.so.0': /usr/li=
-b64/libtss2-fapi.so.1: undefined symbol: Esys_TRSess_GetAuthRequired.  Addi=
-tionally, ctypes.util.find_library() did not manage to locate a library cal=
-led '/usr/lib64/pkcs11/libtpm2_pkcs11.so.0'
 
-I don't know why i'm getting the error message.
-Following are the packages which i've installed
 
-libtss2-esys0-2.3.0-2.41.x86_64
-libtss2-tctildr0-2.3.0-2.41.x86_64
-libtss2-tcti-tabrmd0-2.0.2-12.18.x86_64
-libtss2-fapi1-3.1.0-lp152.116.2.x86_64
-libtss2-rc0-2.3.0-2.41.x86_64
-tpm2-0-tss-2.3.0-2.41.x86_64
-libtss2-mu0-2.3.0-2.41.x86_64
-libtss2-tcti-device0-2.3.0-2.41.x86_64
-tpm2-tss-engine-1.0.1-2.8.x86_64
-libtss2-fapi0-2.4.5-1.11.x86_64
-libtss2-sys0-2.3.0-2.41.x86_64
-libtss2-tcti-mssim0-2.3.0-2.41.x86_64
-libtss2-sys1-3.1.0-lp152.116.2.x86_64
-tpm2-pkcs11-tool-1.6.0+git20210503.c2d53cc-lp152.6.1.noarch
-tpm2.0-abrmd-2.0.2-12.18.x86_64
-tpm2-pkcs11-1.6.0+git20210503.c2d53cc-lp152.6.1.x86_64
-tpm2.0-tools-4.1-1.57.x86_64
-tpm-tools-pkcs11-1.3.9.1-4.3.1.x86_64
-tpm2-pkcs11-tool-1.6.0+git20210503.c2d53cc-lp152.6.1.noarch
-openssl-ibmpkcs11-1.0.1-3.6.x86_64
-libpkcs11-helper1-1.27.0+git20201117.9fa1503-lp152.38.1.x86_64
-pkcs11-helper-1.27.0+git20201117.9fa1503-lp152.38.1.x86_64
 
-Did i miss any package or any other configuration is required ?
 
-I've debugged the error  to some extent.
-Actually "Esys_TRSess_SetAttributes" is a function which is giving the erro=
-r at https://github.com/tpm2-software/tpm2-tss/blob/master/src/tss2-fapi/fa=
-pi_util.c#L2061
-But that function defination is actually present in "https://github.com/tpm=
-2-software/tpm2-tss/blob/5c178b2b61a05e1873be30cfeb4629bba5be900d/include/t=
-ss2/tss2_esys.h" and "https://github.com/tpm2-software/tpm2-tss/blob/928897=
-0a3e657cdee85d08d3813199ec864de3ad/src/tss2-esys/esys_tr.c"
+ERROR: cannot load library '/usr/lib64/pkcs11/libtpm2_pkcs11.so.0':
+/usr/lib64/libtss2-fapi.so.1: undefined symbol:
+Esys_TRSess_GetAuthRequired.  Additionally, ctypes.util.find_library() did
+not manage to locate a library called
+'/usr/lib64/pkcs11/libtpm2_pkcs11.so.0'
 
-I see "tss2_esys.h" is not included as a header file in  "https://github.co=
-m/tpm2-software/tpm2-tss/blob/master/src/tss2-fapi/fapi_util.c."
 
-Please let me know what i've to do to resolve this issue.
 
---
+
+
+Regards
+
+Nitesh
+
+
+
+-- =
+
 Regard's
 
 Nitesh
---===============0090815197949915276==--
+
+
+*-- Feel the Nature and get the utmost happiness.......*
+*    Live the moment....*
+
+--===============7257998386355517983==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGRpdiBkaXI9Imx0ciI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxkaXYgZGlyPSJsdHIiIGNs
+YXNzPSJnbWFpbF9hdHRyIj48YnI+PC9kaXY+PGRpdiBkaXI9Imx0ciI+PHAgY2xhc3M9Ik1zb05v
+cm1hbCIgc3R5bGU9Im1hcmdpbjowaW47Zm9udC1zaXplOjExcHQ7Zm9udC1mYW1pbHk6Q2FsaWJy
+aSxzYW5zLXNlcmlmIj5IaSBGdWNocyDCoEFuZHJlYXMsPC9wPgoKPHAgY2xhc3M9Ik1zb05vcm1h
+bCIgc3R5bGU9Im1hcmdpbjowaW47Zm9udC1zaXplOjExcHQ7Zm9udC1mYW1pbHk6Q2FsaWJyaSxz
+YW5zLXNlcmlmIj7CoDwvcD4KCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46MGlu
+O2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5OkNhbGlicmksc2Fucy1zZXJpZiI+SeKAmW0gYWxz
+byBnZXR0aW5nIHRoZSBzYW1lIGVycm9yLiBJbiBteSBjYXNlIGl0IGlzIGxpbmVkCmFnYWluc3Qg
+dHBtLXRzczIuMy4gSeKAmW0gZ2V0dGluZyB0aGUgYmVsb3cgZXJyb3IuPC9wPgoKPHAgY2xhc3M9
+Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjowaW47Zm9udC1zaXplOjExcHQ7Zm9udC1mYW1pbHk6
+Q2FsaWJyaSxzYW5zLXNlcmlmIj7CoDwvcD4KCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJt
+YXJnaW46MGluO2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5OkNhbGlicmksc2Fucy1zZXJpZiI+
+wqA8L3A+Cgo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luOjBpbjtmb250LXNpemU6
+MTFwdDtmb250LWZhbWlseTpDYWxpYnJpLHNhbnMtc2VyaWYiPjxzcGFuIHN0eWxlPSJjb2xvcjpy
+ZWQiPkVSUk9SOiBjYW5ub3QgbG9hZCBsaWJyYXJ5CiYjMzk7L3Vzci9saWI2NC9wa2NzMTEvbGli
+dHBtMl9wa2NzMTEuc28uMCYjMzk7OiAvdXNyL2xpYjY0L2xpYnRzczItZmFwaS5zby4xOgp1bmRl
+ZmluZWQgc3ltYm9sOiBFc3lzX1RSU2Vzc19HZXRBdXRoUmVxdWlyZWQuwqAgQWRkaXRpb25hbGx5
+LApjdHlwZXMudXRpbC5maW5kX2xpYnJhcnkoKSBkaWQgbm90IG1hbmFnZSB0byBsb2NhdGUgYSBs
+aWJyYXJ5IGNhbGxlZAomIzM5Oy91c3IvbGliNjQvcGtjczExL2xpYnRwbTJfcGtjczExLnNvLjAm
+IzM5Ozwvc3Bhbj48L3A+Cgo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luOjBpbjtm
+b250LXNpemU6MTFwdDtmb250LWZhbWlseTpDYWxpYnJpLHNhbnMtc2VyaWYiPsKgPC9wPgoKPHAg
+Y2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjowaW47Zm9udC1zaXplOjExcHQ7Zm9udC1m
+YW1pbHk6Q2FsaWJyaSxzYW5zLXNlcmlmIj7CoDwvcD4KCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0
+eWxlPSJtYXJnaW46MGluO2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5OkNhbGlicmksc2Fucy1z
+ZXJpZiI+UmVnYXJkczwvcD4KCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46MGlu
+O2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5OkNhbGlicmksc2Fucy1zZXJpZiI+Tml0ZXNoPC9w
+PjxkaXY+PGJyPjwvZGl2PjwvZGl2Pgo8L2Rpdj48YnIgY2xlYXI9ImFsbCI+PGRpdj48YnI+PC9k
+aXY+LS0gPGJyPjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJnbWFpbF9zaWduYXR1cmUiIGRhdGEtc21h
+cnRtYWlsPSJnbWFpbF9zaWduYXR1cmUiPjxkaXYgZGlyPSJsdHIiPjxkaXY+UmVnYXJkJiMzOTtz
+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5OaXRlc2g8L2Rpdj48ZGl2Pjxmb250IGZhY2U9ImNv
+bWljIHNhbnMgbXMsIHNhbnMtc2VyaWYiPjxiPjxicj48L2I+PC9mb250PjwvZGl2PjxkaXY+PGZv
+bnQgZmFjZT0iY29taWMgc2FucyBtcywgc2Fucy1zZXJpZiI+PGI+LS0gRmVlbCB0aGUgTmF0dXJl
+IGFuZCBnZXQgdGhlIHV0bW9zdCBoYXBwaW5lc3MuLi4uLi4uPGJyPjwvYj48L2ZvbnQ+PC9kaXY+
+PGRpdj48Zm9udCBmYWNlPSJjb21pYyBzYW5zIG1zLCBzYW5zLXNlcmlmIj48Yj7CoCDCoCBMaXZl
+IHRoZSBtb21lbnQuLi4uPC9iPjwvZm9udD48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4K
+
+--===============7257998386355517983==--
 
