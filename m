@@ -1,99 +1,25 @@
-Content-Type: multipart/mixed; boundary="===============3675940706805275996=="
+Content-Type: multipart/mixed; boundary="===============7594492213131617753=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+From: parimalanitesh at gmail.com
 Subject: [tpm2] Re: TPM2 PKCS11 intergration error for Openstack Barbican
-Date: Mon, 09 Aug 2021 14:38:38 +0000
-Message-ID: <AM8P194MB1675BC2DD0F021B39D64FC86A6F69@AM8P194MB1675.EURP194.PROD.OUTLOOK.COM>
-In-Reply-To: 20210809143454.2797.189@ml01.vlan13.01.org
+Date: Tue, 10 Aug 2021 13:01:33 +0000
+Message-ID: <20210810130133.2797.46387@ml01.vlan13.01.org>
+In-Reply-To: AM8P194MB1675BC2DD0F021B39D64FC86A6F69@AM8P194MB1675.EURP194.PROD.OUTLOOK.COM
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3675940706805275996==
+--===============7594492213131617753==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Your versions of the tpm2-tss packages are all mixed up.
+Hi Fuchs,
 
-libtss2-esys is in version 2.3.0, libtss2-fapi in version 2.4.45
+Thanks for the response. I'm trying this on Sles 15 Sp 2 container. It woul=
+d be great if you can point me to a link where i can get the rpm's for tpm2=
+-pkcs11 and other packages for version 3.1.x or 3.0.x for SLES 15 SP 2.
 
-I recommend upgrading to 3.1.x or 3.0.x of tpm2-tss and try again.
-
-________________________________________
-Von: parimalanitesh(a)gmail.com <parimalanitesh(a)gmail.com>
-Gesendet: Montag, 9. August 2021 16:34
-An: tpm2(a)lists.01.org
-Betreff: [tpm2] TPM2 PKCS11 intergration error for Openstack Barbican
-
-Hello Everyone,
-
-This is Nitesh. I'm working on integrating TPM as a backend to store keys f=
-or Openstack Barbican project.
-
-Existing PKCS11 Crytpo Plugin procedure to generate the hmac and mkek is ht=
-tps://docs.openstack.org/barbican/stein/install/barbican-backend.html#pkcs-=
-11-crypto-plugin.
-
-I'm trying to integrate TPM as backend with TPM2-PKCS11 package for Opensta=
-ck Barbican. https://github.com/tpm2-software/tpm2-pkcs11
-
-When i try to run "barbican-manage  hsm gen_hmac --library-path /usr/lib64/=
-pkcs11/libtpm2_pkcs11.so.0 --passphrase stack --slot-id 1 --label my_hmac_l=
-abel"
-ERROR: cannot load library '/usr/lib64/pkcs11/libtpm2_pkcs11.so.0': /usr/li=
-b64/libtss2-fapi.so.1: undefined symbol: Esys_TRSess_GetAuthRequired.  Addi=
-tionally, ctypes.util.find_library() did not manage to locate a library cal=
-led '/usr/lib64/pkcs11/libtpm2_pkcs11.so.0'
-
-I don't know why i'm getting the error message.
-Following are the packages which i've installed
-
-libtss2-esys0-2.3.0-2.41.x86_64
-libtss2-tctildr0-2.3.0-2.41.x86_64
-libtss2-tcti-tabrmd0-2.0.2-12.18.x86_64
-libtss2-fapi1-3.1.0-lp152.116.2.x86_64
-libtss2-rc0-2.3.0-2.41.x86_64
-tpm2-0-tss-2.3.0-2.41.x86_64
-libtss2-mu0-2.3.0-2.41.x86_64
-libtss2-tcti-device0-2.3.0-2.41.x86_64
-tpm2-tss-engine-1.0.1-2.8.x86_64
-libtss2-fapi0-2.4.5-1.11.x86_64
-libtss2-sys0-2.3.0-2.41.x86_64
-libtss2-tcti-mssim0-2.3.0-2.41.x86_64
-libtss2-sys1-3.1.0-lp152.116.2.x86_64
-tpm2-pkcs11-tool-1.6.0+git20210503.c2d53cc-lp152.6.1.noarch
-tpm2.0-abrmd-2.0.2-12.18.x86_64
-tpm2-pkcs11-1.6.0+git20210503.c2d53cc-lp152.6.1.x86_64
-tpm2.0-tools-4.1-1.57.x86_64
-tpm-tools-pkcs11-1.3.9.1-4.3.1.x86_64
-tpm2-pkcs11-tool-1.6.0+git20210503.c2d53cc-lp152.6.1.noarch
-openssl-ibmpkcs11-1.0.1-3.6.x86_64
-libpkcs11-helper1-1.27.0+git20201117.9fa1503-lp152.38.1.x86_64
-pkcs11-helper-1.27.0+git20201117.9fa1503-lp152.38.1.x86_64
-
-Did i miss any package or any other configuration is required ?
-
-I've debugged the error  to some extent.
-Actually "Esys_TRSess_SetAttributes" is a function which is giving the erro=
-r at https://github.com/tpm2-software/tpm2-tss/blob/master/src/tss2-fapi/fa=
-pi_util.c#L2061
-But that function defination is actually present in "https://github.com/tpm=
-2-software/tpm2-tss/blob/5c178b2b61a05e1873be30cfeb4629bba5be900d/include/t=
-ss2/tss2_esys.h" and "https://github.com/tpm2-software/tpm2-tss/blob/928897=
-0a3e657cdee85d08d3813199ec864de3ad/src/tss2-esys/esys_tr.c"
-
-I see "tss2_esys.h" is not included as a header file in  "https://github.co=
-m/tpm2-software/tpm2-tss/blob/master/src/tss2-fapi/fapi_util.c."
-
-Please let me know what i've to do to resolve this issue.
-
---
-Regard's
-
+Thanks
 Nitesh
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
---===============3675940706805275996==--
+--===============7594492213131617753==--
 
