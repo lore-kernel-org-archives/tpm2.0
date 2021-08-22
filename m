@@ -1,96 +1,390 @@
-Content-Type: multipart/mixed; boundary="===============2844963799002731408=="
+Content-Type: multipart/mixed; boundary="===============8697544204812307096=="
 MIME-Version: 1.0
-From: parimalanitesh at gmail.com
-Subject: [tpm2] Re: TPM2 PKCS11 intergration error for Openstack Barbican
-Date: Wed, 11 Aug 2021 10:16:50 +0000
-Message-ID: <20210811101650.2797.57486@ml01.vlan13.01.org>
-In-Reply-To: 20210810130133.2797.46387@ml01.vlan13.01.org
+From: Felix Rubio Dalmau <felix at kngnt.org>
+Subject: [tpm2] Re: Example with multifactor authentication available?
+Date: Sun, 22 Aug 2021 09:57:02 +0200
+Message-ID: <2287518.OgVlmGemyz@polaris>
+In-Reply-To: SN6PR11MB34379CDDBBFF49541ACF79F1B8319@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2844963799002731408==
+--===============8697544204812307096==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi All,
+Hi William,
 
-I didn't get the rpm for 3.1.x or 3.0.x =
+	Sorry for answering so late after your last email. I had to jump to anothe=
+r subject, then holidays... yeah, life I guess! I have started again lookin=
+g at this matter, and... I do not understand the part of the rescue passwor=
+d and how to use it. I see that using policysecret is the way to go, becaus=
+e it does not set any flag to require a password when the create is issued,=
+ but I still do not see how to use it to input a password. In the help of p=
+olicysecret, it states:
 
-I've got RPM for 2.4.5 version and i'm ending up with below error
+     "/TPM2_PolicySecret/ command requires you to pass in the name of the o=
+bject whose /password/ is required to satisfy the policy"
 
-()[root(a)e9ab983ac792 sles15_sp3]# barbican-manage hsm gen_hmac --library-=
-path /usr/lib64/pkcs11/libtpm2_pkcs11.so.0 --passphrase stack --slot-id 1 -=
--label my_hmac_label
+Does this mean that I should create an object, password-protected, just for=
+ the sake of using it later with policysecret?? It sounds weird to me, but =
+I am not skilled enough to properly assess it.
 
-** (process:614): CRITICAL **: 09:58:20.157: failed to allocate dbus proxy =
-object: Could not connect: No such file or directory
-WARNING:tcti:src/tss2-tcti/tctildr.c:79:tcti_from_init() TCTI init for func=
-tion 0x7f17e82582a0 failed with a0008
-WARNING:tcti:src/tss2-tcti/tctildr.c:109:tcti_from_info() Could not initial=
-ize TCTI named: tcti-abrmd
-ERROR:tcti:src/tss2-tcti/tctildr-dl.c:150:tcti_from_file() Could not initia=
-lize TCTI file: libtss2-tcti-tabrmd.so.0
-WARNING:tcti:src/tss2-tcti/tcti-device.c:189:tcti_device_receive() The unde=
-rlying IPC mechanism does not support asynchronous I/O. The 'timeout' param=
-eter is set to TSS2_TCTI_TIMEOUT_BLOCK
-WARNING:tcti:src/tss2-tcti/tcti-device.c:189:tcti_device_receive() The unde=
-rlying IPC mechanism does not support asynchronous I/O. The 'timeout' param=
-eter is set to TSS2_TCTI_TIMEOUT_BLOCK
-WARNING:fapi:src/tss2-fapi/api/Fapi_List.c:226:Fapi_List_Finish() Profile o=
-f path not provisioned: /HS/SRK
-ERROR:fapi:src/tss2-fapi/api/Fapi_List.c:81:Fapi_List() ErrorCode (0x000600=
-34) Entities_List
-ERROR: Listing FAPI token objects failed.
+Regards!
+Felix
 
-** (process:614): CRITICAL **: 09:58:20.167: failed to allocate dbus proxy =
-object: Could not connect: No such file or directory
-WARNING:tcti:src/tss2-tcti/tctildr.c:79:tcti_from_init() TCTI init for func=
-tion 0x7f17e82582a0 failed with a0008
-WARNING:tcti:src/tss2-tcti/tctildr.c:109:tcti_from_info() Could not initial=
-ize TCTI named: tcti-abrmd
-ERROR:tcti:src/tss2-tcti/tctildr-dl.c:150:tcti_from_file() Could not initia=
-lize TCTI file: libtss2-tcti-tabrmd.so.0
-ERROR: HSM returned response code: 0x91 CKR_OPERATION_NOT_INITIALIZED
+On Monday, 14 June 2021 20:51:14 CEST Roberts, William C wrote:
+> Two things, if you need different PCR values than what's on the system, t=
+he TPM only cares about the hash of all the banks, so you can just specify =
+that expected hash of the PCR state as argument 3 to tpm2_policypcr as show=
+n in the man page (since 5.0). If on early versions, you can create a binar=
+y file, that's a list of binary hashes in order of the PCR selection. Ie if=
+ you did sha256:1,2,3, the file would be 3 * 32 bytes in size and contain t=
+he hashes of PCR1, 2, 3 in that order. This is the binary format from tpm2_=
+pcrread -o, so if you have a system in the expected state, you can use that=
+ to output it, or hand jam it.
+> =
+
+> policy password just says, hey require a password for this object, and it=
+ will be found in the TPM header in the command.
+> =
+
+> So, the better way would be to look at policysecret, which effectively do=
+es the same thing, but puts it in the session
+> over the command header. Thus, you can have multiple secrets for an objec=
+t.
+> =
+
+> Typically, for a recovery password, folks couple it to the hierarchy the =
+object belongs in via policyauthorize.
+> =
+
+> ________________________________
+> From: Felix Rubio Dalmau <felix(a)kngnt.org>
+> Sent: Saturday, June 12, 2021 12:58 AM
+> To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+> Subject: [tpm2] Example with multifactor authentication available?
+> =
+
+> =
+
+> Hi everybody!
+> =
+
+> =
+
+> I am still learning about tpm and tpm2-tools. Following the advice from W=
+illiam Roberts, I set the authentication policy up as AND(pcr, password) by=
+ doing the following:
+> =
+
+> =
+
+>     # create a policy that requires the pcr and the password
+> =
+
+>     tpm2_startauthsession -S session.dat
+> =
+
+>     tpm2_policypcr -S session.dat -l "sha1:0,1,2,3" -L policy.dat
+> =
+
+>     tpm2_policypassword -S session.dat -L policy.dat
+> =
+
+>     tpm2_flushcontext session.dat
+> =
+
+> =
+
+>     # and the sealing goes with
+> =
+
+>     echo mysecret | tpm2_create -C primary.ctx -u key.pub -r key.priv -i-=
+ -p password -L policy.dat
+> =
+
+> =
+
+> William suggested I should set up a signed policy so that when UEFI gets =
+updated I can regenerate the policy and not find myself lock out off the sy=
+stem, which I understand, but the problem is: to prevent from further unloc=
+k attemps, after unsealing the secret protected by that policy, I will exte=
+nd one of the pcr registers... so, if I generate the pcr policy with the li=
+ve system, I will be using pcr values that have been altered.
+> =
+
+> =
+
+> Now, I have thought in either forcing the EFI updates to happen during th=
+e system boot (I download the update, recreate a initramfs including it, an=
+d during the following boot, in the unlocking script, the UEFI gets updated=
+ and the policy gets created before unlocking), or in having a multi factor=
+ authentication that allows me to get in with either the previous policy or=
+ with another policy composed by the previous password and a rescue passwor=
+d. In this case, AND(password1, OR(password2, pcr)), I have written the fol=
+lowing statements:
+> =
+
+> =
+
+>     # session for auth based on pcr
+>     tpm2_startauthsession -S session.dat
+>     tpm2_policypcr -S session.dat -l "sha256:0,1" -L policy.pcr
+>     tpm2_flushcontext session.dat
+>     rm session.dat
+> =
+
+>     # session for auth based on rescue password
+>     tpm2_startauthsession -S session.dat
+>     tpm2_policypassword -S session.dat -L policy.rescue
+>     tpm2_flushcontext session.dat
+> =
+
+>     rm session.dat
+> =
+
+>     # compound both policies using OR and require always the password
+>     tpm2_startauthsession -S session.dat
+>     tpm2_policyor -S session.dat -L policy.dat sha256:policy.pcr,policy.r=
+escue
+>     tpm2_policypassword -S session.dat -L policy.dat
+>     tpm2_flushcontext session.dat
+> =
+
+>     rm session.dat
+> =
+
+> =
+
+> =
+
+> I think this is ok, but then.. I do not see how to initialize the passwor=
+d policies. Is there any example similar to what I want to achieve?
+> =
+
+> =
+
+> Thank you!
+> =
+
+> Felix
+> =
 
 
-Package versions
-
-libtss2-mu0-2.4.5-1.11.x86_64
-libtss2-tctildr0-2.4.5-1.11.x86_64
-libtss2-sys0-2.4.5-1.11.x86_64
-libtss2-fapi1-3.1.0-lp152.116.2.x86_64
-libtss2-esys0-2.4.5-1.11.x86_64
-libtss2-tcti-device0-2.4.5-1.11.x86_64
-libtss2-tcti-tabrmd0-2.3.3-1.12.x86_64
-libtss2-rc0-2.4.5-1.11.x86_64
-libtss2-tcti-mssim0-2.4.5-1.11.x86_64
-libtss2-sys1-3.1.0-lp153.117.1.x86_64
-libtss2-fapi0-2.4.5-1.11.x86_64
 
 
-tpm2-0-tss-2.4.5-1.11.x86_64
-tpm2.0-tools-4.3.0-2.3.x86_64
-tpm2.0-abrmd-2.3.3-1.12.x86_64
-tpm2-tss-engine-1.0.1-4.3.1.x86_64
-tpm2-pkcs11-1.6.0+git20210503.c2d53cc-lp152.6.1.x86_64
-tpm-tools-pkcs11-1.3.9.1-4.3.1.x86_64
+--===============8697544204812307096==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-I don't have the rpm for tpm2-pkcs11 so when i'm installing it with =
-
-
-zypper addrepo https://download.opensuse.org/repositories/home:brassh:branc=
-hes:security/openSUSE_Tumbleweed/home:brassh:branches:security.repo
-zypper refresh
-zypper install tpm2-pkcs11
-
-libtss2-fapi0-2.4.5-1.11.x86_64 is overridden by libtss2-fapi1-3.1.0-lp152.=
-116.2.x86_64 =
-
-
-Can you please tell me what configuration I'm missing
-
-Thanks
-Nitesh
---===============2844963799002731408==--
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJjb250ZW50LXR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1VVEYtOCI+CjwvaGVhZD4KPGJvZHk+PHAgc3R5bGU9Im1hcmdpbi10
+b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPkhpIFdp
+bGxpYW0sPC9wPgo8YnIgLz48cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDtt
+YXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IFNvcnJ5IGZv
+ciBhbnN3ZXJpbmcgc28gbGF0ZSBhZnRlciB5b3VyIGxhc3QgZW1haWwuIEkgaGFkIHRvIGp1bXAg
+dG8gYW5vdGhlciBzdWJqZWN0LCB0aGVuIGhvbGlkYXlzLi4uIHllYWgsIGxpZmUgSSBndWVzcyEg
+SSBoYXZlIHN0YXJ0ZWQgYWdhaW4gbG9va2luZyBhdCB0aGlzIG1hdHRlciwgYW5kLi4uIEkgZG8g
+bm90IHVuZGVyc3RhbmQgdGhlIHBhcnQgb2YgdGhlIHJlc2N1ZSBwYXNzd29yZCBhbmQgaG93IHRv
+IHVzZSBpdC4gSSBzZWUgdGhhdCB1c2luZyBwb2xpY3lzZWNyZXQgaXMgdGhlIHdheSB0byBnbywg
+YmVjYXVzZSBpdCBkb2VzIG5vdCBzZXQgYW55IGZsYWcgdG8gcmVxdWlyZSBhIHBhc3N3b3JkIHdo
+ZW4gdGhlIGNyZWF0ZSBpcyBpc3N1ZWQsIGJ1dCBJIHN0aWxsIGRvIG5vdCBzZWUgaG93IHRvIHVz
+ZSBpdCB0byBpbnB1dCBhIHBhc3N3b3JkLiBJbiB0aGUgaGVscCBvZiBwb2xpY3lzZWNyZXQsIGl0
+IHN0YXRlczo8L3A+CjxiciAvPjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTow
+O21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsg
+JnF1b3Q7PGVtPlRQTTJfUG9saWN5U2VjcmV0PC9lbT4mbmJzcDtjb21tYW5kIHJlcXVpcmVzIHlv
+dSB0byBwYXNzIGluIHRoZSBuYW1lIG9mIHRoZSBvYmplY3Qgd2hvc2UgPGVtPnBhc3N3b3JkPC9l
+bT4mbmJzcDtpcyByZXF1aXJlZCB0byBzYXRpc2Z5IHRoZSBwb2xpY3kmcXVvdDs8L3A+CjxiciAv
+PjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFy
+Z2luLXJpZ2h0OjA7Ij5Eb2VzIHRoaXMgbWVhbiB0aGF0IEkgc2hvdWxkIGNyZWF0ZSBhbiBvYmpl
+Y3QsIHBhc3N3b3JkLXByb3RlY3RlZCwganVzdCBmb3IgdGhlIHNha2Ugb2YgdXNpbmcgaXQgbGF0
+ZXIgd2l0aCBwb2xpY3lzZWNyZXQ/PyBJdCBzb3VuZHMgd2VpcmQgdG8gbWUsIGJ1dCBJIGFtIG5v
+dCBza2lsbGVkIGVub3VnaCB0byBwcm9wZXJseSBhc3Nlc3MgaXQuPC9wPgo8YnIgLz48cCBzdHls
+ZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdo
+dDowOyI+UmVnYXJkcyE8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTow
+O21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij5GZWxpeDwvcD4KPGJyIC8+PHAgc3R5bGU9
+Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6
+MDsiPk9uIE1vbmRheSwgMTQgSnVuZSAyMDIxIDIwOjUxOjE0IENFU1QgUm9iZXJ0cywgV2lsbGlh
+bSBDIHdyb3RlOjwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFy
+Z2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgVHdvIHRoaW5ncywgaWYgeW91IG5lZWQg
+ZGlmZmVyZW50IFBDUiB2YWx1ZXMgdGhhbiB3aGF0J3Mgb24gdGhlIHN5c3RlbSwgdGhlIFRQTSBv
+bmx5IGNhcmVzIGFib3V0IHRoZSBoYXNoIG9mIGFsbCB0aGUgYmFua3MsIHNvIHlvdSBjYW4ganVz
+dCBzcGVjaWZ5IHRoYXQgZXhwZWN0ZWQgaGFzaCBvZiB0aGUgUENSIHN0YXRlIGFzIGFyZ3VtZW50
+IDMgdG8gdHBtMl9wb2xpY3lwY3IgYXMgc2hvd24gaW4gdGhlIG1hbiBwYWdlIChzaW5jZSA1LjAp
+LiBJZiBvbiBlYXJseSB2ZXJzaW9ucywgeW91IGNhbiBjcmVhdGUgYSBiaW5hcnkgZmlsZSwgdGhh
+dCdzIGEgbGlzdCBvZiBiaW5hcnkgaGFzaGVzIGluIG9yZGVyIG9mIHRoZSBQQ1Igc2VsZWN0aW9u
+LiBJZSBpZiB5b3UgZGlkIHNoYTI1NjoxLDIsMywgdGhlIGZpbGUgd291bGQgYmUgMyAqIDMyIGJ5
+dGVzIGluIHNpemUgYW5kIGNvbnRhaW4gdGhlIGhhc2hlcyBvZiBQQ1IxLCAyLCAzIGluIHRoYXQg
+b3JkZXIuIFRoaXMgaXMgdGhlIGJpbmFyeSBmb3JtYXQgZnJvbSB0cG0yX3BjcnJlYWQgLW8sIHNv
+IGlmIHlvdSBoYXZlIGEgc3lzdGVtIGluIHRoZSBleHBlY3RlZCBzdGF0ZSwgeW91IGNhbiB1c2Ug
+dGhhdCB0byBvdXRwdXQgaXQsIG9yIGhhbmQgamFtIGl0LjwvcD4KPHAgc3R5bGU9Im1hcmdpbi10
+b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsg
+PC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDow
+O21hcmdpbi1yaWdodDowOyI+Jmd0OyBwb2xpY3kgcGFzc3dvcmQganVzdCBzYXlzLCBoZXkgcmVx
+dWlyZSBhIHBhc3N3b3JkIGZvciB0aGlzIG9iamVjdCwgYW5kIGl0IHdpbGwgYmUgZm91bmQgaW4g
+dGhlIFRQTSBoZWFkZXIgaW4gdGhlIGNvbW1hbmQuPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDow
+O21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyA8L3A+
+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFy
+Z2luLXJpZ2h0OjA7Ij4mZ3Q7IFNvLCB0aGUgYmV0dGVyIHdheSB3b3VsZCBiZSB0byBsb29rIGF0
+IHBvbGljeXNlY3JldCwgd2hpY2ggZWZmZWN0aXZlbHkgZG9lcyB0aGUgc2FtZSB0aGluZywgYnV0
+IHB1dHMgaXQgaW4gdGhlIHNlc3Npb248L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2lu
+LWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7IG92ZXIgdGhlIGNv
+bW1hbmQgaGVhZGVyLiBUaHVzLCB5b3UgY2FuIGhhdmUgbXVsdGlwbGUgc2VjcmV0cyBmb3IgYW4g
+b2JqZWN0LjwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2lu
+LWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDow
+O21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyBUeXBp
+Y2FsbHksIGZvciBhIHJlY292ZXJ5IHBhc3N3b3JkLCBmb2xrcyBjb3VwbGUgaXQgdG8gdGhlIGhp
+ZXJhcmNoeSB0aGUgb2JqZWN0IGJlbG9uZ3MgaW4gdmlhIHBvbGljeWF1dGhvcml6ZS48L3A+Cjxw
+IHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2lu
+LXJpZ2h0OjA7Ij4mZ3Q7IDwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9t
+OjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX188L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTow
+O21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7IEZyb206IEZlbGl4IFJ1YmlvIERh
+bG1hdSAmbHQ7ZmVsaXhAa25nbnQub3JnJmd0OzwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDtt
+YXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgU2VudDog
+U2F0dXJkYXksIEp1bmUgMTIsIDIwMjEgMTI6NTggQU08L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9w
+OjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7IFRv
+OiB0cG0yQGxpc3RzLjAxLm9yZyAmbHQ7dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PC9wPgo8cCBzdHls
+ZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdo
+dDowOyI+Jmd0OyBTdWJqZWN0OiBbdHBtMl0gRXhhbXBsZSB3aXRoIG11bHRpZmFjdG9yIGF1dGhl
+bnRpY2F0aW9uIGF2YWlsYWJsZT88L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJv
+dHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7IDwvcD4KPHAgc3R5bGU9
+Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6
+MDsiPiZndDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJn
+aW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyBIaSBldmVyeWJvZHkhPC9wPgo8cCBzdHls
+ZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdo
+dDowOyI+Jmd0OyA8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21h
+cmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7IDwvcD4KPHAgc3R5bGU9Im1hcmdpbi10
+b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsg
+SSBhbSBzdGlsbCBsZWFybmluZyBhYm91dCB0cG0gYW5kIHRwbTItdG9vbHMuIEZvbGxvd2luZyB0
+aGUgYWR2aWNlIGZyb20gV2lsbGlhbSBSb2JlcnRzLCBJIHNldCB0aGUgYXV0aGVudGljYXRpb24g
+cG9saWN5IHVwIGFzIEFORChwY3IsIHBhc3N3b3JkKSBieSBkb2luZyB0aGUgZm9sbG93aW5nOjwv
+cD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDtt
+YXJnaW4tcmlnaHQ6MDsiPiZndDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1i
+b3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyA8L3A+CjxwIHN0eWxl
+PSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0
+OjA7Ij4mZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICMgY3JlYXRlIGEgcG9saWN5IHRoYXQg
+cmVxdWlyZXMgdGhlIHBjciBhbmQgdGhlIHBhc3N3b3JkPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRv
+cDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyA8
+L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7
+bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHRwbTJfc3RhcnRh
+dXRoc2Vzc2lvbiAtUyBzZXNzaW9uLmRhdDwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJn
+aW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgPC9wPgo8cCBz
+dHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1y
+aWdodDowOyI+Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB0cG0yX3BvbGljeXBjciAtUyBz
+ZXNzaW9uLmRhdCAtbCAmcXVvdDtzaGExOjAsMSwyLDMmcXVvdDsgLUwgcG9saWN5LmRhdDwvcD4K
+PHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJn
+aW4tcmlnaHQ6MDsiPiZndDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0
+b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyB0cG0yX3BvbGljeXBhc3N3b3JkIC1TIHNlc3Npb24uZGF0IC1MIHBvbGljeS5kYXQ8
+L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7
+bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7IDwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4t
+Ym90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsgdHBtMl9mbHVzaGNvbnRleHQgc2Vzc2lvbi5kYXQ8L3A+CjxwIHN0eWxlPSJt
+YXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7
+Ij4mZ3Q7IDwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2lu
+LWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDow
+O21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyAjIGFuZCB0aGUgc2VhbGluZyBnb2VzIHdpdGg8L3A+CjxwIHN0
+eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJp
+Z2h0OjA7Ij4mZ3Q7IDwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7
+bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsgZWNobyBteXNlY3JldCB8IHRwbTJfY3JlYXRlIC1DIHByaW1hcnkuY3R4IC11IGtleS5wdWIg
+LXIga2V5LnByaXYgLWktIC1wIHBhc3N3b3JkIC1MIHBvbGljeS5kYXQ8L3A+CjxwIHN0eWxlPSJt
+YXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7
+Ij4mZ3Q7IDwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2lu
+LWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDow
+O21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyBXaWxs
+aWFtIHN1Z2dlc3RlZCBJIHNob3VsZCBzZXQgdXAgYSBzaWduZWQgcG9saWN5IHNvIHRoYXQgd2hl
+biBVRUZJIGdldHMgdXBkYXRlZCBJIGNhbiByZWdlbmVyYXRlIHRoZSBwb2xpY3kgYW5kIG5vdCBm
+aW5kIG15c2VsZiBsb2NrIG91dCBvZmYgdGhlIHN5c3RlbSwgd2hpY2ggSSB1bmRlcnN0YW5kLCBi
+dXQgdGhlIHByb2JsZW0gaXM6IHRvIHByZXZlbnQgZnJvbSBmdXJ0aGVyIHVubG9jayBhdHRlbXBz
+LCBhZnRlciB1bnNlYWxpbmcgdGhlIHNlY3JldCBwcm90ZWN0ZWQgYnkgdGhhdCBwb2xpY3ksIEkg
+d2lsbCBleHRlbmQgb25lIG9mIHRoZSBwY3IgcmVnaXN0ZXJzLi4uIHNvLCBpZiBJIGdlbmVyYXRl
+IHRoZSBwY3IgcG9saWN5IHdpdGggdGhlIGxpdmUgc3lzdGVtLCBJIHdpbGwgYmUgdXNpbmcgcGNy
+IHZhbHVlcyB0aGF0IGhhdmUgYmVlbiBhbHRlcmVkLjwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6
+MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgPC9w
+Pgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21h
+cmdpbi1yaWdodDowOyI+Jmd0OyA8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJv
+dHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7IE5vdywgSSBoYXZlIHRo
+b3VnaHQgaW4gZWl0aGVyIGZvcmNpbmcgdGhlIEVGSSB1cGRhdGVzIHRvIGhhcHBlbiBkdXJpbmcg
+dGhlIHN5c3RlbSBib290IChJIGRvd25sb2FkIHRoZSB1cGRhdGUsIHJlY3JlYXRlIGEgaW5pdHJh
+bWZzIGluY2x1ZGluZyBpdCwgYW5kIGR1cmluZyB0aGUgZm9sbG93aW5nIGJvb3QsIGluIHRoZSB1
+bmxvY2tpbmcgc2NyaXB0LCB0aGUgVUVGSSBnZXRzIHVwZGF0ZWQgYW5kIHRoZSBwb2xpY3kgZ2V0
+cyBjcmVhdGVkIGJlZm9yZSB1bmxvY2tpbmcpLCBvciBpbiBoYXZpbmcgYSBtdWx0aSBmYWN0b3Ig
+YXV0aGVudGljYXRpb24gdGhhdCBhbGxvd3MgbWUgdG8gZ2V0IGluIHdpdGggZWl0aGVyIHRoZSBw
+cmV2aW91cyBwb2xpY3kgb3Igd2l0aCBhbm90aGVyIHBvbGljeSBjb21wb3NlZCBieSB0aGUgcHJl
+dmlvdXMgcGFzc3dvcmQgYW5kIGEgcmVzY3VlIHBhc3N3b3JkLiBJbiB0aGlzIGNhc2UsIEFORChw
+YXNzd29yZDEsIE9SKHBhc3N3b3JkMiwgcGNyKSksIEkgaGF2ZSB3cml0dGVuIHRoZSBmb2xsb3dp
+bmcgc3RhdGVtZW50czo8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTow
+O21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7IDwvcD4KPHAgc3R5bGU9Im1hcmdp
+bi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZn
+dDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVm
+dDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAjIHNlc3Np
+b24gZm9yIGF1dGggYmFzZWQgb24gcGNyPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdp
+bi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyB0cG0yX3N0YXJ0YXV0aHNlc3Npb24gLVMgc2Vzc2lvbi5kYXQ8L3A+Cjxw
+IHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2lu
+LXJpZ2h0OjA7Ij4mZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHRwbTJfcG9saWN5cGNyIC1T
+IHNlc3Npb24uZGF0IC1sICZxdW90O3NoYTI1NjowLDEmcXVvdDsgLUwgcG9saWN5LnBjcjwvcD4K
+PHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJn
+aW4tcmlnaHQ6MDsiPiZndDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgdHBtMl9mbHVzaGNvbnRl
+eHQgc2Vzc2lvbi5kYXQ8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTow
+O21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7IHJtIHNlc3Npb24uZGF0PC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0
+b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyA8L3A+CjxwIHN0eWxlPSJt
+YXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7
+Ij4mZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ICMgc2Vzc2lvbiBmb3IgYXV0aCBiYXNlZCBv
+biByZXNjdWUgcGFzc3dvcmQ8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRv
+bTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7IHRwbTJfc3RhcnRhdXRoc2Vzc2lvbiAtUyBzZXNzaW9uLmRhdDwvcD4KPHAgc3R5bGU9
+Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6
+MDsiPiZndDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgdHBtMl9wb2xpY3lwYXNzd29yZCAtUyBz
+ZXNzaW9uLmRhdCAtTCBwb2xpY3kucmVzY3VlPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21h
+cmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyB0cG0yX2ZsdXNoY29udGV4dCBzZXNzaW9uLmRhdDwvcD4KPHAgc3R5
+bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmln
+aHQ6MDsiPiZndDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDtt
+YXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyBybSBzZXNzaW9uLmRhdDwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9t
+OjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgPC9wPgo8cCBzdHlsZT0ibWFy
+Z2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+
+Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAjIGNvbXBvdW5kIGJvdGggcG9saWNpZXMgdXNp
+bmcgT1IgYW5kIHJlcXVpcmUgYWx3YXlzIHRoZSBwYXNzd29yZDwvcD4KPHAgc3R5bGU9Im1hcmdp
+bi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZn
+dDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgdHBtMl9zdGFydGF1dGhzZXNzaW9uIC1TIHNlc3Np
+b24uZGF0PC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4t
+bGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB0cG0y
+X3BvbGljeW9yIC1TIHNlc3Npb24uZGF0IC1MIHBvbGljeS5kYXQgc2hhMjU2OnBvbGljeS5wY3Is
+cG9saWN5LnJlc2N1ZTwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7
+bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsgdHBtMl9wb2xpY3lwYXNzd29yZCAtUyBzZXNzaW9uLmRhdCAtTCBwb2xpY3kuZGF0PC9wPgo8
+cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdp
+bi1yaWdodDowOyI+Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB0cG0yX2ZsdXNoY29udGV4
+dCBzZXNzaW9uLmRhdDwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7
+bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2lu
+LXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBybSBzZXNzaW9uLmRhdDwvcD4KPHAgc3R5bGU9Im1h
+cmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsi
+PiZndDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4t
+bGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyA8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9wOjA7
+bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7IDwvcD4K
+PHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFyZ2luLWxlZnQ6MDttYXJn
+aW4tcmlnaHQ6MDsiPiZndDsgSSB0aGluayB0aGlzIGlzIG9rLCBidXQgdGhlbi4uIEkgZG8gbm90
+IHNlZSBob3cgdG8gaW5pdGlhbGl6ZSB0aGUgcGFzc3dvcmQgcG9saWNpZXMuIElzIHRoZXJlIGFu
+eSBleGFtcGxlIHNpbWlsYXIgdG8gd2hhdCBJIHdhbnQgdG8gYWNoaWV2ZT88L3A+CjxwIHN0eWxl
+PSJtYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0
+OjA7Ij4mZ3Q7IDwvcD4KPHAgc3R5bGU9Im1hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7bWFy
+Z2luLWxlZnQ6MDttYXJnaW4tcmlnaHQ6MDsiPiZndDsgPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRv
+cDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyBU
+aGFuayB5b3UhPC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJn
+aW4tbGVmdDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyA8L3A+CjxwIHN0eWxlPSJtYXJnaW4tdG9w
+OjA7bWFyZ2luLWJvdHRvbTowO21hcmdpbi1sZWZ0OjA7bWFyZ2luLXJpZ2h0OjA7Ij4mZ3Q7IEZl
+bGl4PC9wPgo8cCBzdHlsZT0ibWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDttYXJnaW4tbGVm
+dDowO21hcmdpbi1yaWdodDowOyI+Jmd0OyA8L3A+CjxiciAvPjxiciAvPjwvYm9keT4KPC9odG1s
+Pg==
+--===============8697544204812307096==--
 
