@@ -1,23 +1,30 @@
-Content-Type: multipart/mixed; boundary="===============7294527100162907639=="
+Content-Type: multipart/mixed; boundary="===============5282415042774782444=="
 MIME-Version: 1.0
-From: joshkalonn567 at gmail.com
-Subject: [tpm2] Research
-Date: Tue, 31 Aug 2021 08:59:40 +0000
-Message-ID: <20210831085940.2717.27584@ml01.vlan13.01.org>
+From: Imran Desai <imran.desai at intel.com>
+Subject: [tpm2] [Release Announcement] tpm2-tools v5.2-rc0
+Date: Thu, 02 Sep 2021 00:06:14 +0000
+Message-ID: <20210902000614.2717.93874@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7294527100162907639==
+--===============5282415042774782444==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Good afternoon, I'm on this forum for the first time. I want to spread my s=
-tory about myself. I'm still studying at university, a future philologist. =
-At the moment I need to write a lot of essays using excel assignment https:=
-//writessay.org/excel-homework-help/. I'm very happy that there is such a s=
-ervice today, in which they will help and write an essay very quickly. Ther=
-efore, I advise all students who want to write an essay quickly and efficie=
-ntly to use this service.
---===============7294527100162907639==--
+Hello all,
+
+Pleased to announce the release of tpm2-tools v5.2-rc0. Thank you to all th=
+e contributors.
+
+The release is available here: https://github.com/tpm2-software/tpm2-tools/=
+releases/tag/5.2-rc0
+Please reference the release notes for changes in this release.
+
+Please note this is a pre-release and we'd appreciate any feedback.
+
+Thanks, and regards,
+
+Imran Desai
+--===============5282415042774782444==--
 
