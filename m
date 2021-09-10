@@ -1,53 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============7600211001813611801=="
+Content-Type: multipart/mixed; boundary="===============8950594536474046397=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] Re: CFLAGS and LIBS defines for tss versus other tpm2 projects
-Date: Fri, 10 Sep 2021 10:58:34 +0000
-Message-ID: <AM8P194MB16755DC0C5BD12E4E5C1FEE3A6D69@AM8P194MB1675.EURP194.PROD.OUTLOOK.COM>
-In-Reply-To: SN6PR11MB3437B20268B120BA4990AD5CB8D49@SN6PR11MB3437.namprd11.prod.outlook.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] [RELEASE CANDIDATE] tpm2-pkcs11 1.7.0-rc1
+Date: Fri, 10 Sep 2021 20:18:04 +0000
+Message-ID: <SN6PR11MB3437D895E32B894D2FE5B29DB8D69@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7600211001813611801==
+--===============8950594536474046397==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I don't mind at all...
+Hello,
 
-________________________________________
-Von: Roberts, William C <william.c.roberts(a)intel.com>
-Gesendet: Donnerstag, 9. September 2021 19:08
-An: tpm2(a)lists.01.org
-Betreff: [tpm2] CFLAGS and LIBS defines for tss versus other tpm2 projects
+I would like to announce the release of 1.7.0-rc1 with the following CHANGE=
+LOG:
 
-So in all of the projects that need libcrypto, the configure.ac check using=
- PKG_CHECK_MODULES
-uses "CRYPTO" except tss project which uses LIBCRYPT. This means that when =
-exporting variables
-for building against a custom libcrypto, the variables will be LIBCRYPTO_CF=
-LAGS and LIBCRYPTO_LIBS,
-where as all the other projects are just CRYPTO_CFLAGS and CRYPTO_LIBS. Whi=
-le it's not difficult to
-set both variables, I was wondering if we could unify this around CRYPTO (w=
-ithout the lib prefix) and
-if we consider configure.ac to be stable, ie if we made this change would w=
-e make someones life miserable?
+### 1.7.0-rc1 - 2021-09-10
+=C2=A0 * DB Schema Change from 5 to 7.
+=C2=A0 =C2=A0 - **Backup your DB before upgrading**
+=C2=A0 * Fixed compilation issues with GCC11.
+=C2=A0 * Fixed errors on releases due to newer compilers from failing by on=
+ly adding `-Werror` for non-release builds.
+=C2=A0 * Fixed error message when the DB is too new in tpm2\_ptool.
+=C2=A0 * Added support for tpm2\_ptool import with ssh-keygen format keys. =
+Note: Requires cryptography >=3D 3.0.
+=C2=A0 * Changed default long level from error to warning.
+=C2=A0 * Added better error message for FAPI backend errors along with [doc=
+s/FAPI.md](docs/FAPI.md) document.
+=C2=A0 * Changed `tpm2_ptool` make `--algorithm` optional.
+=C2=A0 * Fixed error message of wrong attribute name on expected attribute =
+check to be false.
+=C2=A0 * Added support for ECDSA 256, 384 and 512.
+=C2=A0 * Fixed a bug in the Python code DB upgrade path from 4 to 5 where i=
+t didn't add AES mode CTR to
+=C2=A0 =C2=A0 CKA\_ALLOWED\_MECHANISMS.
+=C2=A0 * Added tpm2\_ptool support for ECC key size 192.
+=C2=A0 * Added support passwordless login for tokens, ie not setting CKF\_L=
+OGIN\_REQUIRED.
+=C2=A0 * Fixed Running integration tests when Java version has the `-ea`, l=
+ike on Debian 11 and OpenJDK 17.
+=C2=A0 * Added support for HMAC keys using tpm2\_ptool and the C\_Sign and =
+C\_Verify interfaces.
+=C2=A0 =C2=A0 The following interfaces in ptool have support:
+=C2=A0 =C2=A0 =C2=A0 - addkey: previous working versions of tpm2-tools will=
+ support this.
+=C2=A0 =C2=A0 =C2=A0 - link: previous working versions of tpm2-tools will s=
+upport this.
+=C2=A0 =C2=A0 =C2=A0 - import: requires tpm2-tools 5.2+ for support.
+=C2=A0 * Fixed leaking of temp file descriptors in tpm2\_ptool.
+=C2=A0 * Fixed wrong free in tpm code, should use Esys\_Free.
+=C2=A0 * Fixed a space formatting issue in tpm2\_ptool verify.
+=C2=A0 * Fixed leaked file descriptor in tpm2\_ptool.
+=C2=A0 * Fixed a few suspicious sizeof usages in str\_padded\_copy
+=C2=A0 * Fixed a memory leak of the token list on a failure condition in in=
+itialization.
+
+The release can be found at:
+https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.7.0-rc1
+
 
 Thanks,
 Bill
 
-Configure.ac snippets below.
-
-tpm2-openssl/configure.ac:PKG_CHECK_MODULES([CRYPTO], [libcrypto >=3D 3.0.0=
-],
-tpm2-pkcs11/configure.ac:PKG_CHECK_MODULES([CRYPTO],      [libcrypto >=3D 1=
-.1.0])
-tpm2-tools/configure.ac:PKG_CHECK_MODULES([CRYPTO], [libcrypto >=3D 1.1.0])
-tpm2-tss/configure.ac:           PKG_CHECK_MODULES([LIBCRYPTO],
-tpm2-tss/configure.ac:           [PKG_CHECK_MODULES([LIBCRYPTO],[libcrypto]=
-)])
-tpm2-tss-engine/configure.ac:PKG_CHECK_MODULES([CRYPTO], [libcrypto >=3D 1.=
-0.2g],
---===============7600211001813611801==--
+--===============8950594536474046397==--
 
