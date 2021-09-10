@@ -1,16 +1,25 @@
-Content-Type: multipart/mixed; boundary="===============2333127604476122156=="
+Content-Type: multipart/mixed; boundary="===============7600211001813611801=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] CFLAGS and LIBS defines for tss versus other tpm2 projects
-Date: Thu, 09 Sep 2021 17:08:43 +0000
-Message-ID: <SN6PR11MB3437B20268B120BA4990AD5CB8D49@SN6PR11MB3437.namprd11.prod.outlook.com>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: [tpm2] Re: CFLAGS and LIBS defines for tss versus other tpm2 projects
+Date: Fri, 10 Sep 2021 10:58:34 +0000
+Message-ID: <AM8P194MB16755DC0C5BD12E4E5C1FEE3A6D69@AM8P194MB1675.EURP194.PROD.OUTLOOK.COM>
+In-Reply-To: SN6PR11MB3437B20268B120BA4990AD5CB8D49@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2333127604476122156==
+--===============7600211001813611801==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+I don't mind at all...
+
+________________________________________
+Von: Roberts, William C <william.c.roberts(a)intel.com>
+Gesendet: Donnerstag, 9. September 2021 19:08
+An: tpm2(a)lists.01.org
+Betreff: [tpm2] CFLAGS and LIBS defines for tss versus other tpm2 projects
 
 So in all of the projects that need libcrypto, the configure.ac check using=
  PKG_CHECK_MODULES
@@ -40,75 +49,5 @@ tpm2-tss/configure.ac:           [PKG_CHECK_MODULES([LIBCRYPTO],[libcrypto]=
 )])
 tpm2-tss-engine/configure.ac:PKG_CHECK_MODULES([CRYPTO], [libcrypto >=3D 1.=
 0.2g],
-
---===============2333127604476122156==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
-ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
-eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2Fs
-aWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsgZm9udC1zaXplOjEycHQ7IGNvbG9yOnJn
-YigwLDAsMCkiPgpTbyBpbiBhbGwgb2YgdGhlIHByb2plY3RzIHRoYXQgbmVlZCBsaWJjcnlwdG8s
-IHRoZSBjb25maWd1cmUuPHNwYW4gc3R5bGU9ImJhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUs
-MjU1KTsgZGlzcGxheTppbmxpbmUhaW1wb3J0YW50Ij5hYyBjaGVjayB1c2luZyBQS0dfQ0hFQ0tf
-TU9EVUxFUzwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlh
-bCxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsgZm9udC1zaXplOjEycHQ7IGNvbG9yOnJnYigwLDAsMCki
-Pgo8c3BhbiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpOyBkaXNwbGF5
-OmlubGluZSFpbXBvcnRhbnQiPnVzZXMgJnF1b3Q7Q1JZUFRPJnF1b3Q7IGV4Y2VwdCB0c3MgcHJv
-amVjdCB3aGljaCB1c2VzIExJQkNSWVBULiBUaGlzIG1lYW5zIHRoYXQgd2hlbiBleHBvcnRpbmcg
-dmFyaWFibGVzPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFy
-aWFsLEhlbHZldGljYSxzYW5zLXNlcmlmOyBmb250LXNpemU6MTJwdDsgY29sb3I6cmdiKDAsMCww
-KSI+CjxzcGFuIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSk7IGRpc3Bs
-YXk6aW5saW5lIWltcG9ydGFudCI+Zm9yIGJ1aWxkaW5nIGFnYWluc3QgYSBjdXN0b20gbGliY3J5
-cHRvLCB0aGUgdmFyaWFibGVzIHdpbGwgYmUgTElCQ1JZUFRPX0NGTEFHUyBhbmQgTElCQ1JZUFRP
-X0xJQlMsPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFs
-LEhlbHZldGljYSxzYW5zLXNlcmlmOyBmb250LXNpemU6MTJwdDsgY29sb3I6cmdiKDAsMCwwKSI+
-CjxzcGFuIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSk7IGRpc3BsYXk6
-aW5saW5lIWltcG9ydGFudCI+d2hlcmUgYXMgYWxsIHRoZSBvdGhlciBwcm9qZWN0cyBhcmUganVz
-dCBDUllQVE9fQ0ZMQUdTIGFuZCBDUllQVE9fTElCUy4gV2hpbGUgaXQncyBub3QgZGlmZmljdWx0
-IHRvPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhl
-bHZldGljYSxzYW5zLXNlcmlmOyBmb250LXNpemU6MTJwdDsgY29sb3I6cmdiKDAsMCwwKSI+Cjxz
-cGFuIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSk7IGRpc3BsYXk6aW5s
-aW5lIWltcG9ydGFudCI+c2V0IGJvdGggdmFyaWFibGVzLCBJIHdhcyB3b25kZXJpbmcgaWYgd2Ug
-Y291bGQgdW5pZnkgdGhpcyBhcm91bmQgQ1JZUFRPICh3aXRob3V0IHRoZSBsaWIgcHJlZml4KSBh
-bmQ8L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVs
-dmV0aWNhLHNhbnMtc2VyaWY7IGZvbnQtc2l6ZToxMnB0OyBjb2xvcjpyZ2IoMCwwLDApIj4KPHNw
-YW4gc3R5bGU9ImJhY2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KTsgZGlzcGxheTppbmxp
-bmUhaW1wb3J0YW50Ij5pZiB3ZSBjb25zaWRlciBjb25maWd1cmUuYWMgdG8gYmUgc3RhYmxlLCBp
-ZSBpZiB3ZSBtYWRlIHRoaXMgY2hhbmdlIHdvdWxkIHdlIG1ha2Ugc29tZW9uZXMgbGlmZSBtaXNl
-cmFibGU/PC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFs
-LEhlbHZldGljYSxzYW5zLXNlcmlmOyBmb250LXNpemU6MTJwdDsgY29sb3I6cmdiKDAsMCwwKSI+
-CjxzcGFuIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSk7IGRpc3BsYXk6
-aW5saW5lIWltcG9ydGFudCI+PGJyPgo8L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFt
-aWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7IGZvbnQtc2l6ZToxMnB0OyBj
-b2xvcjpyZ2IoMCwwLDApIj4KPHNwYW4gc3R5bGU9ImJhY2tncm91bmQtY29sb3I6cmdiKDI1NSwy
-NTUsMjU1KTsgZGlzcGxheTppbmxpbmUhaW1wb3J0YW50Ij5UaGFua3MsPC9zcGFuPjwvZGl2Pgo8
-ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlm
-OyBmb250LXNpemU6MTJwdDsgY29sb3I6cmdiKDAsMCwwKSI+CjxzcGFuIHN0eWxlPSJiYWNrZ3Jv
-dW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSk7IGRpc3BsYXk6aW5saW5lIWltcG9ydGFudCI+Qmls
-bDwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2
-ZXRpY2Esc2Fucy1zZXJpZjsgZm9udC1zaXplOjEycHQ7IGNvbG9yOnJnYigwLDAsMCkiPgo8YnI+
-CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxz
-YW5zLXNlcmlmOyBmb250LXNpemU6MTJwdDsgY29sb3I6cmdiKDAsMCwwKSI+CkNvbmZpZ3VyZS5h
-YyBzbmlwcGV0cyBiZWxvdy48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxB
-cmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZjsgZm9udC1zaXplOjEycHQ7IGNvbG9yOnJnYigwLDAs
-MCkiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhl
-bHZldGljYSxzYW5zLXNlcmlmOyBmb250LXNpemU6MTJwdDsgY29sb3I6cmdiKDAsMCwwKSI+CnRw
-bTItb3BlbnNzbC9jb25maWd1cmUuYWM6UEtHX0NIRUNLX01PRFVMRVMoW0NSWVBUT10sIFtsaWJj
-cnlwdG8gJmd0Oz0gMy4wLjBdLAo8ZGl2PnRwbTItcGtjczExL2NvbmZpZ3VyZS5hYzpQS0dfQ0hF
-Q0tfTU9EVUxFUyhbQ1JZUFRPXSwgJm5ic3A7ICZuYnNwOyAmbmJzcDtbbGliY3J5cHRvICZndDs9
-IDEuMS4wXSk8L2Rpdj4KPGRpdj50cG0yLXRvb2xzL2NvbmZpZ3VyZS5hYzpQS0dfQ0hFQ0tfTU9E
-VUxFUyhbQ1JZUFRPXSwgW2xpYmNyeXB0byAmZ3Q7PSAxLjEuMF0pPC9kaXY+CjxkaXY+dHBtMi10
-c3MvY29uZmlndXJlLmFjOiAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7IFBLR19D
-SEVDS19NT0RVTEVTKFtMSUJDUllQVE9dLDwvZGl2Pgo8ZGl2PnRwbTItdHNzL2NvbmZpZ3VyZS5h
-YzogJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyBbUEtHX0NIRUNLX01PRFVMRVMo
-W0xJQkNSWVBUT10sW2xpYmNyeXB0b10pXSk8L2Rpdj4KdHBtMi10c3MtZW5naW5lL2NvbmZpZ3Vy
-ZS5hYzpQS0dfQ0hFQ0tfTU9EVUxFUyhbQ1JZUFRPXSwgW2xpYmNyeXB0byAmZ3Q7PSAxLjAuMmdd
-LDxicj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
-
---===============2333127604476122156==--
+--===============7600211001813611801==--
 
