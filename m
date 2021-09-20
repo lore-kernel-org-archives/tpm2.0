@@ -1,68 +1,75 @@
-Content-Type: multipart/mixed; boundary="===============8950594536474046397=="
+Content-Type: multipart/mixed; boundary="===============6674759032123266435=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE CANDIDATE] tpm2-pkcs11 1.7.0-rc1
-Date: Fri, 10 Sep 2021 20:18:04 +0000
-Message-ID: <SN6PR11MB3437D895E32B894D2FE5B29DB8D69@SN6PR11MB3437.namprd11.prod.outlook.com>
+From: Desai, Imran <imran.desai at intel.com>
+Subject: [tpm2] tpm.dev 2021 conference topic "Enhanced authorization and TPM2
+ mutable policies"
+Date: Mon, 20 Sep 2021 18:41:04 +0000
+Message-ID: <BYAPR11MB31761D6AB13F8B2D3D2F41A3E2A09@BYAPR11MB3176.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8950594536474046397==
+--===============6674759032123266435==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello all,
 
-I would like to announce the release of 1.7.0-rc1 with the following CHANGE=
-LOG:
+Want to know what TPM2-enhanced-authorization is and how you can have more =
+than
+one policy for authorizing objects and operations on a TPM? Join me! I will=
+ be
+speaking at tpm.dev 2021 conference on the 22nd of September at 7:00 AM Pac=
+ific
+time.
 
-### 1.7.0-rc1 - 2021-09-10
-=C2=A0 * DB Schema Change from 5 to 7.
-=C2=A0 =C2=A0 - **Backup your DB before upgrading**
-=C2=A0 * Fixed compilation issues with GCC11.
-=C2=A0 * Fixed errors on releases due to newer compilers from failing by on=
-ly adding `-Werror` for non-release builds.
-=C2=A0 * Fixed error message when the DB is too new in tpm2\_ptool.
-=C2=A0 * Added support for tpm2\_ptool import with ssh-keygen format keys. =
-Note: Requires cryptography >=3D 3.0.
-=C2=A0 * Changed default long level from error to warning.
-=C2=A0 * Added better error message for FAPI backend errors along with [doc=
-s/FAPI.md](docs/FAPI.md) document.
-=C2=A0 * Changed `tpm2_ptool` make `--algorithm` optional.
-=C2=A0 * Fixed error message of wrong attribute name on expected attribute =
-check to be false.
-=C2=A0 * Added support for ECDSA 256, 384 and 512.
-=C2=A0 * Fixed a bug in the Python code DB upgrade path from 4 to 5 where i=
-t didn't add AES mode CTR to
-=C2=A0 =C2=A0 CKA\_ALLOWED\_MECHANISMS.
-=C2=A0 * Added tpm2\_ptool support for ECC key size 192.
-=C2=A0 * Added support passwordless login for tokens, ie not setting CKF\_L=
-OGIN\_REQUIRED.
-=C2=A0 * Fixed Running integration tests when Java version has the `-ea`, l=
-ike on Debian 11 and OpenJDK 17.
-=C2=A0 * Added support for HMAC keys using tpm2\_ptool and the C\_Sign and =
-C\_Verify interfaces.
-=C2=A0 =C2=A0 The following interfaces in ptool have support:
-=C2=A0 =C2=A0 =C2=A0 - addkey: previous working versions of tpm2-tools will=
- support this.
-=C2=A0 =C2=A0 =C2=A0 - link: previous working versions of tpm2-tools will s=
-upport this.
-=C2=A0 =C2=A0 =C2=A0 - import: requires tpm2-tools 5.2+ for support.
-=C2=A0 * Fixed leaking of temp file descriptors in tpm2\_ptool.
-=C2=A0 * Fixed wrong free in tpm code, should use Esys\_Free.
-=C2=A0 * Fixed a space formatting issue in tpm2\_ptool verify.
-=C2=A0 * Fixed leaked file descriptor in tpm2\_ptool.
-=C2=A0 * Fixed a few suspicious sizeof usages in str\_padded\_copy
-=C2=A0 * Fixed a memory leak of the token list on a failure condition in in=
-itialization.
+The conference is live September 21st and 22nd at https://hopin.com/events/=
+tpm-dev-2021-conference
 
-The release can be found at:
-https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.7.0-rc1
+Thanks, and regards,
 
+Imran Desai
 
-Thanks,
-Bill
+--===============6674759032123266435==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
---===============8950594536474046397==--
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiPgpIZWxsbyBhbGwsPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFt
+aWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEy
+cHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1m
+YW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTog
+MTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpXYW50IHRvIGtub3cgd2hhdCBUUE0yLWVuaGFu
+Y2VkLWF1dGhvcml6YXRpb24gaXMgYW5kIGhvdyB5b3UgY2FuIGhhdmUgbW9yZSB0aGFuCjxkaXY+
+b25lIHBvbGljeSBmb3IgYXV0aG9yaXppbmcgb2JqZWN0cyBhbmQgb3BlcmF0aW9ucyBvbiBhIFRQ
+TT8gSm9pbiBtZSEgSSB3aWxsIGJlPC9kaXY+CjxkaXY+c3BlYWtpbmcgYXQgdHBtLmRldiAyMDIx
+IGNvbmZlcmVuY2Ugb24gdGhlIDIybmQgb2YgU2VwdGVtYmVyIGF0IDc6MDAgQU0gUGFjaWZpYzwv
+ZGl2Pgp0aW1lLjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBB
+cmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2Io
+MCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmks
+IEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJn
+YigwLCAwLCAwKTsiPgpUaGUgY29uZmVyZW5jZSBpcyBsaXZlIFNlcHRlbWJlciAyMXN0IGFuZCAy
+Mm5kIGF0Jm5ic3A7PGEgaHJlZj0iaHR0cHM6Ly9ob3Bpbi5jb20vZXZlbnRzL3RwbS1kZXYtMjAy
+MS1jb25mZXJlbmNlIiB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIiBk
+YXRhLWF1dGg9Ik5vdEFwcGxpY2FibGUiIGRhdGEtbGlua2luZGV4PSIwIiBzdHlsZT0ibWFyZ2lu
+OjBweDtmb250LWZhbWlseTpWZXJkYW5hLCBHZW5ldmEsIHNhbnMtc2VyaWY7Zm9udC1zaXplOjku
+MjU5MjU4MjcwMjYzNjcycHgiPmh0dHBzOi8vaG9waW4uY29tL2V2ZW50cy90cG0tZGV2LTIwMjEt
+Y29uZmVyZW5jZTwvYT48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFy
+aWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
+LCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwg
+QXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdi
+KDAsIDAsIDApOyI+ClRoYW5rcywgYW5kIHJlZ2FyZHMsPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
+dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
+ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpJbXJhbiBEZXNhaTwvZGl2Pgo8L2JvZHk+
+CjwvaHRtbD4K
+
+--===============6674759032123266435==--
 
