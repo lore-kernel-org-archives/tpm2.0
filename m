@@ -1,75 +1,119 @@
-Content-Type: multipart/mixed; boundary="===============6674759032123266435=="
+Content-Type: multipart/mixed; boundary="===============4774827542521431077=="
 MIME-Version: 1.0
-From: Desai, Imran <imran.desai at intel.com>
-Subject: [tpm2] tpm.dev 2021 conference topic "Enhanced authorization and TPM2
- mutable policies"
-Date: Mon, 20 Sep 2021 18:41:04 +0000
-Message-ID: <BYAPR11MB31761D6AB13F8B2D3D2F41A3E2A09@BYAPR11MB3176.namprd11.prod.outlook.com>
+From: Emmanuel Deloget <emmanuel at deloget.com>
+Subject: [tpm2] tpm2-pkcs11 : import config from the deprecated tpm2-pk11
+ project
+Date: Thu, 23 Sep 2021 07:37:33 +0200
+Message-ID: <CAKh=nwHi5YM3DRoMWfan_vQqto=SCJpwQbUyE06NMVkCFuP8=A@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6674759032123266435==
+--===============4774827542521431077==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello all,
+Hello y'all,
 
-Want to know what TPM2-enhanced-authorization is and how you can have more =
-than
-one policy for authorizing objects and operations on a TPM? Join me! I will=
- be
-speaking at tpm.dev 2021 conference on the 22nd of September at 7:00 AM Pac=
-ific
-time.
+I'm trying to import my PKCS11 configuration from the old, fully deprecated
+project tpm2-pk11. In this setup, the tpm2 holds persistent RSA keys and
+associate them with adequately named certificates located on the file
+system. I understand that this should have been done a lot earlier (but
+then, even a lot earlier would not have change much as the development and
+even the first distributed products predated the very first commit of
+tpm2-pkcs11) ; unfortunately days are limited and my todo list is way too
+long.
 
-The conference is live September 21st and 22nd at https://hopin.com/events/=
-tpm-dev-2021-conference
+Keys were generated using tpm2_create a long, long time ago.
 
-Thanks, and regards,
+Since this is a really old setup, I no longer have the key.pub and key.priv
+files available (they were trashed, as they are no longer useful). I can
+get the public key through tpm2_readpublic but that won't help me much.
 
-Imran Desai
+Now, the "Interoperability with Existing TPM2 Objects" document proposes a
+way to init tpm2-pkcs11 using keys that were created with tpm2_create.
+Unfortunatly, it seems it also requires two things I cannot provide it:
 
---===============6674759032123266435==
+  * pincodes, for /tpm2_ptool addtoken/ (this is an embedded platform; no
+pin codes; if I'm forced to add them they'll end up as environment vars
+anyway so there is no real interest for pincode in this situation)
+  * the key files, for /tpm2_ptool link/ (key.pub and key.priv are no
+longer available)
+
+Is there any other way to import my configuration into tpm2-pkcs11 ? Not
+being able to do it means that some of our oldest customers will have a
+bricked hardware (one of the current token is used to identify the hardware
+and is set during production, so not being able to reload it essentially
+means that this hardware will not be able to identify itself to our
+services and will not work at all), and this is a hard sell...
+
+Best regards,
+
+-- Emmanuel Deloget
+
+--===============4774827542521431077==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
-ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
-eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
-bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
-b3I6IHJnYigwLCAwLCAwKTsiPgpIZWxsbyBhbGwsPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFt
-aWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEy
-cHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1m
-YW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTog
-MTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpXYW50IHRvIGtub3cgd2hhdCBUUE0yLWVuaGFu
-Y2VkLWF1dGhvcml6YXRpb24gaXMgYW5kIGhvdyB5b3UgY2FuIGhhdmUgbW9yZSB0aGFuCjxkaXY+
-b25lIHBvbGljeSBmb3IgYXV0aG9yaXppbmcgb2JqZWN0cyBhbmQgb3BlcmF0aW9ucyBvbiBhIFRQ
-TT8gSm9pbiBtZSEgSSB3aWxsIGJlPC9kaXY+CjxkaXY+c3BlYWtpbmcgYXQgdHBtLmRldiAyMDIx
-IGNvbmZlcmVuY2Ugb24gdGhlIDIybmQgb2YgU2VwdGVtYmVyIGF0IDc6MDAgQU0gUGFjaWZpYzwv
-ZGl2Pgp0aW1lLjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBB
-cmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2Io
-MCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmks
-IEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJn
-YigwLCAwLCAwKTsiPgpUaGUgY29uZmVyZW5jZSBpcyBsaXZlIFNlcHRlbWJlciAyMXN0IGFuZCAy
-Mm5kIGF0Jm5ic3A7PGEgaHJlZj0iaHR0cHM6Ly9ob3Bpbi5jb20vZXZlbnRzL3RwbS1kZXYtMjAy
-MS1jb25mZXJlbmNlIiB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub29wZW5lciBub3JlZmVycmVyIiBk
-YXRhLWF1dGg9Ik5vdEFwcGxpY2FibGUiIGRhdGEtbGlua2luZGV4PSIwIiBzdHlsZT0ibWFyZ2lu
-OjBweDtmb250LWZhbWlseTpWZXJkYW5hLCBHZW5ldmEsIHNhbnMtc2VyaWY7Zm9udC1zaXplOjku
-MjU5MjU4MjcwMjYzNjcycHgiPmh0dHBzOi8vaG9waW4uY29tL2V2ZW50cy90cG0tZGV2LTIwMjEt
-Y29uZmVyZW5jZTwvYT48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFy
-aWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
-LCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwg
-QXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdi
-KDAsIDAsIDApOyI+ClRoYW5rcywgYW5kIHJlZ2FyZHMsPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
-ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
-IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
-dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
-ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgpJbXJhbiBEZXNhaTwvZGl2Pgo8L2JvZHk+
-CjwvaHRtbD4K
+PGRpdiBkaXI9Imx0ciI+PGRpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9u
+dC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+SGVsbG8geSYjMzk7YWxsLMKgPC9kaXY+PGRp
+diBjbGFzcz0iZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25v
+c3BhY2UiPjxicj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1m
+YW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+SSYjMzk7bSB0cnlpbmcgdG8gaW1wb3J0IG15IFBL
+Q1MxMSBjb25maWd1cmF0aW9uIGZyb20gdGhlIG9sZCwgZnVsbHkgZGVwcmVjYXRlZCBwcm9qZWN0
+IHRwbTItcGsxMS4gSW4gdGhpcyBzZXR1cCwgdGhlIHRwbTIgaG9sZHMgcGVyc2lzdGVudCBSU0Eg
+a2V5cyBhbmQgYXNzb2NpYXRlIHRoZW0gd2l0aCBhZGVxdWF0ZWx5IG5hbWVkIGNlcnRpZmljYXRl
+cyBsb2NhdGVkIG9uIHRoZSBmaWxlIHN5c3RlbS4gSSB1bmRlcnN0YW5kIHRoYXQgdGhpcyBzaG91
+bGQgaGF2ZSBiZWVuIGRvbmUgYSBsb3QgZWFybGllciAoYnV0IHRoZW4sIGV2ZW4gYSBsb3QgZWFy
+bGllciB3b3VsZCBub3QgaGF2ZSBjaGFuZ2UgbXVjaCBhcyB0aGUgZGV2ZWxvcG1lbnQgYW5kIGV2
+ZW4gdGhlIGZpcnN0IGRpc3RyaWJ1dGVkIHByb2R1Y3RzIHByZWRhdGVkIHRoZSB2ZXJ5IGZpcnN0
+IGNvbW1pdCBvZiB0cG0yLXBrY3MxMSkgOyB1bmZvcnR1bmF0ZWx5IGRheXMgYXJlIGxpbWl0ZWQg
+YW5kIG15IHRvZG8gbGlzdCBpcyB3YXkgdG9vIGxvbmcuwqA8L2Rpdj48ZGl2IGNsYXNzPSJnbWFp
+bF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+PGJyPjwv
+ZGl2PjxkaXYgY2xhc3M9ImdtYWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3Bh
+Y2UsbW9ub3NwYWNlIj5LZXlzIHdlcmUgZ2VuZXJhdGVkIHVzaW5nIHRwbTJfY3JlYXRlIGEgbG9u
+ZywgbG9uZyB0aW1lIGFnby48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0i
+Zm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+PGJyPjwvZGl2PjxkaXYgY2xhc3M9Imdt
+YWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj5TaW5j
+ZSB0aGlzIGlzIGEgcmVhbGx5IG9sZCBzZXR1cCwgSSBubyBsb25nZXIgaGF2ZSB0aGUga2V5LnB1
+YiBhbmQga2V5LnByaXYgZmlsZXMgYXZhaWxhYmxlICh0aGV5IHdlcmUgdHJhc2hlZCwgYXMgdGhl
+eSBhcmUgbm8gbG9uZ2VyIHVzZWZ1bCkuIEkgY2FuIGdldCB0aGUgcHVibGljIGtleSB0aHJvdWdo
+IHRwbTJfcmVhZHB1YmxpYyBidXQgdGhhdCB3b24mIzM5O3QgaGVscCBtZSBtdWNoLjwvZGl2Pjxk
+aXYgY2xhc3M9ImdtYWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9u
+b3NwYWNlIj48YnI+PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQt
+ZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPk5vdywgdGhlICZxdW90O0ludGVyb3BlcmFiaWxp
+dHkgd2l0aCBFeGlzdGluZyBUUE0yIE9iamVjdHMmcXVvdDsgZG9jdW1lbnQgcHJvcG9zZXMgYSB3
+YXkgdG8gaW5pdCB0cG0yLXBrY3MxMSB1c2luZyBrZXlzIHRoYXQgd2VyZSBjcmVhdGVkIHdpdGgg
+dHBtMl9jcmVhdGUuIFVuZm9ydHVuYXRseSwgaXQgc2VlbXMgaXQgYWxzbyByZXF1aXJlcyB0d28g
+dGhpbmdzIEkgY2Fubm90IHByb3ZpZGUgaXQ6PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZGVmYXVs
+dCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPjxicj48L2Rpdj48ZGl2
+IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9z
+cGFjZSI+wqAgKiBwaW5jb2RlcywgZm9yIC90cG0yX3B0b29sIGFkZHRva2VuLyAodGhpcyBpcyBh
+biBlbWJlZGRlZCBwbGF0Zm9ybTsgbm8gcGluIGNvZGVzOyBpZiBJJiMzOTttIGZvcmNlZCB0byBh
+ZGQgdGhlbSB0aGV5JiMzOTtsbCBlbmQgdXAgYXMgZW52aXJvbm1lbnQgdmFycyBhbnl3YXkgc28g
+dGhlcmUgaXMgbm8gcmVhbCBpbnRlcmVzdCBmb3IgcGluY29kZSBpbiB0aGlzIHNpdHVhdGlvbik8
+L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3Nw
+YWNlLG1vbm9zcGFjZSI+wqAgKiB0aGUga2V5IGZpbGVzLCBmb3IgL3RwbTJfcHRvb2wgbGluay8g
+KGtleS5wdWIgYW5kIGtleS5wcml2IGFyZSBubyBsb25nZXIgYXZhaWxhYmxlKTwvZGl2PjxkaXYg
+Y2xhc3M9ImdtYWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3Nw
+YWNlIj48YnI+PC9kaXY+PGRpdiBjbGFzcz0iZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFt
+aWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPklzIHRoZXJlIGFueSBvdGhlciB3YXkgdG8gaW1wb3J0
+IG15IGNvbmZpZ3VyYXRpb24gaW50byB0cG0yLXBrY3MxMSA/IE5vdCBiZWluZyBhYmxlIHRvIGRv
+IGl0IG1lYW5zIHRoYXQgc29tZSBvZiBvdXIgb2xkZXN0IGN1c3RvbWVycyB3aWxsIGhhdmUgYSBi
+cmlja2VkIGhhcmR3YXJlIChvbmUgb2YgdGhlIGN1cnJlbnQgdG9rZW4gaXMgdXNlZCB0byBpZGVu
+dGlmeSB0aGUgaGFyZHdhcmUgYW5kIGlzIHNldCBkdXJpbmcgcHJvZHVjdGlvbiwgc28gbm90IGJl
+aW5nIGFibGUgdG8gcmVsb2FkIGl0IGVzc2VudGlhbGx5IG1lYW5zIHRoYXQgdGhpcyBoYXJkd2Fy
+ZSB3aWxsIG5vdCBiZSBhYmxlIHRvIGlkZW50aWZ5IGl0c2VsZiB0byBvdXIgc2VydmljZXMgYW5k
+IHdpbGwgbm90IHdvcmsgYXQgYWxsKSwgYW5kIHRoaXMgaXMgYSBoYXJkIHNlbGwuLi48L2Rpdj48
+YnI+PC9kaXY+PGRpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1p
+bHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+QmVzdCByZWdhcmRzLMKgPC9kaXY+PGRpdiBjbGFzcz0i
+Z21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPjxi
+cj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9u
+b3NwYWNlLG1vbm9zcGFjZSI+LS0gRW1tYW51ZWwgRGVsb2dldDwvZGl2PjxkaXYgY2xhc3M9Imdt
+YWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48L2Rp
+dj48L2Rpdj48L2Rpdj4K
 
---===============6674759032123266435==--
+--===============4774827542521431077==--
 
