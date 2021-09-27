@@ -1,159 +1,69 @@
-Content-Type: multipart/mixed; boundary="===============2531601726302890250=="
+Content-Type: multipart/mixed; boundary="===============2266964427844423233=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: tpm2-pkcs11 : import config from the deprecated tpm2-pk11
- project
-Date: Mon, 27 Sep 2021 14:26:25 +0000
-Message-ID: <SN6PR11MB3437275ED4B3E750A07EEA19B8A79@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: CAKh=nwHi5YM3DRoMWfan_vQqto=SCJpwQbUyE06NMVkCFuP8=A@mail.gmail.com
+Subject: [tpm2] [RELEASE] tpm2-pkcs11 version 1.7.0
+Date: Mon, 27 Sep 2021 19:45:49 +0000
+Message-ID: <SN6PR11MB34371331F2542B55EC1ADFA4B8A79@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2531601726302890250==
+--===============2266964427844423233==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-It sounds like you need to be able to "tpm2_ptool link" persistent keys whi=
-ch is a feature tracked on ticket: https://github.com/tpm2-software/tpm2-pk=
-cs11/issues/611
+Hello,
+
+I would like to announce tpm2-pkcs11 version 1.7.0 with the following chang=
+elog:
+
+1.7.0 - 2021-09-27
+=C2=A0 * DB Schema Change from 5 to 7.
+=C2=A0 =C2=A0 - **Backup your DB before upgrading**
+=C2=A0 * Fixed compilation issues with GCC11.
+=C2=A0 * Fixed errors on releases due to newer compilers from failing by on=
+ly adding `-Werror` for non-release builds.
+=C2=A0 * Fixed error message when the DB is too new in tpm2\_ptool.
+=C2=A0 * Added support for tpm2\_ptool import with ssh-keygen format keys. =
+Note: Requires cryptography >=3D 3.0.
+=C2=A0 * Changed default long level from error to warning.
+=C2=A0 * Added better error message for FAPI backend errors along with [doc=
+s/FAPI.md](docs/FAPI.md) document.
+=C2=A0 * Changed `tpm2_ptool` make `--algorithm` optional.
+=C2=A0 * Fixed error message of wrong attribute name on expected attribute =
+check to be false.
+=C2=A0 * Added support for ECDSA 256, 384 and 512.
+=C2=A0 * Fixed a bug in the Python code DB upgrade path from 4 to 5 where i=
+t didn't add AES mode CTR to
+=C2=A0 =C2=A0 CKA\_ALLOWED\_MECHANISMS.
+=C2=A0 * Added tpm2\_ptool support for ECC key size 192.
+=C2=A0 * Added support passwordless login for tokens, ie not setting CKF\_L=
+OGIN\_REQUIRED.
+=C2=A0 * Fixed Running integration tests when Java version has the `-ea`, l=
+ike on Debian 11 and OpenJDK 17.
+=C2=A0 * Added support for HMAC keys using tpm2\_ptool and the C\_Sign and =
+C\_Verify interfaces.
+=C2=A0 =C2=A0 The following interfaces in ptool have support:
+=C2=A0 =C2=A0 =C2=A0 - addkey: previous working versions of tpm2-tools will=
+ support this.
+=C2=A0 =C2=A0 =C2=A0 - link: previous working versions of tpm2-tools will s=
+upport this.
+=C2=A0 =C2=A0 =C2=A0 - import: requires tpm2-tools 5.2+ for support.
+=C2=A0 * Fixed leaking of temp file descriptors in tpm2\_ptool.
+=C2=A0 * Fixed wrong free in tpm code, should use Esys\_Free.
+=C2=A0 * Fixed a space formatting issue in tpm2\_ptool verify.
+=C2=A0 * Fixed leaked file descriptor in tpm2\_ptool.
+=C2=A0 * Fixed a few suspicious sizeof usages in str\_padded\_copy
+=C2=A0 * Fixed a memory leak of the token list on a failure condition in in=
+itialization.
+
+The release can be found here:
+=C2=A0 -=C2=A0https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.7=
+.0
+
+Thanks,
+Bill
 
 
-So it's currently unimplemented. I can put it on the next feature release.
-________________________________
-From: Emmanuel Deloget <emmanuel(a)deloget.com>
-Sent: Thursday, September 23, 2021 12:37 AM
-To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
-Subject: [tpm2] tpm2-pkcs11 : import config from the deprecated tpm2-pk11 p=
-roject
-
-Hello y'all,
-
-I'm trying to import my PKCS11 configuration from the old, fully deprecated=
- project tpm2-pk11. In this setup, the tpm2 holds persistent RSA keys and a=
-ssociate them with adequately named certificates located on the file system=
-. I understand that this should have been done a lot earlier (but then, eve=
-n a lot earlier would not have change much as the development and even the =
-first distributed products predated the very first commit of tpm2-pkcs11) ;=
- unfortunately days are limited and my todo list is way too long.
-
-Keys were generated using tpm2_create a long, long time ago.
-
-Since this is a really old setup, I no longer have the key.pub and key.priv=
- files available (they were trashed, as they are no longer useful). I can g=
-et the public key through tpm2_readpublic but that won't help me much.
-
-Now, the "Interoperability with Existing TPM2 Objects" document proposes a =
-way to init tpm2-pkcs11 using keys that were created with tpm2_create. Unfo=
-rtunatly, it seems it also requires two things I cannot provide it:
-
-  * pincodes, for /tpm2_ptool addtoken/ (this is an embedded platform; no p=
-in codes; if I'm forced to add them they'll end up as environment vars anyw=
-ay so there is no real interest for pincode in this situation)
-  * the key files, for /tpm2_ptool link/ (key.pub and key.priv are no longe=
-r available)
-
-Is there any other way to import my configuration into tpm2-pkcs11 ? Not be=
-ing able to do it means that some of our oldest customers will have a brick=
-ed hardware (one of the current token is used to identify the hardware and =
-is set during production, so not being able to reload it essentially means =
-that this hardware will not be able to identify itself to our services and =
-will not work at all), and this is a hard sell...
-
-Best regards,
-
--- Emmanuel Deloget
-
---===============2531601726302890250==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
-ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
-ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7Ij4KSXQgc291bmRzIGxpa2UgeW91IG5lZWQgdG8gYmUgYWJsZSB0byAm
-cXVvdDt0cG0yX3B0b29sIGxpbmsmcXVvdDsgcGVyc2lzdGVudCBrZXlzIHdoaWNoIGlzIGEgZmVh
-dHVyZSB0cmFja2VkIG9uIHRpY2tldDombmJzcDs8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20v
-dHBtMi1zb2Z0d2FyZS90cG0yLXBrY3MxMS9pc3N1ZXMvNjExIiBpZD0iTFBsbmsiPmh0dHBzOi8v
-Z2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItcGtjczExL2lzc3Vlcy82MTE8L2E+PC9kaXY+
-CjxkaXYgY2xhc3M9Il9FbnRpdHkgX0VUeXBlX09XQUxpbmtQcmV2aWV3IF9FSWRfT1dBTGlua1By
-ZXZpZXcgX0VSZWFkb25seV8xIj48L2Rpdj4KPGJyPgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTog
-Q2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
-b2xvcjogcmdiKDAsIDAsIDApOyI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5
-OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7
-IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KU28gaXQncyBjdXJyZW50bHkgdW5pbXBsZW1lbnRlZC4g
-SSBjYW4gcHV0IGl0IG9uIHRoZSBuZXh0IGZlYXR1cmUgcmVsZWFzZS48L2Rpdj4KPGRpdiBpZD0i
-YXBwZW5kb25zZW5kIj48L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3aWR0
-aDo5OCUiIHRhYmluZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRyIj48
-Zm9udCBmYWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQiIGNv
-bG9yPSIjMDAwMDAwIj48Yj5Gcm9tOjwvYj4gRW1tYW51ZWwgRGVsb2dldCAmbHQ7ZW1tYW51ZWxA
-ZGVsb2dldC5jb20mZ3Q7PGJyPgo8Yj5TZW50OjwvYj4gVGh1cnNkYXksIFNlcHRlbWJlciAyMywg
-MjAyMSAxMjozNyBBTTxicj4KPGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9yZyAmbHQ7dHBtMkBs
-aXN0cy4wMS5vcmcmZ3Q7PGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIHRwbTItcGtjczExIDog
-aW1wb3J0IGNvbmZpZyBmcm9tIHRoZSBkZXByZWNhdGVkIHRwbTItcGsxMSBwcm9qZWN0PC9mb250
-Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8L2Rpdj4KPGRpdj4KPGRpdiBkaXI9Imx0ciI+CjxkaXY+Cjxk
-aXYgY2xhc3M9InhfZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxt
-b25vc3BhY2UiPkhlbGxvIHknYWxsLCZuYnNwOzwvZGl2Pgo8ZGl2IGNsYXNzPSJ4X2dtYWlsX2Rl
-ZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48YnI+CjwvZGl2
-Pgo8ZGl2IGNsYXNzPSJ4X2dtYWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3Bh
-Y2UsbW9ub3NwYWNlIj5JJ20gdHJ5aW5nIHRvIGltcG9ydCBteSBQS0NTMTEgY29uZmlndXJhdGlv
-biBmcm9tIHRoZSBvbGQsIGZ1bGx5IGRlcHJlY2F0ZWQgcHJvamVjdCB0cG0yLXBrMTEuIEluIHRo
-aXMgc2V0dXAsIHRoZSB0cG0yIGhvbGRzIHBlcnNpc3RlbnQgUlNBIGtleXMgYW5kIGFzc29jaWF0
-ZSB0aGVtIHdpdGggYWRlcXVhdGVseSBuYW1lZCBjZXJ0aWZpY2F0ZXMKIGxvY2F0ZWQgb24gdGhl
-IGZpbGUgc3lzdGVtLiBJIHVuZGVyc3RhbmQgdGhhdCB0aGlzIHNob3VsZCBoYXZlIGJlZW4gZG9u
-ZSBhIGxvdCBlYXJsaWVyIChidXQgdGhlbiwgZXZlbiBhIGxvdCBlYXJsaWVyIHdvdWxkIG5vdCBo
-YXZlIGNoYW5nZSBtdWNoIGFzIHRoZSBkZXZlbG9wbWVudCBhbmQgZXZlbiB0aGUgZmlyc3QgZGlz
-dHJpYnV0ZWQgcHJvZHVjdHMgcHJlZGF0ZWQgdGhlIHZlcnkgZmlyc3QgY29tbWl0IG9mIHRwbTIt
-cGtjczExKSA7IHVuZm9ydHVuYXRlbHkKIGRheXMgYXJlIGxpbWl0ZWQgYW5kIG15IHRvZG8gbGlz
-dCBpcyB3YXkgdG9vIGxvbmcuJm5ic3A7PC9kaXY+CjxkaXYgY2xhc3M9InhfZ21haWxfZGVmYXVs
-dCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPjxicj4KPC9kaXY+Cjxk
-aXYgY2xhc3M9InhfZ21haWxfZGVmYXVsdCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxt
-b25vc3BhY2UiPktleXMgd2VyZSBnZW5lcmF0ZWQgdXNpbmcgdHBtMl9jcmVhdGUgYSBsb25nLCBs
-b25nIHRpbWUgYWdvLjwvZGl2Pgo8ZGl2IGNsYXNzPSJ4X2dtYWlsX2RlZmF1bHQiIHN0eWxlPSJm
-b250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48YnI+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJ4
-X2dtYWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj5T
-aW5jZSB0aGlzIGlzIGEgcmVhbGx5IG9sZCBzZXR1cCwgSSBubyBsb25nZXIgaGF2ZSB0aGUga2V5
-LnB1YiBhbmQga2V5LnByaXYgZmlsZXMgYXZhaWxhYmxlICh0aGV5IHdlcmUgdHJhc2hlZCwgYXMg
-dGhleSBhcmUgbm8gbG9uZ2VyIHVzZWZ1bCkuIEkgY2FuIGdldCB0aGUgcHVibGljIGtleSB0aHJv
-dWdoIHRwbTJfcmVhZHB1YmxpYwogYnV0IHRoYXQgd29uJ3QgaGVscCBtZSBtdWNoLjwvZGl2Pgo8
-ZGl2IGNsYXNzPSJ4X2dtYWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2Us
-bW9ub3NwYWNlIj48YnI+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJ4X2dtYWlsX2RlZmF1bHQiIHN0eWxl
-PSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj5Ob3csIHRoZSAmcXVvdDtJbnRlcm9w
-ZXJhYmlsaXR5IHdpdGggRXhpc3RpbmcgVFBNMiBPYmplY3RzJnF1b3Q7IGRvY3VtZW50IHByb3Bv
-c2VzIGEgd2F5IHRvIGluaXQgdHBtMi1wa2NzMTEgdXNpbmcga2V5cyB0aGF0IHdlcmUgY3JlYXRl
-ZCB3aXRoIHRwbTJfY3JlYXRlLiBVbmZvcnR1bmF0bHksIGl0IHNlZW1zIGl0IGFsc28gcmVxdWly
-ZXMgdHdvCiB0aGluZ3MgSSBjYW5ub3QgcHJvdmlkZSBpdDo8L2Rpdj4KPGRpdiBjbGFzcz0ieF9n
-bWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+PGJy
-Pgo8L2Rpdj4KPGRpdiBjbGFzcz0ieF9nbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6
-bW9ub3NwYWNlLG1vbm9zcGFjZSI+Jm5ic3A7ICogcGluY29kZXMsIGZvciAvdHBtMl9wdG9vbCBh
-ZGR0b2tlbi8gKHRoaXMgaXMgYW4gZW1iZWRkZWQgcGxhdGZvcm07IG5vIHBpbiBjb2RlczsgaWYg
-SSdtIGZvcmNlZCB0byBhZGQgdGhlbSB0aGV5J2xsIGVuZCB1cCBhcyBlbnZpcm9ubWVudCB2YXJz
-IGFueXdheSBzbyB0aGVyZSBpcyBubyByZWFsIGludGVyZXN0IGZvciBwaW5jb2RlCiBpbiB0aGlz
-IHNpdHVhdGlvbik8L2Rpdj4KPGRpdiBjbGFzcz0ieF9nbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9u
-dC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+Jm5ic3A7ICogdGhlIGtleSBmaWxlcywgZm9y
-IC90cG0yX3B0b29sIGxpbmsvIChrZXkucHViIGFuZCBrZXkucHJpdiBhcmUgbm8gbG9uZ2VyIGF2
-YWlsYWJsZSk8L2Rpdj4KPGRpdiBjbGFzcz0ieF9nbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1m
-YW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+PGJyPgo8L2Rpdj4KPGRpdiBjbGFzcz0ieF9nbWFp
-bF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+SXMgdGhl
-cmUgYW55IG90aGVyIHdheSB0byBpbXBvcnQgbXkgY29uZmlndXJhdGlvbiBpbnRvIHRwbTItcGtj
-czExID8gTm90IGJlaW5nIGFibGUgdG8gZG8gaXQgbWVhbnMgdGhhdCBzb21lIG9mIG91ciBvbGRl
-c3QgY3VzdG9tZXJzIHdpbGwgaGF2ZSBhIGJyaWNrZWQgaGFyZHdhcmUgKG9uZSBvZiB0aGUgY3Vy
-cmVudCB0b2tlbgogaXMgdXNlZCB0byBpZGVudGlmeSB0aGUgaGFyZHdhcmUgYW5kIGlzIHNldCBk
-dXJpbmcgcHJvZHVjdGlvbiwgc28gbm90IGJlaW5nIGFibGUgdG8gcmVsb2FkIGl0IGVzc2VudGlh
-bGx5IG1lYW5zIHRoYXQgdGhpcyBoYXJkd2FyZSB3aWxsIG5vdCBiZSBhYmxlIHRvIGlkZW50aWZ5
-IGl0c2VsZiB0byBvdXIgc2VydmljZXMgYW5kIHdpbGwgbm90IHdvcmsgYXQgYWxsKSwgYW5kIHRo
-aXMgaXMgYSBoYXJkIHNlbGwuLi48L2Rpdj4KPGJyPgo8L2Rpdj4KPGRpdj4KPGRpdiBjbGFzcz0i
-eF9nbWFpbF9kZWZhdWx0IiBzdHlsZT0iZm9udC1mYW1pbHk6bW9ub3NwYWNlLG1vbm9zcGFjZSI+
-QmVzdCByZWdhcmRzLCZuYnNwOzwvZGl2Pgo8ZGl2IGNsYXNzPSJ4X2dtYWlsX2RlZmF1bHQiIHN0
-eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3NwYWNlIj48YnI+CjwvZGl2Pgo8ZGl2IGNs
-YXNzPSJ4X2dtYWlsX2RlZmF1bHQiIHN0eWxlPSJmb250LWZhbWlseTptb25vc3BhY2UsbW9ub3Nw
-YWNlIj4tLSBFbW1hbnVlbCBEZWxvZ2V0PC9kaXY+CjxkaXYgY2xhc3M9InhfZ21haWxfZGVmYXVs
-dCIgc3R5bGU9ImZvbnQtZmFtaWx5Om1vbm9zcGFjZSxtb25vc3BhY2UiPjwvZGl2Pgo8L2Rpdj4K
-PC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
-
---===============2531601726302890250==--
+--===============2266964427844423233==--
 
