@@ -1,43 +1,82 @@
-Content-Type: multipart/mixed; boundary="===============6251431361775126668=="
+Content-Type: multipart/mixed; boundary="===============8372544485429153267=="
 MIME-Version: 1.0
-From: Petr Gotthard <petr.gotthard at centrum.cz>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: CMP error: cannot duplicate context:2306 tpm:warn(2.0):
  out of memory for object contexts
-Date: Fri, 08 Oct 2021 18:44:42 +0200
-Message-ID: <20211008184442.5F056E84@centrum.cz>
-In-Reply-To: DM6PR11MB3434604A00F23B491CC67079B8B29@dm6pr11mb3434.namprd11.prod.outlook.com
+Date: Tue, 12 Oct 2021 20:09:15 +0000
+Message-ID: <SN6PR11MB3437FA7C3AFE75B0148E66E5B8B69@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: 20211008184442.5F056E84@centrum.cz
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6251431361775126668==
+--===============8372544485429153267==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Bill,
-we solved this particular issue, but I expect more resource-related trouble=
-s are yet to come.
+> From: Petr Gotthard <petr.gotthard(a)centrum.cz>
+> Sent: Friday, October 8, 2021 11:44 AM
+> To: Roberts, William C <william.c.roberts(a)intel.com>; Chris Newman <chr=
+is(a)mode51.software>; tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+> Subject: Re: [tpm2] Re: CMP error: cannot duplicate context:2306 tpm:warn=
+(2.0): out of memory for object contexts =
+
 =C2=A0
-Example 1: OpenSSL often duplicates hash sequences: To hash sequences A,B,C=
-1 and then A,B,C2 they first hash A,B, then duplicate/fork the hash sequenc=
-e and then complete the hash first for C1 and then for C2. This is a great =
-performance optimization, but when too many dup (forks) are made, the TPM r=
-uns out of objects.
+> Bill,
+> we solved this particular issue, but I expect more resource-related troub=
+les are yet to come.
+
+Oh, how exciting :-p
 =C2=A0
-Example 2: The CMP key update needs 4 objects to operate (old client key, n=
-ew client key, server key and hash sequence), but the kernel RM (tpm_space.=
-context_tbl) allows only 3 objects. (If I am right.)
+> Example 1: OpenSSL often duplicates hash sequences: To hash sequences A,B=
+,C1 and then A,B,C2 they first hash A,B, then duplicate/fork the hash seque=
+nce and then complete the hash first for C1 and then for C2. This is a grea=
+t performance optimization, but when too many dup (forks) are made, the TPM=
+ runs out of objects.
 =C2=A0
+Why are we doing hashing with the TPM? If we're in an OpenSSL provider cant=
+ we just use software provided hashing routines? I see hashing is configura=
+ble, but I would imagine off be default is what you want. Do we use validat=
+ion tickets or anything like that or just the resulting digest? If all we u=
+se are the digests, I would make TPM not hash and make that option a nop.
+
+> Example 2: The CMP key update needs 4 objects to operate (old client key,=
+ new client key, server key and hash sequence), but the kernel RM (tpm_spac=
+e.context_tbl) allows only 3 objects. (If I am right.)
 =C2=A0
-In general, the OpenSSL code often pre-loads or caches objects, which will =
-be used later, which causes troubles with the space-constrained TPM. I was =
-not sure whether the tpm2-openssl provider should act as another level of a=
- resource manager and swap the objects to simulate more space than availabl=
-e on the TPM hardware, or whether this is something the resource manager co=
-uld/should do.
-=C2=A0
-It's definitely a nice problem to think about and most likely something whi=
-ch will need to be addressed in the tpm2-openssl 2.0
+It does seem that way, but TPM commands only ever need 3 objects alive at o=
+nce, so that's likely why that was chosen.
+
+https://github.com/torvalds/linux/commit/6c4e79d99e6f42b79040f1a33cd4018f54=
+25030b#diff-7c47a49cbd705c6edb19c967c22c296f00d2391a3483ba849097e908c6513585
+
+Does CMP key really need all 4 of those things in the TPM at once, because =
+currently today that's not actually happening as abrmd is just swapping the=
+m in and out.
+Also, doesn't CMP use public objects (x509 certs) for some of it?
+
+Looking at the code here:
+  - https://github.com/tpm2-software/tpm2-openssl/blob/34c62521a359455b6c4c=
+2bdf6b4e5e149b1a39ba/test/rsa_genpkey_x509_cmp.sh#L41
+
+Are public key operations implemented in software? In tpm2-pkcs11 we implem=
+ent them in software and hash in software and I have yet to have someone hi=
+t a limit but perhaps they are all using abrmd but I thought some were usin=
+g in-kernel RM.
+
+> In general, the OpenSSL code often pre-loads or caches objects, which wil=
+l be used later, which causes troubles with the space-constrained TPM. I wa=
+s not sure whether the tpm2-openssl provider should act as another level of=
+ a resource manager and swap the objects to simulate more space than availa=
+ble on the TPM hardware, or whether this is something the resource manager =
+could/should do.
+
+It's something the RM should do, but the in-kernel RM will always be tightl=
+y constrained by the amount of kernel memory space it can swap to. I wonder=
+ if we could give it a real swap space :-p
+
+> It's definitely a nice problem to think about and most likely something w=
+hich will need to be addressed in the tpm2-openssl 2.0
 =C2=A0
 =C2=A0
 Petr
@@ -50,62 +89,72 @@ m2(a)lists.01.org>, "Petr Gotthard" <petr.gotthard(a)centrum.cz>
 > P=C5=99edm=C4=9Bt: [tpm2] Re: CMP error: cannot duplicate context:2306 tp=
 m:warn(2.0): out of memory for object contexts
 >
-Thats:tpm2_rc_decode 0x00000902
- tpm:warn(2.0): out of memory for object contextsAre you running against a =
-resource manager? You should probably either use /dev/tpmrm0 or tpm2-abrmd.=
+Thats:
+tpm2_rc_decode 0x00000902
+tpm:warn(2.0): out of memory for object contexts
+Are you running against a resource manager? You should probably either use =
+/dev/tpmrm0 or tpm2-abrmd.
 You can set the TCTI via the=C2=A0TPM2OPENSSL_TCTI which AFAICT takes strin=
-gs like tpm2-tools, so something like:"device:/dev/tpmrm0" or "abrmd".
- This also might be a bug, the provider is pretty new. Petr any other ideas=
- I am missing?
- Bill
- From: Chris Newman <chris(a)mode51.software>
- Sent: Sunday, October 3, 2021 6:40 PM
- To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
- Subject: [tpm2] CMP error: cannot duplicate context:2306 tpm:warn(2.0): ou=
-t of memory for object contexts=C2=A0Hi,
+gs like tpm2-tools, so something like:
+"device:/dev/tpmrm0" or "abrmd".
+
+This also might be a bug, the provider is pretty new. Petr any other ideas =
+I am missing?
+
+Bill
+
+
+From: Chris Newman <chris(a)mode51.software>
+Sent: Sunday, October 3, 2021 6:40 PM
+To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+Subject: [tpm2] CMP error: cannot duplicate context:2306 tpm:warn(2.0): out=
+ of memory for object contexts =
+
+=C2=A0
+Hi,
 I create an EK and AK using tpm2_createek, tpm2_createak and tpm2_evictcont=
 rol to persist the AK in 0x81010002. The I use the following command with D=
 igiCert's CMPv2 server:
 openssl cmp -config /opt/sdk/openssl/current/ssl/openssl.cnf -provider tpm2=
  -provider default -propquery ?provider=3Dtpm2,tpm2.digest!=3Dyes -cmd ir -=
-server  https://demo.one.digicert.com/iot/api/v1/cmp/IOT_1234 <https://demo=
-.one.digicert.com/iot/api/v1/cmp/IOT_1234> -ref 1234 -secret pass:1234 -rec=
-ipient "/CN=3Dmode51.software" -key handle:0x81010002 -subject "/CN=3DTestT=
-est" -cacertsout ./capubs.pem -certout ./cl_cert.pem -tls_used -verbosity 8
+server https://demo.one.digicert.com/iot/api/v1/cmp/IOT_1234 -ref 1234 -sec=
+ret pass:1234 -recipient "/CN=3Dmode51.software" -key handle:0x81010002 -su=
+bject "/CN=3DTestTest" -cacertsout ./capubs.pem -certout ./cl_cert.pem -tls=
+_used -verbosity 8
 I get the following error:
 DIGEST NEW
- DIGEST INIT
- DIGEST UPDATE
- DIGEST DUP
- DIGEST FINAL
- DIGEST FREE
- DIGEST NEW
- DIGEST INIT
- DIGEST UPDATE
- DIGEST NEW
- DIGEST INIT
- DIGEST UPDATE
- DIGEST DUP
- WARNING:esys:src/tss2-esys/api/Esys_ContextLoad.c:279:Esys_ContextLoad_Fin=
-ish() Received TPM Error
- ERROR:esys:src/tss2-esys/api/Esys_ContextLoad.c:93:Esys_ContextLoad() Esys=
- Finish ErrorCode (0x00000902)
- DIGEST FREE
- DIGEST FREE
- DIGEST FREE
- CMP DEBUG: disconnected from CMP server
- CMP error: cannot duplicate context:2306 tpm:warn(2.0): out of memory for =
-object contexts
- CMP error: not able to copy ctx
- CMP error: internal error
- CMP error: error sending
- CMP error: shutdown while in init
- CMP error: transfer error:request sent: IR, expected response: IP
- RSA FREE
- RAND FREE
- RAND FREE
- RAND FREE
- PROVIDER TEARDOWN
+DIGEST INIT
+DIGEST UPDATE
+DIGEST DUP
+DIGEST FINAL
+DIGEST FREE
+DIGEST NEW
+DIGEST INIT
+DIGEST UPDATE
+DIGEST NEW
+DIGEST INIT
+DIGEST UPDATE
+DIGEST DUP
+WARNING:esys:src/tss2-esys/api/Esys_ContextLoad.c:279:Esys_ContextLoad_Fini=
+sh() Received TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_ContextLoad.c:93:Esys_ContextLoad() Esys =
+Finish ErrorCode (0x00000902)
+DIGEST FREE
+DIGEST FREE
+DIGEST FREE
+CMP DEBUG: disconnected from CMP server
+CMP error: cannot duplicate context:2306 tpm:warn(2.0): out of memory for o=
+bject contexts
+CMP error: not able to copy ctx
+CMP error: internal error
+CMP error: error sending
+CMP error: shutdown while in init
+CMP error: transfer error:request sent: IR, expected response: IP
+RSA FREE
+RAND FREE
+RAND FREE
+RAND FREE
+PROVIDER TEARDOWN
 =C2=A0
 I've tried tpm2_flushcontext -t.
 I recompiled tpm2-openssl with the following option and that appears to hav=
@@ -115,155 +164,11 @@ Is this what "?provider=3Dtpm2,tpm2.digest!=3Dyes" should effectively do?
 =C2=A0
 -- =
 
- =
 
- Chris Newman =
+Chris Newman =
 
- https://mode51.software <https://mode51.software> =
+https://mode51.software =
 
- @mode51software <https://twitter.com/mode51software>
-
---===============6251431361775126668==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij5CaWxsLDwvcD4KCjxw
-IHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+d2Ugc29sdmVkIHRoaXMg
-cGFydGljdWxhciBpc3N1ZSwgYnV0IEkgZXhwZWN0IG1vcmUgcmVzb3VyY2UtcmVsYXRlZCB0cm91
-YmxlcyBhcmUgeWV0IHRvIGNvbWUuPC9wPgoKPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFy
-Z2luOjAgMCAwIDA7Ij4mbmJzcDs8L3A+Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJn
-aW46MCAwIDAgMDsiPkV4YW1wbGUgMTogT3BlblNTTCBvZnRlbiBkdXBsaWNhdGVzIGhhc2ggc2Vx
-dWVuY2VzOiBUbyBoYXNoIHNlcXVlbmNlcyBBLEIsQzEgYW5kIHRoZW4gQSxCLEMyIHRoZXkgZmly
-c3QgaGFzaCBBLEIsIHRoZW4gZHVwbGljYXRlL2ZvcmsgdGhlIGhhc2ggc2VxdWVuY2UgYW5kIHRo
-ZW4gY29tcGxldGUgdGhlIGhhc2ggZmlyc3QgZm9yIEMxIGFuZCB0aGVuIGZvciBDMi4gVGhpcyBp
-cyBhIGdyZWF0IHBlcmZvcm1hbmNlIG9wdGltaXphdGlvbiwgYnV0IHdoZW4gdG9vIG1hbnkgZHVw
-IChmb3JrcykgYXJlIG1hZGUsIHRoZSBUUE0gcnVucyBvdXQgb2Ygb2JqZWN0cy48L3A+Cgo8cCBz
-dHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPiZuYnNwOzwvcD4KCjxwIHN0
-eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+RXhhbXBsZSAyOiBUaGUgQ01Q
-IGtleSB1cGRhdGUgbmVlZHMgNCBvYmplY3RzIHRvIG9wZXJhdGUgKG9sZCBjbGllbnQga2V5LCBu
-ZXcgY2xpZW50IGtleSwgc2VydmVyIGtleSBhbmQgaGFzaCBzZXF1ZW5jZSksIGJ1dCB0aGUga2Vy
-bmVsIFJNICh0cG1fc3BhY2UuY29udGV4dF90YmwpIGFsbG93cyBvbmx5IDMgb2JqZWN0cy4gKElm
-IEkgYW0gcmlnaHQuKTwvcD4KCjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAg
-MCAwOyI+Jm5ic3A7PC9wPgoKPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAw
-IDA7Ij4mbmJzcDs8L3A+Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAg
-MDsiPkluIGdlbmVyYWwsIHRoZSBPcGVuU1NMIGNvZGUgb2Z0ZW4gcHJlLWxvYWRzIG9yIGNhY2hl
-cyBvYmplY3RzLCB3aGljaCB3aWxsIGJlIHVzZWQgbGF0ZXIsIHdoaWNoIGNhdXNlcyB0cm91Ymxl
-cyB3aXRoIHRoZSBzcGFjZS1jb25zdHJhaW5lZCBUUE0uIEkgd2FzIG5vdCBzdXJlIHdoZXRoZXIg
-dGhlIHRwbTItb3BlbnNzbCBwcm92aWRlciBzaG91bGQgYWN0IGFzIGFub3RoZXIgbGV2ZWwgb2Yg
-YSByZXNvdXJjZSBtYW5hZ2VyIGFuZCBzd2FwIHRoZSBvYmplY3RzIHRvIHNpbXVsYXRlIG1vcmUg
-c3BhY2UgdGhhbiBhdmFpbGFibGUgb24gdGhlIFRQTSBoYXJkd2FyZSwgb3Igd2hldGhlciB0aGlz
-IGlzIHNvbWV0aGluZyB0aGUgcmVzb3VyY2UgbWFuYWdlciBjb3VsZC9zaG91bGQgZG8uPC9wPgoK
-PHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij4mbmJzcDs8L3A+Cgo8
-cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPkl0J3MgZGVmaW5pdGVs
-eSBhIG5pY2UgcHJvYmxlbSB0byB0aGluayBhYm91dCBhbmQgbW9zdCBsaWtlbHkgc29tZXRoaW5n
-IHdoaWNoIHdpbGwgbmVlZCB0byBiZSBhZGRyZXNzZWQgaW4gdGhlIHRwbTItb3BlbnNzbCAyLjA8
-L3A+Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPiZuYnNwOzwv
-cD4KCjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+Jm5ic3A7PC9w
-PgoKPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij5QZXRyPC9wPgoK
-PGJyIC8+Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-PGJyIC8+CiZndDsgT2Q6ICJSb2JlcnRzLCBXaWxsaWFtIEMiICZsdDt3aWxsaWFtLmMucm9iZXJ0
-c0BpbnRlbC5jb20mZ3Q7PGJyIC8+CiZndDsgS29tdTogIkNocmlzIE5ld21hbiIgJmx0O2Nocmlz
-QG1vZGU1MS5zb2Z0d2FyZSZndDssICJ0cG0yQGxpc3RzLjAxLm9yZyIgJmx0O3RwbTJAbGlzdHMu
-MDEub3JnJmd0OywgIlBldHIgR290dGhhcmQiICZsdDtwZXRyLmdvdHRoYXJkQGNlbnRydW0uY3om
-Z3Q7PGJyIC8+CiZndDsgRGF0dW06IDA4LjEwLjIwMjEgMTc6NDY8YnIgLz4KJmd0OyBQxZllZG3E
-m3Q6IFt0cG0yXSBSZTogQ01QIGVycm9yOiBjYW5ub3QgZHVwbGljYXRlIGNvbnRleHQ6MjMwNiB0
-cG06d2FybigyLjApOiBvdXQgb2YgbWVtb3J5IGZvciBvYmplY3QgY29udGV4dHM8YnIgLz4KJmd0
-OzwvcD4KCjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNh
-LCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiAjMDAwMDAwOyI+VGhhdHM6PC9k
-aXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBz
-YW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiAjMDAwMDAwOyI+dHBtMl9yY19kZWNv
-ZGUgMHgwMDAwMDkwMjxiciAvPgogdHBtOndhcm4oMi4wKTogb3V0IG9mIG1lbW9yeSBmb3Igb2Jq
-ZWN0IGNvbnRleHRzPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlh
-bCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiAjMDAwMDAw
-OyI+QXJlIHlvdSBydW5uaW5nIGFnYWluc3QgYSByZXNvdXJjZSBtYW5hZ2VyPyBZb3Ugc2hvdWxk
-IHByb2JhYmx5IGVpdGhlciB1c2UgL2Rldi90cG1ybTAgb3IgdHBtMi1hYnJtZC48L2Rpdj4KPGRp
-dj48c3BhbiBzdHlsZT0iY29sb3I6ICMwMDAwMDA7IGZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlh
-bCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7Ij5Zb3UgY2FuIHNldCB0
-aGUgVENUSSB2aWEgdGhlJm5ic3A7PC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjogIzI0MjkyZjsg
-Zm9udC1mYW1pbHk6IHVpLW1vbm9zcGFjZSwgU0ZNb25vLVJlZ3VsYXIsICZhbXA7cXVvdDsgc2Yg
-bW9ubyZhbXA7cXVvdDssIG1lbmxvLCBjb25zb2xhcywgJmFtcDtxdW90O2xpYmVyYXRpb24gbW9u
-byZhbXA7cXVvdDssIG1vbm9zcGFjZTsgZm9udC1zaXplOiAxMy42cHg7IGJhY2tncm91bmQtY29s
-b3I6IHJnYmEoMTc1LCAxODQsIDE5MywgMC4yKTsiPlRQTTJPUEVOU1NMX1RDVEkgPC9zcGFuPjxm
-b250IGZhY2U9IkNhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiPjxzcGFuIHN0
-eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmZmZmOyI+d2hpY2ggQUZBSUNUIHRha2VzIHN0cmlu
-Z3MgbGlrZSB0cG0yLXRvb2xzLCBzbyBzb21ldGhpbmcgbGlrZTo8L3NwYW4+PC9mb250PjwvZGl2
-Pgo8ZGl2Pjxmb250IGZhY2U9IkNhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYi
-PjxzcGFuIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmZmZmOyI+ImRldmljZTovZGV2L3Rw
-bXJtMCIgb3IgImFicm1kIi48L3NwYW4+PC9mb250PjwvZGl2Pgo8ZGl2Pjxmb250IGZhY2U9IkNh
-bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiPjxzcGFuIHN0eWxlPSJiYWNrZ3Jv
-dW5kLWNvbG9yOiAjZmZmZmZmOyI+PGJyIC8+CiA8L3NwYW4+PC9mb250PjwvZGl2Pgo8ZGl2Pjxm
-b250IGZhY2U9IkNhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiPjxzcGFuIHN0
-eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmZmZmOyI+VGhpcyBhbHNvIG1pZ2h0IGJlIGEgYnVn
-LCB0aGUgcHJvdmlkZXIgaXMgcHJldHR5IG5ldy4gUGV0ciBhbnkgb3RoZXIgaWRlYXMgSSBhbSBt
-aXNzaW5nPzwvc3Bhbj48L2ZvbnQ+PC9kaXY+CjxkaXY+PGZvbnQgZmFjZT0iQ2FsaWJyaSwgQXJp
-YWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiI+PHNwYW4gc3R5bGU9ImJhY2tncm91bmQtY29sb3I6
-ICNmZmZmZmY7Ij48YnIgLz4KIDwvc3Bhbj48L2ZvbnQ+PC9kaXY+CjxkaXY+PGZvbnQgZmFjZT0i
-Q2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiI+PHNwYW4gc3R5bGU9ImJhY2tn
-cm91bmQtY29sb3I6ICNmZmZmZmY7Ij5CaWxsPC9zcGFuPjwvZm9udD48L2Rpdj4KPGRpdiBzdHls
-ZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZv
-bnQtc2l6ZTogMTJwdDsgY29sb3I6ICMwMDAwMDA7Ij48c3BhbiBzdHlsZT0iY29sb3I6ICMyNDI5
-MmY7IGZvbnQtZmFtaWx5OiB1aS1tb25vc3BhY2UsIFNGTW9uby1SZWd1bGFyLCAmYW1wO3F1b3Q7
-IHNmIG1vbm8mYW1wO3F1b3Q7LCBtZW5sbywgY29uc29sYXMsICZhbXA7cXVvdDtsaWJlcmF0aW9u
-IG1vbm8mYW1wO3F1b3Q7LCBtb25vc3BhY2U7Zm9udC1zaXplOiAxMy42cHg7IGJhY2tncm91bmQt
-Y29sb3I6IHJnYmEoMTc1LCAxODQsIDE5MywgMC4yKTsgZGlzcGxheTogaW5saW5lICFpbXBvcnRh
-bnQ7Ij48YnIgLz4KIDwvc3Bhbj48L2Rpdj4KPGhyIC8+CjxkaXYgZGlyPSJsdHIiPjxmb250IGZh
-Y2U9IkNhbGlicmksIHNhbnMtc2VyaWYiIGNvbG9yPSIjMDAwMDAwIiBzdHlsZT0iZm9udC1zaXpl
-OiAxMXB0OyI+PHN0cm9uZz5Gcm9tOjwvc3Ryb25nPiBDaHJpcyBOZXdtYW4gJmx0O2NocmlzQG1v
-ZGU1MS5zb2Z0d2FyZSZndDs8YnIgLz4KIDxzdHJvbmc+U2VudDo8L3N0cm9uZz4gU3VuZGF5LCBP
-Y3RvYmVyIDMsIDIwMjEgNjo0MCBQTTxiciAvPgogPHN0cm9uZz5Ubzo8L3N0cm9uZz4gdHBtMkBs
-aXN0cy4wMS5vcmcgJmx0O3RwbTJAbGlzdHMuMDEub3JnJmd0OzxiciAvPgogPHN0cm9uZz5TdWJq
-ZWN0Ojwvc3Ryb25nPiBbdHBtMl0gQ01QIGVycm9yOiBjYW5ub3QgZHVwbGljYXRlIGNvbnRleHQ6
-MjMwNiB0cG06d2FybigyLjApOiBvdXQgb2YgbWVtb3J5IGZvciBvYmplY3QgY29udGV4dHM8L2Zv
-bnQ+CjxkaXY+Jm5ic3A7PC9kaXY+CjwvZGl2Pgo8ZGl2Pgo8cCBzdHlsZT0icGFkZGluZzowIDAg
-MCAwOyBtYXJnaW46MCAwIDAgMDsiPkhpLDwvcD4KCjxwIHN0eWxlPSJwYWRkaW5nOjAgMCAwIDA7
-IG1hcmdpbjowIDAgMCAwOyI+SSBjcmVhdGUgYW4gRUsgYW5kIEFLIHVzaW5nIHRwbTJfY3JlYXRl
-ZWssIHRwbTJfY3JlYXRlYWsgYW5kIHRwbTJfZXZpY3Rjb250cm9sIHRvIHBlcnNpc3QgdGhlIEFL
-IGluIDB4ODEwMTAwMDIuIFRoZSBJIHVzZSB0aGUgZm9sbG93aW5nIGNvbW1hbmQgd2l0aCBEaWdp
-Q2VydCdzIENNUHYyIHNlcnZlcjo8L3A+Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJn
-aW46MCAwIDAgMDsiPm9wZW5zc2wgY21wIC1jb25maWcgL29wdC9zZGsvb3BlbnNzbC9jdXJyZW50
-L3NzbC9vcGVuc3NsLmNuZiAtcHJvdmlkZXIgdHBtMiAtcHJvdmlkZXIgZGVmYXVsdCAtcHJvcHF1
-ZXJ5ID9wcm92aWRlcj10cG0yLHRwbTIuZGlnZXN0IT15ZXMgLWNtZCBpciAtc2VydmVyIDxhIGhy
-ZWY9Imh0dHBzOi8vZGVtby5vbmUuZGlnaWNlcnQuY29tL2lvdC9hcGkvdjEvY21wL0lPVF8xMjM0
-Ij4gaHR0cHM6Ly9kZW1vLm9uZS5kaWdpY2VydC5jb20vaW90L2FwaS92MS9jbXAvSU9UXzEyMzQ8
-L2E+IC1yZWYgMTIzNCAtc2VjcmV0IHBhc3M6MTIzNCAtcmVjaXBpZW50ICIvQ049bW9kZTUxLnNv
-ZnR3YXJlIiAta2V5IGhhbmRsZToweDgxMDEwMDAyIC1zdWJqZWN0ICIvQ049VGVzdFRlc3QiIC1j
-YWNlcnRzb3V0IC4vY2FwdWJzLnBlbSAtY2VydG91dCAuL2NsX2NlcnQucGVtIC10bHNfdXNlZCAt
-dmVyYm9zaXR5IDg8L3A+Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAg
-MDsiPkkgZ2V0IHRoZSBmb2xsb3dpbmcgZXJyb3I6PC9wPgoKPHAgc3R5bGU9InBhZGRpbmc6MCAw
-IDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij5ESUdFU1QgTkVXPGJyIC8+CiBESUdFU1QgSU5JVDxiciAv
-PgogRElHRVNUIFVQREFURTxiciAvPgogRElHRVNUIERVUDxiciAvPgogRElHRVNUIEZJTkFMPGJy
-IC8+CiBESUdFU1QgRlJFRTxiciAvPgogRElHRVNUIE5FVzxiciAvPgogRElHRVNUIElOSVQ8YnIg
-Lz4KIERJR0VTVCBVUERBVEU8YnIgLz4KIERJR0VTVCBORVc8YnIgLz4KIERJR0VTVCBJTklUPGJy
-IC8+CiBESUdFU1QgVVBEQVRFPGJyIC8+CiBESUdFU1QgRFVQPGJyIC8+CiBXQVJOSU5HOmVzeXM6
-c3JjL3RzczItZXN5cy9hcGkvRXN5c19Db250ZXh0TG9hZC5jOjI3OTpFc3lzX0NvbnRleHRMb2Fk
-X0ZpbmlzaCgpIFJlY2VpdmVkIFRQTSBFcnJvcjxiciAvPgogRVJST1I6ZXN5czpzcmMvdHNzMi1l
-c3lzL2FwaS9Fc3lzX0NvbnRleHRMb2FkLmM6OTM6RXN5c19Db250ZXh0TG9hZCgpIEVzeXMgRmlu
-aXNoIEVycm9yQ29kZSAoMHgwMDAwMDkwMik8YnIgLz4KIERJR0VTVCBGUkVFPGJyIC8+CiBESUdF
-U1QgRlJFRTxiciAvPgogRElHRVNUIEZSRUU8YnIgLz4KIENNUCBERUJVRzogZGlzY29ubmVjdGVk
-IGZyb20gQ01QIHNlcnZlcjxiciAvPgogPHN0cm9uZz5DTVAgZXJyb3I6IGNhbm5vdCBkdXBsaWNh
-dGUgY29udGV4dDoyMzA2IHRwbTp3YXJuKDIuMCk6IG91dCBvZiBtZW1vcnkgZm9yIG9iamVjdCBj
-b250ZXh0czwvc3Ryb25nPjxiciAvPgogQ01QIGVycm9yOiBub3QgYWJsZSB0byBjb3B5IGN0eDxi
-ciAvPgogQ01QIGVycm9yOiBpbnRlcm5hbCBlcnJvcjxiciAvPgogQ01QIGVycm9yOiBlcnJvciBz
-ZW5kaW5nPGJyIC8+CiBDTVAgZXJyb3I6IHNodXRkb3duIHdoaWxlIGluIGluaXQ8YnIgLz4KIENN
-UCBlcnJvcjogdHJhbnNmZXIgZXJyb3I6cmVxdWVzdCBzZW50OiBJUiwgZXhwZWN0ZWQgcmVzcG9u
-c2U6IElQPGJyIC8+CiBSU0EgRlJFRTxiciAvPgogUkFORCBGUkVFPGJyIC8+CiBSQU5EIEZSRUU8
-YnIgLz4KIFJBTkQgRlJFRTxiciAvPgogUFJPVklERVIgVEVBUkRPV048L3A+Cgo8cCBzdHlsZT0i
-cGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPiZuYnNwOzwvcD4KCjxwIHN0eWxlPSJw
-YWRkaW5nOjAgMCAwIDA7IG1hcmdpbjowIDAgMCAwOyI+SSd2ZSB0cmllZCB0cG0yX2ZsdXNoY29u
-dGV4dCAtdC48L3A+Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsi
-PkkgcmVjb21waWxlZCB0cG0yLW9wZW5zc2wgd2l0aCB0aGUgZm9sbG93aW5nIG9wdGlvbiBhbmQg
-dGhhdCBhcHBlYXJzIHRvIGhhdmUgd29ya2VkIGFyb3VuZCB0aGUgaXNzdWU6PC9wPgoKPHAgc3R5
-bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij4tLWRpc2FibGUtb3AtZGlnZXN0
-PC9wPgoKPHAgc3R5bGU9InBhZGRpbmc6MCAwIDAgMDsgbWFyZ2luOjAgMCAwIDA7Ij5JcyB0aGlz
-IHdoYXQgIj9wcm92aWRlcj10cG0yLHRwbTIuZGlnZXN0IT15ZXMiIHNob3VsZCBlZmZlY3RpdmVs
-eSBkbz88L3A+Cgo8cCBzdHlsZT0icGFkZGluZzowIDAgMCAwOyBtYXJnaW46MCAwIDAgMDsiPiZu
-YnNwOzwvcD4KCjxkaXYgY2xhc3M9InhfbW96LXNpZ25hdHVyZSI+LS0gPGJyIC8+CiA8YnIgLz4K
-IENocmlzIE5ld21hbiA8YnIgLz4KIDxhIGhyZWY9Imh0dHBzOi8vbW9kZTUxLnNvZnR3YXJlIj5o
-dHRwczovL21vZGU1MS5zb2Z0d2FyZTwvYT4gPGJyIC8+CiA8YSBocmVmPSJodHRwczovL3R3aXR0
-ZXIuY29tL21vZGU1MXNvZnR3YXJlIj5AbW9kZTUxc29mdHdhcmU8L2E+PC9kaXY+CjwvZGl2Pgo=
-
---===============6251431361775126668==--
+@mode51software
+--===============8372544485429153267==--
 
