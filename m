@@ -1,43 +1,27 @@
-Content-Type: multipart/mixed; boundary="===============8750690669865630809=="
+Content-Type: multipart/mixed; boundary="===============6016493535160907866=="
 MIME-Version: 1.0
-From: Chat Overlay Streaming <benzhu88899 at gmail.com>
-Subject: [tpm2] SAPI
-Date: Mon, 25 Oct 2021 13:54:12 -0700
-Message-ID: <CAGjyWPJ7DavmaJWVZnyZJDtiDWNfFXggeGaayWJw3WyQnnZkkw@mail.gmail.com>
+From: michael.g.millsap at intel.com
+Subject: [tpm2] Help implementing "OR" PCR policy using C lib
+Date: Thu, 28 Oct 2021 23:17:22 +0000
+Message-ID: <20211028231722.2830.22029@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8750690669865630809==
+--===============6016493535160907866==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi there,
-
-We're  now using TPM2 CLI commands like tpm2_createprimary, tpm2_load,
-tpm2_nvundefine and etc. to manipulate a tpm. My question is if we want to
-switch to the SAPI library, can we do the same things? For example,  write
-a function using SAPI calls to implement the CLI tpm2_createprimary
-command. Is there any sample code or resource I can look at?
+I'm implementing the sealing of a LUKS key against secure boot PCRs and am =
+trying to enable firmware updates using Esys_PolicyOR(). I can't find any e=
+xample code. I am currently doing an Esys_PolicyPCR(), followed by Esys_Pol=
+icyGetDigest() and then I seal against that digest. How would I add the Pol=
+icyOR step? Would I do an Esys_PolicyPCR() & Esys_PolicyGetDigest() for eac=
+h set of PCR values, followed by a Esys_PolicyOR() and then another Esys_Po=
+licyGetDigest() to get the final digest to seal against? What would the uns=
+eal process look like?
 
 Thanks,
-Ben
-
---===============8750690669865630809==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGRpdiBkaXI9Imx0ciI+SGkgdGhlcmUsPGJyPjxkaXY+PGJyPjwvZGl2PjxkaXY+V2UmIzM5O3Jl
-wqAgbm93IHVzaW5nIFRQTTIgQ0xJIGNvbW1hbmRzIGxpa2UgdHBtMl9jcmVhdGVwcmltYXJ5LCB0
-cG0yX2xvYWQsIHRwbTJfbnZ1bmRlZmluZSBhbmQgZXRjLiB0byBtYW5pcHVsYXRlIGEgdHBtLiBN
-eSBxdWVzdGlvbiBpcyBpZiB3ZSB3YW50IHRvIHN3aXRjaCB0byB0aGUgU0FQSSBsaWJyYXJ5LCBj
-YW4gd2UgZG8gdGhlIHNhbWUgdGhpbmdzPyBGb3IgZXhhbXBsZSzCoCB3cml0ZSBhIGZ1bmN0aW9u
-IHVzaW5nIFNBUEkgY2FsbHMgdG8gaW1wbGVtZW50IHRoZSBDTEkgdHBtMl9jcmVhdGVwcmltYXJ5
-IGNvbW1hbmQuIElzIHRoZXJlIGFueSBzYW1wbGUgY29kZSBvciByZXNvdXJjZSBJIGNhbiBsb29r
-IGF0PzwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+VGhhbmtzLDwvZGl2PjxkaXY+QmVuwqAgwqAg
-wqA8L2Rpdj48L2Rpdj4K
-
---===============8750690669865630809==--
+Mike
+--===============6016493535160907866==--
 
