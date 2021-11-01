@@ -1,232 +1,310 @@
-Content-Type: multipart/mixed; boundary="===============2216532255896962920=="
+Content-Type: multipart/mixed; boundary="===============5513574715847831868=="
 MIME-Version: 1.0
-From: David Challener <david.c.challener at gmail.com>
+From: Millsap, Michael G <michael.g.millsap at intel.com>
 Subject: [tpm2] Re: Help implementing "OR" PCR policy using C lib
-Date: Sat, 30 Oct 2021 11:01:45 -0400
-Message-ID: <CAAeabfah72=Xg-tHyuSfE_kYwMHNH8R=6SFhzh3hdkdVGYMOQA@mail.gmail.com>
-In-Reply-To: SN6PR11MB3437132262D8B3A2CD130330B8879@SN6PR11MB3437.namprd11.prod.outlook.com
+Date: Mon, 01 Nov 2021 15:22:22 +0000
+Message-ID: <DM4PR11MB55655FFCEDF15A5CD67B1812A98A9@DM4PR11MB5565.namprd11.prod.outlook.com>
+In-Reply-To: CAAeabfah72=Xg-tHyuSfE_kYwMHNH8R=6SFhzh3hdkdVGYMOQA@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2216532255896962920==
+--===============5513574715847831868==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-PolicyauthorizeNV is orobably a better way to change an authorization. A
-policy is place in an NV index. Then policyauthorizeNV points to that
-index. Only the person with authorization to write the index can change it.
-Caution: writing the NV index should requure a policysign to avoid the
-remove index recreate index attack.
+The problem I have with PolicyauthorizeNV is how do I protect it from unaut=
+horized change in a headless system? The platform is a headless, edge syste=
+m. What=E2=80=99s to stop an attacker from booting off a USB stick, changin=
+g the authorized digest in the NV, then rebooting and gaining access to the=
+ secret which allows them to decrypt the drive?
 
-On Fri, Oct 29, 2021, 2:06 PM Roberts, William C <
-william.c.roberts(a)intel.com> wrote:
+I=E2=80=99m thinking that rather than using PolicyauthorizeNV or PolicyOR, =
+I just create a new update sealed blob, which is sealed against the expecte=
+d updated PCR digest and contains a new LUKS passphrase. On boot, if the or=
+iginal blob fails to unseal, I check for an update blob. If there is a vali=
+date update blob, I delete the original blob, delete the original LUKS pass=
+phrase keyslot, and rename the update blob to the current blob. This feels =
+pretty straight forward and protects against rollback.
 
-> The best way to enable firmware updates is to use a mutable policy, either
-> through policy signed (ie trust any policy signed with this key[1]) or
-> through policyauthorizenv (Allows for mutable policies by referencing an =
-NV
-> Index [2]). The tpm2-tools have full examples in the man pages, and you c=
-an
-> just play with the tools and then port it to ESYS. The tests in tpm2-tss
-> also have examples of all the ESYS calls, but they are often times a bit
-> contrived.
->
-> When trying to create an OR policy, you essentially have:
->
-> session A --> Policy X --> Policy Y .... --> Get Digest =3D Digest A
->
-> session B --> Policy Q --> Policy W .... --> Get Digest =3D Digest B
->
-> PolicyOR (Digest A, Digest B)  =3D Final Digest
->
-> Every policy event you run a session is an AND operation. So a policy can
-> have 1 or more statements. You then take the digests of all those and feed
-> it to the policy OR
-> command which gives you the final digest that's used for policy value for
-> an object.
->
-> To satisfy the policy, you must run the commands on at least one branch
-> that evaluates to true and pass all the same hashes back to policy OR to
-> satisfy the policy. Its a bit awkward. So generally, you want to retain t=
-he
-> policy hashes for each or branch, and then know which one you want to try
-> or compute the hashes without using
-> the TPM and only use the TPM for the branch that is going to be true...
-> But it also depends on commands that are deferred evaluation (ie you don't
-> know that fail until you try and auth with the policy) or ones that fail =
-at
-> command time. So, figuring out which branch you want to run isn't always
-> easy.
->
-> Thats probably a lot to unpack in there... I probably didn't help much to
-> distill it.
->
-> You can also use Feature API's JSON policy format to handle all of this
-> for you a bit simpler.
->
-> [1] Old policies are still valid unless you take other steps like adding
-> in something like policynv against a counter you increment and that it's =
-eq
-> to the current value. Also has some of the issue of [2]. Compromising the
-> nv index here means you can only reuse old policies.
-> [2] The authvalue protecting the nvindex is very important, if that nv
-> index is compromised your whole policy is compromised. [1] would require
-> the signing key to get full control.
-> ------------------------------
-> *From:* michael.g.millsap(a)intel.com <michael.g.millsap(a)intel.com>
-> *Sent:* Thursday, October 28, 2021 6:17 PM
-> *To:* tpm2(a)lists.01.org <tpm2(a)lists.01.org>
-> *Subject:* [tpm2] Help implementing "OR" PCR policy using C lib
->
-> I'm implementing the sealing of a LUKS key against secure boot PCRs and am
-> trying to enable firmware updates using Esys_PolicyOR(). I can't find any
-> example code. I am currently doing an Esys_PolicyPCR(), followed by
-> Esys_PolicyGetDigest() and then I seal against that digest. How would I a=
-dd
-> the PolicyOR step? Would I do an Esys_PolicyPCR() & Esys_PolicyGetDigest()
-> for each set of PCR values, followed by a Esys_PolicyOR() and then another
-> Esys_PolicyGetDigest() to get the final digest to seal against? What would
-> the unseal process look like?
->
-> Thanks,
-> Mike
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+-Mike
 
---===============2216532255896962920==
+From: David Challener <david.c.challener(a)gmail.com>
+Sent: Saturday, October 30, 2021 8:02 AM
+To: Roberts, William C <william.c.roberts(a)intel.com>
+Cc: Millsap, Michael G <michael.g.millsap(a)intel.com>; tpm2(a)lists.01.org
+Subject: [tpm2] Re: Help implementing "OR" PCR policy using C lib
+
+PolicyauthorizeNV is orobably a better way to change an authorization. A po=
+licy is place in an NV index. Then policyauthorizeNV points to that index. =
+Only the person with authorization to write the index can change it. Cautio=
+n: writing the NV index should requure a policysign to avoid the remove ind=
+ex recreate index attack.
+
+On Fri, Oct 29, 2021, 2:06 PM Roberts, William C <william.c.roberts(a)intel=
+.com<mailto:william.c.roberts(a)intel.com>> wrote:
+The best way to enable firmware updates is to use a mutable policy, either =
+through policy signed (ie trust any policy signed with this key[1]) or thro=
+ugh policyauthorizenv (Allows for mutable policies by referencing an NV Ind=
+ex [2]). The tpm2-tools have full examples in the man pages, and you can ju=
+st play with the tools and then port it to ESYS. The tests in tpm2-tss also=
+ have examples of all the ESYS calls, but they are often times a bit contri=
+ved.
+
+When trying to create an OR policy, you essentially have:
+
+session A --> Policy X --> Policy Y .... --> Get Digest =3D Digest A
+
+session B --> Policy Q --> Policy W .... --> Get Digest =3D Digest B
+
+PolicyOR (Digest A, Digest B)  =3D Final Digest
+
+Every policy event you run a session is an AND operation. So a policy can h=
+ave 1 or more statements. You then take the digests of all those and feed i=
+t to the policy OR
+command which gives you the final digest that's used for policy value for a=
+n object.
+
+To satisfy the policy, you must run the commands on at least one branch tha=
+t evaluates to true and pass all the same hashes back to policy OR to satis=
+fy the policy. Its a bit awkward. So generally, you want to retain the poli=
+cy hashes for each or branch, and then know which one you want to try or co=
+mpute the hashes without using
+the TPM and only use the TPM for the branch that is going to be true... But=
+ it also depends on commands that are deferred evaluation (ie you don't kno=
+w that fail until you try and auth with the policy) or ones that fail at co=
+mmand time. So, figuring out which branch you want to run isn't always easy.
+
+Thats probably a lot to unpack in there... I probably didn't help much to d=
+istill it.
+
+You can also use Feature API's JSON policy format to handle all of this for=
+ you a bit simpler.
+
+[1] Old policies are still valid unless you take other steps like adding in=
+ something like policynv against a counter you increment and that it's eq t=
+o the current value. Also has some of the issue of [2]. Compromising the nv=
+ index here means you can only reuse old policies.
+[2] The authvalue protecting the nvindex is very important, if that nv inde=
+x is compromised your whole policy is compromised. [1] would require the si=
+gning key to get full control.
+________________________________
+From: michael.g.millsap(a)intel.com<mailto:michael.g.millsap(a)intel.com> <=
+michael.g.millsap(a)intel.com<mailto:michael.g.millsap(a)intel.com>>
+Sent: Thursday, October 28, 2021 6:17 PM
+To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org> <tpm2(a)lists.01.org<ma=
+ilto:tpm2(a)lists.01.org>>
+Subject: [tpm2] Help implementing "OR" PCR policy using C lib
+
+I'm implementing the sealing of a LUKS key against secure boot PCRs and am =
+trying to enable firmware updates using Esys_PolicyOR(). I can't find any e=
+xample code. I am currently doing an Esys_PolicyPCR(), followed by Esys_Pol=
+icyGetDigest() and then I seal against that digest. How would I add the Pol=
+icyOR step? Would I do an Esys_PolicyPCR() & Esys_PolicyGetDigest() for eac=
+h set of PCR values, followed by a Esys_PolicyOR() and then another Esys_Po=
+licyGetDigest() to get the final digest to seal against? What would the uns=
+eal process look like?
+
+Thanks,
+Mike
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
+To unsubscribe send an email to tpm2-leave(a)lists.01.org<mailto:tpm2-leave=
+(a)lists.01.org>
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
+To unsubscribe send an email to tpm2-leave(a)lists.01.org<mailto:tpm2-leave=
+(a)lists.01.org>
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============5513574715847831868==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGRpdiBkaXI9ImF1dG8iPlBvbGljeWF1dGhvcml6ZU5WIGlzIG9yb2JhYmx5IGEgYmV0dGVyIHdh
-eSB0byBjaGFuZ2UgYW4gYXV0aG9yaXphdGlvbi4gQSBwb2xpY3kgaXMgcGxhY2UgaW4gYW4gTlYg
-aW5kZXguIFRoZW4gcG9saWN5YXV0aG9yaXplTlYgcG9pbnRzIHRvIHRoYXQgaW5kZXguIE9ubHkg
-dGhlIHBlcnNvbiB3aXRoIGF1dGhvcml6YXRpb24gdG8gd3JpdGUgdGhlIGluZGV4IGNhbiBjaGFu
-Z2UgaXQuIENhdXRpb246IHdyaXRpbmcgdGhlIE5WIGluZGV4IHNob3VsZCByZXF1dXJlIGEgcG9s
-aWN5c2lnbiB0byBhdm9pZCB0aGUgcmVtb3ZlIGluZGV4IHJlY3JlYXRlIGluZGV4IGF0dGFjay48
-L2Rpdj48YnI+PGRpdiBjbGFzcz0iZ21haWxfcXVvdGUiPjxkaXYgZGlyPSJsdHIiIGNsYXNzPSJn
-bWFpbF9hdHRyIj5PbiBGcmksIE9jdCAyOSwgMjAyMSwgMjowNiBQTSBSb2JlcnRzLCBXaWxsaWFt
-IEMgJmx0OzxhIGhyZWY9Im1haWx0bzp3aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5jb20iPndpbGxp
-YW0uYy5yb2JlcnRzQGludGVsLmNvbTwvYT4mZ3Q7IHdyb3RlOjxicj48L2Rpdj48YmxvY2txdW90
-ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MCAwIDAgLjhleDtib3JkZXItbGVm
-dDoxcHggI2NjYyBzb2xpZDtwYWRkaW5nLWxlZnQ6MWV4Ij4KCgoKCjxkaXYgZGlyPSJsdHIiPgo8
-ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlm
-O2ZvbnQtc2l6ZToxMnB0O2NvbG9yOnJnYigwLDAsMCkiPgpUaGUgYmVzdCB3YXkgdG8gZW5hYmxl
-IGZpcm13YXJlIHVwZGF0ZXMgaXMgdG8gdXNlIGEgbXV0YWJsZSBwb2xpY3ksIGVpdGhlciB0aHJv
-dWdoIHBvbGljeSBzaWduZWQgKGllIHRydXN0IGFueSBwb2xpY3kgc2lnbmVkIHdpdGggdGhpcyBr
-ZXlbMV0pIG9yIHRocm91Z2ggcG9saWN5YXV0aG9yaXplbnYgKEFsbG93cyBmb3IgbXV0YWJsZSBw
-b2xpY2llcyBieSByZWZlcmVuY2luZyBhbiBOViBJbmRleCBbMl0pLiBUaGUgdHBtMi10b29scyBo
-YXZlIGZ1bGwKIGV4YW1wbGVzIGluIHRoZSBtYW4gcGFnZXMsIGFuZCB5b3UgY2FuIGp1c3QgcGxh
-eSB3aXRoIHRoZSB0b29scyBhbmQgdGhlbiBwb3J0IGl0IHRvIEVTWVMuIFRoZSB0ZXN0cyBpbiB0
-cG0yLXRzcyBhbHNvIGhhdmUgZXhhbXBsZXMgb2YgYWxsIHRoZSBFU1lTIGNhbGxzLCBidXQgdGhl
-eSBhcmUgb2Z0ZW4gdGltZXMgYSBiaXQgY29udHJpdmVkLjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250
-LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMnB0
-O2NvbG9yOnJnYigwLDAsMCkiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpD
-YWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMnB0O2NvbG9yOnJn
-YigwLDAsMCkiPgpXaGVuIHRyeWluZyB0byBjcmVhdGUgYW4gT1IgcG9saWN5LCB5b3UgZXNzZW50
-aWFsbHkgaGF2ZTo8YnI+Cjxicj4Kc2Vzc2lvbiBBIC0tJmd0OyBQb2xpY3kgWCAtLSZndDsgUG9s
-aWN5IFkgLi4uLiAtLSZndDsgR2V0IERpZ2VzdCA9IERpZ2VzdCBBPGJyPgo8YnI+CnNlc3Npb24g
-QiAtLSZndDsgUG9saWN5IFEgLS0mZ3Q7IFBvbGljeSBXIC4uLi4gLS0mZ3Q7IEdldCBEaWdlc3Qg
-PSBEaWdlc3QgQjxicj4KPGJyPgpQb2xpY3lPUiAoRGlnZXN0IEEsIERpZ2VzdCBCKcKgID0gRmlu
-YWwgRGlnZXN0PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVs
-dmV0aWNhLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+Cjxicj4K
-PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNh
-bnMtc2VyaWY7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+CkV2ZXJ5IHBvbGljeSBl
-dmVudCB5b3UgcnVuIGEgc2Vzc2lvbiBpcyBhbiBBTkQgb3BlcmF0aW9uLiBTbyBhIHBvbGljeSBj
-YW4gaGF2ZSAxIG9yIG1vcmUgc3RhdGVtZW50cy4gWW91IHRoZW4gdGFrZSB0aGUgZGlnZXN0cyBv
-ZiBhbGwgdGhvc2UgYW5kIGZlZWQgaXQgdG8gdGhlIHBvbGljeSBPUjwvZGl2Pgo8ZGl2IHN0eWxl
-PSJmb250LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2ZvbnQtc2l6
-ZToxMnB0O2NvbG9yOnJnYigwLDAsMCkiPgpjb21tYW5kIHdoaWNoIGdpdmVzIHlvdSB0aGUgZmlu
-YWwgZGlnZXN0IHRoYXQmIzM5O3MgdXNlZCBmb3IgcG9saWN5IHZhbHVlIGZvciBhbiBvYmplY3Qu
-PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNh
-bnMtc2VyaWY7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+Cjxicj4KPC9kaXY+Cjxk
-aXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7
-Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+ClRvIHNhdGlzZnkgdGhlIHBvbGljeSwg
-eW91IG11c3QgcnVuIHRoZSBjb21tYW5kcyBvbiBhdCBsZWFzdCBvbmUgYnJhbmNoIHRoYXQgZXZh
-bHVhdGVzIHRvIHRydWUgYW5kIHBhc3MgYWxsIHRoZSBzYW1lIGhhc2hlcyBiYWNrIHRvIHBvbGlj
-eSBPUiB0byBzYXRpc2Z5IHRoZSBwb2xpY3kuIEl0cyBhIGJpdCBhd2t3YXJkLiBTbyBnZW5lcmFs
-bHksIHlvdSB3YW50IHRvIHJldGFpbiB0aGUgcG9saWN5IGhhc2hlcyBmb3IgZWFjaCBvciBicmFu
-Y2gsIGFuZAogdGhlbiBrbm93IHdoaWNoIG9uZSB5b3Ugd2FudCB0byB0cnkgb3IgY29tcHV0ZSB0
-aGUgaGFzaGVzIHdpdGhvdXQgdXNpbmc8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6Q2Fs
-aWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZjtmb250LXNpemU6MTJwdDtjb2xvcjpyZ2Io
-MCwwLDApIj4KdGhlIFRQTSBhbmQgb25seSB1c2UgdGhlIFRQTSBmb3IgdGhlIGJyYW5jaCB0aGF0
-IGlzIGdvaW5nIHRvIGJlIHRydWUuLi4gQnV0IGl0IGFsc28gZGVwZW5kcyBvbiBjb21tYW5kcyB0
-aGF0IGFyZSBkZWZlcnJlZCBldmFsdWF0aW9uIChpZSB5b3UgZG9uJiMzOTt0IGtub3cgdGhhdCBm
-YWlsIHVudGlsIHlvdSB0cnkgYW5kIGF1dGggd2l0aCB0aGUgcG9saWN5KSBvciBvbmVzIHRoYXQg
-ZmFpbCBhdCBjb21tYW5kIHRpbWUuIFNvLCBmaWd1cmluZyBvdXQgd2hpY2gKIGJyYW5jaCB5b3Ug
-d2FudCB0byBydW4gaXNuJiMzOTt0IGFsd2F5cyBlYXN5LjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250
-LWZhbWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMnB0
-O2NvbG9yOnJnYigwLDAsMCkiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpD
-YWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMnB0O2NvbG9yOnJn
-YigwLDAsMCkiPgpUaGF0cyBwcm9iYWJseSBhIGxvdCB0byB1bnBhY2sgaW4gdGhlcmUuLi4gSSBw
-cm9iYWJseSBkaWRuJiMzOTt0IGhlbHAgbXVjaCB0byBkaXN0aWxsIGl0LsKgPC9kaXY+CjxkaXYg
-c3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7Zm9u
-dC1zaXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZv
-bnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEy
-cHQ7Y29sb3I6cmdiKDAsMCwwKSI+CllvdSBjYW4gYWxzbyB1c2UgRmVhdHVyZSBBUEkmIzM5O3Mg
-SlNPTiBwb2xpY3kgZm9ybWF0IHRvIGhhbmRsZSBhbGwgb2YgdGhpcyBmb3IgeW91IGEgYml0IHNp
-bXBsZXIuPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0
-aWNhLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+Cjxicj4KPC9k
-aXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMt
-c2VyaWY7Zm9udC1zaXplOjEycHQ7Y29sb3I6cmdiKDAsMCwwKSI+ClsxXSBPbGQgcG9saWNpZXMg
-YXJlIHN0aWxsIHZhbGlkIHVubGVzcyB5b3UgdGFrZSBvdGhlciBzdGVwcyBsaWtlIGFkZGluZyBp
-biBzb21ldGhpbmcgbGlrZSBwb2xpY3ludiBhZ2FpbnN0IGEgY291bnRlciB5b3UgaW5jcmVtZW50
-IGFuZCB0aGF0IGl0JiMzOTtzIGVxIHRvIHRoZSBjdXJyZW50IHZhbHVlLiBBbHNvIGhhcyBzb21l
-IG9mIHRoZSBpc3N1ZSBvZiBbMl0uIENvbXByb21pc2luZyB0aGUgbnYgaW5kZXggaGVyZSBtZWFu
-cyB5b3UgY2FuIG9ubHkgcmV1c2UKIG9sZCBwb2xpY2llcy48L2Rpdj4KPGRpdiBzdHlsZT0iZm9u
-dC1mYW1pbHk6Q2FsaWJyaSxBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZjtmb250LXNpemU6MTJw
-dDtjb2xvcjpyZ2IoMCwwLDApIj4KWzJdIFRoZSBhdXRodmFsdWUgcHJvdGVjdGluZyB0aGUgbnZp
-bmRleCBpcyB2ZXJ5IGltcG9ydGFudCwgaWYgdGhhdCBudiBpbmRleCBpcyBjb21wcm9taXNlZCB5
-b3VyIHdob2xlIHBvbGljeSBpcyBjb21wcm9taXNlZC4gWzFdIHdvdWxkIHJlcXVpcmUgdGhlIHNp
-Z25pbmcga2V5IHRvIGdldCBmdWxsIGNvbnRyb2wuPC9kaXY+CjxkaXYgaWQ9Im1fNjUyNTc5MTU4
-NjgwMzM4OTE5YXBwZW5kb25zZW5kIj48L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1i
-bG9jazt3aWR0aDo5OCUiPgo8ZGl2IGlkPSJtXzY1MjU3OTE1ODY4MDMzODkxOWRpdlJwbHlGd2RN
-c2ciIGRpcj0ibHRyIj48Zm9udCBmYWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9u
-dC1zaXplOjExcHQiIGNvbG9yPSIjMDAwMDAwIj48Yj5Gcm9tOjwvYj4gPGEgaHJlZj0ibWFpbHRv
-Om1pY2hhZWwuZy5taWxsc2FwQGludGVsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9yZWZl
-cnJlciI+bWljaGFlbC5nLm1pbGxzYXBAaW50ZWwuY29tPC9hPiAmbHQ7PGEgaHJlZj0ibWFpbHRv
-Om1pY2hhZWwuZy5taWxsc2FwQGludGVsLmNvbSIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9yZWZl
-cnJlciI+bWljaGFlbC5nLm1pbGxzYXBAaW50ZWwuY29tPC9hPiZndDs8YnI+CjxiPlNlbnQ6PC9i
-PiBUaHVyc2RheSwgT2N0b2JlciAyOCwgMjAyMSA2OjE3IFBNPGJyPgo8Yj5Ubzo8L2I+IDxhIGhy
-ZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9yZWZl
-cnJlciI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+ICZsdDs8YSBocmVmPSJtYWlsdG86dHBtMkBsaXN0
-cy4wMS5vcmciIHRhcmdldD0iX2JsYW5rIiByZWw9Im5vcmVmZXJyZXIiPnRwbTJAbGlzdHMuMDEu
-b3JnPC9hPiZndDs8YnI+CjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gSGVscCBpbXBsZW1lbnRpbmcg
-JnF1b3Q7T1ImcXVvdDsgUENSIHBvbGljeSB1c2luZyBDIGxpYjwvZm9udD4KPGRpdj7CoDwvZGl2
-Pgo8L2Rpdj4KPGRpdj48Zm9udCBzaXplPSIyIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjExcHQi
-Pgo8ZGl2PkkmIzM5O20gaW1wbGVtZW50aW5nIHRoZSBzZWFsaW5nIG9mIGEgTFVLUyBrZXkgYWdh
-aW5zdCBzZWN1cmUgYm9vdCBQQ1JzIGFuZCBhbSB0cnlpbmcgdG8gZW5hYmxlIGZpcm13YXJlIHVw
-ZGF0ZXMgdXNpbmcgRXN5c19Qb2xpY3lPUigpLiBJIGNhbiYjMzk7dCBmaW5kIGFueSBleGFtcGxl
-IGNvZGUuIEkgYW0gY3VycmVudGx5IGRvaW5nIGFuIEVzeXNfUG9saWN5UENSKCksIGZvbGxvd2Vk
-IGJ5IEVzeXNfUG9saWN5R2V0RGlnZXN0KCkKIGFuZCB0aGVuIEkgc2VhbCBhZ2FpbnN0IHRoYXQg
-ZGlnZXN0LiBIb3cgd291bGQgSSBhZGQgdGhlIFBvbGljeU9SIHN0ZXA/IFdvdWxkIEkgZG8gYW4g
-RXN5c19Qb2xpY3lQQ1IoKSAmYW1wOyBFc3lzX1BvbGljeUdldERpZ2VzdCgpIGZvciBlYWNoIHNl
-dCBvZiBQQ1IgdmFsdWVzLCBmb2xsb3dlZCBieSBhIEVzeXNfUG9saWN5T1IoKSBhbmQgdGhlbiBh
-bm90aGVyIEVzeXNfUG9saWN5R2V0RGlnZXN0KCkgdG8gZ2V0IHRoZSBmaW5hbCBkaWdlc3QgdG8g
-c2VhbAogYWdhaW5zdD8gV2hhdCB3b3VsZCB0aGUgdW5zZWFsIHByb2Nlc3MgbG9vayBsaWtlPzxi
-cj4KPGJyPgpUaGFua3MsPGJyPgpNaWtlPGJyPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXzxicj4KdHBtMiBtYWlsaW5nIGxpc3QgLS0gPGEgaHJlZj0ibWFp
-bHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub3JlZmVycmVyIj50
-cG0yQGxpc3RzLjAxLm9yZzwvYT48YnI+ClRvIHVuc3Vic2NyaWJlIHNlbmQgYW4gZW1haWwgdG8g
-PGEgaHJlZj0ibWFpbHRvOnRwbTItbGVhdmVAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayIg
-cmVsPSJub3JlZmVycmVyIj50cG0yLWxlYXZlQGxpc3RzLjAxLm9yZzwvYT48YnI+CiUod2ViX3Bh
-Z2VfdXJsKXNsaXN0aW5mbyUoY2dpZXh0KXMvJShfaW50ZXJuYWxfbmFtZSlzPGJyPgo8L2Rpdj4K
-PC9zcGFuPjwvZm9udD48L2Rpdj4KPC9kaXY+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXzxicj4KdHBtMiBtYWlsaW5nIGxpc3QgLS0gPGEgaHJlZj0ibWFp
-bHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayIgcmVsPSJub3JlZmVycmVyIj50
-cG0yQGxpc3RzLjAxLm9yZzwvYT48YnI+ClRvIHVuc3Vic2NyaWJlIHNlbmQgYW4gZW1haWwgdG8g
-PGEgaHJlZj0ibWFpbHRvOnRwbTItbGVhdmVAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayIg
-cmVsPSJub3JlZmVycmVyIj50cG0yLWxlYXZlQGxpc3RzLjAxLm9yZzwvYT48YnI+CiUod2ViX3Bh
-Z2VfdXJsKXNsaXN0aW5mbyUoY2dpZXh0KXMvJShfaW50ZXJuYWxfbmFtZSlzPC9ibG9ja3F1b3Rl
-PjwvZGl2Pgo=
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPCEtLVtp
+ZiAhbXNvXT48c3R5bGU+dlw6KiB7YmVoYXZpb3I6dXJsKCNkZWZhdWx0I1ZNTCk7fQ0Kb1w6KiB7
+YmVoYXZpb3I6dXJsKCNkZWZhdWx0I1ZNTCk7fQ0Kd1w6KiB7YmVoYXZpb3I6dXJsKCNkZWZhdWx0
+I1ZNTCk7fQ0KLnNoYXBlIHtiZWhhdmlvcjp1cmwoI2RlZmF1bHQjVk1MKTt9DQo8L3N0eWxlPjwh
+W2VuZGlmXS0tPjxzdHlsZT48IS0tDQovKiBGb250IERlZmluaXRpb25zICovDQpAZm9udC1mYWNl
+DQoJe2ZvbnQtZmFtaWx5OiJDYW1icmlhIE1hdGgiOw0KCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYg
+MyAyIDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZhbWlseTpDYWxpYnJpOw0KCXBhbm9zZS0xOjIg
+MTUgNSAyIDIgMiA0IDMgMiA0O30NCi8qIFN0eWxlIERlZmluaXRpb25zICovDQpwLk1zb05vcm1h
+bCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsDQoJe21hcmdpbjowaW47DQoJZm9udC1zaXpl
+OjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQphOmxpbmssIHNw
+YW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpibHVlOw0K
+CXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0Kc3Bhbi5FbWFpbFN0eWxlMTgNCgl7bXNvLXN0
+eWxlLXR5cGU6cGVyc29uYWwtcmVwbHk7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2Vy
+aWY7DQoJY29sb3I6d2luZG93dGV4dDt9DQouTXNvQ2hwRGVmYXVsdA0KCXttc28tc3R5bGUtdHlw
+ZTpleHBvcnQtb25seTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQpAcGFn
+ZSBXb3JkU2VjdGlvbjENCgl7c2l6ZTo4LjVpbiAxMS4waW47DQoJbWFyZ2luOjEuMGluIDEuMGlu
+IDEuMGluIDEuMGluO30NCmRpdi5Xb3JkU2VjdGlvbjENCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQ0K
+LS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlZGVmYXVsdHMgdjpl
+eHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+DQo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0
+ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4NCjxvOmlkbWFwIHY6
+ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPg0KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0t
+Pg0KPC9oZWFkPg0KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9ImJsdWUiIHZsaW5rPSJwdXJwbGUi
+IHN0eWxlPSJ3b3JkLXdyYXA6YnJlYWstd29yZCI+DQo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEi
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhlIHByb2JsZW0gSSBoYXZlIHdpdGggUG9saWN5YXV0
+aG9yaXplTlYgaXMgaG93IGRvIEkgcHJvdGVjdCBpdCBmcm9tIHVuYXV0aG9yaXplZCBjaGFuZ2Ug
+aW4gYSBoZWFkbGVzcyBzeXN0ZW0/IFRoZSBwbGF0Zm9ybSBpcyBhIGhlYWRsZXNzLCBlZGdlIHN5
+c3RlbS4gV2hhdOKAmXMgdG8gc3RvcCBhbiBhdHRhY2tlciBmcm9tIGJvb3Rpbmcgb2ZmIGEgVVNC
+IHN0aWNrLCBjaGFuZ2luZyB0aGUgYXV0aG9yaXplZCBkaWdlc3QNCiBpbiB0aGUgTlYsIHRoZW4g
+cmVib290aW5nIGFuZCBnYWluaW5nIGFjY2VzcyB0byB0aGUgc2VjcmV0IHdoaWNoIGFsbG93cyB0
+aGVtIHRvIGRlY3J5cHQgdGhlIGRyaXZlPw0KPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPknigJlt
+IHRoaW5raW5nIHRoYXQgcmF0aGVyIHRoYW4gdXNpbmcgUG9saWN5YXV0aG9yaXplTlYgb3IgUG9s
+aWN5T1IsIEkganVzdCBjcmVhdGUgYSBuZXcgdXBkYXRlIHNlYWxlZCBibG9iLCB3aGljaCBpcyBz
+ZWFsZWQgYWdhaW5zdCB0aGUgZXhwZWN0ZWQgdXBkYXRlZCBQQ1IgZGlnZXN0IGFuZCBjb250YWlu
+cyBhIG5ldyBMVUtTIHBhc3NwaHJhc2UuIE9uIGJvb3QsIGlmIHRoZSBvcmlnaW5hbCBibG9iIGZh
+aWxzIHRvDQogdW5zZWFsLCBJIGNoZWNrIGZvciBhbiB1cGRhdGUgYmxvYi4gSWYgdGhlcmUgaXMg
+YSB2YWxpZGF0ZSB1cGRhdGUgYmxvYiwgSSBkZWxldGUgdGhlIG9yaWdpbmFsIGJsb2IsIGRlbGV0
+ZSB0aGUgb3JpZ2luYWwgTFVLUyBwYXNzcGhyYXNlIGtleXNsb3QsIGFuZCByZW5hbWUgdGhlIHVw
+ZGF0ZSBibG9iIHRvIHRoZSBjdXJyZW50IGJsb2IuIFRoaXMgZmVlbHMgcHJldHR5IHN0cmFpZ2h0
+IGZvcndhcmQgYW5kIHByb3RlY3RzIGFnYWluc3Qgcm9sbGJhY2suPG86cD48L286cD48L3A+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPi1NaWtlPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZu
+YnNwOzwvbzpwPjwvcD4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci10b3A6c29saWQg
+I0UxRTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBpbiAwaW4gMGluIj4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPjxiPkZyb206PC9iPiBEYXZpZCBDaGFsbGVuZXIgJmx0O2RhdmlkLmMuY2hhbGxlbmVy
+QGdtYWlsLmNvbSZndDsgPGJyPg0KPGI+U2VudDo8L2I+IFNhdHVyZGF5LCBPY3RvYmVyIDMwLCAy
+MDIxIDg6MDIgQU08YnI+DQo8Yj5Ubzo8L2I+IFJvYmVydHMsIFdpbGxpYW0gQyAmbHQ7d2lsbGlh
+bS5jLnJvYmVydHNAaW50ZWwuY29tJmd0Ozxicj4NCjxiPkNjOjwvYj4gTWlsbHNhcCwgTWljaGFl
+bCBHICZsdDttaWNoYWVsLmcubWlsbHNhcEBpbnRlbC5jb20mZ3Q7OyB0cG0yQGxpc3RzLjAxLm9y
+Zzxicj4NCjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gUmU6IEhlbHAgaW1wbGVtZW50aW5nICZxdW90
+O09SJnF1b3Q7IFBDUiBwb2xpY3kgdXNpbmcgQyBsaWI8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2Pg0KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+UG9saWN5YXV0aG9yaXplTlYgaXMgb3JvYmFibHkgYSBiZXR0ZXIgd2F5
+IHRvIGNoYW5nZSBhbiBhdXRob3JpemF0aW9uLiBBIHBvbGljeSBpcyBwbGFjZSBpbiBhbiBOViBp
+bmRleC4gVGhlbiBwb2xpY3lhdXRob3JpemVOViBwb2ludHMgdG8gdGhhdCBpbmRleC4gT25seSB0
+aGUgcGVyc29uIHdpdGggYXV0aG9yaXphdGlvbiB0byB3cml0ZSB0aGUgaW5kZXggY2FuIGNoYW5n
+ZSBpdC4gQ2F1dGlvbjogd3JpdGluZw0KIHRoZSBOViBpbmRleCBzaG91bGQgcmVxdXVyZSBhIHBv
+bGljeXNpZ24gdG8gYXZvaWQgdGhlIHJlbW92ZSBpbmRleCByZWNyZWF0ZSBpbmRleCBhdHRhY2su
+PG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7
+PC9vOnA+PC9wPg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5PbiBGcmksIE9j
+dCAyOSwgMjAyMSwgMjowNiBQTSBSb2JlcnRzLCBXaWxsaWFtIEMgJmx0OzxhIGhyZWY9Im1haWx0
+bzp3aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5jb20iPndpbGxpYW0uYy5yb2JlcnRzQGludGVsLmNv
+bTwvYT4mZ3Q7IHdyb3RlOjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8YmxvY2txdW90ZSBzdHls
+ZT0iYm9yZGVyOm5vbmU7Ym9yZGVyLWxlZnQ6c29saWQgI0NDQ0NDQyAxLjBwdDtwYWRkaW5nOjBp
+biAwaW4gMGluIDYuMHB0O21hcmdpbi1sZWZ0OjQuOHB0O21hcmdpbi1yaWdodDowaW4iPg0KPGRp
+dj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEy
+LjBwdDtjb2xvcjpibGFjayI+VGhlIGJlc3Qgd2F5IHRvIGVuYWJsZSBmaXJtd2FyZSB1cGRhdGVz
+IGlzIHRvIHVzZSBhIG11dGFibGUgcG9saWN5LCBlaXRoZXIgdGhyb3VnaCBwb2xpY3kgc2lnbmVk
+IChpZSB0cnVzdCBhbnkgcG9saWN5IHNpZ25lZCB3aXRoIHRoaXMga2V5WzFdKSBvciB0aHJvdWdo
+IHBvbGljeWF1dGhvcml6ZW52IChBbGxvd3MgZm9yIG11dGFibGUgcG9saWNpZXMNCiBieSByZWZl
+cmVuY2luZyBhbiBOViBJbmRleCBbMl0pLiBUaGUgdHBtMi10b29scyBoYXZlIGZ1bGwgZXhhbXBs
+ZXMgaW4gdGhlIG1hbiBwYWdlcywgYW5kIHlvdSBjYW4ganVzdCBwbGF5IHdpdGggdGhlIHRvb2xz
+IGFuZCB0aGVuIHBvcnQgaXQgdG8gRVNZUy4gVGhlIHRlc3RzIGluIHRwbTItdHNzIGFsc28gaGF2
+ZSBleGFtcGxlcyBvZiBhbGwgdGhlIEVTWVMgY2FsbHMsIGJ1dCB0aGV5IGFyZSBvZnRlbiB0aW1l
+cyBhIGJpdCBjb250cml2ZWQuPG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMi4wcHQ7Y29sb3I6
+YmxhY2siPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTIuMHB0O2NvbG9yOmJsYWNr
+Ij5XaGVuIHRyeWluZyB0byBjcmVhdGUgYW4gT1IgcG9saWN5LCB5b3UgZXNzZW50aWFsbHkgaGF2
+ZTo8YnI+DQo8YnI+DQpzZXNzaW9uIEEgLS0mZ3Q7IFBvbGljeSBYIC0tJmd0OyBQb2xpY3kgWSAu
+Li4uIC0tJmd0OyBHZXQgRGlnZXN0ID0gRGlnZXN0IEE8YnI+DQo8YnI+DQpzZXNzaW9uIEIgLS0m
+Z3Q7IFBvbGljeSBRIC0tJmd0OyBQb2xpY3kgVyAuLi4uIC0tJmd0OyBHZXQgRGlnZXN0ID0gRGln
+ZXN0IEI8YnI+DQo8YnI+DQpQb2xpY3lPUiAoRGlnZXN0IEEsIERpZ2VzdCBCKSZuYnNwOyA9IEZp
+bmFsIERpZ2VzdDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNz
+PSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTIuMHB0O2NvbG9yOmJsYWNrIj48
+bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEyLjBwdDtjb2xvcjpibGFjayI+RXZlcnkg
+cG9saWN5IGV2ZW50IHlvdSBydW4gYSBzZXNzaW9uIGlzIGFuIEFORCBvcGVyYXRpb24uIFNvIGEg
+cG9saWN5IGNhbiBoYXZlIDEgb3IgbW9yZSBzdGF0ZW1lbnRzLiBZb3UgdGhlbiB0YWtlIHRoZSBk
+aWdlc3RzIG9mIGFsbCB0aG9zZSBhbmQgZmVlZCBpdCB0byB0aGUgcG9saWN5IE9SPG86cD48L286
+cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
+c3R5bGU9ImZvbnQtc2l6ZToxMi4wcHQ7Y29sb3I6YmxhY2siPmNvbW1hbmQgd2hpY2ggZ2l2ZXMg
+eW91IHRoZSBmaW5hbCBkaWdlc3QgdGhhdCdzIHVzZWQgZm9yIHBvbGljeSB2YWx1ZSBmb3IgYW4g
+b2JqZWN0LjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTIuMHB0O2NvbG9yOmJsYWNrIj48bzpw
+PiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9y
+bWFsIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEyLjBwdDtjb2xvcjpibGFjayI+VG8gc2F0aXNm
+eSB0aGUgcG9saWN5LCB5b3UgbXVzdCBydW4gdGhlIGNvbW1hbmRzIG9uIGF0IGxlYXN0IG9uZSBi
+cmFuY2ggdGhhdCBldmFsdWF0ZXMgdG8gdHJ1ZSBhbmQgcGFzcyBhbGwgdGhlIHNhbWUgaGFzaGVz
+IGJhY2sgdG8gcG9saWN5IE9SIHRvIHNhdGlzZnkgdGhlIHBvbGljeS4gSXRzIGEgYml0IGF3a3dh
+cmQuIFNvIGdlbmVyYWxseSwNCiB5b3Ugd2FudCB0byByZXRhaW4gdGhlIHBvbGljeSBoYXNoZXMg
+Zm9yIGVhY2ggb3IgYnJhbmNoLCBhbmQgdGhlbiBrbm93IHdoaWNoIG9uZSB5b3Ugd2FudCB0byB0
+cnkgb3IgY29tcHV0ZSB0aGUgaGFzaGVzIHdpdGhvdXQgdXNpbmc8bzpwPjwvbzpwPjwvc3Bhbj48
+L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0iZm9u
+dC1zaXplOjEyLjBwdDtjb2xvcjpibGFjayI+dGhlIFRQTSBhbmQgb25seSB1c2UgdGhlIFRQTSBm
+b3IgdGhlIGJyYW5jaCB0aGF0IGlzIGdvaW5nIHRvIGJlIHRydWUuLi4gQnV0IGl0IGFsc28gZGVw
+ZW5kcyBvbiBjb21tYW5kcyB0aGF0IGFyZSBkZWZlcnJlZCBldmFsdWF0aW9uIChpZSB5b3UgZG9u
+J3Qga25vdyB0aGF0IGZhaWwgdW50aWwgeW91IHRyeSBhbmQgYXV0aCB3aXRoIHRoZQ0KIHBvbGlj
+eSkgb3Igb25lcyB0aGF0IGZhaWwgYXQgY29tbWFuZCB0aW1lLiBTbywgZmlndXJpbmcgb3V0IHdo
+aWNoIGJyYW5jaCB5b3Ugd2FudCB0byBydW4gaXNuJ3QgYWx3YXlzIGVhc3kuPG86cD48L286cD48
+L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5
+bGU9ImZvbnQtc2l6ZToxMi4wcHQ7Y29sb3I6YmxhY2siPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFu
+PjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJm
+b250LXNpemU6MTIuMHB0O2NvbG9yOmJsYWNrIj5UaGF0cyBwcm9iYWJseSBhIGxvdCB0byB1bnBh
+Y2sgaW4gdGhlcmUuLi4gSSBwcm9iYWJseSBkaWRuJ3QgaGVscCBtdWNoIHRvIGRpc3RpbGwgaXQu
+Jm5ic3A7PG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMi4wcHQ7Y29sb3I6YmxhY2siPjxvOnA+
+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTIuMHB0O2NvbG9yOmJsYWNrIj5Zb3UgY2FuIGFs
+c28gdXNlIEZlYXR1cmUgQVBJJ3MgSlNPTiBwb2xpY3kgZm9ybWF0IHRvIGhhbmRsZSBhbGwgb2Yg
+dGhpcyBmb3IgeW91IGEgYml0IHNpbXBsZXIuPG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+
+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMi4w
+cHQ7Y29sb3I6YmxhY2siPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRp
+dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTIuMHB0O2Nv
+bG9yOmJsYWNrIj5bMV0gT2xkIHBvbGljaWVzIGFyZSBzdGlsbCB2YWxpZCB1bmxlc3MgeW91IHRh
+a2Ugb3RoZXIgc3RlcHMgbGlrZSBhZGRpbmcgaW4gc29tZXRoaW5nIGxpa2UgcG9saWN5bnYgYWdh
+aW5zdCBhIGNvdW50ZXIgeW91IGluY3JlbWVudCBhbmQgdGhhdCBpdCdzIGVxIHRvIHRoZSBjdXJy
+ZW50IHZhbHVlLiBBbHNvIGhhcyBzb21lIG9mIHRoZSBpc3N1ZQ0KIG9mIFsyXS4gQ29tcHJvbWlz
+aW5nIHRoZSBudiBpbmRleCBoZXJlIG1lYW5zIHlvdSBjYW4gb25seSByZXVzZSBvbGQgcG9saWNp
+ZXMuPG86cD48L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMi4wcHQ7Y29sb3I6YmxhY2siPlsyXSBUaGUg
+YXV0aHZhbHVlIHByb3RlY3RpbmcgdGhlIG52aW5kZXggaXMgdmVyeSBpbXBvcnRhbnQsIGlmIHRo
+YXQgbnYgaW5kZXggaXMgY29tcHJvbWlzZWQgeW91ciB3aG9sZSBwb2xpY3kgaXMgY29tcHJvbWlz
+ZWQuIFsxXSB3b3VsZCByZXF1aXJlIHRoZSBzaWduaW5nIGtleSB0byBnZXQgZnVsbCBjb250cm9s
+LjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPGRpdiBjbGFzcz0iTXNvTm9ybWFsIiBh
+bGlnbj0iY2VudGVyIiBzdHlsZT0idGV4dC1hbGlnbjpjZW50ZXIiPg0KPGhyIHNpemU9IjIiIHdp
+ZHRoPSI5OCUiIGFsaWduPSJjZW50ZXIiPg0KPC9kaXY+DQo8ZGl2IGlkPSJtXzY1MjU3OTE1ODY4
+MDMzODkxOWRpdlJwbHlGd2RNc2ciPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gc3R5
+bGU9ImNvbG9yOmJsYWNrIj5Gcm9tOjwvc3Bhbj48L2I+PHNwYW4gc3R5bGU9ImNvbG9yOmJsYWNr
+Ij4NCjxhIGhyZWY9Im1haWx0bzptaWNoYWVsLmcubWlsbHNhcEBpbnRlbC5jb20iIHRhcmdldD0i
+X2JsYW5rIj5taWNoYWVsLmcubWlsbHNhcEBpbnRlbC5jb208L2E+ICZsdDs8YSBocmVmPSJtYWls
+dG86bWljaGFlbC5nLm1pbGxzYXBAaW50ZWwuY29tIiB0YXJnZXQ9Il9ibGFuayI+bWljaGFlbC5n
+Lm1pbGxzYXBAaW50ZWwuY29tPC9hPiZndDs8YnI+DQo8Yj5TZW50OjwvYj4gVGh1cnNkYXksIE9j
+dG9iZXIgMjgsIDIwMjEgNjoxNyBQTTxicj4NCjxiPlRvOjwvYj4gPGEgaHJlZj0ibWFpbHRvOnRw
+bTJAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+ICZs
+dDs8YSBocmVmPSJtYWlsdG86dHBtMkBsaXN0cy4wMS5vcmciIHRhcmdldD0iX2JsYW5rIj50cG0y
+QGxpc3RzLjAxLm9yZzwvYT4mZ3Q7PGJyPg0KPGI+U3ViamVjdDo8L2I+IFt0cG0yXSBIZWxwIGlt
+cGxlbWVudGluZyAmcXVvdDtPUiZxdW90OyBQQ1IgcG9saWN5IHVzaW5nIEMgbGliPC9zcGFuPiA8
+bzpwPg0KPC9vOnA+PC9wPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOzxvOnA+
+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjxkaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+SSdtIGltcGxlbWVudGluZyB0aGUgc2VhbGluZyBvZiBhIExVS1Mga2V5IGFnYWluc3Qg
+c2VjdXJlIGJvb3QgUENScyBhbmQgYW0gdHJ5aW5nIHRvIGVuYWJsZSBmaXJtd2FyZSB1cGRhdGVz
+IHVzaW5nIEVzeXNfUG9saWN5T1IoKS4gSSBjYW4ndCBmaW5kIGFueSBleGFtcGxlIGNvZGUuIEkg
+YW0gY3VycmVudGx5IGRvaW5nIGFuIEVzeXNfUG9saWN5UENSKCksIGZvbGxvd2VkIGJ5IEVzeXNf
+UG9saWN5R2V0RGlnZXN0KCkNCiBhbmQgdGhlbiBJIHNlYWwgYWdhaW5zdCB0aGF0IGRpZ2VzdC4g
+SG93IHdvdWxkIEkgYWRkIHRoZSBQb2xpY3lPUiBzdGVwPyBXb3VsZCBJIGRvIGFuIEVzeXNfUG9s
+aWN5UENSKCkgJmFtcDsgRXN5c19Qb2xpY3lHZXREaWdlc3QoKSBmb3IgZWFjaCBzZXQgb2YgUENS
+IHZhbHVlcywgZm9sbG93ZWQgYnkgYSBFc3lzX1BvbGljeU9SKCkgYW5kIHRoZW4gYW5vdGhlciBF
+c3lzX1BvbGljeUdldERpZ2VzdCgpIHRvIGdldCB0aGUgZmluYWwgZGlnZXN0IHRvIHNlYWwNCiBh
+Z2FpbnN0PyBXaGF0IHdvdWxkIHRoZSB1bnNlYWwgcHJvY2VzcyBsb29rIGxpa2U/PGJyPg0KPGJy
+Pg0KVGhhbmtzLDxicj4NCk1pa2U8YnI+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXzxicj4NCnRwbTIgbWFpbGluZyBsaXN0IC0tIDxhIGhyZWY9Im1haWx0
+bzp0cG0yQGxpc3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPnRwbTJAbGlzdHMuMDEub3JnPC9h
+Pjxicj4NClRvIHVuc3Vic2NyaWJlIHNlbmQgYW4gZW1haWwgdG8gPGEgaHJlZj0ibWFpbHRvOnRw
+bTItbGVhdmVAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayI+DQp0cG0yLWxlYXZlQGxpc3Rz
+LjAxLm9yZzwvYT48YnI+DQolKHdlYl9wYWdlX3VybClzbGlzdGluZm8lKGNnaWV4dClzLyUoX2lu
+dGVybmFsX25hbWUpczxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX188YnI+DQp0cG0yIG1haWxpbmcgbGlzdCAtLSA8YSBocmVmPSJtYWlsdG86dHBtMkBs
+aXN0cy4wMS5vcmciIHRhcmdldD0iX2JsYW5rIj50cG0yQGxpc3RzLjAxLm9yZzwvYT48YnI+DQpU
+byB1bnN1YnNjcmliZSBzZW5kIGFuIGVtYWlsIHRvIDxhIGhyZWY9Im1haWx0bzp0cG0yLWxlYXZl
+QGxpc3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPg0KdHBtMi1sZWF2ZUBsaXN0cy4wMS5vcmc8
+L2E+PGJyPg0KJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQpcy8lKF9pbnRlcm5hbF9u
+YW1lKXM8bzpwPjwvbzpwPjwvcD4NCjwvYmxvY2txdW90ZT4NCjwvZGl2Pg0KPC9kaXY+DQo8L2Jv
+ZHk+DQo8L2h0bWw+DQo=
 
---===============2216532255896962920==--
+--===============5513574715847831868==--
 
