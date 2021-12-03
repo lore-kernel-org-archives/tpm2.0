@@ -1,136 +1,195 @@
-Content-Type: multipart/mixed; boundary="===============7723151611223442044=="
+Content-Type: multipart/mixed; boundary="===============2319240803450572966=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] Re: "tpm2_import" Integrity Check issue on a Big Endian 32 Bit
- Platform
-Date: Fri, 03 Dec 2021 08:37:17 +0000
-Message-ID: <AM8P194MB1675BB303BF9B748486FD5CAA66A9@AM8P194MB1675.EURP194.PROD.OUTLOOK.COM>
-In-Reply-To: CADu5HqwHtao46dmH0xuZn_15mtS1LtLa=4HiFcXaVPTQYHo=_g@mail.gmail.com
+From: Sievert, James <james.sievert at bsci.com>
+Subject: [tpm2] tpm2_nvdefine fails with inconsistent attributes...
+Date: Fri, 03 Dec 2021 14:37:13 +0000
+Message-ID: <
+ <DS7PR03MB557618379CE4770AD68FB5B89A6A9@DS7PR03MB5576.namprd03.prod.outlook.com>>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7723151611223442044==
+--===============2319240803450572966==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I guess the next step would be to bisect the exact error:
+Hi,
 
-git bisect start
-git bisect bad upstream/master
-git bisect good 5.2
+I=E2=80=99m using tpm2-tools 4.1.1 on Ubuntu 20.04.  I=E2=80=99m issuing th=
+e following command which is returning an inconsistent attributes error:
 
-This should lead you to the concrete commit that made things go bad.
-It takes some time of course but would be worth it...
+bsci(a)ip-10-132-42-225:~$ tpm2_nvdefine   0x1000025 -C p -s 1
+WARNING:esys:src/tss2-esys/api/Esys_NV_DefineSpace.c:333:Esys_NV_DefineSpac=
+e_Finish() Received TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_NV_DefineSpace.c:122:Esys_NV_DefineSpace(=
+) Esys Finish ErrorCode (0x00000182)
+ERROR: Failed to define NV area at index 0x1000025
+ERROR: Esys_NV_DefineSpace(0x182) - tpm:handle(1):inconsistent attributes
+ERROR: Unable to run tpm2_nvdefine
 
-________________________________________
-Von: Rajkumar K Sivasamy <rajkumar.k.sivasamy(a)gmail.com>
-Gesendet: Freitag, 3. Dezember 2021 06:02
-An: Roberts, William C
-Cc: tpm2(a)lists.01.org; Desai, Imran
-Betreff: [tpm2] Re: "tpm2_import" Integrity Check issue on a Big Endian 32 =
-Bit Platform
+and yes, I am attempting to define the index using the platform hierarchy. =
+ =F0=9F=98=8A  This does work using the IBM utilities.
 
--   tpm2-tss 3.1.0 and Tpm2-tools 5.2 2021-09-2 8=3D=3D> tpm2_import fails =
-with error 0x3DF
--   tpm2-tss 3.0.4 and Tpm2-tools 5.2 2021-09-28 =3D=3D> tpm2_import fails =
-with error 0x3DF
--   tpm2-tss 3.0.4 and Tpm2-tools 5.2 =3D=3D> tpm2_import succeeds
+Here are the current properties:
 
-Why are you putting dates on some of the tpm2-tools versions but not tpm2-t=
-ss?
-[Raj] TPM2 Tools Master has this date code "2021-09-28" at "https://github.=
-com/tpm2-software/tpm2-tools" for the version, hence I have used it to indi=
-cate the source code version of tpm2-tools which I downloaded from https://=
-github.com/tpm2-software/tpm2-tools
+bsci(a)ip-10-132-42-225:~$ tpm2_getcap properties-variable
+TPM2_PT_PERSISTENT:
+  ownerAuthSet:              0
+  endorsementAuthSet:        0
+  lockoutAuthSet:            0
+  reserved1:                 0
+  disableClear:              0
+  inLockout:                 0
+  tpmGeneratedEPS:           0
+  reserved2:                 0
+TPM2_PT_STARTUP_CLEAR:
+  phEnable:                  1
+  shEnable:                  1
+  ehEnable:                  1
+  phEnableNV:                1
+  reserved1:                 0
+  orderly:                   0
+TPM2_PT_HR_NV_INDEX: 0x6
+TPM2_PT_HR_LOADED: 0x0
+TPM2_PT_HR_LOADED_AVAIL: 0x3
+TPM2_PT_HR_ACTIVE: 0x0
+TPM2_PT_HR_ACTIVE_AVAIL: 0x40
+TPM2_PT_HR_TRANSIENT_AVAIL: 0x3
+TPM2_PT_HR_PERSISTENT: 0x0
+TPM2_PT_HR_PERSISTENT_AVAIL: 0x11
+TPM2_PT_NV_COUNTERS: 0x0
+TPM2_PT_NV_COUNTERS_AVAIL: 0xD
+TPM2_PT_ALGORITHM_SET: 0x0
+TPM2_PT_LOADED_CURVES: 0x2
+TPM2_PT_LOCKOUT_COUNTER: 0x0
+TPM2_PT_MAX_AUTH_FAIL: 0x20
+TPM2_PT_LOCKOUT_INTERVAL: 0x1C20
+TPM2_PT_LOCKOUT_RECOVERY: 0x15180
+TPM2_PT_AUDIT_COUNTER_0: 0x0
+TPM2_PT_AUDIT_COUNTER_1: 0x0
 
-tpm2-tools 5.2 source was downloaded from link: https://github.com/tpm2-sof=
-tware/tpm2-tools/releases/download/5.2/tpm2-tools-5.2.tar.gz
-tpm2-tss 3.1.0 was downloaded from https://github.com/tpm2-software/tpm2-tss
-tpm2-tss 3.0.4 was downloaded from https://github.com/tpm2-software/tpm2-ts=
-s/releases/download/3.0.4/tpm2-tss-3.0.4.tar.gz
+Any insight would be appreciated.
+Thanks!
 
-Let me know if you would need any further information.
+--===============2319240803450572966==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-Regards
-Raj
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBpbjsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZvbnQt
+ZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE3DQoJe21zby1z
+dHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMt
+c2VyaWY7DQoJY29sb3I6d2luZG93dGV4dDt9DQouTXNvQ2hwRGVmYXVsdA0KCXttc28tc3R5bGUt
+dHlwZTpleHBvcnQtb25seTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQpA
+cGFnZSBXb3JkU2VjdGlvbjENCgl7c2l6ZTo4LjVpbiAxMS4waW47DQoJbWFyZ2luOjEuMGluIDEu
+MGluIDEuMGluIDEuMGluO30NCmRpdi5Xb3JkU2VjdGlvbjENCgl7cGFnZTpXb3JkU2VjdGlvbjE7
+fQ0KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlZGVmYXVsdHMg
+djpleHQ9ImVkaXQiIHNwaWRtYXg9IjEwMjYiIC8+DQo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lm
+IGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4NCjxvOmlkbWFw
+IHY6ZXh0PSJlZGl0IiBkYXRhPSIxIiAvPg0KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlm
+XS0tPg0KPC9oZWFkPg0KPGJvZHkgbGFuZz0iRU4tVVMiIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIj
+OTU0RjcyIiBzdHlsZT0id29yZC13cmFwOmJyZWFrLXdvcmQiPg0KPGRpdiBjbGFzcz0iV29yZFNl
+Y3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkhpLDxvOnA+PC9vOnA+PC9wPg0KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij5J4oCZbSB1c2luZyB0cG0yLXRvb2xzIDQuMS4xIG9uIFVidW50dSAyMC4wNC4mbmJzcDsgSeKA
+mW0gaXNzdWluZyB0aGUgZm9sbG93aW5nIGNvbW1hbmQgd2hpY2ggaXMgcmV0dXJuaW5nIGFuIGlu
+Y29uc2lzdGVudCBhdHRyaWJ1dGVzIGVycm9yOjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5ic2Np
+QGlwLTEwLTEzMi00Mi0yMjU6fiQgdHBtMl9udmRlZmluZSZuYnNwOyZuYnNwOyAweDEwMDAwMjUg
+LUMgcCAtcyAxPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5XQVJOSU5HOmVz
+eXM6c3JjL3RzczItZXN5cy9hcGkvRXN5c19OVl9EZWZpbmVTcGFjZS5jOjMzMzpFc3lzX05WX0Rl
+ZmluZVNwYWNlX0ZpbmlzaCgpIFJlY2VpdmVkIFRQTSBFcnJvcjxvOnA+PC9vOnA+PC9wPg0KPHAg
+Y2xhc3M9Ik1zb05vcm1hbCI+RVJST1I6ZXN5czpzcmMvdHNzMi1lc3lzL2FwaS9Fc3lzX05WX0Rl
+ZmluZVNwYWNlLmM6MTIyOkVzeXNfTlZfRGVmaW5lU3BhY2UoKSBFc3lzIEZpbmlzaCBFcnJvckNv
+ZGUgKDB4MDAwMDAxODIpPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5FUlJP
+UjogRmFpbGVkIHRvIGRlZmluZSBOViBhcmVhIGF0IGluZGV4IDB4MTAwMDAyNTxvOnA+PC9vOnA+
+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RVJST1I6IEVzeXNfTlZfRGVmaW5lU3BhY2UoMHgx
+ODIpIC0gdHBtOmhhbmRsZSgxKTppbmNvbnNpc3RlbnQgYXR0cmlidXRlczxvOnA+PC9vOnA+PC9w
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+RVJST1I6IFVuYWJsZSB0byBydW4gdHBtMl9udmRlZmlu
+ZTxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48
+L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5hbmQgeWVzLCBJIGFtIGF0dGVtcHRpbmcgdG8gZGVm
+aW5lIHRoZSBpbmRleCB1c2luZyB0aGUgcGxhdGZvcm0gaGllcmFyY2h5LiZuYnNwOw0KPHNwYW4g
+c3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O1NlZ29lIFVJIEVtb2ppJnF1b3Q7LHNhbnMtc2VyaWYi
+PiYjMTI4NTIyOzwvc3Bhbj4mbmJzcDsgVGhpcyBkb2VzIHdvcmsgdXNpbmcgdGhlIElCTSB1dGls
+aXRpZXMuJm5ic3A7DQo8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+
+Jm5ic3A7PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGVyZSBhcmUgdGhlIGN1cnJl
+bnQgcHJvcGVydGllczo8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+
+Jm5ic3A7PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+YnNjaUBpcC0xMC0xMzItNDIt
+MjI1On4kIHRwbTJfZ2V0Y2FwIHByb3BlcnRpZXMtdmFyaWFibGU8bzpwPjwvbzpwPjwvcD4NCjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPlRQTTJfUFRfUEVSU0lTVEVOVDo8bzpwPjwvbzpwPjwvcD4NCjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOyBvd25lckF1dGhTZXQ6Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7IDA8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOyBlbmRvcnNl
+bWVudEF1dGhTZXQ6Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDA8
+bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOyBsb2Nrb3V0QXV0aFNl
+dDombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsg
+Jm5ic3A7Jm5ic3A7MDxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7
+IHJlc2VydmVkMTombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgMDxvOnA+
+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7IGRpc2FibGVDbGVhcjombmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsgMDxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+Jm5ic3A7IGluTG9ja291dDombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsg
+MDxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7IHRwbUdlbmVyYXRl
+ZEVQUzombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsgMDxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7IHJl
+c2VydmVkMjombmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgMDxvOnA+PC9v
+OnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VFBNMl9QVF9TVEFSVFVQX0NMRUFSOjxvOnA+
+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7IHBoRW5hYmxlOiZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAxPG86cD48L286cD48L3A+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj4mbmJzcDsgc2hFbmFibGU6Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDE8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPiZuYnNwOyBlaEVuYWJsZTogJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7MTxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+Jm5ic3A7
+IHBoRW5hYmxlTlY6Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDE8bzpwPjwvbzpw
+PjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOyByZXNlcnZlZDE6Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDA8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPiZuYnNwOyBvcmRlcmx5OiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyAwPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij5UUE0yX1BUX0hSX05WX0lOREVYOiAweDY8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPlRQTTJfUFRfSFJfTE9BREVEOiAweDA8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPlRQTTJfUFRfSFJfTE9BREVEX0FWQUlMOiAweDM8bzpwPjwvbzpwPjwvcD4NCjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPlRQTTJfUFRfSFJfQUNUSVZFOiAweDA8bzpwPjwvbzpwPjwvcD4N
+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRQTTJfUFRfSFJfQUNUSVZFX0FWQUlMOiAweDQwPG86cD48
+L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UUE0yX1BUX0hSX1RSQU5TSUVOVF9BVkFJ
+TDogMHgzPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UUE0yX1BUX0hSX1BF
+UlNJU1RFTlQ6IDB4MDxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VFBNMl9Q
+VF9IUl9QRVJTSVNURU5UX0FWQUlMOiAweDExPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNv
+Tm9ybWFsIj5UUE0yX1BUX05WX0NPVU5URVJTOiAweDA8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNz
+PSJNc29Ob3JtYWwiPlRQTTJfUFRfTlZfQ09VTlRFUlNfQVZBSUw6IDB4RDxvOnA+PC9vOnA+PC9w
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VFBNMl9QVF9BTEdPUklUSE1fU0VUOiAweDA8bzpwPjwv
+bzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRQTTJfUFRfTE9BREVEX0NVUlZFUzogMHgy
+PG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UUE0yX1BUX0xPQ0tPVVRfQ09V
+TlRFUjogMHgwPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UUE0yX1BUX01B
+WF9BVVRIX0ZBSUw6IDB4MjA8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRQ
+TTJfUFRfTE9DS09VVF9JTlRFUlZBTDogMHgxQzIwPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0i
+TXNvTm9ybWFsIj5UUE0yX1BUX0xPQ0tPVVRfUkVDT1ZFUlk6IDB4MTUxODA8bzpwPjwvbzpwPjwv
+cD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRQTTJfUFRfQVVESVRfQ09VTlRFUl8wOiAweDA8bzpw
+PjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRQTTJfUFRfQVVESVRfQ09VTlRFUl8x
+OiAweDA8bzpwPjwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9v
+OnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+QW55IGluc2lnaHQgd291bGQgYmUgYXBwcmVj
+aWF0ZWQuJm5ic3A7IDxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhhbmtz
+ITxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
 
-On Fri, Dec 3, 2021 at 3:55 AM Roberts, William C <william.c.roberts(a)inte=
-l.com<mailto:william.c.roberts(a)intel.com>> wrote:
-> From: Rajkumar K Sivasamy <rajkumar.k.sivasamy(a)gmail.com<mailto:rajkuma=
-r.k.sivasamy(a)gmail.com>>
-> Sent: Thursday, December 2, 2021 2:41 PM
-> To: Roberts, William C <william.c.roberts(a)intel.com<mailto:william.c.ro=
-berts(a)intel.com>>
-> Cc: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org> <tpm2(a)lists.01.org<=
-mailto:tpm2(a)lists.01.org>>; Desai, Imran <imran.desai(a)intel.com<mailto:=
-imran.desai(a)intel.com>>
-> Subject: Re: [tpm2] "tpm2_import" Integrity Check issue on a Big Endian 3=
-2 Bit Platform
-
-> Hello William
-
-> I am using below versions:
-> tpm2-tss 3.1.0
-> tpm2-tools 5.2 2021-09-28
-
-> To further narrow down, I replaced tpm2-tss 3.1.0 with tpm2-tss 3.0.4 and=
- tpm2_import still failed with 0x3DF.
-
-> Now along with tpm2-tss- 3.0.4 I used tpm2-tools 5.2 and tpm2_import succ=
-eeds; seems to be a problem with tpm2-tools t.2 2021-09-28.
-
-I'm confused. I read both these lines as I used tpm2-tss 3.0.4 and tpm2-too=
-ls 5.2 and it succeeds and fails. Why are you putting dates on some of
-the tpm2-tools versions but not tpm2-tss?
-
-
-> Regards
-> Raj
-
->  On Thu, Dec 2, 2021 at 8:44 PM Roberts, William C <william.c.roberts(a)i=
-ntel.com<mailto:william.c.roberts(a)intel.com>> wrote:
-> + Imran
-
-> What version of tools and tss are you running?
-
-> I just noticed that the tools CI doesn't have the multi-arch images enabl=
-ed. Let me investigate adding this and see if I can reproduce.
-
-> From: Rajkumar K Sivasamy <rajkumar.k.sivasamy(a)gmail.com<mailto:rajkuma=
-r.k.sivasamy(a)gmail.com>>
-> Sent: Wednesday, December 1, 2021 11:40 PM
-> To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org> <tpm2(a)lists.01.org<=
-mailto:tpm2(a)lists.01.org>>
-> Subject: [tpm2] "tpm2_import" Integrity Check issue on a Big Endian 32 Bi=
-t Platform
-
-> Hello Team
-
-> I am trying to use tpm2_import on a Big Endian 32 Bit platform and runnin=
-g into following error:
-
-> -------------------------------------------------------------------------=
--------------------------------------------------------
-
-> Command:
-> openssl genrsa -out private.pem 2048
-> tpm2_import -C 0x81000001 -G rsa -i private.pem -u key.pub -r key.priv
-
-> Error:
-> ERROR:esys:src/tss2-esys/api/Esys_Import.c:110:Esys_Import() Esys Finish =
-ErrorCode (0x000003df)
-> ERROR: Esys_HMAC(0x3DF) - tpm:parameter(3):integrity check failed
-> ERROR: Unable to run tpm2_import
-> -------------------------------------------------------------------------=
--------------------------------------------------------
-
-> Need pointers to debug this issue.
-> Have any of you come across this error with tpm2_import on Big Endian 32 =
-Bit Platform? Do we have a fix Or can you provide inputs on the source wher=
-e I can look > at for further debugging?
-
-> Thanks
-> Raj
---===============7723151611223442044==--
+--===============2319240803450572966==--
 
