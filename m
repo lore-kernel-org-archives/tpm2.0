@@ -1,37 +1,111 @@
-Content-Type: multipart/mixed; boundary="===============5505714452068306812=="
+Content-Type: multipart/mixed; boundary="===============3718443388563693860=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RC] tpm2-pytss 1.0.0-rc0
-Date: Mon, 13 Dec 2021 23:34:35 +0000
-Message-ID: <SN6PR11MB34376DA90BD3CE01EE23C839B8749@SN6PR11MB3437.namprd11.prod.outlook.com>
+From: Han <keepsimple at gmail.com>
+Subject: [tpm2] How to remove contexts using tpm2-tools v3.1.3?
+Date: Wed, 15 Dec 2021 10:50:17 -0800
+Message-ID: <CAEjGaqcA-FmN2NGNkBqzuV_nRvqYBZ+JqQgxv8e8rWZ5X9=sQA@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5505714452068306812==
+--===============3718443388563693860==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi,
 
-I am pleased to announce the release of the tpm2-pytss (python bindings and=
- utilities) version 1.0.0 RC 0 with the following CHANGELOG:
+I'm new to tpm2-tools and am using tpm2-tools version 3.1.3 on Raspberry Pi
+CM4. It turns out it doesn't have tpm2_flushcontext which was added in
+v4.0. Is there any other tools in tpm2-tools 3.1.3 that can remove
+contexts? My goal is to free up some memory in TPM as it returned the
+following error:
 
-## [1.0.0-rc0] - 2021-12-13
-### Added
-- Bindings to the Enanced System (ESAPI) API.
-- Bindings to the Feature (FAPI) API .
-- Bindings to Dynamic TCTI Loading (TCTILdr) API .
-- Bindings to Marshalling and Unmarshalling (MU) API.
-- Bindings to rc-decode.
-- tpm2-tools context file loading support.
-- TSS2 PEM format support. This file format is used in OpenSSL Engine and P=
-rovider projects.
-- Utility routines for: TPM Less Make Credential, sensitive wrapping and un=
-wrapping (import and duplication helpers).
+$ tpm2_rc_decode 0x902
+error layer
+  hex: 0x0
+  identifier: TSS2_TPM_RC_LAYER
+  description: Error produced by the TPM
+format 0 warning code
+  hex: 0x02
+  name: TPM2_RC_OBJECT_MEMORY
+  description: out of memory for object contexts
 
-The release can be found here:
-  - https://pypi.org/project/tpm2-pytss/1.0.0rc0/
+--
 
---===============5505714452068306812==--
+Thanks
+
+Han
+
+--===============3718443388563693860==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGRpdiBkaXI9Imx0ciI+SGksPGRpdj48YnI+PC9kaXY+PGRpdj48c3BhbiBzdHlsZT0iZm9udC1m
+YW1pbHk6aW5oZXJpdDtmb250LXNpemU6MTVweDtmb250LXN0eWxlOmluaGVyaXQ7Zm9udC12YXJp
+YW50LWxpZ2F0dXJlczppbmhlcml0O2ZvbnQtdmFyaWFudC1jYXBzOmluaGVyaXQ7Zm9udC13ZWln
+aHQ6aW5oZXJpdDtjb2xvcjpyZ2IoMzUsMzgsNDEpIj5JJiMzOTttIG5ldyB0byB0cG0yLXRvb2xz
+IGFuZCBhbSB1c2luZyB0cG0yLXRvb2xzIHZlcnNpb24gMy4xLjMgb24gUmFzcGJlcnJ5IFBpIENN
+NC4gSXQgdHVybnMgb3V0IGl0IGRvZXNuJiMzOTt0IGhhdmU8L3NwYW4+PHNwYW4gc3R5bGU9ImZv
+bnQtZmFtaWx5OmluaGVyaXQ7Zm9udC1zaXplOjE1cHg7Zm9udC1zdHlsZTppbmhlcml0O2ZvbnQt
+dmFyaWFudC1saWdhdHVyZXM6aW5oZXJpdDtmb250LXZhcmlhbnQtY2Fwczppbmhlcml0O2ZvbnQt
+d2VpZ2h0OmluaGVyaXQ7Y29sb3I6cmdiKDM1LDM4LDQxKSI+wqA8L3NwYW4+PHNwYW4gc3R5bGU9
+ImZvbnQtZmFtaWx5OmluaGVyaXQ7Zm9udC1zdHlsZTppbmhlcml0O2ZvbnQtdmFyaWFudC1saWdh
+dHVyZXM6aW5oZXJpdDtmb250LXZhcmlhbnQtY2Fwczppbmhlcml0O2ZvbnQtd2VpZ2h0OmluaGVy
+aXQ7Y29sb3I6cmdiKDM1LDM4LDQxKTt3aGl0ZS1zcGFjZTpwcmUtd3JhcDtmb250LXNpemU6MTNw
+eCI+dHBtMl9mbHVzaGNvbnRleHQgPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LWZhbWlseTppbmhl
+cml0O2ZvbnQtc2l6ZToxNXB4O2ZvbnQtc3R5bGU6aW5oZXJpdDtmb250LXZhcmlhbnQtbGlnYXR1
+cmVzOmluaGVyaXQ7Zm9udC12YXJpYW50LWNhcHM6aW5oZXJpdDtmb250LXdlaWdodDppbmhlcml0
+O2NvbG9yOnJnYigzNSwzOCw0MSkiPndoaWNoIHdhcyBhZGRlZCBpbiB2NC4wLsKgPC9zcGFuPjxz
+cGFuIHN0eWxlPSJmb250LWZhbWlseTppbmhlcml0O2ZvbnQtc2l6ZToxNXB4O2ZvbnQtc3R5bGU6
+aW5oZXJpdDtmb250LXZhcmlhbnQtbGlnYXR1cmVzOmluaGVyaXQ7Zm9udC12YXJpYW50LWNhcHM6
+aW5oZXJpdDtmb250LXdlaWdodDppbmhlcml0O2NvbG9yOnJnYigzNSwzOCw0MSkiPklzIHRoZXJl
+IGFueSBvdGhlciB0b29scyBpbiB0cG0yLXRvb2xzIDMuMS4zIHRoYXQgY2FuIHJlbW92ZSBjb250
+ZXh0cz8gTXkgZ29hbCBpcyB0byBmcmVlIHVwIHNvbWUgbWVtb3J5IGluIFRQTSBhcyBpdCByZXR1
+cm5lZCB0aGUgZm9sbG93aW5nIGVycm9yOjwvc3Bhbj48L2Rpdj48ZGl2IGNsYXNzPSJnbWFpbC1w
+b3N0Y2VsbCBnbWFpbC1wb3N0LWxheW91dC0tcmlnaHQiIHN0eWxlPSJtYXJnaW46MHB4O3BhZGRp
+bmc6MHB4IDE2cHggMHB4IDBweDtib3JkZXI6MHB4O2ZvbnQtdmFyaWFudC1udW1lcmljOmluaGVy
+aXQ7Zm9udC12YXJpYW50LWVhc3QtYXNpYW46aW5oZXJpdDtmb250LXN0cmV0Y2g6aW5oZXJpdDts
+aW5lLWhlaWdodDppbmhlcml0O2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sJnF1b3Q7c3lzdGVt
+LXVpJnF1b3Q7LCZxdW90O1NlZ29lIFVJJnF1b3Q7LCZxdW90O0xpYmVyYXRpb24gU2FucyZxdW90
+OyxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxM3B4O3ZlcnRpY2FsLWFsaWduOnRvcDtib3gtc2l6aW5n
+OmluaGVyaXQ7d2lkdGg6YXV0bzttaW4td2lkdGg6MHB4O2NvbG9yOnJnYigzNSwzOCw0MSkiPjxk
+aXYgY2xhc3M9ImdtYWlsLXMtcHJvc2UgZ21haWwtanMtcG9zdC1ib2R5IiBzdHlsZT0ibWFyZ2lu
+OjBweDtwYWRkaW5nOjBweDtib3JkZXI6MHB4O2ZvbnQtc3R5bGU6aW5oZXJpdDtmb250LXZhcmlh
+bnQ6aW5oZXJpdDtmb250LXdlaWdodDppbmhlcml0O2ZvbnQtc3RyZXRjaDppbmhlcml0O2ZvbnQt
+c2l6ZToxNXB4O3ZlcnRpY2FsLWFsaWduOmJhc2VsaW5lO2JveC1zaXppbmc6aW5oZXJpdDt3aWR0
+aDo2NTlweCI+PHByZSBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHg7cGFk
+ZGluZzoxMnB4O2JvcmRlcjowcHg7Zm9udC1zdHlsZTppbmhlcml0O2ZvbnQtdmFyaWFudDppbmhl
+cml0O2ZvbnQtd2VpZ2h0OmluaGVyaXQ7Zm9udC1zdHJldGNoOmluaGVyaXQ7bGluZS1oZWlnaHQ6
+MS4zMDc2OTtmb250LXNpemU6MTNweDt2ZXJ0aWNhbC1hbGlnbjpiYXNlbGluZTtib3gtc2l6aW5n
+OmluaGVyaXQ7d2lkdGg6YXV0bzttYXgtaGVpZ2h0OjYwMHB4O292ZXJmbG93OmF1dG87Ym9yZGVy
+LXJhZGl1czo1cHgiPjxjb2RlIHN0eWxlPSJtYXJnaW46MHB4O3BhZGRpbmc6MHB4O2JvcmRlcjow
+cHg7Zm9udC1zdHlsZTppbmhlcml0O2ZvbnQtdmFyaWFudDppbmhlcml0O2ZvbnQtd2VpZ2h0Omlu
+aGVyaXQ7Zm9udC1zdHJldGNoOmluaGVyaXQ7bGluZS1oZWlnaHQ6aW5oZXJpdDt2ZXJ0aWNhbC1h
+bGlnbjpiYXNlbGluZTtib3gtc2l6aW5nOmluaGVyaXQ7YmFja2dyb3VuZC1jb2xvcjp0cmFuc3Bh
+cmVudDt3aGl0ZS1zcGFjZTppbmhlcml0O2JvcmRlci1yYWRpdXM6MHB4Ij4kIHRwbTJfcmNfZGVj
+b2RlIDB4OTAyCmVycm9yIGxheWVyCiAgaGV4OiAweDAKICBpZGVudGlmaWVyOiBUU1MyX1RQTV9S
+Q19MQVlFUgogIGRlc2NyaXB0aW9uOiBFcnJvciBwcm9kdWNlZCBieSB0aGUgVFBNCmZvcm1hdCAw
+IHdhcm5pbmcgY29kZQogIGhleDogMHgwMgogIG5hbWU6IFRQTTJfUkNfT0JKRUNUX01FTU9SWQog
+IGRlc2NyaXB0aW9uOiBvdXQgb2YgbWVtb3J5IGZvciBvYmplY3QgY29udGV4dHM8L2NvZGU+PC9w
+cmU+PHByZSBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTowcHg7cGFkZGluZzox
+MnB4O2JvcmRlcjowcHg7Zm9udC1zdHlsZTppbmhlcml0O2ZvbnQtdmFyaWFudDppbmhlcml0O2Zv
+bnQtd2VpZ2h0OmluaGVyaXQ7Zm9udC1zdHJldGNoOmluaGVyaXQ7bGluZS1oZWlnaHQ6MS4zMDc2
+OTtmb250LXNpemU6MTNweDt2ZXJ0aWNhbC1hbGlnbjpiYXNlbGluZTtib3gtc2l6aW5nOmluaGVy
+aXQ7d2lkdGg6YXV0bzttYXgtaGVpZ2h0OjYwMHB4O292ZXJmbG93OmF1dG87Ym9yZGVyLXJhZGl1
+czo1cHgiPi0tPC9wcmU+PHByZSBzdHlsZT0ibWFyZ2luLXRvcDowcHg7bWFyZ2luLWJvdHRvbTow
+cHg7cGFkZGluZzoxMnB4O2JvcmRlcjowcHg7Zm9udC1zdHlsZTppbmhlcml0O2ZvbnQtdmFyaWFu
+dDppbmhlcml0O2ZvbnQtd2VpZ2h0OmluaGVyaXQ7Zm9udC1zdHJldGNoOmluaGVyaXQ7bGluZS1o
+ZWlnaHQ6MS4zMDc2OTtmb250LXNpemU6MTNweDt2ZXJ0aWNhbC1hbGlnbjpiYXNlbGluZTtib3gt
+c2l6aW5nOmluaGVyaXQ7d2lkdGg6YXV0bzttYXgtaGVpZ2h0OjYwMHB4O292ZXJmbG93OmF1dG87
+Ym9yZGVyLXJhZGl1czo1cHgiPlRoYW5rczwvcHJlPjxwcmUgc3R5bGU9Im1hcmdpbi10b3A6MHB4
+O21hcmdpbi1ib3R0b206MHB4O3BhZGRpbmc6MTJweDtib3JkZXI6MHB4O2ZvbnQtc3R5bGU6aW5o
+ZXJpdDtmb250LXZhcmlhbnQ6aW5oZXJpdDtmb250LXdlaWdodDppbmhlcml0O2ZvbnQtc3RyZXRj
+aDppbmhlcml0O2xpbmUtaGVpZ2h0OjEuMzA3Njk7Zm9udC1zaXplOjEzcHg7dmVydGljYWwtYWxp
+Z246YmFzZWxpbmU7Ym94LXNpemluZzppbmhlcml0O3dpZHRoOmF1dG87bWF4LWhlaWdodDo2MDBw
+eDtvdmVyZmxvdzphdXRvO2JvcmRlci1yYWRpdXM6NXB4Ij5IYW48L3ByZT48L2Rpdj48L2Rpdj48
+L2Rpdj4K
+
+--===============3718443388563693860==--
 
