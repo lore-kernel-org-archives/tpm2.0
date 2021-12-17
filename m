@@ -1,65 +1,99 @@
-Content-Type: multipart/mixed; boundary="===============5704916848336005457=="
+Content-Type: multipart/mixed; boundary="===============0281912487766810186=="
 MIME-Version: 1.0
-From: Han <keepsimple at gmail.com>
-Subject: [tpm2] tpm2_flushcontext stuck
-Date: Wed, 15 Dec 2021 15:56:49 -0800
-Message-ID: <CAEjGaqfmSV=OZRVkPCgAXP6Mp38C6+8OFUeQNuB5vz86zyu3bg@mail.gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: tpm2_flushcontext stuck
+Date: Fri, 17 Dec 2021 18:29:00 +0000
+Message-ID: <SN6PR11MB3437BA49ADAA8D5EF6AAC934B8789@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: CAEjGaqfmSV=OZRVkPCgAXP6Mp38C6+8OFUeQNuB5vz86zyu3bg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5704916848336005457==
+--===============0281912487766810186==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+That's weird, could you strace it and see where it's hanging?
+
+What kernel version is that? I'm assuming your using the /dev/tpm0 or /dev/=
+tpmrm0 device directly since I see the sudo.
+________________________________
+From: Han <keepsimple(a)gmail.com>
+Sent: Wednesday, December 15, 2021 5:56 PM
+To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+Subject: [tpm2] tpm2_flushcontext stuck
+
 Hi,
 
-I'm using tpm2-tools 5.0 in Debian 11 Bullseye based Raspberry Pi OS.  I'm
-trying to run tpm2_flushcontext but the command got stuck and it's not
-showing anything. Is the data in TPM corrupted?  How can I check?
+I'm using tpm2-tools 5.0 in Debian 11 Bullseye based Raspberry Pi OS.  I'm =
+trying to run tpm2_flushcontext but the command got stuck and it's not show=
+ing anything. Is the data in TPM corrupted?  How can I check?
 
 $ sudo tpm2_flushcontext 0x80000000
 < no output at all and stuck here >
 
-(note: the handle 0x80000000 was obtained from previous command output when
-I was running previous version tpm2-tools 3.1.3 on Debian 10 Buster based
+(note: the handle 0x80000000 was obtained from previous command output when=
+ I was running previous version tpm2-tools 3.1.3 on Debian 10 Buster based =
 OS:
+
 
 $ sudo tpm2_createprimary -H o -g sha256 -G ecc -C context.out
 ObjectAttribute: 0x00030072
 
 CreatePrimary Succeed ! Handle: 0x80000000)
 
---===============5704916848336005457==
+--===============0281912487766810186==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGRpdiBkaXI9Imx0ciI+SGksPGRpdj48YnI+PC9kaXY+PGRpdj5JJiMzOTttIHVzaW5nIHRwbTIt
-dG9vbHMgNS4wIGluIERlYmlhbiAxMSBCdWxsc2V5ZSBiYXNlZCBSYXNwYmVycnkgUGkgT1MuwqAg
-SSYjMzk7bSB0cnlpbmcgdG8gcnVuwqB0cG0yX2ZsdXNoY29udGV4dCBidXQgdGhlIGNvbW1hbmQg
-Z290IHN0dWNrIGFuZCBpdCYjMzk7cyBub3Qgc2hvd2luZyBhbnl0aGluZy4gSXMgdGhlIGRhdGEg
-aW4gVFBNIGNvcnJ1cHRlZD/CoCBIb3cgY2FuIEkgY2hlY2s/wqA8L2Rpdj48ZGl2Pjxicj48L2Rp
-dj48ZGl2PiQgc3VkbyB0cG0yX2ZsdXNoY29udGV4dCAweDgwMDAwMDAwPGJyPjwvZGl2PjxkaXY+
-Jmx0OyBubyBvdXRwdXQgYXQgYWxsIGFuZCBzdHVjayBoZXJlICZndDs8L2Rpdj48ZGl2Pjxicj48
-L2Rpdj48ZGl2Pihub3RlOiB0aGUgaGFuZGxlIDB4ODAwMDAwMDAgd2FzIG9idGFpbmVkIGZyb20g
-cHJldmlvdXMgY29tbWFuZCBvdXRwdXQgd2hlbiBJIHdhcyBydW5uaW5nIHByZXZpb3VzIHZlcnNp
-b24gdHBtMi10b29scyAzLjEuMyBvbiBEZWJpYW4gMTAgQnVzdGVyIGJhc2VkIE9TOsKgPC9kaXY+
-PGRpdj48YnI+PC9kaXY+PGRpdj48cHJlIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7Zm9u
-dC1mYW1pbHk6dWktbW9ub3NwYWNlLFNGTW9uby1SZWd1bGFyLCZxdW90O1NGIE1vbm8mcXVvdDss
-TWVubG8sQ29uc29sYXMsJnF1b3Q7TGliZXJhdGlvbiBNb25vJnF1b3Q7LG1vbm9zcGFjZTtmb250
-LXNpemU6MTEuOXB4O21hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MTZweDtwYWRkaW5nOjE2
-cHg7b3ZlcmZsb3c6YXV0bztsaW5lLWhlaWdodDoxLjQ1O2JvcmRlci1yYWRpdXM6NnB4O2NvbG9y
-OnJnYigzNiw0MSw0NykiPjxjb2RlIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7Zm9udC1m
-YW1pbHk6dWktbW9ub3NwYWNlLFNGTW9uby1SZWd1bGFyLCZxdW90O1NGIE1vbm8mcXVvdDssTWVu
-bG8sQ29uc29sYXMsJnF1b3Q7TGliZXJhdGlvbiBNb25vJnF1b3Q7LG1vbm9zcGFjZTtmb250LXNp
-emU6MTEuOXB4O3BhZGRpbmc6MHB4O21hcmdpbjowcHg7YmFja2dyb3VuZDp0cmFuc3BhcmVudDti
-b3JkZXItcmFkaXVzOjZweDt3b3JkLWJyZWFrOm5vcm1hbDtib3JkZXI6MHB4O2Rpc3BsYXk6aW5s
-aW5lO292ZXJmbG93OnZpc2libGU7bGluZS1oZWlnaHQ6aW5oZXJpdCI+JCBzdWRvIHRwbTJfY3Jl
-YXRlcHJpbWFyeSAtSCBvIC1nIHNoYTI1NiAtRyBlY2MgLUMgY29udGV4dC5vdXQKT2JqZWN0QXR0
-cmlidXRlOiAweDAwMDMwMDcyCgpDcmVhdGVQcmltYXJ5IFN1Y2NlZWQgISBIYW5kbGU6IDB4ODAw
-MDAwMDApIDwvY29kZT48L3ByZT48L2Rpdj48L2Rpdj4K
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
+ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
+ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
+YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
+OiByZ2IoMCwgMCwgMCk7Ij4KVGhhdCdzIHdlaXJkLCBjb3VsZCB5b3Ugc3RyYWNlIGl0IGFuZCBz
+ZWUgd2hlcmUgaXQncyBoYW5naW5nPzwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2Fs
+aWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xv
+cjogcmdiKDAsIDAsIDApOyI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBD
+YWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNv
+bG9yOiByZ2IoMCwgMCwgMCk7Ij4KV2hhdCBrZXJuZWwgdmVyc2lvbiBpcyB0aGF0PyBJJ20gYXNz
+dW1pbmcgeW91ciB1c2luZyB0aGUgL2Rldi90cG0wIG9yIC9kZXYvdHBtcm0wIGRldmljZSBkaXJl
+Y3RseSBzaW5jZSBJIHNlZSB0aGUgc3Vkby48L2Rpdj4KPGRpdiBpZD0iYXBwZW5kb25zZW5kIj48
+L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3aWR0aDo5OCUiIHRhYmluZGV4
+PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRyIj48Zm9udCBmYWNlPSJDYWxp
+YnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQiIGNvbG9yPSIjMDAwMDAwIj48
+Yj5Gcm9tOjwvYj4gSGFuICZsdDtrZWVwc2ltcGxlQGdtYWlsLmNvbSZndDs8YnI+CjxiPlNlbnQ6
+PC9iPiBXZWRuZXNkYXksIERlY2VtYmVyIDE1LCAyMDIxIDU6NTYgUE08YnI+CjxiPlRvOjwvYj4g
+dHBtMkBsaXN0cy4wMS5vcmcgJmx0O3RwbTJAbGlzdHMuMDEub3JnJmd0Ozxicj4KPGI+U3ViamVj
+dDo8L2I+IFt0cG0yXSB0cG0yX2ZsdXNoY29udGV4dCBzdHVjazwvZm9udD4KPGRpdj4mbmJzcDs8
+L2Rpdj4KPC9kaXY+CjxkaXY+CjxkaXYgZGlyPSJsdHIiPkhpLAo8ZGl2Pjxicj4KPC9kaXY+Cjxk
+aXY+SSdtIHVzaW5nIHRwbTItdG9vbHMgNS4wIGluIERlYmlhbiAxMSBCdWxsc2V5ZSBiYXNlZCBS
+YXNwYmVycnkgUGkgT1MuJm5ic3A7IEknbSB0cnlpbmcgdG8gcnVuJm5ic3A7dHBtMl9mbHVzaGNv
+bnRleHQgYnV0IHRoZSBjb21tYW5kIGdvdCBzdHVjayBhbmQgaXQncyBub3Qgc2hvd2luZyBhbnl0
+aGluZy4gSXMgdGhlIGRhdGEgaW4gVFBNIGNvcnJ1cHRlZD8mbmJzcDsgSG93IGNhbiBJIGNoZWNr
+PyZuYnNwOzwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+JCBzdWRvIHRwbTJfZmx1c2hjb250
+ZXh0IDB4ODAwMDAwMDA8YnI+CjwvZGl2Pgo8ZGl2PiZsdDsgbm8gb3V0cHV0IGF0IGFsbCBhbmQg
+c3R1Y2sgaGVyZSAmZ3Q7PC9kaXY+CjxkaXY+PGJyPgo8L2Rpdj4KPGRpdj4obm90ZTogdGhlIGhh
+bmRsZSAweDgwMDAwMDAwIHdhcyBvYnRhaW5lZCBmcm9tIHByZXZpb3VzIGNvbW1hbmQgb3V0cHV0
+IHdoZW4gSSB3YXMgcnVubmluZyBwcmV2aW91cyB2ZXJzaW9uIHRwbTItdG9vbHMgMy4xLjMgb24g
+RGViaWFuIDEwIEJ1c3RlciBiYXNlZCBPUzombmJzcDs8L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8
+ZGl2Pgo8cHJlIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7IGZvbnQtZmFtaWx5OnVpLW1v
+bm9zcGFjZSxTRk1vbm8tUmVndWxhciwmcXVvdDtTRiBNb25vJnF1b3Q7LE1lbmxvLENvbnNvbGFz
+LCZxdW90O0xpYmVyYXRpb24gTW9ubyZxdW90Oyxtb25vc3BhY2U7IGZvbnQtc2l6ZToxMS45cHg7
+IG1hcmdpbi10b3A6MHB4OyBtYXJnaW4tYm90dG9tOjE2cHg7IHBhZGRpbmc6MTZweDsgb3ZlcmZs
+b3c6YXV0bzsgbGluZS1oZWlnaHQ6MS40NTsgYm9yZGVyLXJhZGl1czo2cHg7IGNvbG9yOnJnYigz
+Niw0MSw0NykiPjxjb2RlIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7IGZvbnQtZmFtaWx5
+OnVpLW1vbm9zcGFjZSxTRk1vbm8tUmVndWxhciwmcXVvdDtTRiBNb25vJnF1b3Q7LE1lbmxvLENv
+bnNvbGFzLCZxdW90O0xpYmVyYXRpb24gTW9ubyZxdW90Oyxtb25vc3BhY2U7IGZvbnQtc2l6ZTox
+MS45cHg7IHBhZGRpbmc6MHB4OyBtYXJnaW46MHB4OyBiYWNrZ3JvdW5kOnRyYW5zcGFyZW50OyBi
+b3JkZXItcmFkaXVzOjZweDsgd29yZC1icmVhazpub3JtYWw7IGJvcmRlcjowcHg7IGRpc3BsYXk6
+aW5saW5lOyBvdmVyZmxvdzp2aXNpYmxlOyBsaW5lLWhlaWdodDppbmhlcml0Ij4kIHN1ZG8gdHBt
+Ml9jcmVhdGVwcmltYXJ5IC1IIG8gLWcgc2hhMjU2IC1HIGVjYyAtQyBjb250ZXh0Lm91dApPYmpl
+Y3RBdHRyaWJ1dGU6IDB4MDAwMzAwNzIKCkNyZWF0ZVByaW1hcnkgU3VjY2VlZCAhIEhhbmRsZTog
+MHg4MDAwMDAwMCkgPC9jb2RlPjwvcHJlPgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2JvZHk+Cjwv
+aHRtbD4K
 
---===============5704916848336005457==--
+--===============0281912487766810186==--
 
