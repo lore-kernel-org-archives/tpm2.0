@@ -1,99 +1,210 @@
-Content-Type: multipart/mixed; boundary="===============0281912487766810186=="
+Content-Type: multipart/mixed; boundary="===============7725415610040889560=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: Han <keepsimple at gmail.com>
 Subject: [tpm2] Re: tpm2_flushcontext stuck
-Date: Fri, 17 Dec 2021 18:29:00 +0000
-Message-ID: <SN6PR11MB3437BA49ADAA8D5EF6AAC934B8789@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: CAEjGaqfmSV=OZRVkPCgAXP6Mp38C6+8OFUeQNuB5vz86zyu3bg@mail.gmail.com
+Date: Fri, 17 Dec 2021 12:04:23 -0800
+Message-ID: <CAEjGaqdLPaUicAeW-84_C2RRBvkPfXpufsQT_9zCHZf323303g@mail.gmail.com>
+In-Reply-To: SN6PR11MB3437BA49ADAA8D5EF6AAC934B8789@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0281912487766810186==
+--===============7725415610040889560==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-That's weird, could you strace it and see where it's hanging?
+It seems stuck in a call of `poll()` at fd 3, which is /dev/tpmrm0 based on
+the log (see below).  The kernel version is 5.10.63.  Yes, I am using
+/dev/tpm0 and /dev/tpmrm0.
 
-What kernel version is that? I'm assuming your using the /dev/tpm0 or /dev/=
-tpmrm0 device directly since I see the sudo.
-________________________________
-From: Han <keepsimple(a)gmail.com>
-Sent: Wednesday, December 15, 2021 5:56 PM
-To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
-Subject: [tpm2] tpm2_flushcontext stuck
+$ sudo strace tpm2_flushcontext 0x80000000
 
-Hi,
+<snip>
 
-I'm using tpm2-tools 5.0 in Debian 11 Bullseye based Raspberry Pi OS.  I'm =
-trying to run tpm2_flushcontext but the command got stuck and it's not show=
-ing anything. Is the data in TPM corrupted?  How can I check?
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_LARGEFILE|O_CLOEXEC) =3D 3
+fstat64(3, {st_mode=3DS_IFREG|0644, st_size=3D72845, ...}) =3D 0
+mmap2(NULL, 72845, PROT_READ, MAP_PRIVATE, 3, 0) =3D 0xb6f74000
+close(3)                                =3D 0
+openat(AT_FDCWD, "/lib/arm-linux-gnueabihf/libtss2-tcti-device.so.0",
+O_RDONLY|O_LARGEFILE|O_CLOEXEC) =3D 3
+read(3,
+"\177ELF\1\1\1\0\0\0\0\0\0\0\0\0\3\0(\0\1\0\0\08\n\0\0004\0\0\0"..., 512) =
+=3D
+512
+fstat64(3, {st_mode=3DS_IFREG|0644, st_size=3D22028, ...}) =3D 0
+mmap2(NULL, 86236, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) =
+=3D
+0xb5f22000
+mprotect(0xb5f27000, 61440, PROT_NONE)  =3D 0
+mmap2(0xb5f36000, 8192, PROT_READ|PROT_WRITE,
+MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x4000) =3D 0xb5f36000
+close(3)                                =3D 0
+mprotect(0xb5f36000, 4096, PROT_READ)   =3D 0
+munmap(0xb6f74000, 72845)               =3D 0
+openat(AT_FDCWD, "/dev/tpmrm0", O_RDWR|O_NONBLOCK) =3D 3
+write(3, "\200\1\0\0\0\f\0\0\1{\0\10", 12) =3D 12
+poll([{fd=3D3, events=3DPOLLIN}], 1, 1000)  =3D 1 ([{fd=3D3, revents=3DPOLL=
+IN}])
+read(3, "\200\1\0\0\0\24\0\0\0\0", 10)  =3D 10
+poll([{fd=3D3, events=3DPOLLIN}], 1, 1000)  =3D 1 ([{fd=3D3, revents=3DPOLL=
+IN}])
+read(3, "\0\10Z\314k~c`I\346", 10)      =3D 10
+futex(0xb6e7d35c, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7d360, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7d364, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7d380, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7ac9c, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7d280, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7b224, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7ad20, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+brk(0xda2000)                           =3D 0xda2000
+futex(0xb6e7d368, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7d384, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7d3f8, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7d36c, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+futex(0xb6e7d370, FUTEX_WAKE_PRIVATE, 2147483647) =3D 0
+write(3, "\200\1\0\0\0\16\0\0\1s\200\0\0\0", 14) =3D 14
+poll([{fd=3D3, events=3DPOLLIN}], 1, -1
 
-$ sudo tpm2_flushcontext 0x80000000
-< no output at all and stuck here >
-
-(note: the handle 0x80000000 was obtained from previous command output when=
- I was running previous version tpm2-tools 3.1.3 on Debian 10 Buster based =
-OS:
 
 
-$ sudo tpm2_createprimary -H o -g sha256 -G ecc -C context.out
-ObjectAttribute: 0x00030072
+On Fri, Dec 17, 2021 at 10:29 AM Roberts, William C <
+william.c.roberts(a)intel.com> wrote:
 
-CreatePrimary Succeed ! Handle: 0x80000000)
+> That's weird, could you strace it and see where it's hanging?
+>
+> What kernel version is that? I'm assuming your using the /dev/tpm0 or
+> /dev/tpmrm0 device directly since I see the sudo.
+> ------------------------------
+> *From:* Han <keepsimple(a)gmail.com>
+> *Sent:* Wednesday, December 15, 2021 5:56 PM
+> *To:* tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+> *Subject:* [tpm2] tpm2_flushcontext stuck
+>
+> Hi,
+>
+> I'm using tpm2-tools 5.0 in Debian 11 Bullseye based Raspberry Pi OS.  I'm
+> trying to run tpm2_flushcontext but the command got stuck and it's not
+> showing anything. Is the data in TPM corrupted?  How can I check?
+>
+> $ sudo tpm2_flushcontext 0x80000000
+> < no output at all and stuck here >
+>
+> (note: the handle 0x80000000 was obtained from previous command output
+> when I was running previous version tpm2-tools 3.1.3 on Debian 10 Buster
+> based OS:
+>
+> $ sudo tpm2_createprimary -H o -g sha256 -G ecc -C context.out
+> ObjectAttribute: 0x00030072
+>
+> CreatePrimary Succeed ! Handle: 0x80000000)
+>
+>
 
---===============0281912487766810186==
+--===============7725415610040889560==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
-ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
-ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7Ij4KVGhhdCdzIHdlaXJkLCBjb3VsZCB5b3Ugc3RyYWNlIGl0IGFuZCBz
-ZWUgd2hlcmUgaXQncyBoYW5naW5nPzwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2Fs
-aWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xv
-cjogcmdiKDAsIDAsIDApOyI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBD
-YWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNv
-bG9yOiByZ2IoMCwgMCwgMCk7Ij4KV2hhdCBrZXJuZWwgdmVyc2lvbiBpcyB0aGF0PyBJJ20gYXNz
-dW1pbmcgeW91ciB1c2luZyB0aGUgL2Rldi90cG0wIG9yIC9kZXYvdHBtcm0wIGRldmljZSBkaXJl
-Y3RseSBzaW5jZSBJIHNlZSB0aGUgc3Vkby48L2Rpdj4KPGRpdiBpZD0iYXBwZW5kb25zZW5kIj48
-L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3aWR0aDo5OCUiIHRhYmluZGV4
-PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRyIj48Zm9udCBmYWNlPSJDYWxp
-YnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQiIGNvbG9yPSIjMDAwMDAwIj48
-Yj5Gcm9tOjwvYj4gSGFuICZsdDtrZWVwc2ltcGxlQGdtYWlsLmNvbSZndDs8YnI+CjxiPlNlbnQ6
-PC9iPiBXZWRuZXNkYXksIERlY2VtYmVyIDE1LCAyMDIxIDU6NTYgUE08YnI+CjxiPlRvOjwvYj4g
-dHBtMkBsaXN0cy4wMS5vcmcgJmx0O3RwbTJAbGlzdHMuMDEub3JnJmd0Ozxicj4KPGI+U3ViamVj
-dDo8L2I+IFt0cG0yXSB0cG0yX2ZsdXNoY29udGV4dCBzdHVjazwvZm9udD4KPGRpdj4mbmJzcDs8
-L2Rpdj4KPC9kaXY+CjxkaXY+CjxkaXYgZGlyPSJsdHIiPkhpLAo8ZGl2Pjxicj4KPC9kaXY+Cjxk
-aXY+SSdtIHVzaW5nIHRwbTItdG9vbHMgNS4wIGluIERlYmlhbiAxMSBCdWxsc2V5ZSBiYXNlZCBS
-YXNwYmVycnkgUGkgT1MuJm5ic3A7IEknbSB0cnlpbmcgdG8gcnVuJm5ic3A7dHBtMl9mbHVzaGNv
-bnRleHQgYnV0IHRoZSBjb21tYW5kIGdvdCBzdHVjayBhbmQgaXQncyBub3Qgc2hvd2luZyBhbnl0
-aGluZy4gSXMgdGhlIGRhdGEgaW4gVFBNIGNvcnJ1cHRlZD8mbmJzcDsgSG93IGNhbiBJIGNoZWNr
-PyZuYnNwOzwvZGl2Pgo8ZGl2Pjxicj4KPC9kaXY+CjxkaXY+JCBzdWRvIHRwbTJfZmx1c2hjb250
-ZXh0IDB4ODAwMDAwMDA8YnI+CjwvZGl2Pgo8ZGl2PiZsdDsgbm8gb3V0cHV0IGF0IGFsbCBhbmQg
-c3R1Y2sgaGVyZSAmZ3Q7PC9kaXY+CjxkaXY+PGJyPgo8L2Rpdj4KPGRpdj4obm90ZTogdGhlIGhh
-bmRsZSAweDgwMDAwMDAwIHdhcyBvYnRhaW5lZCBmcm9tIHByZXZpb3VzIGNvbW1hbmQgb3V0cHV0
-IHdoZW4gSSB3YXMgcnVubmluZyBwcmV2aW91cyB2ZXJzaW9uIHRwbTItdG9vbHMgMy4xLjMgb24g
-RGViaWFuIDEwIEJ1c3RlciBiYXNlZCBPUzombmJzcDs8L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8
-ZGl2Pgo8cHJlIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7IGZvbnQtZmFtaWx5OnVpLW1v
-bm9zcGFjZSxTRk1vbm8tUmVndWxhciwmcXVvdDtTRiBNb25vJnF1b3Q7LE1lbmxvLENvbnNvbGFz
-LCZxdW90O0xpYmVyYXRpb24gTW9ubyZxdW90Oyxtb25vc3BhY2U7IGZvbnQtc2l6ZToxMS45cHg7
-IG1hcmdpbi10b3A6MHB4OyBtYXJnaW4tYm90dG9tOjE2cHg7IHBhZGRpbmc6MTZweDsgb3ZlcmZs
-b3c6YXV0bzsgbGluZS1oZWlnaHQ6MS40NTsgYm9yZGVyLXJhZGl1czo2cHg7IGNvbG9yOnJnYigz
-Niw0MSw0NykiPjxjb2RlIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7IGZvbnQtZmFtaWx5
-OnVpLW1vbm9zcGFjZSxTRk1vbm8tUmVndWxhciwmcXVvdDtTRiBNb25vJnF1b3Q7LE1lbmxvLENv
-bnNvbGFzLCZxdW90O0xpYmVyYXRpb24gTW9ubyZxdW90Oyxtb25vc3BhY2U7IGZvbnQtc2l6ZTox
-MS45cHg7IHBhZGRpbmc6MHB4OyBtYXJnaW46MHB4OyBiYWNrZ3JvdW5kOnRyYW5zcGFyZW50OyBi
-b3JkZXItcmFkaXVzOjZweDsgd29yZC1icmVhazpub3JtYWw7IGJvcmRlcjowcHg7IGRpc3BsYXk6
-aW5saW5lOyBvdmVyZmxvdzp2aXNpYmxlOyBsaW5lLWhlaWdodDppbmhlcml0Ij4kIHN1ZG8gdHBt
-Ml9jcmVhdGVwcmltYXJ5IC1IIG8gLWcgc2hhMjU2IC1HIGVjYyAtQyBjb250ZXh0Lm91dApPYmpl
-Y3RBdHRyaWJ1dGU6IDB4MDAwMzAwNzIKCkNyZWF0ZVByaW1hcnkgU3VjY2VlZCAhIEhhbmRsZTog
-MHg4MDAwMDAwMCkgPC9jb2RlPjwvcHJlPgo8L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2JvZHk+Cjwv
-aHRtbD4K
+PGRpdiBkaXI9Imx0ciI+SXQgc2VlbXMgc3R1Y2sgaW4gYSBjYWxsIG9mIGBwb2xsKClgIGF0IGZk
+IDMsIHdoaWNoIGlzIC9kZXYvdHBtcm0wwqBiYXNlZCBvbiB0aGUgbG9nIChzZWUgYmVsb3cpLsKg
+IFRoZSBrZXJuZWwgdmVyc2lvbiBpc8KgNS4xMC42My7CoCBZZXMsIEkgYW0gdXNpbmcgL2Rldi90
+cG0wIGFuZCAvZGV2L3RwbXJtMC7CoMKgPGRpdj48YnI+PC9kaXY+PGRpdj4kIHN1ZG8gc3RyYWNl
+IHRwbTJfZmx1c2hjb250ZXh0IDB4ODAwMDAwMDA8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PiZs
+dDtzbmlwJmd0OzwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+b3BlbmF0KEFUX0ZEQ1dELCAmcXVv
+dDsvZXRjL2xkLnNvLmNhY2hlJnF1b3Q7LCBPX1JET05MWXxPX0xBUkdFRklMRXxPX0NMT0VYRUMp
+ID0gMzxicj5mc3RhdDY0KDMsIHtzdF9tb2RlPVNfSUZSRUd8MDY0NCwgc3Rfc2l6ZT03Mjg0NSwg
+Li4ufSkgPSAwPGJyPm1tYXAyKE5VTEwsIDcyODQ1LCBQUk9UX1JFQUQsIE1BUF9QUklWQVRFLCAz
+LCAwKSA9IDB4YjZmNzQwMDA8YnI+Y2xvc2UoMykgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqA9IDA8YnI+b3BlbmF0KEFUX0ZEQ1dELCAmcXVvdDsvbGliL2Fy
+bS1saW51eC1nbnVlYWJpaGYvbGlidHNzMi10Y3RpLWRldmljZS5zby4wJnF1b3Q7LCBPX1JET05M
+WXxPX0xBUkdFRklMRXxPX0NMT0VYRUMpID0gMzxicj5yZWFkKDMsICZxdW90O1wxNzdFTEZcMVwx
+XDFcMFwwXDBcMFwwXDBcMFwwXDBcM1wwKFwwXDFcMFwwXDA4XG5cMFwwMDA0XDBcMFwwJnF1b3Q7
+Li4uLCA1MTIpID0gNTEyPGJyPmZzdGF0NjQoMywge3N0X21vZGU9U19JRlJFR3wwNjQ0LCBzdF9z
+aXplPTIyMDI4LCAuLi59KSA9IDA8YnI+bW1hcDIoTlVMTCwgODYyMzYsIFBST1RfUkVBRHxQUk9U
+X0VYRUMsIE1BUF9QUklWQVRFfE1BUF9ERU5ZV1JJVEUsIDMsIDApID0gMHhiNWYyMjAwMDxicj5t
+cHJvdGVjdCgweGI1ZjI3MDAwLCA2MTQ0MCwgUFJPVF9OT05FKSDCoD0gMDxicj5tbWFwMigweGI1
+ZjM2MDAwLCA4MTkyLCBQUk9UX1JFQUR8UFJPVF9XUklURSwgTUFQX1BSSVZBVEV8TUFQX0ZJWEVE
+fE1BUF9ERU5ZV1JJVEUsIDMsIDB4NDAwMCkgPSAweGI1ZjM2MDAwPGJyPmNsb3NlKDMpIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgPSAwPGJyPm1wcm90ZWN0
+KDB4YjVmMzYwMDAsIDQwOTYsIFBST1RfUkVBRCkgwqAgPSAwPGJyPm11bm1hcCgweGI2Zjc0MDAw
+LCA3Mjg0NSkgwqAgwqAgwqAgwqAgwqAgwqAgwqAgPSAwPGJyPm9wZW5hdChBVF9GRENXRCwgJnF1
+b3Q7L2Rldi90cG1ybTAmcXVvdDssIE9fUkRXUnxPX05PTkJMT0NLKSA9IDM8YnI+d3JpdGUoMywg
+JnF1b3Q7XDIwMFwxXDBcMFwwXGZcMFwwXDF7XDBcMTAmcXVvdDssIDEyKSA9IDEyPGJyPnBvbGwo
+W3tmZD0zLCBldmVudHM9UE9MTElOfV0sIDEsIDEwMDApIMKgPSAxIChbe2ZkPTMsIHJldmVudHM9
+UE9MTElOfV0pPGJyPnJlYWQoMywgJnF1b3Q7XDIwMFwxXDBcMFwwXDI0XDBcMFwwXDAmcXVvdDss
+IDEwKSDCoD0gMTA8YnI+cG9sbChbe2ZkPTMsIGV2ZW50cz1QT0xMSU59XSwgMSwgMTAwMCkgwqA9
+IDEgKFt7ZmQ9MywgcmV2ZW50cz1QT0xMSU59XSk8YnI+cmVhZCgzLCAmcXVvdDtcMFwxMFpcMzE0
+a35jYElcMzQ2JnF1b3Q7LCAxMCkgwqAgwqAgwqA9IDEwPGJyPmZ1dGV4KDB4YjZlN2QzNWMsIEZV
+VEVYX1dBS0VfUFJJVkFURSwgMjE0NzQ4MzY0NykgPSAwPGJyPmZ1dGV4KDB4YjZlN2QzNjAsIEZV
+VEVYX1dBS0VfUFJJVkFURSwgMjE0NzQ4MzY0NykgPSAwPGJyPmZ1dGV4KDB4YjZlN2QzNjQsIEZV
+VEVYX1dBS0VfUFJJVkFURSwgMjE0NzQ4MzY0NykgPSAwPGJyPmZ1dGV4KDB4YjZlN2QzODAsIEZV
+VEVYX1dBS0VfUFJJVkFURSwgMjE0NzQ4MzY0NykgPSAwPGJyPmZ1dGV4KDB4YjZlN2FjOWMsIEZV
+VEVYX1dBS0VfUFJJVkFURSwgMjE0NzQ4MzY0NykgPSAwPGJyPmZ1dGV4KDB4YjZlN2QyODAsIEZV
+VEVYX1dBS0VfUFJJVkFURSwgMjE0NzQ4MzY0NykgPSAwPGJyPmZ1dGV4KDB4YjZlN2IyMjQsIEZV
+VEVYX1dBS0VfUFJJVkFURSwgMjE0NzQ4MzY0NykgPSAwPGJyPmZ1dGV4KDB4YjZlN2FkMjAsIEZV
+VEVYX1dBS0VfUFJJVkFURSwgMjE0NzQ4MzY0NykgPSAwPGJyPmJyaygweGRhMjAwMCkgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgPSAweGRhMjAwMDxicj5mdXRleCgweGI2
+ZTdkMzY4LCBGVVRFWF9XQUtFX1BSSVZBVEUsIDIxNDc0ODM2NDcpID0gMDxicj5mdXRleCgweGI2
+ZTdkMzg0LCBGVVRFWF9XQUtFX1BSSVZBVEUsIDIxNDc0ODM2NDcpID0gMDxicj5mdXRleCgweGI2
+ZTdkM2Y4LCBGVVRFWF9XQUtFX1BSSVZBVEUsIDIxNDc0ODM2NDcpID0gMDxicj5mdXRleCgweGI2
+ZTdkMzZjLCBGVVRFWF9XQUtFX1BSSVZBVEUsIDIxNDc0ODM2NDcpID0gMDxicj5mdXRleCgweGI2
+ZTdkMzcwLCBGVVRFWF9XQUtFX1BSSVZBVEUsIDIxNDc0ODM2NDcpID0gMDxicj53cml0ZSgzLCAm
+cXVvdDtcMjAwXDFcMFwwXDBcMTZcMFwwXDFzXDIwMFwwXDBcMCZxdW90OywgMTQpID0gMTQ8YnI+
+cG9sbChbe2ZkPTMsIGV2ZW50cz1QT0xMSU59XSwgMSwgLTE8YnI+PC9kaXY+PGRpdj48YnI+PC9k
+aXY+PGRpdj48YnI+PC9kaXY+PC9kaXY+PGJyPjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48ZGl2
+IGRpcj0ibHRyIiBjbGFzcz0iZ21haWxfYXR0ciI+T24gRnJpLCBEZWMgMTcsIDIwMjEgYXQgMTA6
+MjkgQU0gUm9iZXJ0cywgV2lsbGlhbSBDICZsdDs8YSBocmVmPSJtYWlsdG86d2lsbGlhbS5jLnJv
+YmVydHNAaW50ZWwuY29tIj53aWxsaWFtLmMucm9iZXJ0c0BpbnRlbC5jb208L2E+Jmd0OyB3cm90
+ZTo8YnI+PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2lu
+OjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0LDIwNCwyMDQp
+O3BhZGRpbmctbGVmdDoxZXgiPgoKCgoKPGRpdiBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OkNhbGlicmksQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7Zm9udC1zaXplOjEycHQ7
+Y29sb3I6cmdiKDAsMCwwKSI+ClRoYXQmIzM5O3Mgd2VpcmQsIGNvdWxkIHlvdSBzdHJhY2UgaXQg
+YW5kIHNlZSB3aGVyZSBpdCYjMzk7cyBoYW5naW5nPzwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZh
+bWlseTpDYWxpYnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMnB0O2Nv
+bG9yOnJnYigwLDAsMCkiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTpDYWxp
+YnJpLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2ZvbnQtc2l6ZToxMnB0O2NvbG9yOnJnYigw
+LDAsMCkiPgpXaGF0IGtlcm5lbCB2ZXJzaW9uIGlzIHRoYXQ/IEkmIzM5O20gYXNzdW1pbmcgeW91
+ciB1c2luZyB0aGUgL2Rldi90cG0wIG9yIC9kZXYvdHBtcm0wIGRldmljZSBkaXJlY3RseSBzaW5j
+ZSBJIHNlZSB0aGUgc3Vkby48L2Rpdj4KPGRpdiBpZD0iZ21haWwtbV8tNjUwNjUxMzQ5Mjc1MDQy
+MTU4MmFwcGVuZG9uc2VuZCI+PC9kaXY+CjxociBzdHlsZT0iZGlzcGxheTppbmxpbmUtYmxvY2s7
+d2lkdGg6OTglIj4KPGRpdiBpZD0iZ21haWwtbV8tNjUwNjUxMzQ5Mjc1MDQyMTU4MmRpdlJwbHlG
+d2RNc2ciIGRpcj0ibHRyIj48Zm9udCBmYWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0i
+Zm9udC1zaXplOjExcHQiIGNvbG9yPSIjMDAwMDAwIj48Yj5Gcm9tOjwvYj4gSGFuICZsdDs8YSBo
+cmVmPSJtYWlsdG86a2VlcHNpbXBsZUBnbWFpbC5jb20iIHRhcmdldD0iX2JsYW5rIj5rZWVwc2lt
+cGxlQGdtYWlsLmNvbTwvYT4mZ3Q7PGJyPgo8Yj5TZW50OjwvYj4gV2VkbmVzZGF5LCBEZWNlbWJl
+ciAxNSwgMjAyMSA1OjU2IFBNPGJyPgo8Yj5Ubzo8L2I+IDxhIGhyZWY9Im1haWx0bzp0cG0yQGxp
+c3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPnRwbTJAbGlzdHMuMDEub3JnPC9hPiAmbHQ7PGEg
+aHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayI+dHBtMkBsaXN0
+cy4wMS5vcmc8L2E+Jmd0Ozxicj4KPGI+U3ViamVjdDo8L2I+IFt0cG0yXSB0cG0yX2ZsdXNoY29u
+dGV4dCBzdHVjazwvZm9udD4KPGRpdj7CoDwvZGl2Pgo8L2Rpdj4KPGRpdj4KPGRpdiBkaXI9Imx0
+ciI+SGksCjxkaXY+PGJyPgo8L2Rpdj4KPGRpdj5JJiMzOTttIHVzaW5nIHRwbTItdG9vbHMgNS4w
+IGluIERlYmlhbiAxMSBCdWxsc2V5ZSBiYXNlZCBSYXNwYmVycnkgUGkgT1MuwqAgSSYjMzk7bSB0
+cnlpbmcgdG8gcnVuwqB0cG0yX2ZsdXNoY29udGV4dCBidXQgdGhlIGNvbW1hbmQgZ290IHN0dWNr
+IGFuZCBpdCYjMzk7cyBub3Qgc2hvd2luZyBhbnl0aGluZy4gSXMgdGhlIGRhdGEgaW4gVFBNIGNv
+cnJ1cHRlZD/CoCBIb3cgY2FuIEkgY2hlY2s/wqA8L2Rpdj4KPGRpdj48YnI+CjwvZGl2Pgo8ZGl2
+PiQgc3VkbyB0cG0yX2ZsdXNoY29udGV4dCAweDgwMDAwMDAwPGJyPgo8L2Rpdj4KPGRpdj4mbHQ7
+IG5vIG91dHB1dCBhdCBhbGwgYW5kIHN0dWNrIGhlcmUgJmd0OzwvZGl2Pgo8ZGl2Pjxicj4KPC9k
+aXY+CjxkaXY+KG5vdGU6IHRoZSBoYW5kbGUgMHg4MDAwMDAwMCB3YXMgb2J0YWluZWQgZnJvbSBw
+cmV2aW91cyBjb21tYW5kIG91dHB1dCB3aGVuIEkgd2FzIHJ1bm5pbmcgcHJldmlvdXMgdmVyc2lv
+biB0cG0yLXRvb2xzIDMuMS4zIG9uIERlYmlhbiAxMCBCdXN0ZXIgYmFzZWQgT1M6wqA8L2Rpdj4K
+PGRpdj48YnI+CjwvZGl2Pgo8ZGl2Pgo8cHJlIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7
+Zm9udC1mYW1pbHk6dWktbW9ub3NwYWNlLFNGTW9uby1SZWd1bGFyLCZxdW90O1NGIE1vbm8mcXVv
+dDssTWVubG8sQ29uc29sYXMsJnF1b3Q7TGliZXJhdGlvbiBNb25vJnF1b3Q7LG1vbm9zcGFjZTtm
+b250LXNpemU6MTEuOXB4O21hcmdpbi10b3A6MHB4O21hcmdpbi1ib3R0b206MTZweDtwYWRkaW5n
+OjE2cHg7b3ZlcmZsb3c6YXV0bztsaW5lLWhlaWdodDoxLjQ1O2JvcmRlci1yYWRpdXM6NnB4O2Nv
+bG9yOnJnYigzNiw0MSw0NykiPjxjb2RlIHN0eWxlPSJib3gtc2l6aW5nOmJvcmRlci1ib3g7Zm9u
+dC1mYW1pbHk6dWktbW9ub3NwYWNlLFNGTW9uby1SZWd1bGFyLCZxdW90O1NGIE1vbm8mcXVvdDss
+TWVubG8sQ29uc29sYXMsJnF1b3Q7TGliZXJhdGlvbiBNb25vJnF1b3Q7LG1vbm9zcGFjZTtmb250
+LXNpemU6MTEuOXB4O3BhZGRpbmc6MHB4O21hcmdpbjowcHg7YmFja2dyb3VuZDp0cmFuc3BhcmVu
+dDtib3JkZXItcmFkaXVzOjZweDt3b3JkLWJyZWFrOm5vcm1hbDtib3JkZXI6MHB4O2Rpc3BsYXk6
+aW5saW5lO292ZXJmbG93OnZpc2libGU7bGluZS1oZWlnaHQ6aW5oZXJpdCI+JCBzdWRvIHRwbTJf
+Y3JlYXRlcHJpbWFyeSAtSCBvIC1nIHNoYTI1NiAtRyBlY2MgLUMgY29udGV4dC5vdXQKT2JqZWN0
+QXR0cmlidXRlOiAweDAwMDMwMDcyCgpDcmVhdGVQcmltYXJ5IFN1Y2NlZWQgISBIYW5kbGU6IDB4
+ODAwMDAwMDApIDwvY29kZT48L3ByZT4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+Cgo8L2Js
+b2NrcXVvdGU+PC9kaXY+Cg==
 
---===============0281912487766810186==--
+--===============7725415610040889560==--
 
