@@ -1,39 +1,20 @@
-Content-Type: multipart/mixed; boundary="===============2799976924718812858=="
+Content-Type: multipart/mixed; boundary="===============3663745044693946765=="
 MIME-Version: 1.0
 From: Juergen Repp <Juergen.Repp at sit.fraunhofer.de>
 Subject: [tpm2] Re: tpm2_flushcontext stuck
-Date: Sat, 18 Dec 2021 14:54:45 +0100
-Message-ID: <1e22ade5-5e50-dff3-6dca-f0f1271ea9ff@sit.fraunhofer.de>
+Date: Sat, 18 Dec 2021 15:11:44 +0100
+Message-ID: <17c21c50-b575-92f3-0aca-17479d8a7b86@sit.fraunhofer.de>
 In-Reply-To: CAEjGaqdA2sj=cBcasO_0PqKHtE5mqAN4Bdyx9LUvqVj_QPCEGg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2799976924718812858==
+--===============3663745044693946765==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I did check your commands on Raspian (also /dev/tpmrm0 was used):
-
-tpm2_createprimary  -C o -g sha256 -G ecc -c primary.ctx
-tpm2_getcap handles-transient (No handle is displayed, primary.ctx can be u=
-sed)
-tpm2_flushcontext 0x80000000
-ERROR:tcti:src/util/io.c:108:write_all() failed to write to fd 3: Invalid a=
-rgument =
-
-ERROR:tcti:src/tss2-tcti/tcti-device.c:126:tcti_device_transmit() wrong num=
-ber of bytes written. Expected 14, wrote 0.
-
-So it seems to be a Problem with tcti_device_transmit. The write did return=
- -1 if the handle does not exist.
-If the TPM handle used for tpm2_flushcontext exists this error did not occu=
-r.
-
-Do you also get no handle when executing getcap?:
-tpm2_getcap handles-transient =
-
-
+I forgot to mention: If /dev/tpm0 was used instead of /dev/tpmrm0 everythin=
+g worked without problems.
 
 Am 18.12.21 um 00:58 schrieb Han:
 > =
@@ -238,5 +219,5 @@ bjectAttribute: 0x00030072 CreatePrimary Succeed ! Handle: 0x80000000) |
 
 
 
---===============2799976924718812858==--
+--===============3663745044693946765==--
 
