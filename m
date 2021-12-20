@@ -1,96 +1,76 @@
-Content-Type: multipart/mixed; boundary="===============4220655987445807116=="
+Content-Type: multipart/mixed; boundary="===============5306910165299121739=="
 MIME-Version: 1.0
-From: Kenneth Goldman <kgoldman at us.ibm.com>
+From: Juergen Repp <Juergen.Repp at sit.fraunhofer.de>
 Subject: [tpm2] Re: tpm2_flushcontext stuck
-Date: Mon, 20 Dec 2021 20:04:07 +0000
-Message-ID: <BN8PR15MB275326320CD1F689C1EDC804F27B9@BN8PR15MB2753.namprd15.prod.outlook.com>
-In-Reply-To: CAEjGaqecH0q-wFbQbNNPAS_R-bh0BqXFFWhweT4VA-gESe5qVw@mail.gmail.com
+Date: Mon, 20 Dec 2021 23:06:15 +0100
+Message-ID: <d9e4b269-39ec-b350-a6cc-ffed39b90ba7@sit.fraunhofer.de>
+In-Reply-To: BN8PR15MB275326320CD1F689C1EDC804F27B9@BN8PR15MB2753.namprd15.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4220655987445807116==
+--===============5306910165299121739==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-They way I use it:
-
-/dev/tpm0 is locking, one user at a time.  I use it for debug only.  IMHO, =
-production applications should not use it.
-
-/dev/tpmrm0 is the multi-user interface.  Use it for production application=
-s, where the TPM is shared.
-
-I suspect (not sure) that /dev/tpm0 will have unexpected effects when the k=
-ernel is also trying to use the TPM.
+When /dev/tpmrm0 was used with kernel 5.10.
+After sending the command read public:
+0x80 0x01 0x00 0x00 0x00 0x0e 0x00 0x00 0x01 0x73 0x80 0x00 0x00 0x00
+the write worked but the poll call in  tcti_device_receive did stuck.
+With kernel 4.19 write for this command did return -1
 
 
-And as a newbie, I felt that the fact TPM exposes two devices (/dev/tpm0 an=
-d /dev/tpmrm0) under Linux is confusing and is making things more complicat=
-ed.  The architecture diagram (https://github.com/tpm2-software/tpm2-tss<ht=
-tps://github.com/tpm2-software/tpm2-tss>) shows all calls go through the Re=
-source Manager but that is not the case in reality.  I was wondering what i=
-s the benefit to have 2 devices instead of just one device in linux?
 
+Am 20.12.21 um 21:04 schrieb Kenneth Goldman:
+> They way I use it:
+> =
 
---===============4220655987445807116==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+> =C2=A0
+> =
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBpbjsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZvbnQt
-ZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsN
-Cgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOmJsdWU7DQoJdGV4dC1kZWNvcmF0aW9u
-OnVuZGVybGluZTt9DQpzcGFuLkVtYWlsU3R5bGUzNA0KCXttc28tc3R5bGUtdHlwZTpwZXJzb25h
-bC1yZXBseTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsNCgljb2xvcjp3aW5k
-b3d0ZXh0O30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5Ow0K
-CWZvbnQtc2l6ZToxMC4wcHQ7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3NpemU6OC41aW4gMTEu
-MGluOw0KCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9DQpkaXYuV29yZFNlY3Rpb24x
-DQoJe3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4
-bWw+DQo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPg0KPC94
-bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWxheW91dCB2
-OmV4dD0iZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4NCjwvbzpzaGFw
-ZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5IGxhbmc9IkVOLVVTIiBs
-aW5rPSJibHVlIiB2bGluaz0icHVycGxlIiBzdHlsZT0id29yZC13cmFwOmJyZWFrLXdvcmQiPg0K
-PGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoZXkgd2F5
-IEkgdXNlIGl0OjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJz
-cDs8L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj4vZGV2L3RwbTAgaXMgbG9ja2luZywg
-b25lIHVzZXIgYXQgYSB0aW1lLiZuYnNwOyBJIHVzZSBpdCBmb3IgZGVidWcgb25seS4mbmJzcDsg
-SU1ITywgcHJvZHVjdGlvbiBhcHBsaWNhdGlvbnMgc2hvdWxkIG5vdCB1c2UgaXQuPG86cD48L286
-cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPi9kZXYvdHBtcm0wIGlzIHRoZSBtdWx0aS11c2VyIGludGVyZmFjZS4m
-bmJzcDsgVXNlIGl0IGZvciBwcm9kdWN0aW9uIGFwcGxpY2F0aW9ucywgd2hlcmUgdGhlIFRQTSBp
-cyBzaGFyZWQuPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
-OzwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkgc3VzcGVjdCAobm90IHN1cmUpIHRo
-YXQgL2Rldi90cG0wIHdpbGwgaGF2ZSB1bmV4cGVjdGVkIGVmZmVjdHMgd2hlbiB0aGUga2VybmVs
-IGlzIGFsc28gdHJ5aW5nIHRvIHVzZSB0aGUgVFBNLjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9u
-ZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGluIDBpbiAwaW4gNC4wcHQi
-Pg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwv
-cD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkFuZCBhcyBhIG5ld2JpZSwg
-SSBmZWx0IHRoYXQgdGhlIGZhY3QgVFBNIGV4cG9zZXMgdHdvIGRldmljZXMgKC9kZXYvdHBtMCBh
-bmQgL2Rldi90cG1ybTApIHVuZGVyIExpbnV4IGlzIGNvbmZ1c2luZyBhbmQgaXMgbWFraW5nIHRo
-aW5ncyZuYnNwO21vcmUmbmJzcDtjb21wbGljYXRlZC4mbmJzcDsgVGhlIGFyY2hpdGVjdHVyZSBk
-aWFncmFtICg8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRz
-cyI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3M8L2E+KQ0KIHNob3dz
-IGFsbCBjYWxscyBnbyB0aHJvdWdoIHRoZSBSZXNvdXJjZSBNYW5hZ2VyIGJ1dCB0aGF0IGlzIG5v
-dCB0aGUgY2FzZSBpbiByZWFsaXR5LiZuYnNwOyBJIHdhcyB3b25kZXJpbmcgd2hhdCBpcyB0aGUg
-YmVuZWZpdCB0byBoYXZlIDIgZGV2aWNlcyBpbnN0ZWFkIG9mIGp1c3Qgb25lIGRldmljZSBpbiBs
-aW51eD8mbmJzcDs8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29O
-b3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9k
-aXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
+> /dev/tpm0 is locking, one user at a time.=C2=A0 I use it for debug only.=
+=C2=A0 IMHO, production applications should not use it.
+> =
 
---===============4220655987445807116==--
+> =C2=A0
+> =
+
+> /dev/tpmrm0 is the multi-user interface.=C2=A0 Use it for production appl=
+ications, where the TPM is shared.
+> =
+
+> =C2=A0
+> =
+
+> I suspect (not sure) that /dev/tpm0 will have unexpected effects when the=
+ kernel is also trying to use the TPM.
+> =
+
+> =C2=A0
+> =
+
+> =C2=A0
+> =
+
+> And as a newbie, I felt that the fact TPM exposes two devices (/dev/tpm0 =
+and /dev/tpmrm0) under Linux is confusing and is making things=C2=A0more=C2=
+=A0complicated.=C2=A0 The architecture diagram (https://github.com/tpm2-sof=
+tware/tpm2-tss <https://github.com/tpm2-software/tpm2-tss>) shows all calls=
+ go through the Resource Manager but that is not the case in reality.=C2=A0=
+ I was wondering what is the benefit to have 2 devices instead of just one =
+device in linux?=C2=A0
+> =
+
+> =C2=A0
+> =
+
+> =
+
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+>=20
+
+--===============5306910165299121739==--
 
