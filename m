@@ -1,30 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============7408329527978196400=="
+Content-Type: multipart/mixed; boundary="===============8346623603614474888=="
 MIME-Version: 1.0
-From: Juergen Repp <Juergen.Repp at sit.fraunhofer.de>
+From: Tadeusz Struk <tstruk at gmail.com>
 Subject: [tpm2] Re: tpm2_flushcontext stuck
-Date: Sun, 19 Dec 2021 13:17:43 +0100
-Message-ID: <4055fbd2-3816-6458-f874-ebd194e588b1@sit.fraunhofer.de>
-In-Reply-To: CAEjGaqeTkD1U2Ppb_F08WwG8gEfNJgYtD9tkYfw9tBHztcxu7Q@mail.gmail.com
+Date: Mon, 20 Dec 2021 10:57:26 -0800
+Message-ID: <964b6c7d-f045-c93a-d260-363c79eee8fb@gmail.com>
+In-Reply-To: 4055fbd2-3816-6458-f874-ebd194e588b1@sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7408329527978196400==
+--===============8346623603614474888==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Am 18.12.21 um 20:34 schrieb Han:
-> I probably missed it,=C2=A0 how can I specify to make sure /dev/tpm0 is u=
-sed, and not /dev/tpmrm0=C2=A0?=C2=A0 Is it in some configurations?
+On 12/19/21 04:17, Juergen Repp wrote:
+> Am 18.12.21 um 20:34 schrieb Han:
+>> I probably missed it,=C2=A0 how can I specify to make sure /dev/tpm0 is =
+used, and not /dev/tpmrm0=C2=A0?=C2=A0 Is it in some configurations?
+>>
+> You can use the TPM without resource manager with:
 > =
 
-You can use the TPM without resource manager with:
+> tpm2_createprimary  -Tdevice:/dev/tpm0 -C o -g sha256 -G ecc -c primary.c=
+tx
+> tpm2_getcap handles-transient -Tdevice:/dev/tpm0
+> tpm2_flushcontext -Tdevice:/dev/tpm0 0x80000000
 
-tpm2_createprimary  -Tdevice:/dev/tpm0 -C o -g sha256 -G ecc -c primary.ctx
-tpm2_getcap handles-transient -Tdevice:/dev/tpm0
-tpm2_flushcontext -Tdevice:/dev/tpm0 0x80000000
+The problem is that when /dev/tpm0 is used it just sends a request straight=
+ to
+the tpm and the tpm responds with a valid error message, which it then pass=
+ed =
 
+back to tcti. In case of /dev/tpmrm0 the RM tries to first load the none =
 
+existing object 0x80000000 from its cash, but since it cannot find it just
+returns an error code -22 (EINVAL) and nothing gets send to the tpm.
+The tpm_dev_async_work() handler needs to be modified to handle such error =
+cases
+as well. I will send a fix for this.
 
---===============7408329527978196400==--
+Thanks,
+--
+Tadeusz
+--===============8346623603614474888==--
 
