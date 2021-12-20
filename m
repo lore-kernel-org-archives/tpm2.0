@@ -1,104 +1,96 @@
-Content-Type: multipart/mixed; boundary="===============9175052166310369546=="
+Content-Type: multipart/mixed; boundary="===============4220655987445807116=="
 MIME-Version: 1.0
-From: Han <keepsimple at gmail.com>
+From: Kenneth Goldman <kgoldman at us.ibm.com>
 Subject: [tpm2] Re: tpm2_flushcontext stuck
-Date: Mon, 20 Dec 2021 11:13:25 -0800
-Message-ID: <CAEjGaqecH0q-wFbQbNNPAS_R-bh0BqXFFWhweT4VA-gESe5qVw@mail.gmail.com>
-In-Reply-To: 964b6c7d-f045-c93a-d260-363c79eee8fb@gmail.com
+Date: Mon, 20 Dec 2021 20:04:07 +0000
+Message-ID: <BN8PR15MB275326320CD1F689C1EDC804F27B9@BN8PR15MB2753.namprd15.prod.outlook.com>
+In-Reply-To: CAEjGaqecH0q-wFbQbNNPAS_R-bh0BqXFFWhweT4VA-gESe5qVw@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9175052166310369546==
+--===============4220655987445807116==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks for your responses. They are really helpful to me. Such a fix will
-also help me understand how TPM works.
+They way I use it:
 
-And as a newbie, I felt that the fact TPM exposes two devices (/dev/tpm0
-and /dev/tpmrm0) under Linux is confusing and is making
-things more complicated.  The architecture diagram (
-https://github.com/tpm2-software/tpm2-tss) shows all calls go through the
-Resource Manager but that is not the case in reality.  I was wondering what
-is the benefit to have 2 devices instead of just one device in linux?
+/dev/tpm0 is locking, one user at a time.  I use it for debug only.  IMHO, =
+production applications should not use it.
 
-Thanks.
+/dev/tpmrm0 is the multi-user interface.  Use it for production application=
+s, where the TPM is shared.
+
+I suspect (not sure) that /dev/tpm0 will have unexpected effects when the k=
+ernel is also trying to use the TPM.
 
 
-On Mon, Dec 20, 2021 at 10:57 AM Tadeusz Struk <tstruk(a)gmail.com> wrote:
+And as a newbie, I felt that the fact TPM exposes two devices (/dev/tpm0 an=
+d /dev/tpmrm0) under Linux is confusing and is making things more complicat=
+ed.  The architecture diagram (https://github.com/tpm2-software/tpm2-tss<ht=
+tps://github.com/tpm2-software/tpm2-tss>) shows all calls go through the Re=
+source Manager but that is not the case in reality.  I was wondering what i=
+s the benefit to have 2 devices instead of just one device in linux?
 
-> On 12/19/21 04:17, Juergen Repp wrote:
-> > Am 18.12.21 um 20:34 schrieb Han:
-> >> I probably missed it,  how can I specify to make sure /dev/tpm0 is
-> used, and not /dev/tpmrm0 ?  Is it in some configurations?
-> >>
-> > You can use the TPM without resource manager with:
-> >
-> > tpm2_createprimary  -Tdevice:/dev/tpm0 -C o -g sha256 -G ecc -c
-> primary.ctx
-> > tpm2_getcap handles-transient -Tdevice:/dev/tpm0
-> > tpm2_flushcontext -Tdevice:/dev/tpm0 0x80000000
->
-> The problem is that when /dev/tpm0 is used it just sends a request
-> straight to
-> the tpm and the tpm responds with a valid error message, which it then
-> passed
-> back to tcti. In case of /dev/tpmrm0 the RM tries to first load the none
-> existing object 0x80000000 from its cash, but since it cannot find it just
-> returns an error code -22 (EINVAL) and nothing gets send to the tpm.
-> The tpm_dev_async_work() handler needs to be modified to handle such error
-> cases
-> as well. I will send a fix for this.
->
-> Thanks,
-> --
-> Tadeusz
->
 
---===============9175052166310369546==
+--===============4220655987445807116==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGRpdiBkaXI9Imx0ciI+VGhhbmtzIGZvciB5b3VyIHJlc3BvbnNlcy4gVGhleSBhcmUgcmVhbGx5
-wqBoZWxwZnVsIHRvIG1lLiBTdWNoIGEgZml4IHdpbGwgYWxzbyBoZWxwIG1lIHVuZGVyc3RhbmQg
-aG93IFRQTSB3b3Jrcy7CoDxkaXY+PGJyPjwvZGl2PjxkaXY+QW5kIGFzIGEgbmV3YmllLCBJIGZl
-bHQgdGhhdCB0aGUgZmFjdCBUUE0gZXhwb3NlcyB0d28gZGV2aWNlcyAoL2Rldi90cG0wIGFuZCAv
-ZGV2L3RwbXJtMCkgdW5kZXIgTGludXggaXMgY29uZnVzaW5nIGFuZCBpcyBtYWtpbmcgdGhpbmdz
-wqBtb3JlwqBjb21wbGljYXRlZC7CoCBUaGUgYXJjaGl0ZWN0dXJlIGRpYWdyYW0gKDxhIGhyZWY9
-Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdHNzIj5odHRwczovL2dpdGh1
-Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzczwvYT4pIHNob3dzIGFsbCBjYWxscyBnbyB0aHJv
-dWdoIHRoZSBSZXNvdXJjZSBNYW5hZ2VyIGJ1dCB0aGF0IGlzIG5vdCB0aGUgY2FzZSBpbiByZWFs
-aXR5LsKgIEkgd2FzIHdvbmRlcmluZyB3aGF0IGlzIHRoZSBiZW5lZml0IHRvIGhhdmUgMiBkZXZp
-Y2VzIGluc3RlYWQgb2YganVzdCBvbmUgZGV2aWNlIGluIGxpbnV4P8KgPC9kaXY+PGRpdj48YnI+
-PC9kaXY+PGRpdj5UaGFua3MuPC9kaXY+PGRpdj48YnI+PC9kaXY+PC9kaXY+PGJyPjxkaXYgY2xh
-c3M9ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0ibHRyIiBjbGFzcz0iZ21haWxfYXR0ciI+T24gTW9u
-LCBEZWMgMjAsIDIwMjEgYXQgMTA6NTcgQU0gVGFkZXVzeiBTdHJ1ayAmbHQ7PGEgaHJlZj0ibWFp
-bHRvOnRzdHJ1a0BnbWFpbC5jb20iPnRzdHJ1a0BnbWFpbC5jb208L2E+Jmd0OyB3cm90ZTo8YnI+
-PC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFyZ2luOjBweCAw
-cHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0LDIwNCwyMDQpO3BhZGRp
-bmctbGVmdDoxZXgiPk9uIDEyLzE5LzIxIDA0OjE3LCBKdWVyZ2VuIFJlcHAgd3JvdGU6PGJyPgom
-Z3Q7IEFtIDE4LjEyLjIxIHVtIDIwOjM0IHNjaHJpZWIgSGFuOjxicj4KJmd0OyZndDsgSSBwcm9i
-YWJseSBtaXNzZWQgaXQswqAgaG93IGNhbiBJIHNwZWNpZnkgdG8gbWFrZSBzdXJlIC9kZXYvdHBt
-MCBpcyB1c2VkLCBhbmQgbm90IC9kZXYvdHBtcm0wwqA/wqAgSXMgaXQgaW4gc29tZSBjb25maWd1
-cmF0aW9ucz88YnI+CiZndDsmZ3Q7PGJyPgomZ3Q7IFlvdSBjYW4gdXNlIHRoZSBUUE0gd2l0aG91
-dCByZXNvdXJjZSBtYW5hZ2VyIHdpdGg6PGJyPgomZ3Q7IDxicj4KJmd0OyB0cG0yX2NyZWF0ZXBy
-aW1hcnnCoCAtVGRldmljZTovZGV2L3RwbTAgLUMgbyAtZyBzaGEyNTYgLUcgZWNjIC1jIHByaW1h
-cnkuY3R4PGJyPgomZ3Q7IHRwbTJfZ2V0Y2FwIGhhbmRsZXMtdHJhbnNpZW50IC1UZGV2aWNlOi9k
-ZXYvdHBtMDxicj4KJmd0OyB0cG0yX2ZsdXNoY29udGV4dCAtVGRldmljZTovZGV2L3RwbTAgMHg4
-MDAwMDAwMDxicj4KPGJyPgpUaGUgcHJvYmxlbSBpcyB0aGF0IHdoZW4gL2Rldi90cG0wIGlzIHVz
-ZWQgaXQganVzdCBzZW5kcyBhIHJlcXVlc3Qgc3RyYWlnaHQgdG88YnI+CnRoZSB0cG0gYW5kIHRo
-ZSB0cG0gcmVzcG9uZHMgd2l0aCBhIHZhbGlkIGVycm9yIG1lc3NhZ2UsIHdoaWNoIGl0IHRoZW4g
-cGFzc2VkIDxicj4KYmFjayB0byB0Y3RpLiBJbiBjYXNlIG9mIC9kZXYvdHBtcm0wIHRoZSBSTSB0
-cmllcyB0byBmaXJzdCBsb2FkIHRoZSBub25lIDxicj4KZXhpc3Rpbmcgb2JqZWN0IDB4ODAwMDAw
-MDAgZnJvbSBpdHMgY2FzaCwgYnV0IHNpbmNlIGl0IGNhbm5vdCBmaW5kIGl0IGp1c3Q8YnI+CnJl
-dHVybnMgYW4gZXJyb3IgY29kZSAtMjIgKEVJTlZBTCkgYW5kIG5vdGhpbmcgZ2V0cyBzZW5kIHRv
-IHRoZSB0cG0uPGJyPgpUaGUgdHBtX2Rldl9hc3luY193b3JrKCkgaGFuZGxlciBuZWVkcyB0byBi
-ZSBtb2RpZmllZCB0byBoYW5kbGUgc3VjaCBlcnJvciBjYXNlczxicj4KYXMgd2VsbC4gSSB3aWxs
-IHNlbmQgYSBmaXggZm9yIHRoaXMuPGJyPgo8YnI+ClRoYW5rcyw8YnI+Ci0tPGJyPgpUYWRldXN6
-PGJyPgo8L2Jsb2NrcXVvdGU+PC9kaXY+Cg==
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
+IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
+IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBpbjsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZvbnQt
+ZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsN
+Cgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOmJsdWU7DQoJdGV4dC1kZWNvcmF0aW9u
+OnVuZGVybGluZTt9DQpzcGFuLkVtYWlsU3R5bGUzNA0KCXttc28tc3R5bGUtdHlwZTpwZXJzb25h
+bC1yZXBseTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsNCgljb2xvcjp3aW5k
+b3d0ZXh0O30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5Ow0K
+CWZvbnQtc2l6ZToxMC4wcHQ7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3NpemU6OC41aW4gMTEu
+MGluOw0KCW1hcmdpbjoxLjBpbiAxLjBpbiAxLjBpbiAxLjBpbjt9DQpkaXYuV29yZFNlY3Rpb24x
+DQoJe3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwvc3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4
+bWw+DQo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPg0KPC94
+bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWxheW91dCB2
+OmV4dD0iZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4NCjwvbzpzaGFw
+ZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4NCjwvaGVhZD4NCjxib2R5IGxhbmc9IkVOLVVTIiBs
+aW5rPSJibHVlIiB2bGluaz0icHVycGxlIiBzdHlsZT0id29yZC13cmFwOmJyZWFrLXdvcmQiPg0K
+PGRpdiBjbGFzcz0iV29yZFNlY3Rpb24xIj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoZXkgd2F5
+IEkgdXNlIGl0OjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJz
+cDs8L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj4vZGV2L3RwbTAgaXMgbG9ja2luZywg
+b25lIHVzZXIgYXQgYSB0aW1lLiZuYnNwOyBJIHVzZSBpdCBmb3IgZGVidWcgb25seS4mbmJzcDsg
+SU1ITywgcHJvZHVjdGlvbiBhcHBsaWNhdGlvbnMgc2hvdWxkIG5vdCB1c2UgaXQuPG86cD48L286
+cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPi9kZXYvdHBtcm0wIGlzIHRoZSBtdWx0aS11c2VyIGludGVyZmFjZS4m
+bmJzcDsgVXNlIGl0IGZvciBwcm9kdWN0aW9uIGFwcGxpY2F0aW9ucywgd2hlcmUgdGhlIFRQTSBp
+cyBzaGFyZWQuPG86cD48L286cD48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNw
+OzwvbzpwPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkgc3VzcGVjdCAobm90IHN1cmUpIHRo
+YXQgL2Rldi90cG0wIHdpbGwgaGF2ZSB1bmV4cGVjdGVkIGVmZmVjdHMgd2hlbiB0aGUga2VybmVs
+IGlzIGFsc28gdHJ5aW5nIHRvIHVzZSB0aGUgVFBNLjxvOnA+PC9vOnA+PC9wPg0KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9u
+ZTtib3JkZXItbGVmdDpzb2xpZCBibHVlIDEuNXB0O3BhZGRpbmc6MGluIDBpbiAwaW4gNC4wcHQi
+Pg0KPGRpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwv
+cD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkFuZCBhcyBhIG5ld2JpZSwg
+SSBmZWx0IHRoYXQgdGhlIGZhY3QgVFBNIGV4cG9zZXMgdHdvIGRldmljZXMgKC9kZXYvdHBtMCBh
+bmQgL2Rldi90cG1ybTApIHVuZGVyIExpbnV4IGlzIGNvbmZ1c2luZyBhbmQgaXMgbWFraW5nIHRo
+aW5ncyZuYnNwO21vcmUmbmJzcDtjb21wbGljYXRlZC4mbmJzcDsgVGhlIGFyY2hpdGVjdHVyZSBk
+aWFncmFtICg8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRz
+cyI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3M8L2E+KQ0KIHNob3dz
+IGFsbCBjYWxscyBnbyB0aHJvdWdoIHRoZSBSZXNvdXJjZSBNYW5hZ2VyIGJ1dCB0aGF0IGlzIG5v
+dCB0aGUgY2FzZSBpbiByZWFsaXR5LiZuYnNwOyBJIHdhcyB3b25kZXJpbmcgd2hhdCBpcyB0aGUg
+YmVuZWZpdCB0byBoYXZlIDIgZGV2aWNlcyBpbnN0ZWFkIG9mIGp1c3Qgb25lIGRldmljZSBpbiBs
+aW51eD8mbmJzcDs8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9k
+aXY+DQo8L2JvZHk+DQo8L2h0bWw+DQo=
 
---===============9175052166310369546==--
+--===============4220655987445807116==--
 
