@@ -1,66 +1,52 @@
-Content-Type: multipart/mixed; boundary="===============1245290863226453994=="
+Content-Type: multipart/mixed; boundary="===============2965957959939049420=="
 MIME-Version: 1.0
-From: luc.riedhauser at bluewin.ch
-Subject: [tpm2] tpm2_create sealing object without user data
-Date: Thu, 23 Dec 2021 08:42:31 +0000
-Message-ID: <20211223084231.2803.33718@ml01.vlan13.01.org>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] [RC] tpm2-pytss 1.0.0-rc1
+Date: Mon, 10 Jan 2022 19:38:24 +0000
+Message-ID: <SN6PR11MB34375C150A028EE55500526EB8509@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1245290863226453994==
+--===============2965957959939049420==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-My goal is to verify the integrity of a file (its hash is 962f4b6aeb8b2d74d=
-c595257cb4384fc266283816acc4940622f29ad748bcb6e) with a pcr policy. But I d=
-o not need to include a secret user data. So here is what I've done so far:
+I am pleased to announce the release of the tpm2-pytss (python bindings and=
+ utilities) version 1.0.0 RC 1 with the following CHANGELOG over RC0:
 
-- tpm2_pcrreset 16
-- tpm2_pcrextend 16:sha256=3D962f4b6aeb8b2d74dc595257cb4384fc266283816acc49=
-40622f29ad748bcb6e
+## [1.0.0-rc1] - 2022-01-10
+### Fixed:
+=C2=A0- Misspellings in Code on things like RuntimeError.
+=C2=A0- Fix documentation of ESAPI methods and exceptions.
+=C2=A0- Double ESAPI.Close call resulting in "Esys_Finalize() Finalizing NU=
+LL context."
+=C2=A0- type hint for verify_signature was an int, should be a str.
+=C2=A0- Parent cdata memory being freed when no parent reference. This caus=
+es sub-field references to parent cdata to
+=C2=A0 =C2=A0be invalid.
+=C2=A0- in util method unwrap, fix variable `encdupsens` does not exist, it=
+ is `decsens` instead.
 
-- `tpm2_createprimary -C o -G rsa2048 -c primary`
-- `tpm2_startauthsession -S session`
-- `tpm2_policypcr -S session -l sha256:16 -L pcr16_policy`
-- `tpm2_flushcontext session`
-- `tpm2_create -C primary -g sha256 -u pcr16.pub -r pcr16.priv -L pcr16_pol=
-icy` =3D> here I do NOT include any user data
-- `tpm2_load -C primary -u pcr16.pub -r pcr16.priv -c pcr16`
-- `tpm2_evictcontrol -c pcr16 0x81010000 -C o`
+### Changed:
+=C2=A0- Renamed ESAPI.set_auth to ESAPI.tr_set_auth for consistenency.
+=C2=A0- Use None over 0 for default auth_handle.
 
-Until now I've created a sealing object that I stored on the NV-RAM. Now I =
-want to verify the file against the policy I've just created. So I reset PC=
-R16, hash my file again and extend PCR16 with the new hash.
+### Added:
+=C2=A0- Check for bad type enum type in ESAPI.load_blob.
+=C2=A0- Support for deprecation of `TPM2_RH_PW` in tpm2-tss with proper TPM=
+2_RS_PW attribute.
 
-- And now start a policy session with `tpm2_startauthsession --policy-sessi=
-on -S session`
-- `tpm2_policypcr -S session -l sha256:16` to include the PCR value into th=
-e session
+The release can be found here:
+=C2=A0 - https://pypi.org/project/tpm2-pytss/1.0.0rc1/
 
-Now comes the problem
+Sorry for the long delay on this RC period, we wanted to make sure we got a=
+s much bugs and broken things before the
+1.0 release to help minimize breaking changes in the future.
 
-- tpm2_unseal -p session:session -c 0x81010000
-
-returns an ERROR:
-
-WARNING:esys:src/tss2-esys/api/Esys_Unseal.c:295:Esys_Unseal_Finish() Recei=
-ved TPM Error =
-
-ERROR:esys:src/tss2-esys/api/Esys_Unseal.c:98:Esys_Unseal() Esys Finish Err=
-orCode (0x0000018a) =
-
-ERROR: Esys_Unseal(0x18A) - tpm:handle(1):the type of the value is not appr=
-opriate for the use
-ERROR: Unable to run tpm2_unseal
-
-I'm pretty sure that this comes from the fact that I did not include any us=
-er data when creating the sealing object.
-
-
-So my question: If I just want to verify the integrity of a file, is unseal=
- still the right command?
---===============1245290863226453994==--
+Thanks,
+Bill
+--===============2965957959939049420==--
 
