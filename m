@@ -1,43 +1,36 @@
-Content-Type: multipart/mixed; boundary="===============4665702014507099158=="
+Content-Type: multipart/mixed; boundary="===============3710406008399720740=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] [RELEASE] tpm2-pytss version 1.0.0
-Date: Mon, 24 Jan 2022 15:59:25 +0000
-Message-ID: <SN6PR11MB3437812C4A207700422F41CFB85E9@SN6PR11MB3437.namprd11.prod.outlook.com>
+From: Gabriele Saturni <gabriele.saturni at wsense.it>
+Subject: [tpm2] How to store AES key inside the TPM and then use it?
+Date: Wed, 02 Feb 2022 18:31:21 +0100
+Message-ID: <CAFruog0EGwf=TWS=Aa1CdrOfjNkjhkyyws+k0Rep=-OCz=YBAA@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4665702014507099158==
+--===============3710406008399720740==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi to everybody,
+I'm pretty new to the TPM and looking for a way to store a premade AES key
+inside the TPM and retrieve it for encrypting the data of my application.
+Is there any way to do it since a lot of TPM does not support AES ?
 
-I am pleased to announce the release of tpm2-pytss version 1.0.0 with the f=
-ollowing changelog:
+Thank you for your time
 
-## [1.0.0] - 2022-01-24
-### Added
-- Bindings to the Enhanced System (ESAPI) API.
-- Bindings to the Feature (FAPI) API .
-- Bindings to Dynamic TCTI Loading (TCTILdr) API .
-- Bindings to Marshalling and Unmarshalling (MU) API.
-- Bindings to rc-decode.
-- tpm2-tools context file loading support.
-- TSS2 PEM format support. This file format is used in OpenSSL Engine and P=
-rovider projects.
-- Utility routines for: TPM Less Make Credential, sensitive wrapping and un=
-wrapping (import and duplication helpers).
+--===============3710406008399720740==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-The release can be found in pypi here:
-  - https://pypi.org/project/tpm2-pytss/1.0.0/
+PGRpdiBkaXI9Imx0ciI+PGRpdj5IaSB0byBldmVyeWJvZHksPGJyPjwvZGl2PjxkaXY+SSYjMzk7
+bSBwcmV0dHkgbmV3IHRvIHRoZSBUUE0gYW5kIGxvb2tpbmcgZm9yIGEgd2F5IHRvIHN0b3JlIGEg
+cHJlbWFkZSBBRVMga2V5IGluc2lkZSB0aGUgVFBNIGFuZCByZXRyaWV2ZSBpdCBmb3IgZW5jcnlw
+dGluZyB0aGUgZGF0YSBvZiBteSBhcHBsaWNhdGlvbi4gSXMgdGhlcmUgYW55IHdheSB0byBkbyBp
+dCBzaW5jZSBhIGxvdCBvZiBUUE0gZG9lcyBub3Qgc3VwcG9ydCBBRVMgPzwvZGl2PjxkaXY+PGJy
+PjwvZGl2PjxkaXY+VGhhbmsgeW91IGZvciB5b3VyIHRpbWU8L2Rpdj48L2Rpdj4K
 
-The documentation can be found on "read the docs" here:
-  - https://tpm2-pytss.readthedocs.io/en/1.0.0/
-
-Thanks,
-Bill
-
---===============4665702014507099158==--
+--===============3710406008399720740==--
 
