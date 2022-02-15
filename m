@@ -1,39 +1,47 @@
-Content-Type: multipart/mixed; boundary="===============3066044964554089974=="
+Content-Type: multipart/mixed; boundary="===============9135391835795891121=="
 MIME-Version: 1.0
-From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
-Subject: [tpm2] [RELEASE CANDIDATES] tpm2-tss 3.2.0-rc1 3.1.1-rc1 3.0.5-rc1
-Date: Mon, 14 Feb 2022 17:43:56 +0000
-Message-ID: <AS8P194MB166931EA53EFD50E4F24D01BA6339@AS8P194MB1669.EURP194.PROD.OUTLOOK.COM>
+From: Philip Tricca <flihp at twobit.org>
+Subject: [tpm2] [RC] tpm2-abrmd 2.4.1-rc0
+Date: Mon, 14 Feb 2022 20:54:17 -0800
+Message-ID: <1d455cd7-5798-13ba-2128-697181d152ea@twobit.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3066044964554089974==
+--===============9135391835795891121==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hello all,
 
-I wanted to announce that I've just tagged versions 3.2.0-rc1 3.1.1-rc1 and=
- 3.0.5-rc1 of the tpm2-tss project.
+I've just tagged the first release candidate for tpm2-abrmd version 2.4.1:
 
-You can find the tags in git and here: https://github.com/tpm2-software/tpm=
-2-tss/tags
+https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.4.1-rc0
 
-For your convenience, here are the changelog-changes for this rc:
-## [3.2.0-rc1] - 2022-02-14
-### Fixed
-- Fix buffer upcast leading to misalignment
-- Fix check whether SM3 is available
-- Update git.mk to support R/O src-dir
+This is a bugfix release. CHANGELOG.md is currently as follows:
 
 ### Added
-- Add additional IFX root CAs
+   - Contributor Covenant Code of Conduct.
 
-Since we had only few feedback on -rc0 I want to release final in the next =
-few days.
+### Fixed
+   - superflous warning messages about tcti status.
+     - `WARNING **: 11:00:56.205: tcti_conf before: "(null)"`
+     - `WARNING **: 11:00:56.205: tcti_conf after: "mssim"`
+   - GCC 11 build error: error: argument 2 of `__atomic_load=E2=80=99 disca=
+rds =
 
-Cheers,
-Andreas
---===============3066044964554089974==--
+=E2=80=98volatile=E2=80=99 qualifier`
+   - Initialize gerror pointer variable to NULL to fix use of =
+
+unitialized memory and segfault.
+   - Updated missing defaults in manpage.
+   - Port CI to composite actions in tpm2-software/ci.
+
+### Removed
+   - Dependency on 'which' utility in configure.ac.
+   - ubuntu-16.04 from CI.
+
+Best,
+Philip
+--===============9135391835795891121==--
 
