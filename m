@@ -1,18 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============9020790538836183034=="
+Content-Type: multipart/mixed; boundary="===============0594821766156586505=="
 MIME-Version: 1.0
-From: arlotito at microsoft.com
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
 Subject: [tpm2] Re: Help - how to store a certificate in the NV under the
  platform hierarchy?
-Date: Thu, 17 Feb 2022 10:21:02 +0000
-Message-ID: <20220217102102.2855.23112@ml01.vlan13.01.org>
-In-Reply-To: 20220217101515.2855.27262@ml01.vlan13.01.org
+Date: Thu, 17 Feb 2022 10:29:03 +0000
+Message-ID: <AS8P194MB1669E8D2E9D32D5DBC0268A3A6369@AS8P194MB1669.EURP194.PROD.OUTLOOK.COM>
+In-Reply-To: 20220217102102.2855.23112@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9020790538836183034==
+--===============0594821766156586505==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+Ok, I guess you are using swtpm_bios, right ?
+
+In that case the BIOS behavior is simulated, including setting the PH passw=
+ord.
+
+You want to pass -u to swtpm_bios to keep PH open:
+https://github.com/stefanberger/swtpm/blob/master/man/man8/swtpm_bios.pod
+
+________________________________________
+Von: arlotito(a)microsoft.com <arlotito(a)microsoft.com>
+Gesendet: Donnerstag, 17. Februar 2022 11:21
+An: tpm2(a)lists.01.org
+Betreff: [tpm2] Re: Help - how to store a certificate in the NV under the p=
+latform hierarchy?
 
 hmm, interesting...
 
@@ -30,5 +45,9 @@ Maybe, as you commented, it could be a specific issue of the ibm swtpm (v16=
 I'll keep on working on both (swtpm and rpi4/slb9670)
 
 Thanks!
---===============9020790538836183034==--
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+--===============0594821766156586505==--
 
