@@ -1,25 +1,54 @@
-Content-Type: multipart/mixed; boundary="===============7686761956636955287=="
+Content-Type: multipart/mixed; boundary="===============4871325946752919949=="
 MIME-Version: 1.0
-From: arlotito at microsoft.com
-Subject: [tpm2] Help - how to store a certificate in the NV under the platform
- hierarchy?
-Date: Thu, 17 Feb 2022 09:19:41 +0000
-Message-ID: <20220217091941.2855.69362@ml01.vlan13.01.org>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: [tpm2] Re: Help - how to store a certificate in the NV under the
+ platform hierarchy?
+Date: Thu, 17 Feb 2022 09:23:23 +0000
+Message-ID: <AS8P194MB166964A48C7CBA153A1F8095A6369@AS8P194MB1669.EURP194.PROD.OUTLOOK.COM>
+In-Reply-To: 20220217091941.2855.69362@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7686761956636955287==
+--===============4871325946752919949==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+The TPM resets the PH password to the empty password on every boot, correct.
+But the BIOS is supposed to set the PH password to a random value directly =
+after boot.
+Reason being that the OS/UserSpace shall not be able to interfere with it.
+So you need to do this operation within the BIOS context.
+
+
+
+
+
+
+---
+
+Andreas Fuchs
+Head of Department Cyberphysical System Security
+Head of Group Trustworthy Platforms
+Fraunhofer Institute for Secure Information Technology SIT
+National Research Center for Applied Cybersecurity ATHENE
+Rheinstr. 75 | 64295 Darmstadt | Germany
+T +49 6151 869 228 | F +49 6151 869 224
+https://www.sit.fraunhofer.de | https://www.athene-center.de
+
+
+________________________________________
+Von: arlotito(a)microsoft.com <arlotito(a)microsoft.com>
+Gesendet: Donnerstag, 17. Februar 2022 10:19
+An: tpm2(a)lists.01.org
+Betreff: [tpm2] Help - how to store a certificate in the NV under the platf=
+orm hierarchy?
+
 Hi,
 the use case is related to idevid onboarding identity, an immutable identit=
 y created by the platform manufacturer and stored as follows:
--key under the Endorsement Hierarchy =
-
--certificate under the Platform Hierarchy =
-
+-key under the Endorsement Hierarchy
+-certificate under the Platform Hierarchy
 
 I managed to create the key under the EK hierarchy and store it in the NV, =
 but how to store the certificate under the PH?
@@ -55,5 +84,9 @@ I know that all what I stated above could be wrong or inaccurate... but i'm=
 
 Thanks!
 Arturo.
---===============7686761956636955287==--
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org
+%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+--===============4871325946752919949==--
 
