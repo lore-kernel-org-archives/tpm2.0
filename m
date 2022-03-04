@@ -1,17 +1,30 @@
-Content-Type: multipart/mixed; boundary="===============1130419142590606615=="
+Content-Type: multipart/mixed; boundary="===============2401506640421396502=="
 MIME-Version: 1.0
 From: Sievert, James <james.sievert at bsci.com>
-Subject: [tpm2] tpm2_createprimary to a transient handle...
-Date: Fri, 04 Mar 2022 04:17:57 +0000
+Subject: [tpm2] Re: tpm2_createprimary to a transient handle...
+Date: Fri, 04 Mar 2022 13:23:26 +0000
 Message-ID: <
- <DS7PR03MB5576F2B3BEB5D23EB1C68ACA9A059@DS7PR03MB5576.namprd03.prod.outlook.com>>
+ <DS7PR03MB5576EFA6C19BB6A0CA8E247D9A059@DS7PR03MB5576.namprd03.prod.outlook.com>>
+In-Reply-To: DS7PR03MB5576F2B3BEB5D23EB1C68ACA9A059@DS7PR03MB5576.namprd03.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1130419142590606615==
+--===============2401506640421396502==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+More specifically, I'm looking at how to implement Section 2.1.2.2 of TCG C=
+redential Profile EK 2.0 (trustedcomputinggroup.org)<https://trustedcomputi=
+nggroup.org/wp-content/uploads/TCG_IWG_EKCredentialProfile_v2p4_r3.pdf>.  I=
+ need to sign the CSR with the EK using openssl cms and the tpm2tss engine.=
+  With that, I need the transient handle of the EK that corresponds to the =
+public key held in the cert. located in TPM NV slot 0x01c0000a.
+
+From: Sievert, James <james.sievert(a)bsci.com>
+Sent: Thursday, March 3, 2022 11:18 PM
+To: tpm2(a)lists.01.org
+Subject: {External} [tpm2] tpm2_createprimary to a transient handle...
 
 Hi,
 
@@ -20,7 +33,7 @@ ent handle?
 
 Thanks.
 
---===============1130419142590606615==
+--===============2401506640421396502==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -39,24 +52,42 @@ IE1hdGgiOwoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9CkBmb250LWZhY2UKCXtmb250
 LWZhbWlseTpDYWxpYnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQovKiBTdHls
 ZSBEZWZpbml0aW9ucyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFs
 Cgl7bWFyZ2luOjBpbjsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIs
-c2Fucy1zZXJpZjt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwt
-Y29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93
-dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250
-LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3NpemU6
-OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2LldvcmRT
-ZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28g
-OV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4K
-PC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0
-IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFw
-ZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIgbGlu
-az0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiIHN0eWxlPSJ3b3JkLXdyYXA6YnJlYWstd29yZCI+
-CjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkhpLDxvOnA+
-PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+SXMgdGhlcmUgYSB3YXkgdG8gZ2V0IHRoZSByZXN1bHQgb2YgdHBt
-Ml9jcmVhdGVwcmltYXJ5IGxvYWRlZCBpbnRvIGEgdHJhbnNpZW50IGhhbmRsZT88bzpwPjwvbzpw
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNz
-PSJNc29Ob3JtYWwiPlRoYW5rcy48bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1s
-Pgo=
+c2Fucy1zZXJpZjt9CmE6bGluaywgc3Bhbi5Nc29IeXBlcmxpbmsKCXttc28tc3R5bGUtcHJpb3Jp
+dHk6OTk7Cgljb2xvcjojMDU2M0MxOwoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9CnNwYW4u
+RW1haWxTdHlsZTE5Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtcmVwbHk7Cglmb250LWZhbWls
+eToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7fQouTXNvQ2hwRGVmYXVs
+dAoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5OwoJZm9udC1zaXplOjEwLjBwdDt9CkBwYWdl
+IFdvcmRTZWN0aW9uMQoJe3NpemU6OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEu
+MGluIDEuMGluO30KZGl2LldvcmRTZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9z
+dHlsZT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRp
+dCIgc3BpZG1heD0iMTAyNiIgLz4KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDld
+Pjx4bWw+CjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQi
+IGRhdGE9IjEiIC8+CjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8
+Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiIHN0eWxlPSJ3
+b3JkLXdyYXA6YnJlYWstd29yZCI+CjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+CjxwIGNsYXNz
+PSJNc29Ob3JtYWwiPk1vcmUgc3BlY2lmaWNhbGx5LCBJJiM4MjE3O20gbG9va2luZyBhdCBob3cg
+dG8gaW1wbGVtZW50IFNlY3Rpb24gMi4xLjIuMiBvZgo8YSBocmVmPSJodHRwczovL3RydXN0ZWRj
+b21wdXRpbmdncm91cC5vcmcvd3AtY29udGVudC91cGxvYWRzL1RDR19JV0dfRUtDcmVkZW50aWFs
+UHJvZmlsZV92MnA0X3IzLnBkZiI+ClRDRyBDcmVkZW50aWFsIFByb2ZpbGUgRUsgMi4wICh0cnVz
+dGVkY29tcHV0aW5nZ3JvdXAub3JnKTwvYT4uJm5ic3A7IEkgbmVlZCB0byBzaWduIHRoZSBDU1Ig
+d2l0aCB0aGUgRUsgdXNpbmcgb3BlbnNzbCBjbXMgYW5kIHRoZSB0cG0ydHNzIGVuZ2luZS4mbmJz
+cDsgV2l0aCB0aGF0LCBJIG5lZWQgdGhlIHRyYW5zaWVudCBoYW5kbGUgb2YgdGhlIEVLIHRoYXQg
+Y29ycmVzcG9uZHMgdG8gdGhlIHB1YmxpYyBrZXkgaGVsZCBpbiB0aGUgY2VydC4gbG9jYXRlZCBp
+biBUUE0KIE5WIHNsb3QgMHgwMWMwMDAwYS48bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxkaXY+CjxkaXYgc3R5bGU9ImJvcmRlcjpub25l
+O2JvcmRlci10b3A6c29saWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0IDBpbiAwaW4gMGlu
+Ij4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+RnJvbTo8L2I+IFNpZXZlcnQsIEphbWVzICZsdDtq
+YW1lcy5zaWV2ZXJ0QGJzY2kuY29tJmd0OyA8YnI+CjxiPlNlbnQ6PC9iPiBUaHVyc2RheSwgTWFy
+Y2ggMywgMjAyMiAxMToxOCBQTTxicj4KPGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9yZzxicj4K
+PGI+U3ViamVjdDo8L2I+IHtFeHRlcm5hbH0gW3RwbTJdIHRwbTJfY3JlYXRlcHJpbWFyeSB0byBh
+IHRyYW5zaWVudCBoYW5kbGUuLi48bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvZGl2Pgo8cCBjbGFz
+cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+SGksPG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+
+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JcyB0aGVyZSBhIHdheSB0byBnZXQgdGhlIHJlc3Vs
+dCBvZiB0cG0yX2NyZWF0ZXByaW1hcnkgbG9hZGVkIGludG8gYSB0cmFuc2llbnQgaGFuZGxlPzxv
+OnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4K
+PHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhhbmtzLjxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5
+Pgo8L2h0bWw+Cg==
 
---===============1130419142590606615==--
+--===============2401506640421396502==--
 
