@@ -1,75 +1,173 @@
-Content-Type: multipart/mixed; boundary="===============4996268887408648916=="
+Content-Type: multipart/mixed; boundary="===============2186095311882848974=="
 MIME-Version: 1.0
-From: David Challener <david.c.challener at gmail.com>
-Subject: [tpm2] Re: tpm2_createprimary to a transient handle...
-Date: Sun, 06 Mar 2022 16:47:21 -0500
-Message-ID: <e4326598-7026-17d2-0cea-bf475de1826f@gmail.com>
-In-Reply-To: DS7PR03MB55765F865300FB946F47FCAD9A079@DS7PR03MB5576.namprd03.prod.outlook.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: What's the equivalent of tpm2_createek?
+Date: Sun, 06 Mar 2022 22:57:29 +0000
+Message-ID: <SN6PR11MB3437B76D069779C93575192EB8079@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: DS7PR03MB5576B8DE42E2FCC6EA0E26AB9A059@DS7PR03MB5576.namprd03.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4996268887408648916==
+--===============2186095311882848974==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The problem we were trying to solve was a privacy one.
+it depends on the options. Initially their was only 2 templates, one for RS=
+A and EK template as defined in L-1 and L-2 of https://trustedcomputinggrou=
+p.org/wp-content/uploads/TCG_IWG_Credential_Profile_EK_V2.1_R13.pdf. Read t=
+he section B.2 on backwards compatibility.
+
+Then you just take that template and convert it to tpm2_createprimary argum=
+ents, for example the RSA option it would look like this:
+
+# policy hash to binary form
+echo -n '837197674484b3f81a90cc8d46a5d724fd52d76e06520b64f2a1da1b331469aa' =
+| xxd -r -p > policy.dat
+# unique data (256 bytes of zeros per template)
+dd if=3D/dev/zero of=3Dunique.dat bs=3D256 count=3D1
+
+tpm2 createprimary -Cendorsement -Grsa -a 'fixedtpm|fixedparent|sensitiveda=
+taorigin|adminwithpolicy|restricted|decrypt' -L policy.dat -u unique.dat -c=
+ primary.ctx
+
+However, for some reason it's not producing the matching key, perhaps I hav=
+e the template wrong, but I noticed that it seems unique isn't changing any=
+thing. I'll have to investigate that more, but in general that's the proces=
+s.
+
+For the other creation templates, they can be defined in NV indices per tha=
+t spec link.
+
+________________________________
+From: Sievert, James <james.sievert(a)bsci.com>
+Sent: Friday, March 4, 2022 4:27 PM
+To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+Subject: [tpm2] What's the equivalent of tpm2_createek?
 
 
-The solution for you can be done many ways.
-
-1) create a signing key and sign it yourself
-
-2) create a signing key and have a CA (usually a privacy CA) sign it as =
-
-a TPM key as follows:
-
-A) Create an AIK signing key. Send its public portion of it o the =
-
-Privacy CA along with the EK certificate
-
-B) Create a regular signing key and use TPM2_Certify to sign this key =
-
-with the AIK. send this to the PrivacyCA.
-
-C) the privacy CA creates certificates for the signing keys and an AES =
-
-key. It encrypts the {AES key along with the public portion of the AIK =
-
-key} with the public portion of the EK.=C2=A0 It sends the result to the =
-
-owner of the TPM.
-
-D) the owner of the TPM uses the EK to decrypt the blob. (This will only =
-
-work if both the AIK and the EK are loaded)=C2=A0 This results it the AES k=
-ey.
-
-Because of the EK cert, you know the EK is only on one TPM. Because the =
-
-TPM was able to decrypt the AES key you know
-
- =C2=A0=C2=A0=C2=A0 i) that the EK is bound to that TPM
-
- =C2=A0=C2=A0 ii) that the AIK is bound to the same TPM as the EK and is a =
-real =
-
-AIK (it won't decrypt it otherwise)
-
-Because the AIK certified the the signing key, you know it is also on =
-
-the same TPM (and if the public portion of it signed by the AIK says it =
-
-is fixedTPM, you know that about the signing key as well.)
-
-If you remote CA wants to, it CAN put in the certs it makes what EK they =
-
-are bound to. (e.g. for an enterprise for its own PCs). If it is a =
-
-PrivacyCA, it promises not to.
+Hi,
 
 
 
+What=E2=80=99s the equivalent of tpm2_createek using tpm2_createprimary?
 
---===============4996268887408648916==--
+
+
+Thanks.
+
+--===============2186095311882848974==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1XaW5kb3dzLTEyNTIiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiIHN0
+eWxlPSJkaXNwbGF5Om5vbmU7Ij4gUCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9IDwv
+c3R5bGU+CjwvaGVhZD4KPGJvZHkgZGlyPSJsdHIiPgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTog
+Q2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
+b2xvcjogcmdiKDAsIDAsIDApOyI+Cml0IGRlcGVuZHMgb24gdGhlIG9wdGlvbnMuIEluaXRpYWxs
+eSB0aGVpciB3YXMgb25seSAyIHRlbXBsYXRlcywgb25lIGZvciZuYnNwOzxzcGFuIHN0eWxlPSJj
+b2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGlj
+YSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyI+UlNBIGFuZCBFSyB0ZW1wbGF0ZSBhcyBk
+ZWZpbmVkIGluIEwtMSBhbmQgTC0yIG9mJm5ic3A7PGEgaHJlZj0iaHR0cHM6Ly90cnVzdGVkY29t
+cHV0aW5nZ3JvdXAub3JnL3dwLWNvbnRlbnQvdXBsb2Fkcy9UQ0dfSVdHX0NyZWRlbnRpYWxfUHJv
+ZmlsZV9FS19WMi4xX1IxMy5wZGYiIGlkPSJMUE5vTFBPV0FMaW5rUHJldmlldyI+aHR0cHM6Ly90
+cnVzdGVkY29tcHV0aW5nZ3JvdXAub3JnL3dwLWNvbnRlbnQvdXBsb2Fkcy9UQ0dfSVdHX0NyZWRl
+bnRpYWxfUHJvZmlsZV9FS19WMi4xX1IxMy5wZGY8L2E+LgogUmVhZCB0aGUgc2VjdGlvbiBCLjIg
+b24gYmFja3dhcmRzIGNvbXBhdGliaWxpdHkuPC9zcGFuPjwvZGl2Pgo8ZGl2IGNsYXNzPSJfRW50
+aXR5IF9FVHlwZV9PV0FMaW5rUHJldmlldyBfRUlkX09XQUxpbmtQcmV2aWV3IF9FUmVhZG9ubHlf
+MSI+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0
+aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4K
+PGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2
+ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsi
+PgpUaGVuIHlvdSBqdXN0IHRha2UgdGhhdCB0ZW1wbGF0ZSBhbmQgY29udmVydCBpdCB0byB0cG0y
+X2NyZWF0ZXByaW1hcnkgYXJndW1lbnRzLCBmb3IgZXhhbXBsZSZuYnNwOzxzcGFuIHN0eWxlPSJj
+b2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGlj
+YSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyI+dGhlIFJTQSBvcHRpb24gaXQgd291bGQg
+bG9vayBsaWtlIHRoaXM6PC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2Fs
+aWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xv
+cjogcmdiKDAsIDAsIDApOyI+CjxzcGFuIHN0eWxlPSJjb2xvcjogcmdiKDAsIDAsIDApOyBmb250
+LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXpl
+OiAxMnB0OyI+PGJyPgo8L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
+YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
+OiByZ2IoMCwgMCwgMCk7Ij4KPHNwYW4gc3R5bGU9ImNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQt
+ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDEycHQ7Ij4jIHBvbGljeSBoYXNoIHRvIGJpbmFyeSBmb3JtPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0
+eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsg
+Zm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CjxzcGFuIHN0eWxlPSJjb2xv
+cjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwg
+c2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyI+ZWNobyAtbiAnODM3MTk3Njc0NDg0YjNmODFh
+OTBjYzhkNDZhNWQ3MjRmZDUyZDc2ZTA2NTIwYjY0ZjJhMWRhMWIzMzE0NjlhYScgfCB4eGQgLXIg
+LXAgJmd0OyBwb2xpY3kuZGF0PGJyPgo8L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFt
+aWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEy
+cHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPHNwYW4gc3R5bGU9ImNvbG9yOiByZ2IoMCwgMCwg
+MCk7IGZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBm
+b250LXNpemU6IDEycHQ7Ij4jIHVuaXF1ZSBkYXRhICgyNTYgYnl0ZXMgb2YgemVyb3MgcGVyIHRl
+bXBsYXRlKTwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFy
+aWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
+LCAwLCAwKTsiPgo8c3BhbiBzdHlsZT0iY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6
+IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsi
+PmRkIGlmPS9kZXYvemVybyBvZj11bmlxdWUuZGF0IGJzPTI1NiBjb3VudD0xPGJyPgo8L3NwYW4+
+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNh
+LCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPHNw
+YW4gc3R5bGU9ImNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlh
+bCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7Ij48YnI+Cjwvc3Bhbj48
+L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2Es
+IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8c3Bh
+biBzdHlsZT0iY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
+LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsiPnRwbTIgY3JlYXRlcHJp
+bWFyeSAtQ2VuZG9yc2VtZW50IC1HcnNhIC1hICdmaXhlZHRwbXxmaXhlZHBhcmVudHxzZW5zaXRp
+dmVkYXRhb3JpZ2lufGFkbWlud2l0aHBvbGljeXxyZXN0cmljdGVkfGRlY3J5cHQnIC1MIHBvbGlj
+eS5kYXQgLXUgdW5pcXVlLmRhdCAtYyBwcmltYXJ5LmN0eDwvc3Bhbj48YnI+CjwvZGl2Pgo8ZGl2
+IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJp
+ZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CjxzcGFuIHN0eWxlPSJj
+b2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGlj
+YSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyI+PGJyPgo8L3NwYW4+PC9kaXY+CjxkaXYg
+c3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlm
+OyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPHNwYW4gc3R5bGU9ImNv
+bG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNh
+LCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7Ij5Ib3dldmVyLCBmb3Igc29tZSByZWFzb24g
+aXQncyBub3QgcHJvZHVjaW5nIHRoZSBtYXRjaGluZyBrZXksIHBlcmhhcHMgSSBoYXZlIHRoZSB0
+ZW1wbGF0ZSB3cm9uZywgYnV0IEkgbm90aWNlZCB0aGF0IGl0IHNlZW1zIHVuaXF1ZSBpc24ndCBj
+aGFuZ2luZyBhbnl0aGluZy4KIEknbGwgaGF2ZSB0byBpbnZlc3RpZ2F0ZSB0aGF0IG1vcmUsIGJ1
+dCBpbiBnZW5lcmFsIHRoYXQncyB0aGUgcHJvY2Vzcy48L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9
+ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250
+LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KPHNwYW4gc3R5bGU9ImNvbG9yOiBy
+Z2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5z
+LXNlcmlmOyBmb250LXNpemU6IDEycHQ7Ij48YnI+Cjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0i
+Zm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQt
+c2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8c3BhbiBzdHlsZT0iY29sb3I6IHJn
+YigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMt
+c2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsiPkZvciB0aGUgb3RoZXIgY3JlYXRpb24gdGVtcGxhdGVz
+LCB0aGV5IGNhbiBiZSBkZWZpbmVkIGluIE5WIGluZGljZXMgcGVyIHRoYXQgc3BlYyBsaW5rLjwv
+c3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2
+ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsi
+Pgo8c3BhbiBzdHlsZT0iY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IENhbGlicmks
+IEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsiPjxicj4KPC9z
+cGFuPjwvZGl2Pgo8ZGl2IGlkPSJhcHBlbmRvbnNlbmQiPjwvZGl2Pgo8aHIgc3R5bGU9ImRpc3Bs
+YXk6aW5saW5lLWJsb2NrO3dpZHRoOjk4JSIgdGFiaW5kZXg9Ii0xIj4KPGRpdiBpZD0iZGl2UnBs
+eUZ3ZE1zZyIgZGlyPSJsdHIiPjxmb250IGZhY2U9IkNhbGlicmksIHNhbnMtc2VyaWYiIHN0eWxl
+PSJmb250LXNpemU6MTFwdCIgY29sb3I9IiMwMDAwMDAiPjxiPkZyb206PC9iPiBTaWV2ZXJ0LCBK
+YW1lcyAmbHQ7amFtZXMuc2lldmVydEBic2NpLmNvbSZndDs8YnI+CjxiPlNlbnQ6PC9iPiBGcmlk
+YXksIE1hcmNoIDQsIDIwMjIgNDoyNyBQTTxicj4KPGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9y
+ZyAmbHQ7dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PGJyPgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIFdo
+YXQncyB0aGUgZXF1aXZhbGVudCBvZiB0cG0yX2NyZWF0ZWVrPzwvZm9udD4KPGRpdj4mbmJzcDs8
+L2Rpdj4KPC9kaXY+CjxzdHlsZT4KPCEtLQpAZm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6IkNhbWJy
+aWEgTWF0aCJ9CkBmb250LWZhY2UKCXtmb250LWZhbWlseTpDYWxpYnJpfQpwLnhfTXNvTm9ybWFs
+LCBsaS54X01zb05vcm1hbCwgZGl2LnhfTXNvTm9ybWFsCgl7bWFyZ2luOjBpbjsKCWZvbnQtc2l6
+ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZn0Kc3Bhbi54X0VtYWls
+U3R5bGUxNwoJe2ZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93
+dGV4dH0KLnhfTXNvQ2hwRGVmYXVsdAoJe2ZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlm
+fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXttYXJnaW46MS4waW4gMS4waW4gMS4waW4gMS4waW59CmRp
+di54X1dvcmRTZWN0aW9uMQoJe30KLS0+Cjwvc3R5bGU+CjxkaXYgbGFuZz0iRU4tVVMiIGxpbms9
+IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIiBzdHlsZT0id29yZC13cmFwOmJyZWFrLXdvcmQiPgo8
+ZGl2IGNsYXNzPSJ4X1dvcmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+SGksPC9w
+Pgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPiZuYnNwOzwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFs
+Ij5XaGF0knMgdGhlIGVxdWl2YWxlbnQgb2YgdHBtMl9jcmVhdGVlayB1c2luZyB0cG0yX2NyZWF0
+ZXByaW1hcnk/PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPiZuYnNwOzwvcD4KPHAgY2xhc3M9
+InhfTXNvTm9ybWFsIj5UaGFua3MuPC9wPgo8L2Rpdj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+
+--===============2186095311882848974==--
 
