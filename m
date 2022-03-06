@@ -1,60 +1,46 @@
-Content-Type: multipart/mixed; boundary="===============0392005198518491857=="
+Content-Type: multipart/mixed; boundary="===============3160735889803107702=="
 MIME-Version: 1.0
-From: Sievert, James <james.sievert at bsci.com>
-Subject: [tpm2] What's the equivalent of tpm2_createek?
-Date: Fri, 04 Mar 2022 22:27:03 +0000
-Message-ID: <
- <DS7PR03MB5576B8DE42E2FCC6EA0E26AB9A059@DS7PR03MB5576.namprd03.prod.outlook.com>>
+From: Philip Tricca <flihp at twobit.org>
+Subject: [tpm2] [RELEASE] tpm2-abrmd 2.4.1
+Date: Sat, 05 Mar 2022 18:43:47 -0800
+Message-ID: <f2f8d791-c27c-88c8-33b1-b815ecdbc853@twobit.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0392005198518491857==
+--===============3160735889803107702==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-What's the equivalent of tpm2_createek using tpm2_createprimary?
+Version 2.4.1 has been tagged and a release posted to github:
 
-Thanks.
+https://github.com/tpm2-software/tpm2-abrmd/releases/tag/2.4.1
 
---===============0392005198518491857==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+This is a bugfix release. The CHANGELOG entry is:
+### Added
+   - Contributor Covenant Code of Conduct.
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6ZHQ9InV1aWQ6QzJGNDEwMTAtNjVC
-My0xMWQxLUEyOUYtMDBBQTAwQzE0ODgyIiB4bWxuczptPSJodHRwOi8vc2NoZW1hcy5taWNyb3Nv
-ZnQuY29tL29mZmljZS8yMDA0LzEyL29tbWwiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy9UUi9S
-RUMtaHRtbDQwIj4KPGhlYWQ+CjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVu
-dD0idGV4dC9odG1sOyBjaGFyc2V0PXVzLWFzY2lpIj4KPG1ldGEgbmFtZT0iR2VuZXJhdG9yIiBj
-b250ZW50PSJNaWNyb3NvZnQgV29yZCAxNSAoZmlsdGVyZWQgbWVkaXVtKSI+CjxzdHlsZT48IS0t
-Ci8qIEZvbnQgRGVmaW5pdGlvbnMgKi8KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OiJDYW1icmlh
-IE1hdGgiOwoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9CkBmb250LWZhY2UKCXtmb250
-LWZhbWlseTpDYWxpYnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQovKiBTdHls
-ZSBEZWZpbml0aW9ucyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFs
-Cgl7bWFyZ2luOjBpbjsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIs
-c2Fucy1zZXJpZjt9CnNwYW4uRW1haWxTdHlsZTE3Cgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwt
-Y29tcG9zZTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmOwoJY29sb3I6d2luZG93
-dGV4dDt9Ci5Nc29DaHBEZWZhdWx0Cgl7bXNvLXN0eWxlLXR5cGU6ZXhwb3J0LW9ubHk7Cglmb250
-LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe3NpemU6
-OC41aW4gMTEuMGluOwoJbWFyZ2luOjEuMGluIDEuMGluIDEuMGluIDEuMGluO30KZGl2LldvcmRT
-ZWN0aW9uMQoJe3BhZ2U6V29yZFNlY3Rpb24xO30KLS0+PC9zdHlsZT48IS0tW2lmIGd0ZSBtc28g
-OV0+PHhtbD4KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4K
-PC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlbGF5b3V0
-IHY6ZXh0PSJlZGl0Ij4KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRhdGE9IjEiIC8+CjwvbzpzaGFw
-ZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4KPC9oZWFkPgo8Ym9keSBsYW5nPSJFTi1VUyIgbGlu
-az0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiIHN0eWxlPSJ3b3JkLXdyYXA6YnJlYWstd29yZCI+
-CjxkaXYgY2xhc3M9IldvcmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkhpLDxvOnA+
-PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+V2hhdCYjODIxNztzIHRoZSBlcXVpdmFsZW50IG9mIHRwbTJfY3Jl
-YXRlZWsgdXNpbmcgdHBtMl9jcmVhdGVwcmltYXJ5PzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhh
-bmtzLjxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
+### Fixed
+   - superflous warning messages about tcti status.
+     - `WARNING **: 11:00:56.205: tcti_conf before: "(null)"`
+     - `WARNING **: 11:00:56.205: tcti_conf after: "mssim"`
+   - GCC 11 build error: error: argument 2 of `__atomic_load=E2=80=99 disca=
+rds =
 
---===============0392005198518491857==--
+=E2=80=98volatile=E2=80=99 qualifier`
+   - Initialize gerror pointer variable to NULL to fix use of =
+
+unitialized memory and segfault.
+   - Updated missing defaults in manpage.
+   - Port CI to composite actions in tpm2-software/ci.
+
+### Removed
+   - Dependency on 'which' utility in configure.ac.
+   - ubuntu-16.04 from CI.
+
+Best,
+Philip
+--===============3160735889803107702==--
 
