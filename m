@@ -1,36 +1,28 @@
-Content-Type: multipart/mixed; boundary="===============7406051037048073951=="
+Content-Type: multipart/mixed; boundary="===============1363103610011643076=="
 MIME-Version: 1.0
-From: Petr Gotthard <petr.gotthard at centrum.cz>
-Subject: [tpm2] [RELEASE] tpm2-openssl 1.1.0
-Date: Tue, 22 Mar 2022 15:22:21 +0100
-Message-ID: <20220322152221.2AEC1565@centrum.cz>
+From: Tadeusz Struk <tstruk at gmail.com>
+Subject: [tpm2] Re: tpm2_flushcontext stuck
+Date: Thu, 24 Mar 2022 12:08:31 -0700
+Message-ID: <fd666b8d-9bfe-89e5-d75d-e22a9bc9afdd@gmail.com>
+In-Reply-To: d9e4b269-39ec-b350-a6cc-ffed39b90ba7@sit.fraunhofer.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7406051037048073951==
+--===============1363103610011643076==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
- =
+On 12/20/21 14:06, Juergen Repp wrote:
+> When /dev/tpmrm0 was used with kernel 5.10.
+> After sending the command read public:
+> 0x80 0x01 0x00 0x00 0x00 0x0e 0x00 0x00 0x01 0x73 0x80 0x00 0x00 0x00
+> the write worked but the poll call in  tcti_device_receive did stuck.
+> With kernel 4.19 write for this command did return -1
 
-I released the tpm2-openssl version 1.1.0 (same as 1.1.0-rc0):
- =
-
-### Fixed
-- Fixed segmentation fault when a signature algorithm is being initialized
-  without a private key.
-
-### Added
-- Added support for the `TPM2OPENSSL_PARENT_AUTH` environment variable.
-- Added the Code of Conduct and Contributing guidelines.
-
-
-The release can be found here:
-https://github.com/tpm2-software/tpm2-openssl/releases/tag/1.1.0
-
-Regards,
-Petr
---===============7406051037048073951==--
+It took awhile, but the fix is now queued for 5.10.109 and above.
+--
+Thanks,
+Tadeusz
+--===============1363103610011643076==--
 
