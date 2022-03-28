@@ -1,28 +1,44 @@
-Content-Type: multipart/mixed; boundary="===============1363103610011643076=="
+Content-Type: multipart/mixed; boundary="===============1229139914032361331=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tstruk at gmail.com>
-Subject: [tpm2] Re: tpm2_flushcontext stuck
-Date: Thu, 24 Mar 2022 12:08:31 -0700
-Message-ID: <fd666b8d-9bfe-89e5-d75d-e22a9bc9afdd@gmail.com>
-In-Reply-To: d9e4b269-39ec-b350-a6cc-ffed39b90ba7@sit.fraunhofer.de
+From: duncan at touch-fire.com
+Subject: [tpm2] TPM2 for PKCS#11 for SoftEther Client Smart Card
+Date: Mon, 28 Mar 2022 22:46:40 +0000
+Message-ID: <20220328224640.2815.81034@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1363103610011643076==
+--===============1229139914032361331==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 12/20/21 14:06, Juergen Repp wrote:
-> When /dev/tpmrm0 was used with kernel 5.10.
-> After sending the command read public:
-> 0x80 0x01 0x00 0x00 0x00 0x0e 0x00 0x00 0x01 0x73 0x80 0x00 0x00 0x00
-> the write worked but the poll call in  tcti_device_receive did stuck.
-> With kernel 4.19 write for this command did return -1
+Hi, =
 
-It took awhile, but the fix is now queued for 5.10.109 and above.
---
-Thanks,
-Tadeusz
---===============1363103610011643076==--
+I have been searching for a way to use the TPM2 module already in my window=
+s laptop, to use as a Smart Card for the SoftEther windows VPN client that =
+I use to connect to work. =
+
+
+SoftEther states that it requires a PKCS#11 device driver, and when I googl=
+e for this, every possible combination of TPM2 and PKCS#11 and windows poin=
+ts to the tpm2-pkcs11 github project. =
+
+However, I cannot see any module / dll download link and I only see a very =
+occasional mention of windows in the github issue list. =
+
+
+I feel like this might be a dumb question, but could I ask if there is an e=
+asy way to achieve this? =
+
+If this project is only for application developers, then does anyone know o=
+f any projects or products that support this? Or even if it is already part=
+ of windows? =
+
+(I am assuming that I am misunderstanding something here, as this seems lik=
+e there would be a huge demand for this with everyone working from home the=
+se days). =
+
+Thank you!
+Duncan.
+--===============1229139914032361331==--
 
