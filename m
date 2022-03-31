@@ -1,30 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============5871526621629734647=="
+Content-Type: multipart/mixed; boundary="===============0131387499742392986=="
 MIME-Version: 1.0
-From: John Connett <jrc at skylon.me.uk>
-Subject: [tpm2] Installing on FreeBSD?
-Date: Thu, 31 Mar 2022 11:55:12 +0100
-Message-ID: <e2d89678-8b03-6159-7f0f-b5e258ed6f1f@skylon.me.uk>
+From: Fuchs, Andreas <andreas.fuchs at sit.fraunhofer.de>
+Subject: [tpm2] Re: Installing on FreeBSD?
+Date: Thu, 31 Mar 2022 11:16:23 +0000
+Message-ID: <AS8P194MB16694511F3CB4C3A21A5D48AA6E19@AS8P194MB1669.EURP194.PROD.OUTLOOK.COM>
+In-Reply-To: e2d89678-8b03-6159-7f0f-b5e258ed6f1f@skylon.me.uk
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5871526621629734647==
+--===============0131387499742392986==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Could you give us the complete Error message ?
+
+Typical fault No1 is that the tpm pseudo-file is not accessible by the curr=
+ent user.
+
+Under linux this is /dev/tpm0 I don't know if it's the same on FreeBSD.
+
+Cheers,
+Andreas
+
+________________________________________
+Von: John Connett <jrc(a)skylon.me.uk>
+Gesendet: Donnerstag, 31. M=C3=A4rz 2022 12:55
+An: tpm2(a)lists.01.org
+Betreff: [tpm2] Installing on FreeBSD?
+
 Is there a simple, step-by-step guide for installing tpm2 on FreeBSD?
 
-I started with a FreeBSD 13.0-RELEASE-p10 installation on x86_64 and =
+I started with a FreeBSD 13.0-RELEASE-p10 installation on x86_64 and instal=
+led the following with "pkg install":
 
-installed the following with "pkg install":
+  *   tpm2-abrmd-2.4.0
+  *   tpm2-tools-5.2
+  *   tpm2-tss-3.1.0
 
-  * tpm2-abrmd-2.4.0
-  * tpm2-tools-5.2
-  * tpm2-tss-3.1.0
-
-then added tpm2_abrmd_enable=3D"YES" and dbus_enable=3D"YES" to =
-
-/etc/rc.conf. The user includes "_tss" in its groups.
+then added tpm2_abrmd_enable=3D"YES" and dbus_enable=3D"YES" to /etc/rc.con=
+f. The user includes "_tss" in its groups.
 
 Attempts to run tpm2_getrandom fail with "Could not initialize TCTI file".
 
@@ -35,90 +50,5 @@ The equivalent on Ubuntu just works.
 Thanks
 --
 John
-
-
---===============5871526621629734647==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CiAgPGhlYWQ+CgogICAgPG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250
-ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgiPgogIDwvaGVhZD4KICA8Ym9keT4KICAgIDxw
-PklzIHRoZXJlIGEgc2ltcGxlLCBzdGVwLWJ5LXN0ZXAgZ3VpZGUgZm9yIGluc3RhbGxpbmcgdHBt
-MiBvbgogICAgICBGcmVlQlNEPzwvcD4KICAgIDxwPkkgc3RhcnRlZCB3aXRoIGEgRnJlZUJTRCAx
-My4wLVJFTEVBU0UtcDEwIGluc3RhbGxhdGlvbiBvbiB4ODZfNjQKICAgICAgYW5kIGluc3RhbGxl
-ZCB0aGUgZm9sbG93aW5nIHdpdGggInBrZyBpbnN0YWxsIjo8L3A+CiAgICA8dWw+CiAgICAgIDxs
-aT50cG0yLWFicm1kLTIuNC4wPC9saT4KICAgICAgPGxpPnRwbTItdG9vbHMtNS4yPC9saT4KICAg
-ICAgPGxpPnRwbTItdHNzLTMuMS4wPC9saT4KICAgIDwvdWw+CiAgICA8cD50aGVuIGFkZGVkIHRw
-bTJfYWJybWRfZW5hYmxlPSJZRVMiIGFuZCBkYnVzX2VuYWJsZT0iWUVTIiB0bwogICAgICAvZXRj
-L3JjLmNvbmYuIFRoZSB1c2VyIGluY2x1ZGVzICJfdHNzIiBpbiBpdHMgZ3JvdXBzLjwvcD4KICAg
-IDxwPkF0dGVtcHRzIHRvIHJ1biB0cG0yX2dldHJhbmRvbSBmYWlsIHdpdGggIkNvdWxkIG5vdCBp
-bml0aWFsaXplCiAgICAgIFRDVEkgZmlsZSIuPC9wPgogICAgPHA+SXQgYXBwZWFycyB0aGF0IEkg
-aGF2ZSBtaXNzZWQgc29tZSBpbXBvcnRhbnQgc3RlcHMhPC9wPgogICAgPHA+VGhlIGVxdWl2YWxl
-bnQgb24gVWJ1bnR1IGp1c3Qgd29ya3MuPC9wPgogICAgPHA+VGhhbmtzPGJyPgogICAgICAtLTxi
-cj4KICAgICAgSm9objxicj4KICAgIDwvcD4KICA8L2JvZHk+CjwvaHRtbD4K
-
---===============5871526621629734647==
-Content-Type: application/pgp-keys
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="OpenPGP_0x8F3115112EB8DB54.asc"
-
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4c0JOQkY2K3VVRUJDQUR0QmMz
-UHlPUXh1TnlOTkFEYzNIOE82UmpUbzNvcVFnVk9iNUhhRnRVT3AzSUFzWDRrCng5ZWZIRm5CRGtX
-ZDBoOVRNQk5PSkJmcTVXR0xVT21yR3JkSVJrUUZFS1ptNDZKQ2ZUQ2VOSyt3N1VNcWIzQmsKZjF3
-R21HY1M0YkVzZDNSQmUxWm5CK0JMa1ljWG1EcUhNT1drejdqMS9UdnM4NkJ0eHlQRlBHQW5rT1BD
-d1JDdQpwZk12cHltVUIvdGppblg1Yi91SitjN0NaUmo3MVNPMUdndnFPMFE4VkN4WU5kTnJyeStu
-eXN5Mm5XTXNWekF1CmZUQjlxQis3ZjM2ZjhMcGJhT0FvRllFOVliYWtxbCtRYUM4Q2IvMVppNy9B
-Ty94S2ZoOTV4Q2tIUllwV29iUk0KMjBYNndiRkFrcFVETU1xcU9yL3duVHhWaUNLZDAwUkpES0xK
-QUJFQkFBSE5IMHB2YUc0Z1EyOXVibVYwZENBOAphbkpqUUhOcmVXeHZiaTV0WlM1MWF6N0N3STRF
-RXdFS0FEZ1dJUVRIQTVxcXVqbHlLY1owVDllUE1SVVJMcmpiClZBVUNYcjY1UVFJYkF3VUxDUWdI
-QWdZVkNna0lDd0lFRmdJREFRSWVBUUlYZ0FBS0NSQ1BNUlVSTHJqYlZBWDEKQ0FEaE5EL09YU3Bx
-WDN2Wm84Wm5SWFRHUnhGVEt3aEJYK2tMV3F3VWd0Tm5ST3RTbE9uaGxLMlNpUzZEcEpNYgpKWnE5
-Vm83K2tERXYwTnc0VXh0Qk1POTRuZVBPWTVhN0dKVTBpZk11TmNNbi9UVGdRT002L2VFRUZzeHlM
-QjVDCjBuK1dkOXBTQ0dpQU5DRTNwYkpnY2w3UlYrclQyaDJDY0hnRGRQanRKOUFDM2xqRXk2RUVC
-NHNGRU9JZzF2K04KMjFMWml2Unk3WmI4ZDNkTnJ6cmVHS2RrS1IyNm1acFdXWEVTN0JENzgwQ1Jx
-QmpUSGtaRmZILzExSVlXK3psQgo0a25VYVExVDZBcTdzRGltNCt6Z285TzROSExabSsycmNiY2ZV
-Ym92NE91eENoQnRCU3VpRFRCWkl4czN1Y1NOCnRZVU5YeURRanFubStjSFJlZHpaaXB2QndzQnpC
-Qk1CQ0FBZEZpRUVMYXprWllyVjlFU1VHUm1UaXZ4eEFkSEkKY3Y0RkFsN0FCUVFBQ2drUWl2eHhB
-ZEhJY3Y0bkxRZ0FxVHdIWkZsVFVRaDJPMHpGRWRMcnVOVjYxZXMzbktiTwpSSlQ3Qy9FY0p0WkEz
-MGV2YUdoOWRibDNmL0RERUpwNzJ0VFNiMlR2QkdzT2xXY3FsYjYyck1Za3dKTDM0WXVRCkpHY1hN
-VFhrL2NWUk16VUZHcktEaGlCdWVCRmxzWXVEWk45WGRSU25Ba3ZKNjVqeGhPeXg1cFZJTXJMZjEy
-NXIKOUNjbTU3TW1LYzJOMmNNY3BoNlpPTngrN1doTjcyZzFtdkI3aUduTzhMY3VtUTR4VEk5cWcr
-bWcySXR3L3hMRwpEUHpudWU0ZEpoVGMvdzI5YnlONTBTdHRHeVFlQUdmRzBPRFJON1g5VUlUbUNw
-Tmg1bjZJamJseDRmSXRJZkYxCncyaGxlZjAyWHZVY0RqK1hVdzhMUGxJMEMvbHRhdGNMWXJDVlo3
-aFVCMy9WcnBLbDYra1lqczdBVFFSZXZybEIKQVFnQW85bkJZWFQ5TXZLQ1VoR0VjNlJPOEU2WWs0
-dzVabmJqV2crZy8zY1djRTd3dCtaeHVSd3B4NERvdUNWWgovcDE3enJpeDIzNGFlcHRmNk9iV3Uz
-dlhxUmVrOFE4TnI3Wjhnd0J2cHMvaWQ0RDA3WEVkTmkzdkNLREpHZFJ6CkJZQkxUQkFCU0ZlSXJr
-WUNtK05haVJnRThYT0JlSnRBSzdvNTl6LzRMMDFNeHlvMDZNakw2R094c0lTVjBSS3MKVnVIR1NS
-WmMzSXNpbHJGaExUbTd2ZzhrSVgzWGk2dmlOb0drbmV0MXNxYTEwMVBuTlYrVjhGczVDTnVEOTZx
-agpJWVkyUHM4U1JmUzBYOTljYWJUYU9CRVNzZUZqenQ5TjhEOUFRR0RIWVo1Ti9DMXcxUGx3T0dx
-TFlmZDFZdDQwCnMzZFUzdkpYVnJVYUpjUmxEV2NrNnhKK3Z3QVJBUUFCd3NCMkJCZ0JDZ0FnRmlF
-RXh3T2Fxcm81Y2luR2RFL1gKanpFVkVTNjQyMVFGQWw2K3VVRUNHd3dBQ2drUWp6RVZFUzY0MjFR
-NVpRZ0E3QndIS1ZOK0dUYUdzSWpQOWlJbwo1aG16YnNJZldxcmRvQm9xVkVJSXNSbkp5NXhtT2tT
-azdlNEIvNGM1Y0F4QUZobTJjVCtIQVBGUWJMV0FSVUExCnRtUXAxcUtLUkdQdDVwM0tzNU9lNmFM
-ay9teXJmbStxVnFuYytmZk1oaGM5YVhuVUdnMjRucUhteWVjK3VwdDMKZWUrZDdVc2lpTkNmVnlB
-cEVWZmt5OFFtMm1IUDhBbEs0ZmdUV0k1UUdNTkFqSXVQTDl5ZjEyNzdHSXBBUTA3agpkYUx3OVhK
-TDVLaDRyYWVwV284VUoxbkRuaWF6TUNJUWlkUlFoZnFVb1B6eW1sWEhMQ3lra3Rhempwd1IzZmR1
-CktiUmgzY1Z2YzdIakU1NDJmSUM2NEx2WTNMUVpqYk5KRHlwK1RFd3hhcnBPYXBSQmN6dC9waVlx
-VUV2MDJveXgKckE9PQo9RENyegotLS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
-
---===============5871526621629734647==
-Content-Type: application/pgp-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="OpenPGP_signature.sig"
-
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCndzQjVCQUFCQ0FBakZpRUV4d09hcXJvNWNp
-bkdkRS9YanpFVkVTNjQyMVFGQW1KRmlKQUZBd0FBQUFBQUNna1FqekVWRVM2NDIxUmEKeEFnQWxW
-RHplSldmYmtYc2dFRDVlcVRpemt6M3VWd2xwMUR3R05CcURId3pjSGw1dUZqYXpuVVh1SU1kNXdh
-eUpkN0hUSTUwNDVSRApoemhFRkJkRk81QTRIZHV5a1h0TlplM2FKRjhqMkFMNExuUUtOZjV6b2kr
-UkZVd0dnTlZOdm8wUXVHYjJybkhUcjYvWGRNYWlmRW9jClJuNWFCa3BEZnNKaU9HbEs5RU1USWRv
-ZjZnSUhENERjY0t0TmV5cVBvNTl2L3UrbmozTHh4ckxZNDVETHB5NUJFN3dXRTBKYUovUFUKaW1O
-bnF0ZFR5U2ZaZmpJR3NrOVJzVUtweUI3WWJGbWl2bVdSRnN3ODVkdXZoZldwU1k0NHBhVFZqU3lR
-Q3kzc3JtMkZrQkdseHlkSgp5S0doQTcyZGlsbDJUUlI2aDFPbmNVZkY4bU9ldER4VGVEd0ROK1c4
-akE9PQo9eDFJagotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0tLS0K
-
---===============5871526621629734647==--
+--===============0131387499742392986==--
 
