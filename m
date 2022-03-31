@@ -1,64 +1,124 @@
-Content-Type: multipart/mixed; boundary="===============1110311004153293155=="
+Content-Type: multipart/mixed; boundary="===============5871526621629734647=="
 MIME-Version: 1.0
-From: Han <keepsimple at gmail.com>
-Subject: [tpm2] Re: tpm2_flushcontext stuck
-Date: Tue, 29 Mar 2022 14:31:18 -0700
-Message-ID: <CAEjGaqeO5NoTifSvGKx7-OL_obYSoU-3M70-d3DZ9acF7Rr2AA@mail.gmail.com>
-In-Reply-To: 0d0bab50-a8dd-4346-9eb7-234a929c9654@gmail.com
+From: John Connett <jrc at skylon.me.uk>
+Subject: [tpm2] Installing on FreeBSD?
+Date: Thu, 31 Mar 2022 11:55:12 +0100
+Message-ID: <e2d89678-8b03-6159-7f0f-b5e258ed6f1f@skylon.me.uk>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1110311004153293155==
+--===============5871526621629734647==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thank you for the fix!
+Is there a simple, step-by-step guide for installing tpm2 on FreeBSD?
 
-On Tue, Mar 29, 2022 at 2:05 PM Tadeusz Struk <tstruk(a)gmail.com> wrote:
+I started with a FreeBSD 13.0-RELEASE-p10 installation on x86_64 and =
 
-> On 3/29/22 13:01, Roberts, William C wrote:
-> > Do you have a link to the patch so it's archived in this thread for
-> > those searching for a fix?
->
-> Yes, here it is:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?=
-id=3D2e8e4c8f6673247e22efc7985ce5497accd16f88
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
->
+installed the following with "pkg install":
 
---===============1110311004153293155==
+  * tpm2-abrmd-2.4.0
+  * tpm2-tools-5.2
+  * tpm2-tss-3.1.0
+
+then added tpm2_abrmd_enable=3D"YES" and dbus_enable=3D"YES" to =
+
+/etc/rc.conf. The user includes "_tss" in its groups.
+
+Attempts to run tpm2_getrandom fail with "Could not initialize TCTI file".
+
+It appears that I have missed some important steps!
+
+The equivalent on Ubuntu just works.
+
+Thanks
+--
+John
+
+
+--===============5871526621629734647==
 Content-Type: text/html
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="attachment.htm"
 
-PGRpdiBkaXI9Imx0ciI+VGhhbmsgeW91IGZvciB0aGUgZml4IcKgPC9kaXY+PGJyPjxkaXYgY2xh
-c3M9ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0ibHRyIiBjbGFzcz0iZ21haWxfYXR0ciI+T24gVHVl
-LCBNYXIgMjksIDIwMjIgYXQgMjowNSBQTSBUYWRldXN6IFN0cnVrICZsdDs8YSBocmVmPSJtYWls
-dG86dHN0cnVrQGdtYWlsLmNvbSI+dHN0cnVrQGdtYWlsLmNvbTwvYT4mZ3Q7IHdyb3RlOjxicj48
-L2Rpdj48YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBw
-eCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQtd2lkdGg6MXB4O2JvcmRlci1sZWZ0LXN0eWxlOnNvbGlk
-O2JvcmRlci1sZWZ0LWNvbG9yOnJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+T24g
-My8yOS8yMiAxMzowMSwgUm9iZXJ0cywgV2lsbGlhbSBDIHdyb3RlOjxicj4KJmd0OyBEbyB5b3Ug
-aGF2ZSBhIGxpbmsgdG8gdGhlIHBhdGNoIHNvIGl0JiMzOTtzIGFyY2hpdmVkIGluIHRoaXMgdGhy
-ZWFkIGZvcjxicj4KJmd0OyB0aG9zZSBzZWFyY2hpbmcgZm9yIGEgZml4Pzxicj4KPGJyPgpZZXMs
-IGhlcmUgaXQgaXM6PGJyPgo8YSBocmVmPSJodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20v
-bGludXgva2VybmVsL2dpdC9zdGFibGUvbGludXguZ2l0L2NvbW1pdC8/aWQ9MmU4ZTRjOGY2Njcz
-MjQ3ZTIyZWZjNzk4NWNlNTQ5N2FjY2QxNmY4OCIgcmVsPSJub3JlZmVycmVyIiB0YXJnZXQ9Il9i
-bGFuayI+aHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvc3Rh
-YmxlL2xpbnV4LmdpdC9jb21taXQvP2lkPTJlOGU0YzhmNjY3MzI0N2UyMmVmYzc5ODVjZTU0OTdh
-Y2NkMTZmODg8L2E+PGJyPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXzxicj4KdHBtMiBtYWlsaW5nIGxpc3QgLS0gPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlz
-dHMuMDEub3JnIiB0YXJnZXQ9Il9ibGFuayI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+PGJyPgpUbyB1
-bnN1YnNjcmliZSBzZW5kIGFuIGVtYWlsIHRvIDxhIGhyZWY9Im1haWx0bzp0cG0yLWxlYXZlQGxp
-c3RzLjAxLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPnRwbTItbGVhdmVAbGlzdHMuMDEub3JnPC9hPjxi
-cj4KJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShjZ2lleHQpcy8lKF9pbnRlcm5hbF9uYW1lKXM8
-YnI+CjwvYmxvY2txdW90ZT48L2Rpdj4K
+PGh0bWw+CiAgPGhlYWQ+CgogICAgPG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250
+ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgiPgogIDwvaGVhZD4KICA8Ym9keT4KICAgIDxw
+PklzIHRoZXJlIGEgc2ltcGxlLCBzdGVwLWJ5LXN0ZXAgZ3VpZGUgZm9yIGluc3RhbGxpbmcgdHBt
+MiBvbgogICAgICBGcmVlQlNEPzwvcD4KICAgIDxwPkkgc3RhcnRlZCB3aXRoIGEgRnJlZUJTRCAx
+My4wLVJFTEVBU0UtcDEwIGluc3RhbGxhdGlvbiBvbiB4ODZfNjQKICAgICAgYW5kIGluc3RhbGxl
+ZCB0aGUgZm9sbG93aW5nIHdpdGggInBrZyBpbnN0YWxsIjo8L3A+CiAgICA8dWw+CiAgICAgIDxs
+aT50cG0yLWFicm1kLTIuNC4wPC9saT4KICAgICAgPGxpPnRwbTItdG9vbHMtNS4yPC9saT4KICAg
+ICAgPGxpPnRwbTItdHNzLTMuMS4wPC9saT4KICAgIDwvdWw+CiAgICA8cD50aGVuIGFkZGVkIHRw
+bTJfYWJybWRfZW5hYmxlPSJZRVMiIGFuZCBkYnVzX2VuYWJsZT0iWUVTIiB0bwogICAgICAvZXRj
+L3JjLmNvbmYuIFRoZSB1c2VyIGluY2x1ZGVzICJfdHNzIiBpbiBpdHMgZ3JvdXBzLjwvcD4KICAg
+IDxwPkF0dGVtcHRzIHRvIHJ1biB0cG0yX2dldHJhbmRvbSBmYWlsIHdpdGggIkNvdWxkIG5vdCBp
+bml0aWFsaXplCiAgICAgIFRDVEkgZmlsZSIuPC9wPgogICAgPHA+SXQgYXBwZWFycyB0aGF0IEkg
+aGF2ZSBtaXNzZWQgc29tZSBpbXBvcnRhbnQgc3RlcHMhPC9wPgogICAgPHA+VGhlIGVxdWl2YWxl
+bnQgb24gVWJ1bnR1IGp1c3Qgd29ya3MuPC9wPgogICAgPHA+VGhhbmtzPGJyPgogICAgICAtLTxi
+cj4KICAgICAgSm9objxicj4KICAgIDwvcD4KICA8L2JvZHk+CjwvaHRtbD4K
 
---===============1110311004153293155==--
+--===============5871526621629734647==
+Content-Type: application/pgp-keys
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="OpenPGP_0x8F3115112EB8DB54.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4c0JOQkY2K3VVRUJDQUR0QmMz
+UHlPUXh1TnlOTkFEYzNIOE82UmpUbzNvcVFnVk9iNUhhRnRVT3AzSUFzWDRrCng5ZWZIRm5CRGtX
+ZDBoOVRNQk5PSkJmcTVXR0xVT21yR3JkSVJrUUZFS1ptNDZKQ2ZUQ2VOSyt3N1VNcWIzQmsKZjF3
+R21HY1M0YkVzZDNSQmUxWm5CK0JMa1ljWG1EcUhNT1drejdqMS9UdnM4NkJ0eHlQRlBHQW5rT1BD
+d1JDdQpwZk12cHltVUIvdGppblg1Yi91SitjN0NaUmo3MVNPMUdndnFPMFE4VkN4WU5kTnJyeStu
+eXN5Mm5XTXNWekF1CmZUQjlxQis3ZjM2ZjhMcGJhT0FvRllFOVliYWtxbCtRYUM4Q2IvMVppNy9B
+Ty94S2ZoOTV4Q2tIUllwV29iUk0KMjBYNndiRkFrcFVETU1xcU9yL3duVHhWaUNLZDAwUkpES0xK
+QUJFQkFBSE5IMHB2YUc0Z1EyOXVibVYwZENBOAphbkpqUUhOcmVXeHZiaTV0WlM1MWF6N0N3STRF
+RXdFS0FEZ1dJUVRIQTVxcXVqbHlLY1owVDllUE1SVVJMcmpiClZBVUNYcjY1UVFJYkF3VUxDUWdI
+QWdZVkNna0lDd0lFRmdJREFRSWVBUUlYZ0FBS0NSQ1BNUlVSTHJqYlZBWDEKQ0FEaE5EL09YU3Bx
+WDN2Wm84Wm5SWFRHUnhGVEt3aEJYK2tMV3F3VWd0Tm5ST3RTbE9uaGxLMlNpUzZEcEpNYgpKWnE5
+Vm83K2tERXYwTnc0VXh0Qk1POTRuZVBPWTVhN0dKVTBpZk11TmNNbi9UVGdRT002L2VFRUZzeHlM
+QjVDCjBuK1dkOXBTQ0dpQU5DRTNwYkpnY2w3UlYrclQyaDJDY0hnRGRQanRKOUFDM2xqRXk2RUVC
+NHNGRU9JZzF2K04KMjFMWml2Unk3WmI4ZDNkTnJ6cmVHS2RrS1IyNm1acFdXWEVTN0JENzgwQ1Jx
+QmpUSGtaRmZILzExSVlXK3psQgo0a25VYVExVDZBcTdzRGltNCt6Z285TzROSExabSsycmNiY2ZV
+Ym92NE91eENoQnRCU3VpRFRCWkl4czN1Y1NOCnRZVU5YeURRanFubStjSFJlZHpaaXB2QndzQnpC
+Qk1CQ0FBZEZpRUVMYXprWllyVjlFU1VHUm1UaXZ4eEFkSEkKY3Y0RkFsN0FCUVFBQ2drUWl2eHhB
+ZEhJY3Y0bkxRZ0FxVHdIWkZsVFVRaDJPMHpGRWRMcnVOVjYxZXMzbktiTwpSSlQ3Qy9FY0p0WkEz
+MGV2YUdoOWRibDNmL0RERUpwNzJ0VFNiMlR2QkdzT2xXY3FsYjYyck1Za3dKTDM0WXVRCkpHY1hN
+VFhrL2NWUk16VUZHcktEaGlCdWVCRmxzWXVEWk45WGRSU25Ba3ZKNjVqeGhPeXg1cFZJTXJMZjEy
+NXIKOUNjbTU3TW1LYzJOMmNNY3BoNlpPTngrN1doTjcyZzFtdkI3aUduTzhMY3VtUTR4VEk5cWcr
+bWcySXR3L3hMRwpEUHpudWU0ZEpoVGMvdzI5YnlONTBTdHRHeVFlQUdmRzBPRFJON1g5VUlUbUNw
+Tmg1bjZJamJseDRmSXRJZkYxCncyaGxlZjAyWHZVY0RqK1hVdzhMUGxJMEMvbHRhdGNMWXJDVlo3
+aFVCMy9WcnBLbDYra1lqczdBVFFSZXZybEIKQVFnQW85bkJZWFQ5TXZLQ1VoR0VjNlJPOEU2WWs0
+dzVabmJqV2crZy8zY1djRTd3dCtaeHVSd3B4NERvdUNWWgovcDE3enJpeDIzNGFlcHRmNk9iV3Uz
+dlhxUmVrOFE4TnI3Wjhnd0J2cHMvaWQ0RDA3WEVkTmkzdkNLREpHZFJ6CkJZQkxUQkFCU0ZlSXJr
+WUNtK05haVJnRThYT0JlSnRBSzdvNTl6LzRMMDFNeHlvMDZNakw2R094c0lTVjBSS3MKVnVIR1NS
+WmMzSXNpbHJGaExUbTd2ZzhrSVgzWGk2dmlOb0drbmV0MXNxYTEwMVBuTlYrVjhGczVDTnVEOTZx
+agpJWVkyUHM4U1JmUzBYOTljYWJUYU9CRVNzZUZqenQ5TjhEOUFRR0RIWVo1Ti9DMXcxUGx3T0dx
+TFlmZDFZdDQwCnMzZFUzdkpYVnJVYUpjUmxEV2NrNnhKK3Z3QVJBUUFCd3NCMkJCZ0JDZ0FnRmlF
+RXh3T2Fxcm81Y2luR2RFL1gKanpFVkVTNjQyMVFGQWw2K3VVRUNHd3dBQ2drUWp6RVZFUzY0MjFR
+NVpRZ0E3QndIS1ZOK0dUYUdzSWpQOWlJbwo1aG16YnNJZldxcmRvQm9xVkVJSXNSbkp5NXhtT2tT
+azdlNEIvNGM1Y0F4QUZobTJjVCtIQVBGUWJMV0FSVUExCnRtUXAxcUtLUkdQdDVwM0tzNU9lNmFM
+ay9teXJmbStxVnFuYytmZk1oaGM5YVhuVUdnMjRucUhteWVjK3VwdDMKZWUrZDdVc2lpTkNmVnlB
+cEVWZmt5OFFtMm1IUDhBbEs0ZmdUV0k1UUdNTkFqSXVQTDl5ZjEyNzdHSXBBUTA3agpkYUx3OVhK
+TDVLaDRyYWVwV284VUoxbkRuaWF6TUNJUWlkUlFoZnFVb1B6eW1sWEhMQ3lra3Rhempwd1IzZmR1
+CktiUmgzY1Z2YzdIakU1NDJmSUM2NEx2WTNMUVpqYk5KRHlwK1RFd3hhcnBPYXBSQmN6dC9waVlx
+VUV2MDJveXgKckE9PQo9RENyegotLS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+
+--===============5871526621629734647==
+Content-Type: application/pgp-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="OpenPGP_signature.sig"
+
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCndzQjVCQUFCQ0FBakZpRUV4d09hcXJvNWNp
+bkdkRS9YanpFVkVTNjQyMVFGQW1KRmlKQUZBd0FBQUFBQUNna1FqekVWRVM2NDIxUmEKeEFnQWxW
+RHplSldmYmtYc2dFRDVlcVRpemt6M3VWd2xwMUR3R05CcURId3pjSGw1dUZqYXpuVVh1SU1kNXdh
+eUpkN0hUSTUwNDVSRApoemhFRkJkRk81QTRIZHV5a1h0TlplM2FKRjhqMkFMNExuUUtOZjV6b2kr
+UkZVd0dnTlZOdm8wUXVHYjJybkhUcjYvWGRNYWlmRW9jClJuNWFCa3BEZnNKaU9HbEs5RU1USWRv
+ZjZnSUhENERjY0t0TmV5cVBvNTl2L3UrbmozTHh4ckxZNDVETHB5NUJFN3dXRTBKYUovUFUKaW1O
+bnF0ZFR5U2ZaZmpJR3NrOVJzVUtweUI3WWJGbWl2bVdSRnN3ODVkdXZoZldwU1k0NHBhVFZqU3lR
+Q3kzc3JtMkZrQkdseHlkSgp5S0doQTcyZGlsbDJUUlI2aDFPbmNVZkY4bU9ldER4VGVEd0ROK1c4
+akE9PQo9eDFJagotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0tLS0K
+
+--===============5871526621629734647==--
 
