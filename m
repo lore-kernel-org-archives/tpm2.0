@@ -1,24 +1,155 @@
-Content-Type: multipart/mixed; boundary="===============8210196992223083152=="
+Content-Type: multipart/mixed; boundary="===============1927310839425851439=="
 MIME-Version: 1.0
-From: Tadeusz Struk <tstruk at gmail.com>
+From: John Connett <jrc at skylon.me.uk>
 Subject: [tpm2] Re: Installing on FreeBSD?
-Date: Thu, 31 Mar 2022 07:05:09 -0700
-Message-ID: <4aa36b9e-4039-7937-aa75-533d712f3689@gmail.com>
-In-Reply-To: e2d89678-8b03-6159-7f0f-b5e258ed6f1f@skylon.me.uk
+Date: Thu, 31 Mar 2022 20:16:41 +0100
+Message-ID: <5853998f-e565-0347-7ea7-d929bdce73e1@skylon.me.uk>
+In-Reply-To: 4aa36b9e-4039-7937-aa75-533d712f3689@gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8210196992223083152==
+--===============1927310839425851439==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 3/31/22 03:55, John Connett wrote:
-> Is there a simple, step-by-step guide for installing tpm2 on FreeBSD?
+On 31/03/2022 15:05, Tadeusz Struk wrote:
 
-What about:
-$ sudo pkg install tpm2-abrmd tpm2-tools
+> On 3/31/22 03:55, John Connett wrote:
+>> Is there a simple, step-by-step guide for installing tpm2 on FreeBSD?
+>
+> What about:
+> $ sudo pkg install tpm2-abrmd tpm2-tools
+>
+> That should install and configure everything.
 
-That should install and configure everything.
---===============8210196992223083152==--
+That's what I would have hoped. However, I've found several problems:
+
+ 1. /usr/local/etc/rc.d/tpm2-abrmd
+    The line starting "desc=3D" breaks the script because of the un-quoted
+    multi-word description text value. Putting quotes around the text
+    value fixes it.
+ 2. /dev/tpm0
+    This has owner root. A temporary fix is to change the owner to
+    "_tss" which allows tpm2_getrandom to work. Not sure how the
+    ownership and permissions are supposed to be set?
+ 3. Hyper-V Virtual TPM not found
+    With FreeBSD installed on a Generation 2 VM on a Windows 11 host the
+    Virtual TPM is not found. Ubuntu installed on the same VM does find
+    the Virtual TPM.
+
+Not quite as smooth as I anticipated. However, the problems are probably =
+
+with the packaging for FreeBSD rather than tpm2-software issues. I've =
+
+copied this to the maintainer of tpm2-tss for FreeBSD in case they have =
+
+any comments.
+
+Thanks
+--
+John
+
+
+--===============1927310839425851439==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
+bnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCI+CiAgPC9oZWFkPgogIDxib2R5PgogICAgPHA+
+T24gMzEvMDMvMjAyMiAxNTowNSwgVGFkZXVzeiBTdHJ1ayB3cm90ZTo8YnI+CiAgICA8L3A+CiAg
+ICA8YmxvY2txdW90ZSB0eXBlPSJjaXRlIgogICAgICBjaXRlPSJtaWQ6NGFhMzZiOWUtNDAzOS03
+OTM3LWFhNzUtNTMzZDcxMmYzNjg5QGdtYWlsLmNvbSI+T24KICAgICAgMy8zMS8yMiAwMzo1NSwg
+Sm9obiBDb25uZXR0IHdyb3RlOgogICAgICA8YnI+CiAgICAgIDxibG9ja3F1b3RlIHR5cGU9ImNp
+dGUiPklzIHRoZXJlIGEgc2ltcGxlLCBzdGVwLWJ5LXN0ZXAgZ3VpZGUgZm9yCiAgICAgICAgaW5z
+dGFsbGluZyB0cG0yIG9uIEZyZWVCU0Q/CiAgICAgICAgPGJyPgogICAgICA8L2Jsb2NrcXVvdGU+
+CiAgICAgIDxicj4KICAgICAgV2hhdCBhYm91dDoKICAgICAgPGJyPgogICAgICAkIHN1ZG8gcGtn
+IGluc3RhbGwgdHBtMi1hYnJtZCB0cG0yLXRvb2xzCiAgICAgIDxicj4KICAgICAgPGJyPgogICAg
+ICBUaGF0IHNob3VsZCBpbnN0YWxsIGFuZCBjb25maWd1cmUgZXZlcnl0aGluZy4KICAgICAgPGJy
+PgogICAgPC9ibG9ja3F1b3RlPgogICAgPHA+VGhhdCdzIHdoYXQgSSB3b3VsZCBoYXZlIGhvcGVk
+LiBIb3dldmVyLCBJJ3ZlIGZvdW5kIHNldmVyYWwKICAgICAgcHJvYmxlbXM6PC9wPgogICAgPG9s
+PgogICAgICA8bGk+L3Vzci9sb2NhbC9ldGMvcmMuZC90cG0yLWFicm1kPGJyPgogICAgICAgIFRo
+ZSBsaW5lIHN0YXJ0aW5nICJkZXNjPSIgYnJlYWtzIHRoZSBzY3JpcHQgYmVjYXVzZSBvZiB0aGUK
+ICAgICAgICB1bi1xdW90ZWQgbXVsdGktd29yZCBkZXNjcmlwdGlvbiB0ZXh0IHZhbHVlLiBQdXR0
+aW5nIHF1b3RlcwogICAgICAgIGFyb3VuZCB0aGUgdGV4dCB2YWx1ZSBmaXhlcyBpdC48L2xpPgog
+ICAgICA8bGk+L2Rldi90cG0wPGJyPgogICAgICAgIFRoaXMgaGFzIG93bmVyIHJvb3QuIEEgdGVt
+cG9yYXJ5IGZpeCBpcyB0byBjaGFuZ2UgdGhlIG93bmVyIHRvCiAgICAgICAgIl90c3MiIHdoaWNo
+IGFsbG93cyB0cG0yX2dldHJhbmRvbSB0byB3b3JrLiBOb3Qgc3VyZSBob3cgdGhlCiAgICAgICAg
+b3duZXJzaGlwIGFuZCBwZXJtaXNzaW9ucyBhcmUgc3VwcG9zZWQgdG8gYmUgc2V0Pzxicj4KICAg
+ICAgPC9saT4KICAgICAgPGxpPkh5cGVyLVYgVmlydHVhbCBUUE0gbm90IGZvdW5kPGJyPgogICAg
+ICAgIFdpdGggRnJlZUJTRCBpbnN0YWxsZWQgb24gYSBHZW5lcmF0aW9uIDIgVk0gb24gYSBXaW5k
+b3dzIDExIGhvc3QKICAgICAgICB0aGUgVmlydHVhbCBUUE0gaXMgbm90IGZvdW5kLiBVYnVudHUg
+aW5zdGFsbGVkIG9uIHRoZSBzYW1lIFZNCiAgICAgICAgZG9lcyBmaW5kIHRoZSBWaXJ0dWFsIFRQ
+TS48L2xpPgogICAgPC9vbD4KICAgIDxwPk5vdCBxdWl0ZSBhcyBzbW9vdGggYXMgSSBhbnRpY2lw
+YXRlZC4gSG93ZXZlciwgdGhlIHByb2JsZW1zIGFyZQogICAgICBwcm9iYWJseSB3aXRoIHRoZSBw
+YWNrYWdpbmcgZm9yIEZyZWVCU0QgcmF0aGVyIHRoYW4gdHBtMi1zb2Z0d2FyZQogICAgICBpc3N1
+ZXMuIEkndmUgY29waWVkIHRoaXMgdG8gdGhlIG1haW50YWluZXIgb2YgdHBtMi10c3MgZm9yIEZy
+ZWVCU0QKICAgICAgaW4gY2FzZSB0aGV5IGhhdmUgYW55IGNvbW1lbnRzLjxicj4KICAgIDwvcD4K
+ICAgIDxwPlRoYW5rczxicj4KICAgICAgLS08YnI+CiAgICAgIEpvaG48YnI+CiAgICA8L3A+CiAg
+PC9ib2R5Pgo8L2h0bWw+Cg==
+
+--===============1927310839425851439==
+Content-Type: application/pgp-keys
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="OpenPGP_0x8F3115112EB8DB54.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4c0JOQkY2K3VVRUJDQUR0QmMz
+UHlPUXh1TnlOTkFEYzNIOE82UmpUbzNvcVFnVk9iNUhhRnRVT3AzSUFzWDRrCng5ZWZIRm5CRGtX
+ZDBoOVRNQk5PSkJmcTVXR0xVT21yR3JkSVJrUUZFS1ptNDZKQ2ZUQ2VOSyt3N1VNcWIzQmsKZjF3
+R21HY1M0YkVzZDNSQmUxWm5CK0JMa1ljWG1EcUhNT1drejdqMS9UdnM4NkJ0eHlQRlBHQW5rT1BD
+d1JDdQpwZk12cHltVUIvdGppblg1Yi91SitjN0NaUmo3MVNPMUdndnFPMFE4VkN4WU5kTnJyeStu
+eXN5Mm5XTXNWekF1CmZUQjlxQis3ZjM2ZjhMcGJhT0FvRllFOVliYWtxbCtRYUM4Q2IvMVppNy9B
+Ty94S2ZoOTV4Q2tIUllwV29iUk0KMjBYNndiRkFrcFVETU1xcU9yL3duVHhWaUNLZDAwUkpES0xK
+QUJFQkFBSE5IMHB2YUc0Z1EyOXVibVYwZENBOAphbkpqUUhOcmVXeHZiaTV0WlM1MWF6N0N3STRF
+RXdFS0FEZ1dJUVRIQTVxcXVqbHlLY1owVDllUE1SVVJMcmpiClZBVUNYcjY1UVFJYkF3VUxDUWdI
+QWdZVkNna0lDd0lFRmdJREFRSWVBUUlYZ0FBS0NSQ1BNUlVSTHJqYlZBWDEKQ0FEaE5EL09YU3Bx
+WDN2Wm84Wm5SWFRHUnhGVEt3aEJYK2tMV3F3VWd0Tm5ST3RTbE9uaGxLMlNpUzZEcEpNYgpKWnE5
+Vm83K2tERXYwTnc0VXh0Qk1POTRuZVBPWTVhN0dKVTBpZk11TmNNbi9UVGdRT002L2VFRUZzeHlM
+QjVDCjBuK1dkOXBTQ0dpQU5DRTNwYkpnY2w3UlYrclQyaDJDY0hnRGRQanRKOUFDM2xqRXk2RUVC
+NHNGRU9JZzF2K04KMjFMWml2Unk3WmI4ZDNkTnJ6cmVHS2RrS1IyNm1acFdXWEVTN0JENzgwQ1Jx
+QmpUSGtaRmZILzExSVlXK3psQgo0a25VYVExVDZBcTdzRGltNCt6Z285TzROSExabSsycmNiY2ZV
+Ym92NE91eENoQnRCU3VpRFRCWkl4czN1Y1NOCnRZVU5YeURRanFubStjSFJlZHpaaXB2QndzQnpC
+Qk1CQ0FBZEZpRUVMYXprWllyVjlFU1VHUm1UaXZ4eEFkSEkKY3Y0RkFsN0FCUVFBQ2drUWl2eHhB
+ZEhJY3Y0bkxRZ0FxVHdIWkZsVFVRaDJPMHpGRWRMcnVOVjYxZXMzbktiTwpSSlQ3Qy9FY0p0WkEz
+MGV2YUdoOWRibDNmL0RERUpwNzJ0VFNiMlR2QkdzT2xXY3FsYjYyck1Za3dKTDM0WXVRCkpHY1hN
+VFhrL2NWUk16VUZHcktEaGlCdWVCRmxzWXVEWk45WGRSU25Ba3ZKNjVqeGhPeXg1cFZJTXJMZjEy
+NXIKOUNjbTU3TW1LYzJOMmNNY3BoNlpPTngrN1doTjcyZzFtdkI3aUduTzhMY3VtUTR4VEk5cWcr
+bWcySXR3L3hMRwpEUHpudWU0ZEpoVGMvdzI5YnlONTBTdHRHeVFlQUdmRzBPRFJON1g5VUlUbUNw
+Tmg1bjZJamJseDRmSXRJZkYxCncyaGxlZjAyWHZVY0RqK1hVdzhMUGxJMEMvbHRhdGNMWXJDVlo3
+aFVCMy9WcnBLbDYra1lqczdBVFFSZXZybEIKQVFnQW85bkJZWFQ5TXZLQ1VoR0VjNlJPOEU2WWs0
+dzVabmJqV2crZy8zY1djRTd3dCtaeHVSd3B4NERvdUNWWgovcDE3enJpeDIzNGFlcHRmNk9iV3Uz
+dlhxUmVrOFE4TnI3Wjhnd0J2cHMvaWQ0RDA3WEVkTmkzdkNLREpHZFJ6CkJZQkxUQkFCU0ZlSXJr
+WUNtK05haVJnRThYT0JlSnRBSzdvNTl6LzRMMDFNeHlvMDZNakw2R094c0lTVjBSS3MKVnVIR1NS
+WmMzSXNpbHJGaExUbTd2ZzhrSVgzWGk2dmlOb0drbmV0MXNxYTEwMVBuTlYrVjhGczVDTnVEOTZx
+agpJWVkyUHM4U1JmUzBYOTljYWJUYU9CRVNzZUZqenQ5TjhEOUFRR0RIWVo1Ti9DMXcxUGx3T0dx
+TFlmZDFZdDQwCnMzZFUzdkpYVnJVYUpjUmxEV2NrNnhKK3Z3QVJBUUFCd3NCMkJCZ0JDZ0FnRmlF
+RXh3T2Fxcm81Y2luR2RFL1gKanpFVkVTNjQyMVFGQWw2K3VVRUNHd3dBQ2drUWp6RVZFUzY0MjFR
+NVpRZ0E3QndIS1ZOK0dUYUdzSWpQOWlJbwo1aG16YnNJZldxcmRvQm9xVkVJSXNSbkp5NXhtT2tT
+azdlNEIvNGM1Y0F4QUZobTJjVCtIQVBGUWJMV0FSVUExCnRtUXAxcUtLUkdQdDVwM0tzNU9lNmFM
+ay9teXJmbStxVnFuYytmZk1oaGM5YVhuVUdnMjRucUhteWVjK3VwdDMKZWUrZDdVc2lpTkNmVnlB
+cEVWZmt5OFFtMm1IUDhBbEs0ZmdUV0k1UUdNTkFqSXVQTDl5ZjEyNzdHSXBBUTA3agpkYUx3OVhK
+TDVLaDRyYWVwV284VUoxbkRuaWF6TUNJUWlkUlFoZnFVb1B6eW1sWEhMQ3lra3Rhempwd1IzZmR1
+CktiUmgzY1Z2YzdIakU1NDJmSUM2NEx2WTNMUVpqYk5KRHlwK1RFd3hhcnBPYXBSQmN6dC9waVlx
+VUV2MDJveXgKckE9PQo9RENyegotLS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+
+--===============1927310839425851439==
+Content-Type: application/pgp-signature
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="OpenPGP_signature.sig"
+
+LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCndzQjVCQUFCQ0FBakZpRUV4d09hcXJvNWNp
+bkdkRS9YanpFVkVTNjQyMVFGQW1KRi9oa0ZBd0FBQUFBQUNna1FqekVWRVM2NDIxUXYKMFFnQXBu
+R2dmbTZLYTBEd21NUXRmN0s0MHQ5b1hzaHJqQ2tSNitYY3FXRDR3eE1TbEVzRnR3V3lDL2Vhdnow
+b0xCeW16QUdOSHNwUwp5Ny9OS0FSTTVNMlhoUEJLNnRSYUUyY0tMVVJFdWdSWk91SHU0ZXhadEZQ
+Skd1V0l2WTY2YzlERFlrSWdsZWlzN2N1MFh2dXdPS2pqClJHTG5uejJjOGx3MmxiazJOanpRbS9L
+TnIyWWVpZjY0Z1ZwVUpDOG5MK3lLdFZTSWJUR0QwNGsvYlFmNVNKT0RleDgyN1U5d29vT3MKWmFS
+Z1czbXVMZVRrK3VucUx1Uk16RmNzZGRUUUNpb3lGM1F3c0Y4eS9seGtjNDQxQzIxVFJBQzAvUHdq
+ZWJ6c3ZZclZCYjJ1WDBmUwpWQ3ZNM013dDh3bzFwVExFRTc1dUhBQXhWOSs1bmVvODY0aitIU1lh
+UWc9PQo9aDA5YQotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0tLS0K
+
+--===============1927310839425851439==--
 
