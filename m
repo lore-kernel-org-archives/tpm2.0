@@ -1,200 +1,45 @@
-Content-Type: multipart/mixed; boundary="===============1200765353132057305=="
+Content-Type: multipart/mixed; boundary="===============5194781364699644439=="
 MIME-Version: 1.0
-From: John Connett <jrc at skylon.me.uk>
+From: Tadeusz Struk <tstruk at gmail.com>
 Subject: [tpm2] Re: Installing on FreeBSD?
-Date: Thu, 31 Mar 2022 23:04:14 +0100
-Message-ID: <df281f63-806a-5fe1-4295-03f3ceeead1c@skylon.me.uk>
-In-Reply-To: b4be5fb4-0b3d-89c9-9860-b5db5f5a3b0c@gmail.com
+Date: Thu, 31 Mar 2022 18:46:09 -0700
+Message-ID: <407dd8bf-734d-34e0-e3c2-677dca3ba040@gmail.com>
+In-Reply-To: df281f63-806a-5fe1-4295-03f3ceeead1c@skylon.me.uk
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1200765353132057305==
+--===============5194781364699644439==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On 3/31/22 15:04, John Connett wrote:
+>> did you "sudo kldload tpm" ?
+> I hadn't (on bare hardware the TPM was found automatically). Here's the o=
+utput:
+> =
 
-On 31/03/2022 20:50, Tadeusz Struk wrote:
-> On 3/31/22 12:16, John Connett wrote:
->> That's what I would have hoped. However, I've found several problems:
->>
->> =C2=A01. /usr/local/etc/rc.d/tpm2-abrmd
->> =C2=A0=C2=A0=C2=A0 The line starting "desc=3D" breaks the script because=
- of the un-quoted
->> =C2=A0=C2=A0=C2=A0 multi-word description text value. Putting quotes aro=
-und the text =
+>     root(a)atelier2:~ # kldload tpm
+>     tpmcrb0: <Trusted Platform Module 2.0, CRB mode> iomem 0xfed40000-0xf=
+ed40fff
+>     on acpi0
+>     device_attach: tpmcrb0 attach returned 6
+>     tpmcrb0: <Trusted Platform Module 2.0, CRB mode> iomem 0xfed40000-0xf=
+ed40fff
+>     on acpi0
+>     device_attach: tpmcrb0 attach returned 6
+>     root(a)atelier2:~ #
+> =
 
->> value
->> =C2=A0=C2=A0=C2=A0 fixes it.
->
-> Right, that will be fixed soon.
->
->> =C2=A02. /dev/tpm0
->> =C2=A0=C2=A0=C2=A0 This has owner root. A temporary fix is to change the=
- owner to =
+> Still no /dev/tpm0
 
->> "_tss" which
->> =C2=A0=C2=A0=C2=A0 allows tpm2_getrandom to work. Not sure how the owner=
-ship and =
+6 - ENXIO Device not configured. There is something wrong with that device.
+You need to debug that first.
 
->> permissions
->> =C2=A0=C2=A0=C2=A0 are supposed to be set?
->
-> Right, we are missing some udev rules here.
->
->> =C2=A03. Hyper-V Virtual TPM not found
->> =C2=A0=C2=A0=C2=A0 With FreeBSD installed on a Generation 2 VM on a Wind=
-ows 11 host =
+https://www.freebsd.org/cgi/man.cgi?query=3Derrno&sektion=3D2&manpath=3Dfre=
+ebsd-release-ports
 
->> the Virtual
->> =C2=A0=C2=A0=C2=A0 TPM is not found. Ubuntu installed on the same VM doe=
-s find the =
-
->> Virtual TPM.
->
-> did you "sudo kldload tpm" ?
-I hadn't (on bare hardware the TPM was found automatically). Here's the =
-
-output:
-
-    root(a)atelier2:~ # kldload tpm
-    tpmcrb0: <Trusted Platform Module 2.0, CRB mode> iomem
-    0xfed40000-0xfed40fff on acpi0
-    device_attach: tpmcrb0 attach returned 6
-    tpmcrb0: <Trusted Platform Module 2.0, CRB mode> iomem
-    0xfed40000-0xfed40fff on acpi0
-    device_attach: tpmcrb0 attach returned 6
-    root(a)atelier2:~ #
-
-Still no /dev/tpm0
->> Not quite as smooth as I anticipated. However, the problems are =
-
->> probably with the packaging for FreeBSD rather than tpm2-software =
-
->> issues. I've copied this to the maintainer of tpm2-tss for FreeBSD in =
-
->> case they have any comments.
->
-Thanks
---
-John
-
---===============1200765353132057305==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CiAgPGhlYWQ+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRl
-bnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCI+CiAgPC9oZWFkPgogIDxib2R5PgogICAgPHA+
-PGJyPgogICAgPC9wPgogICAgPGRpdiBjbGFzcz0ibW96LWNpdGUtcHJlZml4Ij5PbiAzMS8wMy8y
-MDIyIDIwOjUwLCBUYWRldXN6IFN0cnVrCiAgICAgIHdyb3RlOjxicj4KICAgIDwvZGl2PgogICAg
-PGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIKICAgICAgY2l0ZT0ibWlkOmI0YmU1ZmI0LTBiM2QtODlj
-OS05ODYwLWI1ZGI1ZjVhM2IwY0BnbWFpbC5jb20iPk9uCiAgICAgIDMvMzEvMjIgMTI6MTYsIEpv
-aG4gQ29ubmV0dCB3cm90ZToKICAgICAgPGJyPgogICAgICA8YmxvY2txdW90ZSB0eXBlPSJjaXRl
-Ij5UaGF0J3Mgd2hhdCBJIHdvdWxkIGhhdmUgaG9wZWQuIEhvd2V2ZXIsCiAgICAgICAgSSd2ZSBm
-b3VuZCBzZXZlcmFsIHByb2JsZW1zOgogICAgICAgIDxicj4KICAgICAgICA8YnI+CiAgICAgICAg
-wqAxLiAvdXNyL2xvY2FsL2V0Yy9yYy5kL3RwbTItYWJybWQKICAgICAgICA8YnI+CiAgICAgICAg
-wqDCoMKgIFRoZSBsaW5lIHN0YXJ0aW5nICJkZXNjPSIgYnJlYWtzIHRoZSBzY3JpcHQgYmVjYXVz
-ZSBvZiB0aGUKICAgICAgICB1bi1xdW90ZWQKICAgICAgICA8YnI+CiAgICAgICAgwqDCoMKgIG11
-bHRpLXdvcmQgZGVzY3JpcHRpb24gdGV4dCB2YWx1ZS4gUHV0dGluZyBxdW90ZXMgYXJvdW5kIHRo
-ZQogICAgICAgIHRleHQgdmFsdWUKICAgICAgICA8YnI+CiAgICAgICAgwqDCoMKgIGZpeGVzIGl0
-LgogICAgICAgIDxicj4KICAgICAgPC9ibG9ja3F1b3RlPgogICAgICA8YnI+CiAgICAgIFJpZ2h0
-LCB0aGF0IHdpbGwgYmUgZml4ZWQgc29vbi4KICAgICAgPGJyPgogICAgICA8YnI+CiAgICAgIDxi
-bG9ja3F1b3RlIHR5cGU9ImNpdGUiPsKgMi4gL2Rldi90cG0wCiAgICAgICAgPGJyPgogICAgICAg
-IMKgwqDCoCBUaGlzIGhhcyBvd25lciByb290LiBBIHRlbXBvcmFyeSBmaXggaXMgdG8gY2hhbmdl
-IHRoZSBvd25lcgogICAgICAgIHRvICJfdHNzIiB3aGljaAogICAgICAgIDxicj4KICAgICAgICDC
-oMKgwqAgYWxsb3dzIHRwbTJfZ2V0cmFuZG9tIHRvIHdvcmsuIE5vdCBzdXJlIGhvdyB0aGUgb3du
-ZXJzaGlwCiAgICAgICAgYW5kIHBlcm1pc3Npb25zCiAgICAgICAgPGJyPgogICAgICAgIMKgwqDC
-oCBhcmUgc3VwcG9zZWQgdG8gYmUgc2V0PwogICAgICAgIDxicj4KICAgICAgPC9ibG9ja3F1b3Rl
-PgogICAgICA8YnI+CiAgICAgIFJpZ2h0LCB3ZSBhcmUgbWlzc2luZyBzb21lIHVkZXYgcnVsZXMg
-aGVyZS4KICAgICAgPGJyPgogICAgICA8YnI+CiAgICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUi
-PsKgMy4gSHlwZXItViBWaXJ0dWFsIFRQTSBub3QgZm91bmQKICAgICAgICA8YnI+CiAgICAgICAg
-wqDCoMKgIFdpdGggRnJlZUJTRCBpbnN0YWxsZWQgb24gYSBHZW5lcmF0aW9uIDIgVk0gb24gYSBX
-aW5kb3dzIDExCiAgICAgICAgaG9zdCB0aGUgVmlydHVhbAogICAgICAgIDxicj4KICAgICAgICDC
-oMKgwqAgVFBNIGlzIG5vdCBmb3VuZC4gVWJ1bnR1IGluc3RhbGxlZCBvbiB0aGUgc2FtZSBWTSBk
-b2VzIGZpbmQKICAgICAgICB0aGUgVmlydHVhbCBUUE0uCiAgICAgICAgPGJyPgogICAgICA8L2Js
-b2NrcXVvdGU+CiAgICAgIDxicj4KICAgICAgZGlkIHlvdSAic3VkbyBrbGRsb2FkIHRwbSIgPwog
-ICAgICA8YnI+CiAgICA8L2Jsb2NrcXVvdGU+CiAgICBJIGhhZG4ndCAob24gYmFyZSBoYXJkd2Fy
-ZSB0aGUgVFBNIHdhcyBmb3VuZCBhdXRvbWF0aWNhbGx5KS4gSGVyZSdzCiAgICB0aGUgb3V0cHV0
-Ojxicj4KICAgIDxibG9ja3F1b3RlPnJvb3RAYXRlbGllcjI6fiAjIGtsZGxvYWQgdHBtPGJyPgog
-ICAgICB0cG1jcmIwOiAmbHQ7VHJ1c3RlZCBQbGF0Zm9ybSBNb2R1bGUgMi4wLCBDUkIgbW9kZSZn
-dDsgaW9tZW0KICAgICAgMHhmZWQ0MDAwMC0weGZlZDQwZmZmIG9uIGFjcGkwPGJyPgogICAgICBk
-ZXZpY2VfYXR0YWNoOiB0cG1jcmIwIGF0dGFjaCByZXR1cm5lZCA2PGJyPgogICAgICB0cG1jcmIw
-OiAmbHQ7VHJ1c3RlZCBQbGF0Zm9ybSBNb2R1bGUgMi4wLCBDUkIgbW9kZSZndDsgaW9tZW0KICAg
-ICAgMHhmZWQ0MDAwMC0weGZlZDQwZmZmIG9uIGFjcGkwPGJyPgogICAgICBkZXZpY2VfYXR0YWNo
-OiB0cG1jcmIwIGF0dGFjaCByZXR1cm5lZCA2PGJyPgogICAgICByb290QGF0ZWxpZXIyOn4gIyA8
-YnI+CiAgICA8L2Jsb2NrcXVvdGU+CiAgICBTdGlsbCBubyAvZGV2L3RwbTA8YnI+CiAgICA8Ymxv
-Y2txdW90ZSB0eXBlPSJjaXRlIgogICAgICBjaXRlPSJtaWQ6YjRiZTVmYjQtMGIzZC04OWM5LTk4
-NjAtYjVkYjVmNWEzYjBjQGdtYWlsLmNvbSI+CiAgICAgIDxibG9ja3F1b3RlIHR5cGU9ImNpdGUi
-Pk5vdCBxdWl0ZSBhcyBzbW9vdGggYXMgSSBhbnRpY2lwYXRlZC4KICAgICAgICBIb3dldmVyLCB0
-aGUgcHJvYmxlbXMgYXJlIHByb2JhYmx5IHdpdGggdGhlIHBhY2thZ2luZyBmb3IKICAgICAgICBG
-cmVlQlNEIHJhdGhlciB0aGFuIHRwbTItc29mdHdhcmUgaXNzdWVzLiBJJ3ZlIGNvcGllZCB0aGlz
-IHRvCiAgICAgICAgdGhlIG1haW50YWluZXIgb2YgdHBtMi10c3MgZm9yIEZyZWVCU0QgaW4gY2Fz
-ZSB0aGV5IGhhdmUgYW55CiAgICAgICAgY29tbWVudHMuCiAgICAgICAgPGJyPgogICAgICA8L2Js
-b2NrcXVvdGU+CiAgICAgIDxicj4KICAgIDwvYmxvY2txdW90ZT4KICAgIFRoYW5rczxicj4KICAg
-IC0tPGJyPgogICAgSm9objxicj4KICA8L2JvZHk+CjwvaHRtbD4K
-
---===============1200765353132057305==
-Content-Type: application/pgp-keys
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="OpenPGP_0x8F3115112EB8DB54.asc"
-
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4c0JOQkY2K3VVRUJDQUR0QmMz
-UHlPUXh1TnlOTkFEYzNIOE82UmpUbzNvcVFnVk9iNUhhRnRVT3AzSUFzWDRrCng5ZWZIRm5CRGtX
-ZDBoOVRNQk5PSkJmcTVXR0xVT21yR3JkSVJrUUZFS1ptNDZKQ2ZUQ2VOSyt3N1VNcWIzQmsKZjF3
-R21HY1M0YkVzZDNSQmUxWm5CK0JMa1ljWG1EcUhNT1drejdqMS9UdnM4NkJ0eHlQRlBHQW5rT1BD
-d1JDdQpwZk12cHltVUIvdGppblg1Yi91SitjN0NaUmo3MVNPMUdndnFPMFE4VkN4WU5kTnJyeStu
-eXN5Mm5XTXNWekF1CmZUQjlxQis3ZjM2ZjhMcGJhT0FvRllFOVliYWtxbCtRYUM4Q2IvMVppNy9B
-Ty94S2ZoOTV4Q2tIUllwV29iUk0KMjBYNndiRkFrcFVETU1xcU9yL3duVHhWaUNLZDAwUkpES0xK
-QUJFQkFBSE5IMHB2YUc0Z1EyOXVibVYwZENBOAphbkpqUUhOcmVXeHZiaTV0WlM1MWF6N0N3STRF
-RXdFS0FEZ1dJUVRIQTVxcXVqbHlLY1owVDllUE1SVVJMcmpiClZBVUNYcjY1UVFJYkF3VUxDUWdI
-QWdZVkNna0lDd0lFRmdJREFRSWVBUUlYZ0FBS0NSQ1BNUlVSTHJqYlZBWDEKQ0FEaE5EL09YU3Bx
-WDN2Wm84Wm5SWFRHUnhGVEt3aEJYK2tMV3F3VWd0Tm5ST3RTbE9uaGxLMlNpUzZEcEpNYgpKWnE5
-Vm83K2tERXYwTnc0VXh0Qk1POTRuZVBPWTVhN0dKVTBpZk11TmNNbi9UVGdRT002L2VFRUZzeHlM
-QjVDCjBuK1dkOXBTQ0dpQU5DRTNwYkpnY2w3UlYrclQyaDJDY0hnRGRQanRKOUFDM2xqRXk2RUVC
-NHNGRU9JZzF2K04KMjFMWml2Unk3WmI4ZDNkTnJ6cmVHS2RrS1IyNm1acFdXWEVTN0JENzgwQ1Jx
-QmpUSGtaRmZILzExSVlXK3psQgo0a25VYVExVDZBcTdzRGltNCt6Z285TzROSExabSsycmNiY2ZV
-Ym92NE91eENoQnRCU3VpRFRCWkl4czN1Y1NOCnRZVU5YeURRanFubStjSFJlZHpaaXB2QndzQnpC
-Qk1CQ0FBZEZpRUVMYXprWllyVjlFU1VHUm1UaXZ4eEFkSEkKY3Y0RkFsN0FCUVFBQ2drUWl2eHhB
-ZEhJY3Y0bkxRZ0FxVHdIWkZsVFVRaDJPMHpGRWRMcnVOVjYxZXMzbktiTwpSSlQ3Qy9FY0p0WkEz
-MGV2YUdoOWRibDNmL0RERUpwNzJ0VFNiMlR2QkdzT2xXY3FsYjYyck1Za3dKTDM0WXVRCkpHY1hN
-VFhrL2NWUk16VUZHcktEaGlCdWVCRmxzWXVEWk45WGRSU25Ba3ZKNjVqeGhPeXg1cFZJTXJMZjEy
-NXIKOUNjbTU3TW1LYzJOMmNNY3BoNlpPTngrN1doTjcyZzFtdkI3aUduTzhMY3VtUTR4VEk5cWcr
-bWcySXR3L3hMRwpEUHpudWU0ZEpoVGMvdzI5YnlONTBTdHRHeVFlQUdmRzBPRFJON1g5VUlUbUNw
-Tmg1bjZJamJseDRmSXRJZkYxCncyaGxlZjAyWHZVY0RqK1hVdzhMUGxJMEMvbHRhdGNMWXJDVlo3
-aFVCMy9WcnBLbDYra1lqczdBVFFSZXZybEIKQVFnQW85bkJZWFQ5TXZLQ1VoR0VjNlJPOEU2WWs0
-dzVabmJqV2crZy8zY1djRTd3dCtaeHVSd3B4NERvdUNWWgovcDE3enJpeDIzNGFlcHRmNk9iV3Uz
-dlhxUmVrOFE4TnI3Wjhnd0J2cHMvaWQ0RDA3WEVkTmkzdkNLREpHZFJ6CkJZQkxUQkFCU0ZlSXJr
-WUNtK05haVJnRThYT0JlSnRBSzdvNTl6LzRMMDFNeHlvMDZNakw2R094c0lTVjBSS3MKVnVIR1NS
-WmMzSXNpbHJGaExUbTd2ZzhrSVgzWGk2dmlOb0drbmV0MXNxYTEwMVBuTlYrVjhGczVDTnVEOTZx
-agpJWVkyUHM4U1JmUzBYOTljYWJUYU9CRVNzZUZqenQ5TjhEOUFRR0RIWVo1Ti9DMXcxUGx3T0dx
-TFlmZDFZdDQwCnMzZFUzdkpYVnJVYUpjUmxEV2NrNnhKK3Z3QVJBUUFCd3NCMkJCZ0JDZ0FnRmlF
-RXh3T2Fxcm81Y2luR2RFL1gKanpFVkVTNjQyMVFGQWw2K3VVRUNHd3dBQ2drUWp6RVZFUzY0MjFR
-NVpRZ0E3QndIS1ZOK0dUYUdzSWpQOWlJbwo1aG16YnNJZldxcmRvQm9xVkVJSXNSbkp5NXhtT2tT
-azdlNEIvNGM1Y0F4QUZobTJjVCtIQVBGUWJMV0FSVUExCnRtUXAxcUtLUkdQdDVwM0tzNU9lNmFM
-ay9teXJmbStxVnFuYytmZk1oaGM5YVhuVUdnMjRucUhteWVjK3VwdDMKZWUrZDdVc2lpTkNmVnlB
-cEVWZmt5OFFtMm1IUDhBbEs0ZmdUV0k1UUdNTkFqSXVQTDl5ZjEyNzdHSXBBUTA3agpkYUx3OVhK
-TDVLaDRyYWVwV284VUoxbkRuaWF6TUNJUWlkUlFoZnFVb1B6eW1sWEhMQ3lra3Rhempwd1IzZmR1
-CktiUmgzY1Z2YzdIakU1NDJmSUM2NEx2WTNMUVpqYk5KRHlwK1RFd3hhcnBPYXBSQmN6dC9waVlx
-VUV2MDJveXgKckE9PQo9RENyegotLS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
-
---===============1200765353132057305==
-Content-Type: application/pgp-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="OpenPGP_signature.sig"
-
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCndzQjVCQUFCQ0FBakZpRUV4d09hcXJvNWNp
-bkdkRS9YanpFVkVTNjQyMVFGQW1KR0pWNEZBd0FBQUFBQUNna1FqekVWRVM2NDIxVC8KcHdmL1Rm
-YnQ5NUFEYzZQL3lQMFdzRHVNT1BjQ0VGR2xPODl2Q3JzU1FIeHlHZHRpd2N3QnlBK1ZSSHM5YTkv
-YkpuMXJrK0N1Wm9ZSgpKRHZVODFGeUZoSUV0TW9UbHR4dXdMWUVGdnFLVUQzb2h1Rmo1bWRpTWM5
-L0FVcElWTFc5cWpDNlNlTUV2ZjVrQ0xlMlFVTUxrZjFkCjFNL2lKYmNYdkJRSlpKWHVWM2VTS3VH
-QUJVamtNbG1wMzJxdnA3b3V1cEFIeDV4enJlT0EvSWI3aVhIVURFaG1hQmdTcHhPUE9PaTEKK3ZR
-MWdIM3E5YXpsSm5ldHdVQWl6VXpkL2REczAzK2lIVFYrOWYxRTROR0dHeTBzZjU5R3c5TktHT2Zj
-K0IyN2d3OVZmN1RpRGFIaQpLM3dWbDNhNzlOMFFxbjVKeGFUbjZuNk5xYUhxbWZnUFJhcm50UU1E
-SVE9PQo9U3NOcQotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0tLS0K
-
---===============1200765353132057305==--
+Thanks,
+Tadeusz
+--===============5194781364699644439==--
 
