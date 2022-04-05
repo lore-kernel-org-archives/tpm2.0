@@ -1,123 +1,304 @@
-Content-Type: multipart/mixed; boundary="===============6725040957415151881=="
+Content-Type: multipart/mixed; boundary="===============7332604265585815005=="
 MIME-Version: 1.0
-From: John Connett <jrc at skylon.me.uk>
+From: Tadeusz Struk <tstruk at gmail.com>
 Subject: [tpm2] Re: Installing on FreeBSD?
-Date: Tue, 05 Apr 2022 18:03:15 +0100
-Message-ID: <8f99596f-56bd-c34f-d9b2-ce0782c9f11b@skylon.me.uk>
-In-Reply-To: 813027f8-b232-62b0-a8fc-fa5618a832ba@gmail.com
+Date: Tue, 05 Apr 2022 11:20:31 -0700
+Message-ID: <3454f652-d765-eeea-335b-97a875da6c6a@gmail.com>
+In-Reply-To: 8f99596f-56bd-c34f-d9b2-ce0782c9f11b@skylon.me.uk
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6725040957415151881==
+--===============7332604265585815005==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On 04/04/2022 15:42, Tadeusz Struk wrote:
+On 4/5/22 10:03, John Connett wrote:
+> It's=C2=A0ths=C2=A0one!=C2=A0I=C2=A0added=C2=A0a=C2=A0printf=C2=A0to=C2=
+=A0output=C2=A0the=C2=A0value=C2=A0of=C2=A0"timeout"=C2=A0at:
+> https://github.com/freebsd/freebsd-src/blob/main/sys/dev/tpm/tpm_crb.c#L2=
+59
+> =
 
-> On 4/4/22 03:50, John Connett wrote:
->> I have built a debug kernel and am attempting to debug the tpm =
+> It counts down until timeout <=3D 0 (in steps of 10000) then ENXIO is ret=
+urned.
+> =
 
->> module. However, the tpm dtrace probes and symbols are not available =
+> I've=C2=A0had=C2=A0a=C2=A0quick=C2=A0look=C2=A0at:
+> https://trustedcomputinggroup.org/wp-content/uploads/Mobile-Command-Respo=
+nse-Buffer-Interface-v2-r12-Specification_FINAL2.pdf =
 
->> until "kldload=C2=A0tpm"=C2=A0has=C2=A0run=C2=A0by=C2=A0which=C2=A0time=
-=C2=A0the=C2=A0ENXIO=C2=A0error=C2=A0has=C2=A0occurred.
->>
->> I could pepper the tpm driver code with kernel printf calls but was =
+> =
 
->> wondering=C2=A0if=C2=A0there=C2=A0is=C2=A0an=C2=A0eaier=C2=A0way?
->
-> There are only two spots where I would suspect it to fail and return =
+> =
 
-> ENXIO
-> from attach. One is on tpmcrb_request_locality():
-> https://github.com/freebsd/freebsd-src/blob/main/sys/dev/tpm/tpm_crb.c#L1=
-71
+> If polling isn't working perhaps interrupt control or some other form of =
 
-It's ths one! I added a printf to output the value of "timeout" at:
-https://github.com/freebsd/freebsd-src/blob/main/sys/dev/tpm/tpm_crb.c#L259
+> notification=C2=A0is=C2=A0required?
 
-It counts down until timeout <=3D 0 (in steps of 10000) then ENXIO is =
-
-returned.
-
-I've had a quick look at:
-https://trustedcomputinggroup.org/wp-content/uploads/Mobile-Command-Respons=
-e-Buffer-Interface-v2-r12-Specification_FINAL2.pdf
-
-If polling isn't working perhaps interrupt control or some other form of =
-
-notification is required?
-
-Is there anything I could dig out of the control structures that would =
-
-help identify the problem?
-
-Thanks
---
-John
+I don't think CRB interface requires irq, in my case no interrupt is regist=
+ered:
+$ vmstat -i
+interrupt                          total       rate
+irq1: atkbd0                           2          0
+cpu0:timer                         17233         28
+cpu1:timer                         11371         19
+irq25: virtio_pci0                 13987         23
+irq26: virtio_pci0                     1          0
+irq27: hdac0                          58          0
+irq29: virtio_pci2                  5550          9
+irq31: virtio_pci1                     1          0
+Total                              48203         79
 
 
---===============6725040957415151881==
-Content-Type: application/pgp-keys
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="OpenPGP_0x8F3115112EB8DB54.asc"
+> =
 
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4c0JOQkY2K3VVRUJDQUR0QmMz
-UHlPUXh1TnlOTkFEYzNIOE82UmpUbzNvcVFnVk9iNUhhRnRVT3AzSUFzWDRrCng5ZWZIRm5CRGtX
-ZDBoOVRNQk5PSkJmcTVXR0xVT21yR3JkSVJrUUZFS1ptNDZKQ2ZUQ2VOSyt3N1VNcWIzQmsKZjF3
-R21HY1M0YkVzZDNSQmUxWm5CK0JMa1ljWG1EcUhNT1drejdqMS9UdnM4NkJ0eHlQRlBHQW5rT1BD
-d1JDdQpwZk12cHltVUIvdGppblg1Yi91SitjN0NaUmo3MVNPMUdndnFPMFE4VkN4WU5kTnJyeStu
-eXN5Mm5XTXNWekF1CmZUQjlxQis3ZjM2ZjhMcGJhT0FvRllFOVliYWtxbCtRYUM4Q2IvMVppNy9B
-Ty94S2ZoOTV4Q2tIUllwV29iUk0KMjBYNndiRkFrcFVETU1xcU9yL3duVHhWaUNLZDAwUkpES0xK
-QUJFQkFBSE5IMHB2YUc0Z1EyOXVibVYwZENBOAphbkpqUUhOcmVXeHZiaTV0WlM1MWF6N0N3STRF
-RXdFS0FEZ1dJUVRIQTVxcXVqbHlLY1owVDllUE1SVVJMcmpiClZBVUNYcjY1UVFJYkF3VUxDUWdI
-QWdZVkNna0lDd0lFRmdJREFRSWVBUUlYZ0FBS0NSQ1BNUlVSTHJqYlZBWDEKQ0FEaE5EL09YU3Bx
-WDN2Wm84Wm5SWFRHUnhGVEt3aEJYK2tMV3F3VWd0Tm5ST3RTbE9uaGxLMlNpUzZEcEpNYgpKWnE5
-Vm83K2tERXYwTnc0VXh0Qk1POTRuZVBPWTVhN0dKVTBpZk11TmNNbi9UVGdRT002L2VFRUZzeHlM
-QjVDCjBuK1dkOXBTQ0dpQU5DRTNwYkpnY2w3UlYrclQyaDJDY0hnRGRQanRKOUFDM2xqRXk2RUVC
-NHNGRU9JZzF2K04KMjFMWml2Unk3WmI4ZDNkTnJ6cmVHS2RrS1IyNm1acFdXWEVTN0JENzgwQ1Jx
-QmpUSGtaRmZILzExSVlXK3psQgo0a25VYVExVDZBcTdzRGltNCt6Z285TzROSExabSsycmNiY2ZV
-Ym92NE91eENoQnRCU3VpRFRCWkl4czN1Y1NOCnRZVU5YeURRanFubStjSFJlZHpaaXB2QndzQnpC
-Qk1CQ0FBZEZpRUVMYXprWllyVjlFU1VHUm1UaXZ4eEFkSEkKY3Y0RkFsN0FCUVFBQ2drUWl2eHhB
-ZEhJY3Y0bkxRZ0FxVHdIWkZsVFVRaDJPMHpGRWRMcnVOVjYxZXMzbktiTwpSSlQ3Qy9FY0p0WkEz
-MGV2YUdoOWRibDNmL0RERUpwNzJ0VFNiMlR2QkdzT2xXY3FsYjYyck1Za3dKTDM0WXVRCkpHY1hN
-VFhrL2NWUk16VUZHcktEaGlCdWVCRmxzWXVEWk45WGRSU25Ba3ZKNjVqeGhPeXg1cFZJTXJMZjEy
-NXIKOUNjbTU3TW1LYzJOMmNNY3BoNlpPTngrN1doTjcyZzFtdkI3aUduTzhMY3VtUTR4VEk5cWcr
-bWcySXR3L3hMRwpEUHpudWU0ZEpoVGMvdzI5YnlONTBTdHRHeVFlQUdmRzBPRFJON1g5VUlUbUNw
-Tmg1bjZJamJseDRmSXRJZkYxCncyaGxlZjAyWHZVY0RqK1hVdzhMUGxJMEMvbHRhdGNMWXJDVlo3
-aFVCMy9WcnBLbDYra1lqczdBVFFSZXZybEIKQVFnQW85bkJZWFQ5TXZLQ1VoR0VjNlJPOEU2WWs0
-dzVabmJqV2crZy8zY1djRTd3dCtaeHVSd3B4NERvdUNWWgovcDE3enJpeDIzNGFlcHRmNk9iV3Uz
-dlhxUmVrOFE4TnI3Wjhnd0J2cHMvaWQ0RDA3WEVkTmkzdkNLREpHZFJ6CkJZQkxUQkFCU0ZlSXJr
-WUNtK05haVJnRThYT0JlSnRBSzdvNTl6LzRMMDFNeHlvMDZNakw2R094c0lTVjBSS3MKVnVIR1NS
-WmMzSXNpbHJGaExUbTd2ZzhrSVgzWGk2dmlOb0drbmV0MXNxYTEwMVBuTlYrVjhGczVDTnVEOTZx
-agpJWVkyUHM4U1JmUzBYOTljYWJUYU9CRVNzZUZqenQ5TjhEOUFRR0RIWVo1Ti9DMXcxUGx3T0dx
-TFlmZDFZdDQwCnMzZFUzdkpYVnJVYUpjUmxEV2NrNnhKK3Z3QVJBUUFCd3NCMkJCZ0JDZ0FnRmlF
-RXh3T2Fxcm81Y2luR2RFL1gKanpFVkVTNjQyMVFGQWw2K3VVRUNHd3dBQ2drUWp6RVZFUzY0MjFR
-NVpRZ0E3QndIS1ZOK0dUYUdzSWpQOWlJbwo1aG16YnNJZldxcmRvQm9xVkVJSXNSbkp5NXhtT2tT
-azdlNEIvNGM1Y0F4QUZobTJjVCtIQVBGUWJMV0FSVUExCnRtUXAxcUtLUkdQdDVwM0tzNU9lNmFM
-ay9teXJmbStxVnFuYytmZk1oaGM5YVhuVUdnMjRucUhteWVjK3VwdDMKZWUrZDdVc2lpTkNmVnlB
-cEVWZmt5OFFtMm1IUDhBbEs0ZmdUV0k1UUdNTkFqSXVQTDl5ZjEyNzdHSXBBUTA3agpkYUx3OVhK
-TDVLaDRyYWVwV284VUoxbkRuaWF6TUNJUWlkUlFoZnFVb1B6eW1sWEhMQ3lra3Rhempwd1IzZmR1
-CktiUmgzY1Z2YzdIakU1NDJmSUM2NEx2WTNMUVpqYk5KRHlwK1RFd3hhcnBPYXBSQmN6dC9waVlx
-VUV2MDJveXgKckE9PQo9RENyegotLS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+> Is there anything I could dig out of the control structures that would =
 
---===============6725040957415151881==
-Content-Type: application/pgp-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="OpenPGP_signature.sig"
+> help=C2=A0identify=C2=A0the=C2=A0problem?
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KCndzQjVCQUFCQ0FBakZpRUV4d09hcXJvNWNp
-bkdkRS9YanpFVkVTNjQyMVFGQW1KTWRsTUZBd0FBQUFBQUNna1FqekVWRVM2NDIxUjQKUFFmL2Z4
-NkN6QS9GaENpM0NiVGc0bzdJM2xPUFlWcnZxOTRhWllyM3IxdGxwWld3cDhsN0laTmpQZlc1ckFV
-SXY1dmg2V3ZFdkY1SwpyYnBRQ0pISmFUN3NDanNIU3hWRzJzZll4T2M3a0ExakpuUnRHaktibk05
-dmlTTTA5RFYxWEJvellwVkl4WlRvVDUvcFpac1kyZlg2CmVMYjMyZVpBOHFKbm1VU3lEazBlcTBC
-MHJtdGx1dFZQUmlVdmNJaUpDQ1hLRnRoR09iQzRVYzQ0MWtxcStRMFVtcGpraFFGT055enoKRzFr
-V2EwMUJXNi9Sc05xUVBFRno1WnJ4cFMzNjZrN25VNXkzQ0EwU1pNa3YweG9wc0NnclRISUV5d01F
-KzF3VzBVWkRDZUw3VFM1awpSdXBscHBJSjFwdEJvanphTkFJR0NGRDEwaDdjWFRlNithTWljUkp2
-K2c9PQo9LzVBVgotLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0tLS0K
+Not sure, must be something specific to the windows hyper-V TPM.
+I'm running freeBSD13.0 on top of Linux KVM and crb-tpm2.0 and it's working=
+ fine.
+You may want to compare the ACPI tables to see what's missing. Here what I =
+have:
 
---===============6725040957415151881==--
+$ sudo acpidump -dt > dump.txt
+$ cat dump.txt
+....
+/*
+   TPM2: Length=3D76, Revision=3D4, Checksum=3D138,
+	OEMID=3DBOCHS, OEM Table ID=3DBXPC, OEM Revision=3D0x1,
+	Creator ID=3DBXPC, Creator Revision=3D0x1
+		ControlArea=3Dfed40040
+		StartMethod=3D7
+  */
+.....
+/*
+  * Intel ACPI Component Architecture
+  * AML/ASL+ Disassembler version 20201113 (64-bit version)
+  * Copyright (c) 2000 - 2020 Intel Corporation
+  *
+  * Disassembling to symbolic ASL+ operators
+  *
+  * Disassembly of /tmp/acpidump.gpqkvY/acpdump.din, Tue Apr  5 11:02:38 20=
+22
+  *
+  * Original Table Header:
+  *     Signature        "DSDT"
+  *     Length           0x0000190A (6410)
+  *     Revision         0x01 **** 32-bit table (V1), no 64-bit math support
+  *     Checksum         0xBC
+  *     OEM ID           "BOCHS "
+  *     OEM Table ID     "BXPC    "
+  *     OEM Revision     0x00000001 (1)
+  *     Compiler ID      "BXPC"
+  *     Compiler Version 0x00000001 (1)
+  */
+DefinitionBlock ("", "DSDT", 1, "BOCHS ", "BXPC    ", 0x00000001)
+{
+     ...
+     Scope (\_SB)
+     {
+     ...
+         Device (TPM)
+         {
+             Name (_HID, "MSFT0101" /* TPM 2.0 Security Device */)  // _HID=
+: =
+
+Hardware ID
+             Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Set=
+tings
+             {
+                 Memory32Fixed (ReadWrite,
+                     0xFED40000,         // Address Base
+                     0x00001000,         // Address Length
+                     )
+             })
+             Name (_STA, 0x0F)  // _STA: Status
+             OperationRegion (TPP2, SystemMemory, 0xFED45100, 0x5A)
+             Field (TPP2, AnyAcc, NoLock, Preserve)
+             {
+                 PPIN,   8,
+                 PPIP,   32,
+                 PPRP,   32,
+                 PPRQ,   32,
+                 PPRM,   32,
+                 LPPR,   32
+             }
+
+             OperationRegion (TPP3, SystemMemory, 0xFED4515A, One)
+             Field (TPP3, ByteAcc, NoLock, Preserve)
+             {
+                 MOVV,   8
+             }
+
+             Method (TPFN, 1, Serialized)
+             {
+                 If ((Arg0 >=3D 0x0100))
+                 {
+                     Return (Zero)
+                 }
+
+                 OperationRegion (TPP1, SystemMemory, (0xFED45000 + Arg0), =
+One)
+                 Field (TPP1, ByteAcc, NoLock, Preserve)
+                 {
+                     TPPF,   8
+                 }
+
+                 Return (TPPF) /* \_SB_.TPM_.TPFN.TPPF */
+             }
+
+             Name (TPM2, Package (0x02)
+             {
+                 Zero,
+                 Zero
+             })
+             Name (TPM3, Package (0x03)
+             {
+                 Zero,
+                 Zero,
+                 Zero
+             })
+             Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
+             {
+                 If ((Arg0 =3D=3D ToUUID ("3dddfaa6-361b-4eb4-a424-8d10089d=
+1653") /* =
+
+Physical Presence Interface */))
+                 {
+                     If ((Arg2 =3D=3D Zero))
+                     {
+                         Return (Buffer (0x02)
+                         {
+                              0xFF, 0x01                                   =
+    // ..
+                         })
+                     }
+
+                     If ((Arg2 =3D=3D One))
+                     {
+                         Return ("1.3")
+                     }
+
+                     If ((Arg2 =3D=3D 0x02))
+                     {
+                         Local0 =3D DerefOf (Arg3 [Zero])
+                         Local1 =3D TPFN (Local0)
+                         If (((Local1 & 0x07) =3D=3D Zero))
+                         {
+                             Return (One)
+                         }
+
+                         PPRQ =3D Local0
+                         PPRM =3D Zero
+                         Return (Zero)
+                     }
+
+                     If ((Arg2 =3D=3D 0x03))
+                     {
+                         If ((Arg1 =3D=3D One))
+                         {
+                             TPM2 [One] =3D PPRQ /* \_SB_.TPM_.PPRQ */
+                             Return (TPM2) /* \_SB_.TPM_.TPM2 */
+                         }
+
+                         If ((Arg1 =3D=3D 0x02))
+                         {
+                             TPM3 [One] =3D PPRQ /* \_SB_.TPM_.PPRQ */
+                             TPM3 [0x02] =3D PPRM /* \_SB_.TPM_.PPRM */
+                             Return (TPM3) /* \_SB_.TPM_.TPM3 */
+                         }
+                     }
+
+                     If ((Arg2 =3D=3D 0x04))
+                     {
+                         Return (0x02)
+                     }
+
+                     If ((Arg2 =3D=3D 0x05))
+                     {
+                         TPM3 [One] =3D LPPR /* \_SB_.TPM_.LPPR */
+                         TPM3 [0x02] =3D PPRP /* \_SB_.TPM_.PPRP */
+                         Return (TPM3) /* \_SB_.TPM_.TPM3 */
+                     }
+
+                     If ((Arg2 =3D=3D 0x06))
+                     {
+                         Return (0x03)
+                     }
+
+                     If ((Arg2 =3D=3D 0x07))
+                     {
+                         Local0 =3D DerefOf (Arg3 [Zero])
+                         Local1 =3D TPFN (Local0)
+                         If (((Local1 & 0x07) =3D=3D Zero))
+                         {
+                             Return (One)
+                         }
+
+                         If (((Local1 & 0x07) =3D=3D 0x02))
+                         {
+                             Return (0x03)
+                         }
+
+                         If ((Arg1 =3D=3D One))
+                         {
+                             PPRQ =3D Local0
+                             PPRM =3D Zero
+                         }
+
+                         If ((Arg1 =3D=3D 0x02))
+                         {
+                             PPRQ =3D Local0
+                             PPRM =3D DerefOf (Arg3 [One])
+                         }
+
+                         Return (Zero)
+                     }
+
+                     If ((Arg2 =3D=3D 0x08))
+                     {
+                         Local0 =3D DerefOf (Arg3 [Zero])
+                         Local1 =3D TPFN (Local0)
+                         Return ((Local1 & 0x07))
+                     }
+
+                     Return (Buffer (One)
+                     {
+                          0x00                                             =
+// .
+                     })
+                 }
+
+                 If ((Arg0 =3D=3D ToUUID ("376054ed-cc13-4675-901c-4756d7f2=
+d45d") /* =
+
+Unknown UUID */))
+                 {
+                     If ((Arg2 =3D=3D Zero))
+                     {
+                         Return (Buffer (One)
+                         {
+                              0x03                                         =
+    // .
+                         })
+                     }
+
+                     If ((Arg2 =3D=3D One))
+                     {
+                         Local0 =3D DerefOf (Arg3 [Zero])
+                         MOVV =3D Local0
+                         Return (Zero)
+                     }
+                 }
+             }
+         }
+     }
+}
+
+
+
+--===============7332604265585815005==--
 
