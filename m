@@ -1,22 +1,25 @@
-Content-Type: multipart/mixed; boundary="===============1971138922064216595=="
+Content-Type: multipart/mixed; boundary="===============4420972566061282582=="
 MIME-Version: 1.0
-From: jasonadamses at protonmail.com
-Subject: [tpm2] Re: abrmd crashing - how to debug?
-Date: Wed, 13 Apr 2022 10:35:11 +0000
-Message-ID: <20220413103511.2280.97170@ml01.vlan13.01.org>
-In-Reply-To: OF20698D64.A63FD5D5-ON0025868F.007A7AC8-8525868F.007B8904@notes.na.collabserv.com
+From: Grant Williamson <traxtopel at gmail.com>
+Subject: [tpm2] Fedora 36 compatible test packages
+Date: Wed, 13 Apr 2022 13:42:46 +0200
+Message-ID: <CACNAWW-5kQ_jxAOFftKLfMgR+++xOFBa3+Wk2Zb8GLCL5Pvuyg@mail.gmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1971138922064216595==
+--===============4420972566061282582==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I also think if your target audience belongs to the developed world, you sh=
-ould choose Android. Personally, I chose Android a long time ago, and now i=
-t is happy when I find the right software for it. So I want to share best a=
-ntivirus apps. You can download them here: https://celltrackingapps.com/bes=
-t-antivirus-for-android/
---===============1971138922064216595==--
+Fedora does not yet have the latest and tpm2 updates, went ahead and
+created them myself.
+https://copr.fedorainfracloud.org/coprs/traxtopel/tpm2/
+
+tpm2-openssl 1.1.0
+tpm2-pkcs11 1.8.0
+tpm2-pytss 1.1.0
+
+Just in case anyone else finds this useful for testing.
+--===============4420972566061282582==--
 
