@@ -1,174 +1,331 @@
-Content-Type: multipart/mixed; boundary="===============4400808010597309093=="
+Content-Type: multipart/mixed; boundary="===============2950154661773031211=="
 MIME-Version: 1.0
-From: Petr Gotthard <petr.gotthard at centrum.cz>
-Subject: [tpm2] Re: {External} Re: OpenSSL 3 and tpm2 provider...
-Date: Tue, 26 Apr 2022 15:09:13 +0200
-Message-ID: <20220426150913.699DCD0C@centrum.cz>
-In-Reply-To: DS7PR03MB5576C7FFBE1AA4907B99441C9AFB9@ds7pr03mb5576.namprd03.prod.outlook.com
+From: Sievert, James <james.sievert at bsci.com>
+Subject: [tpm2] OpenSSL 3 and TPM 2 vendor certs in NVRAM...
+Date: Tue, 26 Apr 2022 13:18:08 +0000
+Message-ID: <
+ <DS7PR03MB5576FAC869D72A73FD8F8FDC9AFB9@DS7PR03MB5576.namprd03.prod.outlook.com>>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4400808010597309093==
+--===============2950154661773031211==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Could be separate the individual questions/issues, please? I am getting los=
-t :)
-
-The "command code not supported" error after Esys_CreateLoaded is a known i=
-ssue:
-https://github.com/tpm2-software/tpm2-openssl/issues/29
-
-To set the hierarchy you may be able to use the "-pkeyopt parent" parameter.
+Hi,
 
 
-Petr
-______________________________________________________________
-> Od: "Sievert, James" <james.sievert(a)bsci.com>
-> Komu: "tpm2(a)lists.01.org" <tpm2(a)lists.01.org>
-> Datum: 26.04.2022 14:57
-> P=C5=99edm=C4=9Bt: [tpm2] Re: {External} Re: OpenSSL 3 and tpm2 provider.=
-..
->
->I was embarking on that and hit another snag:
->
->        $ tpm2_getcap ecc-curves
->      TPM2_ECC_NIST_P256: 0x3
->      TPM2_ECC_BN_P256: 0x10
->
->      $ openssl genpkey -provider tpm2 -algorithm EC -pkeyopt group:P-256 =
--out testkey.priv
->      Warning: generating random key material may take a long time
->      if the system has a poor entropy source
->      WARNING:esys:src/tss2-esys/api/Esys_CreateLoaded.c:368:Esys_CreateLo=
-aded_Finish() Received TPM Error
->      ERROR:esys:src/tss2-esys/api/Esys_CreateLoaded.c:129:Esys_CreateLoad=
-ed() Esys Finish ErrorCode (0x000b0143)
->      genpkey: Error generating EC key
->      403C86A7007F0000:error:4000000B:tpm2::cannot create key::-1:721219 r=
-mt:error(2.0): command code not supported
->
->I=E2=80=99m curious, does one have control over the hierarchy under which =
-the key is created?
->
->Also, related to my initial query, the TPM vendor has internal certificate=
-s stored at 0x1c0000a and 0x1c00002:
->
->      0x1c00002:
->        name: 000bec00c657a4e2724101954c2c9d51ddd45c825c3997ec0786c3afeb0f=
-7fca3ec7
->        hash algorithm:
->          friendly: sha256
->          value: 0xB
->        attributes:
->          friendly: ppwrite|writedefine|ppread|ownerread|authread|no_da|wr=
-itten|platformcreate
->          value: 0x1200762
->        size: 1177
->
->      0x1c0000a:
->        name: 000b2571404112c8aae1cde797c438d921093fc89b74d44564c25c296aaa=
-26a6f041
->        hash algorithm:
->          friendly: sha256
->          value: 0xB
->        attributes:
->          friendly: ppwrite|writedefine|ppread|ownerread|authread|no_da|wr=
-itten|platformcreate
->          value: 0x1200762
->        size: 781
->
->I cannot retrieve them using openssl x509:
->
->      $ openssl x509 -provider tpm2 -provider default -in handle:0x1c0000a
->      WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finis=
-h() Received TPM Error
->      ERROR:esys:src/tss2-esys/api/Esys_NV_Read.c:105:Esys_NV_Read() Esys =
-Finish ErrorCode (0x00000095)
->      Could not read certificate from handle:0x1c0000a
->      405C04A14E7F0000:error:4000000C:tpm2::cannot load key::-1:149 tpm:ha=
-ndle(unk):structure is the wrong size
->      Unable to load certificate
->
->      $ openssl x509 -provider tpm2 -provider default -in handle:0x1c00002
->      WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finis=
-h() Received TPM Error
->      ERROR:esys:src/tss2-esys/api/Esys_NV_Read.c:105:Esys_NV_Read() Esys =
-Finish ErrorCode (0x00000095)
->      Could not read certificate from handle:0x1c00002
->      40DC7060527F0000:error:4000000C:tpm2::cannot load key::-1:149 tpm:ha=
-ndle(unk):structure is the wrong size
->      Unable to load certificate
->
->This does work; however:
->
->      bsci(a)ip-10-132-42-225:~/test$ tpm2_nvread -C p -s 781 0x1c0000a |o=
-penssl x509 -in /dev/stdin -inform der -noout -text
->      Certificate:
->          Data:
->              Version: 3 (0x2)
->              Serial Number: 756297432 (0x2d142ed8)
->              Signature Algorithm: ecdsa-with-SHA256
->              Issuer: C =3D DE, O =3D Infineon Technologies AG, OU =3D OPT=
-IGA(TM) TPM2.0, CN =3D Infineon OPTIGA(TM) ECC Manufacturing CA 029
->              Validity
->                  Not Before: Sep 29 02:49:58 2021 GMT
->                  Not After : Sep 29 02:49:58 2036 GMT
->        =E2=80=A6
->
->
->-----Original Message-----
->From: Petr Gotthard <petr.gotthard(a)centrum.cz>
->Sent: Tuesday, April 26, 2022 8:20 AM
->To: tpm2(a)lists.01.org
->Subject: [tpm2] Re: {External} Re: OpenSSL 3 and tpm2 provider...
->
->Oh, I never tested the `openssl cms` commands. There may be something miss=
-ing from the OpenSSL. What CMS functions you need? Could you please suggest=
- a sequence of openssl (and other commands) to verify all required CMS func=
-tions? Something like a new (set of) test(s), similar e.g. to https://githu=
-b.com/tpm2-software/tpm2-openssl/blob/master/test/ecdsa_genpkey_auth.sh.
->
->Petr
->______________________________________________________________
->> Od: "Sievert, James" <james.sievert(a)bsci.com<mailto:james.sievert(a)bs=
-ci.com>>
->> Komu: "tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>" <tpm2(a)lists.01=
-.org<mailto:tpm2(a)lists.01.org>>
->> Datum: 26.04.2022 14:07
->> P=C5=99edm=C4=9Bt: [tpm2] Re: {External} Re: OpenSSL 3 and tpm2 provider=
-...
->>
->>Thanks, Petr.  That did the trick (actually, base was sufficient).  In a =
-similar vein, the corresponding private key is also held persistently in th=
-e TPM, handle 0x81800002.  I'm now attempting the following:
->>
->>        openssl cms -sign -provider tpm2 -provider default -in file.txt
->> -inkey handle:0x81800002 -signer handle:0x01000013
->>
->>I get no output, and a return value of 3.  I get the same result if I ref=
-erence the public key certificate as a file:
->>
->>        openssl cms -sign -provider tpm2 -provider default -in file.txt
->> -inkey handle:0x81800002 -signer signer.pem
->>
->>Any insight on that would be appreciated=E2=80=A6
->>
->_______________________________________________
->tpm2 mailing list -- tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org>
->To unsubscribe send an email to tpm2-leave(a)lists.01.org<mailto:tpm2-leav=
-e(a)lists.01.org> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
->
->
->
->----------
->
->_______________________________________________
->tpm2 mailing list -- tpm2(a)lists.01.org
->To unsubscribe send an email to tpm2-leave(a)lists.01.org
->%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
->
->
---===============4400808010597309093==--
+The TPM vendor has internal certificates stored at 0x1c0000a and 0x1c00002:
+
+
+
+0x1c00002:
+
+  name: 000bec00c657a4e2724101954c2c9d51ddd45c825c3997ec0786c3afeb0f7fca3ec7
+
+  hash algorithm:
+
+    friendly: sha256
+
+    value: 0xB
+
+  attributes:
+
+    friendly: ppwrite|writedefine|ppread|ownerread|authread|no_da|written|p=
+latformcreate
+
+    value: 0x1200762
+
+  size: 1177
+
+
+
+0x1c0000a:
+
+  name: 000b2571404112c8aae1cde797c438d921093fc89b74d44564c25c296aaa26a6f041
+
+  hash algorithm:
+
+    friendly: sha256
+
+    value: 0xB
+
+  attributes:
+
+    friendly: ppwrite|writedefine|ppread|ownerread|authread|no_da|written|p=
+latformcreate
+
+    value: 0x1200762
+
+  size: 781
+
+
+
+I cannot retrieve them using openssl x509:
+
+
+
+$ openssl x509 -provider tpm2 -provider default -in handle:0x1c0000a
+
+WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finish() Rec=
+eived TPM Error
+
+ERROR:esys:src/tss2-esys/api/Esys_NV_Read.c:105:Esys_NV_Read() Esys Finish =
+ErrorCode (0x00000095)
+
+Could not read certificate from handle:0x1c0000a
+
+405C04A14E7F0000:error:4000000C:tpm2::cannot load key::-1:149 tpm:handle(un=
+k):structure is the wrong size
+
+Unable to load certificate
+
+
+
+$ openssl x509 -provider tpm2 -provider default -in handle:0x1c00002
+
+WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finish() Rec=
+eived TPM Error
+
+ERROR:esys:src/tss2-esys/api/Esys_NV_Read.c:105:Esys_NV_Read() Esys Finish =
+ErrorCode (0x00000095)
+
+Could not read certificate from handle:0x1c00002
+
+40DC7060527F0000:error:4000000C:tpm2::cannot load key::-1:149 tpm:handle(un=
+k):structure is the wrong size
+
+Unable to load certificate
+
+
+
+This does work; however:
+
+
+
+bsci(a)ip-10-132-42-225:~/test$ tpm2_nvread -C p -s 781 0x1c0000a |openssl =
+x509 -in /dev/stdin -inform der -noout -text
+
+Certificate:
+
+    Data:
+
+        Version: 3 (0x2)
+
+        Serial Number: 756297432 (0x2d142ed8)
+
+        Signature Algorithm: ecdsa-with-SHA256
+
+        Issuer: C =3D DE, O =3D Infineon Technologies AG, OU =3D OPTIGA(TM)=
+ TPM2.0, CN =3D Infineon OPTIGA(TM) ECC Manufacturing CA 029
+
+        Validity
+
+            Not Before: Sep 29 02:49:58 2021 GMT
+
+            Not After : Sep 29 02:49:58 2036 GMT
+
+       ...
+
+
+Thanks.
+
+--===============2950154661773031211==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6ZHQ9InV1aWQ6QzJGNDEwMTAtNjVC
+My0xMWQxLUEyOUYtMDBBQTAwQzE0ODgyIiB4bWxuczptPSJodHRwOi8vc2NoZW1hcy5taWNyb3Nv
+ZnQuY29tL29mZmljZS8yMDA0LzEyL29tbWwiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy9UUi9S
+RUMtaHRtbDQwIj4KPGhlYWQ+CjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVu
+dD0idGV4dC9odG1sOyBjaGFyc2V0PXVzLWFzY2lpIj4KPG1ldGEgbmFtZT0iR2VuZXJhdG9yIiBj
+b250ZW50PSJNaWNyb3NvZnQgV29yZCAxNSAoZmlsdGVyZWQgbWVkaXVtKSI+CjxzdHlsZT48IS0t
+Ci8qIEZvbnQgRGVmaW5pdGlvbnMgKi8KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OiJDYW1icmlh
+IE1hdGgiOwoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9CkBmb250LWZhY2UKCXtmb250
+LWZhbWlseTpDYWxpYnJpOwoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAyIDQ7fQovKiBTdHls
+ZSBEZWZpbml0aW9ucyAqLwpwLk1zb05vcm1hbCwgbGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFs
+Cgl7bWFyZ2luOjBpbjsKCWZvbnQtc2l6ZToxMS4wcHQ7Cglmb250LWZhbWlseToiQ2FsaWJyaSIs
+c2Fucy1zZXJpZjt9CnAuTXNvUGxhaW5UZXh0LCBsaS5Nc29QbGFpblRleHQsIGRpdi5Nc29QbGFp
+blRleHQKCXttc28tc3R5bGUtcHJpb3JpdHk6OTk7Cgltc28tc3R5bGUtbGluazoiUGxhaW4gVGV4
+dCBDaGFyIjsKCW1hcmdpbjowaW47Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNh
+bGlicmkiLHNhbnMtc2VyaWY7fQpzcGFuLkVtYWlsU3R5bGUxNwoJe21zby1zdHlsZS10eXBlOnBl
+cnNvbmFsLWNvbXBvc2U7Cglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsKCWNvbG9y
+OndpbmRvd3RleHQ7fQpzcGFuLlBsYWluVGV4dENoYXIKCXttc28tc3R5bGUtbmFtZToiUGxhaW4g
+VGV4dCBDaGFyIjsKCW1zby1zdHlsZS1wcmlvcml0eTo5OTsKCW1zby1zdHlsZS1saW5rOiJQbGFp
+biBUZXh0IjsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30KLk1zb0NocERlZmF1
+bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixz
+YW5zLXNlcmlmO30KQHBhZ2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo4LjVpbiAxMS4waW47CgltYXJn
+aW46MS4waW4gMS4waW4gMS4waW4gMS4waW47fQpkaXYuV29yZFNlY3Rpb24xCgl7cGFnZTpXb3Jk
+U2VjdGlvbjE7fQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWRl
+ZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPgo8L3htbD48IVtlbmRpZl0tLT48
+IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPgo8bzpp
+ZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2Vu
+ZGlmXS0tPgo8L2hlYWQ+Cjxib2R5IGxhbmc9IkVOLVVTIiBsaW5rPSIjMDU2M0MxIiB2bGluaz0i
+Izk1NEY3MiIgc3R5bGU9IndvcmQtd3JhcDpicmVhay13b3JkIj4KPGRpdiBjbGFzcz0iV29yZFNl
+Y3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGksPG86cD48L286cD48L3A+CjxwIGNsYXNz
+PSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0
+Ij5UaGUgVFBNIHZlbmRvciBoYXMgaW50ZXJuYWwgY2VydGlmaWNhdGVzIHN0b3JlZCBhdCAweDFj
+MDAwMGEgYW5kIDB4MWMwMDAwMjo8bzpwPjwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4
+dCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiIHN0eWxlPSJt
+YXJnaW4tbGVmdDouNWluIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5
+OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij4weDFjMDAwMDI6PG86cD48L286cD48L3NwYW4+PC9w
+Pgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0IiBzdHlsZT0ibWFyZ2luLWxlZnQ6LjVpbiI+PHNwYW4g
+c3R5bGU9ImZvbnQtc2l6ZTo4LjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90
+OyI+Jm5ic3A7IG5hbWU6IDAwMGJlYzAwYzY1N2E0ZTI3MjQxMDE5NTRjMmM5ZDUxZGRkNDVjODI1
+YzM5OTdlYzA3ODZjM2FmZWIwZjdmY2EzZWM3PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFz
+cz0iTXNvUGxhaW5UZXh0IiBzdHlsZT0ibWFyZ2luLWxlZnQ6LjVpbiI+PHNwYW4gc3R5bGU9ImZv
+bnQtc2l6ZTo4LjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+Jm5ic3A7
+IGhhc2ggYWxnb3JpdGhtOjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWlu
+VGV4dCIgc3R5bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OC4w
+cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPiZuYnNwOyZuYnNwOyZuYnNw
+OyBmcmllbmRseTogc2hhMjU2PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvUGxh
+aW5UZXh0IiBzdHlsZT0ibWFyZ2luLWxlZnQ6LjVpbiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo4
+LjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+Jm5ic3A7Jm5ic3A7Jm5i
+c3A7IHZhbHVlOiAweEI8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRl
+eHQiIHN0eWxlPSJtYXJnaW4tbGVmdDouNWluIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjguMHB0
+O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij4mbmJzcDsgYXR0cmlidXRlczo8
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiIHN0eWxlPSJtYXJn
+aW4tbGVmdDouNWluIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5OiZx
+dW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij4mbmJzcDsmbmJzcDsmbmJzcDsgZnJpZW5kbHk6IHBwd3Jp
+dGV8d3JpdGVkZWZpbmV8cHByZWFkfG93bmVycmVhZHxhdXRocmVhZHxub19kYXx3cml0dGVufHBs
+YXRmb3JtY3JlYXRlPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0
+IiBzdHlsZT0ibWFyZ2luLWxlZnQ6LjVpbiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo4LjBwdDtm
+b250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IHZh
+bHVlOiAweDEyMDA3NjI8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRl
+eHQiIHN0eWxlPSJtYXJnaW4tbGVmdDouNWluIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjguMHB0
+O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij4mbmJzcDsgc2l6ZTogMTE3Nzxv
+OnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5bGU9Im1hcmdp
+bi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1mYW1pbHk6JnF1
+b3Q7Q291cmllciBOZXcmcXVvdDsiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xh
+c3M9Ik1zb1BsYWluVGV4dCIgc3R5bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJm
+b250LXNpemU6OC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPjB4MWMw
+MDAwYTo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiIHN0eWxl
+PSJtYXJnaW4tbGVmdDouNWluIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjguMHB0O2ZvbnQtZmFt
+aWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij4mbmJzcDsgbmFtZTogMDAwYjI1NzE0MDQxMTJj
+OGFhZTFjZGU3OTdjNDM4ZDkyMTA5M2ZjODliNzRkNDQ1NjRjMjVjMjk2YWFhMjZhNmYwNDE8bzpw
+PjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiIHN0eWxlPSJtYXJnaW4t
+bGVmdDouNWluIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5OiZxdW90
+O0NvdXJpZXIgTmV3JnF1b3Q7Ij4mbmJzcDsgaGFzaCBhbGdvcml0aG06PG86cD48L286cD48L3Nw
+YW4+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0IiBzdHlsZT0ibWFyZ2luLWxlZnQ6LjVpbiI+
+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo4LjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5l
+dyZxdW90OyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IGZyaWVuZGx5OiBzaGEyNTY8bzpwPjwvbzpwPjwv
+c3Bhbj48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiIHN0eWxlPSJtYXJnaW4tbGVmdDouNWlu
+Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIg
+TmV3JnF1b3Q7Ij4mbmJzcDsmbmJzcDsmbmJzcDsgdmFsdWU6IDB4QjxvOnA+PC9vOnA+PC9zcGFu
+PjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxz
+cGFuIHN0eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcm
+cXVvdDsiPiZuYnNwOyBhdHRyaWJ1dGVzOjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9
+Ik1zb1BsYWluVGV4dCIgc3R5bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250
+LXNpemU6OC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPiZuYnNwOyZu
+YnNwOyZuYnNwOyBmcmllbmRseTogcHB3cml0ZXx3cml0ZWRlZmluZXxwcHJlYWR8b3duZXJyZWFk
+fGF1dGhyZWFkfG5vX2RhfHdyaXR0ZW58cGxhdGZvcm1jcmVhdGU8bzpwPjwvbzpwPjwvc3Bhbj48
+L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiIHN0eWxlPSJtYXJnaW4tbGVmdDouNWluIj48c3Bh
+biBzdHlsZT0iZm9udC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1
+b3Q7Ij4mbmJzcDsmbmJzcDsmbmJzcDsgdmFsdWU6IDB4MTIwMDc2MjxvOnA+PC9vOnA+PC9zcGFu
+PjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxz
+cGFuIHN0eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcm
+cXVvdDsiPiZuYnNwOyBzaXplOiA3ODE8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJN
+c29QbGFpblRleHQiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0
+Ij5JIGNhbm5vdCByZXRyaWV2ZSB0aGVtIHVzaW5nIG9wZW5zc2wgeDUwOTo8bzpwPjwvbzpwPjwv
+cD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+PG86cD4mbmJzcDs8L286cD48L3A+CjxwIGNsYXNz
+PSJNc29QbGFpblRleHQiIHN0eWxlPSJtYXJnaW4tbGVmdDouNWluIj48c3BhbiBzdHlsZT0iZm9u
+dC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij4kIG9wZW5z
+c2wgeDUwOSAtcHJvdmlkZXIgdHBtMiAtcHJvdmlkZXIgZGVmYXVsdCAtaW4gaGFuZGxlOjB4MWMw
+MDAwYTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5bGU9
+Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1mYW1p
+bHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPldBUk5JTkc6ZXN5czpzcmMvdHNzMi1lc3lzL2Fw
+aS9Fc3lzX05WX1JlYWQuYzozMTU6RXN5c19OVl9SZWFkX0ZpbmlzaCgpIFJlY2VpdmVkIFRQTSBF
+cnJvcjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5bGU9
+Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1mYW1p
+bHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPkVSUk9SOmVzeXM6c3JjL3RzczItZXN5cy9hcGkv
+RXN5c19OVl9SZWFkLmM6MTA1OkVzeXNfTlZfUmVhZCgpIEVzeXMgRmluaXNoIEVycm9yQ29kZSAo
+MHgwMDAwMDA5NSk8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQi
+IHN0eWxlPSJtYXJnaW4tbGVmdDouNWluIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjguMHB0O2Zv
+bnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5Db3VsZCBub3QgcmVhZCBjZXJ0aWZp
+Y2F0ZSBmcm9tIGhhbmRsZToweDFjMDAwMGE8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNz
+PSJNc29QbGFpblRleHQiIHN0eWxlPSJtYXJnaW4tbGVmdDouNWluIj48c3BhbiBzdHlsZT0iZm9u
+dC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij40MDVDMDRB
+MTRFN0YwMDAwOmVycm9yOjQwMDAwMDBDOnRwbTI6OmNhbm5vdCBsb2FkIGtleTo6LTE6MTQ5IHRw
+bTpoYW5kbGUodW5rKTpzdHJ1Y3R1cmUgaXMgdGhlIHdyb25nIHNpemU8bzpwPjwvbzpwPjwvc3Bh
+bj48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiIHN0eWxlPSJtYXJnaW4tbGVmdDouNWluIj48
+c3BhbiBzdHlsZT0iZm9udC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3
+JnF1b3Q7Ij5VbmFibGUgdG8gbG9hZCBjZXJ0aWZpY2F0ZTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4K
+PHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0
+eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsi
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5
+bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1m
+YW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPiQgb3BlbnNzbCB4NTA5IC1wcm92aWRlciB0
+cG0yIC1wcm92aWRlciBkZWZhdWx0IC1pbiBoYW5kbGU6MHgxYzAwMDAyPG86cD48L286cD48L3Nw
+YW4+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0IiBzdHlsZT0ibWFyZ2luLWxlZnQ6LjVpbiI+
+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo4LjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5l
+dyZxdW90OyI+V0FSTklORzplc3lzOnNyYy90c3MyLWVzeXMvYXBpL0VzeXNfTlZfUmVhZC5jOjMx
+NTpFc3lzX05WX1JlYWRfRmluaXNoKCkgUmVjZWl2ZWQgVFBNIEVycm9yPG86cD48L286cD48L3Nw
+YW4+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0IiBzdHlsZT0ibWFyZ2luLWxlZnQ6LjVpbiI+
+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo4LjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5l
+dyZxdW90OyI+RVJST1I6ZXN5czpzcmMvdHNzMi1lc3lzL2FwaS9Fc3lzX05WX1JlYWQuYzoxMDU6
+RXN5c19OVl9SZWFkKCkgRXN5cyBGaW5pc2ggRXJyb3JDb2RlICgweDAwMDAwMDk1KTxvOnA+PC9v
+OnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5bGU9Im1hcmdpbi1sZWZ0
+Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291
+cmllciBOZXcmcXVvdDsiPkNvdWxkIG5vdCByZWFkIGNlcnRpZmljYXRlIGZyb20gaGFuZGxlOjB4
+MWMwMDAwMjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5
+bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1m
+YW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPjQwREM3MDYwNTI3RjAwMDA6ZXJyb3I6NDAw
+MDAwMEM6dHBtMjo6Y2Fubm90IGxvYWQga2V5OjotMToxNDkgdHBtOmhhbmRsZSh1bmspOnN0cnVj
+dHVyZSBpcyB0aGUgd3Jvbmcgc2l6ZTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1z
+b1BsYWluVGV4dCIgc3R5bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNp
+emU6OC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPlVuYWJsZSB0byBs
+b2FkIGNlcnRpZmljYXRlPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5U
+ZXh0Ij48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCI+VGhpcyBk
+b2VzIHdvcms7IGhvd2V2ZXI6PG86cD48L286cD48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQi
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0IiBzdHlsZT0ibWFy
+Z2luLWxlZnQ6LjVpbiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo4LjBwdDtmb250LWZhbWlseTom
+cXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+YnNjaUBpcC0xMC0xMzItNDItMjI1On4vdGVzdCQgdHBt
+Ml9udnJlYWQgLUMgcCAtcyA3ODEgMHgxYzAwMDBhIHxvcGVuc3NsIHg1MDkgLWluIC9kZXYvc3Rk
+aW4gLWluZm9ybSBkZXIgLW5vb3V0IC10ZXh0PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFz
+cz0iTXNvUGxhaW5UZXh0IiBzdHlsZT0ibWFyZ2luLWxlZnQ6LjVpbiI+PHNwYW4gc3R5bGU9ImZv
+bnQtc2l6ZTo4LjBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+Q2VydGlm
+aWNhdGU6PG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0IiBzdHls
+ZT0ibWFyZ2luLWxlZnQ6LjVpbiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo4LjBwdDtmb250LWZh
+bWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IERhdGE6PG86
+cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0IiBzdHlsZT0ibWFyZ2lu
+LWxlZnQ6LjVpbiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo4LjBwdDtmb250LWZhbWlseTomcXVv
+dDtDb3VyaWVyIE5ldyZxdW90OyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7IFZlcnNpb246IDMgKDB4Mik8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJN
+c29QbGFpblRleHQiIHN0eWxlPSJtYXJnaW4tbGVmdDouNWluIj48c3BhbiBzdHlsZT0iZm9udC1z
+aXplOjguMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij4mbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgU2VyaWFsIE51bWJlcjogNzU2Mjk3NDMy
+ICgweDJkMTQyZWQ4KTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4
+dCIgc3R5bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OC4wcHQ7
+Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPiZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBTaWduYXR1cmUgQWxnb3JpdGhtOiBlY2RzYS13aXRoLVNI
+QTI1NjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5bGU9
+Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1mYW1p
+bHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyBJc3N1ZXI6IEMgPSBERSwgTyA9IEluZmluZW9uIFRlY2hub2xvZ2llcyBB
+RywgT1UgPSBPUFRJR0EoVE0pIFRQTTIuMCwgQ04gPSBJbmZpbmVvbiBPUFRJR0EoVE0pIEVDQyBN
+YW51ZmFjdHVyaW5nIENBIDAyOTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPHAgY2xhc3M9Ik1zb1Bs
+YWluVGV4dCIgc3R5bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFuIHN0eWxlPSJmb250LXNpemU6
+OC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPiZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBWYWxpZGl0eTxvOnA+PC9vOnA+PC9zcGFuPjwv
+cD4KPHAgY2xhc3M9Ik1zb1BsYWluVGV4dCIgc3R5bGU9Im1hcmdpbi1sZWZ0Oi41aW4iPjxzcGFu
+IHN0eWxlPSJmb250LXNpemU6OC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVv
+dDsiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyBOb3QgQmVmb3JlOiBTZXAgMjkgMDI6NDk6NTggMjAyMSBHTVQ8bzpwPjwv
+bzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29QbGFpblRleHQiIHN0eWxlPSJtYXJnaW4tbGVm
+dDouNWluIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjguMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0Nv
+dXJpZXIgTmV3JnF1b3Q7Ij4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgTm90IEFmdGVyIDogU2VwIDI5IDAyOjQ5OjU4IDIw
+MzYgR01UPG86cD48L286cD48L3NwYW4+PC9wPgo8cCBjbGFzcz0iTXNvUGxhaW5UZXh0IiBzdHls
+ZT0ibWFyZ2luLWxlZnQ6LjVpbiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo4LjBwdDtmb250LWZh
+bWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7ICYjODIzMDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+CjxwIGNsYXNzPSJNc29QbGFp
+blRleHQiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5UaGFua3Mu
+PG86cD48L286cD48L3A+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
+
+--===============2950154661773031211==--
 
