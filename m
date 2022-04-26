@@ -1,103 +1,77 @@
-Content-Type: multipart/mixed; boundary="===============5333504196958341464=="
+Content-Type: multipart/mixed; boundary="===============3751471064551969744=="
 MIME-Version: 1.0
-From: Petr Gotthard <petr.gotthard at centrum.cz>
+From: Sievert, James <james.sievert at bsci.com>
 Subject: [tpm2] Re: {External} Re: OpenSSL 3 and tpm2 provider... / openssl cms
-Date: Tue, 26 Apr 2022 22:22:33 +0200
-Message-ID: <20220426222233.E2A0DF7A@centrum.cz>
-In-Reply-To: DS7PR03MB5576DBEE0181A7DBD38E9C259AFB9@ds7pr03mb5576.namprd03.prod.outlook.com
+Date: Tue, 26 Apr 2022 21:43:48 +0000
+Message-ID: <
+ <DS7PR03MB5576A61EBF01CE46694CE3B79AFB9@DS7PR03MB5576.namprd03.prod.outlook.com>>
+In-Reply-To: 20220426222233.E2A0DF7A@centrum.cz
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============5333504196958341464==
+--===============3751471064551969744==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thank you, James.
+> Debugging openssl is tricky when it fails without any error message
 
-Debugging openssl is tricky when it fails without any error message. :-/ Th=
-is happens especially when the provider does not supply openssl with someth=
-ing that the default provider usually supplies-- in this case the MD algori=
-thm.
+Sorry about that.  =E2=98=B9
 
-The command
-> openssl cms -sign -provider tpm2 -provider default -in file.txt -inkey ha=
-ndle:0x81800002 -signer handle:0x01000013
-was failing because the key had no mandatory digest and there was no digest=
- specified via the command line.
+> If you create e.g. a RSA-PSS key restricted to a specific hash-algorithm =
+you shouldn't need this extra argument
 
-Adding "-md sha256" fixed the issue for me. If you create e.g. a RSA-PSS ke=
-y restricted to a specific hash-algorithm you shouldn't need this extra arg=
-ument, because openssl will ask the key for the digest algorithm.
+I was under the impression that the key was created using the sha256 hashin=
+g algorithm.  Here's the command used for creating the key:
 
-Based on the commands you sent I made a new test for 'openssl cms'. Have a =
-look here:
-https://github.com/tpm2-software/tpm2-openssl/blob/master/test/rsa_genpkey_=
-x509_cms.sh
-This should show a full test scenario for CMS. I can add more if you think =
-something is missing, or when you encounter another weird behaviour.
+tpm2_create -C /run/user/201/platform.ctx -G ecc256:ecdsa-sha256 -r /run/us=
+er/201/private -u /run/user/201/public -a 'fixedtpm|fixedparent|sensitiveda=
+taorigin|sign|userwithauth|noda'
 
+Here's the result:
 
-Regards,
-Petr
-______________________________________________________________
-> Od: "Sievert, James" <james.sievert(a)bsci.com>
-> Komu: "tpm2(a)lists.01.org" <tpm2(a)lists.01.org>
-> Datum: 26.04.2022 16:24
-> P=C5=99edm=C4=9Bt: [tpm2] Re: {External} Re: OpenSSL 3 and tpm2 provider.=
-..
->
->> Could you please suggest a sequence of openssl (and other commands) to v=
-erify all required CMS functions?
->
->Tell you what, I'll frame the test sequences in terms of the tpm2tss engin=
-e commands as I can verify correct syntax and command operation.  I'll assu=
-me for the time being that the necessary keys and certs are stored in TPM N=
-VRAM through tpm2_* commands.
->
->The a good start to testing would be something to the effect:
->
->	echo "this is some text" >file.txt
->
->	openssl cms -sign -engine tpm2tss -keyform engine -inkey 0x81800002 -sign=
-er signer.pem -in file.txt -binary -nodetach -out file.sig
->
->	(note that although the tpm2tss engine doesn't support it, the signer cou=
-ld also be given as a handle to the tpm2 provider)
->
->	openssl cms -verify -in file.sig -binary -noverify
->
->	(note that you can remove the -noverify and point to a truststore if nece=
-ssary with -CApath /somewhere/truststore)
->
->	openssl cms -encrypt -recip signer.pem -in file.txt -out file.enc
->
->	(note that although the tpm2tss engine doesn't support it, the recip coul=
-d also be given as a handle to the tpm2 provider)
->
->	openssl cms -decrypt -engine tpm2tss -keyform engine -inkey 0x81800002 -i=
-n file.enc -recip signer.pem
->
->	(note that this command doesn't work with the tpm2tss engine.  See:  http=
-s://bugs.launchpad.net/ubuntu/+source/openssl/+bug/1962549.)
->
->	openssl cms  -encrypt  -sign...
->
->	(the cms command can encrypt, sign, and bundle everything into an output =
-with a single command -- the syntax is a combination of what's above)
->
->	openssl cms -verify -decrypt ...
->
->	(the cms command can verify and decrypt an input with a single command --=
- the syntax is a combination of what's above)
->
->	 =
+$ tpm2_readpublic -c 0x81800002
+name: 000bb512ddf666370d1d957955207a3159f07a499acdb36a43b5bb928000874aff0e
+qualified name: 000b087ef34ba32025d7430d242d5b95813935c8b0c66983bf0107b63fd=
+f00e62b07
+name-alg:
+  value: sha256
+  raw: 0xb
+attributes:
+  value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|noda|sign
+  raw: 0x40472
+type:
+  value: ecc
+  raw: 0x23
+curve-id:
+  value: NIST p256
+  raw: 0x3
+kdfa-alg:
+  value: null
+  raw: 0x10
+kdfa-halg:
+  value: (null)
+  raw: 0x0
+scheme:
+  value: ecdsa
+  raw: 0x18
+scheme-halg:
+  value: sha256
+  raw: 0xb
+sym-alg:
+  value: null
+  raw: 0x10
+sym-mode:
+  value: (null)
+  raw: 0x0
+sym-keybits: 0
+x: b326cf2f3088979065d64f692dabb8e72384cd480738325a92ec6e0af3ad066d
+y: 7147de064a9b5d438b3e5c4f64f9437eec64816f1c3ddc21b0b194ab620706d1
 
->_______________________________________________
->tpm2 mailing list -- tpm2(a)lists.01.org
->To unsubscribe send an email to tpm2-leave(a)lists.01.org
->%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
->
->
---===============5333504196958341464==--
+> Adding "-md sha256" fixed the issue for me.
+
+I'm unable to test at the moment.  I'll hopefully be able to confirm tomorr=
+ow.
+
+--===============3751471064551969744==--
 
