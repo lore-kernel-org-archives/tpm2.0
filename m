@@ -1,97 +1,115 @@
-Content-Type: multipart/mixed; boundary="===============0189425108837421761=="
+Content-Type: multipart/mixed; boundary="===============4949433619547368823=="
 MIME-Version: 1.0
-From: Sievert, James <james.sievert at bsci.com>
-Subject: [tpm2] Re: {External} Re: OpenSSL 3 and tpm2 provider... / openssl cms
-Date: Wed, 27 Apr 2022 15:20:06 +0000
-Message-ID: <
- <DS7PR03MB557663142DFF081829F097179AFA9@DS7PR03MB5576.namprd03.prod.outlook.com>>
-In-Reply-To: 20220426235440.9B2351AF@centrum.cz
+From: Petr Gotthard <petr.gotthard at centrum.cz>
+Subject: [tpm2] Re: OpenSSL 3 and TPM 2 vendor certs in NVRAM...
+Date: Wed, 27 Apr 2022 19:31:05 +0200
+Message-ID: <20220427193105.358F05EC@centrum.cz>
+In-Reply-To: DS7PR03MB5576FAC869D72A73FD8F8FDC9AFB9@ds7pr03mb5576.namprd03.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0189425108837421761==
+--===============4949433619547368823==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Okay, Petr, I've added -md sha256 to the command line, and both signing and=
- verification now work:
+Hi James,
 
-$ echo "hi there" >file.txt
-$ openssl cms -sign -provider tpm2 -provider base -in file.txt -inkey handl=
-e:0x81800002 -signer handle:0x01000013 -md sha256 -out file.sig -outform der
-$ echo $?
-0
-$ openssl cms -verify -content file.txt -in file.sig -inform der -CApath /r=
-un/user/201/trustStore/
-hi there
-CMS Verification successful
+Loading certs from NV was also not tested and apparently doesn't work eithe=
+r.
+https://github.com/tpm2-software/tpm2-openssl/issues/35
 
-So, that's great!
-
-CMS encryption fails as follows:
-
-$ openssl cms -encrypt -provider tpm2 -provider base -in file.txt -recip ha=
-ndle:0x01000013
-WARNING:esys:src/tss2-esys/api/Esys_CreateLoaded.c:368:Esys_CreateLoaded_Fi=
-nish() Received TPM Error
-ERROR:esys:src/tss2-esys/api/Esys_CreateLoaded.c:129:Esys_CreateLoaded() Es=
-ys Finish ErrorCode (0x000b0143)
-40FCFCC0017F0000:error:4000000B:tpm2::cannot create key::-1:721219 rmt:erro=
-r(2.0): command code not supported
-
-This looks like https://github.com/tpm2-software/tpm2-openssl/issues/29.  F=
-or my use case, support for TPMs without the CreateLoaded command will be e=
-ssential.  My machines have an OPTIGA TPM2.
-
-Thanks!
-
------Original Message-----
-From: Petr Gotthard <petr.gotthard(a)centrum.cz> =
-
-Sent: Tuesday, April 26, 2022 5:55 PM
-To: tpm2(a)lists.01.org
-Subject: [tpm2] Re: {External} Re: OpenSSL 3 and tpm2 provider... / openssl=
- cms
-
->> Debugging openssl is tricky when it fails without any error message
->
->Sorry about that.  =E2=98=B9
-
-No problem. I am glad you are trying the tpm2 provider in your environment.=
- :-)
-
->> If you create e.g. a RSA-PSS key restricted to a specific =
-
->> hash-algorithm you shouldn't need this extra argument
->
->I was under the impression that the key was created using the sha256 hashi=
-ng algorithm.  Here's the command used for creating the key:
->
->tpm2_create -C /run/user/201/platform.ctx -G ecc256:ecdsa-sha256 -r /run/u=
-ser/201/private -u /run/user/201/public -a 'fixedtpm|fixedparent|sensitived=
-ataorigin|sign|userwithauth|noda'
->
->Here's the result:
->
->$ tpm2_readpublic -c 0x81800002
->scheme:
->  value: ecdsa
->  raw: 0x18
->scheme-halg:
->  value: sha256
->  raw: 0xb
-
-Yeah. What I wrote was apparently true for RSA keys only. The EC keys do no=
-t correctly supply the hash algorithm. That is a bug that will be fixed in =
-the coming days: https://github.com/tpm2-software/tpm2-openssl/issues/34
+Please-- could you retrieve your cert from the NV and let me know whether i=
+t is DER (binary) or PEM (textual with -----BEGIN CERTIFICATE----- lines)?
 
 
 Petr
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org %(web_page_url)sl=
-istinfo%(cgiext)s/%(_internal_name)s
-
---===============0189425108837421761==--
+______________________________________________________________
+> Od: "Sievert, James" <james.sievert(a)bsci.com>
+> Komu: "tpm2(a)lists.01.org" <tpm2(a)lists.01.org>
+> Datum: 26.04.2022 15:18
+> P=C5=99edm=C4=9Bt: [tpm2] OpenSSL 3 and TPM 2 vendor certs in NVRAM...
+>
+>Hi,
+>
+>
+>The TPM vendor has internal certificates stored at 0x1c0000a and 0x1c00002:
+>
+>
+>0x1c00002:
+>
+>  name: 000bec00c657a4e2724101954c2c9d51ddd45c825c3997ec0786c3afeb0f7fca3e=
+c7
+>  hash algorithm:
+>    friendly: sha256
+>    value: 0xB
+>  attributes:
+>    friendly: ppwrite|writedefine|ppread|ownerread|authread|no_da|written|=
+platformcreate
+>    value: 0x1200762
+>  size: 1177
+>
+>0x1c0000a:
+>  name: 000b2571404112c8aae1cde797c438d921093fc89b74d44564c25c296aaa26a6f0=
+41
+>  hash algorithm:
+>    friendly: sha256
+>    value: 0xB
+>  attributes:
+>    friendly: ppwrite|writedefine|ppread|ownerread|authread|no_da|written|=
+platformcreate
+>    value: 0x1200762
+>  size: 781
+>
+>I cannot retrieve them using openssl x509:
+>
+>$ openssl x509 -provider tpm2 -provider default -in handle:0x1c0000a
+>WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finish() Re=
+ceived TPM Error
+>ERROR:esys:src/tss2-esys/api/Esys_NV_Read.c:105:Esys_NV_Read() Esys Finish=
+ ErrorCode (0x00000095)
+>Could not read certificate from handle:0x1c0000a
+>405C04A14E7F0000:error:4000000C:tpm2::cannot load key::-1:149 tpm:handle(u=
+nk):structure is the wrong size
+>Unable to load certificate
+>
+>$ openssl x509 -provider tpm2 -provider default -in handle:0x1c00002
+>WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finish() Re=
+ceived TPM Error
+>ERROR:esys:src/tss2-esys/api/Esys_NV_Read.c:105:Esys_NV_Read() Esys Finish=
+ ErrorCode (0x00000095)
+>Could not read certificate from handle:0x1c00002
+>40DC7060527F0000:error:4000000C:tpm2::cannot load key::-1:149 tpm:handle(u=
+nk):structure is the wrong size
+>Unable to load certificate
+>
+>This does work; however:
+>
+>bsci(a)ip-10-132-42-225:~/test$ tpm2_nvread -C p -s 781 0x1c0000a |openssl=
+ x509 -in /dev/stdin -inform der -noout -text
+>Certificate:
+>    Data:
+>        Version: 3 (0x2)
+>        Serial Number: 756297432 (0x2d142ed8)
+>        Signature Algorithm: ecdsa-with-SHA256
+>        Issuer: C =3D DE, O =3D Infineon Technologies AG, OU =3D OPTIGA(TM=
+) TPM2.0, CN =3D Infineon OPTIGA(TM) ECC Manufacturing CA 029
+>        Validity
+>            Not Before: Sep 29 02:49:58 2021 GMT
+>            Not After : Sep 29 02:49:58 2036 GMT
+>       ...
+>
+>
+>Thanks.
+>
+>
+>----------
+>
+>_______________________________________________
+>tpm2 mailing list -- tpm2(a)lists.01.org
+>To unsubscribe send an email to tpm2-leave(a)lists.01.org
+>%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+>
+>
+--===============4949433619547368823==--
 
