@@ -1,157 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============9111442333304849731=="
+Content-Type: multipart/mixed; boundary="===============2614945458999569289=="
 MIME-Version: 1.0
 From: Sievert, James <james.sievert at bsci.com>
-Subject: [tpm2] Re: {External} Re: OpenSSL 3 and TPM 2 vendor certs in NVRAM...
-Date: Thu, 28 Apr 2022 14:39:08 +0000
+Subject: [tpm2] Re: {External} Re: OpenSSL 3 and tpm2 provider... / openssl cms
+Date: Thu, 28 Apr 2022 14:42:17 +0000
 Message-ID: <
- <DS7PR03MB5576F0FEB1AB80F2049891299AFD9@DS7PR03MB5576.namprd03.prod.outlook.com>>
-In-Reply-To: 20220428153419.3D09DDB0@centrum.cz
+ <DS7PR03MB55766DADC3559BB002F691199AFD9@DS7PR03MB5576.namprd03.prod.outlook.com>>
+In-Reply-To: 20220427193732.704789D2@centrum.cz
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9111442333304849731==
+--===============2614945458999569289==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I've tested reading of the vender certs.  They now work. =
+I've tested cms signing without specifying the -md option with the EC key. =
+ That now works.
 
+I also tested cms encryption.  I'm getting a different error:
 
-Thanks for the quick response.
+$ openssl cms -encrypt -provider tpm2 -provider base -in file.txt -recip ha=
+ndle:0x01000013 -aes128 =
+
+409C92EDC37F0000:error:0308010C:digital envelope routines:inner_evp_generic=
+_fetch:unsupported:../crypto/evp/evp_fetch.c:349:Global default library con=
+text, Algorithm (AES-128-CBC : 62), Properties ()
+409C92EDC37F0000:error:17000065:CMS routines:ossl_cms_EncryptedContent_init=
+_bio:cipher initialisation error:../crypto/cms/cms_enc.c:78:
+409C92EDC37F0000:error:17000068:CMS routines:CMS_final:cms lib:../crypto/cm=
+s/cms_smime.c:881:
+
+I suspect that the command is attempting to perform AES encryption using th=
+e TPM.  My particular TPM doesn't support symmetric encryption.
+
+Jim
 
 -----Original Message-----
 From: Petr Gotthard <petr.gotthard(a)centrum.cz> =
 
-Sent: Thursday, April 28, 2022 9:34 AM
+Sent: Wednesday, April 27, 2022 1:38 PM
 To: tpm2(a)lists.01.org
-Subject: [tpm2] Re: {External} Re: OpenSSL 3 and TPM 2 vendor certs in NVRA=
-M...
+Subject: [tpm2] Re: {External} Re: OpenSSL 3 and tpm2 provider... / openssl=
+ cms
 
-James,
-there were some bugs in the NV processing and certificate parsing. Thank yo=
-u for reporting them.
+>CMS encryption fails as follows:
+>
+>$ openssl cms -encrypt -provider tpm2 -provider base -in file.txt =
 
-Everything should be fixed in the latest master branch. Please check if the=
-re are any issues.
+>-recip handle:0x01000013
+>WARNING:esys:src/tss2-esys/api/Esys_CreateLoaded.c:368:Esys_CreateLoade
+>d_Finish() Received TPM Error
+>ERROR:esys:src/tss2-esys/api/Esys_CreateLoaded.c:129:Esys_CreateLoaded(
+>) Esys Finish ErrorCode (0x000b0143) =
+
+>40FCFCC0017F0000:error:4000000B:tpm2::cannot create key::-1:721219 =
+
+>rmt:error(2.0): command code not supported
+>
+>This looks like https://github.com/tpm2-software/tpm2-openssl/issues/29.
+> For my use case, support for TPMs without the CreateLoaded command will b=
+e essential.  My machines have an OPTIGA TPM2.
+
+The CreateLoaded issue should be fixed now (in the latest master branch).
 
 
 Petr
-______________________________________________________________
-> Od: "Sievert, James" <james.sievert(a)bsci.com>
-> Komu: "tpm2(a)lists.01.org" <tpm2(a)lists.01.org>
-> Datum: 27.04.2022 19:33
-> P=C5=99edm=C4=9Bt: [tpm2] Re: {External} Re: OpenSSL 3 and TPM 2 vendor c=
-erts in NVRAM...
->
->They are DER format. =
-
->
->-----Original Message-----
->From: Petr Gotthard <petr.gotthard(a)centrum.cz>
->Sent: Wednesday, April 27, 2022 1:31 PM
->To: tpm2(a)lists.01.org
->Subject: {External} [tpm2] Re: OpenSSL 3 and TPM 2 vendor certs in NVRAM...
->
->Hi James,
->
->Loading certs from NV was also not tested and apparently doesn't work eith=
-er.
->https://github.com/tpm2-software/tpm2-openssl/issues/35
->
->Please-- could you retrieve your cert from the NV and let me know whether =
-it is DER (binary) or PEM (textual with -----BEGIN CERTIFICATE----- lines)?
->
->
->Petr
->______________________________________________________________
->> Od: "Sievert, James" <james.sievert(a)bsci.com>
->> Komu: "tpm2(a)lists.01.org" <tpm2(a)lists.01.org>
->> Datum: 26.04.2022 15:18
->> P=C5=99edm=C4=9Bt: [tpm2] OpenSSL 3 and TPM 2 vendor certs in NVRAM...
->>
->>Hi,
->>
->>
->>The TPM vendor has internal certificates stored at 0x1c0000a and 0x1c0000=
-2:
->>
->>
->>0x1c00002:
->>
->>  name: =
-
->> 000bec00c657a4e2724101954c2c9d51ddd45c825c3997ec0786c3afeb0f7fca3ec7
->>  hash algorithm:
->>    friendly: sha256
->>    value: 0xB
->>  attributes:
->>    friendly: ppwrite|writedefine|ppread|ownerread|authread|no_da|written=
-|platformcreate
->>    value: 0x1200762
->>  size: 1177
->>
->>0x1c0000a:
->>  name: =
-
->>000b2571404112c8aae1cde797c438d921093fc89b74d44564c25c296aaa26a6f041
->>  hash algorithm:
->>    friendly: sha256
->>    value: 0xB
->>  attributes:
->>    friendly: ppwrite|writedefine|ppread|ownerread|authread|no_da|written=
-|platformcreate
->>    value: 0x1200762
->>  size: 781
->>
->>I cannot retrieve them using openssl x509:
->>
->>$ openssl x509 -provider tpm2 -provider default -in handle:0x1c0000a
->>WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finish(
->>)
->>Received TPM Error
->>ERROR:esys:src/tss2-esys/api/Esys_NV_Read.c:105:Esys_NV_Read() Esys =
-
->>Finish ErrorCode (0x00000095) Could not read certificate from =
-
->>handle:0x1c0000a 405C04A14E7F0000:error:4000000C:tpm2::cannot load
->>key::-1:149 tpm:handle(unk):structure is the wrong size Unable to load =
-
->>certificate
->>
->>$ openssl x509 -provider tpm2 -provider default -in handle:0x1c00002
->>WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finish(
->>)
->>Received TPM Error
->>ERROR:esys:src/tss2-esys/api/Esys_NV_Read.c:105:Esys_NV_Read() Esys =
-
->>Finish ErrorCode (0x00000095) Could not read certificate from
->>handle:0x1c00002 40DC7060527F0000:error:4000000C:tpm2::cannot load
->>key::-1:149 tpm:handle(unk):structure is the wrong size Unable to load =
-
->>certificate
->>
->>This does work; however:
->>
->>bsci(a)ip-10-132-42-225:~/test$ tpm2_nvread -C p -s 781 0x1c0000a
->>|openssl x509 -in /dev/stdin -inform der -noout -text
->>Certificate:
->>    Data:
->>        Version: 3 (0x2)
->>        Serial Number: 756297432 (0x2d142ed8)
->>        Signature Algorithm: ecdsa-with-SHA256
->>        Issuer: C =3D DE, O =3D Infineon Technologies AG, OU =3D OPTIGA(T=
-M) TPM2.0, CN =3D Infineon OPTIGA(TM) ECC Manufacturing CA 029
->>        Validity
->>            Not Before: Sep 29 02:49:58 2021 GMT
->>            Not After : Sep 29 02:49:58 2036 GMT
->>       ...
->>
->>
->>Thanks.
 _______________________________________________
 tpm2 mailing list -- tpm2(a)lists.01.org
 To unsubscribe send an email to tpm2-leave(a)lists.01.org %(web_page_url)sl=
 istinfo%(cgiext)s/%(_internal_name)s
-
---===============9111442333304849731==--
+--===============2614945458999569289==--
 
