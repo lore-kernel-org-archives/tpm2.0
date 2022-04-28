@@ -1,17 +1,31 @@
-Content-Type: multipart/mixed; boundary="===============7802211856304436962=="
+Content-Type: multipart/mixed; boundary="===============9111442333304849731=="
 MIME-Version: 1.0
-From: Petr Gotthard <petr.gotthard at centrum.cz>
+From: Sievert, James <james.sievert at bsci.com>
 Subject: [tpm2] Re: {External} Re: OpenSSL 3 and TPM 2 vendor certs in NVRAM...
-Date: Thu, 28 Apr 2022 15:34:19 +0200
-Message-ID: <20220428153419.3D09DDB0@centrum.cz>
-In-Reply-To: DS7PR03MB55767734A941458248B11ACA9AFA9@ds7pr03mb5576.namprd03.prod.outlook.com
+Date: Thu, 28 Apr 2022 14:39:08 +0000
+Message-ID: <
+ <DS7PR03MB5576F0FEB1AB80F2049891299AFD9@DS7PR03MB5576.namprd03.prod.outlook.com>>
+In-Reply-To: 20220428153419.3D09DDB0@centrum.cz
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7802211856304436962==
+--===============9111442333304849731==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+
+I've tested reading of the vender certs.  They now work. =
+
+
+Thanks for the quick response.
+
+-----Original Message-----
+From: Petr Gotthard <petr.gotthard(a)centrum.cz> =
+
+Sent: Thursday, April 28, 2022 9:34 AM
+To: tpm2(a)lists.01.org
+Subject: [tpm2] Re: {External} Re: OpenSSL 3 and TPM 2 vendor certs in NVRA=
+M...
 
 James,
 there were some bugs in the NV processing and certificate parsing. Thank yo=
@@ -33,8 +47,7 @@ erts in NVRAM...
 
 >
 >-----Original Message-----
->From: Petr Gotthard <petr.gotthard(a)centrum.cz> =
-
+>From: Petr Gotthard <petr.gotthard(a)centrum.cz>
 >Sent: Wednesday, April 27, 2022 1:31 PM
 >To: tpm2(a)lists.01.org
 >Subject: {External} [tpm2] Re: OpenSSL 3 and TPM 2 vendor certs in NVRAM...
@@ -93,37 +106,33 @@ it is DER (binary) or PEM (textual with -----BEGIN CERTIFICATE----- lines)?
 >>I cannot retrieve them using openssl x509:
 >>
 >>$ openssl x509 -provider tpm2 -provider default -in handle:0x1c0000a
->>WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finish() =
-
+>>WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finish(
+>>)
 >>Received TPM Error
 >>ERROR:esys:src/tss2-esys/api/Esys_NV_Read.c:105:Esys_NV_Read() Esys =
 
 >>Finish ErrorCode (0x00000095) Could not read certificate from =
 
->>handle:0x1c0000a 405C04A14E7F0000:error:4000000C:tpm2::cannot load =
-
+>>handle:0x1c0000a 405C04A14E7F0000:error:4000000C:tpm2::cannot load
 >>key::-1:149 tpm:handle(unk):structure is the wrong size Unable to load =
 
 >>certificate
 >>
 >>$ openssl x509 -provider tpm2 -provider default -in handle:0x1c00002
->>WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finish() =
-
+>>WARNING:esys:src/tss2-esys/api/Esys_NV_Read.c:315:Esys_NV_Read_Finish(
+>>)
 >>Received TPM Error
 >>ERROR:esys:src/tss2-esys/api/Esys_NV_Read.c:105:Esys_NV_Read() Esys =
 
->>Finish ErrorCode (0x00000095) Could not read certificate from =
-
->>handle:0x1c00002 40DC7060527F0000:error:4000000C:tpm2::cannot load =
-
+>>Finish ErrorCode (0x00000095) Could not read certificate from
+>>handle:0x1c00002 40DC7060527F0000:error:4000000C:tpm2::cannot load
 >>key::-1:149 tpm:handle(unk):structure is the wrong size Unable to load =
 
 >>certificate
 >>
 >>This does work; however:
 >>
->>bsci(a)ip-10-132-42-225:~/test$ tpm2_nvread -C p -s 781 0x1c0000a =
-
+>>bsci(a)ip-10-132-42-225:~/test$ tpm2_nvread -C p -s 781 0x1c0000a
 >>|openssl x509 -in /dev/stdin -inform der -noout -text
 >>Certificate:
 >>    Data:
@@ -139,5 +148,10 @@ M) TPM2.0, CN =3D Infineon OPTIGA(TM) ECC Manufacturing CA 029
 >>
 >>
 >>Thanks.
---===============7802211856304436962==--
+_______________________________________________
+tpm2 mailing list -- tpm2(a)lists.01.org
+To unsubscribe send an email to tpm2-leave(a)lists.01.org %(web_page_url)sl=
+istinfo%(cgiext)s/%(_internal_name)s
+
+--===============9111442333304849731==--
 
