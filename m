@@ -1,96 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============0759084530789738149=="
+Content-Type: multipart/mixed; boundary="===============4770791513178334074=="
 MIME-Version: 1.0
-From: rodolphe.averty at free.fr
-Subject: [tpm2] tpm2_import is modifying the keyid of my private key
-Date: Fri, 13 May 2022 14:51:17 +0200
-Message-ID: <42256C7C-DBBF-EA4C-84CF-86E0B5F43FB3@hxcore.ol>
-In-Reply-To: CAKc39v=LhkYkSVDUUk+FiZMCCDwfCuMWzSsJsU5GMDNGMbqZfA@mail.gmail.com
+From: - - <rodolphe.averty at free.fr>
+Subject: [tpm2] Re: tpm2_import is modifying the keyid of my private key
+Date: Fri, 13 May 2022 12:52:54 +0000
+Message-ID: <20220513125254.1878.24023@ml01.vlan13.01.org>
+In-Reply-To: 42256C7C-DBBF-EA4C-84CF-86E0B5F43FB3@hxcore.ol
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0759084530789738149==
+--===============4770791513178334074==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
---===============0759084530789738149==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+i am trying to use TPM 2.0 device and StrongSwan 5.9.6. I had to recompil S=
+trongSwan to have desired options.
 
-PGh0bWw+PGJvZHk+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJjb2xvcjogcmdiKDMzLCAzMywgMzMp
-OyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij48c3BhbiBzdHlsZT0iZm9u
-dC1zaXplOiAxMnB0OyI+aGVsbG8sPC9zcGFuPjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0byIgaWQ9
-Im1haWwtZWRpdG9yLXJlZmVyZW5jZS1tZXNzYWdlLWNvbnRhaW5lciI+PGRpdiBkaXI9ImF1dG8i
-Pjxicj5pIGFtIHRyeWluZyB0byB1c2UgVFBNIDIuMCBkZXZpY2UgYW5kIFN0cm9uZ1N3YW4gNS45
-LjYuIEkgaGFkIHRvIHJlY29tcGlsIFN0cm9uZ1N3YW4gdG8gaGF2ZSBkZXNpcmVkIG9wdGlvbnMu
-PGJyPjxicj4mZ3Q7Jmd0OyBzeXN0ZW1jdGwgcmVzdGFydCBzdHJvbmdzd2FuPGJyPk1heSAxMyAx
-MTo1MTozOSAwMFtMSUJdIGxvYWRlZCBwbHVnaW5zOiBjaGFyb24tc3lzdGVtZCB0cG0gYWVzIGRl
-cyByYzIgc2hhMiBzaGExIG1kNSBtZ2YxIHJhbmRvbSBub25jZSB4NTA5IHJldm9jYXRpb24gY29u
-c3RyYWludHMgcHVia2V5IHBrY3MxIHBrY3M3IHBrY3MxMiBwZ3AgZG5za2V5IHNzaGtleSBwZW0g
-cGtjczggZmlwcy1wcmYgZ21wIGN1cnZlMjU1MTkgeGNiYyBjbWFjIGhtYWMga2RmIGRyYmcgYXR0
-ciBrZXJuZWwtbmV0bGluayByZXNvbHZlIHNvY2tldC1kZWZhdWx0IHN0cm9rZSB2aWNpIHVwZG93
-biB4YXV0aC1nZW5lcmljIGNvdW50ZXJzPGJyPk1heSAxMyAxMTo1MTozOSAwMFtKT0JdIHNwYXdu
-aW5nIDE2IHdvcmtlciB0aHJlYWRzPGJyPk1heSAxMyAxMTo1MTozOSAwMVtQVFNdIFRQTSAyLjAg
-dmlhIFRTUzIgdjIgYXZhaWxhYmxlPGJyPk1heSAxMyAxMTo1MTozOSAwMVtQVFNdIGVuY3J5cHRp
-b24gYWxnb3JpdGhtIGlzIEFFUy1DRkIgd2l0aCAxMjggYml0czxicj5NYXkgMTMgMTE6NTE6Mzkg
-MDFbQ0ZHXSBsb2FkZWQgUlNBIHByaXZhdGUga2V5IGZyb20gdG9rZW48YnI+TWF5IDEzIDExOjUx
-OjM5IDExW1BUU10gVFBNIDIuMCB2aWEgVFNTMiB2MiBhdmFpbGFibGU8YnI+TWF5IDEzIDExOjUx
-OjM5IDExW0xJQl0gbG9hZGVkIGNlcnRpZmljYXRlIGZyb20gVFBNIE5WIGluZGV4IDB4MDE4MDAw
-MDQ8YnI+TWF5IDEzIDExOjUxOjM5IDExW0NGR10gJm5ic3A7IGlkIG5vdCBzcGVjaWZpZWQsIGRl
-ZmF1bHRpbmcgdG8gY2VydCBzdWJqZWN0ICdDPUZSLCBPPVhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
-WFhYWFhYWFhYWCwgT1U9MDAwMiAxMjAwMDYwMTAwMDAyNSwgQ049cG9zdGUtWVlZWVknPGJyPjxi
-cj4mZ3Q7Jmd0OyBzd2FuY3RsIC0taW5pdGlhdGUgLS1jaGlsZCBob3N0PGJyPltJS0VdIGluaXRp
-YXRpbmcgTWFpbiBNb2RlIElLRV9TQSBjb25uZWN0aW9uMVsxXSB0byAxOTIuMTY4LjQyLjI1NDxi
-cj5bSUtFXSBubyBwcml2YXRlIGtleSBmb3VuZCBmb3IgJ0M9RlIsIE89WFhYWFhYWFhYWFhYWFhY
-WFhYWFhYWFhYWFhYWFhYWFhYWCwgT1U9MDAwMiAxMjAwMDYwMTAwMDAyNSwgQ049cG9zdGUtWVlZ
-WVknPGJyPltDRkddIGNvbmZpZ3VyYXRpb24gdXNlcyB1bnN1cHBvcnRlZCBhdXRoZW50aWNhdGlv
-bjxicj5pbml0aWF0ZSBmYWlsZWQ6IGVzdGFibGlzaGluZyBDSElMRF9TQSAnaG9zdCcgZmFpbGVk
-PGJyPjxicj4mZ3Q7Jmd0OyBzd2FuY3RsIC0tbGlzdC1jZXJ0czxicj5MaXN0IG9mIFguNTA5IEVu
-ZCBFbnRpdHkgQ2VydGlmaWNhdGVzPGJyPjxicj4mbmJzcDsgc3ViamVjdDogJm5ic3A7IkM9RlIs
-IE89WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYLCBPVT0wMDAyIDEyMDAwNjAxMDAwMDI1
-LCBDTj1pdGluZW8tMDMzNDk5MSI8YnI+Jm5ic3A7IGlzc3VlcjogJm5ic3A7ICJDPUZBQ19ERVZO
-R19JTkZSQVNUUlVDVFVSRS9BQ19ERVZOR19JTkZSQVNUUlVDVFVSRVIsIE89WFhYWFhYWFhYWFhY
-WFhYWFhYWFhYWFhYWFhYWFhYLCBDTj1BQyBERVYgSU5GUkEsIjxicj4mbmJzcDsgdmFsaWRpdHk6
-ICZuYnNwO25vdCBiZWZvcmUgTWFyIDI0IDEzOjQ0OjIyIDIwMjIsIG9rPGJyPiZuYnNwOyAmbmJz
-cDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwO25vdCBhZnRlciAmbmJzcDtNYXIg
-MjQgMTM6NDQ6MjIgMjAyMywgb2sgKGV4cGlyZXMgaW4gMzE1IGRheXMpPGJyPiZuYnNwOyBzZXJp
-YWw6ICZuYnNwOyAmbmJzcDswODoyODxicj4mbmJzcDsgZmxhZ3M6ICZuYnNwOyAmbmJzcDsgPGJy
-PiZuYnNwOyBDUkwgVVJJczogJm5ic3A7PGEgaHJlZj0iaHR0cDovL3d3dy5nb29nbGUuZnIvbXku
-Y3JsIj5odHRwOi8vd3d3Lmdvb2dsZS5mci9teS5jcmw8L2E+PGJyPiZuYnNwOyBjZXJ0aWZpY2F0
-ZVBvbGljaWVzOjxicj4mbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAm
-bmJzcDsxLjIuMjUwLjEuMjE0LjY5LjMuMS4xLjIxLjE8YnI+Jm5ic3A7IGF1dGhrZXlJZDogYzQ6
-NTI6Yzc6N2M6NDA6NDE6Yjk6ZWI6YWI6ZGI6ZGY6ZjQ6Yjc6YmU6Zjc6YjI6YmY6NjE6NTc6YTA8
-YnI+Jm5ic3A7IHN1YmprZXlJZDogZjg6NGU6YTI6YWU6NWM6M2E6MWI6NDA6N2E6NmE6MTk6MDQ6
-Mzg6MzI6MDU6NjI6ZGI6ZjA6ZDU6OWU8YnI+Jm5ic3A7IHB1YmtleTogJm5ic3A7ICZuYnNwO1JT
-QSAyMDQ4IGJpdHM8YnI+Jm5ic3A7IGtleWlkOiAmbmJzcDsgJm5ic3A7IDQyOmU3Ojk0OmRhOjli
-OjA3OjQwOjAxOjhlOjQwOmU1OjUxOjM1OmZjOjEwOmRhOjhmOjJjOjYxOjNiPGJyPiZuYnNwOyBz
-dWJqa2V5OiAmbmJzcDsgZjg6NGU6YTI6YWU6NWM6M2E6MWI6NDA6N2E6NmE6MTk6MDQ6Mzg6MzI6
-MDU6NjI6ZGI6ZjA6ZDU6OWU8YnI+PGJyPjxicj4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS08YnI+VGhlIGtleSBpZCBuZWVkZWQgc3RhcnRzIHdpdGggNDI6ZTc8YnI+LS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPGJyPjxicj5UaGUgcHJpdmF0ZSBrZXkgd2Fz
-IGltcG9ydGVkIGludG8gdGhlIFRQTSAyLjAgJm5ic3A7ZGV2aWNlIDo8YnI+PGJyPiZndDsmZ3Q7
-IHRwbTJfY3JlYXRlcHJpbWFyeSAtUSAtRyByc2EgLWcgc2hhMjU2IC1DIG8gLWMgcGFyZW50LmN0
-eDxicj4mZ3Q7Jmd0OyB0cG0yX2ltcG9ydCAtRyByc2EgLWcgc2hhMjU2IC1pICR7UFJJVkFURV9Q
-RU19IC1DIHBhcmVudC5jdHggLXUgaW1wb3J0X3JzYV9rZXkucHViIC1yIGltcG9ydF9yc2Ffa2V5
-LnByaXY8YnI+PGJyPldoZW4gaSBsb29rIGF0IHRoZSBrZXkgc3RvcmVkIDo8YnI+PGJyPiZndDsm
-Z3Q7IHBraSAtLXByaW50IC0ta2V5aWQgMHg4MTAwMDAwMSAtLXR5cGUgcHJpdjxicj5UUE0gMi4w
-IHZpYSBUU1MyIHYyIGF2YWlsYWJsZTxicj5lbmNyeXB0aW9uIGFsZ29yaXRobSBpcyBBRVMtQ0ZC
-IHdpdGggMTI4IGJpdHM8YnI+Jm5ic3A7IHByaXZrZXk6ICZuYnNwOyBSU0EgMjA0OCBiaXRzPGJy
-PiZuYnNwOyBrZXlpZDogJm5ic3A7ICZuYnNwOyBiMzpjYTplNzpjZjpjNDpjMzpmOTozNzowZjpk
-NTo4NTpiMTo0NDo4ZTo2ODpmYjo2ZDplYjpiYzphMzxicj4mbmJzcDsgc3ViamtleTogJm5ic3A7
-IGMxOmQxOjMxOjhjOmZjOjY5OjMxOjI2OmEyOjczOjIxOmQyOmQwOmQ5OmExOmYxOmI1OmU1OjU1
-OjlkPGJyPjxicj5rZXkgaWQgc3RhcnRzIHdpdGggYjM6Y2EgPz88YnI+PGJyPiZndDsmZ3Q7IHBr
-aSAtLXByaW50IC0tdHlwZSBwcml2IC0taW4gJHtQUklWQVRFX1BFTX0gPGJyPnByaXZrZXk6ICZu
-YnNwOyBSU0EgMjA0OCBiaXRzPGJyPmtleWlkOiAmbmJzcDsgJm5ic3A7IDQyOmU3Ojk0OmRhOjli
-OjA3OjQwOjAxOjhlOjQwOmU1OjUxOjM1OmZjOjEwOmRhOjhmOjJjOjYxOjNiPGJyPnN1YmprZXk6
-ICZuYnNwOyBmODo0ZTphMjphZTo1YzozYToxYjo0MDo3YTo2YToxOTowNDozODozMjowNTo2Mjpk
-YjpmMDpkNTo5ZTxicj48YnI+SW4gdGhlIGZpcnN0IGNhc2Ugd2Ugc2F3IGEga2V5IHdpdGggYmFk
-IGtleWlkLiBXaGVuIGtleSBpcyB0YWtlbiBmcm9tIGZpbGUgdGhlIGtleWlkIGlzIGdvb2QgYW5k
-IGlzIGVxdWFsIHRvIHRoZSBjZXJ0aWZpY2F0ZSBrZXkgaWQ8YnI+PGJyPjxicj5JIGFtIHN1cmVs
-eSBkb2luZyBzb21ldGhpbmcgd3JvbmcuIEFueSBoZWxwIHdpbGwgYmUgYXBwcmVjaWF0ZWQuPGJy
-Pjxicj48YnI+VGh4PGJyPjwvZGl2Pgo8YnI+PC9kaXY+PC9ib2R5PjwvaHRtbD4=
---===============0759084530789738149==--
+>> systemctl restart strongswan
+May 13 11:51:39 00[LIB] loaded plugins: charon-systemd tpm aes des rc2 sha2=
+ sha1 md5 mgf1 random nonce x509 revocation constraints pubkey pkcs1 pkcs7 =
+pkcs12 pgp dnskey sshkey pem pkcs8 fips-prf gmp curve25519 xcbc cmac hmac k=
+df drbg attr kernel-netlink resolve socket-default stroke vici updown xauth=
+-generic counters
+May 13 11:51:39 00[JOB] spawning 16 worker threads
+May 13 11:51:39 01[PTS] TPM 2.0 via TSS2 v2 available
+May 13 11:51:39 01[PTS] encryption algorithm is AES-CFB with 128 bits
+May 13 11:51:39 01[CFG] loaded RSA private key from token
+May 13 11:51:39 11[PTS] TPM 2.0 via TSS2 v2 available
+May 13 11:51:39 11[LIB] loaded certificate from TPM NV index 0x01800004
+May 13 11:51:39 11[CFG]   id not specified, defaulting to cert subject 'C=
+=3DFR, O=3DXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX, OU=3D0002 12000601000025, CN=
+=3Dposte-YYYYY'
+
+>> swanctl --initiate --child host
+[IKE] initiating Main Mode IKE_SA connection1[1] to 192.168.42.254
+[IKE] no private key found for 'C=3DFR, O=3DXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXX, OU=3D0002 12000601000025, CN=3Dposte-YYYYY'
+[CFG] configuration uses unsupported authentication
+initiate failed: establishing CHILD_SA 'host' failed
+
+>> swanctl --list-certs
+List of X.509 End Entity Certificates
+
+  subject:  "C=3DFR, O=3DXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX, OU=3D0002 12000601=
+000025, CN=3Ditineo-0334991"
+  issuer:   "C=3DFAC_DEVNG_INFRASTRUCTURE/AC_DEVNG_INFRASTRUCTURER, O=3DXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXX, CN=3DAC DEV INFRA,"
+  validity:  not before Mar 24 13:44:22 2022, ok
+             not after  Mar 24 13:44:22 2023, ok (expires in 315 days)
+  serial:    08:28
+  flags:     =
+
+  CRL URIs:  http://www.google.fr/my.crl
+  certificatePolicies:
+             1.2.250.1.214.69.3.1.1.21.1
+  authkeyId: c4:52:c7:7c:40:41:b9:eb:ab:db:df:f4:b7:be:f7:b2:bf:61:57:a0
+  subjkeyId: f8:4e:a2:ae:5c:3a:1b:40:7a:6a:19:04:38:32:05:62:db:f0:d5:9e
+  pubkey:    RSA 2048 bits
+  keyid:     42:e7:94:da:9b:07:40:01:8e:40:e5:51:35:fc:10:da:8f:2c:61:3b
+  subjkey:   f8:4e:a2:ae:5c:3a:1b:40:7a:6a:19:04:38:32:05:62:db:f0:d5:9e
+
+
+------------------------------------
+The key id needed starts with 42:e7
+------------------------------------
+
+The private key was imported into the TPM 2.0  device :
+
+>> tpm2_createprimary -Q -G rsa -g sha256 -C o -c parent.ctx
+>> tpm2_import -G rsa -g sha256 -i ${PRIVATE_PEM} -C parent.ctx -u import_r=
+sa_key.pub -r import_rsa_key.priv
+
+When i look at the key stored :
+
+>> pki --print --keyid 0x81000001 --type priv
+TPM 2.0 via TSS2 v2 available
+encryption algorithm is AES-CFB with 128 bits
+  privkey:   RSA 2048 bits
+  keyid:     b3:ca:e7:cf:c4:c3:f9:37:0f:d5:85:b1:44:8e:68:fb:6d:eb:bc:a3
+  subjkey:   c1:d1:31:8c:fc:69:31:26:a2:73:21:d2:d0:d9:a1:f1:b5:e5:55:9d
+
+key id starts with b3:ca ??
+
+>> pki --print --type priv --in ${PRIVATE_PEM} =
+
+privkey:   RSA 2048 bits
+keyid:     42:e7:94:da:9b:07:40:01:8e:40:e5:51:35:fc:10:da:8f:2c:61:3b
+subjkey:   f8:4e:a2:ae:5c:3a:1b:40:7a:6a:19:04:38:32:05:62:db:f0:d5:9e
+
+In the first case we saw a key with bad keyid. When key is taken from file =
+the keyid is good and is equal to the certificate key id
+
+
+I am surely doing something wrong. Any help will be appreciated.
+
+
+Thx
+--===============4770791513178334074==--
 
