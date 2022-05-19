@@ -1,34 +1,70 @@
-Content-Type: multipart/mixed; boundary="===============8320561676604070819=="
+Content-Type: multipart/mixed; boundary="===============9031691568734267532=="
 MIME-Version: 1.0
-From: Petr Gotthard <petr.gotthard at centrum.cz>
-Subject: [tpm2] Hash sequence duplication without ContextSave/ContextLoad
-Date: Mon, 16 May 2022 18:29:22 +0200
-Message-ID: <20220516182922.3BF1EB1D@centrum.cz>
+From: rodolphe.averty at free.fr
+Subject: [tpm2] Can't se't signature algorithm when using tpm2_import
+Date: Thu, 19 May 2022 14:48:51 +0200
+Message-ID: <BDEEB7F2-3161-DE4D-A613-6BCBFA206487@hxcore.ol>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8320561676604070819==
+--===============9031691568734267532==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-=C2=A0
-I need to duplicate a hash sequence. This is to implement TPM-based version=
- of OpenSSL's EVP_MD_CTX_dup.
-=C2=A0
-Background: EVP_MD_CTX_dup can be used to duplicate the message digest stat=
-e. This is useful [...] if large amounts of data are to be hashed which onl=
-y differ in the last few bytes.
-=C2=A0
-=C2=A0
-So far I am using ContextSave/ContextLoad, but Windows is blocking these TP=
-M commands.
-https://docs.microsoft.com/en-us/windows/win32/tbs/command-blocking
-=C2=A0
-Is there some other way to duplicate a TPM hash sequence, please?
-=C2=A0
-=C2=A0
-Petr=C2=A0
---===============8320561676604070819==--
+
+--===============9031691568734267532==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWw+PGJvZHk+PGRpdiBzdHlsZT0iY29sb3I6IHJnYigzMywgMzMsIDMzKTsgYmFja2dyb3Vu
+ZC1jb2xvcjogcmdiKDI1NSwgMjU1LCAyNTUpOyIgZGlyPSJhdXRvIj48YnI+PC9kaXY+PGRpdiBp
+ZD0ibWFpbC1lZGl0b3ItcmVmZXJlbmNlLW1lc3NhZ2UtY29udGFpbmVyIiBkaXI9ImF1dG8iPjxi
+cj4KPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNo
+YXJzZXQ9dXRmLTgiPjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iY29sb3I6cmdiKDMzLDMzLDMzKTsg
+YmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpIj5IZWxsbywmbmJzcDs8L2Rpdj48ZGl2
+IGRpcj0iYXV0byIgc3R5bGU9ImNvbG9yOnJnYigzMywzMywzMyk7IGJhY2tncm91bmQtY29sb3I6
+cmdiKDI1NSwyNTUsMjU1KSI+PGJyPjwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iY29sb3I6
+cmdiKDMzLDMzLDMzKTsgYmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUpIj5JJ2FtIHRy
+eWluZyB0byBpbXBvcnRhbnQgbXkgcHJpdmF0ZSBrZXkgaW50byB0aGUgVFBNIDo8L2Rpdj48ZGl2
+IGRpcj0iYXV0byIgc3R5bGU9ImNvbG9yOnJnYigzMywzMywzMyk7IGJhY2tncm91bmQtY29sb3I6
+cmdiKDI1NSwyNTUsMjU1KSI+LSB0cG0yX2NyZWF0ZXByaW1hcnkuLi4gLi4gLiZuYnNwOzwvZGl2
+PjxkaXYgZGlyPSJhdXRvIiBzdHlsZT0iY29sb3I6cmdiKDMzLDMzLDMzKTsgYmFja2dyb3VuZC1j
+b2xvcjpyZ2IoMjU1LDI1NSwyNTUpIj4tIHRwbTJfaW1wb3J0IC1HIHJzYTIwNDg6cnNhc3NhLXNo
+YTI1NiAtaSBwcml2YXRlLnBlbSAtQyBwYXJlbnQuY3R4IC11IGlyc2FrZXkucHViIC1yIGlyc2Fr
+ZXkucHJpPC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJjb2xvcjpyZ2IoMzMsMzMsMzMpOyBi
+YWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSkiPi0gdHBtMl9sb2FkLi4uIC4uJm5ic3A7
+PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJjb2xvcjpyZ2IoMzMsMzMsMzMpOyBiYWNrZ3Jv
+dW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSkiPi0gdHBtMl9ldmljdGNvbnRyb2wuLi4gLi4mbmJz
+cDs8L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImNvbG9yOnJnYigzMywzMywzMyk7IGJhY2tn
+cm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KSI+PGJyPjwvZGl2PjxkaXYgZGlyPSJhdXRvIiBz
+dHlsZT0iY29sb3I6cmdiKDMzLDMzLDMzKTsgYmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwy
+NTUpIj5FdmVyeSB0aGluZyBzZWVtcyB0byBiZSBPazwvZGl2PjxkaXYgZGlyPSJhdXRvIiBzdHls
+ZT0iY29sb3I6cmdiKDMzLDMzLDMzKTsgYmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1NSwyNTUp
+Ij48YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iIHN0eWxlPSJjb2xvcjpyZ2IoMzMsMzMsMzMpOyBi
+YWNrZ3JvdW5kLWNvbG9yOnJnYigyNTUsMjU1LDI1NSkiPkJ1dCB3aGVuIGkgdXNlIHRoZSBjb21t
+YW5kIDo8L2Rpdj48ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImNvbG9yOnJnYigzMywzMywzMyk7IGJh
+Y2tncm91bmQtY29sb3I6cmdiKDI1NSwyNTUsMjU1KSI+PGJyPjwvZGl2PjxkaXYgZGlyPSJhdXRv
+IiBzdHlsZT0iY29sb3I6cmdiKDMzLDMzLDMzKTsgYmFja2dyb3VuZC1jb2xvcjpyZ2IoMjU1LDI1
+NSwyNTUpIj4tIHBraSAtLXByaW50IC0tdHlwZSBwcml2YXRlIC0ta2V5aWQgMHg4MTAwMDAwMjwv
+ZGl2PjxkaXYgaWQ9Im1zLW91dGxvb2stbW9iaWxlLXNpZ25hdHVyZSIgZGlyPSJhdXRvIj48ZGl2
+IGRpcj0iYXV0byI+Jmd0OyZndDsgLi4gLiAuJm5ic3A7PC9kaXY+PGRpdiBkaXI9ImF1dG8iPiZn
+dDsmZ3Q7IFNpZ25hdHVyZSBhbGdvcml0aG0gaXMgbnVsbCB3aXRoIGVycm9yIGhhc2g8L2Rpdj48
+ZGl2IGRpcj0iYXV0byI+Jmd0OyZndDtQcml2a2V5IC4uIC4gLiZuYnNwOzwvZGl2PjxkaXYgZGly
+PSJhdXRvIj4mZ3Q7Jmd0O2tleWlkIC4uIC4gLiZuYnNwOzwvZGl2PjxkaXYgZGlyPSJhdXRvIj4m
+Z3Q7Jmd0O3N1YmprZXkgLi4gLiZuYnNwOzwvZGl2PjxkaXYgZGlyPSJhdXRvIj48YnI+PC9kaXY+
+PGRpdiBkaXI9ImF1dG8iPldpdGggdGhhdCBpIGNhbid0IHVzZSBteSBrZXkgdW4gc3Ryb25nIHN3
+YW48L2Rpdj48ZGl2IGRpcj0iYXV0byI+PGJyPjwvZGl2PjxkaXYgZGlyPSJhdXRvIj5JcyB0aGVy
+ZSBhIHdheSB0byBoYXZlIMOgIHNpZ25hdHVyZSBhbGdvcml0aG0gd2l0aCB0cG0yX2ltcG9ydCA/
+Jm5ic3A7PC9kaXY+PGRpdiBkaXI9ImF1dG8iPklzIFRoaXMgw6AgdHBtMl9pbXBvcnQgbGltaXRh
+dGlvbiA/Jm5ic3A7PC9kaXY+PGRpdiBkaXI9ImF1dG8iPjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0
+byI+T3ImbmJzcDsgYSBidWcuLiAuJm5ic3A7PC9kaXY+PGRpdiBkaXI9ImF1dG8iPjxicj48L2Rp
+dj48ZGl2IGRpcj0iYXV0byI+VGhhbmtzIGZvcnQgaGVscDwvZGl2PjxkaXYgZGlyPSJhdXRvIj48
+YnI+PC9kaXY+PGRpdiBkaXI9ImF1dG8iPjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0byI+PGJyPjwv
+ZGl2PjxkaXYgZGlyPSJhdXRvIj48YnI+PC9kaXY+VMOpbMOpY2hhcmdlciA8YSBocmVmPSJodHRw
+czovL2FrYS5tcy9naGVpMzYiPk91dGxvb2sgcG91ciBBbmRyb2lkPC9hPjwvZGl2Pjxicj48L2Rp
+dj48L2JvZHk+PC9odG1sPg==
+--===============9031691568734267532==--
 
