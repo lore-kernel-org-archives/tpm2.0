@@ -1,76 +1,20 @@
-Content-Type: multipart/mixed; boundary="===============8327744937139971390=="
+Content-Type: multipart/mixed; boundary="===============7408270576335431350=="
 MIME-Version: 1.0
-From: Daniel Wang <Daniel.Wang at intusurg.com>
-Subject: [tpm2] TPM2 ESPI development for Windows
-Date: Mon, 23 May 2022 16:43:52 +0000
-Message-ID: <
- <MWHPR0101MB30859F27E5C82B38A036E5EE9AD49@MWHPR0101MB3085.prod.exchangelabs.com>>
+From: dawn.howe at alten.com
+Subject: [tpm2] Re: Virtualbox ubuntu 22.04 guest with tpm_server
+Date: Mon, 23 May 2022 16:57:24 +0000
+Message-ID: <20220523165724.2134.70366@ml01.vlan13.01.org>
+In-Reply-To: e65bdebc22c58fbfedaebdc55373aaa1c0a8f7f0.camel@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8327744937139971390==
+--===============7408270576335431350==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi all, I'm developing an application for both Linux and Windows 10 using T=
-PM 2.0 EAPI. I've finished the implementation on Linux using TPM2-TSS and T=
-PM2-tool (for provisioning). How can I achieve the same thing on Windows 10?
-
-I found TSS.MSR from Microsoft research but it is much less mature and its =
-C implementation is a fork for TPM2-TSS older version. I tried to compile T=
-PM2-TSS on Windows 10 but have be able to make it work, also based on the R=
-EADME, it seems only SAPI is working on Windows 10. Does Windows 10 has its=
- own EAPI implementation? If so how can I link to that library?
-
-Thank you for your help!
-
---===============8327744937139971390==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8c3R5bGU+
-PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2Ft
-YnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7
-Zm9udC1mYW1pbHk6RGVuZ1hpYW47CglwYW5vc2UtMToyIDEgNiAwIDMgMSAxIDEgMSAxO30KQGZv
-bnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7CglwYW5vc2UtMToyIDE1IDUgMiAyIDIgNCAz
-IDIgNDt9CkBmb250LWZhY2UKCXtmb250LWZhbWlseToiXEBEZW5nWGlhbiI7CglwYW5vc2UtMToy
-IDEgNiAwIDMgMSAxIDEgMSAxO30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWws
-IGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowaW47Cglmb250LXNpemU6MTEu
-MHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpzcGFuLkVtYWlsU3R5bGUx
-NwoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLWNvbXBvc2U7Cglmb250LWZhbWlseToiQ2FsaWJy
-aSIsc2Fucy1zZXJpZjsKCWNvbG9yOndpbmRvd3RleHQ7fQouTXNvQ2hwRGVmYXVsdAoJe21zby1z
-dHlsZS10eXBlOmV4cG9ydC1vbmx5O30KQHBhZ2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo4LjVpbiAx
-MS4waW47CgltYXJnaW46MS4waW4gMS4waW4gMS4waW4gMS4waW47fQpkaXYuV29yZFNlY3Rpb24x
-Cgl7cGFnZTpXb3JkU2VjdGlvbjE7fQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1s
-Pgo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPgo8L3htbD48
-IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVsYXlvdXQgdjpleHQ9
-ImVkaXQiPgo8bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4KPC9vOnNoYXBlbGF5b3V0
-PjwveG1sPjwhW2VuZGlmXS0tPgo8L2hlYWQ+Cjxib2R5IGxhbmc9IkVOLVVTIiBsaW5rPSIjMDU2
-M0MxIiB2bGluaz0iIzk1NEY3MiIgc3R5bGU9IndvcmQtd3JhcDpicmVhay13b3JkIj4KPGRpdiBj
-bGFzcz0iV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGkgYWxsLCBJJ20gZGV2
-ZWxvcGluZyBhbiBhcHBsaWNhdGlvbiBmb3IgYm90aCBMaW51eCBhbmQgV2luZG93cyAxMCB1c2lu
-ZyBUUE0gMi4wIEVBUEkuIEkndmUgZmluaXNoZWQgdGhlIGltcGxlbWVudGF0aW9uIG9uIExpbnV4
-IHVzaW5nIFRQTTItVFNTIGFuZCBUUE0yLXRvb2wgKGZvciBwcm92aXNpb25pbmcpLiBIb3cgY2Fu
-IEkgYWNoaWV2ZSB0aGUgc2FtZSB0aGluZyBvbiBXaW5kb3dzIDEwPzxvOnA+PC9vOnA+PC9wPgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05v
-cm1hbCI+SSBmb3VuZCBUU1MuTVNSIGZyb20gTWljcm9zb2Z0IHJlc2VhcmNoIGJ1dCBpdCBpcyBt
-dWNoIGxlc3MgbWF0dXJlIGFuZCBpdHMgQyBpbXBsZW1lbnRhdGlvbiBpcyBhIGZvcmsgZm9yIFRQ
-TTItVFNTIG9sZGVyIHZlcnNpb24uIEkgdHJpZWQgdG8gY29tcGlsZSBUUE0yLVRTUyBvbiBXaW5k
-b3dzIDEwIGJ1dCBoYXZlIGJlIGFibGUgdG8gbWFrZSBpdCB3b3JrLCBhbHNvIGJhc2VkIG9uIHRo
-ZSBSRUFETUUsIGl0IHNlZW1zCiBvbmx5IFNBUEkgaXMgd29ya2luZyBvbiBXaW5kb3dzIDEwLiBE
-b2VzIFdpbmRvd3MgMTAgaGFzIGl0cyBvd24gRUFQSSBpbXBsZW1lbnRhdGlvbj8gSWYgc28gaG93
-IGNhbiBJIGxpbmsgdG8gdGhhdCBsaWJyYXJ5PzxvOnA+PC9vOnA+PC9wPgo8cCBjbGFzcz0iTXNv
-Tm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhhbmsg
-eW91IGZvciB5b3VyIGhlbHAhPG86cD48L286cD48L3A+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K
-
---===============8327744937139971390==--
+tpm2_pcrread --version
+tool=3D"tpm2_pcrread" version=3D"5.2-158-g5a19b856" tctis=3D"libtss2-tctild=
+r" tcti-default=3Dtcti-device
+--===============7408270576335431350==--
 
