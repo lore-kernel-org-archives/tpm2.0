@@ -1,151 +1,22 @@
-Content-Type: multipart/mixed; boundary="===============1144182274153398966=="
+Content-Type: multipart/mixed; boundary="===============3072163561676020949=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Can't se't signature algorithm when using tpm2_import
-Date: Fri, 20 May 2022 16:49:48 +0000
-Message-ID: <SN6PR11MB34378B71B2EB8F1032918F33B8D39@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 20220520112715.2134.81231@ml01.vlan13.01.org
+From: lorojewellry at gmail.com
+Subject: [tpm2] Evil Eye Charms Bracelet Jewelry
+Date: Mon, 23 May 2022 10:56:10 +0000
+Message-ID: <20220523105610.2134.84719@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1144182274153398966==
+--===============3072163561676020949==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This is a bug, I have filed two tickets:
-  - signature-alg bug: https://github.com/tpm2-software/tpm2-tools/issues/2=
-997
-  - symmetric-alg bug: https://github.com/tpm2-software/tpm2-tools/issues/2=
-99<https://github.com/tpm2-software/tpm2-tools/issues/2997>8
-
-I have staged a PR to fix this:
-  - https://github.com/tpm2-software/tpm2-tools/pull/2999
-
-Thank you for the detailed bug report. Unfortunately I won't be of much hel=
-p on the strongswan side, but hopefully this helps you along.
-
-Bill
-________________________________
-From: Rodolphe AVERTY <rodolphe.averty(a)free.fr>
-Sent: Friday, May 20, 2022 6:27 AM
-To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
-Subject: [tpm2] Re: Can't se't signature algorithm when using tpm2_import
-
-Hi all,
-
-I'am trying to import my private key into the TPM (to use it with StrongSwa=
-n)
-
->> tpm2_createprimary... .. .
->> tpm2_import -G rsa2048:rsassa-sha256 -i private.pem -C parent.ctx -u irs=
-akey.pub -r irsakey.pri
->> tpm2_load... ..
->> tpm2_evictcontrol... ..
-
-Every thing seems to be Ok
-
-But when i use the command :
-
->> pki --print --type private --keyid 0x81000002
-TPM 2.0 via TSS2 v2 available
-signature algorithm is NULL with ERROR hash
-privkey: RSA 2048 bits
-keyid: 42:e7:94:da:9b:07:40:01:8e:40:e5:51:35:fc:10:da:8f:2c:61:3b
-subjkey: f8:4e:a2:ae:5c:3a:1b:40:7a:6a:19:04:38:32:05:62:db:f0:d5:9e
-
-
-With that i can't use my key with strong swan. The message (Signature algor=
-ithm is null with error hash) indicate that tpm2_import hasn't done its job.
-
-Is there a way to have a signature algorithm with tpm2_import ?
-Is this a tpm2_import limitation ?
-Or maybe a bug.. .
-
-I am using de debian SID package of tpm2-tools which is a 5.2
-
-Thanks for help
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============1144182274153398966==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
-ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
-ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7Ij4KVGhpcyBpcyBhIGJ1ZywgSSBoYXZlIGZpbGVkIHR3byB0aWNrZXRz
-OjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGlj
-YSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CiZu
-YnNwOyAtIHNpZ25hdHVyZS1hbGcgYnVnOiZuYnNwOzxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNv
-bS90cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvaXNzdWVzLzI5OTciIGlkPSJMUGxuazI0NTc5NyI+
-aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10b29scy9pc3N1ZXMvMjk5Nzwv
-YT48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRp
-Y2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgom
-bmJzcDsgLSBzeW1tZXRyaWMtYWxnIGJ1ZzombmJzcDs8YSBocmVmPSJodHRwczovL2dpdGh1Yi5j
-b20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL2lzc3Vlcy8yOTk3IiBpZD0iTFBsbmsxODQwMTci
-Pmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdG9vbHMvaXNzdWVzLzI5OTwv
-YT44PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0
-aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4K
-PGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2
-ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsi
-PgpJIGhhdmUgc3RhZ2VkIGEgUFIgdG8gZml4IHRoaXM6PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
-ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
-IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7Ij4KJm5ic3A7IC0mbmJzcDs8YSBocmVmPSJodHRw
-czovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL3B1bGwvMjk5OSIgaWQ9IkxQ
-bG5rNzk0NjAyIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRvb2xzL3B1
-bGwvMjk5OTwvYT48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
-LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAw
-LCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJp
-YWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAs
-IDAsIDApOyI+ClRoYW5rIHlvdSBmb3IgdGhlIGRldGFpbGVkIGJ1ZyByZXBvcnQuIFVuZm9ydHVu
-YXRlbHkgSSB3b24ndCBiZSBvZiBtdWNoIGhlbHAgb24gdGhlIHN0cm9uZ3N3YW4gc2lkZSwgYnV0
-IGhvcGVmdWxseSB0aGlzIGhlbHBzIHlvdSBhbG9uZy48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1m
-YW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTog
-MTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250
-LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXpl
-OiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+CkJpbGw8L2Rpdj4KPGRpdiBpZD0iYXBwZW5k
-b25zZW5kIj48L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGluZS1ibG9jazt3aWR0aDo5OCUi
-IHRhYmluZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ciIGRpcj0ibHRyIj48Zm9udCBm
-YWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1zaXplOjExcHQiIGNvbG9yPSIj
-MDAwMDAwIj48Yj5Gcm9tOjwvYj4gUm9kb2xwaGUgQVZFUlRZICZsdDtyb2RvbHBoZS5hdmVydHlA
-ZnJlZS5mciZndDs8YnI+CjxiPlNlbnQ6PC9iPiBGcmlkYXksIE1heSAyMCwgMjAyMiA2OjI3IEFN
-PGJyPgo8Yj5Ubzo8L2I+IHRwbTJAbGlzdHMuMDEub3JnICZsdDt0cG0yQGxpc3RzLjAxLm9yZyZn
-dDs8YnI+CjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gUmU6IENhbid0IHNlJ3Qgc2lnbmF0dXJlIGFs
-Z29yaXRobSB3aGVuIHVzaW5nIHRwbTJfaW1wb3J0PC9mb250Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8
-L2Rpdj4KPGRpdiBjbGFzcz0iQm9keUZyYWdtZW50Ij48Zm9udCBzaXplPSIyIj48c3BhbiBzdHls
-ZT0iZm9udC1zaXplOjExcHQ7Ij4KPGRpdiBjbGFzcz0iUGxhaW5UZXh0Ij5IaSBhbGwsPGJyPgo8
-YnI+CkknYW0gdHJ5aW5nIHRvIGltcG9ydCBteSBwcml2YXRlIGtleSBpbnRvIHRoZSBUUE0gKHRv
-IHVzZSBpdCB3aXRoIFN0cm9uZ1N3YW4pPGJyPgo8YnI+CiZndDsmZ3Q7IHRwbTJfY3JlYXRlcHJp
-bWFyeS4uLiAuLiAuPGJyPgomZ3Q7Jmd0OyB0cG0yX2ltcG9ydCAtRyByc2EyMDQ4OnJzYXNzYS1z
-aGEyNTYgLWkgcHJpdmF0ZS5wZW0gLUMgcGFyZW50LmN0eCAtdSBpcnNha2V5LnB1YiAtciBpcnNh
-a2V5LnByaTxicj4KJmd0OyZndDsgdHBtMl9sb2FkLi4uIC4uPGJyPgomZ3Q7Jmd0OyB0cG0yX2V2
-aWN0Y29udHJvbC4uLiAuLjxicj4KPGJyPgpFdmVyeSB0aGluZyBzZWVtcyB0byBiZSBPazxicj4K
-PGJyPgpCdXQgd2hlbiBpIHVzZSB0aGUgY29tbWFuZCA6PGJyPgo8YnI+CiZndDsmZ3Q7IHBraSAt
-LXByaW50IC0tdHlwZSBwcml2YXRlIC0ta2V5aWQgMHg4MTAwMDAwMjxicj4KVFBNIDIuMCB2aWEg
-VFNTMiB2MiBhdmFpbGFibGU8YnI+CnNpZ25hdHVyZSBhbGdvcml0aG0gaXMgTlVMTCB3aXRoIEVS
-Uk9SIGhhc2g8YnI+CnByaXZrZXk6IFJTQSAyMDQ4IGJpdHM8YnI+CmtleWlkOiA0MjplNzo5NDpk
-YTo5YjowNzo0MDowMTo4ZTo0MDplNTo1MTozNTpmYzoxMDpkYTo4ZjoyYzo2MTozYjxicj4Kc3Vi
-amtleTogZjg6NGU6YTI6YWU6NWM6M2E6MWI6NDA6N2E6NmE6MTk6MDQ6Mzg6MzI6MDU6NjI6ZGI6
-ZjA6ZDU6OWU8YnI+Cjxicj4KPGJyPgpXaXRoIHRoYXQgaSBjYW4ndCB1c2UgbXkga2V5IHdpdGgg
-c3Ryb25nIHN3YW4uIFRoZSBtZXNzYWdlIChTaWduYXR1cmUgYWxnb3JpdGhtIGlzIG51bGwgd2l0
-aCBlcnJvciBoYXNoKSBpbmRpY2F0ZSB0aGF0IHRwbTJfaW1wb3J0IGhhc24ndCBkb25lIGl0cyBq
-b2IuPGJyPgo8YnI+CklzIHRoZXJlIGEgd2F5IHRvIGhhdmUgYSBzaWduYXR1cmUgYWxnb3JpdGht
-IHdpdGggdHBtMl9pbXBvcnQgPzxicj4KSXMgdGhpcyBhIHRwbTJfaW1wb3J0IGxpbWl0YXRpb24g
-Pzxicj4KT3IgbWF5YmUgYSBidWcuLiAuPGJyPgo8YnI+CkkgYW0gdXNpbmcgZGUgZGViaWFuIFNJ
-RCBwYWNrYWdlIG9mIHRwbTItdG9vbHMgd2hpY2ggaXMgYSA1LjI8YnI+Cjxicj4KVGhhbmtzIGZv
-ciBoZWxwPGJyPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Xzxicj4KdHBtMiBtYWlsaW5nIGxpc3QgLS0gdHBtMkBsaXN0cy4wMS5vcmc8YnI+ClRvIHVuc3Vi
-c2NyaWJlIHNlbmQgYW4gZW1haWwgdG8gdHBtMi1sZWF2ZUBsaXN0cy4wMS5vcmc8YnI+CiUod2Vi
-X3BhZ2VfdXJsKXNsaXN0aW5mbyUoY2dpZXh0KXMvJShfaW50ZXJuYWxfbmFtZSlzPGJyPgo8L2Rp
-dj4KPC9zcGFuPjwvZm9udD48L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
-
---===============1144182274153398966==--
+It's been said that the Evil Eye has the power to protect its wearer from n=
+egative energy. It is believed that it wards off the evil eye, envy, and je=
+alousy. This Evil Eye Charms Bracelet Jewelry is perfect for those who want=
+ to keep their family and friends close to them and ward off the evil eye. =
+It is a one-size-fits-all and can be worn by both men and women.
+https://lorojewelry.com/product/evil-eye-charms-bracelet-jewelry/
+--===============3072163561676020949==--
 
