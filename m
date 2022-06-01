@@ -1,22 +1,18 @@
-Content-Type: multipart/mixed; boundary="===============6293715944721650236=="
+Content-Type: multipart/mixed; boundary="===============7156479800737627004=="
 MIME-Version: 1.0
-From: dawn.howe at alten.com
-Subject: [tpm2] Re: Virtualbox ubuntu 22.04 guest with tpm_server
-Date: Wed, 25 May 2022 20:07:43 +0000
-Message-ID: <20220525200743.2134.51537@ml01.vlan13.01.org>
-In-Reply-To: 20220523154415.2134.74422@ml01.vlan13.01.org
+From: dsnou849 at gmail.com
+Subject: [tpm2] Re: [RELEASE CANDIDATE] tpm2-pytss 1.1.0-rc0
+Date: Wed, 01 Jun 2022 10:39:25 +0000
+Message-ID: <20220601103925.2010.46937@ml01.vlan13.01.org>
+In-Reply-To: SN6PR11MB3437B000343FD4944FDDA4DAB80F9@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6293715944721650236==
+--===============7156479800737627004==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks to everyone who reached out with help.  I was able to create a scrip=
-t that automatically installs a TPM2 simulator on a virtualbox VM running u=
-buntu 22.04.  I have a repo available that hopefully will save some folks t=
-ime when trying to get this installed and running. See https://gitlab.com/h=
-owe-tech/tpm2.
---===============6293715944721650236==--
+Thanks
+--===============7156479800737627004==--
 
