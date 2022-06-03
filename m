@@ -1,14 +1,14 @@
-Content-Type: multipart/mixed; boundary="===============2958927043905824364=="
+Content-Type: multipart/mixed; boundary="===============6049527220613100068=="
 MIME-Version: 1.0
-From: Painololo at protonmail.com
+From: painololo at protonmail.com
 Subject: [tpm2] Re: [RELEASE CANDIDATE] tpm2-pytss 1.1.0-rc0
-Date: Fri, 03 Jun 2022 13:41:37 +0000
-Message-ID: <20220603134137.2010.86100@ml01.vlan13.01.org>
+Date: Fri, 03 Jun 2022 13:44:00 +0000
+Message-ID: <20220603134400.2010.26522@ml01.vlan13.01.org>
 In-Reply-To: SN6PR11MB3437B000343FD4944FDDA4DAB80F9@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============2958927043905824364==
+--===============6049527220613100068==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -19,7 +19,8 @@ Content-Transfer-Encoding: quoted-printable
 > I would like to announce the release of tpm2-pytss version 1.1.0-rc0 whic=
 h can be found on
 > pypi at:
->   - https://pypi.org/project/tpm2-pytss/1.1.0rc0/
+>   - https://celltrackingapps.com/how-to-read-someones-text-messages-witho=
+ut-phone/
 > =
 
 > With the following CHANGELOG:
@@ -59,5 +60,5 @@ mplates.
 > Thanks,
 > Bill
 Thank you very much, it helped.
---===============2958927043905824364==--
+--===============6049527220613100068==--
 
