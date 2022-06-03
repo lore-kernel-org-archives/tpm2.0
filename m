@@ -1,54 +1,63 @@
-Content-Type: multipart/mixed; boundary="===============7952802843765997827=="
+Content-Type: multipart/mixed; boundary="===============2958927043905824364=="
 MIME-Version: 1.0
-From: maurineell at outlook.com
-Subject: [tpm2] Update Mod APK for free for android phones
-Date: Fri, 03 Jun 2022 02:17:35 +0000
-Message-ID: <20220603021735.2010.1222@ml01.vlan13.01.org>
+From: Painololo at protonmail.com
+Subject: [tpm2] Re: [RELEASE CANDIDATE] tpm2-pytss 1.1.0-rc0
+Date: Fri, 03 Jun 2022 13:41:37 +0000
+Message-ID: <20220603134137.2010.86100@ml01.vlan13.01.org>
+In-Reply-To: SN6PR11MB3437B000343FD4944FDDA4DAB80F9@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7952802843765997827==
+--===============2958927043905824364==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-If you are looking for a way to get the latest version of the Mod APK for f=
-ree, then you have come to the right place. In this article, we will provid=
-e you with a step-by-step guide on how to update your android phone to the =
-latest version of the Mod APK.
+> Hello,
+> =
 
+> I would like to announce the release of tpm2-pytss version 1.1.0-rc0 whic=
+h can be found on
+> pypi at:
+>   - https://pypi.org/project/tpm2-pytss/1.1.0rc0/
+> =
 
-First of all, you need to go to the Google Play Store and search for the Mo=
-d APK.
+> With the following CHANGELOG:
+> ## 1.1.0-rc0 - 2022-03-14
+> ### Fixed
+> - Spelling of "Enhanced" in CHANGELOG for 1.0.0 release.
+> - Ensure that TPM2_GENERATED.VALUE is encoded the same way as other const=
+ants.
+> - Add support to unmarshal simple TPM2B types (such as TPM2B_ATTEST and T=
+PM2B_NAME)
+> directly using the =
 
-Once you have found the Mod APK, tap on it and then select "Update".
+>   unmarshal method
+> =
 
-Now, wait for the update to complete and then you will be able to use the l=
-atest version of the Mod APK on your android phone.
+> ### Changed
+> - Drop pkgconfig from runtime dependencies, thus no longer need dev packa=
+ges of built
+> bindings at runtime.
+>   - NOTE: Version information is cached, a change in the TSS libraries re=
+quires a rebuild
+> of the bindings.
+> =
 
-There are many places from where you can download the updated Mod APK for f=
-ree. However https://techupnew.com is the safest place for you to update
+> ### Added
+> - Support session contexts from tpm2-tools as well as function to marshal=
+ context to
+> tpm2-tools format.
+> - Support two new encoding/decoding classes to go to/from hex or json rep=
+resentation of
+> objects.
+> - Support for creating EK from templates and optionally NV index based te=
+mplates.
+> - Binding to `Esys_TR_GetTpmHandle` as `ESAPI` method `tr_get_tpm_handle`.
+> =
 
-You can also go through the reviews of other users to get an idea about the=
- quality of services provided by that particular site. After checking all t=
-hese factors, you can proceed with the downloading process.
-
-Once you have downloaded the file, you need to install it on your android p=
-hone. For this, you need to follow some simple steps which are mentioned be=
-low:
-
-- First of all, go to the settings option on your phone and enable the "Unk=
-nown Sources" feature. This will allow you to install files from external s=
-ources.
-
-- Now, open the file manager on your phone and locate the downloaded APK fi=
-le.
-
-- Tap on the file to begin the installation process.
-
-- Follow the on-screen instructions to complete the installation process.
-
-After following these steps, you will be able to use the updated Mod APK on=
- your android phone. Enjoy!
---===============7952802843765997827==--
+> Thanks,
+> Bill
+Thank you very much, it helped.
+--===============2958927043905824364==--
 
