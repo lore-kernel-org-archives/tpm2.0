@@ -1,89 +1,132 @@
-Content-Type: multipart/mixed; boundary="===============6838303062100507730=="
+Content-Type: multipart/mixed; boundary="===============3248561114532187373=="
 MIME-Version: 1.0
-From: Remi Tricot-Le Breton <rlebreton at haproxy.com>
-Subject: [tpm2] Re: TPM2 provider stuck during handshake
-Date: Wed, 08 Jun 2022 18:46:06 +0200
-Message-ID: <af952fc9-8dd6-b9c0-6980-c4891204750e@haproxy.com>
-In-Reply-To: d834126aaf05947ecebfe91f7ea9e5608595fca3.camel@intel.com
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Making porting ESAPI/SAPI to constrained environments easier
+Date: Wed, 08 Jun 2022 18:25:51 +0000
+Message-ID: <SN6PR11MB343760C742C8E92EC5404955B8A49@SN6PR11MB3437.namprd11.prod.outlook.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6838303062100507730==
+--===============3248561114532187373==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello thanks for your reply,
+Hi folks,
 
-On 08/06/2022 16:47, Roberts, William C wrote:
-> On Wed, 2022-06-08 at 16:16 +0200, Remi Tricot-Le Breton wrote:
->> Hello,
->>
->> I've been trying to make the TPM2 provider work in my environment
->> (Ubuntu 20.04) for quite some time and I did not succeed yet.
-> Interesting so you must have OpenSSL version 3.0 or greater installed
-> becuase it defaults to OpenSSL 1.1.1f. Below it seems provider
-> options work, so that must be the case.
-Yes I do have an OpenSSL 3 (3.1.0-dev actually which I built from sources).
+I have been working on some commits to make SAPI and ESAPI easier to port t=
+o constrained environments.
 
->
->> I tried using the commands suggested in docs/certificates.md to
->> create a
->> self signed certificate which I then used in an "openssl s_server"
->> instance but when I try to connect to this SSL server, the handshake
->> fails to complete.
->> The three commands I used are the following:
->>       openssl req -provider tpm2 -x509 -subj "/C=3DGB/CN=3Dfoo" -keyout
->> testkey.pem -out testcert.pem
->>       openssl s_server -provider tpm2 -provider default -propquery
->> ?provider=3Dtpm2 -accept 4443 -www -key testkey.pem -cert testcert.pem
->>       curl --cacert testcert.pem https://localhost:4443/
->>
->> The curl command ends in a timeout and the server remains stuck
->> (without
->> raising errors).
->>
->> I rebuilt the tpm2 provider with the enable-debug=3Dyes option added
->> in
->> order to understand what was happening and I noticed that the server
->> was
->> stuck when trying to duplicate a context ("DIGEST DUP" was dumped on
->> the
->> server's standard output), and more specifically in the
->> Tss2_Sys_ExecuteFinish function which in turn calls tctildr_receive
->> with
->> a -1 timeout (out of which we apparently never get out).
->>
->> Do any of you know if I missed something or if it is a bug ?
->> I could provide the full standard output log or a complete backtrace
->> of
->> the stuck server if needed but they might end up being unnecessary
->> noise
->> if the bug comes from my wrong use of the provider.
->>
-> So if it is stuck in OSSL_FUNC_DIGEST_DUPCTX, which is a call to
-> tpm2_digest_dupctx, which calls tpm2_hash_sequence_dup and has two TPM
-> functions within it, Esys_ContextSave and Esys_ContextLoad do you know
-> which one it's hanging in?
-It's hanging in the Esys_ContextLoad call.
-> are your running against a real TPM or the simulator and have you tried
-> it with the simulator? If you are running against a real TPM what is
-> your TCTI, is it using /dev/tpm0 or /dev/tpmrm0 or tpm2-abrmd?
-I'm using a real TPM, using /dev/tpmrm0. I'll try using a simulator as =
+The first is run-time settable crypto backend for ESAPI. You can remove any=
+ linker dependencies and set your own crypto
+for whatever that env needs.
+  - https://github.com/tpm2-software/tpm2-tss/pull/2365
 
-well tomorrow.
-I made some tests with the tpm engine as well just to make sure that the =
+The next is build time selectable functionality ala kconfig. You just tell =
+it was SYS/ESYS commands you want, and it knows what to generate:
+  - https://github.com/tpm2-software/tpm2-tss/pull/2369
 
-hardware was working properly and it seemed to work fine.
->
->> Thanks
->>
->> R=C3=A9mi LB
->> _______________________________________________
->> tpm2 mailing list -- tpm2(a)lists.01.org
->> To unsubscribe send an email to tpm2-leave(a)lists.01.org
->> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+That commit is pretty early still, but for instance if you enable an Esys f=
+unction it knows you need W Esys_ functions, X sTSS2_Sys_ functions and Y T=
+SS2_MU_ functions and sets up defines for them. I still need to "ifdef" ESA=
+PI and MU, but SAPI is all done.
 
-R=C3=A9mi LB
---===============6838303062100507730==--
+The configuration engine takes a YAML file of a list of functions and uses =
+ctags/cflow to analyze the source for leaf dependencies.
+
+I'd love comments.
+
+Thanks,
+Bill
+
+
+--===============3248561114532187373==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIiBzdHls
+ZT0iZGlzcGxheTpub25lOyI+IFAge21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjA7fSA8L3N0
+eWxlPgo8L2hlYWQ+Cjxib2R5IGRpcj0ibHRyIj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+CkhpIGZvbGtzLDxicj4K
+PGJyPgpJIGhhdmUgYmVlbiB3b3JraW5nIG9uIHNvbWUgY29tbWl0cyB0byBtYWtlIFNBUEkgYW5k
+IEVTQVBJIGVhc2llciB0byBwb3J0IHRvIGNvbnN0cmFpbmVkIGVudmlyb25tZW50cy48L2Rpdj4K
+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMt
+c2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVt
+ZW50VG9Qcm9vZiI+Cjxicj4KVGhlIGZpcnN0IGlzIHJ1bi10aW1lIHNldHRhYmxlIGNyeXB0byBi
+YWNrZW5kIGZvciBFU0FQSS4gWW91IGNhbiByZW1vdmUgYW55IGxpbmtlciBkZXBlbmRlbmNpZXMg
+YW5kIHNldCB5b3VyIG93biBjcnlwdG88L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
+bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
+b3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+CmZvciB3aGF0ZXZlciB0
+aGF0IGVudiBuZWVkcy48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFy
+aWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigw
+LCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+CiZuYnNwOyAtJm5ic3A7PGEgaHJlZj0i
+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3MvcHVsbC8yMzY1IiBpZD0i
+TFBOb0xQT1dBTGlua1ByZXZpZXciPmh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3Rw
+bTItdHNzL3B1bGwvMjM2NTwvYT48L2Rpdj4KPGRpdiBjbGFzcz0iX0VudGl0eSBfRVR5cGVfT1dB
+TGlua1ByZXZpZXcgX0VJZF9PV0FMaW5rUHJldmlldyBfRVJlYWRvbmx5XzEiPjwvZGl2Pgo8ZGl2
+IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJp
+ZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyI+Cjxicj4KPC9kaXY+Cjxk
+aXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNl
+cmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxlbWVu
+dFRvUHJvb2YiPgpUaGUgbmV4dCBpcyBidWlsZCB0aW1lIHNlbGVjdGFibGUgZnVuY3Rpb25hbGl0
+eSBhbGEga2NvbmZpZy4gWW91IGp1c3QgdGVsbCBpdCB3YXMgU1lTL0VTWVMgY29tbWFuZHMgeW91
+IHdhbnQsIGFuZCBpdCBrbm93cyB3aGF0IHRvIGdlbmVyYXRlOjxicj4KJm5ic3A7IC0mbmJzcDs8
+YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vdHBtMi1zb2Z0d2FyZS90cG0yLXRzcy9wdWxsLzIz
+NjkiIGlkPSJMUE5vTFBPV0FMaW5rUHJldmlld18xIj5odHRwczovL2dpdGh1Yi5jb20vdHBtMi1z
+b2Z0d2FyZS90cG0yLXRzcy9wdWxsLzIzNjk8L2E+CjxkaXYgY2xhc3M9Il9FbnRpdHkgX0VUeXBl
+X09XQUxpbmtQcmV2aWV3IF9FSWRfT1dBTGlua1ByZXZpZXdfMSBfRVJlYWRvbmx5XzEiPjwvZGl2
+Pgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhl
+bHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDAp
+OyIgY2xhc3M9ImVsZW1lbnRUb1Byb29mIj4KPHNwYW4gc3R5bGU9ImNvbG9yOiByZ2IoMCwgMCwg
+MCk7IGZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBm
+b250LXNpemU6IDEycHQ7Ij5UaGF0IGNvbW1pdCBpcyBwcmV0dHkgZWFybHkgc3RpbGwsIGJ1dCBm
+b3IgaW5zdGFuY2UgaWYgeW91IGVuYWJsZSBhbiBFc3lzIGZ1bmN0aW9uIGl0IGtub3dzIHlvdSBu
+ZWVkIFcgRXN5c18gZnVuY3Rpb25zLCBYIHNUU1MyX1N5c18gZnVuY3Rpb25zIGFuZCBZIFRTUzJf
+TVVfCiBmdW5jdGlvbnMgYW5kIHNldHMgdXAgZGVmaW5lcyBmb3IgdGhlbS4gSSBzdGlsbCBuZWVk
+IHRvICZxdW90O2lmZGVmJnF1b3Q7IEVTQVBJIGFuZCBNVSwgYnV0IFNBUEkgaXMgYWxsIGRvbmUu
+PC9zcGFuPjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlh
+bCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwg
+MCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgo8c3BhbiBzdHlsZT0iY29sb3I6IHJnYigw
+LCAwLCAwKTsgZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2Vy
+aWY7IGZvbnQtc2l6ZTogMTJwdDsiPjxicj4KPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250
+LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXpl
+OiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9ImVsZW1lbnRUb1Byb29mIj4KPHNw
+YW4gc3R5bGU9ImNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlh
+bCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7Ij5UaGUgY29uZmlndXJh
+dGlvbiBlbmdpbmUgdGFrZXMgYSBZQU1MIGZpbGUgb2YgYSBsaXN0IG9mIGZ1bmN0aW9ucyBhbmQg
+dXNlcyBjdGFncy9jZmxvdyB0byBhbmFseXplIHRoZSBzb3VyY2UgZm9yIGxlYWYgZGVwZW5kZW5j
+aWVzLjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
+LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAw
+LCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+CjxzcGFuIHN0eWxlPSJjb2xvcjogcmdiKDAs
+IDAsIDApOyBmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJp
+ZjsgZm9udC1zaXplOiAxMnB0OyI+PGJyPgo8L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgo8c3Bh
+biBzdHlsZT0iY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
+LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsiPkknZCBsb3ZlIGNvbW1l
+bnRzLjwvc3Bhbj48L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
+LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAw
+LCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+CjxzcGFuIHN0eWxlPSJjb2xvcjogcmdiKDAs
+IDAsIDApOyBmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJp
+ZjsgZm9udC1zaXplOiAxMnB0OyI+PGJyPgo8L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
+ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
+IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgo8c3Bh
+biBzdHlsZT0iY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
+LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsiPlRoYW5rcyw8L3NwYW4+
+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNh
+LCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IiBjbGFz
+cz0iZWxlbWVudFRvUHJvb2YiPgo8c3BhbiBzdHlsZT0iY29sb3I6IHJnYigwLCAwLCAwKTsgZm9u
+dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
+ZTogMTJwdDsiPkJpbGw8L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
+YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
+OiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgo8c3BhbiBzdHlsZT0iY29s
+b3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2Es
+IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsiPjxicj4KPC9zcGFuPjwvZGl2Pgo8L2JvZHk+
+CjwvaHRtbD4K
+
+--===============3248561114532187373==--
 
