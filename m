@@ -1,18 +1,18 @@
-Content-Type: multipart/mixed; boundary="===============8729704194079615702=="
+Content-Type: multipart/mixed; boundary="===============1337980054358074081=="
 MIME-Version: 1.0
 From: painololo at protonmail.com
-Subject: [tpm2] Re: Calculating name of created AK- server side
-Date: Sat, 18 Jun 2022 11:11:56 +0000
-Message-ID: <20220618111156.1682.16101@ml01.vlan13.01.org>
-In-Reply-To: 20210128122946.2975.75414@ml01.vlan13.01.org
+Subject: [tpm2] Re: Possible TPM uses in fprintd/libfprint
+Date: Sat, 18 Jun 2022 11:18:00 +0000
+Message-ID: <20220618111800.1682.29474@ml01.vlan13.01.org>
+In-Reply-To: 1a6d8509d88d2ebd7ece0ed0a111c61c3c1cfcca.camel@sipsolutions.net
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8729704194079615702==
+--===============1337980054358074081==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-good
---===============8729704194079615702==--
+Very interesting post
+--===============1337980054358074081==--
 
