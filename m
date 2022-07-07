@@ -1,187 +1,73 @@
-Content-Type: multipart/mixed; boundary="===============0632466884202125487=="
+Content-Type: multipart/mixed; boundary="===============2938052963681530205=="
 MIME-Version: 1.0
-From: Shaw, Adrian <adrian.shaw at hp.com>
-Subject: [tpm2] Re: Using a session with TPM2_CreatePrimary
-Date: Fri, 01 Jul 2022 13:29:46 +0000
-Message-ID: <PH7PR84MB153342EA5E057C226B0353389FBD9@PH7PR84MB1533.NAMPRD84.PROD.OUTLOOK.COM>
-In-Reply-To: BYAPR11MB317696F77D4B5E40C87E4E17E2B69@BYAPR11MB3176.namprd11.prod.outlook.com
+From: Sergey 'Jin' Bostandzhyan <jin at mediatomb.cc>
+Subject: [tpm2] Selecting a key which was created via Fapi in the OpenSSL
+ "engine"
+Date: Thu, 07 Jul 2022 15:59:23 +0200
+Message-ID: <20220707135923.GC26089@xn--80adja5bqm.su>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0632466884202125487==
+--===============2938052963681530205==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks, William and Imran. I'll have a look at using your suggestion instea=
-d.
+Hi,
 
-From: Desai, Imran <imran.desai(a)intel.com>
-Sent: 27 June 2022 00:32
-To: Roberts, William C <william.c.roberts(a)intel.com>; Shaw, Adrian <adria=
-n.shaw(a)hp.com>; tpm2(a)lists.01.org
-Subject: Re: Using a session with TPM2_CreatePrimary
+I am struggling to figure out how the following scenario could work:
 
-That's right, it needs to be added for createprimary. Having said that, if =
-your tpm supports createloaded, you can use tpm2_create tool  to create a p=
-rimary object as well.
-________________________________
-From: Roberts, William C <william.c.roberts(a)intel.com<mailto:william.c.ro=
-berts(a)intel.com>>
-Sent: Sunday, June 26, 2022 3:31:56 PM
-To: Shaw, Adrian <adrian.shaw(a)hp.com<mailto:adrian.shaw(a)hp.com>>; tpm2(=
-a)lists.01.org<mailto:tpm2(a)lists.01.org> <tpm2(a)lists.01.org<mailto:tpm2=
-(a)lists.01.org>>; Desai, Imran <imran.desai(a)intel.com<mailto:imran.desai=
-(a)intel.com>>
-Subject: Re: Using a session with TPM2_CreatePrimary
+let's say I have a C application where I created a persistent key pair =
 
-I'm pretty sure it's just missing; we haven't enabled session support throu=
-ghout all the tools yet. Imran am I correct?
-________________________________
-From: Shaw, Adrian <adrian.shaw(a)hp.com<mailto:adrian.shaw(a)hp.com>>
-Sent: Wednesday, June 22, 2022 12:10 PM
-To: tpm2(a)lists.01.org<mailto:tpm2(a)lists.01.org> <tpm2(a)lists.01.org<ma=
-ilto:tpm2(a)lists.01.org>>
-Subject: [tpm2] Using a session with TPM2_CreatePrimary
+via Fapi_CreateKey(), the key can be identified by its path,
+typically something like "HS/SRK/mykey".
 
-Hi everyone,
+Now, let's assume I need to use that key from OpenSSL as well, via the engi=
+ne
+option, i.e. "-engine tpm2tss", what I am failing to understand is - how do
+I pass the path/key identifier, to tell OpenSSL which key to use?
 
-I'm trying to create a primary key using an authenticated and encrypted ses=
-sion.
+All examples in the tpm2-tss-engine README somehow assume that you first
+used tpm2tss-genkey which produces an actual key file in the fs, and then
+this file is being used in OpenSSL?
 
-I looked at the man page for tpm2_createprimary https://github.com/tpm2-sof=
-tware/tpm2-tools/blob/1226b5333e0f051edf67739743a68f668f9ba07a/man/tpm2_cre=
-ateprimary.1.md<https://github.com/tpm2-software/tpm2-tools/blob/1226b5333e=
-0f051edf67739743a68f668f9ba07a/man/tpm2_createprimary.1.md>
+From https://github.com/tpm2-software/tpm2-tss-engine
+tpm2tss-genkey -a rsa -s 2048 mykey
+openssl rsa -engine tpm2tss -inform engine -in mykey -pubout -outform pem -=
+out mykey.pub
+openssl pkeyutl -pubin -inkey mykey.pub -in mydata -encrypt -out mycipher
+openssl pkeyutl -engine tpm2tss -keyform engine -inkey mykey -decrypt -in m=
+ycipher -out mydata
 
-It does not seem to be possible - there is no way to specify the session to=
- use.
+I naively tried passing "-in HS/SRK/mykey", but of course it did not work.
 
-However, it is possible to do this in the IBM TSS equivalent https://www.ma=
-nkier.com/1/tsscreateprimary<https://www.mankier.com/1/tsscreateprimary>
+So what is the correct way to do it, if the key has not been generated usin=
+g =
 
-I noticed you can specify a session for other commands though, like tpm2_cr=
-eate, but not with tpm2_createprimary.
+tpm2tss-genkey, but if the key has been created via the Fapi_CreateKey() =
 
-Is this a missing feature or am I missing some fundamental understanding?
+function?
 
-Thanks,
-Adrian
+My actual scenario is, that my application is using libmosquitto which in
+turn needs to use the private key which I have in TPM. The library uses Ope=
+nSSL
+and allows to pass equivalents of "-engine" and "-keyform" parameters to the
+OpenSSL library. The question however remains the same as with the above
+command line example - how do I select the key, if "mykey" is not a file, b=
+ut
+something that is stored in TPM?
 
---===============0632466884202125487==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+I am not an expert in any of those TPM or security related questions, so I =
+may
+very well misunderstand how this is supposed to work overall, so far I was =
+not
+able to figure it out by studying the docs, I hope someone has a hint for m=
+e.
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
-bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPgo8IS0tW2lm
-ICFtc29dPjxzdHlsZT52XDoqIHtiZWhhdmlvcjp1cmwoI2RlZmF1bHQjVk1MKTt9Cm9cOioge2Jl
-aGF2aW9yOnVybCgjZGVmYXVsdCNWTUwpO30Kd1w6KiB7YmVoYXZpb3I6dXJsKCNkZWZhdWx0I1ZN
-TCk7fQouc2hhcGUge2JlaGF2aW9yOnVybCgjZGVmYXVsdCNWTUwpO30KPC9zdHlsZT48IVtlbmRp
-Zl0tLT48c3R5bGU+PCEtLQovKiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250
-LWZhbWlseToiQ2FtYnJpYSBNYXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpA
-Zm9udC1mYWNlCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0
-IDMgMiA0O30KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1h
-bCwgZGl2Lk1zb05vcm1hbAoJe21hcmdpbjowY207Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1m
-YW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQphOmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rCgl7
-bXNvLXN0eWxlLXByaW9yaXR5Ojk5OwoJY29sb3I6Ymx1ZTsKCXRleHQtZGVjb3JhdGlvbjp1bmRl
-cmxpbmU7fQpzcGFuLkVtYWlsU3R5bGUyMAoJe21zby1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5
-OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7Cgljb2xvcjp3aW5kb3d0ZXh0O30K
-Lk1zb0NocERlZmF1bHQKCXttc28tc3R5bGUtdHlwZTpleHBvcnQtb25seTsKCWZvbnQtc2l6ZTox
-MC4wcHQ7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtzaXplOjYxMi4wcHQgNzkyLjBwdDsKCW1hcmdp
-bjo3Mi4wcHQgNzIuMHB0IDcyLjBwdCA3Mi4wcHQ7fQpkaXYuV29yZFNlY3Rpb24xCgl7cGFnZTpX
-b3JkU2VjdGlvbjE7fQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFw
-ZWRlZmF1bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPgo8L3htbD48IVtlbmRpZl0t
-LT48IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPgo8
-bzppZG1hcCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwh
-W2VuZGlmXS0tPgo8L2hlYWQ+Cjxib2R5IGxhbmc9IkVOLUdCIiBsaW5rPSJibHVlIiB2bGluaz0i
-cHVycGxlIiBzdHlsZT0id29yZC13cmFwOmJyZWFrLXdvcmQiPgo8ZGl2IGNsYXNzPSJXb3JkU2Vj
-dGlvbjEiPgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBzdHlsZT0ibXNvLWZhcmVhc3QtbGFu
-Z3VhZ2U6RU4tVVMiPlRoYW5rcywgV2lsbGlhbSBhbmQgSW1yYW4uIEkmIzgyMTc7bGwgaGF2ZSBh
-IGxvb2sgYXQgdXNpbmcgeW91ciBzdWdnZXN0aW9uIGluc3RlYWQuCjxvOnA+PC9vOnA+PC9zcGFu
-PjwvcD4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1
-YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+CjxkaXY+CjxkaXYgc3R5bGU9
-ImJvcmRlcjpub25lO2JvcmRlci10b3A6c29saWQgI0UxRTFFMSAxLjBwdDtwYWRkaW5nOjMuMHB0
-IDBjbSAwY20gMGNtIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNwYW4gbGFuZz0iRU4tVVMi
-PkZyb206PC9zcGFuPjwvYj48c3BhbiBsYW5nPSJFTi1VUyI+IERlc2FpLCBJbXJhbiAmbHQ7aW1y
-YW4uZGVzYWlAaW50ZWwuY29tJmd0Owo8YnI+CjxiPlNlbnQ6PC9iPiAyNyBKdW5lIDIwMjIgMDA6
-MzI8YnI+CjxiPlRvOjwvYj4gUm9iZXJ0cywgV2lsbGlhbSBDICZsdDt3aWxsaWFtLmMucm9iZXJ0
-c0BpbnRlbC5jb20mZ3Q7OyBTaGF3LCBBZHJpYW4gJmx0O2Fkcmlhbi5zaGF3QGhwLmNvbSZndDs7
-IHRwbTJAbGlzdHMuMDEub3JnPGJyPgo8Yj5TdWJqZWN0OjwvYj4gUmU6IFVzaW5nIGEgc2Vzc2lv
-biB3aXRoIFRQTTJfQ3JlYXRlUHJpbWFyeTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPC9kaXY+Cjwv
-ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4KPGRpdj4KPGRp
-dj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+VGhhdCYjODIxNztzIHJpZ2h0LCBpdCBuZWVk
-cyB0byBiZSBhZGRlZCBmb3IgY3JlYXRlcHJpbWFyeS4gSGF2aW5nIHNhaWQgdGhhdCwgaWYgeW91
-ciB0cG0gc3VwcG9ydHMgY3JlYXRlbG9hZGVkLCB5b3UgY2FuIHVzZSB0cG0yX2NyZWF0ZSB0b29s
-ICZuYnNwO3RvIGNyZWF0ZSBhIHByaW1hcnkgb2JqZWN0IGFzIHdlbGwuPG86cD48L286cD48L3A+
-CjwvZGl2Pgo8L2Rpdj4KPC9kaXY+CjxkaXYgY2xhc3M9Ik1zb05vcm1hbCIgYWxpZ249ImNlbnRl
-ciIgc3R5bGU9InRleHQtYWxpZ246Y2VudGVyIj4KPGhyIHNpemU9IjIiIHdpZHRoPSI5OCUiIGFs
-aWduPSJjZW50ZXIiPgo8L2Rpdj4KPGRpdiBpZD0iZGl2UnBseUZ3ZE1zZyI+CjxwIGNsYXNzPSJN
-c29Ob3JtYWwiPjxiPjxzcGFuIHN0eWxlPSJjb2xvcjpibGFjayI+RnJvbTo8L3NwYW4+PC9iPjxz
-cGFuIHN0eWxlPSJjb2xvcjpibGFjayI+IFJvYmVydHMsIFdpbGxpYW0gQyAmbHQ7PGEgaHJlZj0i
-bWFpbHRvOndpbGxpYW0uYy5yb2JlcnRzQGludGVsLmNvbSI+d2lsbGlhbS5jLnJvYmVydHNAaW50
-ZWwuY29tPC9hPiZndDs8YnI+CjxiPlNlbnQ6PC9iPiBTdW5kYXksIEp1bmUgMjYsIDIwMjIgMzoz
-MTo1NiBQTTxicj4KPGI+VG86PC9iPiBTaGF3LCBBZHJpYW4gJmx0OzxhIGhyZWY9Im1haWx0bzph
-ZHJpYW4uc2hhd0BocC5jb20iPmFkcmlhbi5zaGF3QGhwLmNvbTwvYT4mZ3Q7Owo8YSBocmVmPSJt
-YWlsdG86dHBtMkBsaXN0cy4wMS5vcmciPnRwbTJAbGlzdHMuMDEub3JnPC9hPiAmbHQ7PGEgaHJl
-Zj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3JnIj50cG0yQGxpc3RzLjAxLm9yZzwvYT4mZ3Q7OyBE
-ZXNhaSwgSW1yYW4gJmx0OzxhIGhyZWY9Im1haWx0bzppbXJhbi5kZXNhaUBpbnRlbC5jb20iPmlt
-cmFuLmRlc2FpQGludGVsLmNvbTwvYT4mZ3Q7PGJyPgo8Yj5TdWJqZWN0OjwvYj4gUmU6IFVzaW5n
-IGEgc2Vzc2lvbiB3aXRoIFRQTTJfQ3JlYXRlUHJpbWFyeTwvc3Bhbj4gPG86cD48L286cD48L3A+
-CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNwOzxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4K
-PC9kaXY+CjxkaXY+CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxlPSJmb250
-LXNpemU6MTIuMHB0O2NvbG9yOmJsYWNrIj5JJ20gcHJldHR5IHN1cmUgaXQncyBqdXN0IG1pc3Np
-bmc7IHdlIGhhdmVuJ3QgZW5hYmxlZCBzZXNzaW9uIHN1cHBvcnQgdGhyb3VnaG91dCBhbGwgdGhl
-IHRvb2xzIHlldC4gSW1yYW4gYW0gSSBjb3JyZWN0PzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4KPC9k
-aXY+CjxkaXYgY2xhc3M9Ik1zb05vcm1hbCIgYWxpZ249ImNlbnRlciIgc3R5bGU9InRleHQtYWxp
-Z246Y2VudGVyIj4KPGhyIHNpemU9IjIiIHdpZHRoPSI5OCUiIGFsaWduPSJjZW50ZXIiPgo8L2Rp
-dj4KPGRpdiBpZD0ieF9kaXZScGx5RndkTXNnIj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PGI+PHNw
-YW4gc3R5bGU9ImNvbG9yOmJsYWNrIj5Gcm9tOjwvc3Bhbj48L2I+PHNwYW4gc3R5bGU9ImNvbG9y
-OmJsYWNrIj4gU2hhdywgQWRyaWFuICZsdDs8YSBocmVmPSJtYWlsdG86YWRyaWFuLnNoYXdAaHAu
-Y29tIj5hZHJpYW4uc2hhd0BocC5jb208L2E+Jmd0Ozxicj4KPGI+U2VudDo8L2I+IFdlZG5lc2Rh
-eSwgSnVuZSAyMiwgMjAyMiAxMjoxMCBQTTxicj4KPGI+VG86PC9iPiA8YSBocmVmPSJtYWlsdG86
-dHBtMkBsaXN0cy4wMS5vcmciPnRwbTJAbGlzdHMuMDEub3JnPC9hPiAmbHQ7PGEgaHJlZj0ibWFp
-bHRvOnRwbTJAbGlzdHMuMDEub3JnIj50cG0yQGxpc3RzLjAxLm9yZzwvYT4mZ3Q7PGJyPgo8Yj5T
-dWJqZWN0OjwvYj4gW3RwbTJdIFVzaW5nIGEgc2Vzc2lvbiB3aXRoIFRQTTJfQ3JlYXRlUHJpbWFy
-eTwvc3Bhbj4gPG86cD48L286cD48L3A+CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPiZuYnNw
-OzxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPC9kaXY+CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PkhpIGV2ZXJ5b25lLCA8bzpwPjwvbzpwPjwvcD4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-PG86cD4mbmJzcDs8L286cD48L3A+CjwvZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5J
-JiM4MjE3O20gdHJ5aW5nIHRvIGNyZWF0ZSBhIHByaW1hcnkga2V5IHVzaW5nIGFuIGF1dGhlbnRp
-Y2F0ZWQgYW5kIGVuY3J5cHRlZCBzZXNzaW9uLjxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPGRpdj4K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjwvZGl2Pgo8ZGl2Pgo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj5JIGxvb2tlZCBhdCB0aGUgbWFuIHBhZ2UgZm9yIHRwbTJfY3Jl
-YXRlcHJpbWFyeSZuYnNwOzxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJl
-L3RwbTItdG9vbHMvYmxvYi8xMjI2YjUzMzNlMGYwNTFlZGY2NzczOTc0M2E2OGY2NjhmOWJhMDdh
-L21hbi90cG0yX2NyZWF0ZXByaW1hcnkuMS5tZCI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29m
-dHdhcmUvdHBtMi10b29scy9ibG9iLzEyMjZiNTMzM2UwZjA1MWVkZjY3NzM5NzQzYTY4ZjY2OGY5
-YmEwN2EvbWFuL3RwbTJfY3JlYXRlcHJpbWFyeS4xLm1kPC9hPjxvOnA+PC9vOnA+PC9wPgo8L2Rp
-dj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjwvZGl2
-Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JdCBkb2VzIG5vdCBzZWVtIHRvIGJlIHBvc3Np
-YmxlIC0gdGhlcmUgaXMgbm8gd2F5IHRvIHNwZWNpZnkgdGhlIHNlc3Npb24gdG8gdXNlLiZuYnNw
-OzxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4m
-bmJzcDs8L286cD48L3A+CjwvZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0iTXNvTm9ybWFsIj5Ib3dldmVy
-LCBpdCBpcyBwb3NzaWJsZSB0byBkbyB0aGlzIGluIHRoZSBJQk0gVFNTIGVxdWl2YWxlbnQmbmJz
-cDs8YSBocmVmPSJodHRwczovL3d3dy5tYW5raWVyLmNvbS8xL3Rzc2NyZWF0ZXByaW1hcnkiPmh0
-dHBzOi8vd3d3Lm1hbmtpZXIuY29tLzEvdHNzY3JlYXRlcHJpbWFyeTwvYT48bzpwPjwvbzpwPjwv
-cD4KPC9kaXY+CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9w
-Pgo8L2Rpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9ImNvbG9yOmJs
-YWNrIj5JIG5vdGljZWQgeW91IGNhbiBzcGVjaWZ5IGEgc2Vzc2lvbiBmb3Igb3RoZXIgY29tbWFu
-ZHMgdGhvdWdoLCBsaWtlIHRwbTJfY3JlYXRlLCBidXQgbm90IHdpdGggdHBtMl9jcmVhdGVwcmlt
-YXJ5Ljwvc3Bhbj48bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjxkaXY+CjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPgo8L2Rpdj4KPGRpdj4KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+SXMgdGhpcyBhIG1pc3NpbmcgZmVhdHVyZSBvciBhbSBJIG1pc3Npbmcgc29tZSBmdW5kYW1l
-bnRhbCB1bmRlcnN0YW5kaW5nPzxvOnA+PC9vOnA+PC9wPgo8L2Rpdj4KPGRpdj4KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+CjwvZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj5UaGFua3MsPG86cD48L286cD48L3A+CjwvZGl2Pgo8ZGl2Pgo8cCBjbGFzcz0i
-TXNvTm9ybWFsIj5BZHJpYW48bzpwPjwvbzpwPjwvcD4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPC9k
-aXY+CjwvYm9keT4KPC9odG1sPgo=
+Kind regards,
+Jin
 
---===============0632466884202125487==--
+
+
+--===============2938052963681530205==--
 
