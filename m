@@ -1,219 +1,158 @@
-Content-Type: multipart/mixed; boundary="===============8379938265071828416=="
+Content-Type: multipart/mixed; boundary="===============1794312343240523059=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: Sergey 'Jin' Bostandzhyan <jin at mediatomb.cc>
 Subject: [tpm2] Re: Selecting a key which was created via Fapi in the OpenSSL
  "engine"
-Date: Thu, 07 Jul 2022 14:19:00 +0000
-Message-ID: <SN6PR11MB3437D11A247D968F3197D14DB8839@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 20220707135923.GC26089@xn--80adja5bqm.su
+Date: Thu, 07 Jul 2022 16:51:23 +0200
+Message-ID: <20220707145123.GD26089@xn--80adja5bqm.su>
+In-Reply-To: SN6PR11MB3437D11A247D968F3197D14DB8839@SN6PR11MB3437.namprd11.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8379938265071828416==
+--===============1794312343240523059==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Offhand you could use Fapi_GetTpmBlobs which will return the TPM2B_PUBLIC a=
-nd TPM2B_PRIVATE blobs
-for the TPM and then encode it into a PEM file using tpm2-tools tpm2_encode=
-object command.
+Hi Bill,
 
-So lets say you had the public as key.pub and private as key.priv, somethin=
-g like:
+On Thu, Jul 07, 2022 at 02:19:00PM +0000, Roberts, William C wrote:
+> Offhand you could use Fapi_GetTpmBlobs which will return the TPM2B_PUBLIC=
+ and TPM2B_PRIVATE blobs
+> for the TPM and then encode it into a PEM file using tpm2-tools tpm2_enco=
+deobject command.
+> =
 
-tpm2_encodeobject -u key.pub -r key.priv -C 0x81000001 -o key.pem
+> So lets say you had the public as key.pub and private as key.priv, someth=
+ing like:
+> =
 
-Then you can use key.pem with the engine commands.
+> tpm2_encodeobject -u key.pub -r key.priv -C 0x81000001 -o key.pem
+> =
 
-Note that the 0x81000001 is the default address for the SRK, but if you hav=
-e something
-configured differently you may need to tweak the paramters. A call to tpm2_=
-getcap handles-persistent
-should show you where your SRK is at hopefully.
+> Then you can use key.pem with the engine commands.
 
-I don't know FAPI well or use FAPI much, so their may be an API I am overlo=
-oking that does this.
+I read up on it and there's one thing not quite clear to me, so it says:
 
-Bill
-________________________________
-From: Sergey 'Jin' Bostandzhyan <jin(a)mediatomb.cc>
-Sent: Thursday, July 7, 2022 8:59 AM
-To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
-Subject: [tpm2] Selecting a key which was created via Fapi in the OpenSSL "=
-engine"
+"Encode both the private and public portions of an object into a combined P=
+EM =
 
-Hi,
+format used by tpm2-tss-engine."
 
-I am struggling to figure out how the following scenario could work:
+Is this resulting PEM file only usable in combination with the original key
+stored in hardware TPM, i.e. no big deal if someone "steals" that PEM file,=
+ or
+is this file something that should be considered criticial in terms of
+security?
 
-let's say I have a C application where I created a persistent key pair
-via Fapi_CreateKey(), the key can be identified by its path,
-typically something like "HS/SRK/mykey".
+> Note that the 0x81000001 is the default address for the SRK, but if you h=
+ave something
+> configured differently you may need to tweak the paramters. A call to tpm=
+2_getcap handles-persistent
+> should show you where your SRK is at hopefully.
+> =
 
-Now, let's assume I need to use that key from OpenSSL as well, via the engi=
-ne
-option, i.e. "-engine tpm2tss", what I am failing to understand is - how do
-I pass the path/key identifier, to tell OpenSSL which key to use?
+> I don't know FAPI well or use FAPI much, so their may be an API I am over=
+looking that does this.
 
-All examples in the tpm2-tss-engine README somehow assume that you first
-used tpm2tss-genkey which produces an actual key file in the fs, and then
-this file is being used in OpenSSL?
+Thank you, I think I get the overall idea, i.e. the engine always needs to =
+go
+via this additional file and once I have it, the command line from the exam=
+ples
+will work as described, so will libmosquitto.
 
-From https://github.com/tpm2-software/tpm2-tss-engine
-tpm2tss-genkey -a rsa -s 2048 mykey
-openssl rsa -engine tpm2tss -inform engine -in mykey -pubout -outform pem -=
-out mykey.pub
-openssl pkeyutl -pubin -inkey mykey.pub -in mydata -encrypt -out mycipher
-openssl pkeyutl -engine tpm2tss -keyform engine -inkey mykey -decrypt -in m=
-ycipher -out mydata
-
-I naively tried passing "-in HS/SRK/mykey", but of course it did not work.
-
-So what is the correct way to do it, if the key has not been generated using
-tpm2tss-genkey, but if the key has been created via the Fapi_CreateKey()
-function?
-
-My actual scenario is, that my application is using libmosquitto which in
-turn needs to use the private key which I have in TPM. The library uses Ope=
-nSSL
-and allows to pass equivalents of "-engine" and "-keyform" parameters to the
-OpenSSL library. The question however remains the same as with the above
-command line example - how do I select the key, if "mykey" is not a file, b=
-ut
-something that is stored in TPM?
-
-I am not an expert in any of those TPM or security related questions, so I =
-may
-very well misunderstand how this is supposed to work overall, so far I was =
-not
-able to figure it out by studying the docs, I hope someone has a hint for m=
-e.
+If you could clarify the security aspect, then it looks like the solution w=
+hich
+I have been seeking.
 
 Kind regards,
 Jin
 
 
-_______________________________________________
-tpm2 mailing list -- tpm2(a)lists.01.org
-To unsubscribe send an email to tpm2-leave(a)lists.01.org
-%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 
---===============8379938265071828416==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+> ________________________________
+> From: Sergey 'Jin' Bostandzhyan <jin(a)mediatomb.cc>
+> Sent: Thursday, July 7, 2022 8:59 AM
+> To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+> Subject: [tpm2] Selecting a key which was created via Fapi in the OpenSSL=
+ "engine"
+> =
 
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
-ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
-ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgpPZmZoYW5kIHlvdSBjb3Vs
-ZCB1c2UmbmJzcDtGYXBpX0dldFRwbUJsb2JzIHdoaWNoIHdpbGwgcmV0dXJuIHRoZSBUUE0yQl9Q
-VUJMSUMgYW5kIFRQTTJCX1BSSVZBVEUgYmxvYnM8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1p
-bHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJw
-dDsgY29sb3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+CmZvciB0aGUg
-VFBNIGFuZCB0aGVuIGVuY29kZSBpdCBpbnRvIGEgUEVNIGZpbGUgdXNpbmcgdHBtMi10b29scyZu
-YnNwO3RwbTJfZW5jb2Rlb2JqZWN0IGNvbW1hbmQuPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFt
-aWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEy
-cHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgo8YnI+Cjwv
-ZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwg
-c2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9
-ImVsZW1lbnRUb1Byb29mIj4KU28gbGV0cyBzYXkgeW91IGhhZCB0aGUgcHVibGljIGFzIGtleS5w
-dWIgYW5kIHByaXZhdGUgYXMga2V5LnByaXYsIHNvbWV0aGluZyBsaWtlOjwvZGl2Pgo8ZGl2IHN0
-eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsg
-Zm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9ImVsZW1lbnRUb1By
-b29mIj4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFs
-LCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAw
-LCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+CnRwbTJfZW5jb2Rlb2JqZWN0IC11IGtleS5w
-dWIgLXIga2V5LnByaXYgLUMgMHg4MTAwMDAwMSAtbyBrZXkucGVtPGJyPgo8L2Rpdj4KPGRpdiBz
-dHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7
-IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Q
-cm9vZiI+Cjxicj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlh
-bCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwg
-MCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgpUaGVuIHlvdSBjYW4gdXNlIGtleS5wZW0g
-d2l0aCB0aGUgZW5naW5lIGNvbW1hbmRzLjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTog
-Q2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
-b2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9ImVsZW1lbnRUb1Byb29mIj4KPGJyPgo8L2Rpdj4K
-PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMt
-c2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVt
-ZW50VG9Qcm9vZiI+Ck5vdGUgdGhhdCB0aGUmbmJzcDsweDgxMDAwMDAxIGlzIHRoZSBkZWZhdWx0
-IGFkZHJlc3MgZm9yIHRoZSBTUkssIGJ1dCBpZiB5b3UgaGF2ZSBzb21ldGhpbmc8L2Rpdj4KPGRp
-diBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2Vy
-aWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50
-VG9Qcm9vZiI+CmNvbmZpZ3VyZWQgZGlmZmVyZW50bHkgeW91IG1heSBuZWVkIHRvIHR3ZWFrIHRo
-ZSBwYXJhbXRlcnMuIEEgY2FsbCB0byB0cG0yX2dldGNhcCBoYW5kbGVzLXBlcnNpc3RlbnQ8L2Rp
-dj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNh
-bnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJl
-bGVtZW50VG9Qcm9vZiI+CnNob3VsZCBzaG93IHlvdSB3aGVyZSB5b3VyIFNSSyBpcyBhdCBob3Bl
-ZnVsbHkuPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVs
-dmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7
-IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgo8YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZh
-bWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAx
-MnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9ImVsZW1lbnRUb1Byb29mIj4KSSBkb24n
-dCBrbm93IEZBUEkgd2VsbCBvciB1c2UgRkFQSSBtdWNoLCBzbyB0aGVpciBtYXkgYmUgYW4gQVBJ
-IEkgYW0gb3Zlcmxvb2tpbmcgdGhhdCBkb2VzIHRoaXMuPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
-ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
-IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgo8YnI+
-CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGlj
-YSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyIgY2xh
-c3M9ImVsZW1lbnRUb1Byb29mIj4KQmlsbDwvZGl2Pgo8ZGl2IGlkPSJhcHBlbmRvbnNlbmQiPjwv
-ZGl2Pgo8aHIgc3R5bGU9ImRpc3BsYXk6aW5saW5lLWJsb2NrO3dpZHRoOjk4JSIgdGFiaW5kZXg9
-Ii0xIj4KPGRpdiBpZD0iZGl2UnBseUZ3ZE1zZyIgZGlyPSJsdHIiPjxmb250IGZhY2U9IkNhbGli
-cmksIHNhbnMtc2VyaWYiIHN0eWxlPSJmb250LXNpemU6MTFwdCIgY29sb3I9IiMwMDAwMDAiPjxi
-PkZyb206PC9iPiBTZXJnZXkgJ0ppbicgQm9zdGFuZHpoeWFuICZsdDtqaW5AbWVkaWF0b21iLmNj
-Jmd0Ozxicj4KPGI+U2VudDo8L2I+IFRodXJzZGF5LCBKdWx5IDcsIDIwMjIgODo1OSBBTTxicj4K
-PGI+VG86PC9iPiB0cG0yQGxpc3RzLjAxLm9yZyAmbHQ7dHBtMkBsaXN0cy4wMS5vcmcmZ3Q7PGJy
-Pgo8Yj5TdWJqZWN0OjwvYj4gW3RwbTJdIFNlbGVjdGluZyBhIGtleSB3aGljaCB3YXMgY3JlYXRl
-ZCB2aWEgRmFwaSBpbiB0aGUgT3BlblNTTCAmcXVvdDtlbmdpbmUmcXVvdDs8L2ZvbnQ+CjxkaXY+
-Jm5ic3A7PC9kaXY+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJCb2R5RnJhZ21lbnQiPjxmb250IHNpemU9
-IjIiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTFwdDsiPgo8ZGl2IGNsYXNzPSJQbGFpblRleHQi
-PkhpLDxicj4KPGJyPgpJIGFtIHN0cnVnZ2xpbmcgdG8gZmlndXJlIG91dCBob3cgdGhlIGZvbGxv
-d2luZyBzY2VuYXJpbyBjb3VsZCB3b3JrOjxicj4KPGJyPgpsZXQncyBzYXkgSSBoYXZlIGEgQyBh
-cHBsaWNhdGlvbiB3aGVyZSBJIGNyZWF0ZWQgYSBwZXJzaXN0ZW50IGtleSBwYWlyIDxicj4Kdmlh
-IEZhcGlfQ3JlYXRlS2V5KCksIHRoZSBrZXkgY2FuIGJlIGlkZW50aWZpZWQgYnkgaXRzIHBhdGgs
-PGJyPgp0eXBpY2FsbHkgc29tZXRoaW5nIGxpa2UgJnF1b3Q7SFMvU1JLL215a2V5JnF1b3Q7Ljxi
-cj4KPGJyPgpOb3csIGxldCdzIGFzc3VtZSBJIG5lZWQgdG8gdXNlIHRoYXQga2V5IGZyb20gT3Bl
-blNTTCBhcyB3ZWxsLCB2aWEgdGhlIGVuZ2luZTxicj4Kb3B0aW9uLCBpLmUuICZxdW90Oy1lbmdp
-bmUgdHBtMnRzcyZxdW90Oywgd2hhdCBJIGFtIGZhaWxpbmcgdG8gdW5kZXJzdGFuZCBpcyAtIGhv
-dyBkbzxicj4KSSBwYXNzIHRoZSBwYXRoL2tleSBpZGVudGlmaWVyLCB0byB0ZWxsIE9wZW5TU0wg
-d2hpY2gga2V5IHRvIHVzZT88YnI+Cjxicj4KQWxsIGV4YW1wbGVzIGluIHRoZSB0cG0yLXRzcy1l
-bmdpbmUgUkVBRE1FIHNvbWVob3cgYXNzdW1lIHRoYXQgeW91IGZpcnN0PGJyPgp1c2VkIHRwbTJ0
-c3MtZ2Vua2V5IHdoaWNoIHByb2R1Y2VzIGFuIGFjdHVhbCBrZXkgZmlsZSBpbiB0aGUgZnMsIGFu
-ZCB0aGVuPGJyPgp0aGlzIGZpbGUgaXMgYmVpbmcgdXNlZCBpbiBPcGVuU1NMPzxicj4KPGJyPgpG
-cm9tIDxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS90cG0yLXNvZnR3YXJlL3RwbTItdHNzLWVu
-Z2luZSI+aHR0cHM6Ly9naXRodWIuY29tL3RwbTItc29mdHdhcmUvdHBtMi10c3MtZW5naW5lPC9h
-Pjxicj4KdHBtMnRzcy1nZW5rZXkgLWEgcnNhIC1zIDIwNDggbXlrZXk8YnI+Cm9wZW5zc2wgcnNh
-IC1lbmdpbmUgdHBtMnRzcyAtaW5mb3JtIGVuZ2luZSAtaW4gbXlrZXkgLXB1Ym91dCAtb3V0Zm9y
-bSBwZW0gLW91dCBteWtleS5wdWI8YnI+Cm9wZW5zc2wgcGtleXV0bCAtcHViaW4gLWlua2V5IG15
-a2V5LnB1YiAtaW4gbXlkYXRhIC1lbmNyeXB0IC1vdXQgbXljaXBoZXI8YnI+Cm9wZW5zc2wgcGtl
-eXV0bCAtZW5naW5lIHRwbTJ0c3MgLWtleWZvcm0gZW5naW5lIC1pbmtleSBteWtleSAtZGVjcnlw
-dCAtaW4gbXljaXBoZXIgLW91dCBteWRhdGE8YnI+Cjxicj4KSSBuYWl2ZWx5IHRyaWVkIHBhc3Np
-bmcgJnF1b3Q7LWluIEhTL1NSSy9teWtleSZxdW90OywgYnV0IG9mIGNvdXJzZSBpdCBkaWQgbm90
-IHdvcmsuPGJyPgo8YnI+ClNvIHdoYXQgaXMgdGhlIGNvcnJlY3Qgd2F5IHRvIGRvIGl0LCBpZiB0
-aGUga2V5IGhhcyBub3QgYmVlbiBnZW5lcmF0ZWQgdXNpbmcgPGJyPgp0cG0ydHNzLWdlbmtleSwg
-YnV0IGlmIHRoZSBrZXkgaGFzIGJlZW4gY3JlYXRlZCB2aWEgdGhlIEZhcGlfQ3JlYXRlS2V5KCkg
-PGJyPgpmdW5jdGlvbj88YnI+Cjxicj4KTXkgYWN0dWFsIHNjZW5hcmlvIGlzLCB0aGF0IG15IGFw
-cGxpY2F0aW9uIGlzIHVzaW5nIGxpYm1vc3F1aXR0byB3aGljaCBpbjxicj4KdHVybiBuZWVkcyB0
-byB1c2UgdGhlIHByaXZhdGUga2V5IHdoaWNoIEkgaGF2ZSBpbiBUUE0uIFRoZSBsaWJyYXJ5IHVz
-ZXMgT3BlblNTTDxicj4KYW5kIGFsbG93cyB0byBwYXNzIGVxdWl2YWxlbnRzIG9mICZxdW90Oy1l
-bmdpbmUmcXVvdDsgYW5kICZxdW90Oy1rZXlmb3JtJnF1b3Q7IHBhcmFtZXRlcnMgdG8gdGhlPGJy
-PgpPcGVuU1NMIGxpYnJhcnkuIFRoZSBxdWVzdGlvbiBob3dldmVyIHJlbWFpbnMgdGhlIHNhbWUg
-YXMgd2l0aCB0aGUgYWJvdmU8YnI+CmNvbW1hbmQgbGluZSBleGFtcGxlIC0gaG93IGRvIEkgc2Vs
-ZWN0IHRoZSBrZXksIGlmICZxdW90O215a2V5JnF1b3Q7IGlzIG5vdCBhIGZpbGUsIGJ1dDxicj4K
-c29tZXRoaW5nIHRoYXQgaXMgc3RvcmVkIGluIFRQTT88YnI+Cjxicj4KSSBhbSBub3QgYW4gZXhw
-ZXJ0IGluIGFueSBvZiB0aG9zZSBUUE0gb3Igc2VjdXJpdHkgcmVsYXRlZCBxdWVzdGlvbnMsIHNv
-IEkgbWF5PGJyPgp2ZXJ5IHdlbGwgbWlzdW5kZXJzdGFuZCBob3cgdGhpcyBpcyBzdXBwb3NlZCB0
-byB3b3JrIG92ZXJhbGwsIHNvIGZhciBJIHdhcyBub3Q8YnI+CmFibGUgdG8gZmlndXJlIGl0IG91
-dCBieSBzdHVkeWluZyB0aGUgZG9jcywgSSBob3BlIHNvbWVvbmUgaGFzIGEgaGludCBmb3IgbWUu
-PGJyPgo8YnI+CktpbmQgcmVnYXJkcyw8YnI+Ckppbjxicj4KPGJyPgo8YnI+Cl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fPGJyPgp0cG0yIG1haWxpbmcgbGlz
-dCAtLSB0cG0yQGxpc3RzLjAxLm9yZzxicj4KVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0
-byB0cG0yLWxlYXZlQGxpc3RzLjAxLm9yZzxicj4KJSh3ZWJfcGFnZV91cmwpc2xpc3RpbmZvJShj
-Z2lleHQpcy8lKF9pbnRlcm5hbF9uYW1lKXM8YnI+CjwvZGl2Pgo8L3NwYW4+PC9mb250PjwvZGl2
-Pgo8L2JvZHk+CjwvaHRtbD4K
+> Hi,
+> =
 
---===============8379938265071828416==--
+> I am struggling to figure out how the following scenario could work:
+> =
+
+> let's say I have a C application where I created a persistent key pair
+> via Fapi_CreateKey(), the key can be identified by its path,
+> typically something like "HS/SRK/mykey".
+> =
+
+> Now, let's assume I need to use that key from OpenSSL as well, via the en=
+gine
+> option, i.e. "-engine tpm2tss", what I am failing to understand is - how =
+do
+> I pass the path/key identifier, to tell OpenSSL which key to use?
+> =
+
+> All examples in the tpm2-tss-engine README somehow assume that you first
+> used tpm2tss-genkey which produces an actual key file in the fs, and then
+> this file is being used in OpenSSL?
+> =
+
+> >From https://github.com/tpm2-software/tpm2-tss-engine
+> tpm2tss-genkey -a rsa -s 2048 mykey
+> openssl rsa -engine tpm2tss -inform engine -in mykey -pubout -outform pem=
+ -out mykey.pub
+> openssl pkeyutl -pubin -inkey mykey.pub -in mydata -encrypt -out mycipher
+> openssl pkeyutl -engine tpm2tss -keyform engine -inkey mykey -decrypt -in=
+ mycipher -out mydata
+> =
+
+> I naively tried passing "-in HS/SRK/mykey", but of course it did not work.
+> =
+
+> So what is the correct way to do it, if the key has not been generated us=
+ing
+> tpm2tss-genkey, but if the key has been created via the Fapi_CreateKey()
+> function?
+> =
+
+> My actual scenario is, that my application is using libmosquitto which in
+> turn needs to use the private key which I have in TPM. The library uses O=
+penSSL
+> and allows to pass equivalents of "-engine" and "-keyform" parameters to =
+the
+> OpenSSL library. The question however remains the same as with the above
+> command line example - how do I select the key, if "mykey" is not a file,=
+ but
+> something that is stored in TPM?
+> =
+
+> I am not an expert in any of those TPM or security related questions, so =
+I may
+> very well misunderstand how this is supposed to work overall, so far I wa=
+s not
+> able to figure it out by studying the docs, I hope someone has a hint for=
+ me.
+> =
+
+> Kind regards,
+> Jin
+> =
+
+> =
+
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============1794312343240523059==--
 
