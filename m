@@ -1,211 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============1879858736121215629=="
+Content-Type: multipart/mixed; boundary="===============5657238578871527113=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Tss2_Tcti_Device_Init context not zeroed
-Date: Tue, 12 Jul 2022 13:53:20 +0000
-Message-ID: <SN6PR11MB34375418EF61F877313E8171B8869@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: PH0PR84MB15285AC09CE1019D5B14ED799D879@PH0PR84MB1528.NAMPRD84.PROD.OUTLOOK.COM
+Subject: [tpm2] Re: How to initialize a used TPM2 module and thoughts on clevis
+Date: Tue, 12 Jul 2022 21:19:03 +0000
+Message-ID: <15f391d49af801d95d0ccbaf108c0e1d14eca850.camel@intel.com>
+In-Reply-To: 20220711062309.2570.35561@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1879858736121215629==
+--===============5657238578871527113==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-+ list
+On Mon, 2022-07-11 at 06:23 +0000, tpm2(a)bitzap.e4ward.com wrote:
+> Hello -
+> =
 
-> 1 =E2=80=93 Is mandatory zeroing it before calling  Tss2_Tcti_Device_Init=
-? If so,  is it a case of missing specification?
+> New to TPM2 here. I'm adding a *used* TPM2 module to a mobo that has
+> a header. What are best practices to initialize the TPM2 module? =
 
-No it shouldn't be required IIUC
+> Should I clear it first, possibly via the BIOS?
 
-> 2 =E2=80=93 No, it isn=E2=80=99t, so is there a bug?
+Yes
 
-Looks like a bug and it looks consistent throughout all the init routines f=
-or TCTIs.
-________________________________
-From: Antonio de Moraes, Marcos <marcos.antonio-de-moraes(a)hpe.com>
-Sent: Monday, July 11, 2022 1:21 PM
-To: tpm2-owner(a)lists.01.org <tpm2-owner(a)lists.01.org>
-Subject: Tss2_Tcti_Device_Init context not zeroed
+>  Should I set an owner password?
 
+and YES. This is required to keep someone from wiping all the keys in
+the owner hierarchy which would include your disk encryption keys.
+You also want to set the lockoutauth as well.
 
-Hi all,
+> =
 
+> So far I found `echo 5 > /sys/class/tpm/tpm0/ppi/request` which is
+> probably a good idea to do as I don't know where the module comes
+> from and whether anyone has messed with it before.
+> =
 
+> I'd appreciate any pointers in the right direction and the correct
+> commands to start with a clean TPM2. Running Ubuntu 20.04 and I
+> installed tpm2-tools.
 
-  I noticed when performing subsequent tpm2 calls over a not zeroed tcti co=
-ntext  passed to Tss2_Tcti_Device_Init I have errors such as:
+I think I'd clear it using the BIOS and use
+tpm2_changeauth -C o <newownerpass>
+tpm2_changeauth -C l <newlockoutpass>
 
+You'd probably also want to create the "Storage Root Key" or SRK which
+is a key at certain fixed address without a password so you can put
+subordinate keys under:
 
+# Specify -G ecc for an ecc key over RSA, but it really doesn't matter.
+tpm2_createprimary -c primary.ctx =
 
-=E2=80=9CWARNING:tcti:src/tss2-tcti/tcti-device.c:321:tcti_device_receive()=
- TPM2 response size disagrees with number of bytes read from fd 3. Header s=
-ays 0 but we read 29 bytes.
+tpm2_evictcontrol -c primary.ctx 0x81000001
 
-ERROR:sys:src/tss2-sys/api/Tss2_Sys_Execute.c:118:Tss2_Sys_ExecuteFinish() =
-Malformed response: Invalid tag in response header: 0=E2=80=9D
+to initialize the TPM.
 
+The address 0x81000001 comes from a guidance document on how to
+provision the TPM:
+  - =
 
-
-I made some experiments:  If I put some content different than 0x00 at offs=
-et 89 in memory block passed to RC Tss2_Tcti_Device_Init it fails. That is =
-also true for some other offsets.
-
-
-
-
-
-
-
-TSS2_RC Tss2_Tcti_Device_Init (TSS2_TCTI_CONTEXT *tctiContext, size_t *size=
-, const char *conf);
-
-
-
-I check the description of Tss2_Tcti_Device_Init and didn=E2=80=99t find an=
-y observation that tctiContext parameter must point an zeroed memory block,=
- although in the usage examples the allocated memory is zeroed , calling ca=
-lloc( 1, <needed size>).
+https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM-v2.0-Provision=
+ing-Guidance-Published-v1r1.pdf
 
 
+> =
 
-Regarding tctiContext memory block passed to Tss2_Tcti_Device_Init:
+> Also, is `clevis encrypt tpm2` a good wrapper if I just want to a
+> simple way to encrypt/decrypt a file on disk that holds other
+> credentials?
 
-1 =E2=80=93 Is mandatory zeroing it before calling  Tss2_Tcti_Device_Init? =
-If so,  is it a case of missing specification?
-
-2 =E2=80=93 No, it isn=E2=80=99t, so is there a bug?
-
-
-
-My environment:
-
-TCTI shared library: libtss2-tcti-device.so.0
-
-OS: Enterprise Suse Linux
+Yeah clevis works great for those purposes. However, I don't know how
+clevis manages it's keys so you may need to do something else, but
+as far as I know its a simple way to use TPM2.
 
 
+> =
 
+> Thank you!
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 
-
-Thanks in advance,
-
-
-
-Marcos A. de Moraes
-
-HPE Security Software Engineer
-
-
-
-
-
---===============1879858736121215629==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD1XaW5kb3dzLTEyNTIiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiIHN0
-eWxlPSJkaXNwbGF5Om5vbmU7Ij4gUCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9IDwv
-c3R5bGU+CjwvaGVhZD4KPGJvZHkgZGlyPSJsdHIiPgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTog
-Q2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
-b2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9ImVsZW1lbnRUb1Byb29mIj4KKyBsaXN0PC9kaXY+
-CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5z
-LXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxl
-bWVudFRvUHJvb2YiPgo8c3BhbiBzdHlsZT0idGV4dC1pbmRlbnQ6IDM2cHQ7Ij48YnI+Cjwvc3Bh
-bj48L2Rpdj4KPGRpdiBzdHlsZT0idGV4dC1pbmRlbnQ6IDBweDsgZm9udC1mYW1pbHk6IENhbGli
-cmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6
-IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+CjxzcGFuIHN0eWxlPSJ0ZXh0
-LWluZGVudDogMzZwdDsiPiZndDsgMSCWIElzIG1hbmRhdG9yeSB6ZXJvaW5nIGl0IGJlZm9yZSBj
-YWxsaW5nICZuYnNwO1RzczJfVGN0aV9EZXZpY2VfSW5pdD8gSWYgc28sICZuYnNwO2lzIGl0IGEg
-Y2FzZSBvZiBtaXNzaW5nIHNwZWNpZmljYXRpb24/PC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJ0
-ZXh0LWluZGVudDogMHB4OyBmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwg
-c2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9
-ImVsZW1lbnRUb1Byb29mIj4KPHNwYW4gc3R5bGU9InRleHQtaW5kZW50OiAzNnB0OyI+PGJyPgo8
-L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9InRleHQtaW5kZW50OiAwcHg7IGZvbnQtZmFtaWx5OiBD
-YWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNv
-bG9yOiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgo8c3BhbiBzdHlsZT0i
-dGV4dC1pbmRlbnQ6IDM2cHQ7Ij5ObyBpdCBzaG91bGRuJ3QgYmUgcmVxdWlyZWQgSUlVQzwvc3Bh
-bj48L2Rpdj4KPGRpdiBzdHlsZT0idGV4dC1pbmRlbnQ6IDBweDsgZm9udC1mYW1pbHk6IENhbGli
-cmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6
-IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+CjxzcGFuIHN0eWxlPSJ0ZXh0
-LWluZGVudDogMzZwdDsiPjxicj4KPC9zcGFuPjwvZGl2Pgo8ZGl2IHN0eWxlPSJ0ZXh0LWluZGVu
-dDogMHB4OyBmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJp
-ZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9ImVsZW1lbnRU
-b1Byb29mIj4KPHNwYW4gc3R5bGU9InRleHQtaW5kZW50OiAzNnB0OyI+Jmd0OyAyIJYgTm8sIGl0
-IGlzbpJ0LCBzbyBpcyB0aGVyZSBhIGJ1Zz88L3NwYW4+PC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQt
-ZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6
-IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgo8YnI+
-CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGlj
-YSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyIgY2xh
-c3M9ImVsZW1lbnRUb1Byb29mIj4KTG9va3MgbGlrZSBhIGJ1ZyBhbmQgaXQgbG9va3MgY29uc2lz
-dGVudCB0aHJvdWdob3V0IGFsbCB0aGUgaW5pdCByb3V0aW5lcyBmb3IgVENUSXMuPC9kaXY+Cjxk
-aXYgaWQ9ImFwcGVuZG9uc2VuZCI+PC9kaXY+CjxociBzdHlsZT0iZGlzcGxheTppbmxpbmUtYmxv
-Y2s7d2lkdGg6OTglIiB0YWJpbmRleD0iLTEiPgo8ZGl2IGlkPSJkaXZScGx5RndkTXNnIiBkaXI9
-Imx0ciI+PGZvbnQgZmFjZT0iQ2FsaWJyaSwgc2Fucy1zZXJpZiIgc3R5bGU9ImZvbnQtc2l6ZTox
-MXB0IiBjb2xvcj0iIzAwMDAwMCI+PGI+RnJvbTo8L2I+IEFudG9uaW8gZGUgTW9yYWVzLCBNYXJj
-b3MgJmx0O21hcmNvcy5hbnRvbmlvLWRlLW1vcmFlc0BocGUuY29tJmd0Ozxicj4KPGI+U2VudDo8
-L2I+IE1vbmRheSwgSnVseSAxMSwgMjAyMiAxOjIxIFBNPGJyPgo8Yj5Ubzo8L2I+IHRwbTItb3du
-ZXJAbGlzdHMuMDEub3JnICZsdDt0cG0yLW93bmVyQGxpc3RzLjAxLm9yZyZndDs8YnI+CjxiPlN1
-YmplY3Q6PC9iPiBUc3MyX1RjdGlfRGV2aWNlX0luaXQgY29udGV4dCBub3QgemVyb2VkPC9mb250
-Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8L2Rpdj4KPHN0eWxlPgo8IS0tCkBmb250LWZhY2UKCXtmb250
-LWZhbWlseToiQ2FtYnJpYSBNYXRoIn0KQGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OkNhbGlicml9
-CnAueF9Nc29Ob3JtYWwsIGxpLnhfTXNvTm9ybWFsLCBkaXYueF9Nc29Ob3JtYWwKCXttYXJnaW46
-MGNtOwoJZm9udC1zaXplOjExLjBwdDsKCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlm
-fQoueF9Nc29DaHBEZWZhdWx0Cgl7Zm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWZ9CkBw
-YWdlIFdvcmRTZWN0aW9uMQoJe21hcmdpbjo3Mi4wcHQgNzIuMHB0IDcyLjBwdCA3Mi4wcHR9CmRp
-di54X1dvcmRTZWN0aW9uMQoJe30KLS0+Cjwvc3R5bGU+CjxkaXYgbGFuZz0iRU4tR0IiIGxpbms9
-IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIiBzdHlsZT0id29yZC13cmFwOmJyZWFrLXdvcmQiPgo8
-ZGl2IGNsYXNzPSJ4X1dvcmRTZWN0aW9uMSI+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+SGkgYWxs
-LDwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj4mbmJzcDs8L3A+CjxwIGNsYXNzPSJ4X01zb05v
-cm1hbCI+Jm5ic3A7IEkgbm90aWNlZCB3aGVuIHBlcmZvcm1pbmcgc3Vic2VxdWVudCB0cG0yIGNh
-bGxzIG92ZXIgYSBub3QgemVyb2VkIHRjdGkgY29udGV4dCAmbmJzcDtwYXNzZWQgdG8gVHNzMl9U
-Y3RpX0RldmljZV9Jbml0IEkgaGF2ZSBlcnJvcnMgc3VjaCBhczo8L3A+CjxwIGNsYXNzPSJ4X01z
-b05vcm1hbCI+Jm5ic3A7PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPpNXQVJOSU5HOnRjdGk6
-c3JjL3RzczItdGN0aS90Y3RpLWRldmljZS5jOjMyMTp0Y3RpX2RldmljZV9yZWNlaXZlKCkgVFBN
-MiByZXNwb25zZSBzaXplIGRpc2FncmVlcyB3aXRoIG51bWJlciBvZiBieXRlcyByZWFkIGZyb20g
-ZmQgMzxiPi4gSGVhZGVyIHNheXMgMCBidXQgd2UgcmVhZCAyOSBieXRlczwvYj4uCjwvcD4KPHAg
-Y2xhc3M9InhfTXNvTm9ybWFsIj5FUlJPUjpzeXM6c3JjL3RzczItc3lzL2FwaS9Uc3MyX1N5c19F
-eGVjdXRlLmM6MTE4OlRzczJfU3lzX0V4ZWN1dGVGaW5pc2goKSBNYWxmb3JtZWQgcmVzcG9uc2U6
-IEludmFsaWQgdGFnIGluIHJlc3BvbnNlIGhlYWRlcjogMJQ8L3A+CjxwIGNsYXNzPSJ4X01zb05v
-cm1hbCI+Jm5ic3A7PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPkkgbWFkZSBzb21lIGV4cGVy
-aW1lbnRzOiAmbmJzcDtJZiBJIHB1dCBzb21lIGNvbnRlbnQgZGlmZmVyZW50IHRoYW4gMHgwMCBh
-dCBvZmZzZXQgODkgaW4gbWVtb3J5IGJsb2NrIHBhc3NlZCB0byBSQyBUc3MyX1RjdGlfRGV2aWNl
-X0luaXQgaXQgZmFpbHMuIFRoYXQgaXMgYWxzbyB0cnVlIGZvciBzb21lIG90aGVyIG9mZnNldHMu
-PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyA8L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+Jm5ic3A7PC9wPgo8cCBjbGFzcz0ieF9N
-c29Ob3JtYWwiPiZuYnNwOzwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj5UU1MyX1JDIFRzczJf
-VGN0aV9EZXZpY2VfSW5pdCAoVFNTMl9UQ1RJX0NPTlRFWFQgKnRjdGlDb250ZXh0LCBzaXplX3Qg
-KnNpemUsIGNvbnN0IGNoYXIgKmNvbmYpOzwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj4mbmJz
-cDs8L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+SSBjaGVjayB0aGUgZGVzY3JpcHRpb24gb2Yg
-VHNzMl9UY3RpX0RldmljZV9Jbml0IGFuZCBkaWRuknQgZmluZCBhbnkgb2JzZXJ2YXRpb24gdGhh
-dCB0Y3RpQ29udGV4dCBwYXJhbWV0ZXIgbXVzdCBwb2ludCBhbiB6ZXJvZWQgbWVtb3J5IGJsb2Nr
-LCBhbHRob3VnaCBpbiB0aGUgdXNhZ2UgZXhhbXBsZXMgdGhlIGFsbG9jYXRlZCBtZW1vcnkgaXMg
-emVyb2VkICwgY2FsbGluZyBjYWxsb2MoIDEsICZsdDtuZWVkZWQKIHNpemUmZ3Q7KS48L3A+Cjxw
-IGNsYXNzPSJ4X01zb05vcm1hbCI+Jm5ic3A7PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPlJl
-Z2FyZGluZyB0Y3RpQ29udGV4dCBtZW1vcnkgYmxvY2sgcGFzc2VkIHRvIFRzczJfVGN0aV9EZXZp
-Y2VfSW5pdDo8L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCIgc3R5bGU9InRleHQtaW5kZW50OjM2
-LjBwdCI+MSCWIElzIG1hbmRhdG9yeSB6ZXJvaW5nIGl0IGJlZm9yZSBjYWxsaW5nICZuYnNwO1Rz
-czJfVGN0aV9EZXZpY2VfSW5pdD8gSWYgc28sICZuYnNwO2lzIGl0IGEgY2FzZSBvZiBtaXNzaW5n
-IHNwZWNpZmljYXRpb24/PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiIHN0eWxlPSJ0ZXh0LWlu
-ZGVudDozNi4wcHQiPjIgliBObywgaXQgaXNuknQsIHNvIGlzIHRoZXJlIGEgYnVnPzwvcD4KPHAg
-Y2xhc3M9InhfTXNvTm9ybWFsIiBzdHlsZT0idGV4dC1pbmRlbnQ6MzYuMHB0Ij4mbmJzcDs8L3A+
-CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+TXkgZW52aXJvbm1lbnQ6PC9wPgo8cCBjbGFzcz0ieF9N
-c29Ob3JtYWwiIHN0eWxlPSJ0ZXh0LWluZGVudDozNi4wcHQiPlRDVEkgc2hhcmVkIGxpYnJhcnk6
-IGxpYnRzczItdGN0aS1kZXZpY2Uuc28uMDwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIiBzdHls
-ZT0idGV4dC1pbmRlbnQ6MzYuMHB0Ij5PUzogRW50ZXJwcmlzZSBTdXNlIExpbnV4PC9wPgo8cCBj
-bGFzcz0ieF9Nc29Ob3JtYWwiPiZuYnNwOzwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj4mbmJz
-cDs8L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+VGhhbmtzIGluIGFkdmFuY2UsPC9wPgo8cCBj
-bGFzcz0ieF9Nc29Ob3JtYWwiPiZuYnNwOzwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj5NYXJj
-b3MgQS4gZGUgTW9yYWVzPC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPkhQRSBTZWN1cml0eSBT
-b2Z0d2FyZSBFbmdpbmVlcjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj4mbmJzcDs8L3A+Cjxw
-IGNsYXNzPSJ4X01zb05vcm1hbCI+Jm5ic3A7PC9wPgo8L2Rpdj4KPC9kaXY+CjwvYm9keT4KPC9o
-dG1sPgo=
-
---===============1879858736121215629==--
+--===============5657238578871527113==--
 
