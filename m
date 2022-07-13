@@ -1,62 +1,33 @@
-Content-Type: multipart/mixed; boundary="===============6296948526902808818=="
+Content-Type: multipart/mixed; boundary="===============4573535587083429915=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: Tim K <tpm2 at bitzap.e4ward.com>
 Subject: [tpm2] Re: How to initialize a used TPM2 module and thoughts on clevis
-Date: Wed, 13 Jul 2022 14:53:57 +0000
-Message-ID: <741ff3ee9707c1f3502d48e97496e1a47edfbb6d.camel@intel.com>
-In-Reply-To: 20220712222548.2570.88870@ml01.vlan13.01.org
+Date: Wed, 13 Jul 2022 15:59:13 +0000
+Message-ID: <20220713155913.2570.91658@ml01.vlan13.01.org>
+In-Reply-To: 741ff3ee9707c1f3502d48e97496e1a47edfbb6d.camel@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6296948526902808818==
+--===============4573535587083429915==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-+ Javier
+My goal is to automate a cron job that requires credentials by keeping the =
+credentials in a file that is encrypted using TPM2 via clevis. I am fully a=
+ware this does not add much protection if someone gets access to the OS, it=
+ is just so credentials do not sit in plain text in a file on disk, just pr=
+otected by file permissions and it somewhat protects me from accidentally s=
+ync'ing the file to cloud or to some other backup (the file would at least =
+be encrypted).
 
-On Tue, 2022-07-12 at 22:25 +0000, Tim K wrote:
-> Very useful, thank you!
-> =
+In order to do this, I don't think I can password protect the TPM2 hierarch=
+ies, otherwise there would be no way to automate it, I'd have to put the TP=
+M2 passwords in the script for clevis to use (assuming clevis adds the opti=
+on or that I just call the tpm2_* commands myself).
 
-> > and YES. This is required to keep someone from wiping all the keys
-> > in
-> > the owner hierarchy which would include your disk encryption keys.
-> > You also want to set the lockoutauth as well.
-> =
-
-> It appears clevis uses the owner hierarchy by default. If I set an
-> owner password, what are the implications, does clevis need to know
-> the owner password when it creates its own key and then
-> encrypts/decrypts its own key?
-> =
-
-> This is how I'm trying to use it to encrypt a single file on disk
-> (not the entire disk/LUKS):
-> https://manpages.ubuntu.com/manpages/focal/man1/clevis-encrypt-tpm2.1.html
-
-
-Looking at the source[1,2], it appears they call tpm2_createprimary on
-encrypt which would require owner auth, call tpm2_create save the key
-and then on decrypt call tpm2_createprimary which requires owner auth
-and then call tpm2_load to load the key under that primary object.
-
-I don't see an option to use the SRK, this looks like an oversight or I
-am missing something. Javier, do you know?
-
-
-[1] =
-
-https://github.com/latchset/clevis/blob/master/src/pins/tpm2/clevis-encrypt=
--tpm2
-[2] =
-
-https://github.com/latchset/clevis/blob/master/src/pins/tpm2/clevis-decrypt=
--tpm2
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============6296948526902808818==--
+Any other suggestions how to make this better? My original idea was to use =
+systemd-creds but it is not available in systemd v249 that Ubuntu 22.04 LTS=
+ ships with.
+--===============4573535587083429915==--
 
