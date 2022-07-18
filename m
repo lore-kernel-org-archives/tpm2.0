@@ -1,30 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============4706000343041918061=="
+Content-Type: multipart/mixed; boundary="===============1863819418771786435=="
 MIME-Version: 1.0
-From: Tim K <tpm2 at bitzap.e4ward.com>
-Subject: [tpm2] Recommended way to encrypt a credential
-Date: Sat, 16 Jul 2022 16:18:49 +0000
-Message-ID: <20220716161849.2570.27559@ml01.vlan13.01.org>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: Lifecycle of handles and contexts
+Date: Mon, 18 Jul 2022 14:45:31 +0000
+Message-ID: <add83f20e790263ea0f2e7e07ced371036613fac.camel@intel.com>
+In-Reply-To: 20220716142045.2570.9096@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4706000343041918061==
+--===============1863819418771786435==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Let's assume I have a credential for some other remote system that I'd like=
- to store somewhat protected so it can be used in a cron job. What is the r=
-ecommended way? I see a few possibilities:
+On Sat, 2022-07-16 at 14:20 +0000, Tim K wrote:
+> Is there a good resource that describes the lifecycle of handles and
+> contexts, in easy to understand terms?
 
-1. Create a primary key, an encryption key and seal the credential (it's sm=
-all, less than 128 bytes)
-2. Use an encryption key to encrypt something like a GPG passphrase (or may=
-be the GPG private key without a passphrase) and then gpg-encrypt a file th=
-at holds my credential
-3. Use tpm2_encryptdecrypt which looks like some form of simplifying #2 abo=
-ve and may also work with files that may slightly exceed 128 bytes
-4. Just store the credential directly at an NV index
+Not great, but the TPM spec does have a section on it:
+  - Section 15 of =
 
-Thanks!
---===============4706000343041918061==--
+https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-1-Arc=
+hitecture-01.38.pdf
+
+
+They key to know when you get a Handle the high byte determines the
+type of handle, when you know the type you can know the lifecycle.
+
+> =
+
+> For example, if I create a primary key and then create a key and seal
+> some data, I can keep unsealing the data without reloading the key.
+> But if I reboot the computer, I have to create the primary key again
+> and reload the key then I can unseal multiple times. So these keys
+> get stored in the TPM until reboot it seems.
+
+Correct, they are both transient objects with a high byte of 0x80.
+ =
+
+> =
+
+> Is there a way to flush them out of the TPM or even list what's
+> stored? =
+
+
+TPM2 Command TPM2_GetCap can show you what's loaded and
+TPM2_FlushContext will flush them. Their are matching APIs and tools in
+the tpm2-tss and tpm2-tools project. NOTE that when using a resource
+manager like tpm2-abrmd or /dev/tpmrm0 that transient objects are
+flushed when the application exits or closes the connection with the
+resource manager.
+
+> =
+
+> Is there a way to list what's stored, what keys are loaded? =
+
+
+For example with the tpm2-tools NOT USING A RESOURCE MANAGER:
+
+# create
+tpm2 createprimary
+
+# list
+tpm2 getcap --tcti=3Dmssim handles-transient
+- 0x80000000
+
+# note 0x80 start, so transient
+tpm2 flushcontext --tcti=3Dmssim 0x80000000
+
+tpm2 getcap --tcti=3Dmssim handles-transient
+# gone
+
+> What about flushing them out without rebooting?
+
+flushcontext
+
+> =
+
+> Thanks!
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============1863819418771786435==--
 
