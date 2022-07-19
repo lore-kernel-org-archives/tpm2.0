@@ -1,167 +1,72 @@
-Content-Type: multipart/mixed; boundary="===============4151478047254454226=="
+Content-Type: multipart/mixed; boundary="===============1289664204463847240=="
 MIME-Version: 1.0
-From: Rajkumar K Sivasamy <rajkumar.k.sivasamy at gmail.com>
-Subject: [tpm2] Need help: Nginx and TPM2 Connection Problem
-Date: Tue, 19 Jul 2022 20:32:01 +0530
-Message-ID: <CADu5HqycgfoU-6nF6M=3Az_7O4ten+B0e7nj5D6e9QEKkG=zEg@mail.gmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: Need help: Nginx and TPM2 Connection Problem
+Date: Tue, 19 Jul 2022 18:53:14 +0000
+Message-ID: <075f4d064844a695ac738509b2d276ae5e4e14d8.camel@intel.com>
+In-Reply-To: CADu5HqycgfoU-6nF6M=3Az_7O4ten+B0e7nj5D6e9QEKkG=zEg@mail.gmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4151478047254454226==
+--===============1289664204463847240==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Team
+On Tue, 2022-07-19 at 20:32 +0530, Rajkumar K Sivasamy wrote:
+> Team
+> =
 
-We are running Ngnix which uses TPM 2.0 Engine through Ngnix config option
-"ssl_engine tpm2tss"; now when Ngnix trying to make use of the *tpm2tss *en=
-gine
-it is hitting following error:
+> We are running Ngnix which uses TPM 2.0 Engine through Ngnix config
+> option "ssl_engine tpm2tss"; now when Ngnix trying to make use of the
+> tpm2tss engine it is hitting following error:
+> The 'nginx' worker process is unable to access the 'dbus' exposed by
+> the 'tabrmd' process. Looking into the 'nginx' error log, the
+> following errors are seen:
+> ** (process:8020): CRITICAL **: failed to allocate dbus proxy object:
+> Timeout was reached
+> ERROR:tcti:src/tss2-tcti/tctildr-dl.c:154:tcti_from_file() Could not
+> initialize TCTI file: libtss2-tcti-tabrmd.so.0
+> =
 
-   - The 'nginx' worker process is unable to access the 'dbus' exposed by
-   the 'tabrmd' process. Looking into the 'nginx' error log, the following
-   errors are seen:
+> =E2=80=98dbus=E2=80=99 shows warnings with the following logs:
+> dbus[1928]: [system] Connection has not authenticated soon enough,
+> closing it (auth_timeout=3D30000ms, elapsed: 30001ms)
+> =
 
-** (process:8020): CRITICAL **: failed to allocate dbus proxy object:
-Timeout was reached
+> Whenever 'nginx' is trying to connect to backend server, it is
+> closing the connection. In the logs, SSL handshake failure messages
+> are seen. The SSL connection is not working, it is getting closed.
+> nginx: [info] 8020#0: *2 peer closed connection in SSL handshake
+> while SSL handshaking, client: <IP_Address>, server: 0.0.0.0:443
+>  =
 
-ERROR:tcti:src/tss2-tcti/tctildr-dl.c:154:tcti_from_file() Could not
-initialize TCTI file: libtss2-tcti-tabrmd.so.0
+> Version of packages:
+> kernel 4.14.76
+> nginx 1.14.0
+> openssl 1.1.1
+> tpm2-abrmd 2.3.2
+> =
 
+> Note that the openssl when executed directly it is able to make use
+> of TPM2.0 engine and we have other processes which makes use of
+> tpm2tss and they are all working fine, the problem is only with
+> Ngnix. We would need your help here, can you let us know how to
+> resolve this "failed to allocate dbus proxy object" error?
 
+I really have no idea, but I did find this related thread:
+- https://github.com/tpm2-software/tpm2-abrmd/issues/541
 
-   - =E2=80=98dbus=E2=80=99 shows warnings with the following logs:
+Never seemed to be formally closed outside of use /dev/tpmrm0.
 
-dbus[1928]: [system] Connection has not authenticated soon enough, closing
-it (auth_timeout=3D30000ms, elapsed: 30001ms)
+> =
 
+> Thanks
+> Raj
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 
-
-   - Whenever 'nginx' is trying to connect to backend server, it is closing
-   the connection. In the logs, SSL handshake failure messages are seen. The
-   SSL connection is not working, it is getting closed.
-
-nginx: [info] 8020#0: *2 peer closed connection in SSL handshake while SSL
-handshaking, client: <IP_Address>, server: 0.0.0.0:443
-
-
-
-Version of packages:
-
-kernel 4.14.76
-
-nginx 1.14.0
-
-openssl 1.1.1
-
-tpm2-abrmd 2.3.2
-
-Note that the openssl when executed directly it is able to make use of
-TPM2.0 engine and we have other processes which makes use of tpm2tss and
-they are all working fine, the problem is only with Ngnix. We would need
-your help here, can you let us know how to resolve this "*failed to
-allocate dbus proxy object*" error?
-
-Thanks
-Raj
-
---===============4151478047254454226==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGRpdiBkaXI9Imx0ciI+PGRpdj5UZWFtPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5XZSBhcmUg
-cnVubmluZyBOZ25peCB3aGljaCB1c2VzIFRQTSAyLjAgRW5naW5lIHRocm91Z2ggTmduaXggY29u
-ZmlnIG9wdGlvbiAmcXVvdDtzc2xfZW5naW5lIHRwbTJ0c3MmcXVvdDs7IG5vdyB3aGVuIE48c3Bh
-biBzdHlsZT0iZm9udC1zaXplOjExcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90Oyxz
-YW5zLXNlcmlmO2NvbG9yOmJsYWNrIj5nbml4IHRyeWluZyB0byBtYWtlIHVzZSBvZiB0aGUgPGk+
-dHBtMnRzcyA8L2k+ZW5naW5lIGl0IGlzIGhpdHRpbmcgZm9sbG93aW5nIGVycm9yOjwvc3Bhbj48
-L2Rpdj48ZGl2Pjx1bCBzdHlsZT0ibWFyZ2luLXRvcDowaW47bWFyZ2luLWJvdHRvbTowaW4iIHR5
-cGU9ImRpc2MiPjxsaSBjbGFzcz0iZ21haWwtTXNvTGlzdFBhcmFncmFwaCIgc3R5bGU9Im1hcmdp
-bjowaW47Zm9udC1zaXplOjExcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5z
-LXNlcmlmIj48c3Bhbj5UaGUgJiMzOTtuZ2lueCYjMzk7IHdvcmtlciBwcm9jZXNzIGlzIHVuYWJs
-ZSB0byBhY2Nlc3MgdGhlICYjMzk7ZGJ1cyYjMzk7IGV4cG9zZWQgYnkgdGhlCiAgICAgJiMzOTt0
-YWJybWQmIzM5OyBwcm9jZXNzLiBMb29raW5nIGludG8gdGhlICYjMzk7bmdpbngmIzM5OyBlcnJv
-ciBsb2csIHRoZSBmb2xsb3dpbmcgZXJyb3JzCiAgICAgYXJlIHNlZW46PHNwYW4+PC9zcGFuPjwv
-c3Bhbj48L2xpPjwvdWw+Cgo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luOjBpbiAw
-aW4gMGluIDQwcHg7Zm9udC1zaXplOjExcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90
-OyxzYW5zLXNlcmlmIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwcHQ7Zm9udC1mYW1pbHk6JnF1
-b3Q7Q291cmllciBOZXcmcXVvdDsiPioqCihwcm9jZXNzOjgwMjApOiBDUklUSUNBTCAqKjogZmFp
-bGVkIHRvIGFsbG9jYXRlIGRidXMgcHJveHkgb2JqZWN0OiBUaW1lb3V0IHdhcwpyZWFjaGVkPHNw
-YW4+PC9zcGFuPjwvc3Bhbj48L3A+PGRpdiBzdHlsZT0ibWFyZ2luLWxlZnQ6NDBweCI+Cgo8L2Rp
-dj48cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luOjBpbiAwaW4gMGluIDQwcHg7Zm9u
-dC1zaXplOjExcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj48
-c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcm
-cXVvdDsiPkVSUk9SOnRjdGk6c3JjL3RzczItdGN0aS90Y3RpbGRyLWRsLmM6MTU0OnRjdGlfZnJv
-bV9maWxlKCkKQ291bGQgbm90IGluaXRpYWxpemUgVENUSSBmaWxlOiBsaWJ0c3MyLXRjdGktdGFi
-cm1kLnNvLjA8L3NwYW4+PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46MGlu
-IDBpbiAwaW4gNDBweDtmb250LXNpemU6MTFwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1
-b3Q7LHNhbnMtc2VyaWYiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTBwdDtmb250LWZhbWlseTom
-cXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+PGJyPjwvc3Bhbj48L3A+PHAgY2xhc3M9Ik1zb05vcm1h
-bCIgc3R5bGU9Im1hcmdpbjowaW4gMGluIDBpbiA0MHB4O2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFt
-aWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
-ZToxMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij4KCgoKCgoKCgoKCgoK
-CgoKCgoKPC9zcGFuPjwvcD48dWwgc3R5bGU9Im1hcmdpbi10b3A6MGluO21hcmdpbi1ib3R0b206
-MGluIiB0eXBlPSJkaXNjIj48bGkgY2xhc3M9ImdtYWlsLU1zb0xpc3RQYXJhZ3JhcGgiIHN0eWxl
-PSJtYXJnaW46MGluO2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVv
-dDssc2Fucy1zZXJpZiI+PHNwYW4+4oCYZGJ1c+KAmSBzaG93cyB3YXJuaW5ncwogICAgIHdpdGgg
-dGhlIGZvbGxvd2luZyBsb2dzOjxzcGFuPjwvc3Bhbj48L3NwYW4+PC9saT48L3VsPgoKPHAgY2xh
-c3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjowaW4gMGluIDBpbiA0MHB4O2ZvbnQtc2l6ZTox
-MXB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+PHNwYW4gc3R5
-bGU9ImZvbnQtc2l6ZToxMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij5k
-YnVzWzE5MjhdOgpbc3lzdGVtXSBDb25uZWN0aW9uIGhhcyBub3QgYXV0aGVudGljYXRlZCBzb29u
-IGVub3VnaCwgY2xvc2luZyBpdAooYXV0aF90aW1lb3V0PTMwMDAwbXMsIGVsYXBzZWQ6IDMwMDAx
-bXMpPHNwYW4+PC9zcGFuPjwvc3Bhbj48L3A+CgoKCgoKPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5
-bGU9Im1hcmdpbjowaW4gMGluIDBpbiA0MHB4O2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5OiZx
-dW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMHB0
-O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7Ij48c3Bhbj48L3NwYW4+PC9zcGFu
-PjwvcD48ZGl2IHN0eWxlPSJtYXJnaW4tbGVmdDo0MHB4Ij4KCgoKCgo8L2Rpdj48L2Rpdj48ZGl2
-Pjxicj48L2Rpdj48ZGl2PgoKCgoKCgoKCgoKCgoKCgoKCgo8dWwgc3R5bGU9Im1hcmdpbi10b3A6
-MGluO21hcmdpbi1ib3R0b206MGluIiB0eXBlPSJkaXNjIj48bGkgY2xhc3M9ImdtYWlsLU1zb0xp
-c3RQYXJhZ3JhcGgiIHN0eWxlPSJtYXJnaW46MGluO2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5
-OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+PHNwYW4+V2hlbmV2ZXIgJiMzOTtuZ2lu
-eCYjMzk7IGlzCiAgICAgdHJ5aW5nIHRvIGNvbm5lY3QgdG8gYmFja2VuZCBzZXJ2ZXIsIGl0IGlz
-IGNsb3NpbmcgdGhlIGNvbm5lY3Rpb24uIEluIHRoZQogICAgIGxvZ3MsIFNTTCBoYW5kc2hha2Ug
-ZmFpbHVyZSBtZXNzYWdlcyBhcmUgc2Vlbi4gVGhlIFNTTCBjb25uZWN0aW9uIGlzIG5vdAogICAg
-IHdvcmtpbmcsIGl0IGlzIGdldHRpbmcgY2xvc2VkLjxzcGFuPjwvc3Bhbj48L3NwYW4+PC9saT48
-L3VsPgoKPHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjowaW4gMGluIDBpbiA0MHB4
-O2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJp
-ZiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIg
-TmV3JnF1b3Q7Ij5uZ2lueDoKW2luZm9dIDgwMjAjMDogKjIgcGVlciBjbG9zZWQgY29ubmVjdGlv
-biBpbiBTU0wgaGFuZHNoYWtlIHdoaWxlIFNTTApoYW5kc2hha2luZywgY2xpZW50OiAmbHQ7SVBf
-QWRkcmVzcyZndDssIHNlcnZlcjogPGEgaHJlZj0iaHR0cDovLzAuMC4wLjA6NDQzIj4wLjAuMC4w
-OjQ0MzwvYT48c3Bhbj48L3NwYW4+PC9zcGFuPjwvcD4KCjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0
-eWxlPSJtYXJnaW46MGluO2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkm
-cXVvdDssc2Fucy1zZXJpZiI+PHNwYW4+wqA8L3NwYW4+PC9wPjxwIGNsYXNzPSJNc29Ob3JtYWwi
-IHN0eWxlPSJtYXJnaW46MGluO2ZvbnQtc2l6ZToxMXB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGli
-cmkmcXVvdDssc2Fucy1zZXJpZiI+PHNwYW4+VmVyc2lvbiBvZiBwYWNrYWdlczo8L3NwYW4+PC9w
-PjxwIGNsYXNzPSJNc29Ob3JtYWwiIHN0eWxlPSJtYXJnaW46MGluO2ZvbnQtc2l6ZToxMXB0O2Zv
-bnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssc2Fucy1zZXJpZiI+PHNwYW4+CgoKCgoKCgoK
-CgoKCgoKCgoKCjwvc3Bhbj48L3A+PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjow
-aW47Zm9udC1zaXplOjExcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNl
-cmlmIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmll
-ciBOZXcmcXVvdDsiPmtlcm5lbAo0LjE0Ljc2PHNwYW4+PC9zcGFuPjwvc3Bhbj48L3A+Cgo8cCBj
-bGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFyZ2luOjBpbjtmb250LXNpemU6MTFwdDtmb250LWZh
-bWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWYiPjxzcGFuIHN0eWxlPSJmb250LXNp
-emU6MTBwdDtmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OyI+bmdpbngKMS4xNC4w
-PHNwYW4+PC9zcGFuPjwvc3Bhbj48L3A+Cgo8cCBjbGFzcz0iTXNvTm9ybWFsIiBzdHlsZT0ibWFy
-Z2luOjBpbjtmb250LXNpemU6MTFwdDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNh
-bnMtc2VyaWYiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTBwdDtmb250LWZhbWlseTomcXVvdDtD
-b3VyaWVyIE5ldyZxdW90OyI+b3BlbnNzbAoxLjEuMTxzcGFuPjwvc3Bhbj48L3NwYW4+PC9wPgoK
-PHAgY2xhc3M9Ik1zb05vcm1hbCIgc3R5bGU9Im1hcmdpbjowaW47Zm9udC1zaXplOjExcHQ7Zm9u
-dC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj48c3BhbiBzdHlsZT0iZm9u
-dC1zaXplOjEwcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDsiPnRwbTItYWJy
-bWQKMi4zLjI8c3Bhbj48L3NwYW4+PC9zcGFuPjwvcD4KCgoKCgo8L2Rpdj48ZGl2Pjxicj48L2Rp
-dj48ZGl2Pk5vdGUgdGhhdCB0aGUgb3BlbnNzbCB3aGVuIGV4ZWN1dGVkIGRpcmVjdGx5IGl0IGlz
-IGFibGUgdG8gbWFrZSB1c2Ugb2YgVFBNMi4wIGVuZ2luZSBhbmQgd2UgaGF2ZSBvdGhlciBwcm9j
-ZXNzZXMgd2hpY2ggbWFrZXMgdXNlIG9mIHRwbTJ0c3MgYW5kIHRoZXkgYXJlIGFsbCB3b3JraW5n
-IGZpbmUsIHRoZSBwcm9ibGVtIGlzIG9ubHkgd2l0aCBOZ25peC4gV2Ugd291bGQgbmVlZCB5b3Vy
-IGhlbHAgaGVyZSwgY2FuIHlvdSBsZXQgdXMga25vdyBob3cgdG8gcmVzb2x2ZSB0aGlzICZxdW90
-OzxpPmZhaWxlZCB0byBhbGxvY2F0ZSBkYnVzIHByb3h5IG9iamVjdDwvaT4mcXVvdDsgZXJyb3I/
-PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5UaGFua3M8L2Rpdj48ZGl2PlJhajxicj4KCgoKCgo8
-L2Rpdj48L2Rpdj4K
-
---===============4151478047254454226==--
+--===============1289664204463847240==--
 
