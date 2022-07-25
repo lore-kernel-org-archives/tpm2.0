@@ -1,181 +1,102 @@
-Content-Type: multipart/mixed; boundary="===============0292720618146202273=="
+Content-Type: multipart/mixed; boundary="===============0293561975090417568=="
 MIME-Version: 1.0
-From: Kenneth Goldman <kgoldman at us.ibm.com>
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: Lifecycle of handles and contexts
-Date: Tue, 19 Jul 2022 22:17:57 +0000
-Message-ID: <
- <BN8PR15MB27533D241112AB1F3EA9D0C7F28F9@BN8PR15MB2753.namprd15.prod.outlook.com>>
-In-Reply-To: 2164e6a1f1a71ba937d139fe36f035653964108b.camel@intel.com
+Date: Mon, 25 Jul 2022 18:56:59 +0000
+Message-ID: <ab025685a774450f457da79fc1df289bdbd08f40.camel@intel.com>
+In-Reply-To: BN8PR15MB27533D241112AB1F3EA9D0C7F28F9@BN8PR15MB2753.namprd15.prod.outlook.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0292720618146202273==
+--===============0293561975090417568==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+On Tue, 2022-07-19 at 22:17 +0000, Kenneth Goldman wrote:
+> > On Mon, 2022-07-18 at 17:36 +0000, Kenneth Goldman wrote:
+> > > It depends.
+> > > =
 
+> > > Windows seems to have a large keystore, so you probably don't
+> > > have to
+> > > ever flush.
+> > > =
 
->
-> On Mon, 2022-07-18 at 17:36 +0000, Kenneth Goldman wrote:
-> > It depends.
-> >
-> > Windows seems to have a large keystore, so you probably don't have to
-> > ever flush.
-> >
-> > Linux in kernel RM manages keys across processes but not within
-> > processes, so you still have to flush.
->
-> This is also how TBS works on Windows.
+> > > Linux in kernel RM manages keys across processes but not within
+> > > processes, so you still have to flush.
+> > =
 
+> > This is also how TBS works on Windows.
+> =
 
-Not on my Windows 10.  I just created 32 keys with one process.  Now there =
-are =
+> Not on my Windows 10.  I just created 32 keys with one process.  Now
+> there are =
 
-32 loaded keys.  OK, the Windows RM swaps them out, but the application nev=
-er =
+> 32 loaded keys.
 
-sees that.
+Did the process exit? I always thought TBS was spec compliant:
+"The RM also monitors connections, and removes table entries and
+ContextFlushes leftover sessions
+when the caller closes a connection." from Section 2.3.3 of:
+https://trustedcomputinggroup.org/wp-content/uploads/TSS_2p0_TAB_ResourceMa=
+nager_v1p0_r18_04082019_pub.pdf
 
-I don't know what the RM limit is, but it's certainly far more than the TPM =
+The table entries include transient handles and their associated
+virtual mapping.
 
-itself.
+> OK, the Windows RM swaps them out, but the application never =
 
-getcapability.exe -cap 1 -pr 80000000
-32 handles
-        80ffffe0
-        80ffffe1
-        80ffffe2
-        80ffffe3
-        80ffffe4
-        80ffffe5
-        80ffffe6
-        80ffffe7
-        80ffffe8
-        80ffffe9
-        80ffffea
-        80ffffeb
-        80ffffec
-        80ffffed
-        80ffffee
-        80ffffef
-        80fffff0
-        80fffff1
-        80fffff2
-        80fffff3
-        80fffff4
-        80fffff5
-        80fffff6
-        80fffff7
-        80fffff8
-        80fffff9
-        80fffffa
-        80fffffb
-        80fffffc
-        80fffffd
-        80fffffe
-        80ffffff
+> sees that.
+> =
 
---===============0292720618146202273==
-Content-Type: application/pkcs7-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
+> I don't know what the RM limit is, but it's certainly far more than
+> the TPM =
 
-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
-gQYDVR0fBHoweDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0QXNzdXJl
-ZElEUm9vdEcyLmNybDA6oDigNoY0aHR0cDovL2NybDQuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0QXNz
-dXJlZElEUm9vdEcyLmNybDCB0wYDVR0gBIHLMIHIMIHFBglghkgBhv1sBQIwgbcwKAYIKwYBBQUH
-AgEWHGh0dHBzOi8vd3d3LmRpZ2ljZXJ0LmNvbS9DUFMwgYoGCCsGAQUFBwICMH4MfEFueSB1c2Ug
-b2YgdGhpcyBDZXJ0aWZpY2F0ZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBSZWx5aW5n
-IFBhcnR5IEFncmVlbWVudCBsb2NhdGVkIGF0IGh0dHBzOi8vd3d3LmRpZ2ljZXJ0LmNvbS9ycGEt
-dWEwKAYDVR0RBCEwH6QdMBsxGTAXBgNVBAMTEERpZ2lDZXJ0UEtJLTMtNDgwDQYJKoZIhvcNAQEL
-BQADggEBAJQkB9tihpEuaP+KP49Zl4LZ4sAEfM3T153RZQ2ebyFYyOL2cG6Vz6oT4BkjdZ62zilQ
-XS3Q3nO9FAaWoKFcBKUuO3UPzx/tdrw1ENLHLeadDl85kxBGhfL1lqLyEJ83qCb8CPcRRzd1xb3u
-EJmTMVRm1V0PurTBu5U6NMOOtW/dk64zrkNELAH/jvASFwCGIZC+DNi96hCqYDg+8QchO9HkvoDH
-pcxbI7EqI+vk5LacMFCKqvd1YGaA5MjGhy6ntl6OBYKUiMaThiRnJZhHmkK9/52NYyfE4NpHZjhz
-qt17QTcc/Upp6l3s1tr5D+4Lno/6dbNVim/aXfj0WCUjajswggaeMIIFhqADAgECAhAIxvQO238o
-+mzGDhiyT2YoMA0GCSqGSIb3DQEBCwUAMIGtMQswCQYDVQQGEwJVUzE0MDIGA1UEChMrSW50ZXJu
-YXRpb25hbCBCdXNpbmVzcyBNYWNoaW5lcyBDb3Jwb3JhdGlvbjE/MD0GA1UECxM2Q2xhc3MgMiBE
-aWdpQ2VydCBQS0kgUGxhdGZvcm0gSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMScwJQYDVQQDEx5J
-Qk0gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgRzQwHhcNMjIwNzA1MDAwMDAwWhcNMjMwNzA1MjM1
-OTU5WjBhMRgwFgYDVQQDDA9LZW5uZXRoIEdvbGRtYW4xDzANBgNVBAsMBlMvTUlNRTE0MDIGA1UE
-CgwrSW50ZXJuYXRpb25hbCBCdXNpbmVzcyBNYWNoaW5lcyBDb3Jwb3JhdGlvbjCCASIwDQYJKoZI
-hvcNAQEBBQADggEPADCCAQoCggEBALpe1pY2YowTGF3JJeWrlGWJmqLkuPdfCZowx6SHnoE5PZU1
-hsF/t3+dV+NM+ef1sV5MXCvzGRklxuf9jph4jXPDClx1xW6CY+DEYQnwwu8A2P4RiNyVJxoDZ2wH
-Pfd6rvgPeRPtWrIR644ccJzwf6sFOYmOyfM2Yb4p/YwMZv1jp7P3NuxseHvnXZw6Z62Oh7q7Xyfv
-Oh+CHqJyfjBqoVDPfV039FZDFITt4TXJNRJGSkdBscVjrro/qlC7R9qNn6LHtksQ2ChaM7fGPfgc
-cASy3wOct++pIGEbasv7/G/WZ/jk/a3n8e5V3S123YAaJSJoASjdngg6Xj/UEJe1YuUCAwEAAaOC
-AwMwggL/MAwGA1UdEwEB/wQCMAAwDgYDVR0PAQH/BAQDAgWgMBYGA1UdJQEB/wQMMAoGCCsGAQUF
-BwMEMB0GA1UdDgQWBBRWhUpoLXEQ8H0RYqrd1avCyQi5+TAeBgNVHREEFzAVgRNrZ29sZG1hbkB1
-cy5pYm0uY29tMIGDBggrBgEFBQcBAQR3MHUwKAYIKwYBBQUHMAGGHGh0dHA6Ly9wa2ktb2NzcC5k
-aWdpY2VydC5jb20wSQYIKwYBBQUHMAKGPWh0dHA6Ly9jYWNlci5zeW1hdXRoLmNvbS9tcGtpL0lC
-TUNlcnRpZmljYXRpb25BdXRob3JpdHlHNC5jcnQwgdMGA1UdIASByzCByDCBxQYJYIZIAYb9bAUC
-MIG3MCgGCCsGAQUFBwIBFhxodHRwczovL3d3dy5kaWdpY2VydC5jb20vQ1BTMIGKBggrBgEFBQcC
-AjB+DHxBbnkgdXNlIG9mIHRoaXMgQ2VydGlmaWNhdGUgY29uc3RpdHV0ZXMgYWNjZXB0YW5jZSBv
-ZiB0aGUgUmVseWluZyBQYXJ0eSBBZ3JlZW1lbnQgbG9jYXRlZCBhdCBodHRwczovL3d3dy5kaWdp
-Y2VydC5jb20vcnBhLXVhMF0GA1UdHwRWMFQwUqBQoE6GTGh0dHA6Ly9wa2ktY3JsLnN5bWF1dGgu
-Y29tL2NhXzZhYjg1YjU0ZTllMTVjN2I0N2NlMWQwOGUyYzllZGM1L0xhdGVzdENSTC5jcmwwHwYD
-VR0jBBgwFoAU5wbss3RwhmwxJE2mTffUMm1gJoUwQgYJKoZIhvcNAQkPBDUwMzAKBggqhkiG9w0D
-BzALBglghkgBZQMEAQIwCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBKjAtBgpghkgBhvhFARADBB8w
-HQYTYIZIAYb4RQEQAQICAQGC7o/qYhYGNTc4MDQ4MDkGCmCGSAGG+EUBEAUEKzApAgEAFiRhSFIw
-Y0hNNkx5OXdhMmt0Y21FdWMzbHRZWFYwYUM1amIyMD0wDQYJKoZIhvcNAQELBQADggEBAANxo37I
-2rZG7qI3Tr5/An+k/xR4Jcg4myFC32PpI9T/2tPRiApY/JX1kYfjaz/IiBbcU+eIH123TtsyNltV
-1R7gkjLWo/GpRp2WuTgnStRfaXMHOG80wbQ2u7URFy61Qhh0CWWqp3xWYMKxok35dUhzXnQRfdCm
-csq7tLSUkhIgZruHN5eZWCATSuKB31p+NdoAvC81/OvQC404/d+0FNn54vOwy/+M5p7RKMqNik/F
-0VYNfG1roePvi2RNvmYoRzSCgypvcuxZtBQBSSUIb6R0m1Bj1U1TTMAw8xLwG2D1TJrz262jhlhy
-SmuA/3v0808KXIKurzaDH7Lka0YzgNcxggSfMIIEmwIBATCBwjCBrTELMAkGA1UEBhMCVVMxNDAy
-BgNVBAoTK0ludGVybmF0aW9uYWwgQnVzaW5lc3MgTWFjaGluZXMgQ29ycG9yYXRpb24xPzA9BgNV
-BAsTNkNsYXNzIDIgRGlnaUNlcnQgUEtJIFBsYXRmb3JtIEluZGl2aWR1YWwgU3Vic2NyaWJlciBD
-QTEnMCUGA1UEAxMeSUJNIENlcnRpZmljYXRpb24gQXV0aG9yaXR5IEc0AhAIxvQO238o+mzGDhiy
-T2YoMA0GCWCGSAFlAwQCAQUAoIICrTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3
-DQEJBTEPFw0yMjA3MTkyMjE3NTFaMC8GCSqGSIb3DQEJBDEiBCASN4kTM8sRvREY2p20fe4t01K9
-1q4j7uOhS3nhU7V2DDCBkwYJKoZIhvcNAQkPMYGFMIGCMAsGCWCGSAFlAwQBKjALBglghkgBZQME
-ARYwCgYIKoZIhvcNAwcwCwYJYIZIAWUDBAECMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIB
-QDALBglghkgBZQMEAgEwCwYJYIZIAWUDBAIDMAsGCWCGSAFlAwQCAjAHBgUrDgMCGjCB0wYJKwYB
-BAGCNxAEMYHFMIHCMIGtMQswCQYDVQQGEwJVUzE0MDIGA1UEChMrSW50ZXJuYXRpb25hbCBCdXNp
-bmVzcyBNYWNoaW5lcyBDb3Jwb3JhdGlvbjE/MD0GA1UECxM2Q2xhc3MgMiBEaWdpQ2VydCBQS0kg
-UGxhdGZvcm0gSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMScwJQYDVQQDEx5JQk0gQ2VydGlmaWNh
-dGlvbiBBdXRob3JpdHkgRzQCEAjG9A7bfyj6bMYOGLJPZigwgdUGCyqGSIb3DQEJEAILMYHFoIHC
-MIGtMQswCQYDVQQGEwJVUzE0MDIGA1UEChMrSW50ZXJuYXRpb25hbCBCdXNpbmVzcyBNYWNoaW5l
-cyBDb3Jwb3JhdGlvbjE/MD0GA1UECxM2Q2xhc3MgMiBEaWdpQ2VydCBQS0kgUGxhdGZvcm0gSW5k
-aXZpZHVhbCBTdWJzY3JpYmVyIENBMScwJQYDVQQDEx5JQk0gQ2VydGlmaWNhdGlvbiBBdXRob3Jp
-dHkgRzQCEAjG9A7bfyj6bMYOGLJPZigwDQYJKoZIhvcNAQEBBQAEggEAGErU2MuHPn7QhDoOrMRp
-tqcPwcXAj0jsCNCAggUdS0JaQ84HZOMYaKqbPkWyeNJ6a39W83dPNjCrfTNTlP7nD4NPZlclWnKi
-s3gG3whSM9CqSMSfCIFGbRPY5rBPkrd5pbOjCCZvdBxdfX9x1QFve8C0aaVgfE3Ixg23y7IsHhPZ
-hE1Da9qzJu64iWUV7Tvw555pXT84J1UAnaXwJ3ZhbAERFWPYBDPakqsyUKs8BiEsQYbMuBK4Yytl
-zK6iMl3qSm6q8fquUism6u3RH00FjztdTizRS2He/iXbg1FUU8UJYRbGZerQPfOxED1YBFB2Jhl3
-3ZcnTG4YPd4cEQfomAAAAAAAAA==
---===============0292720618146202273==--
+> itself.
+> =
+
+> getcapability.exe -cap 1 -pr 80000000
+> 32 handles
+>         80ffffe0
+>         80ffffe1
+>         80ffffe2
+>         80ffffe3
+>         80ffffe4
+>         80ffffe5
+>         80ffffe6
+>         80ffffe7
+>         80ffffe8
+>         80ffffe9
+>         80ffffea
+>         80ffffeb
+>         80ffffec
+>         80ffffed
+>         80ffffee
+>         80ffffef
+>         80fffff0
+>         80fffff1
+>         80fffff2
+>         80fffff3
+>         80fffff4
+>         80fffff5
+>         80fffff6
+>         80fffff7
+>         80fffff8
+>         80fffff9
+>         80fffffa
+>         80fffffb
+>         80fffffc
+>         80fffffd
+>         80fffffe
+>         80ffffff
+
+These look like virtual handles. The spec also states,
+"In responses that return handles, these handles MUST be virtualized
+before returning the
+response to the caller:
+=EF=82=A7 These virtual handles MUST be unique per connection".
+I don't think anyone actually makes them unique per connection.
+
+--===============0293561975090417568==--
 
