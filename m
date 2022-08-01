@@ -1,166 +1,381 @@
-Content-Type: multipart/mixed; boundary="===============9011791493573121379=="
+Content-Type: multipart/mixed; boundary="===============5087203534350356357=="
 MIME-Version: 1.0
-From: henry.gadacz at stud.h-da.de
+From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: tpm2-pytss connect to dockerized swtpm
-Date: Wed, 27 Jul 2022 14:39:16 +0200
-Message-ID: <00b501d8a1b5$e93d70a0$bbb851e0$@stud.h-da.de>
-In-Reply-To: 7493c7a8b32f01bef6b601bd51e5285cd10855e5.camel@cnackers.org
+Date: Mon, 01 Aug 2022 15:31:18 +0000
+Message-ID: <SN6PR11MB3437C0605DABA5878DD6B8D7B89A9@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: 007f01d8a192$f6229bb0$e267d310$@stud.h-da.de
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============9011791493573121379==
+--===============5087203534350356357==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi Erik,
+My guess is, that since containers are used to isolate things, that the por=
+t from container needs to be exposed somehow.
 
-Thank you very much! The suggestion about the swtpm IP address was correct!
+________________________________
+From: henry.gadacz(a)stud.h-da.de <henry.gadacz(a)stud.h-da.de>
+Sent: Wednesday, July 27, 2022 3:29 AM
+To: tpm2(a)lists.01.org <tpm2(a)lists.01.org>
+Subject: [tpm2] tpm2-pytss connect to dockerized swtpm
 
-Best regards,
+
+Hello everyone,
+
+
+
+I am trying to accomplish the following, but did not succeed and I hope som=
+eone can help me.
+
+I want to have a docker compose with two containers. In the first container=
+ I want to run the swtpm (https://github.com/stefanberger/swtpm) and in the=
+ other a python script that uses tpm2-pytss to connect to the swtpm in the =
+first container.
+
+
+
+When I run swtpm and the python script in the same container it works.
+
+In order to run them in separate containers I just duplicated the Dockerfil=
+e (I know this has some overhead, but to make sure don=E2=80=99t miss any d=
+ependencies), changed the docker CMD command to either run the python scrip=
+t or the swtpm and renamed them to Dockerfile_app_test and Dockerfile_tpm_t=
+est.
+
+
+
+My docker compose file is looking like this:
+
+version: '3.7'
+services:
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile_app_test
+    restart: unless-stopped
+
+  tpm:
+    container_name: tpm
+    build:
+      context: .
+      dockerfile: Dockerfile_tpm_test
+    ports:
+      - "2321:2321"
+      - "2322:2322"
+    restart: unless-stopped
+
+
+
+
+
+My python script is:
+
+from tpm2_pytss import *
+
+if __name__ =3D=3D '__main__':
+    print("TPM test application")
+    tpm =3D ESAPI(tcti=3D"swtpm:host=3Dtpm,port=3D2321")
+    tpm.startup(TPM2_SU.CLEAR)
+
+    r =3D tpm.get_random(8)
+    print("type is ", type(r))
+    print("r    is ", str(r))
+    print("as int  ", int(str(r), 16))
+
+
+
+When I run it in one Dockerfile I used
+
+tpm =3D ESAPI(tcti=3D"swtpm:host=3Dlocalhost,port=3D2321")
+
+so I thought changing the host name to the docker container name should do =
+it but I always get the following errors:
+
+app  | WARNING:tcti:src/util/io.c:262:socket_connect() Failed to connect to=
+ host 172.21.0.2, port 2321: errno 111: Connection refused
+
+app  | ERROR:tcti:src/tss2-tcti/tcti-swtpm.c:614:Tss2_Tcti_Swtpm_Init() Can=
+not connect to swtpm TPM socket
+
+app  | ERROR:tcti:src/tss2-tcti/tctildr-dl.c:170:tcti_from_file() Could not=
+ initialize TCTI file: swtpm
+
+app  | ERROR:tcti:src/tss2-tcti/tctildr.c:428:Tss2_TctiLdr_Initialize_Ex() =
+Failed to instantiate TCTI
+
+app  | Traceback (most recent call last):
+
+app  |   File "/app/main.py", line 70, in <module>
+
+app  |     tpm =3D ESAPI(tcti=3D"swtpm:host=3Dtpm,port=3D2321")
+
+app  |   File "/usr/local/lib/python3.10/dist-packages/tpm2_pytss/ESAPI.py"=
+, line 123, in __init__
+
+app  |     tcti =3D TCTILdr.parse(tcti)
+
+app  |   File "/usr/local/lib/python3.10/dist-packages/tpm2_pytss/TCTILdr.p=
+y", line 54, in parse
+
+app  |     return cls(name, conf)
+
+app  |   File "/usr/local/lib/python3.10/dist-packages/tpm2_pytss/TCTILdr.p=
+y", line 29, in __init__
+
+app  |     _chkrc(lib.Tss2_TctiLdr_Initialize_Ex(name, conf, self._ctx_pp))
+
+app  |   File "/usr/local/lib/python3.10/dist-packages/tpm2_pytss/internal/=
+utils.py", line 32, in _chkr
+
+app  |     raise TSS2_Exception(rc)
+
+app  | tpm2_pytss.TSS2_Exception.TSS2_Exception: tcti:IO failure
+
+app exited with code 1
+
+
+
+
+
+I know it=E2=80=99s not a plain tpm2-tss question, but does anyone has expe=
+rience with that and can help me?
+
+
+
+Kind regards,
 Henry
 
------Urspr=C3=BCngliche Nachricht-----
-Von: Erik <who+01tpm(a)cnackers.org> =
-
-Gesendet: Mittwoch, 27. Juli 2022 14:16
-An: henry.gadacz(a)stud.h-da.de; tpm2(a)lists.01.org
-Betreff: [tpm2] Re: tpm2-pytss connect to dockerized swtpm
-
-HI,
-
-swtpm only listens on 127.0.0.1 by default, so unless you have changed that=
- it wont be accessible by any other address.
-docker compose seems to use the same network namespace for each container s=
-o localhost should work, but it might be as simple as that the python scrip=
-t runs before swtpm is ready.
-The unit tests for tpm2-pytss tries to connect to swtpm a couple of times w=
-ith a small sleep in between each try to get around that, so try adding for=
- example time.sleep(5) before calling ESAPI(...) to see if that helps.
-
-/Erik
-
-On Wed, 2022-07-27 at 10:29 +0200, henry.gadacz(a)stud.h-da.de <mailto:henr=
-y.gadacz(a)stud.h-da.de>  wrote:
-
-	Hello everyone,
-	 =
-
-	I am trying to accomplish the following, but did not succeed and I hope so=
-meone can help me.
-	I want to have a docker compose with two containers. In the first containe=
-r I want to run the swtpm (https://github.com/stefanberger/swtpm) and in th=
-e other a python script that uses tpm2-pytss to connect to the swtpm in the=
- first container. =
-
-	 =
-
-	When I run swtpm and the python script in the same container it works.
-	In order to run them in separate containers I just duplicated the Dockerfi=
-le (I know this has some overhead, but to make sure don=E2=80=99t miss any =
-dependencies), changed the docker CMD command to either run the python scri=
-pt or the swtpm and renamed them to Dockerfile_app_test and Dockerfile_tpm_=
-test.
-	 =
-
-	My docker compose file is looking like this:
-	version: '3.7'
-	services:
-
-	  app:
-	    container_name: app
-	    build:
-	      context: .
-	      dockerfile: Dockerfile_app_test
-	    restart: unless-stopped
-
-	  tpm:
-	    container_name: tpm
-	    build:
-	      context: .
-	      dockerfile: Dockerfile_tpm_test
-	    ports:
-	      - "2321:2321"
-	      - "2322:2322"
-	    restart: unless-stopped
-	 =
-
-	 =
-
-	My python script is:
-	from tpm2_pytss import *
-	if __name__ =3D=3D '__main__':
-	    print("TPM test application")
-	    tpm =3D ESAPI(tcti=3D"swtpm:host=3Dtpm,port=3D2321")
-	    tpm.startup(TPM2_SU.CLEAR)
-	    =
-
-	    r =3D tpm.get_random(8)
-	    print("type is ", type(r))
-	    print("r    is ", str(r))
-	    print("as int  ", int(str(r), 16))
-
-	 =
-
-	When I run it in one Dockerfile I used =
-
-	tpm =3D ESAPI(tcti=3D"swtpm:host=3Dlocalhost,port=3D2321")
-
-	so I thought changing the host name to the docker container name should do=
- it but I always get the following errors:
-	app  | WARNING:tcti:src/util/io.c:262:socket_connect() Failed to connect t=
-o host 172.21.0.2, port 2321: errno 111: Connection refused =
-
-	app  | ERROR:tcti:src/tss2-tcti/tcti-swtpm.c:614:Tss2_Tcti_Swtpm_Init() Ca=
-nnot connect to swtpm TPM socket =
-
-	app  | ERROR:tcti:src/tss2-tcti/tctildr-dl.c:170:tcti_from_file() Could no=
-t initialize TCTI file: swtpm =
-
-	app  | ERROR:tcti:src/tss2-tcti/tctildr.c:428:Tss2_TctiLdr_Initialize_Ex()=
- Failed to instantiate TCTI =
-
-	app  | Traceback (most recent call last):
-	app  |   File "/app/main.py", line 70, in <module>
-	app  |     tpm =3D ESAPI(tcti=3D"swtpm:host=3Dtpm,port=3D2321")
-	app  |   File "/usr/local/lib/python3.10/dist-packages/tpm2_pytss/ESAPI.py=
-", line 123, in __init__
-	app  |     tcti =3D TCTILdr.parse(tcti)
-	app  |   File "/usr/local/lib/python3.10/dist-packages/tpm2_pytss/TCTILdr.=
-py", line 54, in parse
-	app  |     return cls(name, conf)
-	app  |   File "/usr/local/lib/python3.10/dist-packages/tpm2_pytss/TCTILdr.=
-py", line 29, in __init__
-	app  |     _chkrc(lib.Tss2_TctiLdr_Initialize_Ex(name, conf, self._ctx_pp))
-	app  |   File "/usr/local/lib/python3.10/dist-packages/tpm2_pytss/internal=
-/utils.py", line 32, in _chkr
-	app  |     raise TSS2_Exception(rc)
-	app  | tpm2_pytss.TSS2_Exception.TSS2_Exception: tcti:IO failure
-	app exited with code 1
-
-	 =
-
-	 =
-
-	I know it=E2=80=99s not a plain tpm2-tss question, but does anyone has exp=
-erience with that and can help me? =
-
-	 =
-
-	Kind regards, =
-
-	Henry
-	 =
-
-	_______________________________________________
-	tpm2 mailing list -- tpm2(a)lists.01.org <mailto:tpm2(a)lists.01.org> =
-
-	To unsubscribe send an email to tpm2-leave(a)lists.01.org <mailto:tpm2-lea=
-ve(a)lists.01.org> =
-
-	%(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 
 
+--===============5087203534350356357==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
---===============9011791493573121379==--
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
+eHQvaHRtbDsgY2hhcnNldD1XaW5kb3dzLTEyNTIiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiIHN0
+eWxlPSJkaXNwbGF5Om5vbmU7Ij4gUCB7bWFyZ2luLXRvcDowO21hcmdpbi1ib3R0b206MDt9IDwv
+c3R5bGU+CjwvaGVhZD4KPGJvZHkgZGlyPSJsdHIiPgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTog
+Q2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBj
+b2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9ImVsZW1lbnRUb1Byb29mIj4KTXkgZ3Vlc3MgaXMs
+IHRoYXQgc2luY2UgY29udGFpbmVycyBhcmUgdXNlZCB0byBpc29sYXRlIHRoaW5ncywgdGhhdCB0
+aGUgcG9ydCBmcm9tIGNvbnRhaW5lciBuZWVkcyB0byBiZSBleHBvc2VkIHNvbWVob3cuPC9kaXY+
+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5z
+LXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxl
+bWVudFRvUHJvb2YiPgo8YnI+CjwvZGl2Pgo8ZGl2IGlkPSJhcHBlbmRvbnNlbmQiPjwvZGl2Pgo8
+aHIgc3R5bGU9ImRpc3BsYXk6aW5saW5lLWJsb2NrO3dpZHRoOjk4JSIgdGFiaW5kZXg9Ii0xIj4K
+PGRpdiBpZD0iZGl2UnBseUZ3ZE1zZyIgZGlyPSJsdHIiPjxmb250IGZhY2U9IkNhbGlicmksIHNh
+bnMtc2VyaWYiIHN0eWxlPSJmb250LXNpemU6MTFwdCIgY29sb3I9IiMwMDAwMDAiPjxiPkZyb206
+PC9iPiBoZW5yeS5nYWRhY3pAc3R1ZC5oLWRhLmRlICZsdDtoZW5yeS5nYWRhY3pAc3R1ZC5oLWRh
+LmRlJmd0Ozxicj4KPGI+U2VudDo8L2I+IFdlZG5lc2RheSwgSnVseSAyNywgMjAyMiAzOjI5IEFN
+PGJyPgo8Yj5Ubzo8L2I+IHRwbTJAbGlzdHMuMDEub3JnICZsdDt0cG0yQGxpc3RzLjAxLm9yZyZn
+dDs8YnI+CjxiPlN1YmplY3Q6PC9iPiBbdHBtMl0gdHBtMi1weXRzcyBjb25uZWN0IHRvIGRvY2tl
+cml6ZWQgc3d0cG08L2ZvbnQ+CjxkaXY+Jm5ic3A7PC9kaXY+CjwvZGl2Pgo8c3R5bGU+CjwhLS0K
+QGZvbnQtZmFjZQoJe2ZvbnQtZmFtaWx5OiJDYW1icmlhIE1hdGgifQpAZm9udC1mYWNlCgl7Zm9u
+dC1mYW1pbHk6Q2FsaWJyaX0KcC54X01zb05vcm1hbCwgbGkueF9Nc29Ob3JtYWwsIGRpdi54X01z
+b05vcm1hbAoJe21hcmdpbjowY207Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNh
+bGlicmkiLHNhbnMtc2VyaWZ9CmE6bGluaywgc3Bhbi54X01zb0h5cGVybGluawoJe2NvbG9yOiMw
+NTYzQzE7Cgl0ZXh0LWRlY29yYXRpb246dW5kZXJsaW5lfQpwcmUKCXttYXJnaW46MGNtOwoJbWFy
+Z2luLWJvdHRvbTouMDAwMXB0OwoJZm9udC1zaXplOjEwLjBwdDsKCWZvbnQtZmFtaWx5OiJDb3Vy
+aWVyIE5ldyJ9CnNwYW4ueF9IVE1MVm9yZm9ybWF0aWVydFpjaG4KCXtmb250LWZhbWlseToiQ291
+cmllciBOZXcifQoueF9Nc29DaHBEZWZhdWx0Cgl7Zm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMt
+c2VyaWZ9CkBwYWdlIFdvcmRTZWN0aW9uMQoJe21hcmdpbjo3MC44NXB0IDcwLjg1cHQgMi4wY20g
+NzAuODVwdH0KZGl2LnhfV29yZFNlY3Rpb24xCgl7fQotLT4KPC9zdHlsZT4KPGRpdiBsYW5nPSJF
+Ti1VUyIgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiIHN0eWxlPSJ3b3JkLXdyYXA6YnJl
+YWstd29yZCI+CjxkaXYgY2xhc3M9InhfV29yZFNlY3Rpb24xIj4KPHAgY2xhc3M9InhfTXNvTm9y
+bWFsIj5IZWxsbyBldmVyeW9uZSw8L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+Jm5ic3A7PC9w
+Pgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPkkgYW0gdHJ5aW5nIHRvIGFjY29tcGxpc2ggdGhlIGZv
+bGxvd2luZywgYnV0IGRpZCBub3Qgc3VjY2VlZCBhbmQgSSBob3BlIHNvbWVvbmUgY2FuIGhlbHAg
+bWUuPC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPkkgd2FudCB0byBoYXZlIGEgZG9ja2VyIGNv
+bXBvc2Ugd2l0aCB0d28gY29udGFpbmVycy4gSW4gdGhlIGZpcnN0IGNvbnRhaW5lciBJIHdhbnQg
+dG8gcnVuIHRoZSBzd3RwbSAoPGEgaHJlZj0iaHR0cHM6Ly9naXRodWIuY29tL3N0ZWZhbmJlcmdl
+ci9zd3RwbSI+aHR0cHM6Ly9naXRodWIuY29tL3N0ZWZhbmJlcmdlci9zd3RwbTwvYT48c3BhbiBz
+dHlsZT0iY29sb3I6YmxhY2siPik8L3NwYW4+IGFuZCBpbiB0aGUKIG90aGVyIGEgcHl0aG9uIHNj
+cmlwdCB0aGF0IHVzZXMgdHBtMi1weXRzcyB0byBjb25uZWN0IHRvIHRoZSBzd3RwbSBpbiB0aGUg
+Zmlyc3QgY29udGFpbmVyLgo8L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+Jm5ic3A7PC9wPgo8
+cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPldoZW4gSSBydW4gc3d0cG0gYW5kIHRoZSBweXRob24gc2Ny
+aXB0IGluIHRoZSBzYW1lIGNvbnRhaW5lciBpdCB3b3Jrcy48L3A+CjxwIGNsYXNzPSJ4X01zb05v
+cm1hbCI+SW4gb3JkZXIgdG8gcnVuIHRoZW0gaW4gc2VwYXJhdGUgY29udGFpbmVycyBJIGp1c3Qg
+ZHVwbGljYXRlZCB0aGUgRG9ja2VyZmlsZSAoSSBrbm93IHRoaXMgaGFzIHNvbWUgb3ZlcmhlYWQs
+IGJ1dCB0byBtYWtlIHN1cmUgZG9uknQgbWlzcyBhbnkgZGVwZW5kZW5jaWVzKSwgY2hhbmdlZCB0
+aGUgZG9ja2VyIENNRCBjb21tYW5kIHRvIGVpdGhlciBydW4gdGhlIHB5dGhvbiBzY3JpcHQgb3Ig
+dGhlIHN3dHBtIGFuZAogcmVuYW1lZCB0aGVtIHRvIERvY2tlcmZpbGVfYXBwX3Rlc3QgYW5kIERv
+Y2tlcmZpbGVfdHBtX3Rlc3QuPC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPiZuYnNwOzwvcD4K
+PHAgY2xhc3M9InhfTXNvTm9ybWFsIj5NeSBkb2NrZXIgY29tcG9zZSBmaWxlIGlzIGxvb2tpbmcg
+bGlrZSB0aGlzOjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIiBzdHlsZT0iYmFja2dyb3VuZDp3
+aGl0ZSI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0Nv
+dXJpZXIgTmV3JnF1b3Q7OyBjb2xvcjojMDAzM0IzIj52ZXJzaW9uPC9zcGFuPjxzcGFuIHN0eWxl
+PSJmb250LXNpemU6MTAuMHB0OyBmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90Ozsg
+Y29sb3I6IzA4MDgwOCI+Ogo8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZv
+bnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7OyBjb2xvcjojMDY3RDE3Ij4nMy43Jzxi
+cj4KPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0OyBmb250LWZhbWlseTomcXVv
+dDtDb3VyaWVyIE5ldyZxdW90OzsgY29sb3I6IzAwMzNCMyI+c2VydmljZXM8L3NwYW4+PHNwYW4g
+c3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1
+b3Q7OyBjb2xvcjojMDgwODA4Ij46PGJyPgo8YnI+CiZuYnNwOyA8L3NwYW4+PHNwYW4gc3R5bGU9
+ImZvbnQtc2l6ZToxMC4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7OyBj
+b2xvcjojMDAzM0IzIj5hcHA8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZv
+bnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7OyBjb2xvcjojMDgwODA4Ij46PGJyPgom
+bmJzcDsmbmJzcDsmbmJzcDsgPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0OyBm
+b250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OzsgY29sb3I6IzAwMzNCMyI+Y29udGFp
+bmVyX25hbWU8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZvbnQtZmFtaWx5
+OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7OyBjb2xvcjojMDgwODA4Ij46IGFwcDxicj4KJm5ic3A7
+Jm5ic3A7Jm5ic3A7IDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDsgZm9udC1m
+YW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDs7IGNvbG9yOiMwMDMzQjMiPmJ1aWxkPC9zcGFu
+PjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0OyBmb250LWZhbWlseTomcXVvdDtDb3VyaWVy
+IE5ldyZxdW90OzsgY29sb3I6IzA4MDgwOCI+Ojxicj4KJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7IDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDsgZm9udC1mYW1pbHk6
+JnF1b3Q7Q291cmllciBOZXcmcXVvdDs7IGNvbG9yOiMwMDMzQjMiPmNvbnRleHQ8L3NwYW4+PHNw
+YW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3
+JnF1b3Q7OyBjb2xvcjojMDgwODA4Ij46IC48YnI+CiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyA8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZvbnQtZmFtaWx5OiZx
+dW90O0NvdXJpZXIgTmV3JnF1b3Q7OyBjb2xvcjojMDAzM0IzIj5kb2NrZXJmaWxlPC9zcGFuPjxz
+cGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0OyBmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5l
+dyZxdW90OzsgY29sb3I6IzA4MDgwOCI+OiBEb2NrZXJmaWxlX2FwcF90ZXN0PGJyPgombmJzcDsm
+bmJzcDsmbmJzcDsgPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0OyBmb250LWZh
+bWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OzsgY29sb3I6IzAwMzNCMyI+cmVzdGFydDwvc3Bh
+bj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q291cmll
+ciBOZXcmcXVvdDs7IGNvbG9yOiMwODA4MDgiPjogdW5sZXNzLXN0b3BwZWQ8YnI+Cjxicj4KJm5i
+c3A7IDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDsgZm9udC1mYW1pbHk6JnF1
+b3Q7Q291cmllciBOZXcmcXVvdDs7IGNvbG9yOiMwMDMzQjMiPnRwbTwvc3Bhbj48c3BhbiBzdHls
+ZT0iZm9udC1zaXplOjEwLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDs7
+IGNvbG9yOiMwODA4MDgiPjo8YnI+CiZuYnNwOyZuYnNwOyZuYnNwOyA8L3NwYW4+PHNwYW4gc3R5
+bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7
+OyBjb2xvcjojMDAzM0IzIj5jb250YWluZXJfbmFtZTwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1z
+aXplOjEwLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDs7IGNvbG9yOiMw
+ODA4MDgiPjogdHBtPGJyPgombmJzcDsmbmJzcDsmbmJzcDsgPC9zcGFuPjxzcGFuIHN0eWxlPSJm
+b250LXNpemU6MTAuMHB0OyBmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OzsgY29s
+b3I6IzAwMzNCMyI+YnVpbGQ8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZv
+bnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7OyBjb2xvcjojMDgwODA4Ij46PGJyPgom
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LXNp
+emU6MTAuMHB0OyBmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90OzsgY29sb3I6IzAw
+MzNCMyI+Y29udGV4dDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDsgZm9udC1m
+YW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDs7IGNvbG9yOiMwODA4MDgiPjogLjxicj4KJm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXpl
+OjEwLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDs7IGNvbG9yOiMwMDMz
+QjMiPmRvY2tlcmZpbGU8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7IGZvbnQt
+ZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7OyBjb2xvcjojMDgwODA4Ij46IERvY2tlcmZp
+bGVfdHBtX3Rlc3Q8YnI+CiZuYnNwOyZuYnNwOyZuYnNwOyA8L3NwYW4+PHNwYW4gc3R5bGU9ImZv
+bnQtc2l6ZToxMC4wcHQ7IGZvbnQtZmFtaWx5OiZxdW90O0NvdXJpZXIgTmV3JnF1b3Q7OyBjb2xv
+cjojMDAzM0IzIj5wb3J0czwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDsgZm9u
+dC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDs7IGNvbG9yOiMwODA4MDgiPjo8YnI+CiZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAtIDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1z
+aXplOjEwLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcmcXVvdDs7IGNvbG9yOiMw
+NjdEMTciPiZxdW90OzIzMjE6MjMyMSZxdW90Ozxicj4KJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7IDwvc3Bhbj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDsgZm9udC1mYW1pbHk6
+JnF1b3Q7Q291cmllciBOZXcmcXVvdDs7IGNvbG9yOiMwODA4MDgiPi0KPC9zcGFuPjxzcGFuIHN0
+eWxlPSJmb250LXNpemU6MTAuMHB0OyBmb250LWZhbWlseTomcXVvdDtDb3VyaWVyIE5ldyZxdW90
+OzsgY29sb3I6IzA2N0QxNyI+JnF1b3Q7MjMyMjoyMzIyJnF1b3Q7PGJyPgombmJzcDsmbmJzcDsm
+bmJzcDsgPC9zcGFuPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0OyBmb250LWZhbWlseTom
+cXVvdDtDb3VyaWVyIE5ldyZxdW90OzsgY29sb3I6IzAwMzNCMyI+cmVzdGFydDwvc3Bhbj48c3Bh
+biBzdHlsZT0iZm9udC1zaXplOjEwLjBwdDsgZm9udC1mYW1pbHk6JnF1b3Q7Q291cmllciBOZXcm
+cXVvdDs7IGNvbG9yOiMwODA4MDgiPjogdW5sZXNzLXN0b3BwZWQ8L3NwYW4+PC9wPgo8cCBjbGFz
+cz0ieF9Nc29Ob3JtYWwiPiZuYnNwOzwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj4mbmJzcDs8
+L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+TXkgcHl0aG9uIHNjcmlwdCBpczo8L3A+CjxwcmUg
+c3R5bGU9ImJhY2tncm91bmQ6d2hpdGUiPjxzcGFuIHN0eWxlPSJjb2xvcjojMDAzM0IzIj5mcm9t
+IDwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6IzA4MDgwOCI+dHBtMl9weXRzcyA8L3NwYW4+PHNw
+YW4gc3R5bGU9ImNvbG9yOiMwMDMzQjMiPmltcG9ydCA8L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9y
+OiMwODA4MDgiPio8L3NwYW4+PC9wcmU+CjxwcmUgc3R5bGU9ImJhY2tncm91bmQ6d2hpdGUiPjxz
+cGFuIHN0eWxlPSJjb2xvcjojMDAzM0IzIj5pZiA8L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOiMw
+ODA4MDgiPl9fbmFtZV9fID09IDwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6IzA2N0QxNyI+J19f
+bWFpbl9fJzwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6IzA4MDgwOCI+Ojxicj4mbmJzcDsmbmJz
+cDsmbmJzcDsgPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpuYXZ5Ij5wcmludDwvc3Bhbj48c3Bh
+biBzdHlsZT0iY29sb3I6IzA4MDgwOCI+KDwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6IzA2N0Qx
+NyI+JnF1b3Q7VFBNIHRlc3QgYXBwbGljYXRpb24mcXVvdDs8L3NwYW4+PHNwYW4gc3R5bGU9ImNv
+bG9yOiMwODA4MDgiPik8YnI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IHRwbSA9IEVTQVBJKDwvc3Bhbj48
+c3BhbiBzdHlsZT0iY29sb3I6IzY2MDA5OSI+dGN0aTwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6
+IzA4MDgwOCI+PTwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6IzA2N0QxNyI+JnF1b3Q7c3d0cG06
+aG9zdD10cG0scG9ydD0yMzIxJnF1b3Q7PC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjojMDgwODA4
+Ij4pPGJyPiZuYnNwOyZuYnNwOyZuYnNwOyB0cG0uc3RhcnR1cChUUE0yX1NVLkNMRUFSKTxicj4m
+bmJzcDsmbmJzcDsmbmJzcDsgPGJyPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwO3IgPSB0cG0uZ2V0
+X3JhbmRvbSg8L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOiMxNzUwRUIiPjg8L3NwYW4+PHNwYW4g
+c3R5bGU9ImNvbG9yOiMwODA4MDgiPik8YnI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IDwvc3Bhbj48c3Bh
+biBzdHlsZT0iY29sb3I6bmF2eSI+cHJpbnQ8L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4
+MDgiPig8L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOiMwNjdEMTciPiZxdW90O3R5cGUgaXMgJnF1
+b3Q7PC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjojMDgwODA4Ij4sIDwvc3Bhbj48c3BhbiBzdHls
+ZT0iY29sb3I6bmF2eSI+dHlwZTwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6IzA4MDgwOCI+KHIp
+KTxicj4mbmJzcDsmbmJzcDsmbmJzcDsgPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpuYXZ5Ij5w
+cmludDwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6IzA4MDgwOCI+KDwvc3Bhbj48c3BhbiBzdHls
+ZT0iY29sb3I6IzA2N0QxNyI+JnF1b3Q7ciZuYnNwOyZuYnNwOyZuYnNwOyBpcyAmcXVvdDs8L3Nw
+YW4+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4MDgiPiwgPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xv
+cjpuYXZ5Ij5zdHI8L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4MDgiPihyKSk8YnI+Jm5i
+c3A7Jm5ic3A7Jm5ic3A7IDwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6bmF2eSI+cHJpbnQ8L3Nw
+YW4+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4MDgiPig8L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9y
+OiMwNjdEMTciPiZxdW90O2FzIGludCZuYnNwOyAmcXVvdDs8L3NwYW4+PHNwYW4gc3R5bGU9ImNv
+bG9yOiMwODA4MDgiPiwgPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjpuYXZ5Ij5pbnQ8L3NwYW4+
+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4MDgiPig8L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOm5h
+dnkiPnN0cjwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6IzA4MDgwOCI+KHIpLCA8L3NwYW4+PHNw
+YW4gc3R5bGU9ImNvbG9yOiMxNzUwRUIiPjE2PC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjojMDgw
+ODA4Ij4pKTwvc3Bhbj48L3ByZT4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj4mbmJzcDs8L3A+Cjxw
+IGNsYXNzPSJ4X01zb05vcm1hbCI+V2hlbiBJIHJ1biBpdCBpbiBvbmUgRG9ja2VyZmlsZSBJIHVz
+ZWQgPC9wPgo8cHJlIHN0eWxlPSJiYWNrZ3JvdW5kOndoaXRlIj48c3BhbiBzdHlsZT0iY29sb3I6
+IzA4MDgwOCI+dHBtID0gRVNBUEkoPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjojNjYwMDk5Ij50
+Y3RpPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xvcjojMDgwODA4Ij49PC9zcGFuPjxzcGFuIHN0eWxl
+PSJjb2xvcjojMDY3RDE3Ij4mcXVvdDtzd3RwbTpob3N0PWxvY2FsaG9zdCxwb3J0PTIzMjEmcXVv
+dDs8L3NwYW4+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4MDgiPik8L3NwYW4+PC9wcmU+CjxwIGNs
+YXNzPSJ4X01zb05vcm1hbCI+c28gSSB0aG91Z2h0IGNoYW5naW5nIHRoZSBob3N0IG5hbWUgdG8g
+dGhlIGRvY2tlciBjb250YWluZXIgbmFtZSBzaG91bGQgZG8gaXQgYnV0IEkgYWx3YXlzIGdldCB0
+aGUgZm9sbG93aW5nIGVycm9yczo8L3A+CjxwcmUgc3R5bGU9ImJhY2tncm91bmQ6d2hpdGUiPjxz
+cGFuIHN0eWxlPSJjb2xvcjojMDgwODA4Ij5hcHAmbmJzcDsgfCBXQVJOSU5HOnRjdGk6c3JjL3V0
+aWwvaW8uYzoyNjI6c29ja2V0X2Nvbm5lY3QoKSBGYWlsZWQgdG8gY29ubmVjdCB0byBob3N0IDE3
+Mi4yMS4wLjIsIHBvcnQgMjMyMTogZXJybm8gMTExOiBDb25uZWN0aW9uIHJlZnVzZWQgPC9zcGFu
+PjwvcHJlPgo8cHJlIHN0eWxlPSJiYWNrZ3JvdW5kOndoaXRlIj48c3BhbiBzdHlsZT0iY29sb3I6
+IzA4MDgwOCI+YXBwJm5ic3A7IHwgRVJST1I6dGN0aTpzcmMvdHNzMi10Y3RpL3RjdGktc3d0cG0u
+Yzo2MTQ6VHNzMl9UY3RpX1N3dHBtX0luaXQoKSBDYW5ub3QgY29ubmVjdCB0byBzd3RwbSBUUE0g
+c29ja2V0IDwvc3Bhbj48L3ByZT4KPHByZSBzdHlsZT0iYmFja2dyb3VuZDp3aGl0ZSI+PHNwYW4g
+c3R5bGU9ImNvbG9yOiMwODA4MDgiPmFwcCZuYnNwOyB8IEVSUk9SOnRjdGk6c3JjL3RzczItdGN0
+aS90Y3RpbGRyLWRsLmM6MTcwOnRjdGlfZnJvbV9maWxlKCkgQ291bGQgbm90IGluaXRpYWxpemUg
+VENUSSBmaWxlOiBzd3RwbSA8L3NwYW4+PC9wcmU+CjxwcmUgc3R5bGU9ImJhY2tncm91bmQ6d2hp
+dGUiPjxzcGFuIHN0eWxlPSJjb2xvcjojMDgwODA4Ij5hcHAmbmJzcDsgfCBFUlJPUjp0Y3RpOnNy
+Yy90c3MyLXRjdGkvdGN0aWxkci5jOjQyODpUc3MyX1RjdGlMZHJfSW5pdGlhbGl6ZV9FeCgpIEZh
+aWxlZCB0byBpbnN0YW50aWF0ZSBUQ1RJIDwvc3Bhbj48L3ByZT4KPHByZSBzdHlsZT0iYmFja2dy
+b3VuZDp3aGl0ZSI+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4MDgiPmFwcCZuYnNwOyB8IFRyYWNl
+YmFjayAobW9zdCByZWNlbnQgY2FsbCBsYXN0KTo8L3NwYW4+PC9wcmU+CjxwcmUgc3R5bGU9ImJh
+Y2tncm91bmQ6d2hpdGUiPjxzcGFuIHN0eWxlPSJjb2xvcjojMDgwODA4Ij5hcHAmbmJzcDsgfCZu
+YnNwOyZuYnNwOyBGaWxlICZxdW90Oy9hcHAvbWFpbi5weSZxdW90OywgbGluZSA3MCwgaW4gJmx0
+O21vZHVsZSZndDs8L3NwYW4+PC9wcmU+CjxwcmUgc3R5bGU9ImJhY2tncm91bmQ6d2hpdGUiPjxz
+cGFuIHN0eWxlPSJjb2xvcjojMDgwODA4Ij5hcHAmbmJzcDsgfCZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyB0cG0gPSBFU0FQSSh0Y3RpPSZxdW90O3N3dHBtOmhvc3Q9dHBtLHBvcnQ9MjMyMSZxdW90
+Oyk8L3NwYW4+PC9wcmU+CjxwcmUgc3R5bGU9ImJhY2tncm91bmQ6d2hpdGUiPjxzcGFuIHN0eWxl
+PSJjb2xvcjojMDgwODA4Ij5hcHAmbmJzcDsgfCZuYnNwOyZuYnNwOyBGaWxlICZxdW90Oy91c3Iv
+bG9jYWwvbGliL3B5dGhvbjMuMTAvZGlzdC1wYWNrYWdlcy90cG0yX3B5dHNzL0VTQVBJLnB5JnF1
+b3Q7LCBsaW5lIDEyMywgaW4gX19pbml0X188L3NwYW4+PC9wcmU+CjxwcmUgc3R5bGU9ImJhY2tn
+cm91bmQ6d2hpdGUiPjxzcGFuIHN0eWxlPSJjb2xvcjojMDgwODA4Ij5hcHAmbmJzcDsgfCZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyB0Y3RpID0gVENUSUxkci5wYXJzZSh0Y3RpKTwvc3Bhbj48L3By
+ZT4KPHByZSBzdHlsZT0iYmFja2dyb3VuZDp3aGl0ZSI+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4
+MDgiPmFwcCZuYnNwOyB8Jm5ic3A7Jm5ic3A7IEZpbGUgJnF1b3Q7L3Vzci9sb2NhbC9saWIvcHl0
+aG9uMy4xMC9kaXN0LXBhY2thZ2VzL3RwbTJfcHl0c3MvVENUSUxkci5weSZxdW90OywgbGluZSA1
+NCwgaW4gcGFyc2U8L3NwYW4+PC9wcmU+CjxwcmUgc3R5bGU9ImJhY2tncm91bmQ6d2hpdGUiPjxz
+cGFuIHN0eWxlPSJjb2xvcjojMDgwODA4Ij5hcHAmbmJzcDsgfCZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyByZXR1cm4gY2xzKG5hbWUsIGNvbmYpPC9zcGFuPjwvcHJlPgo8cHJlIHN0eWxlPSJiYWNr
+Z3JvdW5kOndoaXRlIj48c3BhbiBzdHlsZT0iY29sb3I6IzA4MDgwOCI+YXBwJm5ic3A7IHwmbmJz
+cDsmbmJzcDsgRmlsZSAmcXVvdDsvdXNyL2xvY2FsL2xpYi9weXRob24zLjEwL2Rpc3QtcGFja2Fn
+ZXMvdHBtMl9weXRzcy9UQ1RJTGRyLnB5JnF1b3Q7LCBsaW5lIDI5LCBpbiBfX2luaXRfXzwvc3Bh
+bj48L3ByZT4KPHByZSBzdHlsZT0iYmFja2dyb3VuZDp3aGl0ZSI+PHNwYW4gc3R5bGU9ImNvbG9y
+OiMwODA4MDgiPmFwcCZuYnNwOyB8Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IF9jaGtyYyhsaWIu
+VHNzMl9UY3RpTGRyX0luaXRpYWxpemVfRXgobmFtZSwgY29uZiwgc2VsZi5fY3R4X3BwKSk8L3Nw
+YW4+PC9wcmU+CjxwcmUgc3R5bGU9ImJhY2tncm91bmQ6d2hpdGUiPjxzcGFuIHN0eWxlPSJjb2xv
+cjojMDgwODA4Ij5hcHAmbmJzcDsgfCZuYnNwOyZuYnNwOyBGaWxlICZxdW90Oy91c3IvbG9jYWwv
+bGliL3B5dGhvbjMuMTAvZGlzdC1wYWNrYWdlcy90cG0yX3B5dHNzL2ludGVybmFsL3V0aWxzLnB5
+JnF1b3Q7LCBsaW5lIDMyLCBpbiBfY2hrcjwvc3Bhbj48L3ByZT4KPHByZSBzdHlsZT0iYmFja2dy
+b3VuZDp3aGl0ZSI+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4MDgiPmFwcCZuYnNwOyB8Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7IHJhaXNlIFRTUzJfRXhjZXB0aW9uKHJjKTwvc3Bhbj48L3ByZT4K
+PHByZSBzdHlsZT0iYmFja2dyb3VuZDp3aGl0ZSI+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4MDgi
+PmFwcCZuYnNwOyB8IHRwbTJfcHl0c3MuVFNTMl9FeGNlcHRpb24uVFNTMl9FeGNlcHRpb246IHRj
+dGk6SU8gZmFpbHVyZTwvc3Bhbj48L3ByZT4KPHByZSBzdHlsZT0iYmFja2dyb3VuZDp3aGl0ZSI+
+PHNwYW4gc3R5bGU9ImNvbG9yOiMwODA4MDgiPmFwcCBleGl0ZWQgd2l0aCBjb2RlIDE8L3NwYW4+
+PC9wcmU+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+Jm5ic3A7PC9wPgo8cCBjbGFzcz0ieF9Nc29O
+b3JtYWwiPiZuYnNwOzwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj5JIGtub3cgaXSScyBub3Qg
+YSBwbGFpbiB0cG0yLXRzcyBxdWVzdGlvbiwgYnV0IGRvZXMgYW55b25lIGhhcyBleHBlcmllbmNl
+IHdpdGggdGhhdCBhbmQgY2FuIGhlbHAgbWU/CjwvcD4KPHAgY2xhc3M9InhfTXNvTm9ybWFsIj4m
+bmJzcDs8L3A+CjxwIGNsYXNzPSJ4X01zb05vcm1hbCI+S2luZCByZWdhcmRzLCA8YnI+CkhlbnJ5
+PC9wPgo8cCBjbGFzcz0ieF9Nc29Ob3JtYWwiPiZuYnNwOzwvcD4KPC9kaXY+CjwvZGl2Pgo8L2Jv
+ZHk+CjwvaHRtbD4K
+
+--===============5087203534350356357==--
 
