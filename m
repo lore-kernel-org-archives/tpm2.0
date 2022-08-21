@@ -1,181 +1,68 @@
-Content-Type: multipart/mixed; boundary="===============3135283913321278180=="
+Content-Type: multipart/mixed; boundary="===============3692909988910078284=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: How to initialize a used TPM2 module and thoughts on clevis
-Date: Fri, 19 Aug 2022 16:17:39 +0000
-Message-ID: <SN6PR11MB343708BF532EF2E5B139288BB86C9@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: c2216d5e-7732-4492-30c3-11e43f71a25d@redhat.com
+From: Felix Rubio Dalmau <felix at kngnt.org>
+Subject: [tpm2] System design question
+Date: Sun, 21 Aug 2022 09:17:56 +0200
+Message-ID: <22755930.6Emhk5qWAg@polaris>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3135283913321278180==
+--===============3692909988910078284==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks Javier,
+Hi everybody,
 
-Seems to have the same bug:
-  - https://github.com/fedora-iot/clevis-pin-tpm2/blob/main/src/utils.rs#L99
+I am playing with a QEMU VM that uses swtpm. My goal is to make a stable, e=
+asily maintainable setup to have ZFS native full disk encription, and I am =
+facing a problem:
 
+* I was relying on GRUB2 signature-checking capabilities to make sure that,=
+ besides the kernel (that is checked by Secure Boot anyway), initramfs had =
+not been tampered with. However, this introduces yet a new (GPG) private ke=
+y that needs to be stored, initramfs needs to be signed when changed, etc.
+* Recently I have learned that from kernel 5.10 on, the measurements of ini=
+tramfs can be found on PCR9, so I modified my PCR-based policy to make use =
+of registers 0,1,7 and 9 and I am planning to remove the GRUB2 checks. But =
+the problem now is: After generating the policies, which I do by....
 
-I filled issue:
-https://github.com/fedora-iot/clevis-pin-tpm2/issues/20
+```bash
+# Recreate the PCR-based policy
+tpm2_startauthsession -S session.ctx
+tpm2_policypcr -S session.ctx -L regular.policy -l sha256:0,1,7,9
+tpm2_policypassword -S session.ctx -L regular.policy
+tpm2_flushcontext session.ctx
 
-Thanks,
-Bill
-________________________________
-From: Javier Martinez Canillas <javierm(a)redhat.com>
-Sent: Tuesday, August 16, 2022 12:29 PM
-To: Roberts, William C <william.c.roberts(a)intel.com>; tpm2(a)bitzap.e4war=
-d.com <tpm2(a)bitzap.e4ward.com>; tpm2(a)lists.01.org <tpm2(a)lists.01.org>
-Subject: Re: [tpm2] Re: How to initialize a used TPM2 module and thoughts o=
-n clevis
+# session for auth based on rescue password
+tpm2_startauthsession -S session.ctx
+tpm2_policysecret -S session.ctx -L rescue.policy -c o '<tpm_ownerpass>'
+tpm2_flushcontext session.ctx
 
-Hello Bill,
+# compound both policies using OR
+tpm2_startauthsession -S session.ctx
+tpm2_policyor -S session.ctx -L compound.policy sha256:rescue.policy,regula=
+r.policy
+tpm2_flushcontext session.ctx
 
-On 7/13/22 16:53, Roberts, William C wrote:
-> + Javier
->
-> On Tue, 2022-07-12 at 22:25 +0000, Tim K wrote:
->> Very useful, thank you!
->>
->>> and YES. This is required to keep someone from wiping all the keys
->>> in
->>> the owner hierarchy which would include your disk encryption keys.
->>> You also want to set the lockoutauth as well.
->>
->> It appears clevis uses the owner hierarchy by default. If I set an
->> owner password, what are the implications, does clevis need to know
->> the owner password when it creates its own key and then
->> encrypts/decrypts its own key?
->>
->> This is how I'm trying to use it to encrypt a single file on disk
->> (not the entire disk/LUKS):
->> https://manpages.ubuntu.com/manpages/focal/man1/clevis-encrypt-tpm2.1.ht=
-ml
->
->
-> Looking at the source[1,2], it appears they call tpm2_createprimary on
-> encrypt which would require owner auth, call tpm2_create save the key
-> and then on decrypt call tpm2_createprimary which requires owner auth
-> and then call tpm2_load to load the key under that primary object.
->
-> I don't see an option to use the SRK, this looks like an oversight or I
-> am missing something. Javier, do you know?
->
+# create the seal object (the FS password is requested to the user)
+tpm2_create -C prim.ctx -c key.ctx -u key.pub -r key.priv -L compound.polic=
+y -i- -p '<disk_unlock_password>' -a 'fixedtpm|fixedparent'
 
-I don't remember anymore why this was done that way. I haven't worked on
-TPM stuff for a while and paged out of my head all the details... sorry.
+# persist the object to the TPM
+tpm2_evictcontrol -c key.ctx 0x81010001 -P '<tpm_ownerpass>'
+```
 
-But in case is useful, there's a new clevis tpm2 pin that is a rewrite and
-and supports more features such as PCR Authorized Policies. Please take a
-look, since it maybe be doing the correct thing and if not, you can file
-an issue for that:
+... then I need to store regular.policy and rescue.policy in initramfs, whi=
+ch will produce a different hash next time.
 
-https://github.com/fedora-iot/clevis-pin-tpm2
- --
-Best regards,
+Therefore, the question is: is there any way I can store the policies in th=
+e TPM itself, so that I do not have to rebuild initramfs? Do you guys think=
+ this is not the way to go, and there is a better approach?
 
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
+Thank you very much!
+Felix
 
 
---===============3135283913321278180==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
-
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRl
-eHQvaHRtbDsgY2hhcnNldD11cy1hc2NpaSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
-ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
-ZT4KPC9oZWFkPgo8Ym9keSBkaXI9Imx0ciI+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
-YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
-OiByZ2IoMCwgMCwgMCk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YiPgpUaGFua3MgSmF2aWVyLDwv
-ZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwg
-c2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9
-ImVsZW1lbnRUb1Byb29mIj4KPGJyPgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENh
-bGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29s
-b3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+ClNlZW1zIHRvIGhhdmUg
-dGhlIHNhbWUgYnVnOjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJp
-YWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAs
-IDAsIDApOyIgY2xhc3M9ImVsZW1lbnRUb1Byb29mIj4KJm5ic3A7IC0mbmJzcDs8YSBocmVmPSJo
-dHRwczovL2dpdGh1Yi5jb20vZmVkb3JhLWlvdC9jbGV2aXMtcGluLXRwbTIvYmxvYi9tYWluL3Ny
-Yy91dGlscy5ycyNMOTkiIGlkPSJMUE5vTFBPV0FMaW5rUHJldmlldyI+aHR0cHM6Ly9naXRodWIu
-Y29tL2ZlZG9yYS1pb3QvY2xldmlzLXBpbi10cG0yL2Jsb2IvbWFpbi9zcmMvdXRpbHMucnMjTDk5
-PC9hPjwvZGl2Pgo8ZGl2IGNsYXNzPSJfRW50aXR5IF9FVHlwZV9PV0FMaW5rUHJldmlldyBfRUlk
-X09XQUxpbmtQcmV2aWV3IF9FUmVhZG9ubHlfMSI+PC9kaXY+Cjxicj4KPGRpdiBzdHlsZT0iZm9u
-dC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6
-ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+Cjxi
-cj4KPC9kaXY+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0
-aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IiBj
-bGFzcz0iZWxlbWVudFRvUHJvb2YiPgpJIGZpbGxlZCBpc3N1ZTo8L2Rpdj4KPGRpdiBzdHlsZT0i
-Zm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQt
-c2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+
-CjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS9mZWRvcmEtaW90L2NsZXZpcy1waW4tdHBtMi9p
-c3N1ZXMvMjAiIGlkPSJMUGxuazYwOTk4MyI+aHR0cHM6Ly9naXRodWIuY29tL2ZlZG9yYS1pb3Qv
-Y2xldmlzLXBpbi10cG0yL2lzc3Vlcy8yMDwvYT48YnI+CjwvZGl2Pgo8ZGl2IHN0eWxlPSJmb250
-LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXpl
-OiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyIgY2xhc3M9ImVsZW1lbnRUb1Byb29mIj4KPGJy
-Pgo8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRp
-Y2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsiIGNs
-YXNzPSJlbGVtZW50VG9Qcm9vZiI+ClRoYW5rcyw8L2Rpdj4KPGRpdiBzdHlsZT0iZm9udC1mYW1p
-bHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJw
-dDsgY29sb3I6IHJnYigwLCAwLCAwKTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+CkJpbGw8L2Rp
-dj4KPGRpdiBpZD0iYXBwZW5kb25zZW5kIj48L2Rpdj4KPGhyIHN0eWxlPSJkaXNwbGF5OmlubGlu
-ZS1ibG9jazt3aWR0aDo5OCUiIHRhYmluZGV4PSItMSI+CjxkaXYgaWQ9ImRpdlJwbHlGd2RNc2ci
-IGRpcj0ibHRyIj48Zm9udCBmYWNlPSJDYWxpYnJpLCBzYW5zLXNlcmlmIiBzdHlsZT0iZm9udC1z
-aXplOjExcHQiIGNvbG9yPSIjMDAwMDAwIj48Yj5Gcm9tOjwvYj4gSmF2aWVyIE1hcnRpbmV6IENh
-bmlsbGFzICZsdDtqYXZpZXJtQHJlZGhhdC5jb20mZ3Q7PGJyPgo8Yj5TZW50OjwvYj4gVHVlc2Rh
-eSwgQXVndXN0IDE2LCAyMDIyIDEyOjI5IFBNPGJyPgo8Yj5Ubzo8L2I+IFJvYmVydHMsIFdpbGxp
-YW0gQyAmbHQ7d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29tJmd0OzsgdHBtMkBiaXR6YXAuZTR3
-YXJkLmNvbSAmbHQ7dHBtMkBiaXR6YXAuZTR3YXJkLmNvbSZndDs7IHRwbTJAbGlzdHMuMDEub3Jn
-ICZsdDt0cG0yQGxpc3RzLjAxLm9yZyZndDs8YnI+CjxiPlN1YmplY3Q6PC9iPiBSZTogW3RwbTJd
-IFJlOiBIb3cgdG8gaW5pdGlhbGl6ZSBhIHVzZWQgVFBNMiBtb2R1bGUgYW5kIHRob3VnaHRzIG9u
-IGNsZXZpczwvZm9udD4KPGRpdj4mbmJzcDs8L2Rpdj4KPC9kaXY+CjxkaXYgY2xhc3M9IkJvZHlG
-cmFnbWVudCI+PGZvbnQgc2l6ZT0iMiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMXB0OyI+Cjxk
-aXYgY2xhc3M9IlBsYWluVGV4dCI+SGVsbG8gQmlsbCw8YnI+Cjxicj4KT24gNy8xMy8yMiAxNjo1
-MywgUm9iZXJ0cywgV2lsbGlhbSBDIHdyb3RlOjxicj4KJmd0OyArIEphdmllcjxicj4KJmd0OyA8
-YnI+CiZndDsgT24gVHVlLCAyMDIyLTA3LTEyIGF0IDIyOjI1ICswMDAwLCBUaW0gSyB3cm90ZTo8
-YnI+CiZndDsmZ3Q7IFZlcnkgdXNlZnVsLCB0aGFuayB5b3UhPGJyPgomZ3Q7Jmd0Ozxicj4KJmd0
-OyZndDsmZ3Q7IGFuZCBZRVMuIFRoaXMgaXMgcmVxdWlyZWQgdG8ga2VlcCBzb21lb25lIGZyb20g
-d2lwaW5nIGFsbCB0aGUga2V5czxicj4KJmd0OyZndDsmZ3Q7IGluPGJyPgomZ3Q7Jmd0OyZndDsg
-dGhlIG93bmVyIGhpZXJhcmNoeSB3aGljaCB3b3VsZCBpbmNsdWRlIHlvdXIgZGlzayBlbmNyeXB0
-aW9uIGtleXMuPGJyPgomZ3Q7Jmd0OyZndDsgWW91IGFsc28gd2FudCB0byBzZXQgdGhlIGxvY2tv
-dXRhdXRoIGFzIHdlbGwuPGJyPgomZ3Q7Jmd0Ozxicj4KJmd0OyZndDsgSXQgYXBwZWFycyBjbGV2
-aXMgdXNlcyB0aGUgb3duZXIgaGllcmFyY2h5IGJ5IGRlZmF1bHQuIElmIEkgc2V0IGFuPGJyPgom
-Z3Q7Jmd0OyBvd25lciBwYXNzd29yZCwgd2hhdCBhcmUgdGhlIGltcGxpY2F0aW9ucywgZG9lcyBj
-bGV2aXMgbmVlZCB0byBrbm93PGJyPgomZ3Q7Jmd0OyB0aGUgb3duZXIgcGFzc3dvcmQgd2hlbiBp
-dCBjcmVhdGVzIGl0cyBvd24ga2V5IGFuZCB0aGVuPGJyPgomZ3Q7Jmd0OyBlbmNyeXB0cy9kZWNy
-eXB0cyBpdHMgb3duIGtleT88YnI+CiZndDsmZ3Q7PGJyPgomZ3Q7Jmd0OyBUaGlzIGlzIGhvdyBJ
-J20gdHJ5aW5nIHRvIHVzZSBpdCB0byBlbmNyeXB0IGEgc2luZ2xlIGZpbGUgb24gZGlzazxicj4K
-Jmd0OyZndDsgKG5vdCB0aGUgZW50aXJlIGRpc2svTFVLUyk6PGJyPgomZ3Q7Jmd0OyA8YSBocmVm
-PSJodHRwczovL21hbnBhZ2VzLnVidW50dS5jb20vbWFucGFnZXMvZm9jYWwvbWFuMS9jbGV2aXMt
-ZW5jcnlwdC10cG0yLjEuaHRtbCI+Cmh0dHBzOi8vbWFucGFnZXMudWJ1bnR1LmNvbS9tYW5wYWdl
-cy9mb2NhbC9tYW4xL2NsZXZpcy1lbmNyeXB0LXRwbTIuMS5odG1sPC9hPjxicj4KJmd0OyA8YnI+
-CiZndDsgPGJyPgomZ3Q7IExvb2tpbmcgYXQgdGhlIHNvdXJjZVsxLDJdLCBpdCBhcHBlYXJzIHRo
-ZXkgY2FsbCB0cG0yX2NyZWF0ZXByaW1hcnkgb248YnI+CiZndDsgZW5jcnlwdCB3aGljaCB3b3Vs
-ZCByZXF1aXJlIG93bmVyIGF1dGgsIGNhbGwgdHBtMl9jcmVhdGUgc2F2ZSB0aGUga2V5PGJyPgom
-Z3Q7IGFuZCB0aGVuIG9uIGRlY3J5cHQgY2FsbCB0cG0yX2NyZWF0ZXByaW1hcnkgd2hpY2ggcmVx
-dWlyZXMgb3duZXIgYXV0aDxicj4KJmd0OyBhbmQgdGhlbiBjYWxsIHRwbTJfbG9hZCB0byBsb2Fk
-IHRoZSBrZXkgdW5kZXIgdGhhdCBwcmltYXJ5IG9iamVjdC48YnI+CiZndDsgPGJyPgomZ3Q7IEkg
-ZG9uJ3Qgc2VlIGFuIG9wdGlvbiB0byB1c2UgdGhlIFNSSywgdGhpcyBsb29rcyBsaWtlIGFuIG92
-ZXJzaWdodCBvciBJPGJyPgomZ3Q7IGFtIG1pc3Npbmcgc29tZXRoaW5nLiBKYXZpZXIsIGRvIHlv
-dSBrbm93Pzxicj4KJmd0Ozxicj4KPGJyPgpJIGRvbid0IHJlbWVtYmVyIGFueW1vcmUgd2h5IHRo
-aXMgd2FzIGRvbmUgdGhhdCB3YXkuIEkgaGF2ZW4ndCB3b3JrZWQgb248YnI+ClRQTSBzdHVmZiBm
-b3IgYSB3aGlsZSBhbmQgcGFnZWQgb3V0IG9mIG15IGhlYWQgYWxsIHRoZSBkZXRhaWxzLi4uIHNv
-cnJ5Ljxicj4KPGJyPgpCdXQgaW4gY2FzZSBpcyB1c2VmdWwsIHRoZXJlJ3MgYSBuZXcgY2xldmlz
-IHRwbTIgcGluIHRoYXQgaXMgYSByZXdyaXRlIGFuZDxicj4KYW5kIHN1cHBvcnRzIG1vcmUgZmVh
-dHVyZXMgc3VjaCBhcyBQQ1IgQXV0aG9yaXplZCBQb2xpY2llcy4gUGxlYXNlIHRha2UgYTxicj4K
-bG9vaywgc2luY2UgaXQgbWF5YmUgYmUgZG9pbmcgdGhlIGNvcnJlY3QgdGhpbmcgYW5kIGlmIG5v
-dCwgeW91IGNhbiBmaWxlPGJyPgphbiBpc3N1ZSBmb3IgdGhhdDo8YnI+Cjxicj4KPGEgaHJlZj0i
-aHR0cHM6Ly9naXRodWIuY29tL2ZlZG9yYS1pb3QvY2xldmlzLXBpbi10cG0yIj5odHRwczovL2dp
-dGh1Yi5jb20vZmVkb3JhLWlvdC9jbGV2aXMtcGluLXRwbTI8L2E+PGJyPgombmJzcDstLSA8YnI+
-CkJlc3QgcmVnYXJkcyw8YnI+Cjxicj4KSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzPGJyPgpMaW51
-eCBFbmdpbmVlcmluZzxicj4KUmVkIEhhdDxicj4KPGJyPgo8L2Rpdj4KPC9zcGFuPjwvZm9udD48
-L2Rpdj4KPC9ib2R5Pgo8L2h0bWw+Cg==
-
---===============3135283913321278180==--
+--===============3692909988910078284==--
 
