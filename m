@@ -1,315 +1,118 @@
-Content-Type: multipart/mixed; boundary="===============8530189974734264255=="
+Content-Type: multipart/mixed; boundary="===============7939451598234452328=="
 MIME-Version: 1.0
-From: Gadacz, Henry <henry.gadacz at sit.fraunhofer.de>
-Subject: [tpm2] seal with external public EK
-Date: Wed, 31 Aug 2022 14:32:24 +0000
-Message-ID: <FR0P281MB170641DAAFCCBBC8E9EFC847D1789@FR0P281MB1706.DEUP281.PROD.OUTLOOK.COM>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: System design question
+Date: Wed, 31 Aug 2022 19:21:34 +0000
+Message-ID: <SN6PR11MB34377A12E7880536240A23B9B8789@SN6PR11MB3437.namprd11.prod.outlook.com>
+In-Reply-To: 2843585.e9J7NaK4W3@polaris
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8530189974734264255==
+--===============7939451598234452328==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
-
- =
 
 
-I want to encrypt a larger file on TPM A and decrypt it on TPM B. To share a
-symmetric key for that I have TPM B's public endorsement keys on TPM A. The
-EK of TPM B is created and persisted as followed:
+> -----Original Message-----
+> From: Felix Rubio Dalmau <felix(a)kngnt.org>
+> Sent: Sunday, August 28, 2022 4:39 AM
+> To: tpm2(a)lists.01.org
+> Cc: Roberts, William C <william.c.roberts(a)intel.com>
+> Subject: Re: [tpm2] Re: System design question
+> =
 
-tpm2_createek -P endPW -w ownerPW -c $EK_HANDLE -G rsa =
+> Hey William,
+> =
 
+> Thank you for your answer, I have just been playing with the tpm2_tools in
+> latest Debian 11.4, trying to follow your reasoning, but there is somethi=
+ng I
+> am missing:
+> =
 
- =
+> As secureboot does not check the initramfs, my approach is to make the fu=
+ll
+> disk encryption key depend on PCR registers 0,1,7 and 9 (for what I have
+> read, from kernel 5.13 on, the measurements of initramfs go to PCR 9), or=
+ a
+> rescue password. This approach implies having a script in place so that t=
+he
+> first time a new kernel + initramfs boot I will get those measurements
+> somewhere and then I can rebuild the policies with the correct contents
+> (that is, until I find a way to precalculate the value of PCR 9 out of the
+> initramfs file itself...
+> assuming is possible).
+> =
 
+> In your email you say "[...]
+> > So really all that needs to occur is the code/script needs to be in
+> > place that does the normal PCR flow or rescue flow. The create call
+> > can be hardcoded to the known hash, that isn't changing and can be
+> > included in the filesystem when generated.
+> [...]" but I do not see how would that be achieved: my current normal PCR
+> flow goes like this:
+> =
 
-The public part is exported with:
+> tpm2_startauthsession -Q -S session.ctx --policy-session tpm2_policypcr -=
+Q -
+> S session.ctx -l sha256:0,1,7,9 tpm2_policypassword -Q -S session.ctx
+> tpm2_policyor -Q -S session.ctx sha256:rescue.policy,regular.policy
+> SECRET=3D`tpm2_unseal -Q -c 0x81010001 -p
+> "session:session.ctx+$REGULAR_PASS"`
+> tpm2_flushcontext -Q session.ctx
+> tpm2_pcrextend -Q
+> 0:sha256=3D00000000000000000000000000000000000000000000000...
 
-pm2_readpublic -c $EK_HANDLE -o B_EK.pem -f pem
+So you do this to prevent unseal later right?
+Theirs discussion on systemd to standardize this, amongst a lot of other th=
+ings
+you may find interesting
+https://github.com/systemd/systemd/issues/22637
 
- =
+> =
 
+> I think I understand, from user answer, that I should be able to replace
+>         tpm2_policyor -Q -S session.ctx sha256:rescue.policy,regular.poli=
+cy
+> by
+>         tpm2_policyor -Q -S session.ctx <output of precalculated digest>
+> =
 
-On TPM A I load the public EK key of TPM B:
-
-tpm2_loadexternal -C o -G rsa -u B_EK.pem -c B_EK.ctx
-
- =
-
-
-To seal random data that is used as symmetric key to the TPM B EK I tried:
-
-tpm2_getrandom --hex 32 | tpm2_create -C B_EK.ctx -i- -u
-A_transportKey_pub.seal -r A_transportKey_priv.seal
-
- =
-
-
-But I always get the following error:
-
-WARNING:esys:src/tss2-esys/api/Esys_Create.c:399:Esys_Create_Finish()
-Received TPM Error =
-
-
-ERROR:esys:src/tss2-esys/api/Esys_Create.c:134:Esys_Create() Esys Finish
-ErrorCode (0x0000012f) =
-
-
-ERROR: Esys_Create(0x12F) - tpm:error(2.0): authValue or authPolicy is not
-available for selected entity
-
-ERROR: Unable to run tpm2_create
-
- =
-
-
-Why is an authValue or authPolicy required? I created the EK without
-authorization value or policy. =
-
-
- =
-
-
-I want to use the sealing method instead of tpm2_rsaencrypt to be able to
-process the symmetric key inside TPM B when doing the decryption and don't
-need to store a file with the symmetric key on the disk.
-
- =
-
-
-Any help on what's the problem or other suggestions to solve this task are
-really appreciated.
-
- =
-
-
-Best Regards,
-
-Henry
-
- =
+> But still, this does not fix the issue: the moment I hardcode this value =
+in my
+> initramfs, its measurement on PCR 9 will change. =
 
 
+Ahh yeah, including PCR 9 causes a chicken and egg problem where the egg
+Is initramfs. I don't see a way to break this dependency except by =
 
---===============8530189974734264255==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+just need to calculate the value by running all those commands. :-(
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+PGhlYWQ+PE1FVEEgSFRUUC1FUVVJVj0iQ29udGVudC1UeXBlIiBDT05U
-RU5UPSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXMtYXNjaWkiPjxtZXRhIG5hbWU9R2VuZXJhdG9yIGNv
-bnRlbnQ9Ik1pY3Jvc29mdCBXb3JkIDE1IChmaWx0ZXJlZCBtZWRpdW0pIj48c3R5bGU+PCEtLQov
-KiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2FtYnJpYSBN
-YXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7Zm9udC1m
-YW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyogU3R5bGUg
-RGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJ
-e21hcmdpbjowY207Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNh
-bnMtc2VyaWY7fQouTXNvQ2hwRGVmYXVsdAoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5O30K
-QHBhZ2UgV29yZFNlY3Rpb24xCgl7c2l6ZTo2MTIuMHB0IDc5Mi4wcHQ7CgltYXJnaW46NzAuODVw
-dCA3MC44NXB0IDIuMGNtIDcwLjg1cHQ7fQpkaXYuV29yZFNlY3Rpb24xCgl7cGFnZTpXb3JkU2Vj
-dGlvbjE7fQotLT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8bzpzaGFwZWRlZmF1
-bHRzIHY6ZXh0PSJlZGl0IiBzcGlkbWF4PSIxMDI2IiAvPgo8L3htbD48IVtlbmRpZl0tLT48IS0t
-W2lmIGd0ZSBtc28gOV0+PHhtbD4KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPgo8bzppZG1h
-cCB2OmV4dD0iZWRpdCIgZGF0YT0iMSIgLz4KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlm
-XS0tPjwvaGVhZD48Ym9keSBsYW5nPUVOLVVTIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0Rjcy
-IiBzdHlsZT0nd29yZC13cmFwOmJyZWFrLXdvcmQnPjxkaXYgY2xhc3M9V29yZFNlY3Rpb24xPjxw
-IGNsYXNzPU1zb05vcm1hbD48c3BhbiBsYW5nPURFPkhlbGxvIGV2ZXJ5b25lLDxvOnA+PC9vOnA+
-PC9zcGFuPjwvcD48cCBjbGFzcz1Nc29Ob3JtYWw+PHNwYW4gbGFuZz1ERT48bzpwPiZuYnNwOzwv
-bzpwPjwvc3Bhbj48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPkkgd2FudCB0byBlbmNyeXB0IGEgbGFy
-Z2VyIGZpbGUgb24gVFBNIEEgYW5kIGRlY3J5cHQgaXQgb24gVFBNIEIuIFRvIHNoYXJlIGEgc3lt
-bWV0cmljIGtleSBmb3IgdGhhdCBJIGhhdmUgVFBNIEImIzgyMTc7cyBwdWJsaWMgZW5kb3JzZW1l
-bnQga2V5cyBvbiBUUE0gQS4gVGhlIEVLIG9mIFRQTSBCIGlzIGNyZWF0ZWQgYW5kIHBlcnNpc3Rl
-ZCBhcyBmb2xsb3dlZDo8bzpwPjwvbzpwPjwvcD48cCBjbGFzcz1Nc29Ob3JtYWw+dHBtMl9jcmVh
-dGVlayAtUCBlbmRQVyAtdyBvd25lclBXIC1jICRFS19IQU5ETEUgLUcgcnNhIDxvOnA+PC9vOnA+
-PC9wPjxwIGNsYXNzPU1zb05vcm1hbD48bzpwPiZuYnNwOzwvbzpwPjwvcD48cCBjbGFzcz1Nc29O
-b3JtYWw+VGhlIHB1YmxpYyBwYXJ0IGlzIGV4cG9ydGVkIHdpdGg6PG86cD48L286cD48L3A+PHAg
-Y2xhc3M9TXNvTm9ybWFsPnBtMl9yZWFkcHVibGljIC1jICRFS19IQU5ETEUgLW8gQl9FSy5wZW0g
-LWYgcGVtPG86cD48L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7PC9vOnA+
-PC9wPjxwIGNsYXNzPU1zb05vcm1hbD5PbiBUUE0gQSBJIGxvYWQgdGhlIHB1YmxpYyBFSyBrZXkg
-b2YgVFBNIEI6PG86cD48L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPnRwbTJfbG9hZGV4dGVy
-bmFsIC1DIG8gLUcgcnNhIC11IEJfRUsucGVtIC1jIEJfRUsuY3R4PG86cD48L286cD48L3A+PHAg
-Y2xhc3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD5U
-byBzZWFsIHJhbmRvbSBkYXRhIHRoYXQgaXMgdXNlZCBhcyBzeW1tZXRyaWMga2V5IHRvIHRoZSBU
-UE0gQiBFSyBJIHRyaWVkOjxvOnA+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD50cG0yX2dl
-dHJhbmRvbSAtLWhleCAzMiB8IHRwbTJfY3JlYXRlIC1DIEJfRUsuY3R4IC1pLSAtdSBBX3RyYW5z
-cG9ydEtleV9wdWIuc2VhbCAtciBBX3RyYW5zcG9ydEtleV9wcml2LnNlYWw8bzpwPjwvbzpwPjwv
-cD48cCBjbGFzcz1Nc29Ob3JtYWw+PG86cD4mbmJzcDs8L286cD48L3A+PHAgY2xhc3M9TXNvTm9y
-bWFsPkJ1dCBJIGFsd2F5cyBnZXQgdGhlIGZvbGxvd2luZyBlcnJvcjo8bzpwPjwvbzpwPjwvcD48
-cCBjbGFzcz1Nc29Ob3JtYWw+V0FSTklORzplc3lzOnNyYy90c3MyLWVzeXMvYXBpL0VzeXNfQ3Jl
-YXRlLmM6Mzk5OkVzeXNfQ3JlYXRlX0ZpbmlzaCgpIFJlY2VpdmVkIFRQTSBFcnJvciA8bzpwPjwv
-bzpwPjwvcD48cCBjbGFzcz1Nc29Ob3JtYWw+RVJST1I6ZXN5czpzcmMvdHNzMi1lc3lzL2FwaS9F
-c3lzX0NyZWF0ZS5jOjEzNDpFc3lzX0NyZWF0ZSgpIEVzeXMgRmluaXNoIEVycm9yQ29kZSAoMHgw
-MDAwMDEyZikgPG86cD48L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPkVSUk9SOiBFc3lzX0Ny
-ZWF0ZSgweDEyRikgLSB0cG06ZXJyb3IoMi4wKTogYXV0aFZhbHVlIG9yIGF1dGhQb2xpY3kgaXMg
-bm90IGF2YWlsYWJsZSBmb3Igc2VsZWN0ZWQgZW50aXR5PG86cD48L286cD48L3A+PHAgY2xhc3M9
-TXNvTm9ybWFsPkVSUk9SOiBVbmFibGUgdG8gcnVuIHRwbTJfY3JlYXRlPG86cD48L286cD48L3A+
-PHAgY2xhc3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1h
-bD5XaHkgaXMgYW4gYXV0aFZhbHVlIG9yIGF1dGhQb2xpY3kgcmVxdWlyZWQ/IEkgY3JlYXRlZCB0
-aGUgRUsgd2l0aG91dCBhdXRob3JpemF0aW9uIHZhbHVlIG9yIHBvbGljeS4gPG86cD48L286cD48
-L3A+PHAgY2xhc3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05v
-cm1hbD5JIHdhbnQgdG8gdXNlIHRoZSBzZWFsaW5nIG1ldGhvZCBpbnN0ZWFkIG9mIHRwbTJfcnNh
-ZW5jcnlwdCB0byBiZSBhYmxlIHRvIHByb2Nlc3MgdGhlIHN5bW1ldHJpYyBrZXkgaW5zaWRlIFRQ
-TSBCIHdoZW4gZG9pbmcgdGhlIGRlY3J5cHRpb24gYW5kIGRvbiYjODIxNzt0IG5lZWQgdG8gc3Rv
-cmUgYSBmaWxlIHdpdGggdGhlIHN5bW1ldHJpYyBrZXkgb24gdGhlIGRpc2suPG86cD48L286cD48
-L3A+PHAgY2xhc3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05v
-cm1hbD5BbnkgaGVscCBvbiB3aGF0JiM4MjE3O3MgdGhlIHByb2JsZW0gb3Igb3RoZXIgc3VnZ2Vz
-dGlvbnMgdG8gc29sdmUgdGhpcyB0YXNrIGFyZSByZWFsbHkgYXBwcmVjaWF0ZWQuPG86cD48L286
-cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPjxwIGNsYXNzPU1z
-b05vcm1hbD5CZXN0IFJlZ2FyZHMsPG86cD48L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPkhl
-bnJ5PG86cD48L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7PC9vOnA+PC9w
-PjwvZGl2PjwvYm9keT48L2h0bWw+
---===============8530189974734264255==
-Content-Type: application/pkcs7-signature
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
+Sorry my suggestion didn't work, it didn't occur to me at the time (facepal=
+m).
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIaSTCCA8Mw
-ggKroAMCAQICAQEwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYTAkRFMSswKQYDVQQKDCJULVN5
-c3RlbXMgRW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYDVQQLDBZULVN5c3RlbXMgVHJ1c3Qg
-Q2VudGVyMSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFsUm9vdCBDbGFzcyAyMB4XDTA4MTAwMTEw
-NDAxNFoXDTMzMTAwMTIzNTk1OVowgYIxCzAJBgNVBAYTAkRFMSswKQYDVQQKDCJULVN5c3RlbXMg
-RW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYDVQQLDBZULVN5c3RlbXMgVHJ1c3QgQ2VudGVy
-MSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFsUm9vdCBDbGFzcyAyMIIBIjANBgkqhkiG9w0BAQEF
-AAOCAQ8AMIIBCgKCAQEAql/aG1/oc5Hl2lz0ouZH5fNoVWAFHQKks5tZ8x6KrzSt/A3C2UgZ7mmP
-ySD8IaoHGe2wXKxlx1/tAnx7fC0b1rq5gMIYghaE+mawCMZUI4HkzblJP/ZPbjdIKDgPxb7naHD9
-OZdN0seYkVCqxESzI305R+lSYtYSk163MZZCBft2px6j9cL86XrFbKlxT+rLeLxgr8fe9NnLvn4z
-pW6Ug/A0+iGr6o5yoD+k3jBb74ZNapVbQ0SoEBUc5QFXxZjx5gYokaogxbdTJlFDsgsRlVjhwA92
-2cCNfIHzcnCeb/4ajtlfNcaybzR8vkhP4lo519ideJ6fhj4DXhmLRKLVxwIDAQABo0IwQDAPBgNV
-HRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4EFgQUv1kgNgB5oKAia4zV8mHSuCzL
-gkowDQYJKoZIhvcNAQELBQADggEBADEDomELH3TocjbGbflNnvoiqOGBVs/Nu5/qq5EZOK+qfBVN
-87ajjaX0jvZEqafoIZWtPgBiFojwArr8YSPmM5swems2YnutBCOEWGXi2yuK5yVTN2JTX7zaAWIp
-oqYnceY6In7Bbx2VcCBKBzTf6v8VgOW613rYW3V8BXopR35AqDETd81AO7RRR3ouEeNHEd6dZtCL
-1VRm+oNV6nzCKYkb6W+zzuIFhMkvPniFYm7JX8F4Y3RYwEgYDJk566TMGrV5Wo0VnNgUDfZ6B1fH
-IoMFLTybJSY9GLOpQ3zIyKtkjw6jv5wbnTDb2tAZLqo88fszgHbkza0ZTwUnjhOhbsIwggUSMIID
-+qADAgECAgkA4wvV+K8l2YEwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYTAkRFMSswKQYDVQQK
-DCJULVN5c3RlbXMgRW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYDVQQLDBZULVN5c3RlbXMg
-VHJ1c3QgQ2VudGVyMSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFsUm9vdCBDbGFzcyAyMB4XDTE2
-MDIyMjEzMzgyMloXDTMxMDIyMjIzNTk1OVowgZUxCzAJBgNVBAYTAkRFMUUwQwYDVQQKEzxWZXJl
-aW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1dHNjaGVuIEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4x
-EDAOBgNVBAsTB0RGTi1QS0kxLTArBgNVBAMTJERGTi1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRo
-b3JpdHkgMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMtg1/9moUHN0vqHl4pzq5lN
-6mc5WqFggEcVToyVsuXPztNXS43O+FZsFVV2B+pG/cgDRWM+cNSrVICxI5y+NyipCf8FXRgPxJiZ
-N7Mg9mZ4F4fCnQ7MSjLnFp2uDo0peQcAIFTcFV9Kltd4tjTTwXS1nem/wHdN6r1ZB+BaL2w8pQDc
-Nb1lDY9/Mm3yWmpLYgHurDg0WUU2SQXaeMpqbVvAgWsRzNI8qIv4cRrKO+KA3Ra0Z3qLNupOkSk9
-s1FcragMvp0049ENF4N1xDkesJQLEvHVaY4l9Lg9K7/AjsMeO6W/VRCrKq4Xl14zzsjz9AkH4wKG
-MUZrAcUQDBHHWekCAwEAAaOCAXQwggFwMA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4EFgQUk+PYMiba
-1fFKpZFK4OpL4qIMz+EwHwYDVR0jBBgwFoAUv1kgNgB5oKAia4zV8mHSuCzLgkowEgYDVR0TAQH/
-BAgwBgEB/wIBAjAzBgNVHSAELDAqMA8GDSsGAQQBga0hgiwBAQQwDQYLKwYBBAGBrSGCLB4wCAYG
-Z4EMAQICMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9wa2kwMzM2LnRlbGVzZWMuZGUvcmwvVGVs
-ZVNlY19HbG9iYWxSb290X0NsYXNzXzIuY3JsMIGGBggrBgEFBQcBAQR6MHgwLAYIKwYBBQUHMAGG
-IGh0dHA6Ly9vY3NwMDMzNi50ZWxlc2VjLmRlL29jc3ByMEgGCCsGAQUFBzAChjxodHRwOi8vcGtp
-MDMzNi50ZWxlc2VjLmRlL2NydC9UZWxlU2VjX0dsb2JhbFJvb3RfQ2xhc3NfMi5jZXIwDQYJKoZI
-hvcNAQELBQADggEBAIcL/z4Cm2XIVi3WO5qYi3FP2ropqiH5Ri71sqQPrhE4eTizDnS6dl2e6BiC
-lmLbTDPo3flq3zK9LExHYFV/53RrtCyD2HlrtrdNUAtmB7Xts5et6u5/MOaZ/SLick0+hFvu+c+Z
-6n/XUjkurJgARH5pO7917tALOxrN5fcPImxHhPalR6D90Bo0fa3SPXez7vTXTf/D6OWST1k+kEcQ
-SrCFWMBvf/iu7QhCnh7U3xQuTY+8npTD5+32GPg8SecmqKc22CzeIs2LgtjZeOJVEqM7h0S2EQvV
-DFKvaYwPBt/QolOLV5h7z/0HJPT8vcP9SpIClxvyt7bPZYoaorVyGTkwggWrMIIEk6ADAgECAgcb
-Y7rGi1JCMA0GCSqGSIb3DQEBCwUAMIGVMQswCQYDVQQGEwJERTFFMEMGA1UEChM8VmVyZWluIHp1
-ciBGb2VyZGVydW5nIGVpbmVzIERldXRzY2hlbiBGb3JzY2h1bmdzbmV0emVzIGUuIFYuMRAwDgYD
-VQQLEwdERk4tUEtJMS0wKwYDVQQDEyRERk4tVmVyZWluIENlcnRpZmljYXRpb24gQXV0aG9yaXR5
-IDIwHhcNMTYwNTI0MTEzODMwWhcNMzEwMjIyMjM1OTU5WjCBjDELMAkGA1UEBhMCREUxDzANBgNV
-BAgMBkJheWVybjERMA8GA1UEBwwITXVlbmNoZW4xEzARBgNVBAoMCkZyYXVuaG9mZXIxITAfBgNV
-BAsMGEZyYXVuaG9mZXIgQ29ycG9yYXRlIFBLSTEhMB8GA1UEAwwYRnJhdW5ob2ZlciBVc2VyIENB
-IC0gRzAyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvUXEQz2W/aGWLRm8MIM29Wfa
-Yhwgnhy8pRDfSXlkBGQoS1gqWpKyuh/ZaZYV3HHUM/AW2nfxCBuxs48pIOhiJbD7JxbjTd/VkkC+
-fpzk3TuhPUCPfHNgb9DGBj6qQuEomdXSmvtp8L5UgUH/CY0WG+XJekBXLTs06KSJEWUHPD+zj8cd
-0dMvZUoSMKd8PqvMq1M34P7bhRheIy83OY/JZAxCEjG4Mw9PB+ioEUvuV6jffjOAebvyV5osrnYN
-POke+U0c/gOdNFraKlWnKPfJBZw4HD7vmhUTvUBvIU/PDVrQn0/CKxmWNDR5Nvr+2QXzVbl/pQPs
-03gh7aDES9mTKwIDAQABo4ICBTCCAgEwEgYDVR0TAQH/BAgwBgEB/wIBATAOBgNVHQ8BAf8EBAMC
-AQYwKQYDVR0gBCIwIDANBgsrBgEEAYGtIYIsHjAPBg0rBgEEAYGtIYIsAQEEMB0GA1UdDgQWBBSj
-JvWaT9vaO+G1qu5Yi9D8/7VtUTAfBgNVHSMEGDAWgBST49gyJtrV8UqlkUrg6kviogzP4TCBjwYD
-VR0fBIGHMIGEMECgPqA8hjpodHRwOi8vY2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNh
-L3B1Yi9jcmwvY2FjcmwuY3JsMECgPqA8hjpodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2dsb2JhbC1y
-b290LWcyLWNhL3B1Yi9jcmwvY2FjcmwuY3JsMIHdBggrBgEFBQcBAQSB0DCBzTAzBggrBgEFBQcw
-AYYnaHR0cDovL29jc3AucGNhLmRmbi5kZS9PQ1NQLVNlcnZlci9PQ1NQMEoGCCsGAQUFBzAChj5o
-dHRwOi8vY2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0
-LmNydDBKBggrBgEFBQcwAoY+aHR0cDovL2NkcDIucGNhLmRmbi5kZS9nbG9iYWwtcm9vdC1nMi1j
-YS9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwDQYJKoZIhvcNAQELBQADggEBAMSSUnm2ESpxsjKugGuG
-daXTSgBRdi5hCpcOkFMLMXTxoGTjUXItlcfnjDs1R5x1NmlqrRKC56iBtK/2+JPwTNDkG3ptqk6X
-mlWMRvrIGtXRjd3lVveHxYD78T4NHP+5XkyAp1Ud1rOKa5crUcd/RQdIWISSCJjfFJCvoJEftTPO
-K9aP2zoHYZS4/jPN8quADFA3YhoRS29aLCXky2/nmnrCacE6EKcK2PUZ7kO7uNHyjbECH/99ni3P
-lRDtddWh67mK55mneo1vRxO2IYY8nFW0WahoU2W2n7Mj/LnaEX1eCML6YkFVhhqGZpxbfAykgA5H
-SWy2aUN+Iq95zITpLi8wggXOMIIEtqADAgECAgwjCrD7kWxtOYYkGQIwDQYJKoZIhvcNAQELBQAw
-gYwxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMRMwEQYD
-VQQKDApGcmF1bmhvZmVyMSEwHwYDVQQLDBhGcmF1bmhvZmVyIENvcnBvcmF0ZSBQS0kxITAfBgNV
-BAMMGEZyYXVuaG9mZXIgVXNlciBDQSAtIEcwMjAeFw0yMDA2MTgwOTI3MDlaFw0yNTA2MTcwOTI3
-MDlaMFgxCzAJBgNVBAYTAkRFMRMwEQYDVQQKDApGcmF1bmhvZmVyMQwwCgYDVQQLDANTSVQxDzAN
-BgNVBAsMBlBlb3BsZTEVMBMGA1UEAwwMSGVucnkgR2FkYWN6MIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEAsIontT6/waFzFlJszQCRwHR40dcl1SwpXOu9FYyVkKoyPv2tGh95OpnEwNVA
-K+IwEmgZ0OKaaPPWb3A+mcwK9apjFkyox6mfUEjV1C4cUtkc/ALmUMi74Pc8iMYk9gx6lya5XLhB
-KnmXB2xEolT4LhVgHnWAKH9XDQhunXDsqVSlsi8KEIKNGGAufK3Jw/LvXgx0nVB2ZzDG4dARXLyJ
-CrmfrdR3IhpxxIh4KlmCDEg7ESGCCzklhEihkL3pyBoCNlvrbp4ug47Y9z57E2tgusuTN3GrNzD1
-00DLkhhC1QtTTgGlANfnmaVtztF5L7/kOyLtYnHMlxevpJf2O1uqaQIDAQABo4ICYTCCAl0wCQYD
-VR0TBAIwADAOBgNVHQ8BAf8EBAMCBsAwEwYDVR0lBAwwCgYIKwYBBQUHAwQwHQYDVR0OBBYEFGpO
-fQskBbEfMLkURL2JCcFAnRj2MB8GA1UdIwQYMBaAFKMm9ZpP29o74bWq7liL0Pz/tW1RMCkGA1Ud
-EQQiMCCBHmhlbnJ5LmdhZGFjekBzaXQuZnJhdW5ob2Zlci5kZTCBlwYDVR0fBIGPMIGMMESgQqBA
-hj5odHRwOi8vY2RwMS5wY2EuZGZuLmRlL2ZyYXVuaG9mZXItdXNlci1nMi1jYS9wdWIvY3JsL2Nh
-Y3JsLmNybDBEoEKgQIY+aHR0cDovL2NkcDIucGNhLmRmbi5kZS9mcmF1bmhvZmVyLXVzZXItZzIt
-Y2EvcHViL2NybC9jYWNybC5jcmwwgeUGCCsGAQUFBwEBBIHYMIHVMDMGCCsGAQUFBzABhidodHRw
-Oi8vb2NzcC5wY2EuZGZuLmRlL09DU1AtU2VydmVyL09DU1AwTgYIKwYBBQUHMAKGQmh0dHA6Ly9j
-ZHAxLnBjYS5kZm4uZGUvZnJhdW5ob2Zlci11c2VyLWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNy
-dDBOBggrBgEFBQcwAoZCaHR0cDovL2NkcDIucGNhLmRmbi5kZS9mcmF1bmhvZmVyLXVzZXItZzIt
-Y2EvcHViL2NhY2VydC9jYWNlcnQuY3J0MD4GA1UdIAQ3MDUwDwYNKwYBBAGBrSGCLAEBBDAQBg4r
-BgEEAYGtIYIsAQEEBzAQBg4rBgEEAYGtIYIsAgEEBzANBgkqhkiG9w0BAQsFAAOCAQEARdbY2r+h
-cdNuGk1qt8vxRyZvuomILcaj/11wqkfIZi7oPtJble0njwYR77uq7JhbfZlVYPkGg20CrCuK31P9
-axmmHAOhU14xttBMl660afYzVVbO9vguZGrTHmcHv7BbBvDpAsEXeQnCnb+oduNRk/h7mBwu4oK5
-4dXrzQTHPLsRBAL2B/ulukTZKXr7wiQ9weSBDqJlY0JZymB/s9xu1cNXLxbZpo6n++HqU2hhKnKl
-nivLUyDavjAGHWB03d+DiHmsktlMpXfW2ifS2rkRN0TLD4T/sy75VJgj48Y2f/No113kD1Tef5+Q
-3pTUe0a9fixmlxj4hpH5XBur8Y4ZmzCCBecwggTPoAMCAQICDCMKsYQtrVU1kitVvjANBgkqhkiG
-9w0BAQsFADCBjDELMAkGA1UEBhMCREUxDzANBgNVBAgMBkJheWVybjERMA8GA1UEBwwITXVlbmNo
-ZW4xEzARBgNVBAoMCkZyYXVuaG9mZXIxITAfBgNVBAsMGEZyYXVuaG9mZXIgQ29ycG9yYXRlIFBL
-STEhMB8GA1UEAwwYRnJhdW5ob2ZlciBVc2VyIENBIC0gRzAyMB4XDTIwMDYxODA5MjkyNVoXDTI1
-MDYxNzA5MjkyNVowWDELMAkGA1UEBhMCREUxEzARBgNVBAoMCkZyYXVuaG9mZXIxDDAKBgNVBAsM
-A1NJVDEPMA0GA1UECwwGUGVvcGxlMRUwEwYDVQQDDAxIZW5yeSBHYWRhY3owggEiMA0GCSqGSIb3
-DQEBAQUAA4IBDwAwggEKAoIBAQCCzyP8ScBDez285g6fBeXkpieOET94WQLzBWRP2gMZYjEGAzwW
-slexndNv6YPc06CVbVdQjn3c+lrJuB3gMEHbj+7QDB6yPpn48WXFRlvIR0zSsEjmsCetKNeuUamN
-oMWMjpytbQF/s2NGOwot83RNNbVt4+ng0c7w7eWERsvOYc2ZLt5YWhHMN1L/fk/xYAgJrUG8X8BC
-Ld1e3TeFt+HuTHunInyqicAwt5IUUCj8rQfnr3UGl+PZTv9QSGPt/492lOBZjWrN73wvYjmxtRT5
-USgN5E50k6g3rFN7i4UxPkFTGWmqcqFqiSNvfFqkvgJoHe6IuSfUq1Q1Rzj0ZqHNAgMBAAGjggJ6
-MIICdjAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIFIDAsBgNVHSUEJTAjBggrBgEFBQcDBAYKKwYB
-BAGCNwoDBAYLKwYBBAGCNwoDBAEwHQYDVR0OBBYEFJRupm+wXlZ2iKon+AlYVK0jwssMMB8GA1Ud
-IwQYMBaAFKMm9ZpP29o74bWq7liL0Pz/tW1RMCkGA1UdEQQiMCCBHmhlbnJ5LmdhZGFjekBzaXQu
-ZnJhdW5ob2Zlci5kZTCBlwYDVR0fBIGPMIGMMESgQqBAhj5odHRwOi8vY2RwMS5wY2EuZGZuLmRl
-L2ZyYXVuaG9mZXItdXNlci1nMi1jYS9wdWIvY3JsL2NhY3JsLmNybDBEoEKgQIY+aHR0cDovL2Nk
-cDIucGNhLmRmbi5kZS9mcmF1bmhvZmVyLXVzZXItZzItY2EvcHViL2NybC9jYWNybC5jcmwwgeUG
-CCsGAQUFBwEBBIHYMIHVMDMGCCsGAQUFBzABhidodHRwOi8vb2NzcC5wY2EuZGZuLmRlL09DU1At
-U2VydmVyL09DU1AwTgYIKwYBBQUHMAKGQmh0dHA6Ly9jZHAxLnBjYS5kZm4uZGUvZnJhdW5ob2Zl
-ci11c2VyLWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNydDBOBggrBgEFBQcwAoZCaHR0cDovL2Nk
-cDIucGNhLmRmbi5kZS9mcmF1bmhvZmVyLXVzZXItZzItY2EvcHViL2NhY2VydC9jYWNlcnQuY3J0
-MD4GA1UdIAQ3MDUwDwYNKwYBBAGBrSGCLAEBBDAQBg4rBgEEAYGtIYIsAQEEBzAQBg4rBgEEAYGt
-IYIsAgEEBzANBgkqhkiG9w0BAQsFAAOCAQEAd/4ce1Uk9IffRLPLEX4gp56hlgEqC9PreN8O+Mnr
-NkwEG8JnUqTV0pVtr5UFq1KfMn5oBenx6CTGHHO1k3L70oV7ydIiF48iSk32j34y4lKveOBXcBSc
-s88hoQZG0A/u7CSu8BRGPCcAAxcdoXUzMnZCuNpNgeT92uiOWV8tbMw2d6mjzp70H7PpuMfsrHfb
-fuJAkfbvisGc0z7IxAIPJH6VdtS6BJg7e82KDstZdAShc7kQ48/MA1qFe2OaNUUPZ5TOg2DGForj
-1hoV1smgm61SUAgqByRx4S7iHf8+VsDhleCm3cF/JJkUKOeL/TtYTZlaFFNiJGR5giW8tN3DfDGC
-BCAwggQcAgEBMIGdMIGMMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhN
-dWVuY2hlbjETMBEGA1UECgwKRnJhdW5ob2ZlcjEhMB8GA1UECwwYRnJhdW5ob2ZlciBDb3Jwb3Jh
-dGUgUEtJMSEwHwYDVQQDDBhGcmF1bmhvZmVyIFVzZXIgQ0EgLSBHMDICDCMKsPuRbG05hiQZAjAJ
-BgUrDgMCGgUAoIICVzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0y
-MjA4MzExNDMyMTZaMCMGCSqGSIb3DQEJBDEWBBQCWqrUQHGmwq29HthvX5CeKu+fUjCBkwYJKoZI
-hvcNAQkPMYGFMIGCMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCgYIKoZIhvcNAwcwCwYJYIZI
-AWUDBAECMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIBQDAHBgUrDgMCGjALBglghkgBZQME
-AgMwCwYJYIZIAWUDBAICMAsGCWCGSAFlAwQCATCBrgYJKwYBBAGCNxAEMYGgMIGdMIGMMQswCQYD
-VQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhNdWVuY2hlbjETMBEGA1UECgwKRnJh
-dW5ob2ZlcjEhMB8GA1UECwwYRnJhdW5ob2ZlciBDb3Jwb3JhdGUgUEtJMSEwHwYDVQQDDBhGcmF1
-bmhvZmVyIFVzZXIgQ0EgLSBHMDICDCMKsYQtrVU1kitVvjCBsAYLKoZIhvcNAQkQAgsxgaCggZ0w
-gYwxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMRMwEQYD
-VQQKDApGcmF1bmhvZmVyMSEwHwYDVQQLDBhGcmF1bmhvZmVyIENvcnBvcmF0ZSBQS0kxITAfBgNV
-BAMMGEZyYXVuaG9mZXIgVXNlciBDQSAtIEcwMgIMIwqxhC2tVTWSK1W+MA0GCSqGSIb3DQEBAQUA
-BIIBAG/mbN+rBJF4NkM7HsZGg27j36agKmjjKIxb7iMvK9LIRWxyL7KORFVl+DTCOY7WfVfI0GXa
-NY0M/06Bd5JdBwKrlhLbTEk+en4elOAyEDaINZN2V+IX8IAEmlPzqGph29OvOheHwJBlCe1ZdiVu
-rE5vt14Z1x7Kg2+Wq3FLGnay9VrZPMjkQGXR+OtGywmyN1v+EOwkMmGATm3pg5pCV9az4DtoMUP3
-LgNEND9Zb0tRuxrvfbUKxgZIJo2QUqQ6xJUeEkJ7YNYsnnnGYSpbKVIkwjwZ2+WgCUuPtEmrpQhz
-VJxm0xz2QrnlHqrbO34ZrFkHcsX7FcaR8/DKpOrXFooAAAAAAAA=
---===============8530189974734264255==--
+> The only way out I see is to
+> avoid storing this information on the initramfs itself, and this is when =
+the
+> nvram came into the picture. Given that nvram is scarce, maybe I can get
+> away by storing on it the digest of the policyor, and adding it somehow t=
+o the
+> session after reading it?
+> =
+
+
+Policyor depends on the hashes of policy A and B... I don't see that breaki=
+ng
+The dependency offhand. I have other ideas, but they have issues as well.
+I think the simplest thing is just run the commands.
+
+> Regards, and thank you very much for giving this issue a thought!
+> =
+
+> Felix
+>=20
+
+--===============7939451598234452328==--
 
