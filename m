@@ -1,118 +1,87 @@
-Content-Type: multipart/mixed; boundary="===============7939451598234452328=="
+Content-Type: multipart/mixed; boundary="===============2712618206563812901=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
+From: David Challener <david.c.challener at gmail.com>
 Subject: [tpm2] Re: System design question
-Date: Wed, 31 Aug 2022 19:21:34 +0000
-Message-ID: <SN6PR11MB34377A12E7880536240A23B9B8789@SN6PR11MB3437.namprd11.prod.outlook.com>
-In-Reply-To: 2843585.e9J7NaK4W3@polaris
+Date: Wed, 31 Aug 2022 17:21:17 -0400
+Message-ID: <CAAeabfaJSAHG_wAC98G6Md6JznZfQkM+O=uKt3VtfP6xTpvnbg@mail.gmail.com>
+In-Reply-To: f05d55633d2abcf9521b3ee586a93c2018cb8717.camel@intel.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============7939451598234452328==
+--===============2712618206563812901==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
+Generally you use NV when you either have a problem with hash loops (which
+is solvable, by the way), or you don't have access to other storage that
+can be read when you need the value.
 
+On Mon, Aug 22, 2022, 9:09 AM Roberts, William C <
+william.c.roberts(a)intel.com> wrote:
 
-> -----Original Message-----
-> From: Felix Rubio Dalmau <felix(a)kngnt.org>
-> Sent: Sunday, August 28, 2022 4:39 AM
-> To: tpm2(a)lists.01.org
-> Cc: Roberts, William C <william.c.roberts(a)intel.com>
-> Subject: Re: [tpm2] Re: System design question
-> =
+> On Sun, 2022-08-21 at 14:05 +0200, Felix Rubio Dalmau wrote:
+> > My apologies, I have not played with TPM for long time: I had
+> > forgotten I
+> > could tpm2_nvdefine, and then tpm2_nvwrite/nvread.
+> >
+>
+> The best rule of thumb is to do everything you can to not use NV
+> Indices. This is a very small and finite amount of space. I don't think
+> you need to use these if you just "hardcode" the hash values.
+>
+> > Regards!
+> > Felix
+> >
+> > _______________________________________________
+> > tpm2 mailing list -- tpm2(a)lists.01.org
+> > To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+>
 
-> Hey William,
-> =
+--===============2712618206563812901==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-> Thank you for your answer, I have just been playing with the tpm2_tools in
-> latest Debian 11.4, trying to follow your reasoning, but there is somethi=
-ng I
-> am missing:
-> =
+PGRpdiBkaXI9Imx0ciI+PGRpdj5HZW5lcmFsbHkgeW91IHVzZSBOViB3aGVuIHlvdSBlaXRoZXIg
+aGF2ZSBhIHByb2JsZW0gd2l0aCBoYXNoIGxvb3BzICh3aGljaCBpcyBzb2x2YWJsZSwgYnkgdGhl
+IHdheSksIG9yIHlvdSBkb24mIzM5O3QgaGF2ZSBhY2Nlc3MgdG8gb3RoZXIgc3RvcmFnZSB0aGF0
+IGNhbiBiZSByZWFkIHdoZW4geW91IG5lZWQgdGhlIHZhbHVlLiA8YnI+PC9kaXY+PC9kaXY+PGJy
+PjxkaXYgY2xhc3M9ImdtYWlsX3F1b3RlIj48ZGl2IGRpcj0ibHRyIiBjbGFzcz0iZ21haWxfYXR0
+ciI+T24gTW9uLCBBdWcgMjIsIDIwMjIsIDk6MDkgQU0gUm9iZXJ0cywgV2lsbGlhbSBDICZsdDs8
+YSBocmVmPSJtYWlsdG86d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29tIiB0YXJnZXQ9Il9ibGFu
+ayI+d2lsbGlhbS5jLnJvYmVydHNAaW50ZWwuY29tPC9hPiZndDsgd3JvdGU6PGJyPjwvZGl2Pjxi
+bG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAw
+LjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6
+MWV4Ij5PbiBTdW4sIDIwMjItMDgtMjEgYXQgMTQ6MDUgKzAyMDAsIEZlbGl4IFJ1YmlvIERhbG1h
+dSB3cm90ZTo8YnI+CiZndDsgTXkgYXBvbG9naWVzLCBJIGhhdmUgbm90IHBsYXllZCB3aXRoIFRQ
+TSBmb3IgbG9uZyB0aW1lOiBJIGhhZDxicj4KJmd0OyBmb3Jnb3R0ZW4gSSA8YnI+CiZndDsgY291
+bGQgdHBtMl9udmRlZmluZSwgYW5kIHRoZW4gdHBtMl9udndyaXRlL252cmVhZC48YnI+CiZndDsg
+PGJyPgo8YnI+ClRoZSBiZXN0IHJ1bGUgb2YgdGh1bWIgaXMgdG8gZG8gZXZlcnl0aGluZyB5b3Ug
+Y2FuIHRvIG5vdCB1c2UgTlY8YnI+CkluZGljZXMuIFRoaXMgaXMgYSB2ZXJ5IHNtYWxsIGFuZCBm
+aW5pdGUgYW1vdW50IG9mIHNwYWNlLiBJIGRvbiYjMzk7dCB0aGluazxicj4KeW91IG5lZWQgdG8g
+dXNlIHRoZXNlIGlmIHlvdSBqdXN0ICZxdW90O2hhcmRjb2RlJnF1b3Q7IHRoZSBoYXNoIHZhbHVl
+cy48YnI+Cjxicj4KJmd0OyBSZWdhcmRzITxicj4KJmd0OyBGZWxpeDxicj4KJmd0OyA8YnI+CiZn
+dDsgX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188YnI+CiZn
+dDsgdHBtMiBtYWlsaW5nIGxpc3QgLS0gPGEgaHJlZj0ibWFpbHRvOnRwbTJAbGlzdHMuMDEub3Jn
+IiByZWw9Im5vcmVmZXJyZXIiIHRhcmdldD0iX2JsYW5rIj50cG0yQGxpc3RzLjAxLm9yZzwvYT48
+YnI+CiZndDsgVG8gdW5zdWJzY3JpYmUgc2VuZCBhbiBlbWFpbCB0byA8YSBocmVmPSJtYWlsdG86
+dHBtMi1sZWF2ZUBsaXN0cy4wMS5vcmciIHJlbD0ibm9yZWZlcnJlciIgdGFyZ2V0PSJfYmxhbmsi
+PnRwbTItbGVhdmVAbGlzdHMuMDEub3JnPC9hPjxicj4KJmd0OyAlKHdlYl9wYWdlX3VybClzbGlz
+dGluZm8lKGNnaWV4dClzLyUoX2ludGVybmFsX25hbWUpczxicj4KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX188YnI+CnRwbTIgbWFpbGluZyBsaXN0IC0tIDxh
+IGhyZWY9Im1haWx0bzp0cG0yQGxpc3RzLjAxLm9yZyIgcmVsPSJub3JlZmVycmVyIiB0YXJnZXQ9
+Il9ibGFuayI+dHBtMkBsaXN0cy4wMS5vcmc8L2E+PGJyPgpUbyB1bnN1YnNjcmliZSBzZW5kIGFu
+IGVtYWlsIHRvIDxhIGhyZWY9Im1haWx0bzp0cG0yLWxlYXZlQGxpc3RzLjAxLm9yZyIgcmVsPSJu
+b3JlZmVycmVyIiB0YXJnZXQ9Il9ibGFuayI+dHBtMi1sZWF2ZUBsaXN0cy4wMS5vcmc8L2E+PGJy
+PgolKHdlYl9wYWdlX3VybClzbGlzdGluZm8lKGNnaWV4dClzLyUoX2ludGVybmFsX25hbWUpczxi
+cj4KPC9ibG9ja3F1b3RlPjwvZGl2Pgo=
 
-> As secureboot does not check the initramfs, my approach is to make the fu=
-ll
-> disk encryption key depend on PCR registers 0,1,7 and 9 (for what I have
-> read, from kernel 5.13 on, the measurements of initramfs go to PCR 9), or=
- a
-> rescue password. This approach implies having a script in place so that t=
-he
-> first time a new kernel + initramfs boot I will get those measurements
-> somewhere and then I can rebuild the policies with the correct contents
-> (that is, until I find a way to precalculate the value of PCR 9 out of the
-> initramfs file itself...
-> assuming is possible).
-> =
-
-> In your email you say "[...]
-> > So really all that needs to occur is the code/script needs to be in
-> > place that does the normal PCR flow or rescue flow. The create call
-> > can be hardcoded to the known hash, that isn't changing and can be
-> > included in the filesystem when generated.
-> [...]" but I do not see how would that be achieved: my current normal PCR
-> flow goes like this:
-> =
-
-> tpm2_startauthsession -Q -S session.ctx --policy-session tpm2_policypcr -=
-Q -
-> S session.ctx -l sha256:0,1,7,9 tpm2_policypassword -Q -S session.ctx
-> tpm2_policyor -Q -S session.ctx sha256:rescue.policy,regular.policy
-> SECRET=3D`tpm2_unseal -Q -c 0x81010001 -p
-> "session:session.ctx+$REGULAR_PASS"`
-> tpm2_flushcontext -Q session.ctx
-> tpm2_pcrextend -Q
-> 0:sha256=3D00000000000000000000000000000000000000000000000...
-
-So you do this to prevent unseal later right?
-Theirs discussion on systemd to standardize this, amongst a lot of other th=
-ings
-you may find interesting
-https://github.com/systemd/systemd/issues/22637
-
-> =
-
-> I think I understand, from user answer, that I should be able to replace
->         tpm2_policyor -Q -S session.ctx sha256:rescue.policy,regular.poli=
-cy
-> by
->         tpm2_policyor -Q -S session.ctx <output of precalculated digest>
-> =
-
-> But still, this does not fix the issue: the moment I hardcode this value =
-in my
-> initramfs, its measurement on PCR 9 will change. =
-
-
-Ahh yeah, including PCR 9 causes a chicken and egg problem where the egg
-Is initramfs. I don't see a way to break this dependency except by =
-
-just need to calculate the value by running all those commands. :-(
-
-Sorry my suggestion didn't work, it didn't occur to me at the time (facepal=
-m).
-
-> The only way out I see is to
-> avoid storing this information on the initramfs itself, and this is when =
-the
-> nvram came into the picture. Given that nvram is scarce, maybe I can get
-> away by storing on it the digest of the policyor, and adding it somehow t=
-o the
-> session after reading it?
-> =
-
-
-Policyor depends on the hashes of policy A and B... I don't see that breaki=
-ng
-The dependency offhand. I have other ideas, but they have issues as well.
-I think the simplest thing is just run the commands.
-
-> Regards, and thank you very much for giving this issue a thought!
-> =
-
-> Felix
->=20
-
---===============7939451598234452328==--
+--===============2712618206563812901==--
 
