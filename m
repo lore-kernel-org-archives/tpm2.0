@@ -1,42 +1,39 @@
-Content-Type: multipart/mixed; boundary="===============6575283766281161952=="
+Content-Type: multipart/mixed; boundary="===============9047889977758489164=="
 MIME-Version: 1.0
-From: Imran Desai <imran.desai at intel.com>
-Subject: [tpm2] [Release] tpm2-tools v5.3-rc1
-Date: Tue, 13 Sep 2022 21:25:12 +0000
-Message-ID: <20220913212512.1877.56084@ml01.vlan13.01.org>
+From: therock6868i at gmail.com
+Subject: [tpm2] WhatsApp Plus Rojo Review
+Date: Wed, 14 Sep 2022 06:39:58 +0000
+Message-ID: <20220914063958.1877.50738@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6575283766281161952==
+--===============9047889977758489164==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hello all,
+If you are an Android user, you will love WhatsApp Plus Rojo. This free app=
+lication lets you customize your chat experience and keep your chat history=
+ private. It also lets you hide certain chat activity and change the theme.=
+ Moreover, this app lets you translate your messages. Download the app from=
+ the Google Play Store or the official website.
 
-Pleased to announce release for tpm2-tools version 5.3-rc1.
+If you have ever been worried about your privacy, WhatsApp Plus Rojo is for=
+ you. It allows you to hide your last seen and block people from deleting y=
+our messages. Moreover, you can protect your chats by securing them with a =
+PIN or huella digital.
 
-Thank you to all the contributors. You can find the release here: https://g=
-ithub.com/tpm2-software/tpm2-tools/releases/tag/5.3-rc1
+Another great feature of WhatsApp Plus Rojo is its ability to translate and=
+ find deleted messages. While this feature may not be necessary in some cas=
+es, it is useful when traveling abroad or when you want to communicate with=
+ people who speak a different language. It can also be useful in business s=
+ituations. If you are abroad, you can download Whatsapp Plus Rojo to get th=
+e most out of the messaging platform.
 
-Note:
-1. This is a pre-release - your feedback is much appreciated.
-2. Please reference the change log for full list of changes at https://gith=
-ub.com/tpm2-software/tpm2-tools/blob/master/docs/CHANGELOG.md =
-
-
-Fixes in this release candidate:
-1. tools/tpm2_pcrreset.c: fix build errors in 32bit systems.
-2. Fix tssprivkey formatted PEM generation and load errors on 32 bit system=
-s.
-3. CI: Add testing of 32bit systems with multiarch/qemu-user-static contain=
-ers.
-4. Known issue: FAPI tools will not work on 32bit user-static qemu on 64bit=
- host because readdir returns NULL. Follow the issue on https://gitlab.com/=
-qemu-project/qemu/-/issues/263
-
-Thanks, and regards,
-
-Imran Desai
---===============6575283766281161952==--
+WhatsApp Plus Rojo is an updated version of WhatsApp that includes several =
+new features. It also allows you to customize your chat privacy and hide yo=
+ur activities. You can also change the theme of the app and translate messa=
+ges. In addition, the app supports all Android versions, and it is complete=
+ly free to download. https://modpree.com/whatsapp-plus-rojo/
+--===============9047889977758489164==--
 
