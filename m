@@ -1,94 +1,83 @@
-Content-Type: multipart/mixed; boundary="===============4320374508846418890=="
+Content-Type: multipart/mixed; boundary="===============6932273875123283598=="
 MIME-Version: 1.0
 From: Gadacz, Henry <henry.gadacz at sit.fraunhofer.de>
-Subject: [tpm2] Re: import key in tss format into tpm2-pytss
-Date: Tue, 20 Sep 2022 14:14:00 +0000
-Message-ID: <FR0P281MB1706969EE03FF4D9250EBBC9D14C9@FR0P281MB1706.DEUP281.PROD.OUTLOOK.COM>
-In-Reply-To: e14598fcb899f91f8c2532ee6d5b8100d75e8260.camel@cnackers.org
+Subject: [tpm2] flush ALL transient handles or sessions in tpm2-pytss
+Date: Tue, 20 Sep 2022 15:20:29 +0000
+Message-ID: <FR0P281MB1706089B02CCECC42100B6DDD14C9@FR0P281MB1706.DEUP281.PROD.OUTLOOK.COM>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============4320374508846418890==
+--===============6932273875123283598==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thank you for the hint and quick response. The TPM2B_PUBLIC.unmarshal() sol=
-ves it. =
+I have another question :D =
+
+
+
+With tpm2_flushcontext it is possible to flush ALL transient objects, loaded
+sessions or saved sessions.
+
+How can I accomplish the same with tpm2-pytss esapi.flush_context()? I only
+found examples with flush one specific object or session.
+
+ =
+
+
+Thanks in advance!
+
+ =
 
 
 Best Regards,
+
 Henry
 
------Urspr=C3=BCngliche Nachricht-----
-Von: Erik <who(a)cnackers.org> =
-
-Gesendet: Dienstag, 20. September 2022 15:30
-An: Gadacz, Henry <henry.gadacz(a)sit.fraunhofer.de>; tpm2(a)lists.01.org
-Betreff: Re: [tpm2] import key in tss format into tpm2-pytss
-
-Hi,
-
-You can use the unmarshal method for TPM2B_PUBLIC, so something like this (=
-untested) might work:
-from tpm2_pytss.types import TPM2B_PUBLIC                                  =
-                                            =
-
-                                                                           =
-                                                                           =
-                                                                           =
-      =
-
-with open("tpm.pub", "rb") as f:                                           =
-                                            =
-
-    data =3D f.read()                                                      =
-                                              =
-
-    pub, _ =3D TPM2B_PUBLIC.unmarshal(data)                                =
-                                              =
-
-                                                                           =
-                                                                           =
-                                                                           =
-      =
-
-print(pub.publicArea.type) =
+ =
 
 
-/Erik
 
-On Tue, 2022-09-20 at 13:20 +0000, Gadacz, Henry wrote:
-> Hello everyone,
->  =
+--===============6932273875123283598==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
-> I have exported a public key with the tpm2-tools using tpm2_readpublic =
-
-> in the default tss format (I guess it is a TPM2B_PUBLIC structure).
->  =
-
-> How can I load it into an TPM2B_PUBLIC or TPMT_PUBLIC object in =
-
-> tpm2-pytss, so I can load it with the
-> ESAPI.load_external() function? I have seen the .from_pem() method, =
-
-> but I don=E2=80=99t want to use pem format, because it does not include t=
-he key attributes and other information.
->  =
-
-> Best Regards,
-> Henry
->  =
-
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org To unsubscribe send an email to =
-
-> tpm2-leave(a)lists.01.org =
-
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
-
---===============4320374508846418890==
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+PGhlYWQ+PE1FVEEgSFRUUC1FUVVJVj0iQ29udGVudC1UeXBlIiBDT05U
+RU5UPSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9dXMtYXNjaWkiPjxtZXRhIG5hbWU9R2VuZXJhdG9yIGNv
+bnRlbnQ9Ik1pY3Jvc29mdCBXb3JkIDE1IChmaWx0ZXJlZCBtZWRpdW0pIj48c3R5bGU+PCEtLQov
+KiBGb250IERlZmluaXRpb25zICovCkBmb250LWZhY2UKCXtmb250LWZhbWlseToiQ2FtYnJpYSBN
+YXRoIjsKCXBhbm9zZS0xOjIgNCA1IDMgNSA0IDYgMyAyIDQ7fQpAZm9udC1mYWNlCgl7Zm9udC1m
+YW1pbHk6Q2FsaWJyaTsKCXBhbm9zZS0xOjIgMTUgNSAyIDIgMiA0IDMgMiA0O30KLyogU3R5bGUg
+RGVmaW5pdGlvbnMgKi8KcC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbAoJ
+e21hcmdpbjowY207Cglmb250LXNpemU6MTEuMHB0OwoJZm9udC1mYW1pbHk6IkNhbGlicmkiLHNh
+bnMtc2VyaWY7fQouTXNvQ2hwRGVmYXVsdAoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5OwoJ
+Zm9udC1mYW1pbHk6IkNhbGlicmkiLHNhbnMtc2VyaWY7fQpAcGFnZSBXb3JkU2VjdGlvbjEKCXtz
+aXplOjYxMi4wcHQgNzkyLjBwdDsKCW1hcmdpbjo3MC44NXB0IDcwLjg1cHQgMi4wY20gNzAuODVw
+dDt9CmRpdi5Xb3JkU2VjdGlvbjEKCXtwYWdlOldvcmRTZWN0aW9uMTt9Ci0tPjwvc3R5bGU+PCEt
+LVtpZiBndGUgbXNvIDldPjx4bWw+CjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNwaWRt
+YXg9IjEwMjYiIC8+CjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPgo8
+bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+CjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBkYXRhPSIx
+IiAvPgo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+PC9oZWFkPjxib2R5IGxhbmc9
+RU4tVVMgbGluaz0iIzA1NjNDMSIgdmxpbms9IiM5NTRGNzIiIHN0eWxlPSd3b3JkLXdyYXA6YnJl
+YWstd29yZCc+PGRpdiBjbGFzcz1Xb3JkU2VjdGlvbjE+PHAgY2xhc3M9TXNvTm9ybWFsPkkgaGF2
+ZSBhbm90aGVyIHF1ZXN0aW9uIDpEIDxvOnA+PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD48
+YnI+V2l0aCB0cG0yX2ZsdXNoY29udGV4dCBpdCBpcyBwb3NzaWJsZSB0byBmbHVzaCBBTEwgdHJh
+bnNpZW50IG9iamVjdHMsIGxvYWRlZCBzZXNzaW9ucyBvciBzYXZlZCBzZXNzaW9ucy48bzpwPjwv
+bzpwPjwvcD48cCBjbGFzcz1Nc29Ob3JtYWw+SG93IGNhbiBJIGFjY29tcGxpc2ggdGhlIHNhbWUg
+d2l0aCB0cG0yLXB5dHNzIGVzYXBpLmZsdXNoX2NvbnRleHQoKT8gSSBvbmx5IGZvdW5kIGV4YW1w
+bGVzIHdpdGggZmx1c2ggb25lIHNwZWNpZmljIG9iamVjdCBvciBzZXNzaW9uLjxvOnA+PC9vOnA+
+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD48bzpwPiZuYnNwOzwvbzpwPjwvcD48cCBjbGFzcz1Nc29O
+b3JtYWw+VGhhbmtzIGluIGFkdmFuY2UhPG86cD48L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFs
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPjxwIGNsYXNzPU1zb05vcm1hbD5CZXN0IFJlZ2FyZHMsPG86
+cD48L286cD48L3A+PHAgY2xhc3M9TXNvTm9ybWFsPkhlbnJ5PG86cD48L286cD48L3A+PHAgY2xh
+c3M9TXNvTm9ybWFsPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPjwvZGl2PjwvYm9keT48L2h0bWw+
+--===============6932273875123283598==
 Content-Type: application/pkcs7-signature
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -217,7 +206,7 @@ BCAwggQcAgEBMIGdMIGMMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhN
 dWVuY2hlbjETMBEGA1UECgwKRnJhdW5ob2ZlcjEhMB8GA1UECwwYRnJhdW5ob2ZlciBDb3Jwb3Jh
 dGUgUEtJMSEwHwYDVQQDDBhGcmF1bmhvZmVyIFVzZXIgQ0EgLSBHMDICDCMKsPuRbG05hiQZAjAJ
 BgUrDgMCGgUAoIICVzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0y
-MjA5MjAxNDEzNTNaMCMGCSqGSIb3DQEJBDEWBBQ1cKeiZ2t48cYQrdKO5jBa1T3jOzCBkwYJKoZI
+MjA5MjAxNTIwMjNaMCMGCSqGSIb3DQEJBDEWBBSN4uz64JtI+sj6Gpv8ndvaHHVk1DCBkwYJKoZI
 hvcNAQkPMYGFMIGCMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCgYIKoZIhvcNAwcwCwYJYIZI
 AWUDBAECMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIBQDAHBgUrDgMCGjALBglghkgBZQME
 AgMwCwYJYIZIAWUDBAICMAsGCWCGSAFlAwQCATCBrgYJKwYBBAGCNxAEMYGgMIGdMIGMMQswCQYD
@@ -227,10 +216,10 @@ bmhvZmVyIFVzZXIgQ0EgLSBHMDICDCMKsYQtrVU1kitVvjCBsAYLKoZIhvcNAQkQAgsxgaCggZ0w
 gYwxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMRMwEQYD
 VQQKDApGcmF1bmhvZmVyMSEwHwYDVQQLDBhGcmF1bmhvZmVyIENvcnBvcmF0ZSBQS0kxITAfBgNV
 BAMMGEZyYXVuaG9mZXIgVXNlciBDQSAtIEcwMgIMIwqxhC2tVTWSK1W+MA0GCSqGSIb3DQEBAQUA
-BIIBAFUslXgjySNopPlyT4yN/3GZMWAtUayZO5fC+gb8lfTNgnZnLs0y6VYlggT585BJdejHXkrb
-03CN/zUF+BH4QPouTwAc8v7RRenGSN1oy1kdjqxOqupMEY3fYFBCuQZU7dmjynBc7piPRu1osxmk
-Nzuog2UV/Lm1Oh+NeR8GjxtbeE3w7VxS0ETjjQpOG1GnBfTg70/U8i3WLPp61hf545BBmm/E+nGW
-A2b0r2IZTa6M6ZskHcAATYW3BcoAM1BB3POM/stKiYmG64zduAM4oAwA7aoQKaOAoWQLtr5BPIWn
-vEJTZkUd3OcjGe5b1rnVNna4F/Dtobl52SyUSFRHbTQAAAAAAAA=
---===============4320374508846418890==--
+BIIBAJ38AYW76i/57j9sHtjad0bRl5mfbanQaTXVE3DbK/AdT2/95H4RG9Ap42f76wHjlsrKNQC6
+yVj8P/iPLTmpSrX6zoNFwzKoPrfFAeQo0VNpo5Sd8pPLmVzRnvv9mkeor6JHmG17Cr+leJNSL8Ay
+VThSewaMXNmyAlJTXgugBL0qXOSVMuL9IzxhF0Msy3eH6sHUmCrg0XIR1napRjwhaaYVf2+Bk5sl
+sXxzuGWtLErPip63jmizQJ4Yt76yqwXV8MhlBrqbnQSpQMfJUBdBY62YV3gk+pLVYpksRejuEm52
+AJwiZ/0ZVOLrI1oS4zNBo8Qk5VngHu4hUc4jPX6el1MAAAAAAAA=
+--===============6932273875123283598==--
 
