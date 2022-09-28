@@ -1,93 +1,107 @@
-Content-Type: multipart/mixed; boundary="===============3257702799724709086=="
+Content-Type: multipart/mixed; boundary="===============3432707070665593651=="
 MIME-Version: 1.0
-From: accounts <burnsds.accounts at protonmail.com>
-Subject: [tpm2] Design for Secrets Encryption
-Date: Wed, 28 Sep 2022 13:18:05 +0000
-Message-ID: <fYPnYNhBp-T2NJbufHcLy_ghr5nUgil-fSR-DCBm1O-wHQVJsMEnMhNVMzvh6fTbm_ZuT03DNsaTH2_ZY0qkTEF-iNbliDXcofYuN5SlnRM=@protonmail.com>
+From: Roberts, William C <william.c.roberts at intel.com>
+Subject: [tpm2] Re: Design for Secrets Encryption
+Date: Wed, 28 Sep 2022 14:51:40 +0000
+Message-ID: <1805d5c56015983cc4ebdee5f2f46d7ed206ecef.camel@intel.com>
+In-Reply-To: fYPnYNhBp-T2NJbufHcLy_ghr5nUgil-fSR-DCBm1O-wHQVJsMEnMhNVMzvh6fTbm_ZuT03DNsaTH2_ZY0qkTEF-iNbliDXcofYuN5SlnRM=@protonmail.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3257702799724709086==
+--===============3432707070665593651==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-I am working a Linux IoT integration with TPM 2.0, and have a requirement t=
-o use the TPM for encrypting secrets. Unfortunately, disk encryption is not=
- an option. I=E2=80=99m using the tss2 and tpm2 tools found here. https://t=
-pm2-tools.readthedocs.io/en/latest/
+On Wed, 2022-09-28 at 13:18 +0000, accounts wrote:
+> I am working a Linux IoT integration with TPM 2.0, and have a
+> requirement to use the TPM for encrypting secrets.  Unfortunately,
+> disk encryption is not an option.  I=E2=80=99m using the tss2 and tpm2 to=
+ols
+> found here.  https://tpm2-tools.readthedocs.io/en/latest/ =
 
-I=E2=80=99m new to TPM and have some questions regarding the implementation=
-. It appears as I can use two approaches. The first approach uses tss2_crea=
-tekey and tss2_encrypt to encrypt the secrets during device provisioning. t=
-ss2_decrypt would then be used to decrypt the secrets at boot. When using t=
-ss2_createkey, where is the private key stored? Is the private key encrypte=
-d by the SRK which would allow it to be stored on an unencrypted disk?
+> =
 
-The other option is to generate a key pair (using open ssl) and store the p=
-rivate key in the TPM NV index. Assuming the first option stores the privat=
-e key outside of the TPM, are there any security benefits to this approach?
+> I=E2=80=99m new to TPM and have some questions regarding the
+> implementation.  It appears as I can use two approaches.  The first
+> approach uses tss2_createkey and tss2_encrypt to encrypt the secrets
+> during device provisioning.  tss2_decrypt would then be used to
+> decrypt the secrets at boot.  When using tss2_createkey, where is the
+> private key stored?  Is the private key encrypted by the SRK which
+> would allow it to be stored on an unencrypted disk? =
 
-As a side note, the key will be tied to a PCR based auth policy. It should =
-only be released if the valid software configuration boots on the device.
 
-Thanks for the help!
+tss2_createkey can be used to create a key under the SRK. It depends
+on the --path option, but the examples in the man page show it being
+made under the SRK. The TPM generates a key, and then TPM protected
+blobs are stored on disk in the FAPI store. The path can be used to
+resolve those key blobs later for use in other tools. The blobs are
+protected by the SRK as defined in the architecture spec [1] section
+23.3.2 "Protections". TL;DR is that the key is protected by the SRK.
 
-Dan Burns
 
---===============3257702799724709086==
-Content-Type: text/html
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="attachment.htm"
+1. =
 
-PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsOyBmb250LXNpemU6IDE0cHg7Ij48cCBzdHls
-ZT0iZm9udC1zaXplOjExcHQ7bGluZS1oZWlnaHQ6MS41O21hcmdpbjowaW4gMGluIDhwdDtmb250
-LWZhbWlseTpDYWxpYnJpLCBzYW5zLXNlcmlmIj5JIGFtIHdvcmtpbmcgYSBMaW51eCBJb1QgaW50
-ZWdyYXRpb24gd2l0aCBUUE0gMi4wLCBhbmQgaGF2ZSBhIHJlcXVpcmVtZW50IHRvIHVzZSB0aGUg
-VFBNIGZvciBlbmNyeXB0aW5nIHNlY3JldHMuPHNwYW4+Jm5ic3A7PHNwYW4+Jm5ic3A7PC9zcGFu
-Pjwvc3Bhbj5VbmZvcnR1bmF0ZWx5LCBkaXNrIGVuY3J5cHRpb24gaXMgbm90IGFuIG9wdGlvbi48
-c3Bhbj4mbmJzcDs8c3Bhbj4mbmJzcDs8L3NwYW4+PC9zcGFuPknigJltIHVzaW5nIHRoZSB0c3My
-IGFuZCB0cG0yIHRvb2xzIGZvdW5kIGhlcmUuPHNwYW4+Jm5ic3A7PHNwYW4+Jm5ic3A7PC9zcGFu
-Pjwvc3Bhbj48YSBocmVmPSJodHRwczovL3RwbTItdG9vbHMucmVhZHRoZWRvY3MuaW8vZW4vbGF0
-ZXN0LyIgcmVsPSJub3JlZmVycmVyIG5vZm9sbG93IG5vb3BlbmVyIiB0YXJnZXQ9Il9ibGFuayIg
-c3R5bGU9ImNvbG9yOnZhcigtLWludGVyYWN0aW9uLW5vcm0pO3RleHQtZGVjb3JhdGlvbjp1bmRl
-cmxpbmU7Y3Vyc29yOnBvaW50ZXIiPmh0dHBzOi8vdHBtMi10b29scy5yZWFkdGhlZG9jcy5pby9l
-bi9sYXRlc3QvPC9hPiZuYnNwOzwvcD48cCBzdHlsZT0iZm9udC1zaXplOjExcHQ7bGluZS1oZWln
-aHQ6MS41O21hcmdpbjowaW4gMGluIDhwdDtmb250LWZhbWlseTpDYWxpYnJpLCBzYW5zLXNlcmlm
-Ij5J4oCZbSBuZXcgdG8gVFBNIGFuZCBoYXZlIHNvbWUgcXVlc3Rpb25zIHJlZ2FyZGluZyB0aGUg
-aW1wbGVtZW50YXRpb24uPHNwYW4+Jm5ic3A7PHNwYW4+Jm5ic3A7PC9zcGFuPjwvc3Bhbj5JdCBh
-cHBlYXJzIGFzIEkgY2FuIHVzZSB0d28gYXBwcm9hY2hlcy48c3Bhbj4mbmJzcDs8c3Bhbj4mbmJz
-cDs8L3NwYW4+PC9zcGFuPlRoZSBmaXJzdCBhcHByb2FjaCB1c2VzIHRzczJfY3JlYXRla2V5IGFu
-ZCB0c3MyX2VuY3J5cHQgdG8gZW5jcnlwdCB0aGUgc2VjcmV0cyBkdXJpbmcgZGV2aWNlIHByb3Zp
-c2lvbmluZy48c3Bhbj4mbmJzcDs8c3Bhbj4mbmJzcDs8L3NwYW4+PC9zcGFuPnRzczJfZGVjcnlw
-dCB3b3VsZCB0aGVuIGJlIHVzZWQgdG8gZGVjcnlwdCB0aGUgc2VjcmV0cyBhdCBib290LjxzcGFu
-PiZuYnNwOzxzcGFuPiZuYnNwOzwvc3Bhbj48L3NwYW4+V2hlbiB1c2luZyB0c3MyX2NyZWF0ZWtl
-eSwgd2hlcmUgaXMgdGhlIHByaXZhdGUga2V5IHN0b3JlZD88c3Bhbj4mbmJzcDs8c3Bhbj4mbmJz
-cDs8L3NwYW4+PC9zcGFuPklzIHRoZSBwcml2YXRlIGtleSBlbmNyeXB0ZWQgYnkgdGhlIFNSSyB3
-aGljaCB3b3VsZCBhbGxvdyBpdCB0byBiZSBzdG9yZWQgb24gYW4gdW5lbmNyeXB0ZWQgZGlzaz8m
-bmJzcDs8L3A+PHAgc3R5bGU9ImZvbnQtc2l6ZToxMXB0O2xpbmUtaGVpZ2h0OjEuNTttYXJnaW46
-MGluIDBpbiA4cHQ7Zm9udC1mYW1pbHk6Q2FsaWJyaSwgc2Fucy1zZXJpZiI+VGhlIG90aGVyIG9w
-dGlvbiBpcyB0byBnZW5lcmF0ZSBhIGtleSBwYWlyICh1c2luZyBvcGVuIHNzbCkgYW5kIHN0b3Jl
-IHRoZSBwcml2YXRlIGtleSBpbiB0aGUgVFBNIE5WIGluZGV4LjxzcGFuPiZuYnNwOzxzcGFuPiZu
-YnNwOzwvc3Bhbj48L3NwYW4+QXNzdW1pbmcgdGhlIGZpcnN0IG9wdGlvbiBzdG9yZXMgdGhlIHBy
-aXZhdGUga2V5IG91dHNpZGUgb2YgdGhlIFRQTSwgYXJlIHRoZXJlIGFueSBzZWN1cml0eSBiZW5l
-Zml0cyB0byB0aGlzIGFwcHJvYWNoPyZuYnNwOzwvcD48cCBzdHlsZT0iZm9udC1zaXplOjExcHQ7
-bGluZS1oZWlnaHQ6MS41O21hcmdpbjowaW4gMGluIDhwdDtmb250LWZhbWlseTpDYWxpYnJpLCBz
-YW5zLXNlcmlmIj5BcyBhIHNpZGUgbm90ZSwgdGhlIGtleSB3aWxsIGJlIHRpZWQgdG8gYSBQQ1Ig
-YmFzZWQgYXV0aCBwb2xpY3kuPHNwYW4+Jm5ic3A7PHNwYW4+Jm5ic3A7PC9zcGFuPjwvc3Bhbj5J
-dCBzaG91bGQgb25seSBiZSByZWxlYXNlZCBpZiB0aGUgdmFsaWQgc29mdHdhcmUgY29uZmlndXJh
-dGlvbiBib290cyBvbiB0aGUgZGV2aWNlLjwvcD48cCBzdHlsZT0iZm9udC1zaXplOjExcHQ7bGlu
-ZS1oZWlnaHQ6MS41O21hcmdpbjowaW4gMGluIDhwdDtmb250LWZhbWlseTpDYWxpYnJpLCBzYW5z
-LXNlcmlmIj5UaGFua3MgZm9yIHRoZSBoZWxwITwvcD48cCBzdHlsZT0iZm9udC1zaXplOjExcHQ7
-bGluZS1oZWlnaHQ6MS41O21hcmdpbjowaW4gMGluIDhwdDtmb250LWZhbWlseTpDYWxpYnJpLCBz
-YW5zLXNlcmlmIj5EYW4gQnVybnM8L3A+PGJyPjxicj48L2Rpdj4NCjxkaXYgY2xhc3M9InByb3Rv
-bm1haWxfc2lnbmF0dXJlX2Jsb2NrIHByb3Rvbm1haWxfc2lnbmF0dXJlX2Jsb2NrLWVtcHR5IiBz
-dHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsOyBmb250LXNpemU6IDE0cHg7Ij4NCiAgICA8ZGl2IGNs
-YXNzPSJwcm90b25tYWlsX3NpZ25hdHVyZV9ibG9jay11c2VyIHByb3Rvbm1haWxfc2lnbmF0dXJl
-X2Jsb2NrLWVtcHR5Ij48L2Rpdj4NCiAgICANCiAgICAgICAgICAgIDxkaXYgY2xhc3M9InByb3Rv
-bm1haWxfc2lnbmF0dXJlX2Jsb2NrLXByb3RvbiBwcm90b25tYWlsX3NpZ25hdHVyZV9ibG9jay1l
-bXB0eSI+DQogICAgICAgIA0KICAgICAgICAgICAgPC9kaXY+DQo8L2Rpdj4NCg==
+https://trustedcomputinggroup.org/wp-content/uploads/TCG_TPM2_r1p59_Part1_A=
+rchitecture_pub.pdf
 
---===============3257702799724709086==--
+> =
+
+> The other option is to generate a key pair (using open ssl) and store
+> the private key in the TPM NV index.  Assuming the first option
+> stores the private key outside of the TPM, are there any security
+> benefits to this approach? =
+
+
+No, generally if you want to symmetric encryption, ie AES, the TPM is a
+bad choice for performing the actual encryption/decryption operations.
+Generally use seal and unseal to save and retrive an AES key. Then the
+actual encryption operations are perfomed on the host cpu in software
+or wherever the application decides to send the key. Sealing and
+unsealing can be done with tss2_createseal and tss2_unseal.
+
+tss2_encrypt, may use the TPM but the spec doesn't require it. I think
+if it's doing a bulk encryption it will use that key to protect an AES
+key that it keeps on disk, but others know FAPI internals better than
+I. =
+
+
+With FAPI based tools, tss2_ prefix things, you get a very nice
+property. Encrypted sessions are established for you. This means that
+anyone Man In The Middling (MiTM) your bus won't see the key. Only
+things that have the ability to see the process address space can see
+the key in the clear, think of the host kernel as an example. Thus
+doing something in an enclave has benefits here. However, considering
+that the kernel could see the plaintext message, you're not really
+gaining anything a lot by going to the TPM for the key operations.
+
+> =
+
+> As a side note, the key will be tied to a PCR based auth policy.  It
+> should only be released if the valid software configuration boots on
+> the device.
+
+Thats the general configuration for the disk encryption key, adding a
+pin or other auth mechanism to it prevents attacks on the TPM where the
+attacker replays the events to establish the same PCR and steals your
+key.
+
+> =
+
+> Thanks for the help!
+> =
+
+> Dan Burns
+> =
+
+> =
+
+> =
+
+> _______________________________________________
+> tpm2 mailing list -- tpm2(a)lists.01.org
+> To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+
+--===============3432707070665593651==--
 
