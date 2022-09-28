@@ -1,43 +1,93 @@
-Content-Type: multipart/mixed; boundary="===============3098959485667963513=="
+Content-Type: multipart/mixed; boundary="===============3257702799724709086=="
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: flush ALL transient handles or sessions in tpm2-pytss
-Date: Mon, 26 Sep 2022 22:56:14 +0000
-Message-ID: <b7e352a346a3b71a887102a9d5f56b663f2e327b.camel@intel.com>
-In-Reply-To: FR0P281MB1706089B02CCECC42100B6DDD14C9@FR0P281MB1706.DEUP281.PROD.OUTLOOK.COM
+From: accounts <burnsds.accounts at protonmail.com>
+Subject: [tpm2] Design for Secrets Encryption
+Date: Wed, 28 Sep 2022 13:18:05 +0000
+Message-ID: <fYPnYNhBp-T2NJbufHcLy_ghr5nUgil-fSR-DCBm1O-wHQVJsMEnMhNVMzvh6fTbm_ZuT03DNsaTH2_ZY0qkTEF-iNbliDXcofYuN5SlnRM=@protonmail.com>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============3098959485667963513==
+--===============3257702799724709086==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2022-09-20 at 15:20 +0000, Gadacz, Henry wrote:
-> I have another question :D
-> =
+I am working a Linux IoT integration with TPM 2.0, and have a requirement t=
+o use the TPM for encrypting secrets. Unfortunately, disk encryption is not=
+ an option. I=E2=80=99m using the tss2 and tpm2 tools found here. https://t=
+pm2-tools.readthedocs.io/en/latest/
 
-> With tpm2_flushcontext it is possible to flush ALL transient objects,
-> loaded sessions or saved sessions.
-> How can I accomplish the same with tpm2-pytss esapi.flush_context()?
-> I only found examples with flush one specific object or session.
+I=E2=80=99m new to TPM and have some questions regarding the implementation=
+. It appears as I can use two approaches. The first approach uses tss2_crea=
+tekey and tss2_encrypt to encrypt the secrets during device provisioning. t=
+ss2_decrypt would then be used to decrypt the secrets at boot. When using t=
+ss2_createkey, where is the private key stored? Is the private key encrypte=
+d by the SRK which would allow it to be stored on an unencrypted disk?
 
-You need to use get_cap to get all the handles and then loop through
-them calling flush_context.
+The other option is to generate a key pair (using open ssl) and store the p=
+rivate key in the TPM NV index. Assuming the first option stores the privat=
+e key outside of the TPM, are there any security benefits to this approach?
 
->  =
+As a side note, the key will be tied to a PCR based auth policy. It should =
+only be released if the valid software configuration boots on the device.
 
-> Thanks in advance!
->  =
+Thanks for the help!
 
-> Best Regards,
-> Henry
->  =
+Dan Burns
 
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+--===============3257702799724709086==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
 
---===============3098959485667963513==--
+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsOyBmb250LXNpemU6IDE0cHg7Ij48cCBzdHls
+ZT0iZm9udC1zaXplOjExcHQ7bGluZS1oZWlnaHQ6MS41O21hcmdpbjowaW4gMGluIDhwdDtmb250
+LWZhbWlseTpDYWxpYnJpLCBzYW5zLXNlcmlmIj5JIGFtIHdvcmtpbmcgYSBMaW51eCBJb1QgaW50
+ZWdyYXRpb24gd2l0aCBUUE0gMi4wLCBhbmQgaGF2ZSBhIHJlcXVpcmVtZW50IHRvIHVzZSB0aGUg
+VFBNIGZvciBlbmNyeXB0aW5nIHNlY3JldHMuPHNwYW4+Jm5ic3A7PHNwYW4+Jm5ic3A7PC9zcGFu
+Pjwvc3Bhbj5VbmZvcnR1bmF0ZWx5LCBkaXNrIGVuY3J5cHRpb24gaXMgbm90IGFuIG9wdGlvbi48
+c3Bhbj4mbmJzcDs8c3Bhbj4mbmJzcDs8L3NwYW4+PC9zcGFuPknigJltIHVzaW5nIHRoZSB0c3My
+IGFuZCB0cG0yIHRvb2xzIGZvdW5kIGhlcmUuPHNwYW4+Jm5ic3A7PHNwYW4+Jm5ic3A7PC9zcGFu
+Pjwvc3Bhbj48YSBocmVmPSJodHRwczovL3RwbTItdG9vbHMucmVhZHRoZWRvY3MuaW8vZW4vbGF0
+ZXN0LyIgcmVsPSJub3JlZmVycmVyIG5vZm9sbG93IG5vb3BlbmVyIiB0YXJnZXQ9Il9ibGFuayIg
+c3R5bGU9ImNvbG9yOnZhcigtLWludGVyYWN0aW9uLW5vcm0pO3RleHQtZGVjb3JhdGlvbjp1bmRl
+cmxpbmU7Y3Vyc29yOnBvaW50ZXIiPmh0dHBzOi8vdHBtMi10b29scy5yZWFkdGhlZG9jcy5pby9l
+bi9sYXRlc3QvPC9hPiZuYnNwOzwvcD48cCBzdHlsZT0iZm9udC1zaXplOjExcHQ7bGluZS1oZWln
+aHQ6MS41O21hcmdpbjowaW4gMGluIDhwdDtmb250LWZhbWlseTpDYWxpYnJpLCBzYW5zLXNlcmlm
+Ij5J4oCZbSBuZXcgdG8gVFBNIGFuZCBoYXZlIHNvbWUgcXVlc3Rpb25zIHJlZ2FyZGluZyB0aGUg
+aW1wbGVtZW50YXRpb24uPHNwYW4+Jm5ic3A7PHNwYW4+Jm5ic3A7PC9zcGFuPjwvc3Bhbj5JdCBh
+cHBlYXJzIGFzIEkgY2FuIHVzZSB0d28gYXBwcm9hY2hlcy48c3Bhbj4mbmJzcDs8c3Bhbj4mbmJz
+cDs8L3NwYW4+PC9zcGFuPlRoZSBmaXJzdCBhcHByb2FjaCB1c2VzIHRzczJfY3JlYXRla2V5IGFu
+ZCB0c3MyX2VuY3J5cHQgdG8gZW5jcnlwdCB0aGUgc2VjcmV0cyBkdXJpbmcgZGV2aWNlIHByb3Zp
+c2lvbmluZy48c3Bhbj4mbmJzcDs8c3Bhbj4mbmJzcDs8L3NwYW4+PC9zcGFuPnRzczJfZGVjcnlw
+dCB3b3VsZCB0aGVuIGJlIHVzZWQgdG8gZGVjcnlwdCB0aGUgc2VjcmV0cyBhdCBib290LjxzcGFu
+PiZuYnNwOzxzcGFuPiZuYnNwOzwvc3Bhbj48L3NwYW4+V2hlbiB1c2luZyB0c3MyX2NyZWF0ZWtl
+eSwgd2hlcmUgaXMgdGhlIHByaXZhdGUga2V5IHN0b3JlZD88c3Bhbj4mbmJzcDs8c3Bhbj4mbmJz
+cDs8L3NwYW4+PC9zcGFuPklzIHRoZSBwcml2YXRlIGtleSBlbmNyeXB0ZWQgYnkgdGhlIFNSSyB3
+aGljaCB3b3VsZCBhbGxvdyBpdCB0byBiZSBzdG9yZWQgb24gYW4gdW5lbmNyeXB0ZWQgZGlzaz8m
+bmJzcDs8L3A+PHAgc3R5bGU9ImZvbnQtc2l6ZToxMXB0O2xpbmUtaGVpZ2h0OjEuNTttYXJnaW46
+MGluIDBpbiA4cHQ7Zm9udC1mYW1pbHk6Q2FsaWJyaSwgc2Fucy1zZXJpZiI+VGhlIG90aGVyIG9w
+dGlvbiBpcyB0byBnZW5lcmF0ZSBhIGtleSBwYWlyICh1c2luZyBvcGVuIHNzbCkgYW5kIHN0b3Jl
+IHRoZSBwcml2YXRlIGtleSBpbiB0aGUgVFBNIE5WIGluZGV4LjxzcGFuPiZuYnNwOzxzcGFuPiZu
+YnNwOzwvc3Bhbj48L3NwYW4+QXNzdW1pbmcgdGhlIGZpcnN0IG9wdGlvbiBzdG9yZXMgdGhlIHBy
+aXZhdGUga2V5IG91dHNpZGUgb2YgdGhlIFRQTSwgYXJlIHRoZXJlIGFueSBzZWN1cml0eSBiZW5l
+Zml0cyB0byB0aGlzIGFwcHJvYWNoPyZuYnNwOzwvcD48cCBzdHlsZT0iZm9udC1zaXplOjExcHQ7
+bGluZS1oZWlnaHQ6MS41O21hcmdpbjowaW4gMGluIDhwdDtmb250LWZhbWlseTpDYWxpYnJpLCBz
+YW5zLXNlcmlmIj5BcyBhIHNpZGUgbm90ZSwgdGhlIGtleSB3aWxsIGJlIHRpZWQgdG8gYSBQQ1Ig
+YmFzZWQgYXV0aCBwb2xpY3kuPHNwYW4+Jm5ic3A7PHNwYW4+Jm5ic3A7PC9zcGFuPjwvc3Bhbj5J
+dCBzaG91bGQgb25seSBiZSByZWxlYXNlZCBpZiB0aGUgdmFsaWQgc29mdHdhcmUgY29uZmlndXJh
+dGlvbiBib290cyBvbiB0aGUgZGV2aWNlLjwvcD48cCBzdHlsZT0iZm9udC1zaXplOjExcHQ7bGlu
+ZS1oZWlnaHQ6MS41O21hcmdpbjowaW4gMGluIDhwdDtmb250LWZhbWlseTpDYWxpYnJpLCBzYW5z
+LXNlcmlmIj5UaGFua3MgZm9yIHRoZSBoZWxwITwvcD48cCBzdHlsZT0iZm9udC1zaXplOjExcHQ7
+bGluZS1oZWlnaHQ6MS41O21hcmdpbjowaW4gMGluIDhwdDtmb250LWZhbWlseTpDYWxpYnJpLCBz
+YW5zLXNlcmlmIj5EYW4gQnVybnM8L3A+PGJyPjxicj48L2Rpdj4NCjxkaXYgY2xhc3M9InByb3Rv
+bm1haWxfc2lnbmF0dXJlX2Jsb2NrIHByb3Rvbm1haWxfc2lnbmF0dXJlX2Jsb2NrLWVtcHR5IiBz
+dHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsOyBmb250LXNpemU6IDE0cHg7Ij4NCiAgICA8ZGl2IGNs
+YXNzPSJwcm90b25tYWlsX3NpZ25hdHVyZV9ibG9jay11c2VyIHByb3Rvbm1haWxfc2lnbmF0dXJl
+X2Jsb2NrLWVtcHR5Ij48L2Rpdj4NCiAgICANCiAgICAgICAgICAgIDxkaXYgY2xhc3M9InByb3Rv
+bm1haWxfc2lnbmF0dXJlX2Jsb2NrLXByb3RvbiBwcm90b25tYWlsX3NpZ25hdHVyZV9ibG9jay1l
+bXB0eSI+DQogICAgICAgIA0KICAgICAgICAgICAgPC9kaXY+DQo8L2Rpdj4NCg==
+
+--===============3257702799724709086==--
 
