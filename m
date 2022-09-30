@@ -1,59 +1,56 @@
-Content-Type: multipart/mixed; boundary="===============6754720692173805236=="
+Content-Type: multipart/mixed; boundary="===============6396430615012659114=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Design for Secrets Encryption
-Date: Fri, 30 Sep 2022 17:19:10 +0000
-Message-ID: <7f9c897fd4c8df050e653d27331407fe0aa2dafe.camel@intel.com>
-In-Reply-To: 20220930161851.2030.62377@ml01.vlan13.01.org
+Subject: [tpm2] Re: Clearing TPM
+Date: Fri, 30 Sep 2022 17:20:49 +0000
+Message-ID: <0389a2458d13073e1e9ce34e99f17e90307cc93c.camel@intel.com>
+In-Reply-To: 20220930162656.2030.79430@ml01.vlan13.01.org
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============6754720692173805236==
+--===============6396430615012659114==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2022-09-30 at 16:18 +0000, burnsds.accounts(a)protonmail.com
+On Fri, 2022-09-30 at 16:26 +0000, burnsds.accounts(a)protonmail.com
 wrote:
-> Thanks for the great info!  In summary I think this approach will
-> work for me:
+> I am working a Linux IoT integration with TPM 2.0 and want to write a
+> provisioning script for ensuring the TPM is setup consistently on the
+> device.  The script uses tpm2_clear and tpm2_changeauth.  Some of my
+> devices show the following error message when calling tpm2_clear:
 > =
 
-> Provisioning
-> - Generate a key using tss2_createkey
-
-No, you won't be able to get that key out of the TPM [1].
-Generate a key use tss2_createseal to create the sealed object.
-
-> - Instruct TPM to unseal encrypted key using tpm_unseal
-> - Encrypt secrets using unsealed key and openssl
+> dhub(a)dhub336:~$ sudo tpm2_clear
+> [sudo] password for dhub:
+> WARNING:esys:src/tss2-esys/api/Esys_Clear.c:291:Esys_Clear_Finish()
+> Received TPM Error
+> ERROR:esys:src/tss2-esys/api/Esys_Clear.c:97:Esys_Clear() Esys Finish
+> ErrorCode (0x00000921)
+> ERROR: Esys_Clear(0x921) - tpm:warn(2.0): authorizations for objects
+> subject to DA protection are not allowed at this time because the TPM
+> is in DA lockout mode
+> ERROR: Unable to run tpm2_clear
 > =
 
-> Runtime
-> - At boot, instruct TPM to unseal encrypted key using tpm_unseal
-> - Decrypt secrets using unseal key and openssl
-> =
+> This makes me nervous as some of the devices need to be provisioned
+> in the field.  Why is the DA lockout preventing me from clearing the
+> TPM?  This is occurring on a NUC10 where the TPM is implemented in
+> the PTT.
 
-> I'm still working on the correct PCR register config for auth, but
-> I'll couple this with a time based policy to mitigate the attack you
-> described.
-
-Make sure you stick with FAPI API or tss2_ prefixed tools to pick up
-automatic paramter and response encryption with the TPM. I see you
-mixing tss2_ and tpm2_ tools. Just stuck with FAPI if you can.
-
-[1] Not 100% true, depends on object attributes and it can be more pain
-to get it back out to just then have to seal it the tpm (you always
-have to run tss2_createseal).
+Something has gotten auth wrong enough times on a DA protected object
+to trigger DA lockout. Why, I can't tell you. You'd have to investigate
+the reason it got into that state. tpm2_dictionarylockout -c will clear
+it and requires owner or lockout password.
 
 > =
 
-> Thanks again!
-> Dan
+> Thanks,
+> Dan Burns
 > _______________________________________________
 > tpm2 mailing list -- tpm2(a)lists.01.org
 > To unsubscribe send an email to tpm2-leave(a)lists.01.org
 > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
 
---===============6754720692173805236==--
+--===============6396430615012659114==--
 
