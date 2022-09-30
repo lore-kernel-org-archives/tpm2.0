@@ -1,34 +1,38 @@
-Content-Type: multipart/mixed; boundary="===============0846149733785924007=="
+Content-Type: multipart/mixed; boundary="===============4089630097282134191=="
 MIME-Version: 1.0
 From: burnsds.accounts at protonmail.com
-Subject: [tpm2] Re: Design for Secrets Encryption
-Date: Fri, 30 Sep 2022 16:18:51 +0000
-Message-ID: <20220930161851.2030.62377@ml01.vlan13.01.org>
-In-Reply-To: 1805d5c56015983cc4ebdee5f2f46d7ed206ecef.camel@intel.com
+Subject: [tpm2] Clearing TPM
+Date: Fri, 30 Sep 2022 16:26:56 +0000
+Message-ID: <20220930162656.2030.79430@ml01.vlan13.01.org>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============0846149733785924007==
+--===============4089630097282134191==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Thanks for the great info!  In summary I think this approach will work for =
-me:
+I am working a Linux IoT integration with TPM 2.0 and want to write a provi=
+sioning script for ensuring the TPM is setup consistently on the device.  T=
+he script uses tpm2_clear and tpm2_changeauth.  Some of my devices show the=
+ following error message when calling tpm2_clear:
 
-Provisioning
-- Generate a key using tss2_createkey
-- Instruct TPM to unseal encrypted key using tpm_unseal
-- Encrypt secrets using unsealed key and openssl
+dhub(a)dhub336:~$ sudo tpm2_clear
+[sudo] password for dhub:
+WARNING:esys:src/tss2-esys/api/Esys_Clear.c:291:Esys_Clear_Finish() Receive=
+d TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_Clear.c:97:Esys_Clear() Esys Finish Error=
+Code (0x00000921)
+ERROR: Esys_Clear(0x921) - tpm:warn(2.0): authorizations for objects subjec=
+t to DA protection are not allowed at this time because the TPM is in DA lo=
+ckout mode
+ERROR: Unable to run tpm2_clear
 
-Runtime
-- At boot, instruct TPM to unseal encrypted key using tpm_unseal
-- Decrypt secrets using unseal key and openssl
+This makes me nervous as some of the devices need to be provisioned in the =
+field.  Why is the DA lockout preventing me from clearing the TPM?  This is=
+ occurring on a NUC10 where the TPM is implemented in the PTT.
 
-I'm still working on the correct PCR register config for auth, but I'll cou=
-ple this with a time based policy to mitigate the attack you described.
-
-Thanks again!
-Dan
---===============0846149733785924007==--
+Thanks,
+Dan Burns
+--===============4089630097282134191==--
 
