@@ -1,24 +1,160 @@
-Content-Type: multipart/mixed; boundary="===============8188253716599396685=="
+Content-Type: multipart/mixed; boundary="===============9141139905423675903=="
 MIME-Version: 1.0
-From: world777id at gmail.com
-Subject: [tpm2] Get World777 ID - Online Casino India
-Date: Wed, 12 Oct 2022 16:19:36 +0000
-Message-ID: <20221012161936.2075.81278@ml01.vlan13.01.org>
+From: Dimitar Tomov <dimi at designfirst.ee>
+Subject: [tpm2] TPMdev 2022 conf is live
+Date: Thu, 13 Oct 2022 15:09:20 +0000
+Message-ID: <
+ <VI1PR08MB265325A60D56A14864A6E9D4B5259@VI1PR08MB2653.eurprd08.prod.outlook.com>>
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============8188253716599396685==
+--===============9141139905423675903==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-When fantasy sports first appeared in India, sports in that country could n=
-o longer be enjoyed as passive entertainment from the confines of a living =
-room. Instead, fans and spectators could now come together and engage in th=
-eir favorite sport as active world777 com players. Platforms for playing fa=
-ntasy sports games have been around for the past 20 years, but they have on=
-ly lately gained popularity online, particularly during the epidemic phase. =
+Hello everyone,
 
-https://theworld777.com/
---===============8188253716599396685==--
+We are live and sorry for forgetting to write here.
+
+Livestream link - https://vimeo.com/event/2506981/e4c179f207
+
+Schedule TPMdev 2022 Conference - 13 October
+
+7:00 am Pacific Time / 4:00 pm CEST
+
+=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82The latest and greate=
+st from OPTIGA=E2=84=A2=EF=B8=8F TPM, SLB9672 and SLB9673,
+=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82Andreas Fuchs and Pau=
+l Kissinger from Infineon Technologies
+
+7:30 am Pacific Time / 4:30 pm CEST < live now
+
+=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82Disk integrity using =
+microkernels and TPM,
+=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82Sid Hussmann, CTO of =
+Gapfruit, and Stefan Th=C3=B6ni
+
+8:30 am Pacific Time / 5:30 pm CEST
+
+=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82Remote enrollment usi=
+ng sealed keys for Remote Attestation
+=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82Ernesto Gomez Marin, =
+Researcher at Infineon
+
+9:30 am Pacific Time / 6:30 pm CEST
+
+=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82Remote Attestation of=
+ the UEFI Event log using Keylime,
+=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82Thore Sommer, maintai=
+ner of Keylime
+
+10:30 am Pacific Time / 7:30 pm CEST
+
+=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82Maintaining anchors o=
+f trust, Michael Richardson known from his RATS work at IETF and other work=
+groups
+
+11:30 am Pacific Time / 8:30 pm CEST
+
+=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82How OpenSecurityTrain=
+ing2 will help spread TPM and Trusted Computing awareness, Xeno Kovah, Foun=
+der of Open Security Training
+
+Dimi Tomov
+--
+Founder of TPM.dev
+
+--===============9141139905423675903==
+Content-Type: text/html
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="attachment.htm"
+
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyIgc3R5bGU9
+ImRpc3BsYXk6bm9uZTsiPiBQIHttYXJnaW4tdG9wOjA7bWFyZ2luLWJvdHRvbTowO30gPC9zdHls
+ZT4NCjwvaGVhZD4NCjxib2R5IGRpcj0ibHRyIj4NCjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBD
+YWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNv
+bG9yOiByZ2IoMCwgMCwgMCk7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsi
+IGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+DQpIZWxsbyBldmVyeW9uZSw8L2Rpdj4NCjxkaXYgc3R5
+bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBm
+b250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IGJhY2tncm91bmQtY29sb3I6IHJn
+YigyNTUsIDI1NSwgMjU1KTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiI+DQo8YnI+DQo8L2Rpdj4N
+CjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5z
+LXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IGJhY2tncm91bmQt
+Y29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9vZiBDb250ZW50
+UGFzdGVkMSBDb250ZW50UGFzdGVkMiI+DQpXZSBhcmUgbGl2ZSBhbmQgc29ycnkgZm9yIGZvcmdl
+dHRpbmcgdG8gd3JpdGUgaGVyZS48L2Rpdj4NCjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxp
+YnJpLCBBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9y
+OiByZ2IoMCwgMCwgMCk7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsiIGNs
+YXNzPSJlbGVtZW50VG9Qcm9vZiBDb250ZW50UGFzdGVkMSBDb250ZW50UGFzdGVkMiI+DQo8YnI+
+DQo8L2Rpdj4NCjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBDYWxpYnJpLCBBcmlhbCwgSGVsdmV0
+aWNhLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDEycHQ7IGNvbG9yOiByZ2IoMCwgMCwgMCk7IGJh
+Y2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsiIGNsYXNzPSJlbGVtZW50VG9Qcm9v
+ZiBDb250ZW50UGFzdGVkMSBDb250ZW50UGFzdGVkMiI+DQpMaXZlc3RyZWFtIGxpbmsgLSZuYnNw
+OzxhIGhyZWY9Imh0dHBzOi8vdmltZW8uY29tL2V2ZW50LzI1MDY5ODEvZTRjMTc5ZjIwNyIgaWQ9
+IkxQTm9MUE9XQUxpbmtQcmV2aWV3Ij5odHRwczovL3ZpbWVvLmNvbS9ldmVudC8yNTA2OTgxL2U0
+YzE3OWYyMDc8L2E+Jm5ic3A7PC9kaXY+DQo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJy
+aSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjog
+cmdiKDAsIDAsIDApOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7IiBjbGFz
+cz0iZWxlbWVudFRvUHJvb2YgQ29udGVudFBhc3RlZDEiPg0KPGJyPg0KPC9kaXY+DQo8ZGl2IHN0
+eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsg
+Zm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyBiYWNrZ3JvdW5kLWNvbG9yOiBy
+Z2IoMjU1LCAyNTUsIDI1NSk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YgQ29udGVudFBhc3RlZDAi
+Pg0KU2NoZWR1bGUgVFBNZGV2IDIwMjIgQ29uZmVyZW5jZSAtIDEzIE9jdG9iZXINCjxkaXY+PGJy
+IGNsYXNzPSJDb250ZW50UGFzdGVkMCI+DQo8L2Rpdj4NCjxkaXYgY2xhc3M9IkNvbnRlbnRQYXN0
+ZWQwIj43OjAwIGFtIFBhY2lmaWMgVGltZSAvIDQ6MDAgcG0gQ0VTVDwvZGl2Pg0KPGRpdj48YnIg
+Y2xhc3M9IkNvbnRlbnRQYXN0ZWQwIj4NCjwvZGl2Pg0KPGRpdiBjbGFzcz0iQ29udGVudFBhc3Rl
+ZDAiPuKAguKAguKAguKAguKAguKAglRoZSBsYXRlc3QgYW5kIGdyZWF0ZXN0IGZyb20gT1BUSUdB
+4oSi77iPIFRQTSwgU0xCOTY3MiBhbmQgU0xCOTY3Myw8L2Rpdj4NCjxkaXYgY2xhc3M9IkNvbnRl
+bnRQYXN0ZWQwIj7igILigILigILigILigILigIJBbmRyZWFzIEZ1Y2hzIGFuZCBQYXVsIEtpc3Np
+bmdlciBmcm9tIEluZmluZW9uIFRlY2hub2xvZ2llczwvZGl2Pg0KPGRpdj48YnIgY2xhc3M9IkNv
+bnRlbnRQYXN0ZWQwIj4NCjwvZGl2Pg0KPGRpdiBjbGFzcz0iQ29udGVudFBhc3RlZDAiPjc6MzAg
+YW0gUGFjaWZpYyBUaW1lIC8gNDozMCBwbSBDRVNUICZsdDs8Yj48dT4gbGl2ZSBub3c8L3U+PC9i
+PjwvZGl2Pg0KPGRpdj48YnIgY2xhc3M9IkNvbnRlbnRQYXN0ZWQwIj4NCjwvZGl2Pg0KPGRpdiBj
+bGFzcz0iQ29udGVudFBhc3RlZDAiPuKAguKAguKAguKAguKAguKAgkRpc2sgaW50ZWdyaXR5IHVz
+aW5nIG1pY3Jva2VybmVscyBhbmQgVFBNLDwvZGl2Pg0KPGRpdiBjbGFzcz0iQ29udGVudFBhc3Rl
+ZDAiPuKAguKAguKAguKAguKAguKAglNpZCBIdXNzbWFubiwgQ1RPIG9mIEdhcGZydWl0LCBhbmQg
+U3RlZmFuIFRow7ZuaTwvZGl2Pg0KPGRpdj48YnIgY2xhc3M9IkNvbnRlbnRQYXN0ZWQwIj4NCjwv
+ZGl2Pg0KPGRpdiBjbGFzcz0iQ29udGVudFBhc3RlZDAiPjg6MzAgYW0gUGFjaWZpYyBUaW1lIC8g
+NTozMCBwbSBDRVNUPC9kaXY+DQo8ZGl2PjxiciBjbGFzcz0iQ29udGVudFBhc3RlZDAiPg0KPC9k
+aXY+DQo8ZGl2IGNsYXNzPSJDb250ZW50UGFzdGVkMCI+4oCC4oCC4oCC4oCC4oCC4oCCUmVtb3Rl
+IGVucm9sbG1lbnQgdXNpbmcgc2VhbGVkIGtleXMgZm9yIFJlbW90ZSBBdHRlc3RhdGlvbjwvZGl2
+Pg0KPGRpdiBjbGFzcz0iQ29udGVudFBhc3RlZDAiPuKAguKAguKAguKAguKAguKAgkVybmVzdG8g
+R29tZXogTWFyaW4sIFJlc2VhcmNoZXIgYXQgSW5maW5lb248L2Rpdj4NCjxkaXY+PGJyIGNsYXNz
+PSJDb250ZW50UGFzdGVkMCI+DQo8L2Rpdj4NCjxkaXYgY2xhc3M9IkNvbnRlbnRQYXN0ZWQwIj45
+OjMwIGFtIFBhY2lmaWMgVGltZSAvIDY6MzAgcG0gQ0VTVCA8L2Rpdj4NCjxkaXY+PGJyIGNsYXNz
+PSJDb250ZW50UGFzdGVkMCI+DQo8L2Rpdj4NCjxkaXYgY2xhc3M9IkNvbnRlbnRQYXN0ZWQwIj7i
+gILigILigILigILigILigIJSZW1vdGUgQXR0ZXN0YXRpb24gb2YgdGhlIFVFRkkgRXZlbnQgbG9n
+IHVzaW5nIEtleWxpbWUsPC9kaXY+DQo8ZGl2IGNsYXNzPSJDb250ZW50UGFzdGVkMCI+4oCC4oCC
+4oCC4oCC4oCC4oCCVGhvcmUgU29tbWVyLCBtYWludGFpbmVyIG9mIEtleWxpbWU8L2Rpdj4NCjxk
+aXY+PGJyIGNsYXNzPSJDb250ZW50UGFzdGVkMCI+DQo8L2Rpdj4NCjxkaXYgY2xhc3M9IkNvbnRl
+bnRQYXN0ZWQwIj4xMDozMCBhbSBQYWNpZmljIFRpbWUgLyA3OjMwIHBtIENFU1Q8L2Rpdj4NCjxk
+aXY+PGJyIGNsYXNzPSJDb250ZW50UGFzdGVkMCI+DQo8L2Rpdj4NCjxkaXYgY2xhc3M9IkNvbnRl
+bnRQYXN0ZWQwIj7igILigILigILigILigILigIJNYWludGFpbmluZyBhbmNob3JzIG9mIHRydXN0
+LCBNaWNoYWVsIFJpY2hhcmRzb24ga25vd24gZnJvbSBoaXMgUkFUUyB3b3JrIGF0IElFVEYgYW5k
+IG90aGVyIHdvcmtncm91cHM8L2Rpdj4NCjxkaXY+PGJyIGNsYXNzPSJDb250ZW50UGFzdGVkMCI+
+DQo8L2Rpdj4NCjxkaXYgY2xhc3M9IkNvbnRlbnRQYXN0ZWQwIj4xMTozMCBhbSBQYWNpZmljIFRp
+bWUgLyA4OjMwIHBtIENFU1Q8L2Rpdj4NCjxkaXY+PGJyIGNsYXNzPSJDb250ZW50UGFzdGVkMCI+
+DQo8L2Rpdj4NCuKAguKAguKAguKAguKAguKAgkhvdyBPcGVuU2VjdXJpdHlUcmFpbmluZzIgd2ls
+bCBoZWxwIHNwcmVhZCBUUE0gYW5kIFRydXN0ZWQgQ29tcHV0aW5nIGF3YXJlbmVzcywgWGVubyBL
+b3ZhaCwgRm91bmRlciBvZiBPcGVuIFNlY3VyaXR5IFRyYWluaW5nPGJyPg0KPC9kaXY+DQo8ZGl2
+IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJp
+ZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAsIDApOyBiYWNrZ3JvdW5kLWNvbG9y
+OiByZ2IoMjU1LCAyNTUsIDI1NSk7IiBjbGFzcz0iZWxlbWVudFRvUHJvb2YgQ29udGVudFBhc3Rl
+ZDAiPg0KPGJyPg0KPC9kaXY+DQo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJp
+YWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAs
+IDAsIDApOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7IiBjbGFzcz0iZWxl
+bWVudFRvUHJvb2YgQ29udGVudFBhc3RlZDAiPg0KRGltaSBUb21vdjwvZGl2Pg0KPGRpdiBzdHls
+ZT0iZm9udC1mYW1pbHk6IENhbGlicmksIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IGZv
+bnQtc2l6ZTogMTJwdDsgY29sb3I6IHJnYigwLCAwLCAwKTsgYmFja2dyb3VuZC1jb2xvcjogcmdi
+KDI1NSwgMjU1LCAyNTUpOyIgY2xhc3M9ImVsZW1lbnRUb1Byb29mIENvbnRlbnRQYXN0ZWQwIj4N
+Ci0tJm5ic3A7PC9kaXY+DQo8ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQ2FsaWJyaSwgQXJpYWws
+IEhlbHZldGljYSwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB0OyBjb2xvcjogcmdiKDAsIDAs
+IDApOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7IiBjbGFzcz0iZWxlbWVu
+dFRvUHJvb2YgQ29udGVudFBhc3RlZDAiPg0KRm91bmRlciBvZiBUUE0uZGV2PC9kaXY+DQo8L2Jv
+ZHk+DQo8L2h0bWw+DQo=
+
+--===============9141139905423675903==--
 
