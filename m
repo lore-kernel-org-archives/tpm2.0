@@ -1,52 +1,156 @@
-Content-Type: multipart/mixed; boundary="===============1866250581132071964=="
+Content-Type: multipart/mixed; boundary="===============3281204494250918740=="
 MIME-Version: 1.0
 From: Roberts, William C <william.c.roberts at intel.com>
 Subject: [tpm2] Re: How can I prevent MITM attacks for unsealing?
-Date: Fri, 21 Oct 2022 17:41:30 +0000
-Message-ID: <b5be0ace5a7295e4b4727c73797f67c34c0810f0.camel@intel.com>
-In-Reply-To: 20221006130719.2030.23916@ml01.vlan13.01.org
+Date: Fri, 21 Oct 2022 17:42:55 +0000
+Message-ID: <062975e60a00d3c82b1eba07c13ce095ce9f85ae.camel@intel.com>
+In-Reply-To: 1665414438.939708747@f10.my.com
 List-ID: <tpm2@lists.01.org>
 To: tpm2@lists.01.org
 
---===============1866250581132071964==
+--===============3281204494250918740==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2022-10-06 at 13:07 +0000, joseph(a)zeronsoftn.com wrote:
-> Here is the command I tested:
-> https://gist.github.com/jclab-joseph/d1d6d9bbbd32c0fe200cc7725bcf0d86
-> A session was established via a serialized persistent handle.
-> This seems to be able to prevent MITM by default.
+On Mon, 2022-10-10 at 18:07 +0300, joseph(a)zeronsoftn.com wrote:
 > =
 
-> But wouldn't it still be vulnerable if an attacker could replace
-> primary.handle?
+> Here is the commands I tried:
+> https://gist.github.=C2=ADcom/jclab-joseph/d1d=C2=AD6d9bbbd32c0fe200cc77=
+=C2=AD25bcf0d86
+> A session was estab=C2=ADlished via a seriali=C2=ADzed persistent handl=
+=C2=ADe.
+> This seems to be ab=C2=ADle to prevent MITM in the session connection
+> process.
+> =
 
-You can think of this as the same attack as replacing your root CA
-certs for your browser. If an attacker can modify or add a Root CA they
-can get you to trust them (the attacker). Same here, if the metadata
-your validating against changes, ie the public key, then you lost.
+> But, assume that an attacker can modify the filesystem.
+> If the primary.handle can be replaced with the attacker's key, the
+> session will be successfully established.
+> And I suspect that plaintext can be exposed if unsealed through the
+> session.
+> =
 
-> Is there a way to validate between session and seal.ctx or seal.pub?
+> Wouldn't validation be needed between the connected session and
+> seal.ctx?
 
-The key blobs themselves are tamper resistant using an HMAC for
-integrity and AES128CFB for confidentiality. =
+If the attacker can modify the primary.handle, which is verifying the
+encrypted session, then yes you need something else. You could add a
+bind key with a password and have the user enter the password and thus
+nothing for the attacker to attack that is stored on disk.
 
+> =
 
-Assuming you seal and unseal with a session started with a trusted key,
-then you're good. An attacker can only observer the traffic but cannot
-modify or extract the data on the bus if encrypted sessions are used.
+> =ED=99=94=EC=9A=94=EC=9D=BC, 04 10=EC=9B=94 2022, 00:54=EC=98=A4=EC=A0=84=
+ +09:00 =EB=B0=9C=EC=8B=A0 "Roberts, William C" =
 
-You could also use or add a bind key to the session where the objects
-password is used in the generation of the session key. This bind key
-could be the password used on the seal key if the seal key has a
-password.
+> william.c.roberts(a)intel.com:
+> =
 
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+> > On Mon, 2022-10-03 at 18:01 +0300, joseph(a)zeronsoftn.com wrote:
+> > > Hello,
+> > > =
 
---===============1866250581132071964==--
+> > > Does anyone know about this issue?
+> > > =
+
+> > > =
+
+> > https://github.com/jc-lab/securekit/blob/466abe16bfe4f28ef86db6bc726492=
+14ab2e4b51/pkg/securekit-disk/opt/securekit/sbin/disk-init#L82-L86
+> > > =
+
+> > > Here's one example of sealing and unsealing.
+> > > This method seems (probably?) to prevent the sniffing attack,
+> > which
+> > > was a vulnerability of Bitlocker in the past.
+> > > =
+
+> > > But isn't a MITM attack possible in the process of creating an
+> > > encrypted session?
+> > So just to unpack the commands here for discussion I copied that
+> > code
+> > block:
+> > =
+
+> > tpm2_createprimary -Q -C o -c tpm-primary.ctx
+> > tpm2_load -Q -C tpm-primary.ctx -u ${p1_dir}/seal.pub -r
+> > ${p1_dir}/seal.priv -c tpm-seal.ctx
+> > tpm2_startauthsession -Q --hmac-session -c tpm-primary.ctx -S
+> > session.ctx
+> > tpm2_unseal -Q -p pcr:${tpm_seal_pcr_policy} -c tpm-seal.ctx -o
+> > ${output}
+> > cleanupSession
+> > =
+
+> > The issue here is that the key created by the tpm2_createprimary
+> > command doesn't have provenance, so it's just be trusted implicitly
+> > even through it could be attacker controlled. If the attacker was
+> > controlling the primary object, they could just forward the
+> > commands
+> > unencrypted to the TPM and get the unseal to release them the key
+> > in
+> > the clear.
+> > =
+
+> > > =
+
+> > > I am not familiar with the process of establishing a session,
+> > > However, it seems that MITM can be prevented only by using a
+> > session
+> > > key encrypted with the EK of the TPM, or by signing the
+> > asymmetric
+> > > key with the EK to derive the key, when creating a session.
+> > =
+
+> > You just need a way to ensure provenance. Another way is to load an
+> > established key to the TPM and start the authsession with that. If
+> > you're using a persistent key you need to verify the name after
+> > establishing the session or use something like a serialized ESYS_TR
+> > which will do the name checking automatically. If you load a key
+> > blob
+> > to the TPM that you control, ESAPI will have the checks in place to
+> > make sure you don't get duped.
+> > =
+
+> > > =
+
+> > > Is MITM not considered in TPM? Or is there another way?
+> > =
+
+> > It is considered in the TPM and is discussed in the architecture
+> > document. Theirs a few ways you can securely set up an encrypted
+> > session, either with EK and associated Certificate or through other
+> > keys like the SRK. The big thing is, you have to do it in a way
+> > where
+> > the attacker can not MiTM the session establishment, which boils
+> > down
+> > to using a known key.
+> > =
+
+> > > =
+
+> > > Regards,
+> > > =
+
+> > > =
+
+> > > =
+
+> > > =
+
+> > > =
+
+> > > _______________________________________________
+> > > tpm2 mailing list -- tpm2(a)lists.01.org
+> > > To unsubscribe send an email to tpm2-leave(a)lists.01.org
+> > > %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
+> =
+
+> =
+
+>=20
+
+--===============3281204494250918740==--
 
