@@ -1,79 +1,71 @@
-Content-Type: multipart/mixed; boundary="===============0165541017952930330=="
+Return-Path: <petr.gotthard@centrum.cz>
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org 3B73D8149B
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org EE01B8148A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=centrum.cz; s=mail;
+ t=1683114199; bh=i+18P3fkO5aTq2QieVnV9nG472wXxiMYm/uwkebdc5Y=;
+ h=Date:From:Subject:To:References:In-Reply-To:From;
+ b=BMtQF/5l4OUhIk4mFEqnfDbdv1x0rKTDCSl8TOiTuxaXNFlhj6w+o8gZXGe+cXGxG
+ e39Qcxpf7NaEb8sveBq1sbob9b/SWCifED/eSKcSpIrb5VF52N/vCj3GTEGoZV7GF9
+ Uvg6uh72z5jzo4WJa7+iJ0wOjxqyfgwWqK+h8ERM=
+Date: Wed, 03 May 2023 13:43:18 +0200
+From: Petr Gotthard <petr.gotthard@centrum.cz>
+References: <20230304111257.FBBD1E80@centrum.cz>
+In-Reply-To: <20230304111257.FBBD1E80@centrum.cz>
 MIME-Version: 1.0
-From: Roberts, William C <william.c.roberts at intel.com>
-Subject: [tpm2] Re: Duplicate a TPM_ALG_KEYEDHASH Key in software
-Date: Thu, 27 Oct 2022 15:58:55 +0000
-Message-ID: <0443217b34af2540d3f8e5f2608a90e26184fe54.camel@intel.com>
-In-Reply-To: 20221027142909.1727.89797@ml01.vlan13.01.org
-List-ID: <tpm2@lists.01.org>
-To: tpm2@lists.01.org
-
---===============0165541017952930330==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+Message-Id: <20230503134318.423136D0@centrum.cz>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+Subject: [Tpm2] [RELEASE CANDIDATE] tpm2-openssl 1.2.0-rc1
+List-Id: The tpm2 userspace mailing list <tpm2.lists.linuxfoundation.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/tpm2>,
+ <mailto:tpm2-request@lists.linuxfoundation.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/tpm2/>
+List-Post: <mailto:tpm2@lists.linuxfoundation.org>
+List-Help: <mailto:tpm2-request@lists.linuxfoundation.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/tpm2>,
+ <mailto:tpm2-request@lists.linuxfoundation.org?subject=subscribe>
+To: tpm2@lists.linuxfoundation.org
 
-On Thu, 2022-10-27 at 14:29 +0000, Ronaldo Medeiros wrote:
-> Hello everybody
-> =
+Hello,
 
-> Is it possible to run a tpm2_duplicate in software? That is, modify
-> tpm2_tools so that it is possible to duplicate a TPM_ALG_KEYEDHASH
-> Key without applying any Policy (TPM2_PolicyCommandCode or
-> TPM2_PolicyDuplicationSelect) and if possible without the need for a
-> TPM chip to execute the process.
+I would like to announce the release of tpm2-openssl 1.2.0-rc1: https://git=
+hub.com/tpm2-software/tpm2-openssl/releases/tag/1.2.0-rc1
 
-The process of duplication is taking a key that is protected by the TPM
-and protecting it with another storage parent (aka parent key). Without
-having the key material itself, you must ask the TPM to perform this
-operation. The tools assume a target TPM in both the import and
-duplication case. If the issue here is that the other TPM to duplicate
-to is remote, you can use the cmd tcti to open an ssh tunnel to the
-remote TPM and run the tpm2-tools commands locally [1].
+This fixes some warnings displayed when building on Fedora Linux and improv=
+es tests to work also on FC38.
 
-Now if you have the key material for the keyedhash object, you can use
-tpm2_pytss to wrap[2] this with the new storage parent using the public
-key of the new parent and optionally a protection seed.
 
-If you create an object that is allowed to be duplicated in the TPM and
-you want to "export" the key, you can perform the duplication process
-to a new storage parent that you control the private portion of. You
-can do this with the unwrap method[3]. The test code mentioned below
-contains a method
-called test_tpm_export_rsa_child_rsa_parent_with_inner_key that shows
-how to do this. But again you must go to the TPM to ask it to perform
-the duplication process since you do not have the key material itself.
+Petr
 
-The wrap and unwrap routines are in the tpm2_pytss.utils[4] package.
-None of them require a running TPM.
-Examples of usage can be found in test/test_utils.py[5] and they also
-have pydocs for them.
-
-The project can be found here:
-  - https://github.com/tpm2-software/tpm2-pytss
-
-1. PR that updates the man page to show how to use it: =
-
-https://github.com/tpm2-software/tpm2-tss/pull/2443
-2. =
-
-https://tpm2-pytss.readthedocs.io/en/latest/utils.html#tpm2_pytss.utils.wrap
-3. =
-
-https://tpm2-pytss.readthedocs.io/en/latest/utils.html#tpm2_pytss.utils.unw=
-rap
-4. https://tpm2-pytss.readthedocs.io/en/latest/utils.html#
-5. =
-
-https://github.com/tpm2-software/tpm2-pytss/blob/master/test/test_utils.py
-
-> =
-
-> Regards
-> _______________________________________________
-> tpm2 mailing list -- tpm2(a)lists.01.org
-> To unsubscribe send an email to tpm2-leave(a)lists.01.org
-> %(web_page_url)slistinfo%(cgiext)s/%(_internal_name)s
-
---===============0165541017952930330==--
-
+______________________________________________________________
+> Komu: "tpm2@lists.linuxfoundation.org" <tpm2@lists.linuxfoundation.org>
+> Datum: 04.03.2023 11:20
+> P=C5=99edm=C4=9Bt: [Tpm2] [RELEASE CANDIDATE] tpm2-openssl 1.2.0-rc0
+>
+>Hello,
+>=20
+>I would like to announce the release of tpm2-openssl 1.2.0-rc0: https://gi=
+thub.com/tpm2-software/tpm2-openssl/releases/tag/1.2.0-rc0
+>
+>=20
+>Added
+>- Added support for ECDH with a KDF, which is used by ECC-based CMS (S/MIM=
+E).
+>
+>Changed
+>- Symmetric operations are disabled by default. In most situations these a=
+re not needed and cause a huge performance penalty.
+>  To enable configure with `--enable-op-digest` or `--enable-op-cipher`.
+>
+>Removed
+>- Removed unofficial support for tpm2-tss < 3.2.0, which do not support th=
+e openssl 3.x.
+>
+>Fixed
+>- Fixed OSSL_FUNC_KEYMGMT_HAS operations with NULL keys
+>- Modified documentation: the user-space resource manager (abrmd) is almos=
+t mandatory for complex scenarios such as SSL or X.509 operations.
+>
+>
+>Kind Regards,
+>Petr
