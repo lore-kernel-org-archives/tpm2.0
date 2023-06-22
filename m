@@ -1,25 +1,23 @@
-Return-Path: <Andreas.Fuchs@infineon.com>
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org 1883B8184F
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org 7930A81779
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
- d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
- t=1686894814; x=1718430814;
- h=from:to:subject:date:message-id:references:in-reply-to:
- mime-version; bh=ePSpQ/4RFKUKnRODx805gIq5L1E/GNWHrRtJKIwAJvA=;
- b=ZekLPDDUkDz7cAWJ1buo1hM6kBDEDvQtWzx1pp5uZKsI8zgwtfWw4R2q
- Jsx3Ei0UUt0wiJs55O70SbBSK5v1DZtBb15f1oJuyK5xxRSbaYacwWzn3
- j5jelQdfahYnUkTWZZKAQ7SWJzeC2YUCPSpnDROi8P3yU6iRL2t4reSS+ 8=;
-From: <Andreas.Fuchs@infineon.com>
-Date: Fri, 16 Jun 2023 05:46:16 +0000
-Message-ID: <f0992820454f45f399c6ddcd1f6e8c9e@infineon.com>
-References: <CAKzn3wwOu60Ndn8K_JxwL4eH5vwTPwyyQJB5b_Sp6r92hhKffg@mail.gmail.com>
-In-Reply-To: <CAKzn3wwOu60Ndn8K_JxwL4eH5vwTPwyyQJB5b_Sp6r92hhKffg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: multipart/alternative;
- boundary="_000_f0992820454f45f399c6ddcd1f6e8c9einfineoncom_"
+Return-Path: <swebb@umd.com.au>
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org CB392833A3
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org 177A68308A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=umd-com-au.20221208.gappssmtp.com; s=20221208; t=1687421191; x=1690013191;
+ h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+ :date:message-id:reply-to;
+ bh=WhoHFXbuEaZoBJnDol0z4WZZ4ZDJnz19cdpRO1AwX+4=;
+ b=3CgyeKHcn2niyQZyQW9wWjLZ3I7cUj3UDeSJbaZM62pAkimwJgOfV1Z20cVBmgroev
+ YzqdHjCi/lWAUnCpT0wd6IWV/c9rYnmARVz1s+DPU2lZgENOLpVSKvWieK89VaV30Z4P
+ FZWztUe6ruFvcOZHhDkwvL0CinGNI+Pdj8lFXYweQx1WKkvfbgjDYiAtGmiU9sY0Pxf8
+ 1X4peGyWupNE4xpSLTE13L6+V/Hao0A3tP7X3g3ocISYyl1HhpTEHzNUa49oLTTEwPqd
+ ZQ7ooGfXFGDXxrV5j2HDEHCp7QmEgzr7fRzoCLkP75EJ6iNAYnoFvWSUdext4inB3Yjr
+ TbUw==
 MIME-Version: 1.0
-Subject: Re: [Tpm2] is it possible to create a child public that can be use
- to encrypt data externally ?
+From: Stewart Webb <swebb@umd.com.au>
+Date: Thu, 22 Jun 2023 18:06:20 +1000
+Message-ID: <CAKfZqkGug+w7FznhcKHBWwQdQS25HGVd2DAFaw5_uEcYrhd2hQ@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000b2cf9e05feb35cd2"
+Subject: [Tpm2] Better understanding auth/object hierarchies
 List-Id: The tpm2 userspace mailing list <tpm2.lists.linuxfoundation.org>
 List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/tpm2>,
  <mailto:tpm2-request@lists.linuxfoundation.org?subject=unsubscribe>
@@ -28,170 +26,191 @@ List-Post: <mailto:tpm2@lists.linuxfoundation.org>
 List-Help: <mailto:tpm2-request@lists.linuxfoundation.org?subject=help>
 List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/tpm2>,
  <mailto:tpm2-request@lists.linuxfoundation.org?subject=subscribe>
-To: benzwt@gmail.com, tpm2@lists.linuxfoundation.org
+To: tpm2@lists.linuxfoundation.org
 
---_000_f0992820454f45f399c6ddcd1f6e8c9einfineoncom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+--000000000000b2cf9e05feb35cd2
+Content-Type: text/plain; charset="UTF-8"
 
-SSBhbSBub3QgcXVpdGUgc3VyZSBJIHVuZGVyc3RhbmQgeW91ciBxdWVzdGlvbiwgYnV0IG1heWJl
-IHNvbWUgaWRlYXMuDQoNCllvdSBjYW4gY3JlYXRlIGEgdmFyaWV0eSBvZiBwcmltYXJ5IGtleXMg
-YW5kIG5vcm1hbCBrZXlzLiBXaGF0IHlvdSBzaG91bGQgbWFrZSBzdXJlIGlzIHRoYXQgdGhlIGRl
-Y3J5cHQgYml0IGluIGluIGF0dHJpYnV0ZXMgaXMgc2V0IGFuZCB0aGUgcmVzdHJpY3RlZCBiaXQg
-aXMgbm90IHNldC4NCg0KWW91IGNhbiBhbHNvIGNyZWF0ZSBhIGtleXBhaXIgZXh0ZXJuYWxseSB0
-byB0aGUgVFBNIGFuZCB0aGVuIGltcG9ydCB0aGUgcHJpdmF0ZSBrZXkgaW50byB0aGUgVFBNIGZv
-ciBwcm90ZWN0aW9uIHVzaW5nIHRwbTJfaW1wb3J0Lg0KDQpGaW5hbGx5LCB0aGUgVFBNIHBlcmZv
-cm1zIG9ubHkgYXN5bW1ldHJpYyBkZWNyeXB0aW9uLiBJZiB5b3VyIGRhdGEgaXMgbG9uZ2VyLCB0
-aGVuIHlvdSBzaG91bGQgZ2VuZXJhdGUgYW4gQUVTIGtleSBmb3IgZGF0YSBlbmNyeXB0aW9uIGFu
-ZCB0aGVuIGVuY3J5cHQgdGhpcyBBRVMga2V5IHdpdGggdGhlIFRQTSBwdWJsaWMga2V5Lg0KVGhp
-cyBzY2hlbWUgaXMgY2FsbGVkIOKAnGh5YnJpZCBlbmNyeXB0aW9u4oCdLg0KDQpJIGhvcGUgdGhp
-cyBoYXMgc29tZSBoaW50cyBmb3IgeW91LCBvciBqdXN0IGtlZXAgYXNraW5nLg0KDQpDaGVlcnMs
-DQpBbmRyZWFzDQoNCkZyb206IFRwbTIgPHRwbTItYm91bmNlc0BsaXN0cy5saW51eGZvdW5kYXRp
-b24ub3JnPiBPbiBCZWhhbGYgT2YgYmVuend0IGJlbnp3dA0KU2VudDogRG9ubmVyc3RhZywgMTUu
-IEp1bmkgMjAyMyAxNzoyNQ0KVG86IHRwbTJAbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZw0KU3Vi
-amVjdDogW1RwbTJdIGlzIGl0IHBvc3NpYmxlIHRvIGNyZWF0ZSBhIGNoaWxkIHB1YmxpYyB0aGF0
-IGNhbiBiZSB1c2UgdG8gZW5jcnlwdCBkYXRhIGV4dGVybmFsbHkgPw0KDQpDYXV0aW9uOiBUaGlz
-IGUtbWFpbCBvcmlnaW5hdGVkIG91dHNpZGUgSW5maW5lb24gVGVjaG5vbG9naWVzLiBEbyBub3Qg
-Y2xpY2sgb24gbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IHZhbGlkYXRlIGl0
-IGlzIHNhZmU8aHR0cHM6Ly9pbnRyYW5ldC1jb250ZW50LmluZmluZW9uLmNvbS9leHBsb3JlL2Fi
-b3V0aW5maW5lb24vcnVsZXMvaW5mb3JtYXRpb25zZWN1cml0eS91Zy9Tb2NpYWxFbmdpbmVlcmlu
-Zy9QYWdlcy9Tb2NpYWxFbmdpbmVlcmluZ0VsZW1lbnRzX2VuLmFzcHg+Lg0KDQoNCkhpIEZvbGtz
-LA0KDQpJIGFtIG5ldyB0byB0cG0yLg0KSSB3b3VsZCB0byBjcmVhdGUgYSBjaGlsZCBrZXkgZnJv
-bSBhIHByaW1hcnkga2V5Lg0KSSBuZWVkIHRvIGVuY3J5cHQgbXkgZGF0YSB3aXRoIHRoZSBjaGls
-ZCBwdWJsaWMga2V5IGV4dGVybmFsbHkuDQpBZnRlciB0aGF0LCB0aGlzIGVuY3J5cHRlZCBkYXRh
-IHdpbGwgYmUgc2VudCB0byB0aGUgVFBNIGZvciBkZWNyeXB0aW9uLg0KUHJvdmlkZWQgdGhhdCwg
-dGhlIFRQTSB3aXRoIG9ubHkgcGVyZm9ybSB0aGUgZGVjcnlwdGlvbiBpZiB0aGUgZW5jcnlwdGVk
-IGRhdGEgd2FzIGVuY3J5cHRlZCBieSBhIHB1YmxpYyBrZXkgY2F0IGJlIGxpbmtlZCBiYWNrIHRv
-IHByaW1hcnkga2V5OyBpbiBvdGhlciB3b3JkcywgdGhlIFRQTSB3aWxsIG5vdCBwZXJmb3JtIGRl
-Y3J5cHRpb24gaWYgdGhlIHB1YmxpYyBrZXkgZG9lcyBub3QgY29tZSBmcm9tIGl0c2VsZi4NCkl0
-IGlzIHBvc3NpYmxlIHRvIGRvIHRoYXQgPyBBcmUgdGhlcmUgYW55IHdvcmsgYXJvdW5kID8NCg0K
-QlRXLCAgSSB0cmllZCB0byBtaXNzLXVzZSB0aGUgZW5kb3JzZW1lbnQga2V5LCBtYWtlY3JlbmRl
-bnRpYWwgYW5kIGFjdGl2ZS1jcmVudGlhbCB0byBkbyB0aGUgam9iIEkgaGF2ZSBtZW50aW9uZWQg
-YWJvdmUuIEJ1dCBJIGZhaWxlZCwgYmVjYXVzZSB0aGUgc2l6ZSBvZiBlbmNyeXB0ZWQgYmxvYiBt
-dXN0IGJlIGxlc3MgdGhhbiBvciBlcXVhbCB0byA2NCBieXRlcyB3aGljaCBpcyB3aHkgdG9vIHNt
-YWxsIGZvciBteSBkYXRhLg0KDQpCZXN0IHJlZ2FyZHMsDQpiZW56d3QNCg==
+Hi there,
 
---_000_f0992820454f45f399c6ddcd1f6e8c9einfineoncom_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+I have been investigating using the TPM2 for secure persistence of secrets.
+It seems sealing objects are the way to go for this kind of thing.
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
-Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
-OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
-cjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFuLk1z
-b0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpwdXJw
-bGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwLm1zb25vcm1hbDAsIGxpLm1zb25v
-cm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1uYW1lOm1zb25vcm1hbDsNCgltc28t
-bWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGNtOw0KCW1zby1tYXJnaW4tYm90
-dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBjbTsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZv
-bnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE5DQoJe21z
-by1zdHlsZS10eXBlOnBlcnNvbmFsLXJlcGx5Ow0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5z
-LXNlcmlmOw0KCWNvbG9yOndpbmRvd3RleHQ7fQ0KLk1zb0NocERlZmF1bHQNCgl7bXNvLXN0eWxl
-LXR5cGU6ZXhwb3J0LW9ubHk7DQoJZm9udC1zaXplOjEwLjBwdDt9DQpAcGFnZSBXb3JkU2VjdGlv
-bjENCgl7c2l6ZTo2MTIuMHB0IDc5Mi4wcHQ7DQoJbWFyZ2luOjcyLjBwdCA3Mi4wcHQgNzIuMHB0
-IDcyLjBwdDt9DQpkaXYuV29yZFNlY3Rpb24xDQoJe3BhZ2U6V29yZFNlY3Rpb24xO30NCi0tPjwv
-c3R5bGU+PCEtLVtpZiBndGUgbXNvIDldPjx4bWw+DQo8bzpzaGFwZWRlZmF1bHRzIHY6ZXh0PSJl
-ZGl0IiBzcGlkbWF4PSIxMDI2IiAvPg0KPC94bWw+PCFbZW5kaWZdLS0+PCEtLVtpZiBndGUgbXNv
-IDldPjx4bWw+DQo8bzpzaGFwZWxheW91dCB2OmV4dD0iZWRpdCI+DQo8bzppZG1hcCB2OmV4dD0i
-ZWRpdCIgZGF0YT0iMSIgLz4NCjwvbzpzaGFwZWxheW91dD48L3htbD48IVtlbmRpZl0tLT4NCjwv
-aGVhZD4NCjxib2R5IGxhbmc9IkRFIiBsaW5rPSJibHVlIiB2bGluaz0icHVycGxlIj4NCjxkaXYg
-Y2xhc3M9IldvcmRTZWN0aW9uMSI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJF
-Ti1VUyIgc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5JIGFtIG5vdCBxdWl0ZSBz
-dXJlIEkgdW5kZXJzdGFuZCB5b3VyIHF1ZXN0aW9uLCBidXQgbWF5YmUgc29tZSBpZGVhcy48bzpw
-PjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1V
-UyIgc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpwPjwv
-c3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9
-Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5Zb3UgY2FuIGNyZWF0ZSBhIHZhcmlldHkgb2Yg
-cHJpbWFyeSBrZXlzIGFuZCBub3JtYWwga2V5cy4gV2hhdCB5b3Ugc2hvdWxkIG1ha2Ugc3VyZSBp
-cyB0aGF0IHRoZSBkZWNyeXB0IGJpdCBpbiBpbiBhdHRyaWJ1dGVzIGlzIHNldCBhbmQgdGhlIHJl
-c3RyaWN0ZWQgYml0IGlzIG5vdCBzZXQuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9
-Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJtc28tZmFyZWFzdC1sYW5ndWFn
-ZTpFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJtc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+
-WW91IGNhbiBhbHNvIGNyZWF0ZSBhIGtleXBhaXIgZXh0ZXJuYWxseSB0byB0aGUgVFBNIGFuZCB0
-aGVuIGltcG9ydCB0aGUgcHJpdmF0ZSBrZXkgaW50byB0aGUgVFBNIGZvciBwcm90ZWN0aW9uIHVz
-aW5nIHRwbTJfaW1wb3J0LjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3Jt
-YWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0ibXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMi
-PjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
-IGxhbmc9IkVOLVVTIiBzdHlsZT0ibXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPkZpbmFsbHks
-IHRoZSBUUE0gcGVyZm9ybXMgb25seSBhc3ltbWV0cmljIGRlY3J5cHRpb24uIElmIHlvdXIgZGF0
-YSBpcyBsb25nZXIsIHRoZW4geW91IHNob3VsZCBnZW5lcmF0ZSBhbiBBRVMga2V5IGZvciBkYXRh
-IGVuY3J5cHRpb24gYW5kIHRoZW4gZW5jcnlwdCB0aGlzIEFFUyBrZXkgd2l0aCB0aGUgVFBNIHB1
-YmxpYw0KIGtleS48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
-c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5UaGlz
-IHNjaGVtZSBpcyBjYWxsZWQg4oCcaHlicmlkIGVuY3J5cHRpb27igJ0uPG86cD48L286cD48L3Nw
-YW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJt
-c28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJtc28tZmFyZWFz
-dC1sYW5ndWFnZTpFTi1VUyI+SSBob3BlIHRoaXMgaGFzIHNvbWUgaGludHMgZm9yIHlvdSwgb3Ig
-anVzdCBrZWVwIGFza2luZy48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVT
-Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBsYW5nPSJFTi1VUyIgc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5DaGVlcnMs
-PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0i
-RU4tVVMiIHN0eWxlPSJtc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+QW5kcmVhczxvOnA+PC9v
-OnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBz
-dHlsZT0ibXNvLWZhcmVhc3QtbGFuZ3VhZ2U6RU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFu
-PjwvcD4NCjxkaXY+DQo8ZGl2IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItdG9wOnNvbGlkICNF
-MUUxRTEgMS4wcHQ7cGFkZGluZzozLjBwdCAwY20gMGNtIDBjbSI+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj48Yj48c3BhbiBsYW5nPSJFTi1VUyI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIGxhbmc9IkVO
-LVVTIj4gVHBtMiAmbHQ7dHBtMi1ib3VuY2VzQGxpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcmZ3Q7
-DQo8Yj5PbiBCZWhhbGYgT2YgPC9iPmJlbnp3dCBiZW56d3Q8YnI+DQo8Yj5TZW50OjwvYj4gRG9u
-bmVyc3RhZywgMTUuIEp1bmkgMjAyMyAxNzoyNTxicj4NCjxiPlRvOjwvYj4gdHBtMkBsaXN0cy5s
-aW51eGZvdW5kYXRpb24ub3JnPGJyPg0KPGI+U3ViamVjdDo8L2I+IFtUcG0yXSBpcyBpdCBwb3Nz
-aWJsZSB0byBjcmVhdGUgYSBjaGlsZCBwdWJsaWMgdGhhdCBjYW4gYmUgdXNlIHRvIGVuY3J5cHQg
-ZGF0YSBleHRlcm5hbGx5ID88bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8L2Rpdj4NCjwvZGl2Pg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2Pg0KPHRhYmxl
-IGNsYXNzPSJNc29Ob3JtYWxUYWJsZSIgYm9yZGVyPSIwIiBjZWxsc3BhY2luZz0iMyIgY2VsbHBh
-ZGRpbmc9IjAiIHdpZHRoPSIwIiBzdHlsZT0id2lkdGg6MGNtO2JhY2tncm91bmQ6bW9jY2FzaW4i
-Pg0KPHRib2R5Pg0KPHRyPg0KPHRkIHN0eWxlPSJwYWRkaW5nOi43NXB0IC43NXB0IC43NXB0IC43
-NXB0Ij4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzdHJvbmc+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
-ZToxMC41cHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90OyxzYW5zLXNlcmlmIj5DYXV0
-aW9uPC9zcGFuPjwvc3Ryb25nPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuNXB0Ij46IFRoaXMg
-ZS1tYWlsIG9yaWdpbmF0ZWQgb3V0c2lkZSBJbmZpbmVvbiBUZWNobm9sb2dpZXMuIERvIG5vdCBj
-bGljayBvbiBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3UNCjxhIGhyZWY9Imh0
-dHBzOi8vaW50cmFuZXQtY29udGVudC5pbmZpbmVvbi5jb20vZXhwbG9yZS9hYm91dGluZmluZW9u
-L3J1bGVzL2luZm9ybWF0aW9uc2VjdXJpdHkvdWcvU29jaWFsRW5naW5lZXJpbmcvUGFnZXMvU29j
-aWFsRW5naW5lZXJpbmdFbGVtZW50c19lbi5hc3B4Ij4NCnZhbGlkYXRlIGl0IGlzIHNhZmU8L2E+
-LjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvdGQ+DQo8L3RyPg0KPC90Ym9keT4NCjwvdGFibGU+
-DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRp
-dj4NCjxkaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SGkgRm9sa3MsPG86cD48L286
-cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwv
-bzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkgYW0gbmV3IHRv
-IHRwbTIuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij5JIHdvdWxkIHRvIGNyZWF0ZSBhIGNoaWxkIGtleSBmcm9tIGEgcHJpbWFyeSBrZXkuPG86cD48
-L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5JIG5lZWQgdG8g
-ZW5jcnlwdCBteSBkYXRhIHdpdGggdGhlIGNoaWxkIHB1YmxpYyBrZXkgZXh0ZXJuYWxseS48bzpw
-PjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkFmdGVyIHRo
-YXQsIHRoaXMgZW5jcnlwdGVkIGRhdGEgd2lsbCBiZSBzZW50IHRvIHRoZSBUUE0gZm9yIGRlY3J5
-cHRpb24uPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
-Ij5Qcm92aWRlZCB0aGF0LCB0aGUgVFBNIHdpdGggb25seSBwZXJmb3JtIHRoZSBkZWNyeXB0aW9u
-IGlmIHRoZSBlbmNyeXB0ZWQgZGF0YSB3YXMgZW5jcnlwdGVkIGJ5IGEgcHVibGljIGtleSBjYXQg
-YmUgbGlua2VkIGJhY2sgdG8gcHJpbWFyeSBrZXk7IGluIG90aGVyIHdvcmRzLCB0aGUgVFBNIHdp
-bGwgbm90IHBlcmZvcm0gZGVjcnlwdGlvbiBpZiB0aGUgcHVibGljIGtleSBkb2VzIG5vdCBjb21l
-IGZyb20gaXRzZWxmLjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+SXQgaXMgcG9zc2libGUgdG8gZG8gdGhhdCA/IEFyZSB0aGVyZSBhbnkgd29yayBh
-cm91bmQgPzxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1h
-bCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9y
-bWFsIj5CVFcsJm5ic3A7IEkgdHJpZWQgdG8gbWlzcy11c2UgdGhlIGVuZG9yc2VtZW50IGtleSwg
-bWFrZWNyZW5kZW50aWFsIGFuZCBhY3RpdmUtY3JlbnRpYWwgdG8gZG8gdGhlIGpvYiBJIGhhdmUg
-bWVudGlvbmVkIGFib3ZlLiBCdXQgSSBmYWlsZWQsIGJlY2F1c2UgdGhlIHNpemUgb2YgZW5jcnlw
-dGVkIGJsb2IgbXVzdCBiZSBsZXNzIHRoYW4gb3IgZXF1YWwgdG8gNjQgYnl0ZXMgd2hpY2ggaXMg
-d2h5IHRvbyBzbWFsbCBmb3INCiBteSBkYXRhLjxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8L2Rpdj4NCjxk
-aXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5CZXN0IHJlZ2FyZHMsPG86cD48L286cD48L3A+DQo8
-L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj5iZW56d3Q8bzpwPjwvbzpwPjwvcD4N
-CjwvZGl2Pg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
+I am hoping someone here might be able to better explain how sealing
+objects are related to the parent objects they are created and loaded
+under, especially when password auth values are involved. I've been a bit
+confused by some examples I've put together that allow various operations
+without supplying the passwords I would have thought were required.
 
---_000_f0992820454f45f399c6ddcd1f6e8c9einfineoncom_--
+(note: many of the examples below require calls to tpm2_flushcontext to
+clear out space for intermediate object loading, but I have excluded them
+for brevity)
+
+As part of my evaluation I have learnt that sealing objects must always be
+created underneath some other 'primary object'/primary key that must be
+created first.
+
+    # make a new primary key
+    $ tpm2_createprimary -C o -c testprim.ctx
+    # make a new sealing object under this primary key
+    $ tpm2_create -u testseal.pub -r testseal.priv -i hunter2.txt -C
+testprim.ctx
+
+
+These primary objects can optionally be created with password auth values
+on them. As you'd expect, trying to create a sealing object via a
+password-protected primary object without supplying its password doesn't
+work:
+
+    $ tpm2_createprimary -C o -p str:testpwd -c testprim-wauth.ctx
+    $ tpm2_create -u testseal-wpauth.pub -r testseal-wpauth.priv -i
+hunter2.txt -C testprim-wauth.ctx
+WARNING:esys:src/tss2-esys/api/Esys_Create.c:398:Esys_Create_Finish()
+Received TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_Create.c:134:Esys_Create() Esys
+Finish ErrorCode (0x0000098e)    ERROR: Esys_Create(0x98E) -
+tpm:session(1):the authorization HMAC check failed and DA counter
+incremented    ERROR: Unable to run tpm2_create    $ tpm2_create -u
+testseal-wpauth.pub -r testseal-wpauth.priv -i hunter2.txt -C
+testprim-wauth.ctx -P str:testpwd    # OK
+
+
+What confuses me a bit is that loading and unsealing one of these
+created-under-the-auth-protected-primary-key objects works fine if the
+loading is done under a non-authed primary key:
+
+    # no password required here
+    $ tpm2_load -C testprim.ctx -u testseal-wpauth.pub -r
+testseal-wpauth.priv -n testseal-loadedwnopauth.name -c
+testseal-loadedwnopauth.ctx
+    $ tpm2_unseal -c testseal-loadedwnopauth.ctx
+    hunter2
+
+
+However, if loading under the auth-value-protected primary key, the
+password is required as expected for the loading...
+
+    # Try load without password
+    $ tpm2_load -C testprim-wauth.ctx -u testseal-wpauth.pub -r
+testseal-wpauth.priv -n testseal-loadedwpauth.name -c
+testseal-loadedwpauth.ctx
+WARNING:esys:src/tss2-esys/api/Esys_Load.c:324:Esys_Load_Finish()
+Received TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_Load.c:112:Esys_Load() Esys Finish
+ErrorCode (0x0000098e)    ERROR: Eys_Load(0x98E) - tpm:session(1):the
+authorization HMAC check failed and DA counter incremented    ERROR:
+Unable to run tpm2_load    # with password:    $ tpm2_load -C
+testprim-wauth.ctx -u testseal-wpauth.pub -r testseal-wpauth.priv -n
+testseal-loadedwpauth.name -c testseal-loadedwpauth.ctx -P str:testpwd
+   # OK
+
+
+...but the unsealing still works without a password too. I'm assuming this
+is because the sealing object itself has no password on it.
+
+$ tpm2_unseal -c testseal-loadedwpauth.ctx
+hunter2
+
+If the sealing object itself is given a password auth value (-p flag in
+tpm2_create) then it can never be unsealed without that password, which is
+expected behaviour, so that at least works fine.
+
+I am just confused as to why things created under password-protected
+primary keys can still be seemingly later used without needing that
+password? Is the password purely for the ability to create subsequent child
+objects under the primary key? Or am I missing something here?
+
+Cheers,
+Stewart Webb
+
+--000000000000b2cf9e05feb35cd2
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div>Hi there,</div><div><br></div><div><=
+div>I have been investigating using the TPM2 for secure=20
+persistence of secrets. It seems sealing objects are the way to go for=20
+this kind of thing.</div><div><br></div>I am hoping someone here might=20
+be able to better explain how sealing objects are related to the parent=20
+objects they are created and loaded under, especially when password auth
+ values are involved. I&#39;ve been a bit confused by some examples I&#39;v=
+e put
+ together that allow various operations without supplying the passwords I
+ would have thought were required.<br></div><div><br></div><div>(note: many=
+ of the examples below require calls to tpm2_flushcontext to=20
+clear out space for intermediate object loading, but I have excluded=20
+them for brevity)</div><div><br></div><div>As part of my evaluation I=20
+have learnt that sealing objects must always be created underneath some=20
+other &#39;primary object&#39;/primary key that must be created first.</div=
+><div><br></div><div><span><code style=3D"white-space:pre-wrap"></code></sp=
+an><span><code style=3D"white-space:pre-wrap"><code></code></code></span><p=
+re><code>    # make a new primary key
+    $ tpm2_createprimary -C o -c testprim.ctx
+    # make a new sealing object under this primary key
+    $ tpm2_create -u testseal.pub -r testseal.priv -i hunter2.txt -C testpr=
+im.ctx</code></pre></div><div><span><code style=3D"white-space:pre-wrap"></=
+code></span></div><div><br></div><div>These
+ primary objects can optionally be created with password auth values on=20
+them. As you&#39;d expect, trying to create a sealing object via a=20
+password-protected primary object without supplying its password doesn&#39;=
+t
+ work:<code><br></code></div><div><code><br></code><pre><code>    </code><c=
+ode>$ tpm2_createprimary -C o -p str:testpwd -c testprim-wauth.ctx<br>    $=
+ tpm2_create -u testseal-wpauth.pub -r testseal-wpauth.priv -i hunter2.txt =
+-C testprim-wauth.ctx
+<code>    </code>WARNING:esys:src/tss2-esys/api/Esys_Create.c:398:Esys_Crea=
+te_Finish() Received TPM Error
+<code>    </code>ERROR:esys:src/tss2-esys/api/Esys_Create.c:134:Esys_Create=
+() Esys Finish ErrorCode (0x0000098e)
+<code>    </code>ERROR: Esys_Create(0x98E) - tpm:session(1):the authorizati=
+on HMAC check failed and DA counter incremented
+<code>    </code>ERROR: Unable to run tpm2_create
+<code>    </code>$ tpm2_create -u testseal-wpauth.pub -r testseal-wpauth.pr=
+iv -i hunter2.txt -C testprim-wauth.ctx -P str:testpwd
+<code>    </code># OK<br></code></pre></div><div><div><div dir=3D"ltr" clas=
+s=3D"gmail_signature"><div><br></div><div>What confuses me a bit is that lo=
+ading and unsealing one of these created-under-the-auth-protected-primary-k=
+ey objects works fine if the loading is done under a non-authed primary key=
+:</div><div><br></div><div><pre><code>    # no password required here
+    $ tpm2_load -C testprim.ctx -u testseal-wpauth.pub -r testseal-wpauth.p=
+riv -n <a href=3D"http://testseal-loadedwnopauth.name">testseal-loadedwnopa=
+uth.name</a> -c testseal-loadedwnopauth.ctx
+    $ tpm2_unseal -c testseal-loadedwnopauth.ctx
+    hunter2</code></pre></div><div></div><div><br></div><div>However, if lo=
+ading under the auth-value-protected primary key, the password is required =
+as expected for the loading...</div><div><br></div><pre><code>    # Try loa=
+d without password
+    $ tpm2_load -C testprim-wauth.ctx -u testseal-wpauth.pub -r testseal-wp=
+auth.priv -n <a href=3D"http://testseal-loadedwpauth.name">testseal-loadedw=
+pauth.name</a> -c testseal-loadedwpauth.ctx
+<code>    </code>WARNING:esys:src/tss2-esys/api/Esys_Load.c:324:Esys_Load_F=
+inish() Received TPM Error
+<code>    </code>ERROR:esys:src/tss2-esys/api/Esys_Load.c:112:Esys_Load() E=
+sys Finish ErrorCode (0x0000098e)
+<code>    </code>ERROR: Eys_Load(0x98E) - tpm:session(1):the authorization =
+HMAC check failed and DA counter incremented
+<code>    </code>ERROR: Unable to run tpm2_load
+<code>    </code># with password:
+<code>    </code>$ tpm2_load -C testprim-wauth.ctx -u testseal-wpauth.pub -=
+r testseal-wpauth.priv -n <a href=3D"http://testseal-loadedwpauth.name">tes=
+tseal-loadedwpauth.name</a> -c testseal-loadedwpauth.ctx -P str:testpwd
+<code>    </code># OK</code></pre><div><br></div><div>...but
+ the unsealing still works without a password too. I&#39;m assuming this is=
+=20
+because the sealing object itself has no password on it.</div><div><br></di=
+v><div><div dir=3D"ltr"><span><code style=3D"white-space:pre-wrap">    $ tp=
+m2_unseal -c testseal-loadedwpauth.ctx<span><code style=3D"white-space:pre-=
+wrap"></code></span><br>    hunter2<br></code></span></div><div><br></div><=
+/div><div>If
+ the sealing object itself is given a password auth value (-p flag in=20
+tpm2_create) then it can never be unsealed without that password, which=20
+is expected behaviour, so that at least works fine.</div><div><br></div><di=
+v>I
+ am just confused as to why things created under password-protected=20
+primary keys can still be seemingly later used without needing that=20
+password? Is the password purely for the ability to create subsequent=20
+child objects under the primary key? Or am I missing something here?<br></d=
+iv><div><br></div><div dir=3D"ltr">Cheers,<div>Stewart Webb</div></div></di=
+v></div></div></div></div>
+
+--000000000000b2cf9e05feb35cd2--
