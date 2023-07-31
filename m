@@ -1,23 +1,23 @@
-Return-Path: <feplooptest@gmail.com>
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp2.osuosl.org 172A9403E2
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp2.osuosl.org 5B7C8400D1
+Return-Path: <ahmad7bashir@gmail.com>
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org E1A1881EEA
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org D68BF81EE8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=gmail.com; s=20221208; t=1689366497; x=1691958497;
+ d=gmail.com; s=20221208; t=1690824078; x=1691428878;
  h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
  :date:message-id:reply-to;
- bh=h++o88KoKt1RqVLmNhZcwLlSzQlXNszlw7OPEOLg2nY=;
- b=nk0o1oH0HvYIvtxmP8PrBFBA1ee2hepA4ycMvGM+SDkGidgkjlVF1xPL5P0jRnNAMI
- /WIL+U357VbjvGgMPZ/RSCIDq2v3J4Q0jfw0ZATLKAjTFWwgWdSVot3aVNy4Z8Y7ZdCy
- A8/O69djPILNVLOvfH9jpQ4hpX3jnE0BJbCFRxxe1mYpjqUmUIbXPNHh9L2iaUVX0GlD
- zXCNXUA+2ONWyCjFB9dXFRAcBiGf2ftqEQMuIJBKbWSjdBW3AXG1UKEiEiacsWLGkLNu
- j5TrFlH+EhKU8asfcPPsRYDhxHgqs5e27wpx+5N8h431DtASOWcMtJ9borG3WI0RLIXf
- L69g==
+ bh=2k9McxsAv5QSM5Ne5mdefo63Hf6iNVAGhWUuLUHcXOc=;
+ b=Ka0qGY+OHAQGP9HtyYy6gIrz3booropp73/3SatFrkPTNKgxU1G2LwRxd7W3HuS5Zm
+ nPGyzTS1b57biEN9gqZ3Y+3HkJRDogALWtcuCN2OydvOMni6ewX2CpM/VfRJJigDRn+N
+ s/TRgDjKsAoMfDGrhymRz3Xl7TVJWwuD61MEHlwFMeAQxDpGrGWGOW/MuLkscDzmEDrS
+ H8PJ3IHSFfIbKfjhBCoqXarP5l1fRjo3uwqxOu9+Y8kMh2hXMotNdCSNk3uMUSfA880s
+ QdcF2CMf5rlpN+0CU0pLfuIEDk7rh8YhFljhQdfJgLSTuJ8PPoPXnrG1RV3h4ZLPZCx7
+ tjkg==
 MIME-Version: 1.0
-From: Lee <feplooptest@gmail.com>
-Date: Fri, 14 Jul 2023 15:27:36 -0500
-Message-ID: <CAPQXZP8FaHzb1-0VXqj-J6_5GXUoXTjfwNmta0fQuDxVV5675g@mail.gmail.com>
-Content-Type: multipart/alternative; boundary="000000000000ed0b2a0600784913"
-Subject: [Tpm2] How to wrap/unwrap with TPM2 endorsement key?
+From: "Ahmad B. Usman" <ahmad7bashir@gmail.com>
+Date: Mon, 31 Jul 2023 19:21:06 +0200
+Message-ID: <CA+K1d5u1k+xe+K655Axn_+qjt3+WP+OOT45LRAhBX3t-GDfvUA@mail.gmail.com>
+Content-Type: multipart/alternative; boundary="0000000000008464310601cba82a"
+Subject: [Tpm2] TPM2_ACT_SetTimeout command usage
 List-Id: The tpm2 userspace mailing list <tpm2.lists.linuxfoundation.org>
 List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/tpm2>,
  <mailto:tpm2-request@lists.linuxfoundation.org?subject=unsubscribe>
@@ -28,93 +28,69 @@ List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/tpm2>,
  <mailto:tpm2-request@lists.linuxfoundation.org?subject=subscribe>
 To: tpm2@lists.linuxfoundation.org
 
---000000000000ed0b2a0600784913
+--0000000000008464310601cba82a
 Content-Type: text/plain; charset="UTF-8"
 
-Hi
+I am writing this email to ask for your help on how to construct valid TPM
+commands and parse some results for TPM2_ACT_SetTimeout from
+https://sourceforge.net/projects/ibmtpm20tss/ and also
+https://github.com/kgoldman/ibmswtpm2 and also as specified in
+https://trustedcomputinggroup.org/wp-content/uploads/TCG_TPM_ACTCommand_v1r3_pubrev.pdf
+so
+as to set a timer which countdown from +x second to zero periodically.
 
-I have a remote client A which wants to communicate securely with a server
-B having a discrete TPM. My understanding is that each TPM normally comes
-with an endorsement key from a manufacturer like Infineon. Therefore,
-client A can validate client B's unique identity indirectly through a TPM
-endorsement certificate by checking it against the manufacturer's CA
-certificate. This can be easily achieved by retrieving ek certificate from
-TPM NV index (below) or tpm2_getekcertifcate command, then sending it to
-client A.
 
-tpm2_nvread 0x1C00002 > rsa_cert
+I have built and run the ibm simulator: (
+https://sourceforge.net/projects/ibmswtpm2/) and was able to send command
+and get result using tpm2-tools (https://github.com/tpm2-software/tpm2-tools
+)
 
-Since the endorsement key is a storage root key, it should not be used as
-an encryption key according to information I found online. However, it
-can(I think) be used to wrap/unwrap a symmetric encryption key to be used
-in the subsequent operation. This means the client can extract the public
-from the EK certificate and wrap an encryption key with it and send it back
-to server B, but the problem is I could not figure out how to unwrap a file
-with the private part of the endorsement key using tpm2-tools. Could
-someone give me some guidance on this?
 
-Thanks
+I tried compiling like a C file (gcc myprog.c -o myprog; ./myprog) but
+getting errors even if i use the -ltss2-esys option
 
-Yu-Chieh
+Best regards,
+/Ahmad
 
---000000000000ed0b2a0600784913
+--0000000000008464310601cba82a
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Hi=C2=A0<div><br></div><div><p style=3D"margin:0px 0px 1.1=
-em;padding:0px;border:0px;font-stretch:inherit;line-height:inherit;font-fam=
-ily:-apple-system,BlinkMacSystemFont,&quot;Segoe UI Adjusted&quot;,&quot;Se=
-goe UI&quot;,&quot;Liberation Sans&quot;,sans-serif;font-size-adjust:inheri=
-t;font-kerning:inherit;font-variant-alternates:inherit;font-variant-ligatur=
-es:inherit;font-variant-numeric:inherit;font-variant-east-asian:inherit;fon=
-t-feature-settings:inherit;font-size:15px;vertical-align:baseline;box-sizin=
-g:inherit;clear:both;color:rgb(35,38,41)">I have a remote client A which wa=
-nts to communicate securely with a server B having a discrete TPM. My under=
-standing is that each TPM normally comes with an endorsement key from a man=
-ufacturer like Infineon. Therefore, client A can validate client B&#39;s un=
-ique identity indirectly through a TPM endorsement certificate by checking =
-it against the manufacturer&#39;s CA certificate. This can be easily achiev=
-ed by retrieving ek certificate from TPM NV index (below) or tpm2_getekcert=
-ifcate command, then sending it to client A.</p><pre style=3D"margin-top:0p=
-x;border:0px;font-stretch:inherit;font-size-adjust:inherit;font-kerning:inh=
-erit;font-variant-alternates:inherit;font-variant-ligatures:inherit;font-va=
-riant-numeric:inherit;font-variant-east-asian:inherit;font-feature-settings=
-:inherit;vertical-align:baseline;box-sizing:inherit;width:auto;max-height:6=
-00px;overflow:auto"><code style=3D"margin:0px;padding:0px;border:0px;font-s=
-tyle:inherit;font-variant-caps:inherit;font-stretch:inherit;line-height:inh=
-erit;font-size-adjust:inherit;font-kerning:inherit;font-variant-alternates:=
-inherit;font-variant-ligatures:inherit;font-variant-numeric:inherit;font-va=
-riant-east-asian:inherit;font-feature-settings:inherit;vertical-align:basel=
-ine;box-sizing:inherit;white-space:inherit;border-radius:0px">tpm2_nvread 0=
-x1C00002 &gt; rsa_cert=20
-</code></pre><p style=3D"margin:0px 0px 1.1em;padding:0px;border:0px;font-s=
-tretch:inherit;line-height:inherit;font-family:-apple-system,BlinkMacSystem=
-Font,&quot;Segoe UI Adjusted&quot;,&quot;Segoe UI&quot;,&quot;Liberation Sa=
-ns&quot;,sans-serif;font-size-adjust:inherit;font-kerning:inherit;font-vari=
-ant-alternates:inherit;font-variant-ligatures:inherit;font-variant-numeric:=
-inherit;font-variant-east-asian:inherit;font-feature-settings:inherit;font-=
-size:15px;vertical-align:baseline;box-sizing:inherit;clear:both;color:rgb(3=
-5,38,41)">Since the endorsement key is a storage root key, it should not be=
- used as an encryption key according to information I found online. However=
-, it can(I think) be used to wrap/unwrap a symmetric encryption key to be u=
-sed in the subsequent operation. This means the client can extract the publ=
-ic from the EK certificate and wrap an encryption key with it and send it b=
-ack to server B, but the problem is I could not figure out how to unwrap a =
-file with the private part of the endorsement key using tpm2-tools. Could s=
-omeone give me some guidance on this?</p><p style=3D"margin:0px;padding:0px=
-;border:0px;font-stretch:inherit;line-height:inherit;font-family:-apple-sys=
-tem,BlinkMacSystemFont,&quot;Segoe UI Adjusted&quot;,&quot;Segoe UI&quot;,&=
-quot;Liberation Sans&quot;,sans-serif;font-size-adjust:inherit;font-kerning=
-:inherit;font-variant-alternates:inherit;font-variant-ligatures:inherit;fon=
-t-variant-numeric:inherit;font-variant-east-asian:inherit;font-feature-sett=
-ings:inherit;font-size:15px;vertical-align:baseline;box-sizing:inherit;clea=
-r:both;color:rgb(35,38,41)">Thanks</p><p style=3D"margin:0px;padding:0px;bo=
-rder:0px;font-stretch:inherit;line-height:inherit;font-family:-apple-system=
-,BlinkMacSystemFont,&quot;Segoe UI Adjusted&quot;,&quot;Segoe UI&quot;,&quo=
-t;Liberation Sans&quot;,sans-serif;font-size-adjust:inherit;font-kerning:in=
-herit;font-variant-alternates:inherit;font-variant-ligatures:inherit;font-v=
-ariant-numeric:inherit;font-variant-east-asian:inherit;font-feature-setting=
-s:inherit;font-size:15px;vertical-align:baseline;box-sizing:inherit;clear:b=
-oth;color:rgb(35,38,41)">Yu-Chieh</p></div></div>
+<div dir=3D"ltr"><div dir=3D"auto" style=3D"font-size:1rem;font-family:-app=
+le-system,&quot;Helvetica Neue&quot;;word-spacing:1px;color:rgb(49,49,49)">=
+I am writing this email to ask for your help on how to construct valid TPM =
+commands and parse some results for TPM2_ACT_SetTimeout from=C2=A0=C2=A0<a =
+href=3D"https://sourceforge.net/projects/ibmtpm20tss/" target=3D"_blank" st=
+yle=3D"font-size:1rem">https://sourceforge.net/projects/ibmtpm20tss/</a>=C2=
+=A0and also=C2=A0<a href=3D"https://github.com/kgoldman/ibmswtpm2" rel=3D"n=
+ofollow" target=3D"_blank" style=3D"font-size:1rem">https://github.com/kgol=
+dman/ibmswtpm2</a>=C2=A0and also as specified in=C2=A0=C2=A0<a href=3D"http=
+s://trustedcomputinggroup.org/wp-content/uploads/TCG_TPM_ACTCommand_v1r3_pu=
+brev.pdf" rel=3D"nofollow" target=3D"_blank" style=3D"font-size:1rem">https=
+://trustedcomputinggroup.org/wp-content/uploads/TCG_TPM_ACTCommand_v1r3_pub=
+rev.pdf</a>=C2=A0so as to set a timer which countdown from +x second to zer=
+o periodically.<br></div><div dir=3D"auto" style=3D"font-family:-apple-syst=
+em,&quot;Helvetica Neue&quot;;word-spacing:1px;color:rgb(49,49,49)"><br></d=
+iv><div dir=3D"auto" style=3D"font-family:-apple-system,&quot;Helvetica Neu=
+e&quot;;word-spacing:1px;color:rgb(49,49,49)"><br></div><div dir=3D"auto" s=
+tyle=3D"font-size:1rem;font-family:-apple-system,&quot;Helvetica Neue&quot;=
+;word-spacing:1px;color:rgb(49,49,49)">I have built and run the ibm simulat=
+or: (<a href=3D"https://sourceforge.net/projects/ibmswtpm2/" target=3D"_bla=
+nk" style=3D"font-size:1rem">https://sourceforge.net/projects/ibmswtpm2/</a=
+>) and was able to send command and get result using tpm2-tools (<a href=3D=
+"https://github.com/tpm2-software/tpm2-tools" target=3D"_blank" style=3D"fo=
+nt-size:1rem">https://github.com/tpm2-software/tpm2-tools</a>)</div><div di=
+r=3D"auto" style=3D"font-family:-apple-system,&quot;Helvetica Neue&quot;;wo=
+rd-spacing:1px;color:rgb(49,49,49)"><br></div><div dir=3D"auto" style=3D"fo=
+nt-size:1rem;font-family:-apple-system,&quot;Helvetica Neue&quot;;word-spac=
+ing:1px;color:rgb(49,49,49)"><br></div><div dir=3D"auto" style=3D"font-size=
+:1rem;font-family:-apple-system,&quot;Helvetica Neue&quot;;word-spacing:1px=
+;color:rgb(49,49,49)">I tried compiling like a C file (gcc myprog.c -o mypr=
+og; ./myprog) but getting errors even if i use the -ltss2-esys option=C2=A0=
+<br></div><div dir=3D"auto" style=3D"font-family:-apple-system,&quot;Helvet=
+ica Neue&quot;;word-spacing:1px;color:rgb(49,49,49)"><br></div><div dir=3D"=
+auto" style=3D"font-size:1rem;font-family:-apple-system,&quot;Helvetica Neu=
+e&quot;;word-spacing:1px;color:rgb(49,49,49)"><p style=3D"font-size:1rem">B=
+est regards,<br>/Ahmad</p><p style=3D"font-size:1rem"></p></div></div>
 
---000000000000ed0b2a0600784913--
+--0000000000008464310601cba82a--
