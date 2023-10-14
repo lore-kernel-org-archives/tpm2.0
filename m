@@ -1,28 +1,21 @@
 Return-Path: <petr.gotthard@centrum.cz>
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp4.osuosl.org C8F4841772
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp4.osuosl.org 5355941769
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org 24B2E81CA5
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org 1EF8C81C40
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=centrum.cz; s=mail;
- t=1696710969; bh=28thu8XiAxXGctKd+ooYAFO9qHWcPlRCRSVIeuHbg+s=;
+ t=1697274746; bh=MBt6UajTlSTSk5IOD+btFJSaIPfZaWb0vnz7ZU7JDeo=;
  h=Date:From:Subject:To:References:In-Reply-To:From;
- b=mFaOdt3PrKN5ECqzDEfeDureS3dXFDwxjexIYGMMYpfLrLm4QAENqQq6Lt/OCee7K
- 7xyQXuUPzAVna7gZJTfMyywEa8tMqJdfxusMnaF5Jqf4iYjE5mI6e28kLhFjIGMjBr
- 9PleQDPnoZS2j41q0CtI3Ja6zThbTET6Mi6CtXqk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=centrum.cz; s=mail;
- t=1696710969; bh=28thu8XiAxXGctKd+ooYAFO9qHWcPlRCRSVIeuHbg+s=;
- h=Date:From:Subject:To:References:In-Reply-To:From;
- b=mFaOdt3PrKN5ECqzDEfeDureS3dXFDwxjexIYGMMYpfLrLm4QAENqQq6Lt/OCee7K
- 7xyQXuUPzAVna7gZJTfMyywEa8tMqJdfxusMnaF5Jqf4iYjE5mI6e28kLhFjIGMjBr
- 9PleQDPnoZS2j41q0CtI3Ja6zThbTET6Mi6CtXqk=
-Date: Sat, 07 Oct 2023 22:36:08 +0200
+ b=N7AV3V1vS5xUkJuMOhXgOJDiqyvBrcBNU81mZlbxKLV20/SpDG9l0YdsKriVqj1AZ
+ DBtgoJrBJcdMSCnYHQsEylTduvpdlSi30/3PBiQ37LWM42PZCg/vdTKnAyXSwz8mvI
+ CSnmP/zLtdNS+YP4Cw6jRifViGDuVxd+ewXOwEMI=
+Date: Sat, 14 Oct 2023 11:12:04 +0200
 From: Petr Gotthard <petr.gotthard@centrum.cz>
-References: <20230304111257.FBBD1E80@centrum.cz>
- <20230503134318.423136D0@centrum.cz>
-In-Reply-To: <20230503134318.423136D0@centrum.cz>
+References: <SN6PR11MB3437E666457CD27E5B0FAB9AB8DD9@sn6pr11mb3437.namprd11.prod.outlook.com>
+In-Reply-To: <SN6PR11MB3437E666457CD27E5B0FAB9AB8DD9@sn6pr11mb3437.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Message-Id: <20231007223608.6C34B3C5@centrum.cz>
+Message-Id: <20231014111204.3DBB765D@centrum.cz>
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Subject: [Tpm2] [RELEASE CANDIDATE] tpm2-openssl 1.2.0-rc2
+Subject: [Tpm2] [RELEASE] tpm2-openssl 1.2.0
 List-Id: The tpm2 userspace mailing list <tpm2.lists.linuxfoundation.org>
 List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/tpm2>,
  <mailto:tpm2-request@lists.linuxfoundation.org?subject=unsubscribe>
@@ -35,9 +28,12 @@ To: tpm2@lists.linuxfoundation.org
 
 Hello,
 
-I would like to announce the release of tpm2-openssl 1.2.0-rc2, hopefully its last release candidate.
+I just released tpm2-openssl 1.2.0: https://github.com/tpm2-software/tpm2-openssl/releases/tag/1.2.0
 
-https://github.com/tpm2-software/tpm2-openssl/blob/1.2.0-rc2/docs/CHANGELOG.md
+This is a feature release with several improvements
+https://github.com/tpm2-software/tpm2-openssl/blob/1.2.0/docs/CHANGELOG.md
+
+Many thanks to all the contributors!
 
 
 Kind Regards,
