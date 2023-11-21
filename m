@@ -1,20 +1,15 @@
-Return-Path: <konstantin@linuxfoundation.org>
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp4.osuosl.org 79848408A3
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp4.osuosl.org 7761E40898
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
- s=korg; t=1700601676;
- bh=CtgqEnGlOvbOxYLgO1I+chqokhKSNHAyKyXwkP9xvfY=;
- h=Date:From:To:Subject:From;
- b=N92KTsdjmanIMfDGJxDJoPcVogIcKTeURwxSCXfOivxTTzbxdGxaeJdPfMRrZa0Bi
- UhzZAjOcP/XKeFADQ0y78GBTWa1D7GQa42KxgruoXpsej3Em0L2Rqn67nUzp/Y1RDm
- 0YOarcmiuXbaH1e+0cd0ecjteuZT5JwEKyiPPPxw=
-Date: Tue, 21 Nov 2023 16:21:15 -0500
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Message-ID: <20231121-wild-excellent-mastodon-2ad369@meerkat>
+Return-Path: <who+lfl@cnackers.org>
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp2.osuosl.org 4EC14400D8
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp2.osuosl.org 4645E40363
+Message-ID: <b161e5e8eb5d572ac4a6eb4eee0ba9da78313bd6.camel@cnackers.org>
+From: Erik <who+lfl@cnackers.org>
+Date: Tue, 21 Nov 2023 23:39:49 +0100
+In-Reply-To: <cec7540a0ac32948aa29a2c49fff797e21e328bd.camel@cnackers.org>
+References: <cec7540a0ac32948aa29a2c49fff797e21e328bd.camel@cnackers.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Subject: [Tpm2] PSA: the tpm2 list will be moving to lists.linux.dev
+Subject: [Tpm2]  [RELEASE CANDIDATE] tpm2-pytss 2.2.0-rc1
 List-Id: The tpm2 userspace mailing list <tpm2.lists.linuxfoundation.org>
 List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/tpm2>,
  <mailto:tpm2-request@lists.linuxfoundation.org?subject=unsubscribe>
@@ -25,44 +20,50 @@ List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/tpm2>,
  <mailto:tpm2-request@lists.linuxfoundation.org?subject=subscribe>
 To: tpm2@lists.linuxfoundation.org
 
-Hello, all:
+Hi,
 
-The mailman-2 system running on lists.linuxfoundation.org is being
-decommissioned, so all lists currently hosted there will be found new homes.
-Some time next week, the tpm2 list will be migrated to live on
-lists.linux.dev, but the impact of this move should be minor:
+2.2.0-rc1 has been released with some small fixes.
 
-1. The new canonical list address will be tpm2@lists.linux.dev.
+Changelog:
 
-2. *The old address will continue to work* for the foreseeable future, so any
-   existing conversations can continue and any new messages sent to the old
-   list address will be properly delivered to all subscribers.
+Fixed:
+- Fix readthedocs builds.
+- Fix hardcoded sizes in the policy module.
 
-3. All members will be automatically subscribed to the new list, so no action
-   is required on anyone's part to keep receiving list mail.
+Added:
+- Add support for python 3.12.
 
-4. The list will be archived on https://lore.kernel.org/tpm2/ with all prior
-   archives automatically imported.
+/Erik
 
-5. The List-ID header will change, regardless to which address the message is
-   sent:
-
-   before: List-Id: <tpm2.lists.linuxfoundation.org>
-    after: List-Id: <tpm2.lists.linux.dev>
-
-   You will need to update your filtering rules if you filter based on the
-   contents of that header (on or after the migration date).
-
-6. The mailman footer will no longer be added to message bodies and the
-   subject will no longer be modified to insert [tpm2] (because this
-   violates DMARC).
-
-7. Subscribing and unsubscribing will be done using the mlmmj supported
-   commands, documented at https://subspace.kernel.org/subscribing.html
-
-Please let me know if you have any questions or concerns. Otherwise, I will
-follow up next week with the exact date and time of the move.
-
-Best regards,
--K
+On Tue, 2023-09-12 at 00:05 +0200, Erik wrote:
+> Hi,
+>=20
+> A release candidate for tpm2-pytss 2.2.0-rc0 have been released at
+> https://github.com/tpm2-software/tpm2-pytss/releases/tag/2.2.0-rc0
+>=20
+> It can be installed with pip install tpm2-pytss=3D=3D2.2.0rc0 =20
+>=20
+> Changelog:
+>=20
+> Fixed =20
+> Fix pycparse error for __float128. =20
+> Fix check on ESYS_TR in policy_secret.
+>=20
+> Added =20
+> Add routine for making ESYS_TR from parts. =20
+> Support unmarshal and marshal routines for constants. =20
+> Provide a better error message for missing symbols.
+>=20
+> Removed =20
+> Drop support for python 3.7. =20
+> Remove references to TPMS_ALGORITHM_DESCRIPTION.
+>=20
+> /Erik
+>=20
+>=20
+>=20
+> _______________________________________________
+> Tpm2 mailing list
+> Tpm2@lists.linuxfoundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/tpm2
 
