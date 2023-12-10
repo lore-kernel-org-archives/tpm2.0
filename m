@@ -1,24 +1,22 @@
-Return-Path: <Andreas.Fuchs@infineon.com>
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp4.osuosl.org 84DD34028B
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp4.osuosl.org DC817401DD
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
- d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
- t=1701245601; x=1732781601;
- h=from:to:subject:date:message-id:references:in-reply-to:
- mime-version; bh=srXb8h1RZq7ZS29Lgw4oqpjSbKcxZmnN1k576PmD5S4=;
- b=VXn/8T3/GEsYKMSbLDEfBWXUF6A+y0FQ2fW7ctUBKlp2/3y2D/S7KAWL
- 9T/oD6K2n8W5e9Ugrjpek6/5Bp+MAF0O4xb7QTsu7SzsYpbDv0FBg7AYF
- DgSClSgJ9XHH9NmxxUrY2DVk8LVUGFsgK89+M3lqp+KPmXM6fSPHSpq+x A=;
-From: <Andreas.Fuchs@infineon.com>
-Date: Wed, 29 Nov 2023 08:04:09 +0000
-Message-ID: <929c5dd33de64b258fdcd3a40aa83669@infineon.com>
-References: <CANbXECnRoE2R3mog=aj_qDYFkDj-fvwYkpoZNVyyayyEHXHyrQ@mail.gmail.com>
-In-Reply-To: <CANbXECnRoE2R3mog=aj_qDYFkDj-fvwYkpoZNVyyayyEHXHyrQ@mail.gmail.com>
-Content-Language: en-US
+Return-Path: <armin.simma@fhv.at>
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp2.osuosl.org C39A0400FB
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp2.osuosl.org B58E0400D1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=FHVorarlberg.onmicrosoft.com; s=selector2-FHVorarlberg-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C6uRE3cnBa0dtfr/B/YaS1ZqlbTzZc9FDiuPQyk4xDQ=;
+ b=hEx0BcmiQb4mArxDKHfPbbrJLEjnD6znI7BVGwstVTgxTKJfAnNpV9SUYPAE8Apz0fGX2mOE5JSZ49Pmp0JfRBT+Wy/pMhBHvwlEYxPcPT1zvS45gec3/xruXj7yxBZZc/exfQWYHO/A5XpUtso0sF/2yUuMGTXOeL5rc0lxswY=
+From: SIMMA Armin <armin.simma@fhv.at>
+Date: Sun, 10 Dec 2023 06:56:55 +0000
+Message-ID: <VI1PR09MB37923FDBD28623C5FE3F61529588A@VI1PR09MB3792.eurprd09.prod.outlook.com>
+References: <VI1PR09MB379294040DD4CE76F927F8D99588A@VI1PR09MB3792.eurprd09.prod.outlook.com>
+In-Reply-To: <VI1PR09MB379294040DD4CE76F927F8D99588A@VI1PR09MB3792.eurprd09.prod.outlook.com>
+Content-Language: en-GB
 Content-Type: multipart/alternative;
- boundary="_000_929c5dd33de64b258fdcd3a40aa83669infineoncom_"
+ boundary="_000_VI1PR09MB37923FDBD28623C5FE3F61529588AVI1PR09MB3792eurp_"
 MIME-Version: 1.0
-Subject: Re: [Tpm2] Windows TBS and using tpm2-tss FAPI
+Subject: [Tpm2] tpm2_policyauthorize applied directly on tpm-based key
+ instead of file
 List-Id: The tpm2 userspace mailing list <tpm2.lists.linuxfoundation.org>
 List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/tpm2>,
  <mailto:tpm2-request@lists.linuxfoundation.org?subject=unsubscribe>
@@ -27,176 +25,627 @@ List-Post: <mailto:tpm2@lists.linuxfoundation.org>
 List-Help: <mailto:tpm2-request@lists.linuxfoundation.org?subject=help>
 List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/tpm2>,
  <mailto:tpm2-request@lists.linuxfoundation.org?subject=subscribe>
-To: al.garnier.trad@gmail.com, tpm2@lists.linuxfoundation.org
+To: "tpm2@lists.linuxfoundation.org" <tpm2@lists.linuxfoundation.org>
 
---_000_929c5dd33de64b258fdcd3a40aa83669infineoncom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+--_000_VI1PR09MB37923FDBD28623C5FE3F61529588AVI1PR09MB3792eurp_
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgQWxleGlzLA0KDQp0aGF0IHNvdW5kcyBsaWtlIGEgbG90IG9mIGdyZWF0IHdvcmsuDQoNClNv
-IEVTWVMgc2hvdWxkIGJlIHdvcmtpbmcganVzdCBmaW5lLiBJIGhhZCBubyBwcm9ibGVtcyB1c2lu
-ZyBpdCBqdXN0IGxpa2UgdW5kZXIgbGludXguDQpDYW4geW91IHRlbGwgbWUgd2hhdCB5b3VyIHBy
-b2JsZW1zIGFyZSA/DQoNClJlZ2FyZGluZyBGQVBJOyB5ZXMgdGhlIHByb3Zpc2lvbmluZyBpcyBz
-b21ldGhpbmcgd2UgaGF2ZSB0byBmaWd1cmUgb3V0Lg0KVGhlIHJlYXNvbiBpcyB0aGF0IFdpbmRv
-d3Mgd2lsbCBhbHJlYWR5IGRvIHNvbWUgb2YgdGhlc2Ugc3RlcHMsIHN1Y2ggYXMgc2V0dGluZyBh
-dXRoIHZhbHVlcyBhbmQgbWFraW5nIGtleXMgcGVyc2lzdGVudC4NCknigJlkIGxvdmUgdG8gaGVs
-cCBoZXJlLg0KRG8geW91IGFscmVhZHkgaGF2ZSB0aGUgRkFQSSBtb2R1bGVzIGZvciBmaWxlIHN0
-b3JhZ2UgcG9ydGVkIG92ZXIgdG8gd2luZG93cyA/DQoNCkNoZWVycywNCkFuZHJlYXMNCg0KRnJv
-bTogVHBtMiA8dHBtMi1ib3VuY2VzQGxpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmc+IE9uIEJlaGFs
-ZiBPZiBBbGV4aXMgR2Fybmllcg0KU2VudDogRGllbnN0YWcsIDI4LiBOb3ZlbWJlciAyMDIzIDE5
-OjQyDQpUbzogdHBtMkBsaXN0cy5saW51eGZvdW5kYXRpb24ub3JnDQpTdWJqZWN0OiBbVHBtMl0g
-V2luZG93cyBUQlMgYW5kIHVzaW5nIHRwbTItdHNzIEZBUEkNCg0KQ2F1dGlvbjogVGhpcyBlLW1h
-aWwgb3JpZ2luYXRlZCBvdXRzaWRlIEluZmluZW9uIFRlY2hub2xvZ2llcy4gRG8gbm90IGNsaWNr
-IG9uIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSB2YWxpZGF0ZSBpdCBpcyBz
-YWZlPGh0dHBzOi8vaW50cmFuZXQtY29udGVudC5pbmZpbmVvbi5jb20vZXhwbG9yZS9hYm91dGlu
-ZmluZW9uL3J1bGVzL2luZm9ybWF0aW9uc2VjdXJpdHkvdWcvU29jaWFsRW5naW5lZXJpbmcvUGFn
-ZXMvU29jaWFsRW5naW5lZXJpbmdFbGVtZW50c19lbi5hc3B4Pi4NCg0KDQpIZWxsbywNCg0KSSBo
-YXZlIGJlZW4gdHJ5aW5nIHRvIGltcGxlbWVudCBhIHNvbHV0aW9uIHVzaW5nIHRoZSB0cG0yLXRz
-cyBGQVBJIHRvIHRhbGsgdG8gYSBXaW5kb3dzIFRQTSwgdmlhIHRoZSBUQ1RJIFRCUy4NCg0KSSBo
-YXZlIHVzZWQgdGhlIEZBUEkgc3VjY2Vzc2Z1bGx5IG9uIExpbnV4IGFuZCB0aG91Z2h0IHRoYXQg
-YnkgdXNpbmcgdGhlIFZpc3VhbCBTdHVkaW8gZXhpc3Rpbmcgc29sdXRpb24gaW4gdHBtMi10c3Mg
-YW5kIHBvcnRpbmcgdGhlIHRwbTItdHNzIEZBUEkgb24gdG9wIEkgbWlnaHQgYmUgYWJsZSB0byBo
-YXZlIHNvbWV0aGluZyB3b3JraW5nLg0KDQpXaGlsc3QgcGFydCBvZiB0aGUgc29sdXRpb24gc2Vl
-bXMgdG8gd29yaywgdGhlIFdpbmRvd3MgVFBNIGhhcyBiZWVuIHVuY29vcGVyYXRpdmUgb24gYSBs
-b3Qgb2YgaW5zdGFuY2VzLCBmaXJzdCBkdXJpbmcgdGhlIHN0YXJ0dXAgc2VxdWVuY2Ugd2hlbiB0
-cnlpbmcgdG8gZ2V0IGNhcGFiaWxpdGllcywgYW1vbmcgb3RoZXIgdGhpbmdzLg0KDQpJJ20gYWxz
-byBhc3N1bWluZyB0aGUgcHJvdmlzaW9uaW5nIHByb2Nlc3MgYmFzZWQgb24gdGhlIGZhcGkgcHJv
-ZmlsZXMgcHJvY2VzcyB3aWxsIG5vdCB3b3JrIGZvciBUQlMuDQoNCk15IHF1ZXN0aW9uIGlzIHNp
-bXBsZSwgaGFzIHRoZXJlIGV2ZXIgYmVlbiBhIHN1Y2Nlc3NmdWwgRVNZUyBpbXBsZW1lbnRhdGlv
-biBvbiBXaW5kb3dzID8gT25lIHdpdGggZXhhbXBsZXMgSSBtaWdodCBiZSBhYmxlIHRvIGJhc2Ug
-bXlzZWxmIG9uIHRvIHRyeSBhbmQgbWFrZSBpdCB3b3JrID8NCg0KSSBtaWdodCBiZSBhIGJpdCBn
-cmVlbiB3aGVuIGl0IGNvbWVzIHRvIHdvcmtpbmcgd2l0aCBUUE1zIHNvIEkgYXBvbG9naXplIGlm
-IG15IHJlcXVlc3Qgc2VlbXMgaWdub3JhbnQuDQoNClRoYW5rcyBpbiBhZHZhbmNlIGZvciB5b3Vy
-IGhlbHANCg0KUmVnYXJkcywNCkFsZXhpcyBHYXJuaWVyDQo=
+Hi TPM-users and experts!
 
---_000_929c5dd33de64b258fdcd3a40aa83669infineoncom_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+I tried to use the code from Nicolas Oliver to create a tpm-based key which=
+ has a =93Wildcard Policy=94 i.e. an Authorized Policiy to allow using the =
+key only with specified PCR values; and still being able to change those PC=
+R values later on using a signature.  Support for this is provided thorough=
+ the tpm2_policyauthorizecommand.
+I just adapted the code from https://github.com/latchset/clevis/issues/121
 
-PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
-bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
-YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
-cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
-VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
-Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
-ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
-PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
-IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
-YWNlDQoJe2ZvbnQtZmFtaWx5OkNhbGlicmk7DQoJcGFub3NlLTE6MiAxNSA1IDIgMiAyIDQgMyAy
-IDQ7fQ0KLyogU3R5bGUgRGVmaW5pdGlvbnMgKi8NCnAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWws
-IGRpdi5Nc29Ob3JtYWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJ
-Zm9udC1zaXplOjExLjBwdDsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjt9DQph
-OmxpbmssIHNwYW4uTXNvSHlwZXJsaW5rDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xv
-cjpibHVlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0KYTp2aXNpdGVkLCBzcGFuLk1z
-b0h5cGVybGlua0ZvbGxvd2VkDQoJe21zby1zdHlsZS1wcmlvcml0eTo5OTsNCgljb2xvcjpwdXJw
-bGU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpwLm1zb25vcm1hbDAsIGxpLm1zb25v
-cm1hbDAsIGRpdi5tc29ub3JtYWwwDQoJe21zby1zdHlsZS1uYW1lOm1zb25vcm1hbDsNCgltc28t
-bWFyZ2luLXRvcC1hbHQ6YXV0bzsNCgltYXJnaW4tcmlnaHQ6MGNtOw0KCW1zby1tYXJnaW4tYm90
-dG9tLWFsdDphdXRvOw0KCW1hcmdpbi1sZWZ0OjBjbTsNCglmb250LXNpemU6MTEuMHB0Ow0KCWZv
-bnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlmO30NCnNwYW4uRW1haWxTdHlsZTE5DQoJe21z
-by1zdHlsZS10eXBlOnBlcnNvbmFsOw0KCWZvbnQtZmFtaWx5OiJDYWxpYnJpIixzYW5zLXNlcmlm
-Ow0KCWNvbG9yOndpbmRvd3RleHQ7fQ0Kc3Bhbi5FbWFpbFN0eWxlMjANCgl7bXNvLXN0eWxlLXR5
-cGU6cGVyc29uYWwtY29tcG9zZTsNCglmb250LWZhbWlseToiQ2FsaWJyaSIsc2Fucy1zZXJpZjsN
-Cgljb2xvcjp3aW5kb3d0ZXh0O30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4
-cG9ydC1vbmx5Ow0KCWZvbnQtc2l6ZToxMC4wcHQ7fQ0KQHBhZ2UgV29yZFNlY3Rpb24xDQoJe3Np
-emU6NjEyLjBwdCA3OTIuMHB0Ow0KCW1hcmdpbjo3Mi4wcHQgNzIuMHB0IDcyLjBwdCA3Mi4wcHQ7
-fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQotLT48L3N0eWxlPjwh
-LS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4dD0iZWRpdCIgc3Bp
-ZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1s
-Pg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpleHQ9ImVkaXQiIGRh
-dGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+DQo8L2hlYWQ+DQo8
-Ym9keSBsYW5nPSJERSIgbGluaz0iYmx1ZSIgdmxpbms9InB1cnBsZSI+DQo8ZGl2IGNsYXNzPSJX
-b3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9Im1zby1mYXJl
-YXN0LWxhbmd1YWdlOkVOLVVTIj5IaSBBbGV4aXMsPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVT
-Ij48bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3Bh
-biBsYW5nPSJFTi1VUyIgc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj50aGF0IHNv
-dW5kcyBsaWtlIGEgbG90IG9mIGdyZWF0IHdvcmsuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAg
-Y2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJtc28tZmFyZWFzdC1s
-YW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1z
-b05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJtc28tZmFyZWFzdC1sYW5ndWFnZTpF
-Ti1VUyI+U28gRVNZUyBzaG91bGQgYmUgd29ya2luZyBqdXN0IGZpbmUuIEkgaGFkIG5vIHByb2Js
-ZW1zIHVzaW5nIGl0IGp1c3QgbGlrZSB1bmRlciBsaW51eC48bzpwPjwvbzpwPjwvc3Bhbj48L3A+
-DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9Im1zby1mYXJl
-YXN0LWxhbmd1YWdlOkVOLVVTIj5DYW4geW91IHRlbGwgbWUgd2hhdCB5b3VyIHByb2JsZW1zIGFy
-ZSA/PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFu
-Zz0iRU4tVVMiIHN0eWxlPSJtc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+PG86cD4mbmJzcDs8
-L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMi
-IHN0eWxlPSJtc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+UmVnYXJkaW5nIEZBUEk7IHllcyB0
-aGUgcHJvdmlzaW9uaW5nIGlzIHNvbWV0aGluZyB3ZSBoYXZlIHRvIGZpZ3VyZSBvdXQuPG86cD48
-L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMi
-IHN0eWxlPSJtc28tZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+VGhlIHJlYXNvbiBpcyB0aGF0IFdp
-bmRvd3Mgd2lsbCBhbHJlYWR5IGRvIHNvbWUgb2YgdGhlc2Ugc3RlcHMsIHN1Y2ggYXMgc2V0dGlu
-ZyBhdXRoIHZhbHVlcyBhbmQgbWFraW5nIGtleXMgcGVyc2lzdGVudC48bzpwPjwvbzpwPjwvc3Bh
-bj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5bGU9Im1z
-by1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5J4oCZZCBsb3ZlIHRvIGhlbHAgaGVyZS48bzpwPjwv
-bzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIg
-c3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5EbyB5b3UgYWxyZWFkeSBoYXZlIHRo
-ZSBGQVBJIG1vZHVsZXMgZm9yIGZpbGUgc3RvcmFnZSBwb3J0ZWQgb3ZlciB0byB3aW5kb3dzID88
-bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJF
-Ti1VUyIgc3R5bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj48bzpwPiZuYnNwOzwvbzpw
-Pjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyIgc3R5
-bGU9Im1zby1mYXJlYXN0LWxhbmd1YWdlOkVOLVVTIj5DaGVlcnMsPG86cD48L286cD48L3NwYW4+
-PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiIHN0eWxlPSJtc28t
-ZmFyZWFzdC1sYW5ndWFnZTpFTi1VUyI+QW5kcmVhczxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxw
-IGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIiBzdHlsZT0ibXNvLWZhcmVhc3Qt
-bGFuZ3VhZ2U6RU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxkaXY+DQo8ZGl2
-IHN0eWxlPSJib3JkZXI6bm9uZTtib3JkZXItdG9wOnNvbGlkICNFMUUxRTEgMS4wcHQ7cGFkZGlu
-ZzozLjBwdCAwY20gMGNtIDBjbSI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48Yj48c3BhbiBsYW5n
-PSJFTi1VUyI+RnJvbTo8L3NwYW4+PC9iPjxzcGFuIGxhbmc9IkVOLVVTIj4gVHBtMiAmbHQ7dHBt
-Mi1ib3VuY2VzQGxpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcmZ3Q7DQo8Yj5PbiBCZWhhbGYgT2Yg
-PC9iPkFsZXhpcyBHYXJuaWVyPGJyPg0KPGI+U2VudDo8L2I+IERpZW5zdGFnLCAyOC4gTm92ZW1i
-ZXIgMjAyMyAxOTo0Mjxicj4NCjxiPlRvOjwvYj4gdHBtMkBsaXN0cy5saW51eGZvdW5kYXRpb24u
-b3JnPGJyPg0KPGI+U3ViamVjdDo8L2I+IFtUcG0yXSBXaW5kb3dzIFRCUyBhbmQgdXNpbmcgdHBt
-Mi10c3MgRkFQSTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPC9kaXY+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjxkaXY+DQo8dGFibGUgY2xhc3M9
-Ik1zb05vcm1hbFRhYmxlIiBib3JkZXI9IjAiIGNlbGxzcGFjaW5nPSIzIiBjZWxscGFkZGluZz0i
-MCIgd2lkdGg9IjAiIHN0eWxlPSJ3aWR0aDowY207YmFja2dyb3VuZDptb2NjYXNpbiI+DQo8dGJv
-ZHk+DQo8dHI+DQo8dGQgc3R5bGU9InBhZGRpbmc6Ljc1cHQgLjc1cHQgLjc1cHQgLjc1cHQiPg0K
-PHAgY2xhc3M9Ik1zb05vcm1hbCI+PHN0cm9uZz48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEwLjVw
-dDtmb250LWZhbWlseTomcXVvdDtDYWxpYnJpJnF1b3Q7LHNhbnMtc2VyaWYiPkNhdXRpb248L3Nw
-YW4+PC9zdHJvbmc+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC41cHQiPjogVGhpcyBlLW1haWwg
-b3JpZ2luYXRlZCBvdXRzaWRlIEluZmluZW9uIFRlY2hub2xvZ2llcy4gRG8gbm90IGNsaWNrIG9u
-IGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdQ0KPGEgaHJlZj0iaHR0cHM6Ly9p
-bnRyYW5ldC1jb250ZW50LmluZmluZW9uLmNvbS9leHBsb3JlL2Fib3V0aW5maW5lb24vcnVsZXMv
-aW5mb3JtYXRpb25zZWN1cml0eS91Zy9Tb2NpYWxFbmdpbmVlcmluZy9QYWdlcy9Tb2NpYWxFbmdp
-bmVlcmluZ0VsZW1lbnRzX2VuLmFzcHgiPg0KdmFsaWRhdGUgaXQgaXMgc2FmZTwvYT4uPG86cD48
-L286cD48L3NwYW4+PC9wPg0KPC90ZD4NCjwvdHI+DQo8L3Rib2R5Pg0KPC90YWJsZT4NCjwvZGl2
-Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2Pg0KPGRp
-dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPkhlbGxvLCA8bzpwPjwvbzpwPjwvcD4NCjxkaXY+DQo8
-cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4N
-CjxwIGNsYXNzPSJNc29Ob3JtYWwiPkkgaGF2ZSBiZWVuIHRyeWluZyB0byBpbXBsZW1lbnQgYSBz
-b2x1dGlvbiB1c2luZyB0aGUgdHBtMi10c3MgRkFQSSB0byB0YWxrIHRvIGEgV2luZG93cyBUUE0s
-IHZpYSB0aGUgVENUSSBUQlMuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFz
-cz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNs
-YXNzPSJNc29Ob3JtYWwiPkkgaGF2ZSB1c2VkIHRoZSBGQVBJIHN1Y2Nlc3NmdWxseSBvbiBMaW51
-eCBhbmQgdGhvdWdodCB0aGF0IGJ5IHVzaW5nIHRoZSBWaXN1YWwgU3R1ZGlvIGV4aXN0aW5nIHNv
-bHV0aW9uIGluIHRwbTItdHNzIGFuZCBwb3J0aW5nIHRoZSB0cG0yLXRzcyBGQVBJIG9uIHRvcCBJ
-IG1pZ2h0IGJlIGFibGUgdG8gaGF2ZSBzb21ldGhpbmcgd29ya2luZy48bzpwPjwvbzpwPjwvcD4N
-CjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9w
-Pg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+V2hpbHN0IHBhcnQgb2YgdGhl
-IHNvbHV0aW9uIHNlZW1zIHRvIHdvcmssIHRoZSBXaW5kb3dzIFRQTSBoYXMgYmVlbiB1bmNvb3Bl
-cmF0aXZlIG9uIGEgbG90IG9mIGluc3RhbmNlcywgZmlyc3QgZHVyaW5nIHRoZSBzdGFydHVwIHNl
-cXVlbmNlIHdoZW4gdHJ5aW5nIHRvIGdldCBjYXBhYmlsaXRpZXMsIGFtb25nIG90aGVyIHRoaW5n
-cy48bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxv
-OnA+Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
-SSdtIGFsc28gYXNzdW1pbmcgdGhlIHByb3Zpc2lvbmluZyBwcm9jZXNzIGJhc2VkIG9uIHRoZSBm
-YXBpIHByb2ZpbGVzIHByb2Nlc3Mgd2lsbCBub3Qgd29yayZuYnNwO2ZvciBUQlMuPG86cD48L286
-cD48L3A+DQo8L2Rpdj4NCjxkaXY+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwv
-bzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPk15IHF1ZXN0aW9u
-IGlzIHNpbXBsZSwgaGFzIHRoZXJlIGV2ZXIgYmVlbiBhIHN1Y2Nlc3NmdWwgRVNZUyBpbXBsZW1l
-bnRhdGlvbiBvbiBXaW5kb3dzID8gT25lIHdpdGggZXhhbXBsZXMgSSBtaWdodCBiZSBhYmxlIHRv
-IGJhc2UgbXlzZWxmIG9uIHRvIHRyeSBhbmQgbWFrZSBpdCB3b3JrID88bzpwPjwvbzpwPjwvcD4N
-CjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+Jm5ic3A7PC9vOnA+PC9w
-Pg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+SSBtaWdodCBiZSBhIGJpdCBn
-cmVlbiB3aGVuIGl0IGNvbWVzIHRvIHdvcmtpbmcgd2l0aCBUUE1zIHNvIEkgYXBvbG9naXplIGlm
-IG15IHJlcXVlc3Qgc2VlbXMgaWdub3JhbnQuPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjxkaXY+
-DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48bzpwPiZuYnNwOzwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRp
-dj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPlRoYW5rcyBpbiBhZHZhbmNlIGZvciB5b3VyIGhlbHA8
-bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxvOnA+
-Jm5ic3A7PC9vOnA+PC9wPg0KPC9kaXY+DQo8ZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+UmVn
-YXJkcyw8bzpwPjwvbzpwPjwvcD4NCjwvZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
-PkFsZXhpcyBHYXJuaWVyPG86cD48L286cD48L3A+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9kaXY+DQo8
-L2Rpdj4NCjwvYm9keT4NCjwvaHRtbD4NCg==
+Instead of sealing a file (in the code Nicolas it is file secret.txt I trie=
+d to use a tpm-stored key within the =93normal=94 owner hierarchy created w=
+ith tpm2_create i.e. a subkey of the primary key.  When I try to unseal the=
+ key with the correct policy at the end of the code I get the following err=
+or:
+/home/user# tpm2_unseal \
+    --object-context 0x81000005 \
+    --auth session:session1.ctx
+WARNING:esys:src/tss2-esys/api/Esys_Unseal.c:295:Esys_Unseal_Finish() Recei=
+ved TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_Unseal.c:98:Esys_Unseal() Esys Finish Err=
+orCode (0x0000018a)
 
---_000_929c5dd33de64b258fdcd3a40aa83669infineoncom_--
+ERROR: Esys_Unseal(0x18A) - tpm:handle(1):the type of the value is not appr=
+opriate for the use
+
+Can=92t we use tpm2_policyauthorize directly on tpm-keys in tpm2-tools? (or=
+ maybe it is written in the spec where I haven=92t read all the details.)
+Here is part of my code; the complete code can be seen in  https://github.c=
+om/latchset/clevis/issues/121 :
+
+ # Create a PCR policy |
+
+tpm2_startauthsession --session session.ctx
+
+tpm2_policypcr \
+
+    --session session.ctx \
+
+    --pcr-list sha256:0,1 \
+
+    --policy pcr.policy
+
+tpm2_flushcontext session.ctx
+
+rm -f session.ctx
+
+
+
+# Generate public/private key pair for signing
+
+
+Rest of the code see github/ latchset (link above)=85
+
+I removed the following option from tpm2_create (compared to github:
+
+ --sealing-input secret.txt \
+
+
+
+
+
+
+tpm2_create \
+
+    --parent-context primary.ctx \
+
+    --hash-algorithm sha256 \
+
+    --public key.obj.pub \
+
+    --private key.obj.priv \
+
+    --policy authorized.policy
+
+
+
+tpm2_load \
+
+    --parent-context primary.ctx \
+
+    --public key.obj.pub \
+
+    --private key.obj.priv \
+
+    --name key.obj.name \
+
+    --key-context key.obj.ctx
+
+
+
+# Persist the TPM Object
+
+tpm2_evictcontrol \
+
+    --hierarchy o \
+
+    --object-context key.obj.ctx \
+
+    0x81000005
+
+
+
+ # Sign the PCR policy
+
+
+
+=85
+
+
+
+# Unseal the TPM object using the Authorized PCR Policy
+
+=85
+
+
+
+
+
+tpm2_unseal \
+
+    --object-context 0x81000005 \
+
+    --auth session:session1.ctx
+
+If you have any idea why this does not work or =96 even better - a solution=
+ to my problem I would be very happy hearing it.
+Armin
+
+
+
+--_000_VI1PR09MB37923FDBD28623C5FE3F61529588AVI1PR09MB3792eurp_
+Content-Type: text/html; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" xmlns:w=3D"urn:sc=
+hemas-microsoft-com:office:word" xmlns:m=3D"http://schemas.microsoft.com/of=
+fice/2004/12/omml" xmlns=3D"http://www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DWindows-1=
+252">
+<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:Helvetica;
+	panose-1:0 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	font-size:10.0pt;
+	font-family:"Calibri",sans-serif;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+code
+	{mso-style-priority:99;
+	font-family:"Courier New";}
+pre
+	{mso-style-priority:99;
+	mso-style-link:"HTML Preformatted Char";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Courier New";}
+span.HTMLPreformattedChar
+	{mso-style-name:"HTML Preformatted Char";
+	mso-style-priority:99;
+	mso-style-link:"HTML Preformatted";
+	font-family:"Consolas",serif;
+	mso-ligatures:none;
+	mso-fareast-language:EN-GB;}
+p.code, li.code, div.code
+	{mso-style-name:code;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	font-size:10.0pt;
+	font-family:"Calibri",sans-serif;}
+span.apple-converted-space
+	{mso-style-name:apple-converted-space;}
+span.pl-c
+	{mso-style-name:pl-c;}
+span.EmailStyle26
+	{mso-style-type:personal-reply;
+	font-family:"Calibri",sans-serif;
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:10.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-ligatures:none;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+--></style>
+</head>
+<body lang=3D"en-AT" link=3D"#0563C1" vlink=3D"#954F72" style=3D"word-wrap:=
+break-word">
+<div class=3D"WordSection1">
+<div id=3D"mail-editor-reference-message-container">
+<div>
+<div>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:12.0pt;color=
+:#212121">Hi TPM-users and experts!</span><span style=3D"font-size:11.0pt">=
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-US" style=3D"font-size:12.0pt;color:#212121">&nbsp;</span>=
+<span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-US" style=3D"font-size:12.0pt;color:#212121">I tried to us=
+e the code from Nicolas Oliver to create a tpm-based key which has a =93Wil=
+dcard Policy=94 i.e. an<span class=3D"apple-converted-space">&nbsp;</span><=
+/span><span style=3D"font-size:12.0pt;color:#212121">Authorized
+ Polici</span><span lang=3D"EN-US" style=3D"font-size:12.0pt;color:#212121"=
+>y to allow using the key only with specified PCR values; and still being a=
+ble to change those PCR values later on using a signature.&nbsp; S</span><s=
+pan style=3D"font-size:12.0pt;color:#212121">upport<span class=3D"apple-con=
+verted-space">&nbsp;</span></span><span lang=3D"EN-US" style=3D"font-size:1=
+2.0pt;color:#212121">for
+ this<span class=3D"apple-converted-space">&nbsp;</span></span><span style=
+=3D"font-size:12.0pt;color:#212121">is provided thorough the<span class=3D"=
+apple-converted-space">&nbsp;</span></span><code><span style=3D"color:#2121=
+21">tpm2_policyauthorize</span></code><span style=3D"font-size:12.0pt;color=
+:#212121">command</span><span lang=3D"EN-US" style=3D"font-size:12.0pt;colo=
+r:#212121">.</span><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-US" style=3D"font-size:12.0pt;color:#212121">I just adapte=
+d the code from<span class=3D"apple-converted-space">&nbsp;</span><a href=
+=3D"https://github.com/latchset/clevis/issues/121" title=3D"https://github.=
+com/latchset/clevis/issues/121"><span style=3D"color:#0078D7">https://githu=
+b.com/latchset/clevis/issues/121</span></a></span><span style=3D"font-size:=
+11.0pt"><o:p></o:p></span></p>
+<pre style=3D"white-space:pre-wrap;font-variant-caps:normal;orphans:auto;te=
+xt-align:start;widows:auto;word-spacing:0px"><span lang=3D"EN-US" style=3D"=
+font-size:12.0pt;font-family:&quot;Calibri&quot;,sans-serif;color:#212121">=
+Instead of sealing a file (in the code Nicolas it is file </span><code><spa=
+n style=3D"color:#212121">secret</span></code><span lang=3D"EN-US" style=3D=
+"font-size:12.0pt;font-family:&quot;Calibri&quot;,sans-serif;color:#212121"=
+>.</span><code><span style=3D"color:#212121">txt</span></code><span style=
+=3D"font-size:12.0pt;font-family:&quot;Calibri&quot;,sans-serif;color:#2121=
+21"> <span lang=3D"EN-US">I tried to use a tpm-stored key within the =93nor=
+mal=94 owner hierarchy created with tpm2_create i.e. a subkey of the primar=
+y key.&nbsp; When I try to unseal the key with the correct policy at the en=
+d of the code I get the following error:</span></span><o:p></o:p></pre>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:Helvetica;color:=
+#212121">/home/user# tpm2_unseal \</span><span style=3D"font-size:11.0pt"><=
+o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:Helvetica;color:=
+#212121">&nbsp;&nbsp;&nbsp; --object-context 0x81000005 \</span><span style=
+=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:Helvetica;color:=
+#212121">&nbsp;&nbsp;&nbsp; --auth session:session1.ctx</span><span style=
+=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<b><span lang=3D"EN-GB" style=3D"font-size:11.0pt;font-family:Helvetica;col=
+or:#212121">WARNING:esys:src/tss2-esys/api/Esys_Unseal.c:295:Esys_Unseal_Fi=
+nish() Received TPM Error<span class=3D"apple-converted-space">&nbsp;</span=
+></span></b><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<b><span lang=3D"EN-GB" style=3D"font-size:11.0pt;font-family:Helvetica;col=
+or:#212121">ERROR:esys:src/tss2-esys/api/Esys_Unseal.c:98:Esys_Unseal() Esy=
+s Finish ErrorCode (0x0000018a)<span class=3D"apple-converted-space">&nbsp;=
+</span></span></b><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<pre style=3D"white-space:pre-wrap;font-variant-caps:normal;orphans:auto;te=
+xt-align:start;widows:auto;word-spacing:0px"><b><span lang=3D"EN-GB" style=
+=3D"font-size:11.0pt;font-family:Helvetica;color:#212121">ERROR: Esys_Unsea=
+l(0x18A) - tpm:handle(1):the type of the value is not appropriate for the u=
+se</span></b><o:p></o:p></pre>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-US" style=3D"font-size:12.0pt;color:#212121">&nbsp;</span>=
+<span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-US" style=3D"font-size:12.0pt;color:#212121">Can=92t we us=
+e<span class=3D"apple-converted-space">&nbsp;</span></span><code><span styl=
+e=3D"color:#212121">tpm2_policyauthorize</span></code><span class=3D"apple-=
+converted-space"><span style=3D"font-family:&quot;Courier New&quot;;color:#=
+212121">&nbsp;</span></span><span lang=3D"EN-US" style=3D"font-size:12.0pt;=
+color:#212121">directly
+ on tpm-</span><span style=3D"font-size:12.0pt;color:#212121">keys</span><s=
+pan class=3D"apple-converted-space"><span lang=3D"EN-US" style=3D"font-size=
+:12.0pt;color:#212121">&nbsp;</span></span><span lang=3D"EN-US" style=3D"fo=
+nt-size:12.0pt;color:#212121">in tpm2-tools? (or
+ maybe it is written in the spec where I haven=92t read all the details.)</=
+span><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-US" style=3D"font-size:12.0pt;color:#212121">Here is </spa=
+n><span lang=3D"EN-US" style=3D"font-size:12.0pt">part of my code;
+<span style=3D"color:#212121">the complete code</span> can be seen in <span=
+ class=3D"apple-converted-space">
+<span style=3D"color:#212121">&nbsp;</span></span><span style=3D"color:#212=
+121"><a href=3D"https://github.com/latchset/clevis/issues/121" title=3D"htt=
+ps://github.com/latchset/clevis/issues/121"><span style=3D"color:#0078D7">h=
+ttps://github.com/latchset/clevis/issues/121</span></a></span>
+<span style=3D"color:#212121">:</span></span><span style=3D"font-size:11.0p=
+t"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#212121">&nbsp;</span></span><span class=3D"pl-c"><span style=3D"font-fa=
+mily:&quot;Courier New&quot;;color:black"># Create a PCR policy |</span></s=
+pan><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB"><span class=3D"pl=
+-c"><span style=3D"font-family:&quot;Courier New&quot;;color:black">tpm2_st=
+artauthsession --session session.ctx</span></span><span style=3D"font-size:=
+11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:black">tpm2_policypcr \</span></span><span style=3D"font-size:11.0pt"><o=
+:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:black">&nbsp;&nbsp;&nbsp; --session session.ctx \</span></span><span sty=
+le=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:black">&nbsp;&nbsp;&nbsp; --pcr-list sha256:0,1 \</span></span><span sty=
+le=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:black">&nbsp;&nbsp;&nbsp; --policy pcr.policy</span></span><span style=
+=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:black">tpm2_flushcontext session.ctx</span></span><span style=3D"font-si=
+ze:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:black">rm -f session.ctx</span></span><span style=3D"font-size:11.0pt"><=
+o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#212121">&nbsp;</span></span><span style=3D"font-size:11.0pt"><o:p></o:p=
+></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:black"># Generate public/private key pair for signing</span></span><span=
+ style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#212121">&nbsp;</span></span><span style=3D"font-size:11.0pt"><o:p></o:p=
+></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span lang=3D"EN-US">Rest of the code see github/ latc=
+hset (link above)=85<o:p></o:p></span></span></p>
+<pre><span class=3D"pl-c"><span lang=3D"EN-US" style=3D"font-family:&quot;C=
+alibri&quot;,sans-serif">I removed the following option from tpm2_create (c=
+ompared to github:<o:p></o:p></span></span></pre>
+<pre><span class=3D"pl-c"><span lang=3D"EN-US" style=3D"font-family:&quot;C=
+alibri&quot;,sans-serif"> </span></span><span style=3D"font-family:&quot;Ca=
+libri&quot;,sans-serif">--sealing-input secret.txt \<o:p></o:p></span></pre=
+>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:11.0pt"><o:p=
+>&nbsp;</o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-US" style=3D"font-size:11.0pt"><o:p>&nbsp;</o:p></span></p=
+>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#212121">&nbsp;</span></span><span style=3D"font-size:11.0pt"><o:p></o:p=
+></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">tpm2_create \</span></b></span><span style=3D"font-size:11.0pt=
+"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --parent-context primary.ctx \</span></b></=
+span><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --hash-algorithm sha256 \</span></b></span>=
+<span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --public</span></b></span><span class=3D"ap=
+ple-converted-space"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;</span></b></span><span class=3D"pl-c"><b><span style=3D=
+"font-family:&quot;Courier New&quot;;color:black">key.obj.pub</span></b></s=
+pan><span class=3D"apple-converted-space"><b><span style=3D"font-family:&qu=
+ot;Courier New&quot;;color:black">&nbsp;</span></b></span><span class=3D"pl=
+-c"><b><span style=3D"font-family:&quot;Courier New&quot;;color:black">\</s=
+pan></b></span><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --private key.obj.priv \</span></b></span><=
+span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --policy authorized.policy</span></b></span=
+><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:#212121">&nbsp;</span></b></span><span style=3D"font-size:11.0pt"><o:=
+p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">tpm2_load \</span></b></span><span style=3D"font-size:11.0pt">=
+<o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --parent-context primary.ctx \</span></b></=
+span><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --public</span></b></span><span class=3D"ap=
+ple-converted-space"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;</span></b></span><span class=3D"pl-c"><b><span style=3D=
+"font-family:&quot;Courier New&quot;;color:black">key.obj.pub</span></b></s=
+pan><span class=3D"apple-converted-space"><b><span style=3D"font-family:&qu=
+ot;Courier New&quot;;color:black">&nbsp;</span></b></span><span class=3D"pl=
+-c"><b><span style=3D"font-family:&quot;Courier New&quot;;color:black">\</s=
+pan></b></span><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --private key.obj.priv \</span></b></span><=
+span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --name</span></b></span><span class=3D"appl=
+e-converted-space"><b><span style=3D"font-family:&quot;Courier New&quot;;co=
+lor:black">&nbsp;</span></b></span><span class=3D"pl-c"><b><span style=3D"f=
+ont-family:&quot;Courier New&quot;;color:black">key.obj.name</span></b></sp=
+an><span class=3D"apple-converted-space"><b><span style=3D"font-family:&quo=
+t;Courier New&quot;;color:black">&nbsp;</span></b></span><span class=3D"pl-=
+c"><b><span style=3D"font-family:&quot;Courier New&quot;;color:black">\</sp=
+an></b></span><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --key-context key.obj.ctx</span></b></span>=
+<span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:#212121">&nbsp;</span></b></span><span style=3D"font-size:11.0pt"><o:=
+p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black"># Persist the TPM Object</span></b></span><span style=3D"font-=
+size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">tpm2_evictcontrol \</span></b></span><span style=3D"font-size:=
+11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --hierarchy o \</span></b></span><span styl=
+e=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --object-context key.obj.ctx \</span></b></=
+span><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; 0x810</span></b></span><span class=3D"pl-c"=
+><b><span lang=3D"EN-US" style=3D"font-family:&quot;Courier New&quot;;color=
+:black">0</span></b></span><span class=3D"pl-c"><b><span style=3D"font-fami=
+ly:&quot;Courier New&quot;;color:black">000</span></b></span><span class=3D=
+"pl-c"><b><span lang=3D"EN-US" style=3D"font-family:&quot;Courier New&quot;=
+;color:black">5</span></b></span><span style=3D"font-size:11.0pt"><o:p></o:=
+p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#212121">&nbsp;</span></span><span style=3D"font-size:11.0pt"><o:p></o:p=
+></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#212121">&nbsp;</span></span><span class=3D"pl-c"><span style=3D"font-fa=
+mily:&quot;Courier New&quot;;color:black"># Sign the PCR policy</span></spa=
+n><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB"><span class=3D"pl=
+-c"><span style=3D"font-family:&quot;Courier New&quot;;color:#212121">&nbsp=
+;</span></span><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span lang=3D"DE-AT" style=3D"font-family:&quot;Courie=
+r New&quot;;color:black">=85</span></span><span lang=3D"DE-AT" style=3D"fon=
+t-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#212121">&nbsp;</span></span><span style=3D"font-size:11.0pt"><o:p></o:p=
+></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:black"># Unseal the TPM</span></span><span class=3D"apple-converted-spac=
+e"><span style=3D"font-family:&quot;Courier New&quot;;color:black">&nbsp;</=
+span></span><span class=3D"pl-c"><span lang=3D"EN-US" style=3D"font-family:=
+&quot;Courier New&quot;;color:black">object</span></span><span class=3D"app=
+le-converted-space"><span lang=3D"EN-US" style=3D"font-family:&quot;Courier=
+ New&quot;;color:black">&nbsp;</span></span><span class=3D"pl-c"><span styl=
+e=3D"font-family:&quot;Courier New&quot;;color:black">using
+ the Authorized PCR Policy</span></span><span style=3D"font-size:11.0pt"><o=
+:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span lang=3D"DE-AT" style=3D"font-family:&quot;Courie=
+r New&quot;;color:black">=85</span></span><span lang=3D"DE-AT" style=3D"fon=
+t-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#212121">&nbsp;</span></span><span style=3D"font-size:11.0pt"><o:p></o:p=
+></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#212121">&nbsp;</span></span><span style=3D"font-size:11.0pt"><o:p></o:p=
+></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">tpm2_unseal \</span></b></span><span style=3D"font-size:11.0pt=
+"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --object-context 0x810</span></b></span><sp=
+an class=3D"pl-c"><b><span lang=3D"EN-US" style=3D"font-family:&quot;Courie=
+r New&quot;;color:black">0</span></b></span><span class=3D"pl-c"><b><span s=
+tyle=3D"font-family:&quot;Courier New&quot;;color:black">000</span></b></sp=
+an><span class=3D"pl-c"><b><span lang=3D"EN-US" style=3D"font-family:&quot;=
+Courier New&quot;;color:black">5</span></b></span><span class=3D"apple-conv=
+erted-space"><b><span style=3D"font-family:&quot;Courier New&quot;;color:bl=
+ack">&nbsp;</span></b></span><span class=3D"pl-c"><b><span style=3D"font-fa=
+mily:&quot;Courier New&quot;;color:black">\</span></b></span><span style=3D=
+"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"code" style=3D"margin:0cm;background:#E8EBEB;font-variant-caps:=
+normal;orphans:auto;text-align:start;widows:auto;word-spacing:0px">
+<span class=3D"pl-c"><b><span style=3D"font-family:&quot;Courier New&quot;;=
+color:black">&nbsp;&nbsp;&nbsp; --auth session:session1.ctx</span></b></spa=
+n><span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span style=3D"font-size:12.0pt;color:#212121">&nbsp;</span><span style=3D"=
+font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-US" style=3D"font-size:12.0pt;color:#212121">If you have a=
+ny idea why this does not work or =96 even better - a solution to my proble=
+m I would be very happy hearing it.</span><span style=3D"font-size:11.0pt">=
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"font-variant-caps:normal;orphans:auto;text-=
+align:start;widows:auto;word-spacing:0px">
+<span lang=3D"EN-US" style=3D"font-size:12.0pt;color:#212121">Armin</span><=
+span style=3D"font-size:11.0pt"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt">&nbsp;<o:p></o:p></=
+span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:11.0pt">&nbsp;<o:p></o:p></=
+span></p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
+
+--_000_VI1PR09MB37923FDBD28623C5FE3F61529588AVI1PR09MB3792eurp_--
+
