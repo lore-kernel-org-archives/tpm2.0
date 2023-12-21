@@ -1,38 +1,72 @@
-Return-Path: <konstantin@linuxfoundation.org>
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org 39B4180FB5
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.osuosl.org 2B33180F58
+Received: from smtp3.osuosl.org (smtp3.osuosl.org [140.211.166.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2E7BA2F
+	for <tpm2@lists.linuxfoundation.org>; Thu, 21 Dec 2023 20:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PA4ZWJrQ"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp3.osuosl.org (Postfix) with ESMTP id A557C617BC
+	for <tpm2@lists.linuxfoundation.org>; Thu, 21 Dec 2023 20:36:49 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp3.osuosl.org A557C617BC
+Authentication-Results: smtp3.osuosl.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=google header.b=PA4ZWJrQ
+X-Virus-Scanned: amavisd-new at osuosl.org
+X-Spam-Flag: NO
+X-Spam-Score: -2.101
+X-Spam-Level:
+Received: from smtp3.osuosl.org ([127.0.0.1])
+	by localhost (smtp3.osuosl.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id LQFXdFANWpZx for <tpm2@lists.linuxfoundation.org>;
+	Thu, 21 Dec 2023 20:36:48 +0000 (UTC)
+Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
+	by smtp3.osuosl.org (Postfix) with ESMTPS id B91BE6001B
+	for <tpm2@lists.linuxfoundation.org>; Thu, 21 Dec 2023 20:36:48 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp3.osuosl.org B91BE6001B
+Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-7cae6a42e69so667203241.0
+        for <tpm2@lists.linuxfoundation.org>; Thu, 21 Dec 2023 12:36:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=linuxfoundation.org; s=google; t=1702940734; x=1703545534;
- darn=lists.linuxfoundation.org; 
- h=to:subject:message-id:date:from:in-reply-to:references:mime-version
- :from:to:cc:subject:date:message-id:reply-to;
- bh=x/bFzJjrz3xMvxJllqdGKS+Ph6LApMUNEeDRPIsjj0g=;
- b=GOhnCvZvJ1wkny8+HGpQHoakHgr0hrXI9imVhY4C8w8xwwBiSulsFWYhalNO7QyOu8
- FIOzPAkrTuwtg9sEgwHRfunkWU7BAXwSBo7ySxtEb8Z3tswNerPlR91EfznvtJq71OG4
- SCdsfMa9z/Y22hBlYTw4Zd1G8vw89+M3IMxTo=
+        d=linuxfoundation.org; s=google; t=1703191007; x=1703795807; darn=lists.linuxfoundation.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vQ/aVs7/l+xmzslZjqeY29jvjcjsr+htveNIDHev6FQ=;
+        b=PA4ZWJrQRDu2DClo22o4Ey2a2izK9VmYEHMv+LBEsKX0pt/W+OidGTGUyNeZmawz8e
+         9PJU0atNqw/WWFAWPypj48C6fwHGsVKSJ6YiCyxoBRjDrPHuVgiVHCSXMDp0OaihFtlh
+         Z8pGtp4eKgGnljHPBHieoqeJcHU3kLmxdj4dc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703191007; x=1703795807;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vQ/aVs7/l+xmzslZjqeY29jvjcjsr+htveNIDHev6FQ=;
+        b=q4kE0r6ERqQXvBIEAZydXVe0WRe7SC21YSNuZxUHBnMDX0kqKJoPIyJbygFcU0cvq3
+         wiLJ+ZmIw0ETG7Qw3pXc1rkipWpz1dPCYVHQIY8XY5ZmHOnypUNlqTzXARfA2ig+qK8L
+         nUCcd50QKjqPkW1D+jVnk6Bl9hi1w+6COxDkUKVdHfDyITof816RQDE5Ak9Qdlk4p0U+
+         YVWb1oDM27iqHJxPTwu3CRlfcKqaBZpOp2J7XDoRWyFNeK+8FNRUAXy0JnzDvnleZmzH
+         z4DtYdclsGctlXALpm22eHWIZlhbXe/xKYnjEWT5WyrmI0H3F6EN9GbDvMzZii6v2rkJ
+         9IqA==
+X-Gm-Message-State: AOJu0Ywrm8aTxCbLvrZk46u/A+l4SItctuLucSuyta9CUJwEbDIGidTD
+	aGj9H2lMgq2UnGxq4DzmTP7NKTS9b+lJ1LOOKdWwxgFnHrhQi5d9Vk7tWMuYo50=
+X-Google-Smtp-Source: AGHT+IFE5Ojxg8uKc4LOQ8Nq/vgJayzAVKe7viHRa0BnI3BYRlWf66Ih+1L9ezrxx2nA/EudXjHzhJiRaHXFCDUdXr4=
+X-Received: by 2002:a67:c199:0:b0:464:8e32:10f0 with SMTP id
+ h25-20020a67c199000000b004648e3210f0mr488500vsj.5.1703191005840; Thu, 21 Dec
+ 2023 12:36:45 -0800 (PST)
+Precedence: bulk
+X-Mailing-List: tpm2@lists.linux.dev
+List-Id: <tpm2.lists.linux.dev>
+List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20231121-wild-excellent-mastodon-2ad369@meerkat>
 In-Reply-To: <20231121-wild-excellent-mastodon-2ad369@meerkat>
 From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Date: Mon, 18 Dec 2023 18:05:23 -0500
-Message-ID: <CAMwyc-S1sAqQVi=E1Km4t+Op56osk20JbYyaOFDDrAsVcbPBfg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Subject: Re: [Tpm2] PSA: the tpm2 list will be moving to lists.linux.dev
-List-Id: The tpm2 userspace mailing list <tpm2.lists.linuxfoundation.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/tpm2>,
- <mailto:tpm2-request@lists.linuxfoundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/tpm2/>
-List-Post: <mailto:tpm2@lists.linuxfoundation.org>
-List-Help: <mailto:tpm2-request@lists.linuxfoundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/tpm2>,
- <mailto:tpm2-request@lists.linuxfoundation.org?subject=subscribe>
+Date: Thu, 21 Dec 2023 15:36:35 -0500
+Message-ID: <CAMwyc-RVvhLzj7U_2MkUdLJkAuHUNrZQ5rUD2Ti9YZzFSpNZJg@mail.gmail.com>
+Subject: Re: PSA: the tpm2 list will be moving to lists.linux.dev
 To: tpm2@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 
 On Tue, 21 Nov 2023 at 16:21, Konstantin Ryabitsev
 <konstantin@linuxfoundation.org> wrote:
->
-> Hello, all:
->
 > The mailman-2 system running on lists.linuxfoundation.org is being
 > decommissioned, so all lists currently hosted there will be found new homes.
 > Some time next week, the tpm2 list will be migrated to live on
@@ -65,15 +99,12 @@ On Tue, 21 Nov 2023 at 16:21, Konstantin Ryabitsev
 >
 > 7. Subscribing and unsubscribing will be done using the mlmmj supported
 >    commands, documented at https://subspace.kernel.org/subscribing.html
->
-> Please let me know if you have any questions or concerns. Otherwise, I will
-> follow up next week with the exact date and time of the move.
 
 Hello:
 
-This took a bit longer than expected due to other work, but the
-migration of this list will take place this Thursday, December 21, at
-11AM US-Pacific (19:00 UTC). I will follow up once this work has been
-completed.
+This work is complete and this message acts as a test to make sure
+that everything is working properly. The list archives will be moved
+later today.
 
+Best wishes,
 -K
