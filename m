@@ -1,110 +1,120 @@
-Received: from smtp3.osuosl.org (smtp3.osuosl.org [140.211.166.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2E7BA2F
-	for <tpm2@lists.linuxfoundation.org>; Thu, 21 Dec 2023 20:36:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902D11B59F
+	for <tpm2@lists.linux.dev>; Tue,  5 Mar 2024 22:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709677907; cv=none; b=HwFAmFxNbUMYfZQtnU3o7ea300DZ7F1X6wk6tjG5SxEr4gcXalvmBL5fELBV6S//B9RrG3wajh+Ka3SFh6AZrkZSX2yOwnir/bC4txkJJvlDWkW8KUKLn+ntJA53FZicL8/snuskO1HfJarC/QG9PgHTWxMObzCODCjRfoMtuoc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709677907; c=relaxed/simple;
+	bh=9imm9unr4A7Gh9kN8TST/hJD1F0YqHpGnOV3Z0giK9E=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Gryv502FJh3IkwfrceoQ1LPwaE0uAE5YLjrxDaq88VfY2yN+X+kNJRcXmoqujOcQF8JkwxfKG86+ZR8TFNFckcHAtmmHbD71huk77bw6cJagxbbmRxXSihi3DOlmGS/B7VW+dOGdgb2WuADDqVrnYA7PoTRFXpG2dfctYHuLuhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; dkim=pass (2048-bit key) header.d=gateworks-com.20230601.gappssmtp.com header.i=@gateworks-com.20230601.gappssmtp.com header.b=uVIea9dz; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gateworks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PA4ZWJrQ"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp3.osuosl.org (Postfix) with ESMTP id A557C617BC
-	for <tpm2@lists.linuxfoundation.org>; Thu, 21 Dec 2023 20:36:49 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp3.osuosl.org A557C617BC
-Authentication-Results: smtp3.osuosl.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=google header.b=PA4ZWJrQ
-X-Virus-Scanned: amavisd-new at osuosl.org
-X-Spam-Flag: NO
-X-Spam-Score: -2.101
-X-Spam-Level:
-Received: from smtp3.osuosl.org ([127.0.0.1])
-	by localhost (smtp3.osuosl.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id LQFXdFANWpZx for <tpm2@lists.linuxfoundation.org>;
-	Thu, 21 Dec 2023 20:36:48 +0000 (UTC)
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-	by smtp3.osuosl.org (Postfix) with ESMTPS id B91BE6001B
-	for <tpm2@lists.linuxfoundation.org>; Thu, 21 Dec 2023 20:36:48 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp3.osuosl.org B91BE6001B
-Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-7cae6a42e69so667203241.0
-        for <tpm2@lists.linuxfoundation.org>; Thu, 21 Dec 2023 12:36:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gateworks-com.20230601.gappssmtp.com header.i=@gateworks-com.20230601.gappssmtp.com header.b="uVIea9dz"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d220e39907so93921321fa.1
+        for <tpm2@lists.linux.dev>; Tue, 05 Mar 2024 14:31:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1703191007; x=1703795807; darn=lists.linuxfoundation.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vQ/aVs7/l+xmzslZjqeY29jvjcjsr+htveNIDHev6FQ=;
-        b=PA4ZWJrQRDu2DClo22o4Ey2a2izK9VmYEHMv+LBEsKX0pt/W+OidGTGUyNeZmawz8e
-         9PJU0atNqw/WWFAWPypj48C6fwHGsVKSJ6YiCyxoBRjDrPHuVgiVHCSXMDp0OaihFtlh
-         Z8pGtp4eKgGnljHPBHieoqeJcHU3kLmxdj4dc=
+        d=gateworks-com.20230601.gappssmtp.com; s=20230601; t=1709677903; x=1710282703; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9imm9unr4A7Gh9kN8TST/hJD1F0YqHpGnOV3Z0giK9E=;
+        b=uVIea9dz4glQAB54llashkuGSCV24+gBGuyLsgW9uXHF3VhoA4/WHYu7d4GgLqLrDo
+         L5lUAwpIBB5+IuNjnybm7UNEsXE8guhrtTYwwBj7RP3fya4Tj5rNlvRZ33RM6qNPJm8z
+         y2cmEvRmBrX1m7hdJfRGwPX+OlSSaxXOhnnMoqMtG/fKDKD+eeVgz9CwXA0mWbYcURbV
+         nRbni6fslv9O7I6VSHI758rObYoyWy01KI1WKw/attEYbH6N8V2d3r/5Kiy0HyEXOFSI
+         PJG+d6Ah3kkZHHgj6N4EaBy+qj+e+Kb6XCP6XXPPMOgN5nffzkmBxBO9CgDV04/jOii+
+         a/EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703191007; x=1703795807;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vQ/aVs7/l+xmzslZjqeY29jvjcjsr+htveNIDHev6FQ=;
-        b=q4kE0r6ERqQXvBIEAZydXVe0WRe7SC21YSNuZxUHBnMDX0kqKJoPIyJbygFcU0cvq3
-         wiLJ+ZmIw0ETG7Qw3pXc1rkipWpz1dPCYVHQIY8XY5ZmHOnypUNlqTzXARfA2ig+qK8L
-         nUCcd50QKjqPkW1D+jVnk6Bl9hi1w+6COxDkUKVdHfDyITof816RQDE5Ak9Qdlk4p0U+
-         YVWb1oDM27iqHJxPTwu3CRlfcKqaBZpOp2J7XDoRWyFNeK+8FNRUAXy0JnzDvnleZmzH
-         z4DtYdclsGctlXALpm22eHWIZlhbXe/xKYnjEWT5WyrmI0H3F6EN9GbDvMzZii6v2rkJ
-         9IqA==
-X-Gm-Message-State: AOJu0Ywrm8aTxCbLvrZk46u/A+l4SItctuLucSuyta9CUJwEbDIGidTD
-	aGj9H2lMgq2UnGxq4DzmTP7NKTS9b+lJ1LOOKdWwxgFnHrhQi5d9Vk7tWMuYo50=
-X-Google-Smtp-Source: AGHT+IFE5Ojxg8uKc4LOQ8Nq/vgJayzAVKe7viHRa0BnI3BYRlWf66Ih+1L9ezrxx2nA/EudXjHzhJiRaHXFCDUdXr4=
-X-Received: by 2002:a67:c199:0:b0:464:8e32:10f0 with SMTP id
- h25-20020a67c199000000b004648e3210f0mr488500vsj.5.1703191005840; Thu, 21 Dec
- 2023 12:36:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709677903; x=1710282703;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9imm9unr4A7Gh9kN8TST/hJD1F0YqHpGnOV3Z0giK9E=;
+        b=Ix5S8umRJRauITFoeX1xs7fl8l7rYlgvHS7cEJP4SLv/qGw3I9bSGbQV0GICwUzsVT
+         vg0ufYStYP2uZylOSlV/ntYHjYuI72blq94/fdmJvx7msN55XyYbje6POPoFoslLsCZc
+         qamt/PGpGqmFSvIulqF+oIXwevyJgDww5rBewtF0ghXKSnP0NbGpoyyi37B+0gwZMXa5
+         FFvdHQdmU7oxAEORwgcreFKHY9GYn/D1UQEW1ya8rg5tU2v1lkVPHswq6d2hIm5zek6b
+         ncim1R01wvkT0uORPiNONKot8Z/N5EUBUHtmgWLBftQ1Ju6ErjE4aq+vSHV0PRDR44oD
+         btWA==
+X-Gm-Message-State: AOJu0YwoMPv9fijOwpIdES92sHZI4IHiYc0yQZLYqjUrj/0mb6lajDCt
+	6qCIDgQlLq48+G/fV/Zk4BjCMIwuJCHL1RKjcWxw28mEfFiPdkUjCCQHoRbu770+zBq4pTcP++G
+	UuViLqRt/dPZ0mifUZCnm4mR7SrhOWpI+iwxNAvUD1e2cZWBDnzhbSg==
+X-Google-Smtp-Source: AGHT+IE7dkSwE2Vh+/g49LC10ib5XWl4nQqOfF2TDcp34N3YcTiD6mYwBwI85AH4kkFCW6ClBnlkjSmrkEGfx9s7y20=
+X-Received: by 2002:a05:6512:14f:b0:513:19cb:be72 with SMTP id
+ m15-20020a056512014f00b0051319cbbe72mr2238728lfo.64.1709677903091; Tue, 05
+ Mar 2024 14:31:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231121-wild-excellent-mastodon-2ad369@meerkat>
-In-Reply-To: <20231121-wild-excellent-mastodon-2ad369@meerkat>
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Date: Thu, 21 Dec 2023 15:36:35 -0500
-Message-ID: <CAMwyc-RVvhLzj7U_2MkUdLJkAuHUNrZQ5rUD2Ti9YZzFSpNZJg@mail.gmail.com>
-Subject: Re: PSA: the tpm2 list will be moving to lists.linux.dev
-To: tpm2@lists.linuxfoundation.org
+From: Samuel Lee <slee@gateworks.com>
+Date: Tue, 5 Mar 2024 14:31:32 -0800
+Message-ID: <CAGL1gLNsEPXG6dXXJLk2Ucd_UAjMoa3_OS=uca5G4FvPjAMPNg@mail.gmail.com>
+Subject: Issue with TPM2 Encrypt/Decrypt Functionality and TSS API Integration
+To: tpm2@lists.linux.dev
+Cc: linux-integrity@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 21 Nov 2023 at 16:21, Konstantin Ryabitsev
-<konstantin@linuxfoundation.org> wrote:
-> The mailman-2 system running on lists.linuxfoundation.org is being
-> decommissioned, so all lists currently hosted there will be found new homes.
-> Some time next week, the tpm2 list will be migrated to live on
-> lists.linux.dev, but the impact of this move should be minor:
->
-> 1. The new canonical list address will be tpm2@lists.linux.dev.
->
-> 2. *The old address will continue to work* for the foreseeable future, so any
->    existing conversations can continue and any new messages sent to the old
->    list address will be properly delivered to all subscribers.
->
-> 3. All members will be automatically subscribed to the new list, so no action
->    is required on anyone's part to keep receiving list mail.
->
-> 4. The list will be archived on https://lore.kernel.org/tpm2/ with all prior
->    archives automatically imported.
->
-> 5. The List-ID header will change, regardless to which address the message is
->    sent:
->
->    before: List-Id: <tpm2.lists.linuxfoundation.org>
->     after: List-Id: <tpm2.lists.linux.dev>
->
->    You will need to update your filtering rules if you filter based on the
->    contents of that header (on or after the migration date).
->
-> 6. The mailman footer will no longer be added to message bodies and the
->    subject will no longer be modified to insert [tpm2] (because this
->    violates DMARC).
->
-> 7. Subscribing and unsubscribing will be done using the mlmmj supported
->    commands, documented at https://subspace.kernel.org/subscribing.html
+Dear TPM 2.0 Mailing List Community,
 
-Hello:
+I am currently facing an issue while attempting to utilize the TPM2
+Encrypt/Decrypt functionality in conjunction with the TSS API
+integration.
 
-This work is complete and this message acts as a test to make sure
-that everything is working properly. The list archives will be moved
-later today.
+I have followed the steps outlined in the TPM2 Encrypt/Decrypt man
+page (https://tpm2-tools.readthedocs.io/en/latest/man/tpm2_encryptdecrypt.1/)
+to create primary and key contexts successfully. However, when I
+attempt to use the encrypt/decrypt functionality, I encounter the
+following errors:
 
-Best wishes,
--K
+# tpm2_encryptdecrypt -c key.ctx -o secret.enc secret.dat
+WARN: Using a weak IV, try specifying an IV
+WARNING:esys:src/tss2-esys/api/Esys_EncryptDecrypt2.c:322:Esys_EncryptDecrypt2_Finish()
+Received TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_EncryptDecrypt2.c:107:Esys_EncryptDecrypt2()
+Esys Finish ErrorCode (0x000b0143)
+WARNING:esys:src/tss2-esys/api/Esys_EncryptDecrypt.c:328:Esys_EncryptDecrypt_Finish()
+Received TPM Error
+ERROR:esys:src/tss2-esys/api/Esys_EncryptDecrypt.c:110:Esys_EncryptDecrypt()
+Esys Finish ErrorCode (0x000002c9)
+ERROR: Esys_EncryptDecrypt(0x2C9) - tpm:parameter(2):mode of operation
+not supported
+ERROR: Unable to run tpm2_encryptdecrypt
+
+Further investigation led me to the discovery that the TPM I am using
+does not support the TPM2_CC_Encryptdecrypt2 command, as confirmed by
+the output of
+
+# tpm2_getcap commands | grep -i Encryptdecrypt
+TPM2_CC_EncryptDecrypt:
+
+In an attempt to resolve this issue, I decided to explore utilizing
+the TSS API instead. However, I encountered a new error when
+attempting to create a primary context using the tsscreateprimary
+command:
+
+# tsscreateprimary -hi p -st -opu primary.pub
+TSS_Socket_Open: Error on connect to localhost:2321
+TSS_Socket_Open: client connect: error 111 Connection refused
+createprimary: failed, rc 000b0008
+TSS_RC_NO_CONNECTION - Failure connecting to lower layer
+
+For additional context, my system configuration is as follows:
+
+Kernel version: 6.6.8-g19a0c7318c79
+Installed packages: tpm2-tools, tpm2-abrmd, tss2
+Discrete TPM in use: ATTPM20P by Microchip
+
+I would greatly appreciate any insights, suggestions, or guidance on
+how to address this issue. Additionally, if there are alternative
+approaches or best practices for achieving the desired TPM
+functionality in my environment, I would be eager to learn about them.
+
+Thank you in advance for your time and assistance.
+
+Samuel Lee
