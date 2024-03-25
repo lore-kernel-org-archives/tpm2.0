@@ -1,120 +1,100 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902D11B59F
-	for <tpm2@lists.linux.dev>; Tue,  5 Mar 2024 22:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391EA5C8FC;
+	Mon, 25 Mar 2024 16:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709677907; cv=none; b=HwFAmFxNbUMYfZQtnU3o7ea300DZ7F1X6wk6tjG5SxEr4gcXalvmBL5fELBV6S//B9RrG3wajh+Ka3SFh6AZrkZSX2yOwnir/bC4txkJJvlDWkW8KUKLn+ntJA53FZicL8/snuskO1HfJarC/QG9PgHTWxMObzCODCjRfoMtuoc=
+	t=1711382609; cv=none; b=IAK05FPT0CmtL9ui68e53e/Uo+uDl3kCY23PlWPlg8tQM26F1xAB/x7breOj6kkLxxq8uABfAgRUoLgM9xv2jPGRNBOmp+ExI52yc6jk3Jr5Q6vOJ5hgKjfd1GpRTlI0VDp7x8QoU9ZYFUikEJB9omaUn4mPb7zzbpsOa1NPL3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709677907; c=relaxed/simple;
-	bh=9imm9unr4A7Gh9kN8TST/hJD1F0YqHpGnOV3Z0giK9E=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Gryv502FJh3IkwfrceoQ1LPwaE0uAE5YLjrxDaq88VfY2yN+X+kNJRcXmoqujOcQF8JkwxfKG86+ZR8TFNFckcHAtmmHbD71huk77bw6cJagxbbmRxXSihi3DOlmGS/B7VW+dOGdgb2WuADDqVrnYA7PoTRFXpG2dfctYHuLuhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; dkim=pass (2048-bit key) header.d=gateworks-com.20230601.gappssmtp.com header.i=@gateworks-com.20230601.gappssmtp.com header.b=uVIea9dz; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gateworks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
+	s=arc-20240116; t=1711382609; c=relaxed/simple;
+	bh=lqLEd5huLtgmKEsfrk97E+iShwK9un0d/cE9W3qxfNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P5kdPXYXJGQq7WnvC8jwXZPaDQalSM4O2ooVERKquw01qEFQO1Rz9MzNkQP+7Kp5nGiEjh6oAj3FignLLwv0hfRW6SDqUkekiQ+sTF1Fi8YTfytnDX62240BD+PthLjAzegaUiPDPLepagxAvZGFW8wq8bVZXTDI9ft2O+o719o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mMF+IEqQ; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20230601.gappssmtp.com header.i=@gateworks-com.20230601.gappssmtp.com header.b="uVIea9dz"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d220e39907so93921321fa.1
-        for <tpm2@lists.linux.dev>; Tue, 05 Mar 2024 14:31:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20230601.gappssmtp.com; s=20230601; t=1709677903; x=1710282703; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9imm9unr4A7Gh9kN8TST/hJD1F0YqHpGnOV3Z0giK9E=;
-        b=uVIea9dz4glQAB54llashkuGSCV24+gBGuyLsgW9uXHF3VhoA4/WHYu7d4GgLqLrDo
-         L5lUAwpIBB5+IuNjnybm7UNEsXE8guhrtTYwwBj7RP3fya4Tj5rNlvRZ33RM6qNPJm8z
-         y2cmEvRmBrX1m7hdJfRGwPX+OlSSaxXOhnnMoqMtG/fKDKD+eeVgz9CwXA0mWbYcURbV
-         nRbni6fslv9O7I6VSHI758rObYoyWy01KI1WKw/attEYbH6N8V2d3r/5Kiy0HyEXOFSI
-         PJG+d6Ah3kkZHHgj6N4EaBy+qj+e+Kb6XCP6XXPPMOgN5nffzkmBxBO9CgDV04/jOii+
-         a/EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709677903; x=1710282703;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9imm9unr4A7Gh9kN8TST/hJD1F0YqHpGnOV3Z0giK9E=;
-        b=Ix5S8umRJRauITFoeX1xs7fl8l7rYlgvHS7cEJP4SLv/qGw3I9bSGbQV0GICwUzsVT
-         vg0ufYStYP2uZylOSlV/ntYHjYuI72blq94/fdmJvx7msN55XyYbje6POPoFoslLsCZc
-         qamt/PGpGqmFSvIulqF+oIXwevyJgDww5rBewtF0ghXKSnP0NbGpoyyi37B+0gwZMXa5
-         FFvdHQdmU7oxAEORwgcreFKHY9GYn/D1UQEW1ya8rg5tU2v1lkVPHswq6d2hIm5zek6b
-         ncim1R01wvkT0uORPiNONKot8Z/N5EUBUHtmgWLBftQ1Ju6ErjE4aq+vSHV0PRDR44oD
-         btWA==
-X-Gm-Message-State: AOJu0YwoMPv9fijOwpIdES92sHZI4IHiYc0yQZLYqjUrj/0mb6lajDCt
-	6qCIDgQlLq48+G/fV/Zk4BjCMIwuJCHL1RKjcWxw28mEfFiPdkUjCCQHoRbu770+zBq4pTcP++G
-	UuViLqRt/dPZ0mifUZCnm4mR7SrhOWpI+iwxNAvUD1e2cZWBDnzhbSg==
-X-Google-Smtp-Source: AGHT+IE7dkSwE2Vh+/g49LC10ib5XWl4nQqOfF2TDcp34N3YcTiD6mYwBwI85AH4kkFCW6ClBnlkjSmrkEGfx9s7y20=
-X-Received: by 2002:a05:6512:14f:b0:513:19cb:be72 with SMTP id
- m15-20020a056512014f00b0051319cbbe72mr2238728lfo.64.1709677903091; Tue, 05
- Mar 2024 14:31:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mMF+IEqQ"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PDOcuQ000609;
+	Mon, 25 Mar 2024 16:03:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=ysViygD1U7IgI4tE+Ni1R03dcM4gag7kWP+7mggR5xs=;
+ b=mMF+IEqQa4HckZQ7n+uxNtAIc87dslMpaLWRNUc6Sk0PhnJcyJ0W5bWW0wN4WiDuRAgi
+ wq99hbeiA7mQT3p9xYwlCMNCxrq8tFDAfkyb247MhoFE58p9MZ+vl3CEd6rv2zfv6JIu
+ SkS9DGecNqnThd4by44bYKd5v8MFcPGZp811Cz8aaS5VgzsiWimlJfBy7yxl+XiBEsNg
+ hTaKKvjelloEUJyJ+SGm5H9x+ZS6DRozHcdZKDqeXP1Vu2OCHQw4H5j9ZqnG13bSMqC3
+ GAgSFc7R9UnY482cgMJhv7A0HkG+++YaSK5pJ+/EjRPlK4iGnUr6QJyBwZWTNyduZWrv Ww== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x36e68u9a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 16:03:21 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42PEGq5x028623;
+	Mon, 25 Mar 2024 16:03:20 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x2adp25yh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 16:03:20 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42PG3H2554722884
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 25 Mar 2024 16:03:19 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5EE6A58067;
+	Mon, 25 Mar 2024 16:03:17 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 24FD258066;
+	Mon, 25 Mar 2024 16:03:17 +0000 (GMT)
+Received: from [9.2.202.85] (unknown [9.2.202.85])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 25 Mar 2024 16:03:17 +0000 (GMT)
+Message-ID: <7580c505-7db9-4a34-887b-888918ea11b7@linux.ibm.com>
+Date: Mon, 25 Mar 2024 12:03:15 -0400
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Samuel Lee <slee@gateworks.com>
-Date: Tue, 5 Mar 2024 14:31:32 -0800
-Message-ID: <CAGL1gLNsEPXG6dXXJLk2Ucd_UAjMoa3_OS=uca5G4FvPjAMPNg@mail.gmail.com>
-Subject: Issue with TPM2 Encrypt/Decrypt Functionality and TSS API Integration
-To: tpm2@lists.linux.dev
+User-Agent: Mozilla Thunderbird
+Subject: Re: Issue with TPM2 Encrypt/Decrypt Functionality and TSS API
+ Integration
+To: Samuel Lee <slee@gateworks.com>, tpm2@lists.linux.dev
 Cc: linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <CAGL1gLNsEPXG6dXXJLk2Ucd_UAjMoa3_OS=uca5G4FvPjAMPNg@mail.gmail.com>
+Content-Language: en-US
+From: Ken Goldman <kgold@linux.ibm.com>
+In-Reply-To: <CAGL1gLNsEPXG6dXXJLk2Ucd_UAjMoa3_OS=uca5G4FvPjAMPNg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ohvPOignfPDhzPmtPdDMKzJsiAcCtIYT
+X-Proofpoint-ORIG-GUID: ohvPOignfPDhzPmtPdDMKzJsiAcCtIYT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_12,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ bulkscore=0 spamscore=0 phishscore=0 suspectscore=0 mlxscore=0
+ priorityscore=1501 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403250089
 
-Dear TPM 2.0 Mailing List Community,
+The TPM 2.0 Library specification is a library of possible functions.  A 
+platform specific specification (e.g., PC Client) specifies which 
+commands are mandatory.
 
-I am currently facing an issue while attempting to utilize the TPM2
-Encrypt/Decrypt functionality in conjunction with the TSS API
-integration.
+I assume that the TPM you are using does not implement TPM2 Encrypt/Decrypt.
 
-I have followed the steps outlined in the TPM2 Encrypt/Decrypt man
-page (https://tpm2-tools.readthedocs.io/en/latest/man/tpm2_encryptdecrypt.1/)
-to create primary and key contexts successfully. However, when I
-attempt to use the encrypt/decrypt functionality, I encounter the
-following errors:
+In general, check the platform specific specification and use only
+mandatory features for interoperability.
 
-# tpm2_encryptdecrypt -c key.ctx -o secret.enc secret.dat
-WARN: Using a weak IV, try specifying an IV
-WARNING:esys:src/tss2-esys/api/Esys_EncryptDecrypt2.c:322:Esys_EncryptDecrypt2_Finish()
-Received TPM Error
-ERROR:esys:src/tss2-esys/api/Esys_EncryptDecrypt2.c:107:Esys_EncryptDecrypt2()
-Esys Finish ErrorCode (0x000b0143)
-WARNING:esys:src/tss2-esys/api/Esys_EncryptDecrypt.c:328:Esys_EncryptDecrypt_Finish()
-Received TPM Error
-ERROR:esys:src/tss2-esys/api/Esys_EncryptDecrypt.c:110:Esys_EncryptDecrypt()
-Esys Finish ErrorCode (0x000002c9)
-ERROR: Esys_EncryptDecrypt(0x2C9) - tpm:parameter(2):mode of operation
-not supported
-ERROR: Unable to run tpm2_encryptdecrypt
-
-Further investigation led me to the discovery that the TPM I am using
-does not support the TPM2_CC_Encryptdecrypt2 command, as confirmed by
-the output of
-
-# tpm2_getcap commands | grep -i Encryptdecrypt
-TPM2_CC_EncryptDecrypt:
-
-In an attempt to resolve this issue, I decided to explore utilizing
-the TSS API instead. However, I encountered a new error when
-attempting to create a primary context using the tsscreateprimary
-command:
-
-# tsscreateprimary -hi p -st -opu primary.pub
-TSS_Socket_Open: Error on connect to localhost:2321
-TSS_Socket_Open: client connect: error 111 Connection refused
-createprimary: failed, rc 000b0008
-TSS_RC_NO_CONNECTION - Failure connecting to lower layer
-
-For additional context, my system configuration is as follows:
-
-Kernel version: 6.6.8-g19a0c7318c79
-Installed packages: tpm2-tools, tpm2-abrmd, tss2
-Discrete TPM in use: ATTPM20P by Microchip
-
-I would greatly appreciate any insights, suggestions, or guidance on
-how to address this issue. Additionally, if there are alternative
-approaches or best practices for achieving the desired TPM
-functionality in my environment, I would be eager to learn about them.
-
-Thank you in advance for your time and assistance.
-
-Samuel Lee
+On 3/5/2024 5:31 PM, Samuel Lee wrote:
+> Dear TPM 2.0 Mailing List Community,
+> 
+> I am currently facing an issue while attempting to utilize the TPM2
+> Encrypt/Decrypt functionality in conjunction with the TSS API
+> integration.
