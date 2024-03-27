@@ -1,97 +1,96 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp4.osuosl.org (smtp4.osuosl.org [140.211.166.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A4F4C7D;
-	Mon, 25 Mar 2024 16:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3089B381BE
+	for <tpm2@lists.linuxfoundation.org>; Wed, 27 Mar 2024 10:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711382763; cv=none; b=B7wSARw60ttzEDSx/BEhRiZerh9s4iTIkJjeMyxCStXHsqOKIiSiaSgoi+it6V5Zw4qbbLV2mBbjeiAT/+KMHtsjfKK55sovBc/aLv/krw3QLo9ZjT/Ck3JaWnLSmPilvsYUTOV89E+BR8nekB9fe6jnlh+4CTSIPKjuhlq9asM=
+	t=1711534561; cv=none; b=g2phvylEAjD8vFxliXHRCbSdh29WnzYD3SP6XiG08zEBOyabUWZHJUrtCS57cuqOKjuTtmLNAcbmGfliFDkq9HY1CVvoFknpRxqUphFirgJiXEyhh/ONhf6uErmryV27YYlhWXU6uOm28eiaQitffQKDAkRZ/pitjVTxIcO3AGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711382763; c=relaxed/simple;
-	bh=dVVLMKHbPKk5loN9gGOiMZFD4IZunaqsL/JFE4p+Ias=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pCP76YRMxPbAT8RoQ7SrHOFb4SqKRmYsbUuqe2YkLAovcQ5cogoIH3kOjH4OLVwjYGhVScJSjVPJ4ZWOIK1q8Pxd8JNShvydZezGWjNRaE+k5qOMdWRc1QFXxSWKPOiN829T4Y09mAqxRFsWzdXfB0r1dXBiPlKjbTLhMatG+v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fq6VwD3d; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1711534561; c=relaxed/simple;
+	bh=Fr4QJcyKQ96AEBVcX0mIS+mQL1Vo47gXCUKgKYL5e7Y=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UZ2G4D5zdOSpxjbZTaOb2eKxHrwkLGU3h0qmw1tSfsZF0819YV6NEBwrn8OCJho9Hg2ea8QTPfhvgDT2Okc5Ke9/v+tm3jTOO5Q0UCTD0xunaL49Fxml2OyU1fRuSHBqedXaeelxAWyXMPMpSgFQUlR2IzIyCj4IEpZD2i7o7Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=mAgdNUrJ; arc=none smtp.client-ip=140.211.166.137
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fq6VwD3d"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PDriIS019480;
-	Mon, 25 Mar 2024 16:06:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=dVVLMKHbPKk5loN9gGOiMZFD4IZunaqsL/JFE4p+Ias=;
- b=fq6VwD3dH0rSOA4mVE74gf8EJt4eEAM0nM5Mj/OyMSSVU43GXIST/CFJAWOh2Sgud45h
- X/TrHWvkQGu3gnb7iwIi+R997zxJJdUelyfV49ld2vLhM3QESGYUp7N6QoQTbBXbWCLo
- KySRkqKO834WYNNYW0VR7U73jSZvQHFnwCE2W/0vNYOhmOLbO+J7GF6LKT9O8pCdplOk
- f35mRpDnOJk9qi3VgsPrvgC/Y48LjOsuaPxzzcKx1tG7IKVRzp67Jgv0wiyFqbl4kzWB
- sjNA3Q03BMyWGrIHZJQVIAIqgP8CN5aBEoI1tumgX6VfWZdaDQ9MkXmBtIDJzdJlwpaE /Q== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x36e68udm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 16:05:59 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42PFvhxp003753;
-	Mon, 25 Mar 2024 16:05:31 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x2c42hnyg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 16:05:31 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42PG5SYJ22676032
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 25 Mar 2024 16:05:30 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D059F58052;
-	Mon, 25 Mar 2024 16:05:28 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9521858063;
-	Mon, 25 Mar 2024 16:05:28 +0000 (GMT)
-Received: from [9.2.202.85] (unknown [9.2.202.85])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 25 Mar 2024 16:05:28 +0000 (GMT)
-Message-ID: <8ff7a52e-1a0d-4d07-b8e2-9f91ebda9c2e@linux.ibm.com>
-Date: Mon, 25 Mar 2024 12:05:26 -0400
+	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="mAgdNUrJ"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp4.osuosl.org (Postfix) with ESMTP id B4F7E40828
+	for <tpm2@lists.linuxfoundation.org>; Wed, 27 Mar 2024 10:15:59 +0000 (UTC)
+X-Virus-Scanned: amavis at osuosl.org
+X-Spam-Flag: NO
+X-Spam-Score: -2.1
+X-Spam-Level:
+Received: from smtp4.osuosl.org ([127.0.0.1])
+ by localhost (smtp4.osuosl.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id bfO7Ygk0tJEK for <tpm2@lists.linuxfoundation.org>;
+ Wed, 27 Mar 2024 10:15:58 +0000 (UTC)
+X-Greylist: delayed 304 seconds by postgrey-1.37 at util1.osuosl.org; Wed, 27 Mar 2024 10:15:58 UTC
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp4.osuosl.org 3D26840800
+Authentication-Results: smtp4.osuosl.org; dmarc=pass (p=none dis=none) header.from=infineon.com
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp4.osuosl.org 3D26840800
+Authentication-Results: smtp4.osuosl.org;
+	dkim=pass (1024-bit key, unprotected) header.d=infineon.com header.i=@infineon.com header.a=rsa-sha256 header.s=IFXMAIL header.b=mAgdNUrJ
+Received-SPF: Pass (mailfrom) identity=mailfrom; client-ip=217.10.52.204; helo=smtp9.infineon.com; envelope-from=andreas.fuchs@infineon.com; receiver=<UNKNOWN> 
+Received: from smtp9.infineon.com (smtp9.infineon.com [217.10.52.204])
+	by smtp4.osuosl.org (Postfix) with ESMTPS id 3D26840800
+	for <tpm2@lists.linuxfoundation.org>; Wed, 27 Mar 2024 10:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1711534559; x=1743070559;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=Fr4QJcyKQ96AEBVcX0mIS+mQL1Vo47gXCUKgKYL5e7Y=;
+  b=mAgdNUrJjeHL5GAqIiBpoSqe5lDsadCiS1EvF0i8nexZ2am9GebzPHBi
+   bGAgiH+sSEfrWFjdQyZ6W7B8VdGaRYVjUguMSDKefQ+hyPrlkzDWyTWKv
+   +tS5IwGGuZOcSO2W/Cd4ZCji7wViYGri9Qsdqxb1rsIzxnAv1DS+0JuBK
+   k=;
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="15180185"
+X-IronPort-AV: E=Sophos;i="6.07,158,1708383600"; 
+   d="scan'208";a="15180185"
+Received: from unknown (HELO MUCSE819.infineon.com) ([172.23.29.45])
+  by smtp9.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 11:06:51 +0100
+Received: from MUCSE843.infineon.com (172.23.7.72) by MUCSE819.infineon.com
+ (172.23.29.45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 27 Mar
+ 2024 11:06:50 +0100
+Received: from MUCSE843.infineon.com (172.23.7.72) by MUCSE843.infineon.com
+ (172.23.7.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 27 Mar
+ 2024 11:06:49 +0100
+Received: from MUCSE843.infineon.com ([fe80::2199:b8a6:8f2e:48a]) by
+ MUCSE843.infineon.com ([fe80::2199:b8a6:8f2e:48a%21]) with mapi id
+ 15.02.1118.040; Wed, 27 Mar 2024 11:06:49 +0100
+From: <Andreas.Fuchs@infineon.com>
+To: <tpm2@lists.linuxfoundation.org>
+Subject: tpm2-tss release candidates 4.1.0-rc0 4.0.2-rc0 3.2.2-rc0
+Thread-Topic: tpm2-tss release candidates 4.1.0-rc0 4.0.2-rc0 3.2.2-rc0
+Thread-Index: AdqALOqM8+AMVHViQCSbU6a1N7l/AgAAYTpw
+Date: Wed, 27 Mar 2024 10:06:49 +0000
+Message-ID: <3c41c840a3894557b57db572528b1593@infineon.com>
+References: <5fd960dc6e4d446c92e3ec6706fb6b20@infineon.com>
+In-Reply-To: <5fd960dc6e4d446c92e3ec6706fb6b20@infineon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Issue with TPM2 Encrypt/Decrypt Functionality and TSS API
- Integration
-To: Samuel Lee <slee@gateworks.com>, tpm2@lists.linux.dev
-Cc: linux-integrity@vger.kernel.org
-References: <CAGL1gLNsEPXG6dXXJLk2Ucd_UAjMoa3_OS=uca5G4FvPjAMPNg@mail.gmail.com>
-Content-Language: en-US
-From: Ken Goldman <kgold@linux.ibm.com>
-In-Reply-To: <CAGL1gLNsEPXG6dXXJLk2Ucd_UAjMoa3_OS=uca5G4FvPjAMPNg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 4MD60MkRdidG_eIRKqHTOswqsHkNs-9_
-X-Proofpoint-ORIG-GUID: 4MD60MkRdidG_eIRKqHTOswqsHkNs-9_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_12,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- bulkscore=0 spamscore=0 phishscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 mlxlogscore=851 impostorscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403250090
 
-This indicates that the TSS is trying to connect to a
-TPM over a socket interface. This is typical for a software TPM
-aka a TPM simulator.
+Hi all,
 
-I suspect that you do not have a TPM simulator running.
+I'm happy to announce rc0 for the tpm2-tss series:
+https://github.com/tpm2-software/tpm2-tss/releases/tag/4.1.0-rc0
+https://github.com/tpm2-software/tpm2-tss/releases/tag/4.0.2-rc0
+https://github.com/tpm2-software/tpm2-tss/releases/tag/3.2.2-rc0
 
-On 3/5/2024 5:31 PM, Samuel Lee wrote:
-> # tsscreateprimary -hi p -st -opu primary.pub
-> TSS_Socket_Open: Error on connect to localhost:2321
-> TSS_Socket_Open: client connect: error 111 Connection refused
-> createprimary: failed, rc 000b0008
-> TSS_RC_NO_CONNECTION - Failure connecting to lower layer
+Happy testing.
+
+Best regards,
+Andreas
