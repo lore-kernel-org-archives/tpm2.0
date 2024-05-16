@@ -1,54 +1,46 @@
-Received: from smtp11.infineon.com (smtp11.infineon.com [217.10.52.105])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B255A14884E
-	for <tpm2@lists.linux.dev>; Thu, 16 May 2024 14:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17DE1E491
+	for <tpm2@lists.linux.dev>; Thu, 16 May 2024 15:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715868868; cv=none; b=jSlHWsmsibp1pZr72/pWnJS085Wqyk25uzy6ULxuT7+4EMs34FFX72YVBgZgiMNhuUUUCJ0O5QHVIQGde9BQ64YoEKId78KXQMLgNkM+J55DMpJxlcr1YNDsfBeUPqAFFzWwHGcyNKvQKbvs+EgNlltd4rmnFsiKIMzUYQUoWrw=
+	t=1715872709; cv=none; b=BUILLj+6KNWc9vnq9v5hBuiu01PG4MovFrHU8sDVmtWkpJ/bXD/bz7y3OQtHP4zLbnz6MNikV4fWCfyBUGaVEDzO6vI+rQxQQS9DIHgnbOXZoWjfpG3h4RDeB5KsKnTFk6PP2u0O0uJXenzIlO4MVA2XFbdEBLvhLc421B7SzlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715868868; c=relaxed/simple;
-	bh=XXBAfbV3Y+yHzv50PCTHoxAlZzjq/zCOFrm39xbKMc0=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Vj0qpMTRaZ7Z50tXGZMDrXi7OIQfQs/9dKtBhXp1cu+SpCW+y35TJFuM/RKfz+/vIXfCq+PVa8CR4uWBb0JtVFrBF0VB5ybU4v9ewr5yHkEDZ+/H7tBaswODbweUrvaLlkHXoUHGlxALRLqnVE1YJjQjkjPKBxJsFMbGKYHff6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=fc1gpU0i; arc=none smtp.client-ip=217.10.52.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
+	s=arc-20240116; t=1715872709; c=relaxed/simple;
+	bh=zhEE7ogL/NrE05gvU5lFYEZovXojW3wtqQECJF3+EE4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Subject:
+	 References:In-Reply-To; b=KNWeWu/takBYpU23gSVP0cUW1zWTcJ22kVpp8rXk9OWpaMnl5sGrhrSBYQA4O3nhEMvE9yxSq2i9AY58j6RbYPhx2sL7LPp7tHJ7R2trwrw7sCKa609XBvOyTRIGklNr4BP9ZZj8vRleClmhdA8pfDPOvXN114B3iSAKcZNBN24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8P4klu1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="fc1gpU0i"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1715868867; x=1747404867;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=XXBAfbV3Y+yHzv50PCTHoxAlZzjq/zCOFrm39xbKMc0=;
-  b=fc1gpU0iEcdxHU07etxWNVigZKgPF4qNrNoK55ZiHcV5QFFTU5aD0N4I
-   wU3dvUegurrr4o6Km6m5lsFDuNwJj85Bazv1ZNeNFIPZ1pdVjRifS3EaH
-   6crsP5x3gJ716FOjAMtEYNEvJ4gTkuxzcV1Umeb7mWYemolvYELy3MP4U
-   c=;
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="57663371"
-X-IronPort-AV: E=Sophos;i="6.08,164,1712613600"; 
-   d="scan'208";a="57663371"
-Received: from unknown (HELO MUCSE805.infineon.com) ([172.23.29.31])
-  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 16:14:19 +0200
-Received: from MUCSE842.infineon.com (172.23.7.71) by MUCSE805.infineon.com
- (172.23.29.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 16 May
- 2024 16:14:18 +0200
-Received: from MUCSE843.infineon.com (172.23.7.72) by MUCSE842.infineon.com
- (172.23.7.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 16 May
- 2024 16:14:18 +0200
-Received: from MUCSE843.infineon.com ([fe80::8f59:7f5d:e71c:9fad]) by
- MUCSE843.infineon.com ([fe80::8f59:7f5d:e71c:9fad%21]) with mapi id
- 15.02.1118.040; Thu, 16 May 2024 16:14:18 +0200
-From: <Andreas.Fuchs@infineon.com>
-To: <prestwoj@gmail.com>, <jarkko@kernel.org>, <tpm2@lists.linux.dev>
-Subject: RE: TPM2_Sign vs TPM2_RSA_Decrypt
-Thread-Topic: TPM2_Sign vs TPM2_RSA_Decrypt
-Thread-Index: AQHap3th3qoarclTFECdi7T8P40SwrGZwa1Q///tdICAACH0YP//6TgAgAADrgCAAALrgIAAAQSAgAAi8DA=
-Date: Thu, 16 May 2024 14:14:18 +0000
-Message-ID: <4fdcc042a8f74b0e8e5d54a67a1c87e0@infineon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8P4klu1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA42BC113CC;
+	Thu, 16 May 2024 15:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715872708;
+	bh=zhEE7ogL/NrE05gvU5lFYEZovXojW3wtqQECJF3+EE4=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=B8P4klu1pYioSinQj04VOLsyvgkqLFC08kKJtjKZP9X7Qx0SJxlzLLWkUv39srCvi
+	 FFaZFUWQCVjKA+G1QnVn59+g2mWKGSHBRBWuJkf30Z2+wdy/idRdJToZpxRoW9gwAD
+	 jMm6dX3jSBkLopnjoTtYhPbk2VamCl3WpsQ914N0gH71A2b4vO61CI6V0Kitpc9f0u
+	 f1ruYL0D1Lt048RbaWzNdsDt7+rvdeDTJ3lYiwOgvbP9ixJ95BVEqzno2bDkg22YKW
+	 wftHzlQhhp67fqoeJWVuEwa62xhAKTszIVuy+4RF+XOGY5RuDJAjG4K9r6OLvLH62b
+	 2I5ldibDL/j+A==
+Precedence: bulk
+X-Mailing-List: tpm2@lists.linux.dev
+List-Id: <tpm2.lists.linux.dev>
+List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 16 May 2024 18:18:25 +0300
+Message-Id: <D1B63Z0L7EFJ.U9RZFEM3WIDF@kernel.org>
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "James Prestwood" <prestwoj@gmail.com>, <Andreas.Fuchs@infineon.com>,
+ <tpm2@lists.linux.dev>
+Subject: Re: TPM2_Sign vs TPM2_RSA_Decrypt
+X-Mailer: aerc 0.17.0
 References: <D1AZVM0QQF2M.1SZHF66G10XK8@kernel.org>
  <c8c85a062358420ab13e849a902606cd@infineon.com>
  <D1B2ZP29BA7Y.3OYCZMEP3MLGY@kernel.org>
@@ -58,51 +50,34 @@ References: <D1AZVM0QQF2M.1SZHF66G10XK8@kernel.org>
  <D1B4CE777IGH.MQ5BRAN4Q69X@kernel.org>
  <1107614a-a99d-4997-84f6-e18cc30f5a9a@gmail.com>
 In-Reply-To: <1107614a-a99d-4997-84f6-e18cc30f5a9a@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Precedence: bulk
-X-Mailing-List: tpm2@lists.linux.dev
-List-Id: <tpm2.lists.linux.dev>
-List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
 
-VFBNMl9FbmNyeXB0RGVjcnlwdDIgaXMgZm9yIFN5bW1ldHJpYyBlbmNyeXB0aW9uIChpLmUuIEFF
-Uykgb25seS4NCg0KSSdkIHN0aWxsIHJlY29tbWVuZCB0byBnbyBmb3IgVFBNMl9TaWduKCkuDQpO
-b3RlIGFsc28gdGhhdCBzd2l0Y2hpbmcgbWF5IGJlIGhhcmQgbGF0ZXIgZG93biB0aGUgcm9hZCwg
-c2luY2UgdGhlIGtleSB1c2FnZSBmbGFncyBhcmUgZGVmaW5lIGR1cmluZyBjcmVhdGlvbi4NClNv
-IGJhY2t3YXJkcyBjb21wYXRpYmlsaXR5IGlzIG5hc3R5IGhlcmUuDQoNCkZlZWwgZnJlZSB0byBD
-QyBtZS4NCkknbGwgZG8gd2hhdCBJIGNhbi4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
-CkZyb206IEphbWVzIFByZXN0d29vZCA8cHJlc3R3b2pAZ21haWwuY29tPiANClNlbnQ6IERvbm5l
-cnN0YWcsIDE2LiBNYWkgMjAyNCAxNTo1OQ0KVG86IEphcmtrbyBTYWtraW5lbiA8amFya2tvQGtl
-cm5lbC5vcmc+OyBGdWNocyBBbmRyZWFzIChTTUQgQzMgRU1FQSBUTSkgPEFuZHJlYXMuRnVjaHNA
-aW5maW5lb24uY29tPjsgdHBtMkBsaXN0cy5saW51eC5kZXYNClN1YmplY3Q6IFJlOiBUUE0yX1Np
-Z24gdnMgVFBNMl9SU0FfRGVjcnlwdA0KDQpDYXV0aW9uOiBUaGlzIGUtbWFpbCBvcmlnaW5hdGVk
-IG91dHNpZGUgSW5maW5lb24gVGVjaG5vbG9naWVzLiBEbyBub3QgY2xpY2sgb24gbGlua3Mgb3Ig
-b3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IHZhbGlkYXRlIGl0IGlzIHNhZmU8aHR0cHM6Ly9p
-bnRyYW5ldC1jb250ZW50LmluZmluZW9uLmNvbS9leHBsb3JlL2Fib3V0aW5maW5lb24vcnVsZXMv
-aW5mb3JtYXRpb25zZWN1cml0eS91Zy9Tb2NpYWxFbmdpbmVlcmluZy9QYWdlcy9Tb2NpYWxFbmdp
-bmVlcmluZ0VsZW1lbnRzX2VuLmFzcHg+Lg0KDQoNCg0KT24gNS8xNi8yNCA2OjU1IEFNLCBKYXJr
-a28gU2Fra2luZW4gd3JvdGU6DQo+IE9uIFRodSBNYXkgMTYsIDIwMjQgYXQgNDo0NCBQTSBFRVNU
-LCBKYW1lcyBQcmVzdHdvb2Qgd3JvdGU6DQo+PiBUbyBiZSBob25lc3QgSSBzdGFydGVkIHdpdGgg
-ZW5jcnlwdC9kZWNyeXB0IGFuZCBpbmNsdWRlZCB0aGUgc2lnbmluZyANCj4+IG9wZXJhdGlvbiBi
-ZWNhdXNlIGl0IHdhcyBiYXNpY2FsbHkgImZyZWUiIGJ5IHVzaW5nIA0KPj4gdHBtMl9yc2FfZGVj
-cnlwdCgpLiBJIHdhcyBub3QgYXdhcmUgb2YgdGhpcyBkaXN0aW5jdGlvbi9kaWZmZXJlbmNlIA0K
-Pj4gYmV0d2VlbiB0aGF0IGFuZCBkb2luZyBzaWduaW5nIG9uIHRoZSBUUE0gaXRzZWxmLiBJIGRv
-bid0IHRoaW5rIEkgDQo+PiBldmVyIGxvb2tlZCBpbnRvIHRoZSBzaWduaW5nIGNvbW1hbmQgb24g
-dGhlIFRQTSBpdHNlbGYuDQo+IE15IHBlcnNvbmFsIHRha2U6IEknZCBzdGFydCBSU0Egd2l0aCB0
-aGUgd29ya2luZyBjb2RlIGFuZCBqdXN0IGNsZWFuIA0KPiB1cCB0aGUgcGFydHMgZm9yIHRoZSBm
-aXJzdCByb3VuZC4gSXQgaXMgdGVzdGVkIGNvZGUgYW5kIGRvZXMgdGhlIGpvYiwgDQo+IHJpZ2h0
-PyA6LSkNCkl0IHdhcyB0ZXN0ZWQgdGhlbiB5ZXMsIG9idmlvdXNseSBuZWVkIHRvIHZlcmlmeSB0
-aGF0IGFmdGVyIDQgeWVhcnMgOikNCj4NCj4gVGhlbiB3ZSB3aWxsIHdlaWdodCB0aGUgb2RkcyBh
-bmQgY29ucyBpbiB0aGUgcmV2aWV3LiBUaGF0IHNhaWQsIGlmIHlvdSANCj4gd2FudCB0byB1c2Ug
-VFBNX1NpZ24gYW5kIFRQTTJfRW5jcnlwdERlY3J5cHQoMikgdGhhdCBpcyBmaW5lIHRvbywgYnV0
-IA0KPiBub3QgZGVtYW5kLg0KPg0KPiBBcyBmb3IgRUNEU0EsIGl0IGNhbiBiZSBwYXJ0IG9mIHRo
-ZSBwYXRjaCBzZXQsIG9yIHdlIGNhbiBzdGFydCBqdXN0IA0KPiB3aXRoIHRoZSBSU0EgcGFydC4N
-Cj4gQW5kcmVhcywgaXMgaXQgT0sgaWYgdGhlIHBhdGNoIHNldCBpcyBDQydkIHRvIHlvdSBzbyB5
-b3UgY2FuIGdpdmUgeW91ciANCj4gZmVlZGJhY2svcmVtYXJrcyBvbiBpdD8NCj4NCj4gQlIsIEph
-cmtrbw0K
+On Thu May 16, 2024 at 4:59 PM EEST, James Prestwood wrote:
+> On 5/16/24 6:55 AM, Jarkko Sakkinen wrote:
+> > On Thu May 16, 2024 at 4:44 PM EEST, James Prestwood wrote:
+> >> To be honest I started with encrypt/decrypt and included the signing
+> >> operation because it was basically "free" by using tpm2_rsa_decrypt().=
+ I
+> >> was not aware of this distinction/difference between that and doing
+> >> signing on the TPM itself. I don't think I ever looked into the signin=
+g
+> >> command on the TPM itself.
+> > My personal take: I'd start RSA with the working code and just
+> > clean up the parts for the first round. It is tested code and
+> > does the job, right? :-)
+> It was tested then yes, obviously need to verify that after 4 years :)
+
+Yeah, I gave some nitpicks for you (private) and yeah branch (tpm2_key)
+branch has shenigans to call ANS.1 template acquiring function from the
+stock RSA code in the kernel :-)
+
+Better to do as little as possible and then we look at what actually
+needs to be done.
+
+In addition to Andreas, I'd recommend to first of all CC the patch
+set to linux-crypto too in addition to linux-integrity and
+keyrings and also Herbert Xu (crypto maintainer).
+
+I know this is some effort to you but isn't it any way worth it
+because then the work that you did years ago was not wasted? :-)
+
+BR, Jarkko
