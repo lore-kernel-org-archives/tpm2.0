@@ -1,71 +1,97 @@
-Received: from smtp11.infineon.com (smtp11.infineon.com [217.10.52.105])
+Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE282F5B
-	for <tpm2@lists.linux.dev>; Tue, 21 May 2024 12:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361EE1649A8
+	for <tpm2@lists.linux.dev>; Wed, 29 May 2024 09:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716295670; cv=none; b=mEM5XM+bQZiguF+E8Ky2o3SN3CLluZrLGFK7M5O5KXPvWwypT4jWgKvjdm1Zll/o15gEOfuOYkyqK98wMJsA8XL3NYGagdAw+xqVAfSPeGm+NaBKBdrgnQjkOEetWUqGS2JhLn7e7qTIsJqrpUXLK/37lO5pvKZmFVMEcEUISnE=
+	t=1716973334; cv=none; b=bFianerHrJhDhCAuWUBV6OFDPr30oSQvDK00vFlFwrVgMwR+LVBRzIvElGdy066l9s+Vgz3+ou0jf8JZVeIwDupBq4W6fNz0D4lOxJ48NJhCjdh+RbFTgoGMMdQDhOCrduIangf3PgST+rfp6Wqvwv6t2PU0qkSNKoFTNCeWUgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716295670; c=relaxed/simple;
-	bh=ul5JPDyGCW6nkzvk2a1HHlyVsyqOjTJfDYm0h+yoQuI=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=d8mNCMPjbbx77koCpauINPzKce18bfvARk5hmbbtLbRL3sx1s5t12cc7+HQvG4fEoxDIkIFwuaBCFNmoLTjRv+sGECcUdXZUGGlOnZbuVTyy+HSb8OKXAt3kcN7bhYa2ZuT+2kT0U5+E5E//0gDTi5v+TPSaW2ihh74WTrm11jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=LfSJlOJ1; arc=none smtp.client-ip=217.10.52.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="LfSJlOJ1"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1716295669; x=1747831669;
-  h=from:to:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=ul5JPDyGCW6nkzvk2a1HHlyVsyqOjTJfDYm0h+yoQuI=;
-  b=LfSJlOJ1ZpHT1u+0kU9ibcaqEA2lLw/OsAyBDOj9oOQUwihNSKsGKyVb
-   Ny8/kOxg638PDAFlJXJFh0aoBPtmPb9sHPb5xgQtKgd9GFTrDs09nb16w
-   yp1FYTf5zeuvXqOwEXUA/Fv2u8UOWV1w6juoaGcGHKEWCmVJ6dcAh9pS3
-   o=;
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="58065977"
-X-IronPort-AV: E=Sophos;i="6.08,177,1712613600"; 
-   d="scan'208";a="58065977"
-Received: from unknown (HELO MUCSE803.infineon.com) ([172.23.29.29])
-  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 14:47:41 +0200
-Received: from MUCSE844.infineon.com (172.23.7.73) by MUCSE803.infineon.com
- (172.23.29.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 21 May
- 2024 14:47:40 +0200
-Received: from MUCSE843.infineon.com (172.23.7.72) by MUCSE844.infineon.com
- (172.23.7.73) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Tue, 21 May
- 2024 14:47:40 +0200
-Received: from MUCSE843.infineon.com ([fe80::8f59:7f5d:e71c:9fad]) by
- MUCSE843.infineon.com ([fe80::8f59:7f5d:e71c:9fad%21]) with mapi id
- 15.02.1118.040; Tue, 21 May 2024 14:47:40 +0200
-From: <Andreas.Fuchs@infineon.com>
-To: <tpm2@lists.linux.dev>
-Subject: tpm2-tss release 4.1.3
-Thread-Topic: tpm2-tss release 4.1.3
-Thread-Index: AdqrfP329Cfo1dtgS0m1Z5esMtW/Eg==
-Date: Tue, 21 May 2024 12:47:40 +0000
-Message-ID: <e13ee110937342acadf8e84deb10a7ba@infineon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1716973334; c=relaxed/simple;
+	bh=CLrXPTPdC0detIfavcI/c5XR8JuiOsTSEfP5Td0rwIs=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=miBhynjpAE1hNxaAxM4YsS5XUfA9f1Hl25nKsNpQoTwliYsMhxdUk0wLIPrU0tHWUG8Us37ep4k0UyqGFwHB0QK4y1p0Ps5w9RiV7pqRYZbZ4TBOJLWhlLWXP2PhqvfQ9jO6qoHqGZZV6pKwFvNkmYl8NaBw+BKBVs+UTLsEYmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.net; spf=pass smtp.mailfrom=0pointer.net; arc=none smtp.client-ip=85.214.157.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.net
+Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+	by gardel.0pointer.net (Postfix) with ESMTP id 64FBEE801B0
+	for <tpm2@lists.linux.dev>; Wed, 29 May 2024 10:54:00 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+	id DF49F160185; Wed, 29 May 2024 10:53:59 +0200 (CEST)
+Date: Wed, 29 May 2024 10:53:59 +0200
+From: Lennart Poettering <mzgcz2gff@0pointer.net>
+To: tpm2@lists.linux.dev
+Subject: Combining PolicyAuthorize + PolicyAuthorizeNV into one policy?
+Message-ID: <ZlbtJ0jcy8rrUbUg@gardel-login>
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi all,
+Hi!
 
-I just rolled 4.1.3 of tpm2-tss.
+In systemd we nowadays implement various PCR-related TPM policies for disk
+encryption and other purposes. In particular two of them are relevant:
 
-This fixes some namespace problems with some dlopen() implementations.
+1. We support a "signed PCR" policy. This is actually a
+   PolicyAuthorize policy, where the intended use case is that an OS
+   kernel vendor signs a PolicyPCR-based policy with some vendor key
+   pair ahead of time, and that this would cover PCR extensions made
+   if a specific vendor kernel is booted. This mostly covers PCR 11
+   measurements if systemd's EFI stub is used (which measures the
+   kernel to the otherwise unused PCR 11). Or in other words: if this
+   is used you can lock secrets to only be released if kernels of that
+   specific vendor are booted.
 
-Best regards,
-Andreas
+2. We support a "locally managed PCR" (which we dubbed "pcrlock"
+   policy). This is actually a PolicyAuthorizeNV, where the intended
+   use case is that a local tool manages a complex PolicyPCR/PolicyOR
+   policy covering PCRs which are outside of OS vendor control,
+   i.e. all the firmware PCRs and so on. The policy is recalculated
+   whenever firmware updates are made, or boot loaders updated and so
+   on, and the nvindex updated.
+
+With these two mechanisms we could in theory cover most relevant PCRs
+really nicely: the OS vendor controlled ones with an OS vendor signed
+policy and the inherently local PCRs with the locally managed
+nvindex-based policy.
+
+Except that there's one big problem with this: I couldn't find a nice
+way to join both policies into one combined policy. The problem is
+that both PolicyAuthorize and PolicyAuthorizeNV do not *extend* the
+policy so far sent to the TPM, but *replace* it. Thus I see no nice
+way how I could fire first one of the two policies above and then the
+other, and get the AND combination of both.
+
+I guess I could include the signed PCR policy inside the policy I
+stash in the NV index, but this sucks a bit, since it would mean the
+objects I actually want to protect then would not carry a policy
+themselves that enforces both policies to be enforced, but would
+delegate enforcement of the OS vendor policy always to the local
+policy. (I mean, this is not a total desaster, but I find it less than
+ideal).
+
+Does anyone have a good idea what I could do here?
+
+I looked into use the "ticket" based policies. AFAIU i could get a
+ticket for both policies and the put a policy together as combination
+of those two tickets. But I think this would not be that great either
+because it would mean that we cannot instantly invalidate policies via
+a PCR extension anymore, and instead the time-out of the tickets would
+allow accessing protected objects long after PCR extensions would
+invalidate it.
+
+Hence, anyone has a good idea about this?
+
+(I asked around in other places already, noone could come up with a
+really convincing solution yet I'd say, hence my hope that this bigger
+forum can come up with a solution for this?)
+
+Any help and suggestions greatly appreciated!
+
+Lennart
