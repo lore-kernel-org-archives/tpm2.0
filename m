@@ -1,62 +1,95 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7DF266B40
-	for <tpm2@lists.linux.dev>; Mon, 24 Feb 2025 18:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B654B26D4EB;
+	Tue, 12 Aug 2025 12:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740423323; cv=none; b=WaW5F6wazqzpGoLry4pRrVJgaxgjOTR4ofMln0654gMSTd0O3mHOIseDbPqgKeOhNWS4qxBb19svase/5/eF35L4gJi1nMaY+vMWpOU1LPtz2bKHzZasYRbi9keIHEkeIxP5JLAMXKDbTppomLSW149JAnRabRVJwkl9Qy+ZhKk=
+	t=1755003569; cv=none; b=sTp6E0/aj3HJnwv5SxKeRqNkvWOnMtXWIxZgpRtZKAg1UO7BoR6SHnnAtFY9l9TRQV4wLW+vDbmmtjvpMBLfStzd9yXU/CZnz263SwKeJAFY4TVQhPYMV2d1YI+wOdne4CahTlM8UdnzsO2arG0IVZz2LQu+klBSmNZrZ3v3amQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740423323; c=relaxed/simple;
-	bh=56N0ABE9XTgk/QX5pUl/VXEQx/bXERsIIhAydnuW0bI=;
-	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=flMwUf6nKqwnxkdBAn12q4MNLNuAmlj+vqF/vLCDDPD3ohjkxX8Bj5McgBKys3uZvrbKiGqgDJjRLM+ekg1S3vvwk1aqW9k8iqmzrQtxRdH2Ht8P7IYAKOmruacfFD1rehdXvvxgdwAWPEQw6n0sPmmSSm0wKnJK8dHjqiz3F6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=zIgo3CUu; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1755003569; c=relaxed/simple;
+	bh=RZ5vAmJOYVLCS14bnkVli5Uta59ZRHvEqdzwAnsg0y0=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=j6hYia75hT7fLIOENOCg1jid4wDey1xdrTac1Li5Mshu3KQdFkpY50sKAs0zjJ+LbXlHExoUWNqDZIjUgSw7FhHKK9Ie495kh0K7bR9y53eY0EW2i0vpV52aL9V1k2dOpUmBzxRMUsmQyjXTTutOkJ99WhVxLJbC8w40oEYmhV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nX526Aho; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="zIgo3CUu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1740423311; x=1740682511;
-	bh=56N0ABE9XTgk/QX5pUl/VXEQx/bXERsIIhAydnuW0bI=;
-	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=zIgo3CUutohoad+Tia+5Gqx3cePXTqwevjnGKHD5CzTYoc2dFez2kySRQRX21KpRp
-	 +se3xbyy63qZZoDG2gi8scJ6SbZ1Zvik+3SzcHeRolvjLINHxNd8b2rotJ6mXN/uag
-	 ZWVvarXFBkiwB+gAzrcb899BAU4ylzaX8OTuB+Hg6EJFcYre6QXjcenXxArMVB7vI8
-	 sqGtAXso6aEkgIHprTrp8iZr+Dm8r2WFZqs5kOn50guOWPbu1DxzIHt057WdivVmCn
-	 5xmyraRo9VKT4uiF0tK4oCaua4zfo//RMjaFtmcjfWXXof3JqsnugHTXizfGB6n/X+
-	 EnSjBgfNic61w==
-Date: Mon, 24 Feb 2025 18:55:07 +0000
-To: "tpm2@lists.linux.dev" <tpm2@lists.linux.dev>
-From: Prashant Kumar <notsoshant@protonmail.com>
-Subject: Requesting review of a PAM based on TPM NV storage
-Message-ID: <_zjU5bKR6fy_fg-jmo5qPfwtwOk8THOadSQMV2b-YrjN0e-jVSJPQuit2BjzmVQLT9XbSwn0P5MjuF9q9d5Xthh0YjoCgiSor0l3RXi4Vn8=@protonmail.com>
-Feedback-ID: 15921986:user:proton
-X-Pm-Message-ID: f268eacd31b6824d65bdf9f42459ced305903570
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nX526Aho"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBBF7C4CEF0;
+	Tue, 12 Aug 2025 12:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755003569;
+	bh=RZ5vAmJOYVLCS14bnkVli5Uta59ZRHvEqdzwAnsg0y0=;
+	h=Date:From:To:Subject:From;
+	b=nX526AhoiX6elZGKSBGuOGpaLgak/3OjIduyWkF3skZdeg8KfM04ZxMJ41peZd/ZY
+	 9Gad/pXO7qXXrG4OvkavyerV9l+ls79yUDcPszwIZlEpPcBKxV4EdFz36HRLDpSKbK
+	 zJFyWSopOIYTaRQgZ8CF2MGQ8/1KWaYbRI2F3noxGzfMmEX+TZYmOEGU0ARkW7yeAl
+	 0EJGn4/6yZc+2Jlw/w8xELBt7A/j5hZ+qPKmFNSG0jPg3RbtUo2bEIg5mcUEmDQpbA
+	 8c9zIteTIGn5ETtIki+kHBGtoUfCRSTWjye+gULQEOYHow6qR3ZiBkt1OWCTHuME4z
+	 TRy1bPvOKDU/Q==
+Date: Tue, 12 Aug 2025 15:59:25 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: tpm2@lists.linux.dev, linux-integrity@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: tpm2_protocol
+Message-ID: <aJs6rWexGNsH45_Z@kernel.org>
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello!
+I came up with this within 1,5 weeks not much sleep, and thought that
+this might be interesting to all of the three lists:
 
-I posted the same message in Gitter, but I think it mostly stays inactive s=
-o posting it here as well.
+tpm_struct!(
+    #[derive(Debug, PartialEq, Eq, Clone)]
+    TpmPcrEventCommand,
+    TpmCc::PcrEvent,
+    TpmSt::Sessions,
+    1,
+    {
+        pub event_data: Tpm2b,
+    }
+);
 
-As a fun little side-project, I have created a PAM that uses TPM's NV stora=
-ge for PIN based authentication. It uses the authValue of Fapi_CreateNV() t=
-o set the PIN and Fapi_NvRead() is used by PAM for verifying the PIN, if th=
-e read operation is successful, the auth is approved. The implementation of=
- PAM is barebones and skips over many obvious checks. This is just a PoC to=
- check if using NV storage in the way I'm using is safe or not. So, I'd app=
-reciate if good people of this community can review the code and tell me if=
- my novice attempt at this missed any obvious flaw.
+tpm_response!(
+    #[derive(Debug, Default, PartialEq, Eq, Clone)]
+    TpmPcrEventResponse,
+    TpmCc::PcrEvent,
+    TpmSt::Sessions,
+    {
+        pub digests: TpmlDigestValues,
+    }
+);
 
-Link to project: https://github.com/notsoshant/libpam-tpm
+[tpm_struct is also used for data types, it so just happend that it
+equally works for commands, every single type in depth shares the
+same core marshalling and unmarshalling infrastructure]
 
-notsoshant
+It's a zero deps, no-alloc and no_st crate which unamrshals the full TCG
+specification to both directions. I.e. you can build a TPM emulator
+alike thing  "in a day", and not just interface with a chip.  As it runs
+also on bare-metal (it's a stack allocated entity), it would scale even
+to chip firmware.
+
+I targeted this for Linux kernel, and thus the design choices. I just
+thought what would be the part that would trigger me most if someone
+submitted a Rust driver, and implemented it myself. Learning from what
+I've seen basically :-) I totally support someone making a Rust driver
+and I thought this in-depth understanding of the protocol is my best
+possible contribution for such effort (binding IO shenanigans not so
+much).  E.g. you could use this to do a way better /dev/tpmrm0 than what
+exists today with high-fidelity filtering and shit.
+
+Obviously I hope to be a co-maintainer if such thing ever happens.
+
+Since it is also independent crate it can be e.g., used to build
+interoperability layers and stuff like that.
+
+There's also a cli called simply "tpm2". I'll probably make it alll
+available today or tomorrow.
+
+BR, Jarkko
