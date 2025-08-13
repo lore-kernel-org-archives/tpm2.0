@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B654B26D4EB;
-	Tue, 12 Aug 2025 12:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CC49475;
+	Wed, 13 Aug 2025 00:40:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755003569; cv=none; b=sTp6E0/aj3HJnwv5SxKeRqNkvWOnMtXWIxZgpRtZKAg1UO7BoR6SHnnAtFY9l9TRQV4wLW+vDbmmtjvpMBLfStzd9yXU/CZnz263SwKeJAFY4TVQhPYMV2d1YI+wOdne4CahTlM8UdnzsO2arG0IVZz2LQu+klBSmNZrZ3v3amQ=
+	t=1755045627; cv=none; b=m/0NxQyE54WrlA+nruHZw+d9Km4TWuiaxfQkAJOul02Q0OzFrIHBligLQvV+ms1sffIyQTj4IunyiKwMNX7F58RDdvPuxmEGsI+GglydI6w4Mvum9CwZGu1grzsiYRPOtjNTy/ncBVZwe+CNw9v+jNm4EkPLZftGF3Er7ye81PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755003569; c=relaxed/simple;
-	bh=RZ5vAmJOYVLCS14bnkVli5Uta59ZRHvEqdzwAnsg0y0=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=j6hYia75hT7fLIOENOCg1jid4wDey1xdrTac1Li5Mshu3KQdFkpY50sKAs0zjJ+LbXlHExoUWNqDZIjUgSw7FhHKK9Ie495kh0K7bR9y53eY0EW2i0vpV52aL9V1k2dOpUmBzxRMUsmQyjXTTutOkJ99WhVxLJbC8w40oEYmhV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nX526Aho; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755045627; c=relaxed/simple;
+	bh=HHiNHrqHoFp4mXWjjLP4MSJOQcT84nHTXCmLZe8hn5Q=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mY3hfELDy4zGMHlbirc18P1A6xMA3SZ2CVwIlAqGhOq/IcPleyXYgsWQwNeA+uM/n4rvLCPmgFMIc3xaOhxkGs56TR/SvpHhy9L/Z5EYMnvuTNRfFqGayXHWpAQOFdKHEuxFFSzg/Ix4rUGByoQi+msBdYZDkovGvmzx4xBeLgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EN9KOuJA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nX526Aho"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBBF7C4CEF0;
-	Tue, 12 Aug 2025 12:59:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EN9KOuJA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE004C4CEF0;
+	Wed, 13 Aug 2025 00:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755003569;
-	bh=RZ5vAmJOYVLCS14bnkVli5Uta59ZRHvEqdzwAnsg0y0=;
-	h=Date:From:To:Subject:From;
-	b=nX526AhoiX6elZGKSBGuOGpaLgak/3OjIduyWkF3skZdeg8KfM04ZxMJ41peZd/ZY
-	 9Gad/pXO7qXXrG4OvkavyerV9l+ls79yUDcPszwIZlEpPcBKxV4EdFz36HRLDpSKbK
-	 zJFyWSopOIYTaRQgZ8CF2MGQ8/1KWaYbRI2F3noxGzfMmEX+TZYmOEGU0ARkW7yeAl
-	 0EJGn4/6yZc+2Jlw/w8xELBt7A/j5hZ+qPKmFNSG0jPg3RbtUo2bEIg5mcUEmDQpbA
-	 8c9zIteTIGn5ETtIki+kHBGtoUfCRSTWjye+gULQEOYHow6qR3ZiBkt1OWCTHuME4z
-	 TRy1bPvOKDU/Q==
-Date: Tue, 12 Aug 2025 15:59:25 +0300
+	s=k20201202; t=1755045627;
+	bh=HHiNHrqHoFp4mXWjjLP4MSJOQcT84nHTXCmLZe8hn5Q=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=EN9KOuJAatdaRP2AoNehdooyqe/Ypdg8JFENjdIQCo1cwfP7/UG4qW9sllhsYLvFr
+	 eCxHGu9ydF0ilS06Wq8qJW0nQjz8DOWMkfyLm5tsvRvLZ6lAoBh2B+hz6zuWNJDgTl
+	 9opdJxRQlbzYuzRcR/ibT2xE3WbG8a/WjIaoPDSw0tyBtEp11+APoU/01oy2uZ+Nc+
+	 T9nmt0LcSko8awqNYDrtLSo17/aUdNWY3IWLjCUV8kmaShQlUQ17wm5HOQOSN/L8RJ
+	 qbmL2paRXaLUdv6XX9kjuCVSEbccGB64nkvhclQZDSv9ILZWP8duDk46VVVBmMp21N
+	 NUFM6mnvwXgQw==
+Date: Wed, 13 Aug 2025 03:40:23 +0300
 From: Jarkko Sakkinen <jarkko@kernel.org>
 To: tpm2@lists.linux.dev, linux-integrity@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
-Subject: tpm2_protocol
-Message-ID: <aJs6rWexGNsH45_Z@kernel.org>
+Subject: Re: tpm2_protocol
+Message-ID: <aJve98-cGPKdEOlB@kernel.org>
+References: <aJs6rWexGNsH45_Z@kernel.org>
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
@@ -40,56 +41,35 @@ List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <aJs6rWexGNsH45_Z@kernel.org>
 
-I came up with this within 1,5 weeks not much sleep, and thought that
-this might be interesting to all of the three lists:
+On Tue, Aug 12, 2025 at 03:59:25PM +0300, Jarkko Sakkinen wrote:
+> I came up with this within 1,5 weeks not much sleep, and thought that
+> this might be interesting to all of the three lists:
 
-tpm_struct!(
-    #[derive(Debug, PartialEq, Eq, Clone)]
-    TpmPcrEventCommand,
-    TpmCc::PcrEvent,
-    TpmSt::Sessions,
-    1,
-    {
-        pub event_data: Tpm2b,
-    }
-);
+https://github.com/puavo-org/tpm2_library
 
-tpm_response!(
-    #[derive(Debug, Default, PartialEq, Eq, Clone)]
-    TpmPcrEventResponse,
-    TpmCc::PcrEvent,
-    TpmSt::Sessions,
-    {
-        pub digests: TpmlDigestValues,
-    }
-);
+Known issues; two tests are failing  They work when copy-pasted to cli
+without any change, when run in a temporary subcommand, Not sure what 
+is going on but looking into over time. And not all subcommands are
+yet too well tested or polished ;-)
 
-[tpm_struct is also used for data types, it so just happend that it
-equally works for commands, every single type in depth shares the
-same core marshalling and unmarshalling infrastructure]
+Features, reference and driver for this work is my earlier trial from
+2014: https://github.com/ColinIanKing/tpm2-scripts
 
-It's a zero deps, no-alloc and no_st crate which unamrshals the full TCG
-specification to both directions. I.e. you can build a TPM emulator
-alike thing  "in a day", and not just interface with a chip.  As it runs
-also on bare-metal (it's a stack allocated entity), it would scale even
-to chip firmware.
+And partly this cover letter:
+https://lore.kernel.org/linux-integrity/20240528210823.28798-1-jarkko@kernel.org/
 
-I targeted this for Linux kernel, and thus the design choices. I just
-thought what would be the part that would trigger me most if someone
-submitted a Rust driver, and implemented it myself. Learning from what
-I've seen basically :-) I totally support someone making a Rust driver
-and I thought this in-depth understanding of the protocol is my best
-possible contribution for such effort (binding IO shenanigans not so
-much).  E.g. you could use this to do a way better /dev/tpmrm0 than what
-exists today with high-fidelity filtering and shit.
+[i was planning to update that patch set but was not happy with the
+ tools so i decided to make my own.]
 
-Obviously I hope to be a co-maintainer if such thing ever happens.
+With those constraints I learned by trial and error to use macro_rules
+and this the outcome. I'm looking forward to narrow the delta between
+static estimate and run time 'len()' over time.
 
-Since it is also independent crate it can be e.g., used to build
-interoperability layers and stuff like that.
-
-There's also a cli called simply "tpm2". I'll probably make it alll
-available today or tomorrow.
+This is designed as unipolar TPM protocol stack i.e. it's designed not
+only send commands and receive responses, but also send responses and
+receive commands.
 
 BR, Jarkko
+
