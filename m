@@ -1,126 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBF91E0DD8;
-	Sun, 31 Aug 2025 16:29:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3363B335C7;
+	Sun, 31 Aug 2025 21:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756657795; cv=none; b=qhCODAb/EWvAkftLGbSH0Xsw8XVYSbGzz1z0Z3gWFQ/qpXXM1RGtwlCf66vRpUtKD0bmHGlaV1d8zpdpiSjmdw+JUilwBP/7r79NHihinVnFgHXsUuIo1tC9Pxpe8USSeJsp0ucgwOzgvh+kkWIqX8PIPTK5k5unX9QpujCnZgw=
+	t=1756676968; cv=none; b=Zmpee7XnwJS1BHTkRcZ5iulC7ps5AXe09f67Mgo1FayxN2KXtYzAcmO6BWe/ImYkF3XSZWtWrdl9HZu/rOrcmoJUFvHzBzqd7RxGbIa8xXZUVIvcp+j+/Q838tSghuSzfhBYe3BmrQ7XANhDIMD+W8Y0E7O6iwydoJ4ZFXjEK20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756657795; c=relaxed/simple;
-	bh=McONvu4K30nhOueTZb97dAQsom0MJYkYZf4XlzSStR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y61Wp07LDjtkCKwA9X6hDlQ43i1osjA9WqlRxNjKZYC+WxBSj8MXirkafrZ5LDT2tElw4tiZsITRZ5CPANXlBgoF1uyVkDZ4Rv8y9tLy9JItmudHbZKKu9zzdpscOXNFtaxkSv+5cKhxWIXi1C0LPQRctSUs67BXAEQddXlFtYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMr+qDVo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756676968; c=relaxed/simple;
+	bh=K0ortl8v/dm7gkYFQqln3Xy3B/ece7VjIfslyPEQv+I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F1dn3P7SSfgL1lT9ytDZh7KBadnqDq79iTRNPZmPOUv77dyFSuFGom02EM5MaV2GRSNfZWrpjrYnRQTNxs1VQX9jKB8kThsP4Mq+3X8+qNNqu+co+m7oc4v1tvK/DuMQYQRwQ+bpNOXRH8CSgsq9I5FYIYSfd7H8GTTkKG3CgX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcRYDm0Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMr+qDVo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC0DC4CEED;
-	Sun, 31 Aug 2025 16:29:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcRYDm0Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E8BBC4CEED;
+	Sun, 31 Aug 2025 21:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756657795;
-	bh=McONvu4K30nhOueTZb97dAQsom0MJYkYZf4XlzSStR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YMr+qDVo4iBxOfMhpGgYFRFiLP5jqStXGHmfxoM6P29Sb4ghEe8JIYTJG6l8FrDO4
-	 /T0IVKqPOY3pBNgxVrWebxSzyAqgK4yGdqk+vQBNOXj8ipQGsaDbKDBZ2xJ0YDyW+P
-	 +p0llQe4HXuh7wstUQmI5eEY3AdK7yrI2UL5HpnlvZH6gITsE8l3DB+ULh2h5iJxXT
-	 PEN8QOJC8UPS0txRD32S7ChGp+7/+jl+PiUcSxaFXQ16C1Dg6U+zrXyzsa1KiLhqYP
-	 rlx/4vdiJ4Nh373aRh/Y2Uj2+KlBc+Xx20UPhHk0TW6uMjC4ApM4Nn5Vk70rQfzJ9n
-	 Kos+ot1hUFRAw==
-Date: Sun, 31 Aug 2025 19:29:51 +0300
+	s=k20201202; t=1756676967;
+	bh=K0ortl8v/dm7gkYFQqln3Xy3B/ece7VjIfslyPEQv+I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hcRYDm0QyzGucdT/gELRWYRSQ7r7uCetR1CTjctM+E/hic7v395FQngj8Zz61CSOT
+	 Fy7QUeb2RsLgPFBkRvXvK0z/ir0W7Js3a9Nc58T/wIg79mn51UgYBXkSD2CGL9S7lh
+	 lGaLisMIH/RS9utZ8lAkSFwifFWWhLqjhjjsA1eZ0RSKJHPHDptWD9XE3H/4tzRt8z
+	 giNf9lgzQDWpfvcCEnw0PUZQvDQkM82WWPFybgFpAbCg79dzJfqASstakw53dwV9C3
+	 c0+0MQcnTqkjMjek7OUq2HwmTr7NdKn5zZXEtUtARAUzJ0D0d6xzSKgZ52z7FlE1zt
+	 tj4epSii05+/w==
 From: Jarkko Sakkinen <jarkko@kernel.org>
 To: tpm-protocol@lists.linux.dev
-Cc: tpm2@lists.linux.dev
-Subject: Re: [PATCH] refactor!(message): decouple TpmHeader from the build
- trait
-Message-ID: <aLR4f8oHe4h-M7aw@kernel.org>
-References: <20250831162528.482704-1-jarkko@kernel.org>
+Cc: tpm2@lists.linux.dev,
+	Jarkko Sakkinen <jarkko@kernel.org>
+Subject: [PATCH] fix(message): correct wrong field type in StartAuthSession
+Date: Mon,  1 Sep 2025 00:49:15 +0300
+Message-Id: <20250831214915.847041-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250831162528.482704-1-jarkko@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Aug 31, 2025 at 07:25:28PM +0300, Jarkko Sakkinen wrote:
-> In order to make the command build trait more symmetrical with the parse
-> trait, decouple `TpmHeader` from the trait. Rename the trait as
-> `TpmCommandBuild`.
-> 
-> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> ---
-> I think I'll backport this too to the 0.10.x as it by pracical means
-> does not affect the consumed API and user volumes are still low.
->  src/macro/struct.rs  | 6 +++---
->  src/message/build.rs | 4 ++--
->  src/message/mod.rs   | 2 +-
->  3 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/src/macro/struct.rs b/src/macro/struct.rs
-> index 01e2cfb..ad5303f 100644
-> --- a/src/macro/struct.rs
-> +++ b/src/macro/struct.rs
-> @@ -36,12 +36,12 @@ macro_rules! tpm_struct {
->          impl $crate::TpmBuild for $name {
->              #[allow(unused_variables)]
->              fn build(&self, writer: &mut $crate::TpmWriter) -> $crate::TpmResult<()> {
-> -                <Self as $crate::message::TpmHeaderCommand>::build_handles(self, writer)?;
-> -                <Self as $crate::message::TpmHeaderCommand>::build_parameters(self, writer)
-> +                <Self as $crate::message::TpmCommandBuild>::build_handles(self, writer)?;
-> +                <Self as $crate::message::TpmCommandBuild>::build_parameters(self, writer)
->              }
->          }
->  
-> -        impl $crate::message::TpmHeaderCommand for $name {
-> +        impl $crate::message::TpmCommandBuild for $name {
->              #[allow(unused_variables)]
->              fn build_handles(&self, writer: &mut $crate::TpmWriter) -> $crate::TpmResult<()> {
->                  $($crate::TpmBuild::build(&self.$handle_field, writer)?;)*
-> diff --git a/src/message/build.rs b/src/message/build.rs
-> index 4170513..41a7fee 100644
-> --- a/src/message/build.rs
-> +++ b/src/message/build.rs
-> @@ -4,7 +4,7 @@
->  
->  use crate::{
->      data::{TpmRc, TpmSt, TpmsAuthCommand, TpmsAuthResponse},
-> -    message::{TpmHeader, TpmHeaderCommand, TPM_HEADER_SIZE},
-> +    message::{TpmCommandBuild, TpmHeader, TPM_HEADER_SIZE},
->      TpmBuild, TpmErrorKind, TpmResult, TpmSized,
->  };
->  use core::mem::size_of;
-> @@ -21,7 +21,7 @@ pub fn tpm_build_command<C>(
->      writer: &mut crate::TpmWriter,
->  ) -> TpmResult<()>
->  where
-> -    C: TpmHeaderCommand,
-> +    C: TpmHeader + TpmCommandBuild,
->  {
->      match tag {
->          TpmSt::NoSessions => {
-> diff --git a/src/message/mod.rs b/src/message/mod.rs
-> index eb0d3f0..2d02361 100644
-> --- a/src/message/mod.rs
-> +++ b/src/message/mod.rs
-> @@ -60,7 +60,7 @@ pub trait TpmHeader: TpmBuild + Debug {
->  }
->  
->  /// A trait for building command bodies in separate handle and parameter sections.
-> -pub trait TpmHeaderCommand: TpmHeader {
-> +pub trait TpmCommandBuild {
->      /// Builds the handle area of the command.
->      ///
->      /// # Errors
-> -- 
-> 2.39.5
-> 
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+---
+Will be immediately applied.
+ src/macro/mod.rs       | 1 +
+ src/message/session.rs | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-This also applied (last remaiming low-hanging fruit item in my backlog).
-It was also backported to 0.10.x given low incompatibility risk factor.
+diff --git a/src/macro/mod.rs b/src/macro/mod.rs
+index 782d3f7..2070b62 100644
+--- a/src/macro/mod.rs
++++ b/src/macro/mod.rs
+@@ -172,6 +172,7 @@ macro_rules! tpm_dispatch {
+         }
+ 
+         /// A TPM command
++        #[allow(clippy::large_enum_variant)]
+         #[derive(Debug, PartialEq, Eq, Clone)]
+         pub enum TpmCommandBody {
+             $( $variant($cmd), )*
+diff --git a/src/message/session.rs b/src/message/session.rs
+index 24c883a..c2e29a6 100644
+--- a/src/message/session.rs
++++ b/src/message/session.rs
+@@ -5,7 +5,7 @@
+ //! 11.2 `TPM2_PolicyRestart`
+ 
+ use crate::{
+-    data::{Tpm2b, Tpm2bNonce, TpmAlgId, TpmCc, TpmSe, TpmtSymDefObject},
++    data::{Tpm2bEncryptedSecret, Tpm2bNonce, TpmAlgId, TpmCc, TpmSe, TpmtSymDefObject},
+     tpm_struct, TpmSession,
+ };
+ use core::fmt::Debug;
+@@ -23,7 +23,7 @@ tpm_struct! {
+     },
+     parameters: {
+         pub nonce_caller: Tpm2bNonce,
+-        pub encrypted_salt: Tpm2b,
++        pub encrypted_salt: Tpm2bEncryptedSecret,
+         pub session_type: TpmSe,
+         pub symmetric: TpmtSymDefObject,
+         pub auth_hash: TpmAlgId,
+-- 
+2.39.5
 
-Where main branch API wise now diverges is TpmRc (i.e. no longer is
-wrapped into a result structure).
-
-BR, Jarkko
