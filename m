@@ -1,144 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADAA1DF994;
-	Tue, 23 Sep 2025 15:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8391A1A0BE0
+	for <tpm2@lists.linux.dev>; Tue, 30 Sep 2025 14:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758640087; cv=none; b=bkC0ITWjiHrT1QTpaikGOUR0wGiFBFeJXfjnU5BaZsPRYN+s3zux68W+Shp5ELWl9y4VLWNSHtHAuJ5WvEtZR9FooTEpPxvwXlcy/I4SGan5x00pgDs0lU5Q4xp5DrOspqX33V1kB9Pk6ue77i1MB30C7s1LHxQ4qUa7lfpIWyA=
+	t=1759242694; cv=none; b=lhormWKeQhuvxcD6DmOK9LmYd70b5LN0ceegJb1SbMzQfmJ8IxT7WdVn3rTdHgPs1WIuJdoRkf+Ymr49juVTCEJj783DG3lP5TuoalnfqWyI3TeHf9tD1qeqkJ6PxZb5RzW278dlK6s3XF1rV2USccC0ujO13q76iwOE5tK0OlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758640087; c=relaxed/simple;
-	bh=S9GOsjmp40/4qQXOv2AcNQGiY/8K8Xg4xmBBsp0hplo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gjqy8KIYP+Ht3CkkDcLr77eRBd8fwJrA1gXTwDb72q8EbqQSnNLIK3pJ0jvm/zGpmWe/HobWRVf2hOgHuOXFjnpWxwbeJKU3HC3600HOD/Ihd1jQGRH18upEIZNgwfr0YiAAs5mNa5dKlfsEktkrCEEjZBTTbFJmTUTbU/kJEy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKb4qCSf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759242694; c=relaxed/simple;
+	bh=JLK1DaQMGtsyEDHILGxgjAd3QxdA6dpOHw6xA2jlT2M=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=bW1jcBp+PmecT79Tamzqr64u1MDGKVojG8bFqrsFP3oxPY+WpaYsmj9DdDC1pjP6HvDy1EWblrk8lfJc43yUs9wdJqD6JkXeYAwNYxDPHT+Sxqb2ZInBBkctycjgy9DfWV2mi5Htx8mvjUatI9nafMqtWK5qJMBQ4Fao8wSGzoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aAS6AHre; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKb4qCSf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8C28C4CEF5;
-	Tue, 23 Sep 2025 15:08:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758640087;
-	bh=S9GOsjmp40/4qQXOv2AcNQGiY/8K8Xg4xmBBsp0hplo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iKb4qCSfqdiYoghX1dzKfeaJxLlXumN2D7ZPtY1nFAUdlvS59WH+vjiPJM0NGPo+e
-	 ZkYHFl5bAl7TcfW5EnWU1P6PlEIKVLzMkY3tKIJFfcnQSiroM1/AGJFrpI9YzC+8ig
-	 w12qV5OTNW8wtz+ubD3Ee71wKvP2AlNtO6W28+aiFGdQoKbZZIGWjyKPRabOd3haqd
-	 mGg0D3ZFh1gS2j6FOa0Mu3M+AEBMPN4/7SwUjWka7fvWjfYdOldRuFIdIKNon6eTSg
-	 6Enkbcli2lfHULo4xQjuWsPW7/Go8a9vbr+KoGv8mqddAT9A0SwR2kUCxqb4lePhkK
-	 ImQEiBu1CMTfA==
-Date: Tue, 23 Sep 2025 18:08:03 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: linux-integrity@vger.kernel.org, tpm2@lists.linux.dev
-Subject: Re: tpm2key.asn1 parent identification
-Message-ID: <aNK30-5LLloQFXbD@kernel.org>
-References: <6e1f2713288b48a1cc0311d01e281a98d8e7f45d.camel@HansenPartnership.com>
- <aMgnm1OkDj9XnStc@kernel.org>
- <aMhWHy1LQVqpyW5E@kernel.org>
- <8c2817f5bbf8202b50d93b6044d6595ea4b29b9a.camel@HansenPartnership.com>
- <aMwptnyYedvdqdHc@kernel.org>
- <aMxC6hU-UhCP2m6v@kernel.org>
- <aNEPLsJlV6LjnAty@kernel.org>
- <76504837de4d85c385d32f36b8340af0ccad2a09.camel@HansenPartnership.com>
- <aNKt6kjNnFvhgRW1@kernel.org>
- <d84351697f65dc3ab58d7c1634d129dee431074d.camel@HansenPartnership.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAS6AHre"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-57933d3e498so7051998e87.3
+        for <tpm2@lists.linux.dev>; Tue, 30 Sep 2025 07:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759242690; x=1759847490; darn=lists.linux.dev;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nMko4euYgVTMRbpyVvgLAyVDo096tlboFjTX/sZLITo=;
+        b=aAS6AHrek2egcsjnG7o1ge3UdPXI046RFOoyL0baQu/PfwmWccpbl16cmAa9g7AyqU
+         OlaAkPc13LYVeR5RFd5SBpOv+W+eq3trf+2MFxWLlpZQgUK67ujve4zLSNw5yld61vUV
+         31z544UEZxq9bwbYvCk3VxkoW9f//6J2cdR2i+sHHu55jihGRvfzYuX9xYY3O+W41Otw
+         Yf7uflVRYpIyie6GXG1+jrRzoNcPgeeA/rw/626JmUrbg01oMvsRKsFnD3eI1xm5oTMp
+         5OZ+QNR9lXklDyZEI0pybccdsqowYSf81b73e6qWVq1iPftTtpQRS3CLn9i9Mi8LIOOa
+         Rh2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759242690; x=1759847490;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nMko4euYgVTMRbpyVvgLAyVDo096tlboFjTX/sZLITo=;
+        b=WWrWWl3dyYyBdQYMEET86WNiTJYsP/8MW286DducPbKQHfr82uavAdPArGEbiTzsiU
+         SEeM7zJ7P/O0CYBgiNV/5W+bZc5p3+j+8J8r51mO7KRmP96fPyG98ehz1rtyjWjQE/2z
+         pc9uFKTAv81RTxQByfOArZnh9AUGobkTRjEFSb6HvD+B15YixPbAPnjVTurBZGqwmVbU
+         wMXx7QgljE8B5tnV1cQAUGK7ZNBg81he48elmrmwUy7WCcZbAMj0J1CfKXh+DqEjaCvZ
+         jBDwECNrhQVp06ZA+faIZ8MGQ6zfULNFkJzKaOooaH8uIinhNkaIfz6szJ6DZ7mcyimE
+         rvUA==
+X-Gm-Message-State: AOJu0YzKCROmPRvi3zc6aYyLhUC3xNL4USKJ9dq7+0mxK9lKFrqPl9Ni
+	NRPRap7aRNdpSMQ2BBbFmsTxGYaTUxWoHu614oXV2dRO/IuGsHCh5Mcw7t//PeMvC43EgGfn6l/
+	qjJ7nkZ5zqaKF6+ZzQQ9y73Y5kAnPxhSsp6FJN2U=
+X-Gm-Gg: ASbGnctp2g1wiRUo1abik9D4iAGFhjlFd+jvxXCpbZ5Ro46knLkdkEmi1BJmQ1V+Tfh
+	3skZ+lMjsuEKOcz626a6irPix993En2lSNiTaBxUL/MHQP1BN0v4jWoelopBIaJ3ZfGI0Sm4kO4
+	wZ/UEnuSLsJQGylliFKoCGG8XEO8uwaUMnqOG168itSPUBoapg6tQWHzx5zTVxNegxtuZWvcLyf
+	lCABQxMzBG8USMJ1TmZy+945IZj
+X-Google-Smtp-Source: AGHT+IEjNdw+FfKTFnw7SqyJAm/zizdhb8jObenznjmBwgrj1GAZH5ANIKA4NlBsg6p5kvO5VGwmonrIp984nIWKrB4=
+X-Received: by 2002:a05:6512:2c8f:b0:57d:8870:e97e with SMTP id
+ 2adb3069b0e04-582d2b4aee3mr5660575e87.39.1759242689756; Tue, 30 Sep 2025
+ 07:31:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d84351697f65dc3ab58d7c1634d129dee431074d.camel@HansenPartnership.com>
+From: William Roberts <bill.c.roberts@gmail.com>
+Date: Tue, 30 Sep 2025 09:31:18 -0500
+X-Gm-Features: AS18NWD-QKHFGQtY6EwfXDuaermEokBVx_UMFCVThlRRHebOK2gvUxymd5fbTgQ
+Message-ID: <CAFftDdqEewrmKDAOda-OObp93z1H909Y65rm_T8oFTPGU+JjsQ@mail.gmail.com>
+Subject: [RELEASE] tpm2-pkcs11 1.9.2
+To: tpm2@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Sep 23, 2025 at 10:37:06AM -0400, James Bottomley wrote:
-> On Tue, 2025-09-23 at 17:25 +0300, Jarkko Sakkinen wrote:
-> > On Mon, Sep 22, 2025 at 05:31:24PM -0400, James Bottomley wrote:
-> > > On Mon, 2025-09-22 at 11:56 +0300, Jarkko Sakkinen wrote:
-> > > > On Thu, Sep 18, 2025 at 08:35:38PM +0300, Jarkko Sakkinen wrote:
-> [...]
-> > > > > The way I see it, a "random project" would apply to any project
-> > > > > that a format is locked in, and it is quite obvious that fixing
-> > > > > handle as the anchor is exactly fit for exactly for this
-> > > > > project, and within those exact limits it is probably a
-> > > > > sustainable choice.
-> > > > > 
-> > > > > Being able to fix key into cryptographic  identity is somewhat
-> > > > > sane addition because not only does it lock-in the creator but
-> > > > > it also allows to use offline stored keys with the same scheme
-> > > > > i.e., non-endorsement hierarchy derived keys created with
-> > > > > TPM2_Create or TPM2_Import.
-> > > > > 
-> > > > > In the context of OpenSSL TPM2 engine, perhaps the current
-> > > > > scheme is fine but in the context of supporting a "ecosystem"
-> > > > > as a kernel feature it's not in its current form robust enough.
-> > > > > 
-> > > > > And how else I can describe it other than I don't care about
-> > > > > the project, if the file format enforces me align with it?
-> > > > 
-> > > > The ASN.1 definition limits types of keys while there's no any
-> > > > good reasons to disregard transient keys. 
-> > > 
-> > > As I explained in the bit you quote above, the spec covers volatile
-> > > parents.
-> > > 
-> > > > It also enforces handle numbers, which is not very robust
-> > > > approach.
-> > > 
-> > > I think if you read the spec, you'll find it only requires handle
-> > > numbers for persistent keys ... specific handle numbers being a
-> > > feature of those keys required by TPM spec.
-> > > 
-> > > > I've neither seen any cryptographic object in my life, which uses
-> > > > ambiguous data as part of the identity no matter how hypothetical
-> > > > the possible threat scenarios are. It's a bad security practice
-> > > > plain and simple.
-> > > 
-> > > This contains no actionable technical content.  However, it is
-> > > possible the spec doesn't cover your use case, it's just you
-> > > haven't actually outlined what your use case is, so no-one who
-> > > knows the spec can actually confirm or deny this.
-> > 
-> > I revisited the issue and this is how I see the situation.
-> > 
-> > I think the most feasible approch especially for volatile keys would
-> > be to store all structures included in TPM2_Create response, instead
-> > of only storing the first two response parameters. Rest of the blobs
-> > can be e.g. optional. It's the most bottleneck free way to address
-> > any issues.
-> 
-> I still don't understand what issues you're referring to.  However ...
+Hello,
 
-OK so I can work on the topic more. In my case, I realized that the is
-existential question that why having ASN.1 format is useful in the first
-place. This is not to say there is not existential reason (i.e. not
-claiming that but) if save just the whole response to the disk I can
-load a key as:
+I would like to announce the release of tpm2-pkcs11 version 1.9.2
+which can be found here:
+  - https://github.com/tpm2-software/tpm2-pkcs11/releases/tag/1.9.2
 
-1. Read the response blob.
-2. Read parent identity from CREATION_DATA
-3. With the information iterate through handles in the TPM and find the
-   correct parent
-4. Pass the parent handle to TPM2_Load
+With the following changelog:
 
-So if this works out I might not need to change tpm2key if I just use
-the response blob itself as the file format. I need to experiment with
-this and find the possible issues wit the approach, and if there are
-fields in ASN.1 that don't exist in some form in the raw TPM data.
+## [1.9.2] - 2025-09-29
+### Fixed:
+- Fix tpm2\_ptool destroy command failures.
+- Warning "UserWarning: Unknown distribution option: 'tests\_require'"
+from setup.py.
+- Missing SHA1-RSA-PKCS from CKM\_ALLOWED\_MECHANISMS.
+- In tests requiring Python, don't override HOME as it may be needed
+for user installed packages.
+- Certificate finding logic in pkcs11-tool usage where `--label` was
+used instead of `--token-label`.
+- Configure: Fix detection of javac.
+- Configure: Fix detection of pkcs11 python module.
+- Fix incorrect logging statement in create\_pkcs\_store.sh.
+- Fix links in documentation.
+- Fix OpenSuse Leap CI builds.
+- Fix improper handling of chunks across IV multi-part handling.
+- Fix memory leak.
 
-> 
-> > Creation data contains indefinitive information about parent and this
-> > also enable the use of tickets.
-> 
-> This is already being discussed on the list if you want to join:
-> 
-> https://groups.io/g/openssl-tpm2-engine/topic/patch_doc_update_draft_rfc/115384542
-> 
-> Regards,
-> 
-> James
-> 
-
-BR, Jarkko
+### Added
+- Add support for importing persistent TPM2 keys with tpm2\_ptool.
