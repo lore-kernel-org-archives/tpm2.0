@@ -1,36 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D62C2D876F;
-	Tue, 14 Oct 2025 16:42:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34762FB61C;
+	Mon, 27 Oct 2025 08:56:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760460148; cv=none; b=DY+gU32gqTAoaIlcsDeDi1uKSvuZzBro50kuOHP3bBbRwmkvOIhlDUcfughWUoX3iHV8JyqKOvt1NiRQNCQm+mCHGU7l/n8s1LAG4H+nq6HvyPw0EXj6UUwkyPTkUC64D37PlTGcb+D6+vJRqnndI65Wbj1uQz860lDpYl4N52U=
+	t=1761555411; cv=none; b=cuCo+cJJnYiWLiuhgy9U0mma3RwkMozi+25vI9F97nq45LDhR+UlhwISaNrH1VbASQez+5bpkCY8Okey6vAVPvy74+DHhsJwIFjypUAmqmuO60zIiAexTK9YBWY4BwiZ8bHXFhg5Ffzmzoz0uI2q+ZcHfxfswjLmunVf1qtL1AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760460148; c=relaxed/simple;
-	bh=kzUoUpAM8ISIy11Qj+JGayB53mZL25D9BT56N08xfig=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=UCirKAuUo3a3/eztkmLUHjzQfTt4NRWao+IlZcyLNg91OCq/jWc+0dwAj1qMa5nHaos26uzdi26rkberX9jdPO8pxGhGIWrWOwM1FNn1JkaBHEHld/WLF6yGwSwJ5uoWo1C+xWXnwVJlnX76ouOZT/mak0of6Z9s/AvQ1vgQcv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMSWJVzO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761555411; c=relaxed/simple;
+	bh=N/9THp7GdKUCjPyADE7u2Z+Ew7uOk9w1UcHFECnPIXw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=M30EoqVG+u/DRTOZ9PqpKP+r8rEwghzDJdmpbW/fkqr2SghLPn96Uiu70yi+FWOecA3/0DF4kf/zU3N6RVv2xXses7PRlWZHsIBIxE3ZKGPmPSPhOy2x+oPfTs/6UMhliwhLsOlmZujubOHSwOAn+0Mi3inEJiINAQZvXQ+qkpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8u0dDAf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMSWJVzO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440A5C4CEF9;
-	Tue, 14 Oct 2025 16:42:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8u0dDAf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E91C4CEFB;
+	Mon, 27 Oct 2025 08:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760460147;
-	bh=kzUoUpAM8ISIy11Qj+JGayB53mZL25D9BT56N08xfig=;
-	h=Date:From:To:Subject:From;
-	b=rMSWJVzO50i/2rZuw0KRvhLXjfS1AEg2HoSTA4Qf09Fkn06HWbyhjZeRLPwLtf2iI
-	 lu7eBu2ylyf9G5vsUVh8nWlsIdyLNS7hYvGf1f9ckDTSE+98KttWIFmmLa6qBp7ugI
-	 i73T3EusI9HpTHvuVo96ytAfjEpzmL0RnPXNXGIDo711mtoau/daN+aaARFse3hv5Q
-	 cVr/qeN3YrmOhgmPqX5L+bocQ2PxmIIcJB5EX/Xx0+b+vOB+88fRmjAMCaWGbf8jwT
-	 Lxajidz1GPcEbESsoYE1fWynG/CXu8EXdo2tElr/DoeJtL7QIVRxqu9uvOJAOFprsb
-	 7sPQA3f1bOMZA==
-Date: Tue, 14 Oct 2025 19:42:23 +0300
+	s=k20201202; t=1761555411;
+	bh=N/9THp7GdKUCjPyADE7u2Z+Ew7uOk9w1UcHFECnPIXw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=t8u0dDAf5ovP/NmbVY/QIvvUWP0k1ymWg3BDYnbkQyyLc53olS1XEWf15n+LUYTqy
+	 8a5kVr/8Igvf8TKT6jJdVWUFy+WqZna+HywxlN5SC5b3j9ptLIQ9HK75rEl4VCVoNf
+	 1xCP52wNN1Z03Lbj7YBqpPJxM/3AmS3ExZQLa7LiVHPQKGXiydLL+8fmjxwNx6RYCn
+	 JnxvolyHv2/jI411yR0mAq2Jv3KuF3iU3KIyz4t/YsBlUQywpeOr3LgWtxkXchWqIM
+	 cMSHJ4nUyjsaXCmdLvcHhspOZUPaXTF/w1dBvkIjrj2AMow8ejEFRje+wPTmsgesMu
+	 BHmtbTWl2ZVAg==
+Date: Mon, 27 Oct 2025 10:56:47 +0200
 From: Jarkko Sakkinen <jarkko@kernel.org>
-To: tpm2@lists.linux.dev, linux-integrity@vger.kernel.org
-Subject: tpm2sh 0.11
-Message-ID: <aO59byuIXG7fvnyf@kernel.org>
+To: tpm2@lists.linux.dev
+Cc: linux-integrity@vger.kernel.org
+Subject: tpm2sh 0.12.3
+Message-ID: <aP8zzzYVxes1g-vS@kernel.org>
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
@@ -41,46 +42,50 @@ Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-Hi
+tpm2sh 0.12.3 loads and processes multi-level ancestor chains correctly,
+policy expressions have now a more stable custom-built implemented
+parser:
 
-Kernel testing focused and somewhat opionated TPM2 tool tpm2sh has
-now first usable release:
+https://crates.io/crates/tpm2sh
 
-https://crates.io/crates/tpm2sh/0.11.0
+The functionality is still mostly focused on key management and TPMKey
+ASN.1 generation from various internal and external sources, making
+it a tool with kernel testing focus.
 
-❯ tpm2sh help
-Usage: tpm2sh [-d <device>] [--log-format <log-format>] [-P] <command> [<args>]
+I've added optional parentPubkey field to the original TPMKey ASN.1
+because that allows "tpm2sh load" to be ergonomic as it can traverse
+persistent and cached keys and discover parent, instead of requiring
+explicit '--parent' argument.
 
-TPM 2.0 shell
+This transcript demonstrates well the added ergonomics:
 
-Options:
-  -d, --device      device path
-  --log-format      log format: 'plain' or 'pretty'
-  -P, --plain       print tables without headers and with space-separated
-                    columns
-  --help, help      display usage information
+~ main ≡
+❯ tpm2sh create-primary ecc-nist-p256:sha256
+vtpm:80000000
 
-Commands:
-  algorithm         Lists available algorithms supported by the chip.
-  certificate       Exports an endorsement key certificate.
-  convert           Converts external key files to TPMKey files.
-  create            Creates secondary keys.
-  create-primary    Creates a new primary key in a specified hierarchy.
-  delete            Deletes TPM objects, and cached keys and sessions.
-  key               Lists cached keys.
-  load              Loads a key under a parent and caches its context.
-  memory            Lists objects inside TPM memory.
-  pcr-event         Extends a PCR with an event.
-  policy            Builds an authorization policy.
-  return-code       Prints a TPM return code in human-readable format.
-  reset-lock        Resets the dictionary attack lockout counter.
-  save              Stores a cached key to non-volatile memory.
-  seal              Creates a sealed data object.
-  session           Lists cached authorization sessions.
-  start-session     Starts a new authorization session.
-  unseal            Retrieves data from a sealed data object.
+~ main ≡
+❯ set DIGEST (tpm2sh policy --mode software 'pcr(sha256:7) or pcr(sha256:15)')
 
-It can convert and load PKCS#1, SEC1 and PKCS#8 keys into TPMKey files,
-which makes it practical with kernel interfaces.
+~ main ≡
+❯ tpm2sh create -P vtpm:80000000 --data deadbeef --policy $DIGEST keyedhash:sha256 | tpm2sh load
+vtpm:80000001
+
+~ main ≡
+❯ tpm2sh policy --mode session 'pcr(sha256:7) or pcr(sha256:15)'
+vtpm:03000000
+
+~ main ≡
+❯ tpm2sh unseal -A vtpm:03000000 vtpm:80000001
+deadbeef
+
+~ main ≡
+❯ openssl genrsa -out private.pem 2048
+
+~ main ≡
+❯ tpm2sh convert -P vtpm:80000000 -I private.pem | tpm2sh load
+vtpm:80000002
+
+Without the extra field, also load commands would need to have 
+"-P vtpm:80000000".
 
 BR, Jarkko
