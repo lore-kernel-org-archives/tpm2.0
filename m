@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34762FB61C;
-	Mon, 27 Oct 2025 08:56:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890BA1C5F13;
+	Tue,  4 Nov 2025 01:46:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761555411; cv=none; b=cuCo+cJJnYiWLiuhgy9U0mma3RwkMozi+25vI9F97nq45LDhR+UlhwISaNrH1VbASQez+5bpkCY8Okey6vAVPvy74+DHhsJwIFjypUAmqmuO60zIiAexTK9YBWY4BwiZ8bHXFhg5Ffzmzoz0uI2q+ZcHfxfswjLmunVf1qtL1AA=
+	t=1762220800; cv=none; b=sHiaITA3JAsEeBlx0ykRlwsY4erG3gRBLHn86M3RypAb0Gsk5S1lVDmMegxBnysjos0b4OCdGYmTCHHQdtRp8o1q+xrHXJ66LNKue3UuwWq5yM3dNlkX1p9g4dMbN1wOds39fOnBjHkaOloYttLmB8kDQ6Tshs/OISepOPY6flY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761555411; c=relaxed/simple;
-	bh=N/9THp7GdKUCjPyADE7u2Z+Ew7uOk9w1UcHFECnPIXw=;
+	s=arc-20240116; t=1762220800; c=relaxed/simple;
+	bh=dPVBT7JGqP6QWM8M6gGC/TKPc3oU08ulbidUfqz/Bms=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=M30EoqVG+u/DRTOZ9PqpKP+r8rEwghzDJdmpbW/fkqr2SghLPn96Uiu70yi+FWOecA3/0DF4kf/zU3N6RVv2xXses7PRlWZHsIBIxE3ZKGPmPSPhOy2x+oPfTs/6UMhliwhLsOlmZujubOHSwOAn+0Mi3inEJiINAQZvXQ+qkpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8u0dDAf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=Rx5RqqrAaL1Dwze0ArciEmceAHrT/ipLJ0XSeCPoScjJ9lQ1PuGXO7wfdQ1bU849gAKkqa1uMa+LIK3oQ5N3s+N0HLv7OhcLz59swdP0ibPcm2BdmAQdgTzqoBvACXl7CPCzjtdnt7OBVGr0nyUHux5pY/vx+voAg4wSLjnbahY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C937CMCF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8u0dDAf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E91C4CEFB;
-	Mon, 27 Oct 2025 08:56:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C937CMCF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1314C4CEE7;
+	Tue,  4 Nov 2025 01:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761555411;
-	bh=N/9THp7GdKUCjPyADE7u2Z+Ew7uOk9w1UcHFECnPIXw=;
+	s=k20201202; t=1762220800;
+	bh=dPVBT7JGqP6QWM8M6gGC/TKPc3oU08ulbidUfqz/Bms=;
 	h=Date:From:To:Cc:Subject:From;
-	b=t8u0dDAf5ovP/NmbVY/QIvvUWP0k1ymWg3BDYnbkQyyLc53olS1XEWf15n+LUYTqy
-	 8a5kVr/8Igvf8TKT6jJdVWUFy+WqZna+HywxlN5SC5b3j9ptLIQ9HK75rEl4VCVoNf
-	 1xCP52wNN1Z03Lbj7YBqpPJxM/3AmS3ExZQLa7LiVHPQKGXiydLL+8fmjxwNx6RYCn
-	 JnxvolyHv2/jI411yR0mAq2Jv3KuF3iU3KIyz4t/YsBlUQywpeOr3LgWtxkXchWqIM
-	 cMSHJ4nUyjsaXCmdLvcHhspOZUPaXTF/w1dBvkIjrj2AMow8ejEFRje+wPTmsgesMu
-	 BHmtbTWl2ZVAg==
-Date: Mon, 27 Oct 2025 10:56:47 +0200
+	b=C937CMCFP1T5T53kGi8Agbf5dGry1EhhXyZjIiBG10m1WKfC/MDXhH++lMQ9V2xat
+	 sw4KO9r3UWWcaGZ/cQjX0V1a+QQpuP2E31Aa02AxQjhy6NLzwHSQq7N4RB8Zsu6uc2
+	 YW40Au8R10knAOPb7R+UaW4H7EFI4gcmPVD8Khxqe/s24G6pWH2ljFvFviey22FNlG
+	 rNGGIcOSakMmVQLZ4BGDpEXQZgHAalxFgkP4AiDVo/9e52Aj/hG9bLbOiFJwTypy2r
+	 964vsewKmKiOFVmaLU9pUS4IAjXhzY9RLQHT9K9plU3bYn4mf9n4jtSBeO8ENulIzj
+	 OxCtbFtWJSZJQ==
+Date: Tue, 4 Nov 2025 03:46:36 +0200
 From: Jarkko Sakkinen <jarkko@kernel.org>
 To: tpm2@lists.linux.dev
-Cc: linux-integrity@vger.kernel.org
-Subject: tpm2sh 0.12.3
-Message-ID: <aP8zzzYVxes1g-vS@kernel.org>
+Cc: linux-integrity@vger.kernel.org, keyrings@vger.kernel.org
+Subject: tpm2h 0.15.0
+Message-ID: <aQla8R85uQVTIodS@kernel.org>
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
@@ -42,50 +42,107 @@ Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-tpm2sh 0.12.3 loads and processes multi-level ancestor chains correctly,
-policy expressions have now a more stable custom-built implemented
-parser:
+tpm2sh 0.15.0 is much more stabilized than previous iterations, and
+enhances key management with a proper support for compiling command
+lists from policy expressions embedded to the TPM 2.0 ASN.1 key
+files:
 
-https://crates.io/crates/tpm2sh
+~ main ≡
+❯ tpm2sh create tpm:81000001 --data deadbeef --policy  '(pcr(sha256:16) or pcr(sha256:7)) and secret(tpm:81000001)' keyedhash:sha256 | tpm2sh load
+vtpm:80000000
 
-The functionality is still mostly focused on key management and TPMKey
-ASN.1 generation from various internal and external sources, making
-it a tool with kernel testing focus.
+~ main ≡
+❯ tpm2sh cache
+HANDLE    TYPE       DETAILS
+80000000  transient  keyedhash:sha256
 
-I've added optional parentPubkey field to the original TPMKey ASN.1
-because that allows "tpm2sh load" to be ergonomic as it can traverse
-persistent and cached keys and discover parent, instead of requiring
-explicit '--parent' argument.
+~ main ≡
+❯ tpm2sh unseal vtpm:80000000
+deadbeef
 
-This transcript demonstrates well the added ergonomics:
+
+RustCrypto crates have been erased and all software crypto is based
+on openssl crate and libssl in order to have a patchable crypto:
+
+❯ ldd target/release/tpm2sh
+        linux-vdso.so.1 (0x00007f4eddc64000)
+        libssl.so.3 => /lib/x86_64-linux-gnu/libssl.so.3 (0x00007f4edd757000)
+        libcrypto.so.3 => /lib/x86_64-linux-gnu/libcrypto.so.3 (0x00007f4edd2d0000)
+        libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f4eddc0a000)
+        libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f4edd1f0000)
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f4edd00e000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f4eddc66000)
+
+Total size of dependency graph is 129, which is not whole a lot in the
+usual Rust metrics and tpm2sh is fine-tuned to compile nicely with rustc
+1.7x toolchains. This allows to compile it fluently to e.g., BuildRoot
+and Yocto images. E.g., to keep some control and narrow down
+dependencies I wrote my own custom PKCS#1, PCKS#8, SEC1 and X.509
+parsers using rasn [1].
+
+Converting external keys to TPM keys is super trivial:
 
 ~ main ≡
 ❯ tpm2sh create-primary ecc-nist-p256:sha256
 vtpm:80000000
 
 ~ main ≡
-❯ set DIGEST (tpm2sh policy --mode software 'pcr(sha256:7) or pcr(sha256:15)')
+❯ tpm2sh cache
+HANDLE    TYPE       DETAILS
+80000000  transient  ecc-nist-p256:sha256
 
 ~ main ≡
-❯ tpm2sh create -P vtpm:80000000 --data deadbeef --policy $DIGEST keyedhash:sha256 | tpm2sh load
+❯ tpm2sh convert vtpm:80000000 -I private.pem | tpm2sh load
 vtpm:80000001
 
 ~ main ≡
-❯ tpm2sh policy --mode session 'pcr(sha256:7) or pcr(sha256:15)'
-vtpm:03000000
+❯ tpm2sh cache
+HANDLE    TYPE       DETAILS
+80000000  transient  ecc-nist-p256:sha256
+80000001  transient  rsa-2048:sha256
+
+`tpm2-tpmkey` crate reads and writes otherwise the format following the
+standard, except it adds an optional `parentPubkey` attribute, which
+enable parent auto-discovery from persistent handles and vtpm cache
+for the tpm2sh load subcommand.
+
+The custom (and stripped off) X.509 parser allows to trivially download
+EC certificates:
 
 ~ main ≡
-❯ tpm2sh unseal -A vtpm:03000000 vtpm:80000001
-deadbeef
+❯ tpm2sh memory
+HANDLE    TYPE         DETAILS
+01c00002  certificate  rsa-2048:sha256
+01c0000a  certificate  ecc-nist-p256:sha256
+81000001  persistent   rsa-2048:sha256
+81000002  persistent   ecc-nist-p256:sha256
 
 ~ main ≡
-❯ openssl genrsa -out private.pem 2048
+❯ tpm2sh memory tpm:01c0000a | openssl x509 -text -noout | head -15
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 1298017026 (0x4d5e2b02)
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C = DE, O = Infineon Technologies AG, OU = OPTIGA(TM), CN = Infineon OPTIGA(TM) TPM 2.0 ECC CA 042
+        Validity
+            Not Before: Sep 16 22:18:38 2020 GMT
+            Not After : Sep 16 22:18:38 2035 GMT
+        Subject:
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:a5:09:12:cd:a6:0d:79:49:2f:b0:fa:39:bf:cf:
 
-~ main ≡
-❯ tpm2sh convert -P vtpm:80000000 -I private.pem | tpm2sh load
-vtpm:80000002
+The stack overall has grown into a micro-ecosystem of re-usable components:
 
-Without the extra field, also load commands would need to have 
-"-P vtpm:80000000".
+1. https://crates.io/crates/tpm2sh
+3. https://crates.io/crates/tpm2-tpmkey
+2. https://crates.io/crates/tpm2-policy-language
+4. https://crates.io/crates/tpm2-crypto
+5. https://crates.io/crates/tpm2-protocol
+
+[1] https://github.com/librasn/compiler
 
 BR, Jarkko
