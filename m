@@ -1,103 +1,72 @@
-Received: from smtp2.infineon.com (smtp2.infineon.com [217.10.52.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C94313534
-	for <tpm2@lists.linux.dev>; Thu, 27 Nov 2025 15:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460803FBA7;
+	Sun,  7 Dec 2025 17:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764257927; cv=none; b=Kp2LX5Bes4sQdFN5iAAC5F3MIXfRDz2FIe5UC+3xfVEC3rxEwpFO4JBFtVaxN6Iwt4kT8rWFEAdXO5TKn4lXrfnppl7qPK6iqZ+2kaum6gIAaOCpPxihVTQ1lSwwVfCejMgQA0Sfloa1tBho+6TKGVyWmZ8ciMc3eAxZbyN4KMc=
+	t=1765128741; cv=none; b=Ml8TWmSgTFhptsZ8xh2w0NT1ROWXz6NwhlVg6M4N6FtHywBPFZRd/Y68n7ILpezcNRCbfVf1oUE+sbo8kgPs1tTuR0oQkdy4A6ed/dqBKPs/SabKnH2ONpWeQ6IVO9YbsU58gaV8L+JYHhMVJBfWWE636qGygyMiHNbC8fJ4bss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764257927; c=relaxed/simple;
-	bh=jypQTN52GU6MTgQFbt1f19ibdTRgnwFqH0UwH3uKmMg=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Z/wYYquic198JivZFuNrDNHLmcg/aQ3m0riMzQp7fmw3e5L+4ujSqUb3x5MDUspuLoTyjHqcWVO5JoHho9kOs5OaBJUOUjpfsEGlzIS+UWLmOfoLcvPyfySB7ZN1klBpqwdVcpFlyg6sk7Z57zFxyAehqxo1ZdV3LEWF0RnZjt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=JAIEgRVx; arc=none smtp.client-ip=217.10.52.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
+	s=arc-20240116; t=1765128741; c=relaxed/simple;
+	bh=ZhMaps32hoygg4D5ruYd+aVY7HvUwN93TzP+N2C6NZ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tXQSpDKOZ8zndrrrECGiJjh62jiSi7b3958S1z6zZmceKm3+qZL2k9RjcD05x58En+8Exph89XE0hhl87UTR1eXlpe1D0Udo+8KGg5CLc/e3g4IXXXDI7rEfO4twAesA6n6F1AR2Ua/A1vblWbefVI6S4mkAPOpPQGCC5k2KZgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1M8ebG7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="JAIEgRVx"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1764257925; x=1795793925;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=jypQTN52GU6MTgQFbt1f19ibdTRgnwFqH0UwH3uKmMg=;
-  b=JAIEgRVxFzN546XLuXUxNs5w/9CSqST38QELzwawCoOnGb1FaujVtYcE
-   Nebjc5UeHynQ55U3NM0QcXhkG3pl6JPfART8Zy4whMHjsRYs6+sDvHsoQ
-   FHhiJQU7Z62C7c/WUkWqNkbpKjv6oE70igd/Lee9lUfB8FJL0ExbjyBxq
-   8=;
-X-CSE-ConnectionGUID: TKvQLRanRBm5Ofe6hrhp3g==
-X-CSE-MsgGUID: p5z7aiB1TaG9PQH60YYuIw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="133980804"
-X-IronPort-AV: E=Sophos;i="6.20,231,1758578400"; 
-   d="scan'208";a="133980804"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO MUCSE812.infineon.com) ([172.23.29.38])
-  by smtp2.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 16:38:43 +0100
-Received: from MUCSE841.infineon.com (172.23.7.70) by MUCSE812.infineon.com
- (172.23.29.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Thu, 27 Nov
- 2025 16:38:42 +0100
-Received: from MUCSE843.infineon.com (172.23.7.72) by MUCSE841.infineon.com
- (172.23.7.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Thu, 27 Nov
- 2025 16:38:41 +0100
-Received: from MUCSE843.infineon.com ([fe80::2199:b8a6:8f2e:48a]) by
- MUCSE843.infineon.com ([fe80::2199:b8a6:8f2e:48a%21]) with mapi id
- 15.02.2562.029; Thu, 27 Nov 2025 16:38:41 +0100
-From: <Andreas.Fuchs@infineon.com>
-To: <david.halls@hp.com>, <tpm2@lists.linux.dev>
-Subject: RE: tpm2-tss release question
-Thread-Topic: tpm2-tss release question
-Thread-Index: AQHcX68qXLCkAy+LvkePvsq2qjqwFrUGqDTQ
-Date: Thu, 27 Nov 2025 15:38:41 +0000
-Message-ID: <3b4bb9c6e7ee40698b01bb1759813763@infineon.com>
-References: <PH7PR84MB15339B22EB53D20EF2B50A1787DFA@PH7PR84MB1533.NAMPRD84.PROD.OUTLOOK.COM>
-In-Reply-To: <PH7PR84MB15339B22EB53D20EF2B50A1787DFA@PH7PR84MB1533.NAMPRD84.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1M8ebG7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C6B5C4CEFB;
+	Sun,  7 Dec 2025 17:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765128740;
+	bh=ZhMaps32hoygg4D5ruYd+aVY7HvUwN93TzP+N2C6NZ4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=S1M8ebG7wk4E7JDgQv6pPJ7DJXB3Wu0sv/1xcFTykolxQPsohlgODnmZFwnQemv0S
+	 3OXd23QmPV3m5A0l03OBIlNh1UgfGsohjfsekY2FT75pPEMSHz8cISo3fa3oU13ZZb
+	 K+JIGfL5pfl2SgEBi1EmvaqWh5nxLaUzafeQavhHAdLIfaT9IjEdIbrsVQhERuv5ly
+	 I1sBq0pStVRQxUh2xjTZMI3q59wVoL32WZT83VANp8HxO3IF3oU+dTO0bLPkVjZcur
+	 ePljxdIsZT3MkC6aH7DpODwe5K/P/dAkHksKVYQVEUVtX85mDP8syK+X+M4qdULXlQ
+	 SoY+74mlp6hQw==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: linux-integrity@vger.kernel.org
+Cc: tpm2@lists.linux.dev,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	keyrings@vger.kernel.org (open list:KEYS-TRUSTED),
+	linux-security-module@vger.kernel.org (open list:SECURITY SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v6 0/2] Optimize tpm2_read_public() calls
+Date: Sun,  7 Dec 2025 19:32:08 +0200
+Message-Id: <20251207173210.93765-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi David,
+The main goal is fairly straight-forwrd here.
 
-we would've backported security fixes.
+The aim of these patches is optimize the number of tpm2_read_public()
+calls to the bare minimum. The last patch is a bit out of scope but
+I included because it builds on top of this work.
 
-However there are quite some additions in master.
-I'm planning to release before Christmas, so maybe that's still early enoug=
-h for you.
+Jarkko Sakkinen (2):
+  KEYS: trusted: Re-orchestrate tpm2_read_public() calls
+  KEYS: trusted: Store parent's name to the encoded keys
 
-Cheers,
-Andreas
+ drivers/char/tpm/tpm2-cmd.c               |  86 ++++++++-
+ drivers/char/tpm/tpm2-sessions.c          | 156 ++--------------
+ include/linux/tpm.h                       |   3 +-
+ security/keys/trusted-keys/tpm2key.asn1   |  17 +-
+ security/keys/trusted-keys/trusted_tpm2.c | 207 +++++++++++++++-------
+ 5 files changed, 259 insertions(+), 210 deletions(-)
 
------Original Message-----
-From: Halls, David <david.halls@hp.com>=20
-Sent: Donnerstag, 27. November 2025 16:07
-To: tpm2@lists.linux.dev
-Subject: tpm2-tss release question
-
-Caution: This e-mail originated outside Infineon Technologies. Please be ca=
-utious when sharing information or opening attachments especially from unkn=
-own senders. Refer to our intranet guide<https://intranet-content.infineon.=
-com/explore/aboutinfineon/rules/informationsecurity/ug/SocialEngineering/Pa=
-ges/SocialEngineeringElements_en.aspx> to help you identify Phishing email.
-
-
-
-Hi-
-There's been a lot of work and fixes on the master branch since 4.1.3. Shou=
-ld I use the release or will I be missing some important updates (e.g. secu=
-rity fixes) from master?
-Thanks
-David
-
-
+-- 
+2.39.5
 
