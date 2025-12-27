@@ -1,95 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B45C2F7AD2;
-	Mon,  8 Dec 2025 05:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBC41D86DC
+	for <tpm2@lists.linux.dev>; Sat, 27 Dec 2025 17:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.121.94.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765170928; cv=none; b=kVYZc/nhfTGbRNnt4FGwFjtF78Ulk7yWkvrqp34vhsxrwe2Nkmsj6piAbKMI6CLibb49HHEEfy688SfxG7h6+lhSzVpISx4x01l4xajrvFKystafzVh8rvYACkmNF/TzmXVlncz784oWFNN98KRIUSXI2Mb3ceWKJj3D1n98CHE=
+	t=1766857186; cv=none; b=U2pGDUJA/8ZdXyectAAlD9BngxYN5SCbYY82rKfo+uxT6q0vikBWwIYn4Avo4IJFJ1lDJLwFrr+MEidwlibdyVvXEm7UbPP5gj84bRvGU/ostTr3z5fF/diC1t3hXqEO5Xcq7DdZRYDuBgoQY60SJy1a+/ZxMH6xWNQes/GGmx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765170928; c=relaxed/simple;
-	bh=EO+eptpophDK8ioaheMldpxHkJcTDL7LQ7oJpU0cLgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NKBCfspdNrIEnFe4ebGhY0pCEQsyhXIbCZutl8mnJvaHyQMvfGgI57CSVT4WgsyteDNRt8N9O2x3CigBCeya3EmXYhcvmV77wLg0ju5O5PULgh30DscunsWxBLdn1XEXdd2JPzo8pwmTHUJFnEwiJmrj8ao43JXuA4N1LjpTEq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTmiKVLh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766857186; c=relaxed/simple;
+	bh=JSBOnx6WV/NEmQKnQJ/oCbwPLo5wzM97Mq34qyC9CWM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Rq955yh9lKZjZAAVHfD27PBVGUwVlzAljFHt0y04DwuD3mNmnHcr+QlxRQbEblzBcpvCQcfTPTgPOnCoYvTqyfWJTF7xrQq3LbM0d+7ywyyVfj/gMXvuzJVtUv1J2VGXVDr3I/1f/itoeWVhyjcGKxEUm2fnxSNx/lx/1iQC3ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kngnt.org; spf=pass smtp.mailfrom=kngnt.org; dkim=pass (1024-bit key) header.d=kpnmail.nl header.i=@kpnmail.nl header.b=jlJhaaL5; dkim=pass (2048-bit key) header.d=kngnt.org header.i=@kngnt.org header.b=pH4ZSLhd; arc=none smtp.client-ip=195.121.94.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kngnt.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kngnt.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTmiKVLh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54AB4C4CEF1;
-	Mon,  8 Dec 2025 05:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765170927;
-	bh=EO+eptpophDK8ioaheMldpxHkJcTDL7LQ7oJpU0cLgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LTmiKVLhqtrjVxcUzPpAYJd5xZKFse4XGvNTDHtvrGd5IlUChTCQ4s3+adal2jfVb
-	 7BPsTQq3YzJWGry4sFtxHd/j6CpQ2eweY2WRfaYF8OFoJutMdYkx+6gxze8gBI0BiV
-	 2yl6ugutCK7uvyLuFvy6B+2SBQM1NI0+Hwknm6l7AQerFtiIqWGcS+r7OaNIcGUv+i
-	 7RiHUrpDCiBNasIv36ez/A0rR//TmDUTJypTuk7Ch+smKC0H1EE9VrnujvmC695b8H
-	 u3ZhbBYxfQGFC/bIm6xJPpor/p505J5T69M5EyTFAZKAeVUDaEdON+A6t6+2ASjF3s
-	 q7ewO6PRFUgjg==
-Date: Mon, 8 Dec 2025 07:15:23 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-integrity@vger.kernel.org
-Cc: tpm2@lists.linux.dev,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	"open list:KEYS-TRUSTED" <keyrings@vger.kernel.org>,
-	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 0/3] Optimize tpm2_read_public() calls
-Message-ID: <aTZe65tllY4u2YT5@kernel.org>
-References: <20251208050620.339408-1-jarkko@kernel.org>
+	dkim=pass (1024-bit key) header.d=kpnmail.nl header.i=@kpnmail.nl header.b="jlJhaaL5";
+	dkim=pass (2048-bit key) header.d=kngnt.org header.i=@kngnt.org header.b="pH4ZSLhd"
+X-KPN-MessageId: aa030a07-e34b-11f0-b0b9-00505699b430
+Received: from smtp.kpnmail.nl (unknown [10.31.155.8])
+	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
+	id aa030a07-e34b-11f0-b0b9-00505699b430;
+	Sat, 27 Dec 2025 18:44:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=kpnmail.nl; s=kpnmail01;
+	h=content-type:mime-version:message-id:date:subject:to:from;
+	bh=w4g77RVFNo0Tb0eO0it5Vcq9bdvRXfPiLT0RRdYCdAE=;
+	b=jlJhaaL5xSBuPe0V2W7G6FuncFQxx0/t/kBAFFyw/nrnLk7R2acyKPW3gN5KTOEC/XM43TJvvMeWG
+	 emwh4Oq7EbcLfq2QF+oCx8S1ncGvLyljvrzSGJTu9/aIlzj2Vvbwl3tPREdQfVaA5TKQr1shpPJjVI
+	 i7LceA1zxnLS27J0=
+X-KPN-MID: 33|J1HBTGLkbY192WTP3CxBFEOLK1Lq7Ls2KBskLBvXKZB9UjvrqyCamvAz7JzZ8nF
+ FrWvTTfzdLacGqyAt+CN4d7mFlGNzFy2fCU2yO7OZ3Ac=
+X-KPN-VerifiedSender: No
+X-CMASSUN: 33|hrf8he8gyA04AZyUqf7P/lba10zaUDyTkDySkjMdRjMPyY1ltEi8v0ord7e00PE
+ rwn4C8hFHDAGa6paTDU8JJg==
+Received: from mail.kngnt.org (82-169-112-203.fixed.kpn.net [82.169.112.203])
+	by smtp.kpnmail.nl (Halon) with ESMTPSA
+	id 053c01ab-e34b-11f0-9bf7-00505699d6e5;
+	Sat, 27 Dec 2025 18:39:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kngnt.org; s=mail;
+	t=1766857178;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=w4g77RVFNo0Tb0eO0it5Vcq9bdvRXfPiLT0RRdYCdAE=;
+	b=pH4ZSLhdCyY9XcZJ4dYPMB9wh4nUIBZUmdvgL28fIL8muaIdmzOknOWzFiC5zu6Axykiue
+	J3Ds+jKXlvx6FvPnN4PguO0SxQQv9UqLySB9HopeR8KZnfCTudIZCYjadGiNC+L5Cey+vP
+	RJPwJNec5Rqq5oAUFKX/tse8YgW3zdfc8ztTH1cDU8jeaRkEfBcx4g/kSXOYOqYNTkWEzF
+	lrAh8+YbKNPwvgyHiK6gXn/KMclgBNS9F2iWRFwbaRd+VpZOWTjcEEayw3Ylu6QE9rEh7E
+	CjDaE/y1Bg4pVWDANK6SrfCl5rIecXfD/Lwy/5FsY4fH6upbSS9IMBJkcREIaw==
+From: Felix Rubio <felix@kngnt.org>
+To: tpm2@lists.linux.dev
+Subject: Is possible to seal a secret once,
+ and authorize any policy properly signed to unseal it?
+Date: Sat, 27 Dec 2025 18:39:37 +0100
+Message-ID: <3394779.44csPzL39Z@altair>
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251208050620.339408-1-jarkko@kernel.org>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Dec 08, 2025 at 07:06:16AM +0200, Jarkko Sakkinen wrote:
-> The main goal is fairly straight-forwrd here.
-> 
-> The aim of these patches is optimize the number of tpm2_read_public() calls
-> to the bare minimum. 
-> 
-> ## About dropping 'parentName' attribute for ASN.1 keys from the patch set
-> 
-> I wrote this section as a remainder as I have facts fresh in my mind so 
-> that I can return them as soon as there is working group for the ASN.1 
-> specification. We really need to have this in the spec.
-> 
-> I dropped [1] given that [2] is landing shortly to IETF draft process,
-> according to James Bottomley [3]. We will return to [1] as soon as draft
-> process is open for comments. Still, that attribute is super important,
-> and here is why.
-> 
-> This will cause a overhead as tpm2_unseal_trusted needs to do an
-> unnecessary (from pure technical perspective) TPM2_ReadPublic command to
-> acquire TPM name of the parent. This is obviously known at the time of
-> creation of a key but the information is not stored anywhere by the
-> key format.
-> 
-> It also aligns badly with TCG specifications as Table 6 of architecture
-> spec explicitly defines a reference (or name) for transient keys,
-> persistent keys and NV indexes to be TPM_ALG_ID concatenated together
-> with the hash of TPMT_PUBLIC. I.e. the file format is using exactly
-> the opposite what should be use as reference for keys than what it 
-> should use.
-> 
-> Other benefits are of course auto-discovery of parent for a key file,
-> which is nasty to do without the name pre-stored.
+Hi everybody,
 
-Right and TPMT_HA is calculated everytime when a trusted key is
-created, and right after that the already calculated data is simply
-thrown into dumpster. And we are talking about spec compliant way
-to refer other keys here, and only 66 bytes of extra payload.
+I am trying to get a secret sealed once (ZFS encryption key), while being able 
+to unseal it with any key that is properly signed (so that when I recreate a 
+UKI I do not have to reseal but just to calculate the new PCR values). I have 
+played with tpm2-tools across the years, but my knowledge is still quite 
+basic: I do not know even if this is possible.
 
-I don't get it. And neither do I get how anyone would want to fix 
-this issue with TPM2_CreatePrimary interception.
+This is the script I am using:
+########################################################
+#!/bin/bash
+set -eufx
 
-BR, Jarkko
+OUTDIR=/tmp/outdir
+SIGN_HANDLE="0x81010021"
+mkdir -p "${OUTDIR:?}"
+rm -rf "${OUTDIR:?}/*"
+
+#############
+# Step 0: Create signing key
+AUTH_PUB="$OUTDIR/auth.pub"
+AUTH_PRIV="$OUTDIR/auth.priv"
+
+# Create an isolated tmpdir for TPM transient files
+TMPDIR=$(mktemp -d /run/tpm-primary.XXXXXX)
+AUTH_CTX="$TMPDIR/auth.ctx"
+AUTH_PRIMARY_CTX="$TMPDIR/auth_primary.ctx"
+
+# Create a new signing key under a primary key
+tpm2_evictcontrol -Q -C o -c "$SIGN_HANDLE" || true
+tpm2_createprimary -Q -C o -g 'sha256' -G rsa -c "$AUTH_PRIMARY_CTX"
+tpm2_create -Q -C "$AUTH_PRIMARY_CTX" -G rsa -u "$AUTH_PUB" -r "$AUTH_PRIV"
+tpm2_load -Q -C "$AUTH_PRIMARY_CTX" -u "$AUTH_PUB" -r "$AUTH_PRIV" -c 
+"$AUTH_CTX"
+tpm2_evictcontrol -Q -C o -c "$AUTH_CTX" "$SIGN_HANDLE"
+tpm2_flushcontext -t
+
+# Save Name now that is persistent
+tpm2_readpublic -Q -c "$SIGN_HANDLE" -n "$OUTDIR/auth.name"
+rm -rf "$AUTH_PUB" "$TMPDIR"
+
+#############
+# Step 1: Seal secret under authorizedPolicy using policyRef
+TMPDIR=$(mktemp -d /run/tpm-seal.XXXXXX)
+TPM_CTX="$TMPDIR/tpm.ctx"
+AUTHORIZED_POLICY="$TMPDIR/authorized_policy.bin"
+DUMMY_POLICY="$TMPDIR/dummy_policy.bin"
+DUMMY_SIG="$TMPDIR/dummy_policy.sig"
+
+echo "[*] Create a dummy policy and sign it"
+tpm2_startauthsession -Q --policy-session --hash-algorithm 'sha256' -S 
+"$TPM_CTX"
+tpm2_getpolicydigest -Q -S "$TPM_CTX" -o "$DUMMY_POLICY"
+tpm2_flushcontext -Q -s
+tpm2_sign -c "$SIGN_HANDLE" -g 'sha256' -d "$DUMMY_POLICY" -o "$DUMMY_SIG"
+
+echo "[*] Compute authorized policyDigest"
+tpm2_startauthsession -Q -S "$TPM_CTX"
+tpm2_policyauthorize -Q -S "$TPM_CTX" -i "$DUMMY_POLICY" -n "$OUTDIR/
+auth.name" -L "$AUTHORIZED_POLICY" < "$DUMMY_SIG"
+tpm2_flushcontext -Q -s
+
+# Create primary key to seal under, and seal the ZFS key
+echo "[*] Seal the secret"
+tpm2_createprimary -Q -C o -g 'sha256' -G rsa -c "$TPM_CTX"
+tpm2_create -Q -C "$TPM_CTX" -L "$AUTHORIZED_POLICY" -u "$OUTDIR/secret.pub" 
+-r "$OUTDIR/secret.priv" <<< "This is my secret"
+tpm2_flushcontext -t
+rm -rf "$TMPDIR"
+
+#############
+# Generate signature for PCRS
+TMPDIR=$(mktemp -d /run/tpm-pcr-sig.XXXXXX)
+polfile="$TMPDIR/policy.bin"
+
+echo "[*] Create PCRs signature"
+POLICY_HASH=$(tpm2_createpolicy --policy-pcr -l sha256:11 -L "$polfile")
+tpm2_sign -c "$SIGN_HANDLE" -d "$polfile" -o "$OUTDIR/policy-$POLICY_HASH.sig"
+rm -rf "$TMPDIR"
+
+#############
+# validate signature for PCRS
+TMPDIR=$(mktemp -d /run/tpm-unseal.XXXXXX)
+
+POLICY="$TMPDIR/current_policy.bin"
+SESSION_CTX="$TMPDIR/session.ctx"
+PRIMARY_CTX="$TMPDIR/primary.ctx"
+ZFSKEY_CTX="$TMPDIR/zfskey.ctx"
+TICKET="$TMPDIR/verification.tkt"
+
+echo "[*] Get the policy hash"
+POLICY_HASH=$(tpm2_createpolicy --policy-pcr -l sha256:11 -L "$POLICY")
+
+echo "[*] Starting policy session"
+tpm2_startauthsession --policy-session --hash-algorithm sha256 -S 
+"$SESSION_CTX"
+
+echo "[*] Verifying signature"
+tpm2_verifysignature -c "$SIGN_HANDLE" -d "$POLICY" -s "$OUTDIR/policy-
+$POLICY_HASH.sig" -t "$TICKET"
+
+echo "[*] Authorizing policy"
+tpm2_policyauthorize -S "$SESSION_CTX" -i "$POLICY" -n "$OUTDIR/auth.name" -t 
+"$TICKET"
+
+echo "[*] Applying PCR policy"
+tpm2_policypcr -S "$SESSION_CTX" -l sha256:11
+
+echo "[*] Loading sealed object"
+tpm2_createprimary -Q -C o -g sha256 -G rsa -c "$PRIMARY_CTX"
+tpm2_load -Q -C "$PRIMARY_CTX" -u "$OUTDIR/secret.pub" -r "$OUTDIR/
+secret.priv" -c "$ZFSKEY_CTX"
+
+echo "[*] Unsealing ZFS key"
+tpm2_unseal -c "$ZFSKEY_CTX" -p "session:$SESSION_CTX"
+tpm2_flushcontext -Q -s -t
+rm -rf "$TMPDIR"
+
+########################################################
+What am I doing wrong?
+Thank you for any advise you can provide :-) (and happy new year! just in 
+case...)
+
+-- 
+Felix Rubio
+
+
+
