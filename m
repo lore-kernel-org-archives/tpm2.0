@@ -1,152 +1,124 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from gmmr-1.centrum.cz (gmmr-1.centrum.cz [46.255.225.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5DD3CF054
-	for <tpm2@lists.linux.dev>; Wed,  1 Apr 2026 09:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6EA25A2C6
+	for <tpm2@lists.linux.dev>; Sun, 19 Apr 2026 13:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.225.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775035176; cv=none; b=LjrCPqJ+sH311H4r/uCJsJqvZroFT9te6I/k5To+vO1jv5QZJxJ4qel907qKLFdriaeOOuxjzdXqoDqPNBvCkgwnHLuQyjH8xbMgD5kvSBIrvVw9MSrqLFQHu7vY/UNdbH42OzBkBoH5p5Wbv8Dp8W/+w/QloGjjIN+rayb7+1Q=
+	t=1776607112; cv=none; b=p+HPxRq4KJO4sgD6kEQMNpLugW80xJ1QQ6pJB9y9RV1v79JJOcW1ZYREbwJDrtQb/nmyZSYGYcGUcjwnvsmGAw0zr86VP9HEn9hiO/mp4HynCNkWFOGhyplaIPp7lwlly3CCH5j19Uin0hyT9u2NUWEQtweDhproZPBYBE60U2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775035176; c=relaxed/simple;
-	bh=ZnRMjLP9oGXGnHma49x7O6C3I0HkRfcek6cwvwc9qqo=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=Q3hRQjnR5LjYnt/qwbFyqaVzIvAt22f14H8qBny39LOEDzKGjhN2YR3GPGbJb0gUVg2MDLWqgi1Bs+JG1lw+6BMm+SWFS983zDkO3IbegH3ZPA0+F6xZ25x4fYTW6xEkedGKNbRlYLVkFCUH37eRRs+whtszrdpRZk21GbKh0Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=marvin24@gmx.de header.b=oH1iQFAU; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1776607112; c=relaxed/simple;
+	bh=gef2G4hJIGjPbYeb+0oUoro2Xt8LsyQfgHBk82PIZgc=;
+	h=Date:From:Subject:To:References:In-Reply-To:MIME-Version:
+	 Message-Id:Content-Type; b=Bk/IV6Pt69dyA9KRaLc7xikQZL87XZR5a4Xldms6zFM4Jg050jIZPfOh21xnrrCI5Bd/i1+QT5dYyZNptUMCcZQT8c6jQzGJ/S3dPJOw5N6/OdqPORxdaye4G5QLfJXjrf0akiUP2gZ777yE9OmhoVHJMclw7gPc4yQvHUt4TBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=centrum.cz; spf=pass smtp.mailfrom=centrum.cz; dkim=pass (1024-bit key) header.d=centrum.cz header.i=@centrum.cz header.b=KnxUvZUr; arc=none smtp.client-ip=46.255.225.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=centrum.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=centrum.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=marvin24@gmx.de header.b="oH1iQFAU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1775035172; x=1775639972; i=marvin24@gmx.de;
-	bh=bv94LSqpDfAlod+uh4M2fRRZMwjHa5io/ok339Cdlwo=;
-	h=X-UI-Sender-Class:Date:From:To:Subject:Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=oH1iQFAUDHs7Pp2/WCRjEp6GrYEH5oAWYV05OOmcKrIUwt/rg4OkLokNNJx2gdU8
-	 //Q2nymMvW2UunTKkPzdk+gWm0LMG1L1bb6mfC0t8pQkkcQOSd253nf6rSMhgk8ZM
-	 qjJZ/pRu6f9kP/Cl7nTlxbNZT3Bn6Z4CxpyuT3YPGvP8NjrEkkqOk0s1yLLarsL8u
-	 +AYSOp9rHE0xKFffVKKbGxD/kswRwwr8SHsf+zYtIcTWdgOdVs9qXy0HimfzTN8jx
-	 s2dJtxzwXdsLBMY9rTiVmXlnYGZHF5VL3Bx+NEC8DLXZAfdmuTMU7cApt8TWgu4c1
-	 L82/MNa/vClkb2n7Bw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MVeI8-1vxrqy1JCu-00Viex for
- <tpm2@lists.linux.dev>; Wed, 01 Apr 2026 11:19:32 +0200
-Date: Wed, 1 Apr 2026 11:19:31 +0200 (CEST)
-From: Marc Dietrich <marvin24@gmx.de>
-To: tpm2@lists.linux.dev
-Subject: tpm_tis: workqueue: tpm_dev_async_work hogged CPU
-Message-ID: <2b9e7540-5439-1143-8d30-b98a99ec4a7d@gmx.de>
+	dkim=pass (1024-bit key) header.d=centrum.cz header.i=@centrum.cz header.b="KnxUvZUr"
+Received: from gmmr-1.centrum.cz (localhost [127.0.0.1])
+	by gmmr-1.centrum.cz (Postfix) with ESMTP id E2D4623D73
+	for <tpm2@lists.linux.dev>; Sun, 19 Apr 2026 15:56:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=centrum.cz; s=mail;
+	t=1776607000; bh=gef2G4hJIGjPbYeb+0oUoro2Xt8LsyQfgHBk82PIZgc=;
+	h=Date:From:Subject:To:References:In-Reply-To:From;
+	b=KnxUvZUrpoH/WSWVdtcb3QrEdvyspvFny5fLhfPhibO0WEj5sLVjnCciq8tcloxyJ
+	 Th8+r043Kln5UR0Dfq9RqAT5YWgwgK7QgBfu8Y8mHcoQfL52Jg1DFTRXSxx1IL+tvn
+	 G2wQcQv2I3F8cx2vLEaEeHx/9r7nPZlLN1X0IgvE=
+Received: from antispam67.centrum.cz (antispam67.cent [10.30.208.67])
+	by gmmr-1.centrum.cz (Postfix) with ESMTP id E189C424
+	for <tpm2@lists.linux.dev>; Sun, 19 Apr 2026 15:56:40 +0200 (CEST)
+X-CSE-ConnectionGUID: IxeiNNLsQyWtIcg5z9drmg==
+X-CSE-MsgGUID: zU99JQ93TLqmzW4YWIXrxg==
+X-ThreatScanner-Verdict: Negative
+X-IPAS-Result: =?us-ascii?q?A2FBBQD23eRp/83j/y5aglmDSIFqHQFdqSCIeYNUCQYBA?=
+ =?us-ascii?q?QEBAQEBAQEJPRQEAQEDBIIMgnQCjS0oNwYOAQIEAQEBAQMCAwEBAQEBAQEBA?=
+ =?us-ascii?q?QEBCwEBBgEBAQEBAQYGAQKBHYYJRg2CW4EsgSYBAQEBAQEBAQEBAQEBAQEBA?=
+ =?us-ascii?q?QEXAg1+BjpPBUxWBiSCcoI5ATkUuAOBNIEB3HgFgSIfgWoGgU2FcYJKHAEFb?=
+ =?us-ascii?q?oUCAYR6NoFVRIEVhkkCgi2DSIIvBIIigQ6PE4FKHANZLAFVExcLBwWBZgOBB?=
+ =?us-ascii?q?m4yHYEjPhc0WBsHBYFLhl6BE4M5gQwDC209NxQbBItnIoIZgVovlUojkRmCI?=
+ =?us-ascii?q?J8lNAeEH4FeBgyCXoYqgSaIYYxZBEmqagGZBo4JlWAThUUDAYF6ggBNg1tRG?=
+ =?us-ascii?q?Q+SIsMdeD0HAgcOApF1LQWBSwEB?=
+IronPort-PHdr: A9a23:UC/6ZhOmLZXa6i4c5jEl6nYYChdPi9zP1u491JMrhvp0f7i5+Ny6Z
+ QqDvqgr1AeCANiEuroE07OQ7/u8HzRYoN6oizMrTt9lb1c9k8IYnggtUoauKHbQC7rHSRJ/N
+ +l5EGFfwnegLEJOE9z/bVCB6le77DoVBwmtfVEtfre9FYHdldm42P6v8JPPfQpImCC9YbRvJ
+ xmqsAndrMYbjIViJ6or1hfFvnREduRWyG5qIV+YghLw6tut8JJ5/Cldtf0s+9RcXanmeqgzU
+ KBVAikhP20p68LnsgXOQxGS7XUGSGUWlRRIAwnB7B7kW5r6rzX3uOlg1iSEJMP6Vb86Vyyt4
+ KtyVhLmhzoJOyY2/2/LhMNwirlboA+6qBxk34HUeoCVO+Fgca7bYNgXWHBOXsdVVyxGH4O8c
+ 44CBPcPMOpEs4XwoUYFoB2jDgeuGezv0CdFiHH206MnzeohHwPJ0hYvENwNrHvao874NLsQX
+ O270KXE0SnPY+1Q1Dzg6IbIaBchofSUULxqb8XR1VMvHB7EgFWXtYzlIzOV2f4Xs2eG8uFtU
+ vqvhHA7qwFruDSvycAsipXVhoIV0F/E7zh2zZ0pKtKmTk57fcSkEIZVty2AK4R3Q9ovTmd1s
+ yk11rMIo4S0fDQWyJs53R7fbeSKfYiG7B/9VuucLyl1iG95db6jmRq/7Umtx+/4W8SqzVpHo
+ DZJnsfMuH4N1RHd5caKR+dh8kqhxzuCyg/d5/1HLE0yiKHVJZkhwrsqmZoSt0TOBiD2mETqj
+ K+Wa0Ur4fKk5PjgYrXjoJKXKox6ihnmP6khm8GzG/o0PwgOUmSB5+iwyr/u8VfnTLlWjvA6i
+ qrUvZDAKcgGoqO0DRVZ34gs5hqlDTqr39IVlmQdIl1fYhKIlY3pNknLIPD/EPiwnUyhkCxux
+ /DaJr3hBYjNLmTbnLfhY7l970lcxRI8zdBa4pJUEKgNLf3pVkDtqtPYCAM5Mxapw+biEtlyy
+ oIfVXqOAq+fLqzSrUeF6+0uLuWWeoMYuDbwJ+I76/Lwj3I1g0ERcbWp0JcPbXC3BPVmI0GXY
+ Xr2hdcBFH8HvhIgQ+z2kl2OSzFTZ3GuX6Ig5jE0EpimAprYS4+xnrOB2ju7HodLZmBDEFyDD
+ Xbpe52eW/gQcCKSPtNhkjscWLi9U48h0A+iuRT+y7pmNerU5jYYuYjn1Nh04e3TiB4z+SZpA
+ MuDzWGBV2d0kXgQSD8swK9/uVB9ykuE0aVgnvBUDcZT6O1XUgk5L5DR1+N6C9X3WgLbZ9uER
+ 0yqTcm4DjE3UtIx2cIOY0NnF9q+jxHPxzelA7wUl7yOHJE66q3S0HbvKchh13vI0rEtgEQjQ
+ sRVL22pmrZy+RDKCYDRnEuVj72qdbwS3CPV7GmN1HKAsk5AXA5rSaXFU2gQZkvIotT94UPPV
+ 6egB60/PAVOmoa+Lf4edsXs131CRez/I5LaYmSsiyG8CAjelZ2Wa4+/Q2gBxm3yD1QYkwkJ8
+ T7SLQUiHGGupH7CDDV0GXrkbkXw6/R77nipGBxnhzqWZlFsguLmsiUeguaRHqt74w==
+IronPort-Data: A9a23:Gy+4+q7CpRT7z4inlmRU5AxRtHnGchMFZxGqfqrLsTDasY5as4F+v
+ jMZUGHVbPvfYGb8fYt+PNu/8UJTuJOEmNEyS1Zk+Cs0Zn8b8sCt6fZ1j6vT04F+CuWZESqLO
+ u1HMoGowPgcFyGa/lH3dOG49xGQ7InQLpLkEunIJyttcgFtTSYlmHpLlvUw6mJSqYHR7zil5
+ 5Wo+KUzBHf/g2Qqaj5NuvrawP9SlK2aVA0w7wFWic9j4we2e0k9VPo3Oay3Jn3kdYhYdsbSb
+ /rD1ryw4lTC9B4rDN6/+p6jGqHdauO60aCm0xK6aoD66vRwjnVaPpUTaJLwXXxqZwChxLid/
+ v0W7MDtFl15VkH7sL91vxFwS0mSNEDdkVPNCSDXXce7lyUqf5ZwqhnH4Y5f0YAwo45K7W9yG
+ fMwCSAAbzalo/mP0Y2na+Jj29ZyINPuM9ZK0p1g5Wmx4fcOTpXGWeCWo9RV2isqm8UIFuS2i
+ 8gxNWQpNkmdJUcVZRFNUM9WcOSA3xETdxVApU6P46Uw/3TTxRZ9+LPgNsbPZ9nMTtc9ckOw/
+ ziboD2nXkxKXDCZ4Si4oyOOv76UoQfiXZAtSIyH185wkFLGkwT/DzVTDzNXu8KRlla7AfpbK
+ lcI4WwqrK4v5AqnQ8eVYvGjiHGBuwRZB5xbHusm8hyIjKHGi+qEOlU5ovd6QIROnKcLqfYCj
+ zdlQ/uB6eRTjYCo
+IronPort-HdrOrdr: A9a23:lMBtFaxOoplbZ2F4mX4NKrPwLL1zdoMgy1knxilNoHtuA6qlfq
+ GV7ZMmPHDP5Qr5NEtNpTnEAsm9qBDnhPtICPcqTNOftWDd0QPCRr2Kr7GC/9SKIULDH4Bmu5
+ uJpcNFeb/N5CNB/KXH3DU=
+X-Talos-CUID: 9a23:F6WRWW+67NBOV33XyLGVv28EF8EDVFnG9WbvP26zBjt7GbGPTFDFrQ==
+X-Talos-MUID: 9a23:Rk7BSQWlqy/37dHq/C3R1WBADZYz34C3DVIyzaQ5mvmeJSMlbg==
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.23,188,1770591600"; 
+   d="scan'208";a="125716458"
+Received: from gmmr-4.centrum.cz ([46.255.227.205])
+  by antispam67.centrum.cz with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 19 Apr 2026 15:56:40 +0200
+Received: from mail1010.cent (envoy-stl.cent [10.32.56.18])
+	by gmmr-4.centrum.cz (Postfix) with ESMTP id A057E7F45
+	for <tpm2@lists.linux.dev>; Sun, 19 Apr 2026 15:56:40 +0200 (CEST)
+Received: from 85.193.34.74
+	by mail1010.centrum.cz (centrum.cz multimail) with HTTP;
+	Sun, 19 Apr 2026 15:56:40 +0200
+Date: Sun, 19 Apr 2026 15:56:40 +0200
+From: Petr Gotthard <petr.gotthard@centrum.cz>
+Subject: [RELEASE CANDIDATE] tpm2-openssl 1.3.1-rc0
+To: <tpm2@lists.linux.dev>
+References: <20250108223635.6D4AC965@centrum.cz>
+In-Reply-To: <20250108223635.6D4AC965@centrum.cz>
+X-Priority: 3
+X-Original-From: =?utf-8?q?Petr_Gotthard?= <petr.gotthard@centrum.cz>
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
-X-Provags-ID: V03:K1:U19764f6y2lL9k8jTDuLcQ9zD8lwrsAWOdCsz951VN+Y4ho5RC/
- Th79d91pMPkJ2fYLnMEx9qGv3m536nijHOi0/AvozkWUKhQyfTjQd530BXauNsdrgKQtoCk
- icdxomPmnU3pM1xP4yGwi3PdJUA30QcEQ3ilHYOBkkTjZbZyY6UVIVfC+mD6fcgX3Ofw51E
- wq7IMatCjJne4lqldNWNA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:AV4OertU8e0=;lGU2BcfNBDiD2HzTz10FnkhINV9
- 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
- 0wC/4bJ6NqTy0j1X0=
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <20260419155640.BD3BD5A6@centrum.cz>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+Hello,
 
-I'm seeing hogged CPU error during boot. Access to TPM is maybe due to=20
-the decryption of the LUKS key. I have this since I can remember, so also=
-=20
-on current (ubuntu) kernels:
-[    2.194340] workqueue: tpm_dev_async_work hogged CPU for >10000us 4=20
-times, consider switching to WQ_UNBOUND
-[    2.404044] workqueue: tpm_dev_async_work hogged CPU for >10000us 5=20
-times, consider switching to WQ_UNBOUND
-[    2.672315] workqueue: tpm_dev_async_work hogged CPU for >10000us 7=20
-times, consider switching to WQ_UNBOUND
-[    3.601033] workqueue: tpm_dev_async_work hogged CPU for >10000us 11=20
-times, consider switching to WQ_UNBOUND
-[    4.796138] workqueue: tpm_dev_async_work hogged CPU for >10000us 19=20
-times, consider switching to WQ_UNBOUND
-[    7.429240] workqueue: tpm_dev_async_work hogged CPU for >10000us 35=20
-times, consider switching to WQ_UNBOUND
+I would like to announce the release of tpm2-openssl 1.3.1-rc0: https://github.com/tpm2-software/tpm2-openssl/releases/tag/1.3.1-rc0
 
-Is there a way to switch to an unbound workqueue or how can this warning=
-=20
-be prevented?
+This is a bugfix release:
+ - Fixed compatibility with OpenSSL 4.0.
+ - Fixed the ECDSA signature algorithm to omit the parameters field (thanks to @smhmeier).
+ - Fixed cipher padding validation according to PKCS#5/PKCS#7, so zero padding is now rejected (thanks to @hyperfinitism).
+ - Fixed buffer indexing for block ciphers without padding (thanks to @hyperfinitism).
+ - Fixed cleansing of sensitive data upon buffer deallocation and fixed buffer allocator consistency (thanks to @hyperfinitism).
+ - Fixed missing NULL checks and harmless type cast errors in RSA and ECDSA algorithms (thanks to @hyperfinitism).
+ - Fixed semaphore destruction (thanks to @Deadolus).
 
-Best wishes,
-Marc
 
+Kind Regards,
+Petr
