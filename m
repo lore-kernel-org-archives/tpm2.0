@@ -1,473 +1,475 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp11.infineon.com (smtp11.infineon.com [217.10.52.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD4921773D
-	for <tpm2@lists.linux.dev>; Sun, 10 May 2026 08:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778400681; cv=pass; b=EUzXs/JbQ7kSKZz8++W9/0GYG9MpjlZZtjehEokVf1fpkc1qgCcrC+cvPK766MqMY5CRddYX8OEkF5MaN487VYuZGwua3pE9iZlI+qsepU3YIBn9iVEzrA9D0CnnZKCpyHaYg9biB1KtVqU4GrzeUhS7ksU2dXi3LhQ0npUXVsw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778400681; c=relaxed/simple;
-	bh=zr6wkaDQwCZRYK1k6g+DYdmE5Kb4JL4DJJQtXazSJkI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=eIXDV29NygJ+8Tg+z0HEForS0ozg3THkbxxHgQASFjmlfjt+snUX81krqbTfgTUxBXIfXcsP+1NctwMkSGXdU+SjdDqnzrc513oF1QJkdW0qdib0FpMKGKkz9IaT+6A+OTkGcQJQFFDa/6YBhEN0wEhEj74t3TjTSZaexQqqmMs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lLU+SJsT; arc=pass smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90AF18A92F
+	for <tpm2@lists.linux.dev>; Mon, 11 May 2026 13:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.105
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778507232; cv=none; b=ZKy2pT730mjX7/iA04OPk9wVZ9NeoCyxzBxuuNzqNWAQUz7Pxp419j6mrSrCP9HfCEq4SiDn1OylZRYZ2ygdebVo9dvXfVraapedPn1WmfUyDXKa9xDeKZKQHwvAs1in+W3JP5nb3WWse9j7jfGtVGHjw35CaAlWRDLWL8dXed8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778507232; c=relaxed/simple;
+	bh=WAzenZefhLGj3tf2VqiXWr+Z56n/6RX7gSp9E09BjUo=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eqiSuXW5eAUDqNlNsrdO+EAcyZcAgMyY5MqMy2hCTz0LK/wKjfzpyLJTPm4P9d8KtZ3fXE61DX3eIpLem81YFAk1rZUQK5dVKT9ev1Q64ix8bH6wfG/gMTra6xY8R97PgW25HlTOwNcnBFrk1RIN25o+QD2ddFpPpnJf356I6uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=lxGJzDq/; arc=none smtp.client-ip=217.10.52.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=infineon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLU+SJsT"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-67389cf78b0so6004036a12.2
-        for <tpm2@lists.linux.dev>; Sun, 10 May 2026 01:11:19 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778400677; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JlNQBLcXLD7c2gszZv3JYuTnhJXLHihhrPgMhEUrQ+elhMvX7Uar5MVV3Y0HCHMHwh
-         iZhu99HFejIyiYHNZTJ+sr8fenT9e5oEV7CRce173rPtp8vGYo7cpDrdwCcDu0QyIlru
-         MyJJHCZlGJeui7GTbVe60kugfgn4Hf2rbDDU9ZTgBD2C0yC2hD2vZQ4tjOHzrsWlPbMu
-         lVX1ifBIr30HJ/dCaRrm0dH5xs7ziLsXlgbWjHIwhMB2oY7lGnxUE3WNantq1yKF1D+D
-         Cgxksdrr9Jnyq7ENRQj7q4EdGnvMFM+ibOOvoCsWc6sNmjtrLa/vYyiKuit//ii7xZUH
-         zABQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=g7V6ITw8vWs3T1+nYxcgaSUiDzusbnt7ktlUwKaWsjE=;
-        fh=PFK5BRwVnwyxZKyx1wYwmu3IBDeE0v/2V/gDtVcF/48=;
-        b=E5hUlYnoU26FA0/iR5mrsxPbrhLYChogncbGdzsbd20krOsxW5qJ8EUgVAZI4WoSbX
-         IO3x7HOhUdiPvM2rxEX0idxklh0SK2RNaJDxWM02F26ONRCggxKqEsxn/y7m0vxI6S9V
-         uKkYxGIXottnelnC8Jr7U4JR8aCCczaZCjpUB+CDZ9oa71gh9X4+bDU0t251PY8IYSTW
-         aiTvnbKuuOCv5hccoUKKI3MNCTY7rCqQaWECLc8cEMgfpwcIzTgKVTYQeFMavSt32lP7
-         6H9xgfll5HQRjymJq0uIyLdMW2xN2lSi4Y/0c39PrxdMdUEvLAQzMeeWbYYxtGUhC5Jj
-         Hj4Q==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778400677; x=1779005477; darn=lists.linux.dev;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g7V6ITw8vWs3T1+nYxcgaSUiDzusbnt7ktlUwKaWsjE=;
-        b=lLU+SJsTXcntO8c0oAt4A1lfkVR/3SfAkWD7iVMGV0hpuaSQPKILc7BcRc4WF5mWR0
-         /i/YwGuLsTDcRxagTeMNGQC+05JXeubEA7ZH69zY4O6rOrE3i3WmkJDAa6cOKSrCg/hb
-         HLMWwKPlZr4hXUWos4UKlrESGS/uTWFSEXpCe3+MsKDvhCOOCLuu+yZKK5ett29ouKAn
-         0owb5iq8TxN/3X+w+/KAIbnq5IlWzyGXbN3zQc9p3r6Uc91HUdHM4/54YBQry6TztwQq
-         PbRESbbezyMtOfBvr4tVKWSjHO/prvuZxvmrab8FR0dsGGOvhHf/WLvf0qEOBqjpbLIi
-         Ap2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778400677; x=1779005477;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=g7V6ITw8vWs3T1+nYxcgaSUiDzusbnt7ktlUwKaWsjE=;
-        b=j4NcdofYn00TdzETK39SOe8pcb4Lk2mvOf+xapxSbm7JQLZVV3HeLMjubJZVe2L6sG
-         NijdgrMfMt+WZI2jYrJkpslSjkqdGVjHEgj4Y6+RPrw+lwknPQudMF5NpeqVTeXLXU5n
-         2EB1N7z/Gx/xbmaIezxWJVWMjjEhfRFZ9vwFHIL8JNXll041e4RIgG9CyJRkh1nJhevH
-         M7SnRK6kf8/9JkLr5PtoaExECOh/YtbT0KjqI69xnyr6CmG97aS1BYKJXSYJ/34bXdHK
-         3zqmBrZ37nTXZDSfXFudjfH/pJXTydOuU5PJU42w/5BOqbyK754HjsTFuaZ7wE9PFubh
-         MNPQ==
-X-Gm-Message-State: AOJu0YwaTvE78dAlFJYMefmC669rMdjuRCzPnHVuJzDuH4MgekS2B793
-	AIEd0JgNFCqWluj09TeKo9um0BPNo6LE+Ptk8nOCGNIOFePHmluqQu8hZjZxSARN7EDDvQkhsw4
-	JQF1i2rf6ziI2Rrw7/k7qi4VCDlVoLUpLTA==
-X-Gm-Gg: Acq92OGhmHtqLpK+hD8syK+2146V67FfgDp8h5bDV8xQROWoWAHv7PRpzLZw4u4bff9
-	mqvvPqKEaXFrXvvL0uFP2+S1sbCnIGqDwOkbwtcC6Eo89ZvQ+K670xZDb41Xh1GbxSJ5iRo5Bxg
-	zLKo+Y/T38/wGqf8CjxWy5tn2whsgBJZHganCzm/OwNsMaWerE48b+/vSoO2A1CXmVRS2wxJs+a
-	WRwLAPkvdj786zzFq7fQ3PLAQAKVanQqXWSnIjnZQgZWON3Qkuf1xX9D24ZE9gLPEqpln0FaxWM
-	KgxaEuke
-X-Received: by 2002:a17:906:478e:b0:bc9:e1b1:8edf with SMTP id
- a640c23a62f3a-bcaaa54ce58mr533860866b.12.1778400677102; Sun, 10 May 2026
- 01:11:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="lxGJzDq/"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1778507230; x=1810043230;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=WAzenZefhLGj3tf2VqiXWr+Z56n/6RX7gSp9E09BjUo=;
+  b=lxGJzDq/uIb+Y9/56nc+zP9weqR6umuD9z/6YLujOg4XKW9lhAZK/+OT
+   0FiPfaevBBTOwFeoG7Kq4eETmAk0JL9tdgZYzYpZmC/GpnukhDdriCkoU
+   73EXXpP2hbCvvqNKkRhn1RxOYCTzr+0QxxRDSQQhWEgsEFX36jjvUyc6+
+   A=;
+X-CSE-ConnectionGUID: Aeo41LUzS3yFdRfIbiWQQw==
+X-CSE-MsgGUID: bNbv+zDnT+SiVZ7ABOvE3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="142760244"
+X-IronPort-AV: E=Sophos;i="6.23,229,1770591600"; 
+   d="scan'208";a="142760244"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO MUCSE814.infineon.com) ([172.23.29.40])
+  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 15:47:02 +0200
+Received: from MUCSE843.infineon.com (172.23.7.72) by MUCSE814.infineon.com
+ (172.23.29.40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Mon, 11 May
+ 2026 15:47:01 +0200
+Received: from MUCSE843.infineon.com (172.23.7.72) by MUCSE843.infineon.com
+ (172.23.7.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Mon, 11 May
+ 2026 15:47:01 +0200
+Received: from MUCSE843.infineon.com ([fe80::8f59:7f5d:e71c:9fad]) by
+ MUCSE843.infineon.com ([fe80::8f59:7f5d:e71c:9fad%21]) with mapi id
+ 15.02.2562.037; Mon, 11 May 2026 15:47:01 +0200
+From: <Andreas.Fuchs@infineon.com>
+To: <ahendre2010@gmail.com>, <tpm2@lists.linux.dev>,
+	<systemd-devel@lists.freedesktop.org>
+Subject: RE: [RFC] Proposal for Centralized TPM 2.0 Userspace Management
+ Layer: systemd-tpmd
+Thread-Topic: [RFC] Proposal for Centralized TPM 2.0 Userspace Management
+ Layer: systemd-tpmd
+Thread-Index: AQHc4FSYGV43IzJS+0qYY5quG9M/hrYIvvsQ
+Date: Mon, 11 May 2026 13:46:35 +0000
+Deferred-Delivery: Mon, 11 May 2026 13:46:23 +0000
+Message-ID: <1a0ca30ca63e486ca43a66477b5f6f4f@infineon.com>
+References: <CAAGG+4T3qmDg7utUUB+c2Q_mqOJpRcMzGM_RwBxaeyPE3qbgSw@mail.gmail.com>
+ <CAAGG+4T2qRFS7Bn8t_05hyVDzwG-by7Z9zmh1tvkVkcOXDcLNA@mail.gmail.com>
+In-Reply-To: <CAAGG+4T2qRFS7Bn8t_05hyVDzwG-by7Z9zmh1tvkVkcOXDcLNA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAAGG+4T3qmDg7utUUB+c2Q_mqOJpRcMzGM_RwBxaeyPE3qbgSw@mail.gmail.com>
-In-Reply-To: <CAAGG+4T3qmDg7utUUB+c2Q_mqOJpRcMzGM_RwBxaeyPE3qbgSw@mail.gmail.com>
-From: Akshay Hendre <ahendre2010@gmail.com>
-Date: Sun, 10 May 2026 13:41:03 +0530
-X-Gm-Features: AVHnY4JqkOrv_udjKFB4aXsty7EPj9i0DEqxaoje0KLxnBxGB71G80534GTCqiI
-Message-ID: <CAAGG+4T2qRFS7Bn8t_05hyVDzwG-by7Z9zmh1tvkVkcOXDcLNA@mail.gmail.com>
-Subject: Fwd: [RFC] Proposal for Centralized TPM 2.0 Userspace Management
- Layer: systemd-tpmd
-To: tpm2@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-I am cross-posting proposal for [RFC: systemd-tpmd] for the right audience.
-
----------- Forwarded message ---------
-From: Akshay Hendre <ahendre2010@gmail.com>
-Date: Sun, 10 May 2026 at 13:31
-Subject: [RFC] Proposal for Centralized TPM 2.0 Userspace Management
-Layer: systemd-tpmd
-To: <systemd-devel@lists.freedesktop.org>
-
-
-Hello all,
-
-I am submitting a proposal to introduce systemd-tpmd, a centralized
-TPM 2.0 userspace management layer designed to serve as the foundation
-for TPM integration on Linux. This proposal deliberately focuses on
-architectural design in order to reach consensus before diving into
-implementation details.
-
-Table of Contents
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-1. Problem Statement
-2. Proposed Solution: systemd-tpmd Architecture
-   2.1 Boot-Time Provisioning and State Escrow
-   2.2 Application Ecosystem and Architectural Layers
-   2.3 Standard Interaction Sequence
-3. Supported Interaction Paths: Varlink and OpenSSL 3.0
-   3.1 Path A: The OpenSSL 3.0 Provider
-   3.2 Path B: Native Varlink API (io.systemd.Tpm)
-4. System Administration and Managed Environments
-   4.1 State Management and Daemon Recovery
-   4.2 Command Line Integration and Access Control
-5. Security, Sandboxing, and Simulation
-   5.1 Hardened Service Confinement
-   5.2 Simulator Support and Fallback Prevention
-6. Future Capabilities and Solvable Problems
-   6.1 Seamless Firmware Updates (Solving the LUKS / fwupd Lockout)
-   6.2 Standardizing TPM-Backed Passkeys for the Linux Desktop
-   6.3 Stabilizing Continuous Remote Attestation for Fleet Management
-   6.4 Secure SSH Key Protection
-   6.5 Confidential Computing and vTPM State Management
-
-1. Problem Statement
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-While the Linux kernel provides robust low-level multiplexing for the
-Trusted Platform Module via /dev/tpmrm0, the userspace ecosystem
-currently lacks a centralized, stateful broker to manage hardware
-cryptography. To understand these gaps, it is useful to compare the
-Linux landscape with the established Windows paradigm. On Windows,
-hardware cryptography is handled seamlessly via the Cryptography API:
-Next Generation (CNG) and the Platform Crypto Provider (PCP). The
-Windows operating system automatically takes ownership of the TPM
-during boot, securely escrows the owner password, and provides a
-unified, multi-tenant broker for all applications. Developers simply
-request a cryptographic operation, and the OS handles the hardware
-state, context swapping, and security authorizations automatically.
-
-In stark contrast, the Linux ecosystem delegates hardware state
-management and cryptographic session establishment directly to the
-applications themselves. This fragmented approach creates severe
-architectural gaps that impact multiple groups:
-
-* Application Developers: Enhanced System API (ESAPI) and the
-operational fragility of the Feature API (FAPI). While ESAPI requires
-expert-level hardware management=E2=80=94such as manually invoking
-TPM2_CreatePrimary for SRK provisioning=E2=80=94it risks locking out
-applications if the Owner Hierarchy is password-protected. Conversely,
-FAPI simplifies provisioning but introduces a fragile file-based
-keystore (typically /var/lib/tpm2-tss/system/keystore) that frequently
-triggers fatal 0x0006000b (Permission Denied) errors during concurrent
-access.
-* System Administrators: Currently, because there is no centralized
-daemon to automatically provision the TPM and establish a shared
-Storage Root Key (SRK), applications often attempt to create their own
-primary keys directly under the Owner hierarchy. If an administrator
-follows security best practices and password-protects the Owner
-hierarchy, core OS utilities like systemd-cryptenroll immediately fail
-to bind LUKS2 volumes, throwing an 0x000009a2 authorization error.
-Administrators are caught in a paradox: leave the TPM Owner hierarchy
-entirely unprotected, or break system functionality.
-* Managed Enterprise Fleets: In large deployments, the lack of a
-centralized policy broker means that standard software and kernel
-updates alter Platform Configuration Registers (PCRs). This
-arbitrarily breaks fragile local trust chains, locks users out of
-encrypted disks, and causes disruptive false positives in continuous
-remote attestation frameworks.
-
-2. Proposed Solution: systemd-tpmd Architecture
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-systemd-tpmd is proposed as a persistent, stateful userspace
-management layer acting as the absolute foundation for TPM integration
-on Linux. It operates as a highly privileged system daemon sitting
-directly between the in-kernel resource manager and the unprivileged
-application layer, providing unified abstraction and state escrow.
-
-2.1 Boot-Time Provisioning and State Escrow
-------------------------
-Upon initialization, systemd-tpmd evaluates the hardware provisioning
-state. If unprovisioned, it acts based on a configuration parameter
-(e.g., ProvisioningMode=3D):
-* Auto (Default): It automatically takes ownership, generating
-high-entropy cryptographic secrets for the Owner, Endorsement, and
-Lockout hierarchies. It invokes TPM2_CreatePrimary to establish the
-Storage Root Key (SRK) and utilizes TPM2_EvictControl to lock the SRK
-into the TPM's persistent NVRAM at the TCG-standardized handle
-0x81000001. The SRK is instantiated with an empty authorization value,
-allowing the daemon to utilize it as a universal parent for encrypting
-and decrypting application-specific child keys without needing to
-unlock the protected Owner hierarchy.
-* Deferred: To prevent conflicts with enterprise
-infrastructure-as-code or CI/CD pipelines that strictly manage
-deployment states, provisioning can be deferred. In this mode,
-systemd-tpmd will wait for external tooling to trigger the
-provisioning process via an explicit administrative command.
-
-2.2 Application Ecosystem and Architectural Layers
-------------------------
-To ensure broad ecosystem compatibility, systemd-tpmd supports two
-primary interaction paths for applications: a native Varlink API and a
-fully supported OpenSSL 3.0 Provider. The architecture is defined as
-follows:
-
-* Layer 1: Applications (Daemons, web servers, systemd-cryptenroll) -
-Consumers of cryptographic operations. Applications require zero
-knowledge of TPM byte-marshaling and do not require membership in the
-tss group.
-* Layer 2: Interaction Interfaces (Varlink & OpenSSL 3.0) -
-Applications interface with the broker either transparently via
-standard OpenSSL EVP APIs (using the systemd-tpmd OpenSSL provider) or
-directly via plain-text JSON over AF_UNIX sockets (io.systemd.Tpm).
-Both paths provide strict process isolation, ensuring applications
-never possess hardware file descriptors.
-* Layer 3: The Broker (systemd-tpmd) - Stateful engine that securely
-escrows hierarchy passwords, parses incoming requests, enforces
-cgroup/user access controls, and evaluates PCR policies.
-* Layer 4: TCG Stack (tpm2-tss / ESAPI) - Embedded strictly within the
-daemon. Translates high-level requests into TCG-compliant byte streams
-and establishes encrypted HMAC bus sessions.
-* Layer 5: Kernel & HW (/dev/tpmrm0 & Physical TPM) - The Linux kernel
-resource manager that multiplexes the physical, discrete TPM 2.0 chip.
-
-2.3 Standard Interaction Sequence
-------------------------
-Step 1. Request Formulation: An unprivileged application (e.g., a web
-server) needs to sign a TLS handshake. It reads its encrypted
-privateBlob and publicBlob from the standard filesystem.
-Step 2. Transmission: The application issues a signing request either
-through the OpenSSL 3.0 provider or natively via a JSON Varlink
-socket.
-Step 3. Broker Execution: systemd-tpmd receives the request, utilizes
-the public, empty-password SRK to load the encrypted private blob into
-the TPM's volatile memory, and instructs the hardware to sign the
-digest.
-Step 4. Response Delivery: The TPM outputs the signature. systemd-tpmd
-clears the transient context and returns the signature to the
-application via the chosen interface. The application successfully
-utilized the hardware without ever possessing permissions to the TPM
-device node.
-
-3. Supported Interaction Paths: Varlink and OpenSSL 3.0
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-systemd-tpmd provides two robust avenues for application integration,
-ensuring both legacy compatibility and modern, lightweight IPC.
-
-3.1 Path A: The OpenSSL 3.0 Provider
-------------------------
-To guarantee immediate, seamless integration for the vast majority of
-the Linux ecosystem (including web servers, VPN daemons, and SSH
-agents), systemd-tpmd ships with a dedicated OpenSSL 3.0 provider
-module.
-* Transparent Execution: When configured in openssl.cnf, applications
-utilizing standard OpenSSL EVP APIs will have their cryptographic
-operations transparently intercepted by the provider.
-* Stateless Routing: The OpenSSL provider acts as a lightweight
-client, packaging the OpenSSL memory buffers into Varlink payloads and
-routing them to the systemd-tpmd daemon.
-* Zero-Code Changes: Existing C/C++, Rust, and Python applications
-relying on OpenSSL can leverage TPM hardware-backed keys with minimal
-changes to application code.
-
-3.2 Path B: Native Varlink API (io.systemd.Tpm)
-------------------------
-For applications desiring to communicate directly with the broker
-without an OpenSSL dependency (such as early-boot utilities and
-systemd native tools), systemd-tpmd exposes a Varlink interface
-utilizing JSON over AF_UNIX sockets.
-
-The methods exposed under the io.systemd.Tpm interface include:
-* GenerateKey: Generates a new asymmetric key pair or symmetric secret
-bound to the TPM. Outputs the encrypted marshaled structures for local
-application storage.
-* SignData: Loads the provided key blobs into the TPM using the SRK
-and signs the provided digest.
-* VerifySignature: Verifies a cryptographic signature against a given
-digest utilizing the public blob.
-* SealSecret: Seals a plaintext secret into the TPM, optionally
-binding it to the current state of specific PCRs.
-* UnsealSecret: Unseals a previously sealed secret from the TPM,
-returning the plaintext only if the PCR states match.
-
-Because the API relies on Varlink, native developers can utilize
-libsystemd's sd-varlink.h to request cryptographic operations
-synchronously:
-
-#include <stdio.h>
-#include <systemd/sd-varlink.h>
-#include <systemd/sd-json.h>
-
-int tpm_sign_payload(const char *priv_blob, const char *pub_blob,
-const char *digest) {
-    sd_varlink *link =3D NULL;
-    sd_json_variant *args =3D NULL;
-    sd_json_variant *reply =3D NULL;
-    /* 1. Connect to the systemd-tpmd Varlink socket */
-    sd_varlink_connect_url(&link, "unix:/run/systemd/tpmd/io.systemd.Tpm");
-    /* 2. Build JSON arguments */
-    sd_json_buildo(&args,
-        SD_JSON_BUILD_PAIR("privateBlob", SD_JSON_BUILD_STRING(priv_blob)),
-        SD_JSON_BUILD_PAIR("publicBlob", SD_JSON_BUILD_STRING(pub_blob)),
-        SD_JSON_BUILD_PAIR("digest", SD_JSON_BUILD_STRING(digest))
-    );
-    /* 3. Execute the Varlink call synchronously */
-    sd_varlink_call(link, "io.systemd.Tpm.SignData", args, &reply, NULL);
-    /* Cleanup */
-    return 0;
-}
-
-4. System Administration and Managed Environments
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-4.1 State Management and Daemon Recovery
-------------------------
-Because systemd-tpmd acts as a stateful userspace layer managing
-active ESAPI encrypted HMAC sessions and escrowed passwords, a daemon
-crash must not disrupt continuous remote attestation workflows or
-trigger hardware lockouts. To defend against state loss, systemd-tpmd
-utilizes the Linux Kernel Key Retention Service. Upon successful
-provisioning, the highly sensitive Owner, Endorsement, and Lockout
-passwords are securely injected into the kernel keyring and isolated
-via KeyringMode=3Dprivate within the systemd service unit. If the daemon
-restarts, it queries the kernel keyring to seamlessly to re-establish
-its authentication contexts and session states without requiring user
-intervention or causing DA lockouts.
-
-4.2 Command Line Integration and Access Control
-------------------------
-Administration integrates directly into systemctl via a new top-level tpm v=
-erb:
-* systemctl tpm status: Reports hardware capabilities and the presence
-of the SRK.
-* systemctl tpm clear: Securely wipes the TPM and rotates the locally
-escrowed hierarchy passwords.
-* systemctl tpm reset-lockout: Submits the escrowed Owner password to
-clear the DA lockout counter.
-
-State-altering operations are strictly governed by polkit (PolicyKit).
-systemd-tpmd will query polkit to ensure that only authenticated
-administrators or enterprise management agents can mutate the physical
-hardware's ownership state. Unprivileged users are physically
-prevented from clearing the TPM or triggering anti-hammering lockouts.
-
-5. Security, Sandboxing, and Simulation
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-5.1 Hardened Service Confinement
-------------------------
-systemd-tpmd leverages systemd's native sandboxing directives to
-enforce the principle of least privilege. The unit file
-(systemd-tpmd.service) incorporates:
-* DynamicUser=3Dyes: Generates a dynamic, unprivileged user for the
-execution context.
-* CapabilityBoundingSet=3D: Drops all Linux capabilities except those
-strictly required for hardware communication.
-* DeviceAllow=3D/dev/tpmrm0 rw: Strictly limits hardware access to the
-kernel resource manager.
-* NoNewPrivileges=3Dyes: Prevents privilege escalation via execve.
-
-5.2 Simulator Support and Fallback Prevention
-------------------------
-To support robust CI/CD and developer testing without wearing out
-physical NVRAM, systemd-tpmd natively supports software emulators like
-swtpm. Through a systemd drop-in configuration (e.g., using systemctl
-edit systemd-tpmd), a developer can dynamically route the daemon's
-transport layer away from /dev/tpmrm0 to a local software simulator.
-However, falling back to a software emulator in a production
-environment breaks the hardware root of trust.
-
-Enforcement of this strict boundary relies on system administrators
-utilizing systemd's native unit file configurations and the underlying
-Linux kernel security modules (cgroups, namespaces, and Mandatory
-Access Controls like AppArmor or SELinux). Administrators enforce
-these protections by defining sandbox directives within the
-/etc/systemd/system/systemd-tpmd.service file:
-* Device Whitelisting (cgroups): The unit enforces
-DeviceAllow=3D/dev/tpmrm0 rw. When systemd loads the service, it
-configures the kernel's cgroup device controller to explicitly block
-access to any other device. This guarantees the daemon is blocked from
-interacting with virtual character devices like /dev/vtpmx used by
-CUSE-based emulators.
-* Network Sandboxing (namespaces): By applying
-RestrictAddressFamilies=3DAF_UNIX (which permits local Varlink sockets
-but entirely disables TCP/IP networking namespaces), systemd instructs
-the kernel to physically block the daemon from opening outbound
-network connections to a remote or local swtpm TCP port.
-
-Because these rules are enforced by systemd (acting as PID 1) and the
-Linux kernel itself, even a compromised systemd-tpmd process cannot
-bypass them. These policies guarantee the daemon will fatally error
-out rather than silently falling back to a compromised simulator in
-live deployments.
-
-6. Future Capabilities and Solvable Problems
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-By establishing systemd-tpmd as a persistent, centralized root of
-trust in userspace, several long-standing ecosystem challenges beyond
-basic cryptography can be elegantly resolved.
-
-6.1 Seamless Firmware Updates (Solving the LUKS / fwupd Lockout)
-------------------------
-Currently, binding LUKS disk encryption to Platform Configuration
-Registers creates severe system fragility. When an administrator
-updates the system firmware using fwupd, the PCR 7 measurement
-changes, which permanently breaks the LUKS unlocking policy and locks
-the user out. systemd-tpmd will resolve this by leveraging
-TPM2_PolicyAuthorize. Instead of binding disk encryption to static PCR
-values, the disk is bound to a cryptographic ticket signed by
-systemd-tpmd. When fwupd schedules an update, it can communicate its
-intent via Varlink. systemd-tpmd can automatically generate a new
-authorized policy for the incoming firmware state, ensuring the disk
-unseals smoothly after the reboot.
-
-6.2 Standardizing TPM-Backed Passkeys for the Linux Desktop
-------------------------
-The Linux desktop currently lacks a unified, hardware-backed API for
-modern WebAuthn/FIDO2 passkeys. systemd-tpmd could serve as the
-foundational backend for projects like credentialsd. By deriving keys
-from the TPM's primary seed and encrypting the credential blobs,
-systemd-tpmd would allow browsers to store highly secure,
-phishing-resistant passkeys that never leave the hardware in
-plaintext.
-
-6.3 Stabilizing Continuous Remote Attestation for Fleet Management
-------------------------
-In enterprise deployments, continuous remote attestation agents (such
-as Keylime) are used to cryptographically prove to a central server
-that a machine's Linux Integrity Measurement Architecture (IMA) log
-has not been compromised. However, these agents frequently suffer from
-false alerts and access conflicts when querying the TPM simultaneously
-with other system updates. By acting as the sole orchestrator,
-systemd-tpmd could safely broker attestation quotes and IMA
-measurements, ensuring that fleet management tools operate reliably
-without resource contention on the /dev/tpmrm0 node.
-
-6.4 Secure SSH Key Protection
-------------------------
-SSH private keys stored in local files are highly vulnerable to theft
-by malware. While the TPM can mitigate this by generating and securing
-the keys in hardware, configuring this currently requires end-users to
-manage complex PKCS#11 libraries (like tpm2-pkcs11) and manipulate
-paths. With systemd-tpmd, SSH agents could be rewritten to simply pass
-signing payloads via Varlink, natively protecting SSH access across
-the entire Linux ecosystem with zero configuration required from the
-user. Alternatively, they can leverage the OpenSSL 3.0 provider
-natively.
-
-6.5 Confidential Computing and vTPM State Management
-------------------------
-In cloud environments leveraging AMD SEV-SNP or Intel TDX for
-Confidential Computing, virtual TPMs (vTPMs) are injected into the
-guest to provide measured boot guarantees. systemd-tpmd can easily
-standardize the management of these virtual TPMs from inside the guest
-OS. Because the daemon abstracts the underlying hardware, it can
-interface with a cloud provider's vTPM exactly as it would a physical
-chip, automatically provisioning it and simplifying the deployment of
-Confidential Virtual Machines (CVMs) without requiring cloud-specific
-user space tooling.
-
-Thanks for your time and efforts reading into thie proposal. Any
-thoughts, critiques, or architectural feedback are highly appreciated.
-
-Best Regards,
-Akshay Hendre
+SGkgQWtzaGF5LA0KDQpmaXJzdCBvZiBhbGwsIGxldCBtZSBzYXkgdGhhdCBJIGFtIHZlcnkgaGFw
+cHkgdG8gc2VlIHN1Y2ggaW50ZXJlc3QgaW4gbWFraW5nIHRoZSBUUE0gdXNhYmxlIHRocm91Z2hv
+dXQgTGludXguDQpUaGlzIGhhcyBhbHNvIGJlZW4gdGhlIG1haW4gZHJpdmVyIGZvciBtZSB0byBn
+ZXQgdXMgZ29pbmcuDQpOb3cgb24gdG8gc29tZSBvZiB5b3VyIHBvaW50czoNCg0KTWFpbiBtb3Rp
+dmF0aW9uOg0KSSB3b3VsZCBsb3ZlIHRvIHNlZSBmaXhlcyBmb3Igc2hvcnQgY29taW5ncyB5b3Ug
+c2VlIHRvIGJlIGluY2x1ZGVkIGluIHRoZSBleGlzdGluZyB0cG0yLXRzcyBtb2R1bGVzDQppbnN0
+ZWFkIG9mIGludHJvZHVjaW5nIHlldCBhbm90aGVyIEFQSSB0byB0aGUgZWNvIHN5c3RlbSBhbmQg
+dWx0aW1hdGVseSBsZWFkaW5nIHRvIG1vcmUgZnJhZ21lbnRhdGlvbg0KYW5kIGNvbmZ1c2lvbiBm
+b3IgZW5kIHVzZXJzLg0KDQpGQVBJIGtleXN0b3JlOg0KSSBrbm93IHRoYXQgdGhlIGZpbGUtYmFz
+ZWQgc3RvcmFnZSBvZiBrZXkgKG1ldGEpIGRhdGEgY2FuIGJlIGEgYml0IHByb2JsZW1hdGljIGF0
+IHRpbWVzLg0KSG9uZXN0bHksIGl0IHdhcyBhIHJlc3RyaWN0aW9uIGludHJvZHVjZWQgYnkgdGlt
+ZSBhIHJlc291cmNlIGF2YWlsYWJpbGl0eS4NCkknZCBsb3ZlIHRvIHNlZSBhbHRlcm5hdGl2ZSBp
+bXBsZW1lbnRhdGlvbnMgdGhhdCBjb3VsZCBiZSBiYXNlZCBvbiBhIHN5c3RlbSBzZXJ2aWNlIG9y
+IG90aGVyIG1lYW5zLg0KSSdkIGFsc28gbG92ZSB0byBzZWUgYW4gaW1wbGVtZW50YXRpb24gdGhh
+dCBydW5zIG9uIHdpbmRvd3MuDQpXZSBkbyBoYXZlIGFuIGludGVybmFsIGFic3RyYWN0aW9uIGZv
+ciB0aGUga2V5c3RvcmUgaW4gRkFQSSBhbmQgSSdkIGludml0ZSB5b3UgdG8gcGxlYXNlIGNvbnRy
+aWJ1dGUgd2l0aA0KYWx0ZXJuYXRpdmUgaW1wbGVtZW50YXRpb25zIGhlcmUuDQpUaGlzIGNvdWxk
+IHZlcnkgbXVjaCBhbHNvIGluY2x1ZGUgVkFSTElOSyBvciBEQnVzIGJhc2VkIGNvbW11bmljYXRp
+b24gdG8gYSBrZXlzdG9yZSBzZXJ2aWNlLg0KDQpMYW5ndWFnZSBhZ25vc3RpY2l0eToNCldlIGFs
+cmVhZHkgaGF2ZSBiaW5kaW5ncyBmb3IgUHl0aG9uIGFuZCBSdXN0IGJlc2lkZXMgdGhlIGV4aXN0
+aW5nIEMgaW1wbGVtZW50YXRpb24uDQpXZSBhbHNvIGhhdmUgYSBkbG9wZW4tYmFzZWQgQVBJIGZv
+ciBwcml2YXRlIGluY2x1c2lvbi4NCklmIHRoZXJlIGFyZSBtYWpvciB1c2VycyBiZXlvbmQgdGhl
+c2UgbGFuZ3VhZ2VzLCBJJ2QgcHJvcG9zYWwgdG8gbGV0J3MgYWRkIG1vcmUgYmluZGluZ3MuDQoN
+Ck9wZW5TU0w6DQpUaGVyZSBhbHJlYWR5IGV4aXN0cyB0aGUgdHBtMi1vcGVuc3NsIHByb3ZpZGVy
+IHRoYXQgYmFzaWNhbGx5IGRvZXMgd2hhdCB5b3UgZW52aXNpb24uDQpJJ2QgbG92ZSB0byBzZWUg
+dGhpcyBiZWluZyBleHRlbmRlZCB0byB1c2luZyBGQVBJIGtleXN0b3JlIGFzIHdlbGwgYXMgdGhl
+IEZBUEkgcG9saWN5IGxhbmd1YWdlDQpjYXBhYmlsaXRpZXMuDQpTbyB0aGUgdXNlIGNhc2UgeW91
+IG9mZmVyIHNlZW1zIHRvIGFscmVhZHkgYmUgaW1wbGVtZW50ZWQgaGVyZS4NCklmIG5vdCBwbGVh
+c2UgbGV0IHVzIGtub3cgdGhlIHNwZWNpZmljIHNob3J0Y29taW5ncyB5b3Ugc2VlIGhlcmUuDQoN
+CkFQSSAodHBtX3NpZ25fcGF5bG9hZCk6DQpUaGlzIGxvb2tzIHZlcnkgdmVyeSBzaW1pbGFyIHRv
+IHRoZSBGYXBpX1NpZ24oKSBmdW5jdGlvbmFsaXR5Lg0KQ29taW5nIGJhY2sgdG8gbXkgZmlyc3Qg
+cG9pbnQgaGVyZSwgSU1ITyB3ZSBhcmUgYWxyZWFkeSBjbG9zZSB0byB3aGF0IHlvdSB3YW50IGFu
+ZCBJJ2QNCmxvdmUgdG8gaGVhciBhYm91dCBzcGVjaWZpYyBzaG9ydGNvbWluZ3MgYW5kIHRoZW4g
+dG8gc2VlIHRoZW0gYmVpbmcgYWRkcmVzc2VkIGluIHRoZSB0cG0yLXRzcw0KRkFQSSBtb2R1bGUg
+aXRzZWxmLCBpbnN0ZWFkIG9mIGNyZWF0aW5nIGEgbmV3ICJjb21wZXRpbmciIHNlcnZpY2UgaW1w
+bGVtZW50YXRpb24uDQoNCkJvb3QtdGltZSBwcm92aXNpb25pbmc6DQpUaGlzIGlzIGEgdG91Z2gg
+b25lLiBXZSd2ZSB0aG91Z2ggaGFyZCBhYm91dCBhZGRpbmcgYXV0b21hdGVkIHByb3Zpc2lvbmlu
+ZyBidXQgZGVjaWRlZCB0bw0KcG9zdHBvbmUgaXQgdW50aWwgdGhlIHVzZXIgY2FsbHMgRmFwaV9Q
+cm92aXNpb24oKSBpLmUuIHRzczJfcHJvdmlzaW9uLg0KVGhpcyBhbGxvd3MgY29uZmlndXJhdGlv
+biBvZiBwcmVmZXJyZWQgY3J5cHRvIHByb2ZpbGUgYW5kIG90aGVyIHRoaW5ncy4NCkFsc28gc2lu
+Y2UgcHJvdmlzaW9uaW5nIHJlcXVpcmVzIHVzZXIgaW50ZXJhY3Rpb24gZm9yIHBhc3N3b3JkIHNl
+dHRpbmcsIHdlIGRpZCBub3Qga25vdyBob3cNCnRvIGRvIGl0IGRpZmZlcmVudGx5Lg0KVGhhdCBi
+ZWluZyBzYWlkLCBJIGNvdWxkIHRvdGFsbHkgc2VlIHRoaXMgYmVpbmcgaW50ZWdyYXRpb24gImJl
+dHRlciIgd2l0aCBhIEdVSSBvciBzaW1pbGFyIG9yIGluc2lkZSB0aGUNCmRpc3RybyBpbnN0YWxs
+ZXJzLg0KDQpBdHRlc3RhdGlvbiBhbmQgc3VjaDoNCkhlcmUgd2Ugc3RpbGwgaGF2ZSB0aGUgYmln
+Z2VzdCBzaG9ydGNvbWluZy4gVGhlcmUgYXJlIGF0dGVtcHRzIGhlcmUgYW5kIHRoZXJlIGJ1dCB0
+aGUgYmlnIHByb2JsZW0NCmhhcyBhbHdheXMgYmVlbiB0aGUgZ2VuZXJhdGlvbiBvZiByZWZlcmVu
+Y2UgdmFsdWVzIGFuZCB0aGUgYXNzZXNzbWVudCBvZiBRdW90ZXMuDQpUaGUgRmFwaV9RdW90ZSBj
+b21tYW5kIGFscmVhZHkgZ2l2ZXMgeW91IHRoZSBzeXN0ZW0gc3RhdGUgd2l0aCBhbGwgaXRzIGxv
+Z3MsIGJ1dCB3ZSBuZWVkIG5ldHdvcmsNCnByb3RvY29scyBhbmQgdGhlbiBzcGVjaWZpY2FsbHkg
+YSBiYWNrZW5kIHNlcnZpY2UgZm9yIGFzc2Vzc2luZyB0aGUgRXZlbnQgbG9ncy4gVGhpcyBpcyB3
+aGVyZSB0aGUNCmJpZyB3b3JrIGxpdmVzLg0KDQpBbGwgdGhhdCBiZWluZyBzYWlkLCBJIGFtIHZl
+cnkgb3BlbiB0byBnZXR0aW5nIHN0dWZmIGludG8gdHBtMi10c3MgaW4gb3JkZXIgdG8gZmFjaWxp
+dGF0ZSBtb3JlIHVzZSBjYXNlcy4NCg0KTWF5YmUgd2UgY2FuIGhhdmUgc2VwYXJhdGUgZGlzY3Vz
+c2lvbnMgZm9yIHNvbWUgb2YgeW91ciBzaG9ydCBjb21pbmdzIGFuZCBnZXQgYSBiaXQgbW9yZSBp
+bnRvDQpkZXB0aCBvbiBlYWNoIG9mIHRoZXNlLg0KDQpMb29raW5nIGZvcndhcmQgdG8gbW9yZSBk
+aXNjdXNzaW9ucyBvbiB0aGlzIHRvcGljLg0KDQpDaGVlcnMsDQpBbmRyZWFzDQoNCg0KLS0tLS1P
+cmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFrc2hheSBIZW5kcmUgPGFoZW5kcmUyMDEwQGdt
+YWlsLmNvbT4gDQpTZW50OiBTb25udGFnLCAxMC4gTWFpIDIwMjYgMTA6MTENClRvOiB0cG0yQGxp
+c3RzLmxpbnV4LmRldg0KU3ViamVjdDogRndkOiBbUkZDXSBQcm9wb3NhbCBmb3IgQ2VudHJhbGl6
+ZWQgVFBNIDIuMCBVc2Vyc3BhY2UgTWFuYWdlbWVudCBMYXllcjogc3lzdGVtZC10cG1kDQoNCkNh
+dXRpb246IFRoaXMgZS1tYWlsIG9yaWdpbmF0ZWQgb3V0c2lkZSBJbmZpbmVvbiBUZWNobm9sb2dp
+ZXMuIFBsZWFzZSBiZSBjYXV0aW91cyB3aGVuIHNoYXJpbmcgaW5mb3JtYXRpb24gb3Igb3Blbmlu
+ZyBhdHRhY2htZW50cyBlc3BlY2lhbGx5IGZyb20gdW5rbm93biBzZW5kZXJzLiBSZWZlciB0byBv
+dXIgaW50cmFuZXQgZ3VpZGU8aHR0cHM6Ly9pbnRyYW5ldC1jb250ZW50LmluZmluZW9uLmNvbS9l
+eHBsb3JlL2Fib3V0aW5maW5lb24vcnVsZXMvaW5mb3JtYXRpb25zZWN1cml0eS91Zy9Tb2NpYWxF
+bmdpbmVlcmluZy9QYWdlcy9Tb2NpYWxFbmdpbmVlcmluZ0VsZW1lbnRzX2VuLmFzcHg+IHRvIGhl
+bHAgeW91IGlkZW50aWZ5IFBoaXNoaW5nIGVtYWlsLg0KDQoNCg0KSSBhbSBjcm9zcy1wb3N0aW5n
+IHByb3Bvc2FsIGZvciBbUkZDOiBzeXN0ZW1kLXRwbWRdIGZvciB0aGUgcmlnaHQgYXVkaWVuY2Uu
+DQoNCi0tLS0tLS0tLS0gRm9yd2FyZGVkIG1lc3NhZ2UgLS0tLS0tLS0tDQpGcm9tOiBBa3NoYXkg
+SGVuZHJlIDxhaGVuZHJlMjAxMEBnbWFpbC5jb20+DQpEYXRlOiBTdW4sIDEwIE1heSAyMDI2IGF0
+IDEzOjMxDQpTdWJqZWN0OiBbUkZDXSBQcm9wb3NhbCBmb3IgQ2VudHJhbGl6ZWQgVFBNIDIuMCBV
+c2Vyc3BhY2UgTWFuYWdlbWVudA0KTGF5ZXI6IHN5c3RlbWQtdHBtZA0KVG86IDxzeXN0ZW1kLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZz4NCg0KDQpIZWxsbyBhbGwsDQoNCkkgYW0gc3VibWl0
+dGluZyBhIHByb3Bvc2FsIHRvIGludHJvZHVjZSBzeXN0ZW1kLXRwbWQsIGEgY2VudHJhbGl6ZWQg
+VFBNIDIuMCB1c2Vyc3BhY2UgbWFuYWdlbWVudCBsYXllciBkZXNpZ25lZCB0byBzZXJ2ZSBhcyB0
+aGUgZm91bmRhdGlvbiBmb3IgVFBNIGludGVncmF0aW9uIG9uIExpbnV4LiBUaGlzIHByb3Bvc2Fs
+IGRlbGliZXJhdGVseSBmb2N1c2VzIG9uIGFyY2hpdGVjdHVyYWwgZGVzaWduIGluIG9yZGVyIHRv
+IHJlYWNoIGNvbnNlbnN1cyBiZWZvcmUgZGl2aW5nIGludG8gaW1wbGVtZW50YXRpb24gZGV0YWls
+cy4NCg0KVGFibGUgb2YgQ29udGVudHMNCj09PT09PT09PT09PT09PT09PT09PT09PQ0KMS4gUHJv
+YmxlbSBTdGF0ZW1lbnQNCjIuIFByb3Bvc2VkIFNvbHV0aW9uOiBzeXN0ZW1kLXRwbWQgQXJjaGl0
+ZWN0dXJlDQogICAyLjEgQm9vdC1UaW1lIFByb3Zpc2lvbmluZyBhbmQgU3RhdGUgRXNjcm93DQog
+ICAyLjIgQXBwbGljYXRpb24gRWNvc3lzdGVtIGFuZCBBcmNoaXRlY3R1cmFsIExheWVycw0KICAg
+Mi4zIFN0YW5kYXJkIEludGVyYWN0aW9uIFNlcXVlbmNlDQozLiBTdXBwb3J0ZWQgSW50ZXJhY3Rp
+b24gUGF0aHM6IFZhcmxpbmsgYW5kIE9wZW5TU0wgMy4wDQogICAzLjEgUGF0aCBBOiBUaGUgT3Bl
+blNTTCAzLjAgUHJvdmlkZXINCiAgIDMuMiBQYXRoIEI6IE5hdGl2ZSBWYXJsaW5rIEFQSSAoaW8u
+c3lzdGVtZC5UcG0pIDQuIFN5c3RlbSBBZG1pbmlzdHJhdGlvbiBhbmQgTWFuYWdlZCBFbnZpcm9u
+bWVudHMNCiAgIDQuMSBTdGF0ZSBNYW5hZ2VtZW50IGFuZCBEYWVtb24gUmVjb3ZlcnkNCiAgIDQu
+MiBDb21tYW5kIExpbmUgSW50ZWdyYXRpb24gYW5kIEFjY2VzcyBDb250cm9sIDUuIFNlY3VyaXR5
+LCBTYW5kYm94aW5nLCBhbmQgU2ltdWxhdGlvbg0KICAgNS4xIEhhcmRlbmVkIFNlcnZpY2UgQ29u
+ZmluZW1lbnQNCiAgIDUuMiBTaW11bGF0b3IgU3VwcG9ydCBhbmQgRmFsbGJhY2sgUHJldmVudGlv
+biA2LiBGdXR1cmUgQ2FwYWJpbGl0aWVzIGFuZCBTb2x2YWJsZSBQcm9ibGVtcw0KICAgNi4xIFNl
+YW1sZXNzIEZpcm13YXJlIFVwZGF0ZXMgKFNvbHZpbmcgdGhlIExVS1MgLyBmd3VwZCBMb2Nrb3V0
+KQ0KICAgNi4yIFN0YW5kYXJkaXppbmcgVFBNLUJhY2tlZCBQYXNza2V5cyBmb3IgdGhlIExpbnV4
+IERlc2t0b3ANCiAgIDYuMyBTdGFiaWxpemluZyBDb250aW51b3VzIFJlbW90ZSBBdHRlc3RhdGlv
+biBmb3IgRmxlZXQgTWFuYWdlbWVudA0KICAgNi40IFNlY3VyZSBTU0ggS2V5IFByb3RlY3Rpb24N
+CiAgIDYuNSBDb25maWRlbnRpYWwgQ29tcHV0aW5nIGFuZCB2VFBNIFN0YXRlIE1hbmFnZW1lbnQN
+Cg0KMS4gUHJvYmxlbSBTdGF0ZW1lbnQNCj09PT09PT09PT09PT09PT09PT09PT09PQ0KV2hpbGUg
+dGhlIExpbnV4IGtlcm5lbCBwcm92aWRlcyByb2J1c3QgbG93LWxldmVsIG11bHRpcGxleGluZyBm
+b3IgdGhlIFRydXN0ZWQgUGxhdGZvcm0gTW9kdWxlIHZpYSAvZGV2L3RwbXJtMCwgdGhlIHVzZXJz
+cGFjZSBlY29zeXN0ZW0gY3VycmVudGx5IGxhY2tzIGEgY2VudHJhbGl6ZWQsIHN0YXRlZnVsIGJy
+b2tlciB0byBtYW5hZ2UgaGFyZHdhcmUgY3J5cHRvZ3JhcGh5LiBUbyB1bmRlcnN0YW5kIHRoZXNl
+IGdhcHMsIGl0IGlzIHVzZWZ1bCB0byBjb21wYXJlIHRoZSBMaW51eCBsYW5kc2NhcGUgd2l0aCB0
+aGUgZXN0YWJsaXNoZWQgV2luZG93cyBwYXJhZGlnbS4gT24gV2luZG93cywgaGFyZHdhcmUgY3J5
+cHRvZ3JhcGh5IGlzIGhhbmRsZWQgc2VhbWxlc3NseSB2aWEgdGhlIENyeXB0b2dyYXBoeSBBUEk6
+DQpOZXh0IEdlbmVyYXRpb24gKENORykgYW5kIHRoZSBQbGF0Zm9ybSBDcnlwdG8gUHJvdmlkZXIg
+KFBDUCkuIFRoZSBXaW5kb3dzIG9wZXJhdGluZyBzeXN0ZW0gYXV0b21hdGljYWxseSB0YWtlcyBv
+d25lcnNoaXAgb2YgdGhlIFRQTSBkdXJpbmcgYm9vdCwgc2VjdXJlbHkgZXNjcm93cyB0aGUgb3du
+ZXIgcGFzc3dvcmQsIGFuZCBwcm92aWRlcyBhIHVuaWZpZWQsIG11bHRpLXRlbmFudCBicm9rZXIg
+Zm9yIGFsbCBhcHBsaWNhdGlvbnMuIERldmVsb3BlcnMgc2ltcGx5IHJlcXVlc3QgYSBjcnlwdG9n
+cmFwaGljIG9wZXJhdGlvbiwgYW5kIHRoZSBPUyBoYW5kbGVzIHRoZSBoYXJkd2FyZSBzdGF0ZSwg
+Y29udGV4dCBzd2FwcGluZywgYW5kIHNlY3VyaXR5IGF1dGhvcml6YXRpb25zIGF1dG9tYXRpY2Fs
+bHkuDQoNCkluIHN0YXJrIGNvbnRyYXN0LCB0aGUgTGludXggZWNvc3lzdGVtIGRlbGVnYXRlcyBo
+YXJkd2FyZSBzdGF0ZSBtYW5hZ2VtZW50IGFuZCBjcnlwdG9ncmFwaGljIHNlc3Npb24gZXN0YWJs
+aXNobWVudCBkaXJlY3RseSB0byB0aGUgYXBwbGljYXRpb25zIHRoZW1zZWx2ZXMuIFRoaXMgZnJh
+Z21lbnRlZCBhcHByb2FjaCBjcmVhdGVzIHNldmVyZSBhcmNoaXRlY3R1cmFsIGdhcHMgdGhhdCBp
+bXBhY3QgbXVsdGlwbGUgZ3JvdXBzOg0KDQoqIEFwcGxpY2F0aW9uIERldmVsb3BlcnM6IEVuaGFu
+Y2VkIFN5c3RlbSBBUEkgKEVTQVBJKSBhbmQgdGhlIG9wZXJhdGlvbmFsIGZyYWdpbGl0eSBvZiB0
+aGUgRmVhdHVyZSBBUEkgKEZBUEkpLiBXaGlsZSBFU0FQSSByZXF1aXJlcyBleHBlcnQtbGV2ZWwg
+aGFyZHdhcmUgbWFuYWdlbWVudOKAlHN1Y2ggYXMgbWFudWFsbHkgaW52b2tpbmcgVFBNMl9DcmVh
+dGVQcmltYXJ5IGZvciBTUksgcHJvdmlzaW9uaW5n4oCUaXQgcmlza3MgbG9ja2luZyBvdXQgYXBw
+bGljYXRpb25zIGlmIHRoZSBPd25lciBIaWVyYXJjaHkgaXMgcGFzc3dvcmQtcHJvdGVjdGVkLiBD
+b252ZXJzZWx5LCBGQVBJIHNpbXBsaWZpZXMgcHJvdmlzaW9uaW5nIGJ1dCBpbnRyb2R1Y2VzIGEg
+ZnJhZ2lsZSBmaWxlLWJhc2VkIGtleXN0b3JlICh0eXBpY2FsbHkgL3Zhci9saWIvdHBtMi10c3Mv
+c3lzdGVtL2tleXN0b3JlKSB0aGF0IGZyZXF1ZW50bHkgdHJpZ2dlcnMgZmF0YWwgMHgwMDA2MDAw
+YiAoUGVybWlzc2lvbiBEZW5pZWQpIGVycm9ycyBkdXJpbmcgY29uY3VycmVudCBhY2Nlc3MuDQoq
+IFN5c3RlbSBBZG1pbmlzdHJhdG9yczogQ3VycmVudGx5LCBiZWNhdXNlIHRoZXJlIGlzIG5vIGNl
+bnRyYWxpemVkIGRhZW1vbiB0byBhdXRvbWF0aWNhbGx5IHByb3Zpc2lvbiB0aGUgVFBNIGFuZCBl
+c3RhYmxpc2ggYSBzaGFyZWQgU3RvcmFnZSBSb290IEtleSAoU1JLKSwgYXBwbGljYXRpb25zIG9m
+dGVuIGF0dGVtcHQgdG8gY3JlYXRlIHRoZWlyIG93biBwcmltYXJ5IGtleXMgZGlyZWN0bHkgdW5k
+ZXIgdGhlIE93bmVyIGhpZXJhcmNoeS4gSWYgYW4gYWRtaW5pc3RyYXRvciBmb2xsb3dzIHNlY3Vy
+aXR5IGJlc3QgcHJhY3RpY2VzIGFuZCBwYXNzd29yZC1wcm90ZWN0cyB0aGUgT3duZXIgaGllcmFy
+Y2h5LCBjb3JlIE9TIHV0aWxpdGllcyBsaWtlIHN5c3RlbWQtY3J5cHRlbnJvbGwgaW1tZWRpYXRl
+bHkgZmFpbCB0byBiaW5kIExVS1MyIHZvbHVtZXMsIHRocm93aW5nIGFuIDB4MDAwMDA5YTIgYXV0
+aG9yaXphdGlvbiBlcnJvci4NCkFkbWluaXN0cmF0b3JzIGFyZSBjYXVnaHQgaW4gYSBwYXJhZG94
+OiBsZWF2ZSB0aGUgVFBNIE93bmVyIGhpZXJhcmNoeSBlbnRpcmVseSB1bnByb3RlY3RlZCwgb3Ig
+YnJlYWsgc3lzdGVtIGZ1bmN0aW9uYWxpdHkuDQoqIE1hbmFnZWQgRW50ZXJwcmlzZSBGbGVldHM6
+IEluIGxhcmdlIGRlcGxveW1lbnRzLCB0aGUgbGFjayBvZiBhIGNlbnRyYWxpemVkIHBvbGljeSBi
+cm9rZXIgbWVhbnMgdGhhdCBzdGFuZGFyZCBzb2Z0d2FyZSBhbmQga2VybmVsIHVwZGF0ZXMgYWx0
+ZXIgUGxhdGZvcm0gQ29uZmlndXJhdGlvbiBSZWdpc3RlcnMgKFBDUnMpLiBUaGlzIGFyYml0cmFy
+aWx5IGJyZWFrcyBmcmFnaWxlIGxvY2FsIHRydXN0IGNoYWlucywgbG9ja3MgdXNlcnMgb3V0IG9m
+IGVuY3J5cHRlZCBkaXNrcywgYW5kIGNhdXNlcyBkaXNydXB0aXZlIGZhbHNlIHBvc2l0aXZlcyBp
+biBjb250aW51b3VzIHJlbW90ZSBhdHRlc3RhdGlvbiBmcmFtZXdvcmtzLg0KDQoyLiBQcm9wb3Nl
+ZCBTb2x1dGlvbjogc3lzdGVtZC10cG1kIEFyY2hpdGVjdHVyZSA9PT09PT09PT09PT09PT09PT09
+PT09PT0gc3lzdGVtZC10cG1kIGlzIHByb3Bvc2VkIGFzIGEgcGVyc2lzdGVudCwgc3RhdGVmdWwg
+dXNlcnNwYWNlIG1hbmFnZW1lbnQgbGF5ZXIgYWN0aW5nIGFzIHRoZSBhYnNvbHV0ZSBmb3VuZGF0
+aW9uIGZvciBUUE0gaW50ZWdyYXRpb24gb24gTGludXguIEl0IG9wZXJhdGVzIGFzIGEgaGlnaGx5
+IHByaXZpbGVnZWQgc3lzdGVtIGRhZW1vbiBzaXR0aW5nIGRpcmVjdGx5IGJldHdlZW4gdGhlIGlu
+LWtlcm5lbCByZXNvdXJjZSBtYW5hZ2VyIGFuZCB0aGUgdW5wcml2aWxlZ2VkIGFwcGxpY2F0aW9u
+IGxheWVyLCBwcm92aWRpbmcgdW5pZmllZCBhYnN0cmFjdGlvbiBhbmQgc3RhdGUgZXNjcm93Lg0K
+DQoyLjEgQm9vdC1UaW1lIFByb3Zpc2lvbmluZyBhbmQgU3RhdGUgRXNjcm93DQotLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0NClVwb24gaW5pdGlhbGl6YXRpb24sIHN5c3RlbWQtdHBtZCBldmFsdWF0
+ZXMgdGhlIGhhcmR3YXJlIHByb3Zpc2lvbmluZyBzdGF0ZS4gSWYgdW5wcm92aXNpb25lZCwgaXQg
+YWN0cyBiYXNlZCBvbiBhIGNvbmZpZ3VyYXRpb24gcGFyYW1ldGVyIChlLmcuLCBQcm92aXNpb25p
+bmdNb2RlPSk6DQoqIEF1dG8gKERlZmF1bHQpOiBJdCBhdXRvbWF0aWNhbGx5IHRha2VzIG93bmVy
+c2hpcCwgZ2VuZXJhdGluZyBoaWdoLWVudHJvcHkgY3J5cHRvZ3JhcGhpYyBzZWNyZXRzIGZvciB0
+aGUgT3duZXIsIEVuZG9yc2VtZW50LCBhbmQgTG9ja291dCBoaWVyYXJjaGllcy4gSXQgaW52b2tl
+cyBUUE0yX0NyZWF0ZVByaW1hcnkgdG8gZXN0YWJsaXNoIHRoZSBTdG9yYWdlIFJvb3QgS2V5IChT
+UkspIGFuZCB1dGlsaXplcyBUUE0yX0V2aWN0Q29udHJvbCB0byBsb2NrIHRoZSBTUksgaW50byB0
+aGUgVFBNJ3MgcGVyc2lzdGVudCBOVlJBTSBhdCB0aGUgVENHLXN0YW5kYXJkaXplZCBoYW5kbGUg
+MHg4MTAwMDAwMS4gVGhlIFNSSyBpcyBpbnN0YW50aWF0ZWQgd2l0aCBhbiBlbXB0eSBhdXRob3Jp
+emF0aW9uIHZhbHVlLCBhbGxvd2luZyB0aGUgZGFlbW9uIHRvIHV0aWxpemUgaXQgYXMgYSB1bml2
+ZXJzYWwgcGFyZW50IGZvciBlbmNyeXB0aW5nIGFuZCBkZWNyeXB0aW5nIGFwcGxpY2F0aW9uLXNw
+ZWNpZmljIGNoaWxkIGtleXMgd2l0aG91dCBuZWVkaW5nIHRvIHVubG9jayB0aGUgcHJvdGVjdGVk
+IE93bmVyIGhpZXJhcmNoeS4NCiogRGVmZXJyZWQ6IFRvIHByZXZlbnQgY29uZmxpY3RzIHdpdGgg
+ZW50ZXJwcmlzZSBpbmZyYXN0cnVjdHVyZS1hcy1jb2RlIG9yIENJL0NEIHBpcGVsaW5lcyB0aGF0
+IHN0cmljdGx5IG1hbmFnZSBkZXBsb3ltZW50IHN0YXRlcywgcHJvdmlzaW9uaW5nIGNhbiBiZSBk
+ZWZlcnJlZC4gSW4gdGhpcyBtb2RlLCBzeXN0ZW1kLXRwbWQgd2lsbCB3YWl0IGZvciBleHRlcm5h
+bCB0b29saW5nIHRvIHRyaWdnZXIgdGhlIHByb3Zpc2lvbmluZyBwcm9jZXNzIHZpYSBhbiBleHBs
+aWNpdCBhZG1pbmlzdHJhdGl2ZSBjb21tYW5kLg0KDQoyLjIgQXBwbGljYXRpb24gRWNvc3lzdGVt
+IGFuZCBBcmNoaXRlY3R1cmFsIExheWVycw0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpUbyBl
+bnN1cmUgYnJvYWQgZWNvc3lzdGVtIGNvbXBhdGliaWxpdHksIHN5c3RlbWQtdHBtZCBzdXBwb3J0
+cyB0d28gcHJpbWFyeSBpbnRlcmFjdGlvbiBwYXRocyBmb3IgYXBwbGljYXRpb25zOiBhIG5hdGl2
+ZSBWYXJsaW5rIEFQSSBhbmQgYSBmdWxseSBzdXBwb3J0ZWQgT3BlblNTTCAzLjAgUHJvdmlkZXIu
+IFRoZSBhcmNoaXRlY3R1cmUgaXMgZGVmaW5lZCBhcw0KZm9sbG93czoNCg0KKiBMYXllciAxOiBB
+cHBsaWNhdGlvbnMgKERhZW1vbnMsIHdlYiBzZXJ2ZXJzLCBzeXN0ZW1kLWNyeXB0ZW5yb2xsKSAt
+IENvbnN1bWVycyBvZiBjcnlwdG9ncmFwaGljIG9wZXJhdGlvbnMuIEFwcGxpY2F0aW9ucyByZXF1
+aXJlIHplcm8ga25vd2xlZGdlIG9mIFRQTSBieXRlLW1hcnNoYWxpbmcgYW5kIGRvIG5vdCByZXF1
+aXJlIG1lbWJlcnNoaXAgaW4gdGhlIHRzcyBncm91cC4NCiogTGF5ZXIgMjogSW50ZXJhY3Rpb24g
+SW50ZXJmYWNlcyAoVmFybGluayAmIE9wZW5TU0wgMy4wKSAtIEFwcGxpY2F0aW9ucyBpbnRlcmZh
+Y2Ugd2l0aCB0aGUgYnJva2VyIGVpdGhlciB0cmFuc3BhcmVudGx5IHZpYSBzdGFuZGFyZCBPcGVu
+U1NMIEVWUCBBUElzICh1c2luZyB0aGUgc3lzdGVtZC10cG1kIE9wZW5TU0wgcHJvdmlkZXIpIG9y
+IGRpcmVjdGx5IHZpYSBwbGFpbi10ZXh0IEpTT04gb3ZlciBBRl9VTklYIHNvY2tldHMgKGlvLnN5
+c3RlbWQuVHBtKS4NCkJvdGggcGF0aHMgcHJvdmlkZSBzdHJpY3QgcHJvY2VzcyBpc29sYXRpb24s
+IGVuc3VyaW5nIGFwcGxpY2F0aW9ucyBuZXZlciBwb3NzZXNzIGhhcmR3YXJlIGZpbGUgZGVzY3Jp
+cHRvcnMuDQoqIExheWVyIDM6IFRoZSBCcm9rZXIgKHN5c3RlbWQtdHBtZCkgLSBTdGF0ZWZ1bCBl
+bmdpbmUgdGhhdCBzZWN1cmVseSBlc2Nyb3dzIGhpZXJhcmNoeSBwYXNzd29yZHMsIHBhcnNlcyBp
+bmNvbWluZyByZXF1ZXN0cywgZW5mb3JjZXMgY2dyb3VwL3VzZXIgYWNjZXNzIGNvbnRyb2xzLCBh
+bmQgZXZhbHVhdGVzIFBDUiBwb2xpY2llcy4NCiogTGF5ZXIgNDogVENHIFN0YWNrICh0cG0yLXRz
+cyAvIEVTQVBJKSAtIEVtYmVkZGVkIHN0cmljdGx5IHdpdGhpbiB0aGUgZGFlbW9uLiBUcmFuc2xh
+dGVzIGhpZ2gtbGV2ZWwgcmVxdWVzdHMgaW50byBUQ0ctY29tcGxpYW50IGJ5dGUgc3RyZWFtcyBh
+bmQgZXN0YWJsaXNoZXMgZW5jcnlwdGVkIEhNQUMgYnVzIHNlc3Npb25zLg0KKiBMYXllciA1OiBL
+ZXJuZWwgJiBIVyAoL2Rldi90cG1ybTAgJiBQaHlzaWNhbCBUUE0pIC0gVGhlIExpbnV4IGtlcm5l
+bCByZXNvdXJjZSBtYW5hZ2VyIHRoYXQgbXVsdGlwbGV4ZXMgdGhlIHBoeXNpY2FsLCBkaXNjcmV0
+ZSBUUE0gMi4wIGNoaXAuDQoNCjIuMyBTdGFuZGFyZCBJbnRlcmFjdGlvbiBTZXF1ZW5jZQ0KLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpTdGVwIDEuIFJlcXVlc3QgRm9ybXVsYXRpb246IEFuIHVu
+cHJpdmlsZWdlZCBhcHBsaWNhdGlvbiAoZS5nLiwgYSB3ZWINCnNlcnZlcikgbmVlZHMgdG8gc2ln
+biBhIFRMUyBoYW5kc2hha2UuIEl0IHJlYWRzIGl0cyBlbmNyeXB0ZWQgcHJpdmF0ZUJsb2IgYW5k
+IHB1YmxpY0Jsb2IgZnJvbSB0aGUgc3RhbmRhcmQgZmlsZXN5c3RlbS4NClN0ZXAgMi4gVHJhbnNt
+aXNzaW9uOiBUaGUgYXBwbGljYXRpb24gaXNzdWVzIGEgc2lnbmluZyByZXF1ZXN0IGVpdGhlciB0
+aHJvdWdoIHRoZSBPcGVuU1NMIDMuMCBwcm92aWRlciBvciBuYXRpdmVseSB2aWEgYSBKU09OIFZh
+cmxpbmsgc29ja2V0Lg0KU3RlcCAzLiBCcm9rZXIgRXhlY3V0aW9uOiBzeXN0ZW1kLXRwbWQgcmVj
+ZWl2ZXMgdGhlIHJlcXVlc3QsIHV0aWxpemVzIHRoZSBwdWJsaWMsIGVtcHR5LXBhc3N3b3JkIFNS
+SyB0byBsb2FkIHRoZSBlbmNyeXB0ZWQgcHJpdmF0ZSBibG9iIGludG8gdGhlIFRQTSdzIHZvbGF0
+aWxlIG1lbW9yeSwgYW5kIGluc3RydWN0cyB0aGUgaGFyZHdhcmUgdG8gc2lnbiB0aGUgZGlnZXN0
+Lg0KU3RlcCA0LiBSZXNwb25zZSBEZWxpdmVyeTogVGhlIFRQTSBvdXRwdXRzIHRoZSBzaWduYXR1
+cmUuIHN5c3RlbWQtdHBtZCBjbGVhcnMgdGhlIHRyYW5zaWVudCBjb250ZXh0IGFuZCByZXR1cm5z
+IHRoZSBzaWduYXR1cmUgdG8gdGhlIGFwcGxpY2F0aW9uIHZpYSB0aGUgY2hvc2VuIGludGVyZmFj
+ZS4gVGhlIGFwcGxpY2F0aW9uIHN1Y2Nlc3NmdWxseSB1dGlsaXplZCB0aGUgaGFyZHdhcmUgd2l0
+aG91dCBldmVyIHBvc3Nlc3NpbmcgcGVybWlzc2lvbnMgdG8gdGhlIFRQTSBkZXZpY2Ugbm9kZS4N
+Cg0KMy4gU3VwcG9ydGVkIEludGVyYWN0aW9uIFBhdGhzOiBWYXJsaW5rIGFuZCBPcGVuU1NMIDMu
+MCA9PT09PT09PT09PT09PT09PT09PT09PT0gc3lzdGVtZC10cG1kIHByb3ZpZGVzIHR3byByb2J1
+c3QgYXZlbnVlcyBmb3IgYXBwbGljYXRpb24gaW50ZWdyYXRpb24sIGVuc3VyaW5nIGJvdGggbGVn
+YWN5IGNvbXBhdGliaWxpdHkgYW5kIG1vZGVybiwgbGlnaHR3ZWlnaHQgSVBDLg0KDQozLjEgUGF0
+aCBBOiBUaGUgT3BlblNTTCAzLjAgUHJvdmlkZXINCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
+VG8gZ3VhcmFudGVlIGltbWVkaWF0ZSwgc2VhbWxlc3MgaW50ZWdyYXRpb24gZm9yIHRoZSB2YXN0
+IG1ham9yaXR5IG9mIHRoZSBMaW51eCBlY29zeXN0ZW0gKGluY2x1ZGluZyB3ZWIgc2VydmVycywg
+VlBOIGRhZW1vbnMsIGFuZCBTU0ggYWdlbnRzKSwgc3lzdGVtZC10cG1kIHNoaXBzIHdpdGggYSBk
+ZWRpY2F0ZWQgT3BlblNTTCAzLjAgcHJvdmlkZXIgbW9kdWxlLg0KKiBUcmFuc3BhcmVudCBFeGVj
+dXRpb246IFdoZW4gY29uZmlndXJlZCBpbiBvcGVuc3NsLmNuZiwgYXBwbGljYXRpb25zIHV0aWxp
+emluZyBzdGFuZGFyZCBPcGVuU1NMIEVWUCBBUElzIHdpbGwgaGF2ZSB0aGVpciBjcnlwdG9ncmFw
+aGljIG9wZXJhdGlvbnMgdHJhbnNwYXJlbnRseSBpbnRlcmNlcHRlZCBieSB0aGUgcHJvdmlkZXIu
+DQoqIFN0YXRlbGVzcyBSb3V0aW5nOiBUaGUgT3BlblNTTCBwcm92aWRlciBhY3RzIGFzIGEgbGln
+aHR3ZWlnaHQgY2xpZW50LCBwYWNrYWdpbmcgdGhlIE9wZW5TU0wgbWVtb3J5IGJ1ZmZlcnMgaW50
+byBWYXJsaW5rIHBheWxvYWRzIGFuZCByb3V0aW5nIHRoZW0gdG8gdGhlIHN5c3RlbWQtdHBtZCBk
+YWVtb24uDQoqIFplcm8tQ29kZSBDaGFuZ2VzOiBFeGlzdGluZyBDL0MrKywgUnVzdCwgYW5kIFB5
+dGhvbiBhcHBsaWNhdGlvbnMgcmVseWluZyBvbiBPcGVuU1NMIGNhbiBsZXZlcmFnZSBUUE0gaGFy
+ZHdhcmUtYmFja2VkIGtleXMgd2l0aCBtaW5pbWFsIGNoYW5nZXMgdG8gYXBwbGljYXRpb24gY29k
+ZS4NCg0KMy4yIFBhdGggQjogTmF0aXZlIFZhcmxpbmsgQVBJIChpby5zeXN0ZW1kLlRwbSkNCi0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KRm9yIGFwcGxpY2F0aW9ucyBkZXNpcmluZyB0byBjb21t
+dW5pY2F0ZSBkaXJlY3RseSB3aXRoIHRoZSBicm9rZXIgd2l0aG91dCBhbiBPcGVuU1NMIGRlcGVu
+ZGVuY3kgKHN1Y2ggYXMgZWFybHktYm9vdCB1dGlsaXRpZXMgYW5kIHN5c3RlbWQgbmF0aXZlIHRv
+b2xzKSwgc3lzdGVtZC10cG1kIGV4cG9zZXMgYSBWYXJsaW5rIGludGVyZmFjZSB1dGlsaXppbmcg
+SlNPTiBvdmVyIEFGX1VOSVggc29ja2V0cy4NCg0KVGhlIG1ldGhvZHMgZXhwb3NlZCB1bmRlciB0
+aGUgaW8uc3lzdGVtZC5UcG0gaW50ZXJmYWNlIGluY2x1ZGU6DQoqIEdlbmVyYXRlS2V5OiBHZW5l
+cmF0ZXMgYSBuZXcgYXN5bW1ldHJpYyBrZXkgcGFpciBvciBzeW1tZXRyaWMgc2VjcmV0IGJvdW5k
+IHRvIHRoZSBUUE0uIE91dHB1dHMgdGhlIGVuY3J5cHRlZCBtYXJzaGFsZWQgc3RydWN0dXJlcyBm
+b3IgbG9jYWwgYXBwbGljYXRpb24gc3RvcmFnZS4NCiogU2lnbkRhdGE6IExvYWRzIHRoZSBwcm92
+aWRlZCBrZXkgYmxvYnMgaW50byB0aGUgVFBNIHVzaW5nIHRoZSBTUksgYW5kIHNpZ25zIHRoZSBw
+cm92aWRlZCBkaWdlc3QuDQoqIFZlcmlmeVNpZ25hdHVyZTogVmVyaWZpZXMgYSBjcnlwdG9ncmFw
+aGljIHNpZ25hdHVyZSBhZ2FpbnN0IGEgZ2l2ZW4gZGlnZXN0IHV0aWxpemluZyB0aGUgcHVibGlj
+IGJsb2IuDQoqIFNlYWxTZWNyZXQ6IFNlYWxzIGEgcGxhaW50ZXh0IHNlY3JldCBpbnRvIHRoZSBU
+UE0sIG9wdGlvbmFsbHkgYmluZGluZyBpdCB0byB0aGUgY3VycmVudCBzdGF0ZSBvZiBzcGVjaWZp
+YyBQQ1JzLg0KKiBVbnNlYWxTZWNyZXQ6IFVuc2VhbHMgYSBwcmV2aW91c2x5IHNlYWxlZCBzZWNy
+ZXQgZnJvbSB0aGUgVFBNLCByZXR1cm5pbmcgdGhlIHBsYWludGV4dCBvbmx5IGlmIHRoZSBQQ1Ig
+c3RhdGVzIG1hdGNoLg0KDQpCZWNhdXNlIHRoZSBBUEkgcmVsaWVzIG9uIFZhcmxpbmssIG5hdGl2
+ZSBkZXZlbG9wZXJzIGNhbiB1dGlsaXplIGxpYnN5c3RlbWQncyBzZC12YXJsaW5rLmggdG8gcmVx
+dWVzdCBjcnlwdG9ncmFwaGljIG9wZXJhdGlvbnMNCnN5bmNocm9ub3VzbHk6DQoNCiNpbmNsdWRl
+IDxzdGRpby5oPg0KI2luY2x1ZGUgPHN5c3RlbWQvc2QtdmFybGluay5oPg0KI2luY2x1ZGUgPHN5
+c3RlbWQvc2QtanNvbi5oPg0KDQppbnQgdHBtX3NpZ25fcGF5bG9hZChjb25zdCBjaGFyICpwcml2
+X2Jsb2IsIGNvbnN0IGNoYXIgKnB1Yl9ibG9iLCBjb25zdCBjaGFyICpkaWdlc3QpIHsNCiAgICBz
+ZF92YXJsaW5rICpsaW5rID0gTlVMTDsNCiAgICBzZF9qc29uX3ZhcmlhbnQgKmFyZ3MgPSBOVUxM
+Ow0KICAgIHNkX2pzb25fdmFyaWFudCAqcmVwbHkgPSBOVUxMOw0KICAgIC8qIDEuIENvbm5lY3Qg
+dG8gdGhlIHN5c3RlbWQtdHBtZCBWYXJsaW5rIHNvY2tldCAqLw0KICAgIHNkX3ZhcmxpbmtfY29u
+bmVjdF91cmwoJmxpbmssICJ1bml4Oi9ydW4vc3lzdGVtZC90cG1kL2lvLnN5c3RlbWQuVHBtIik7
+DQogICAgLyogMi4gQnVpbGQgSlNPTiBhcmd1bWVudHMgKi8NCiAgICBzZF9qc29uX2J1aWxkbygm
+YXJncywNCiAgICAgICAgU0RfSlNPTl9CVUlMRF9QQUlSKCJwcml2YXRlQmxvYiIsIFNEX0pTT05f
+QlVJTERfU1RSSU5HKHByaXZfYmxvYikpLA0KICAgICAgICBTRF9KU09OX0JVSUxEX1BBSVIoInB1
+YmxpY0Jsb2IiLCBTRF9KU09OX0JVSUxEX1NUUklORyhwdWJfYmxvYikpLA0KICAgICAgICBTRF9K
+U09OX0JVSUxEX1BBSVIoImRpZ2VzdCIsIFNEX0pTT05fQlVJTERfU1RSSU5HKGRpZ2VzdCkpDQog
+ICAgKTsNCiAgICAvKiAzLiBFeGVjdXRlIHRoZSBWYXJsaW5rIGNhbGwgc3luY2hyb25vdXNseSAq
+Lw0KICAgIHNkX3ZhcmxpbmtfY2FsbChsaW5rLCAiaW8uc3lzdGVtZC5UcG0uU2lnbkRhdGEiLCBh
+cmdzLCAmcmVwbHksIE5VTEwpOw0KICAgIC8qIENsZWFudXAgKi8NCiAgICByZXR1cm4gMDsNCn0N
+Cg0KNC4gU3lzdGVtIEFkbWluaXN0cmF0aW9uIGFuZCBNYW5hZ2VkIEVudmlyb25tZW50cyA9PT09
+PT09PT09PT09PT09PT09PT09PT0NCjQuMSBTdGF0ZSBNYW5hZ2VtZW50IGFuZCBEYWVtb24gUmVj
+b3ZlcnkNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KQmVjYXVzZSBzeXN0ZW1kLXRwbWQgYWN0
+cyBhcyBhIHN0YXRlZnVsIHVzZXJzcGFjZSBsYXllciBtYW5hZ2luZyBhY3RpdmUgRVNBUEkgZW5j
+cnlwdGVkIEhNQUMgc2Vzc2lvbnMgYW5kIGVzY3Jvd2VkIHBhc3N3b3JkcywgYSBkYWVtb24gY3Jh
+c2ggbXVzdCBub3QgZGlzcnVwdCBjb250aW51b3VzIHJlbW90ZSBhdHRlc3RhdGlvbiB3b3JrZmxv
+d3Mgb3IgdHJpZ2dlciBoYXJkd2FyZSBsb2Nrb3V0cy4gVG8gZGVmZW5kIGFnYWluc3Qgc3RhdGUg
+bG9zcywgc3lzdGVtZC10cG1kIHV0aWxpemVzIHRoZSBMaW51eCBLZXJuZWwgS2V5IFJldGVudGlv
+biBTZXJ2aWNlLiBVcG9uIHN1Y2Nlc3NmdWwgcHJvdmlzaW9uaW5nLCB0aGUgaGlnaGx5IHNlbnNp
+dGl2ZSBPd25lciwgRW5kb3JzZW1lbnQsIGFuZCBMb2Nrb3V0IHBhc3N3b3JkcyBhcmUgc2VjdXJl
+bHkgaW5qZWN0ZWQgaW50byB0aGUga2VybmVsIGtleXJpbmcgYW5kIGlzb2xhdGVkIHZpYSBLZXly
+aW5nTW9kZT1wcml2YXRlIHdpdGhpbiB0aGUgc3lzdGVtZCBzZXJ2aWNlIHVuaXQuIElmIHRoZSBk
+YWVtb24gcmVzdGFydHMsIGl0IHF1ZXJpZXMgdGhlIGtlcm5lbCBrZXlyaW5nIHRvIHNlYW1sZXNz
+bHkgdG8gcmUtZXN0YWJsaXNoIGl0cyBhdXRoZW50aWNhdGlvbiBjb250ZXh0cyBhbmQgc2Vzc2lv
+biBzdGF0ZXMgd2l0aG91dCByZXF1aXJpbmcgdXNlciBpbnRlcnZlbnRpb24gb3IgY2F1c2luZyBE
+QSBsb2Nrb3V0cy4NCg0KNC4yIENvbW1hbmQgTGluZSBJbnRlZ3JhdGlvbiBhbmQgQWNjZXNzIENv
+bnRyb2wNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KQWRtaW5pc3RyYXRpb24gaW50ZWdyYXRl
+cyBkaXJlY3RseSBpbnRvIHN5c3RlbWN0bCB2aWEgYSBuZXcgdG9wLWxldmVsIHRwbSB2ZXJiOg0K
+KiBzeXN0ZW1jdGwgdHBtIHN0YXR1czogUmVwb3J0cyBoYXJkd2FyZSBjYXBhYmlsaXRpZXMgYW5k
+IHRoZSBwcmVzZW5jZSBvZiB0aGUgU1JLLg0KKiBzeXN0ZW1jdGwgdHBtIGNsZWFyOiBTZWN1cmVs
+eSB3aXBlcyB0aGUgVFBNIGFuZCByb3RhdGVzIHRoZSBsb2NhbGx5IGVzY3Jvd2VkIGhpZXJhcmNo
+eSBwYXNzd29yZHMuDQoqIHN5c3RlbWN0bCB0cG0gcmVzZXQtbG9ja291dDogU3VibWl0cyB0aGUg
+ZXNjcm93ZWQgT3duZXIgcGFzc3dvcmQgdG8gY2xlYXIgdGhlIERBIGxvY2tvdXQgY291bnRlci4N
+Cg0KU3RhdGUtYWx0ZXJpbmcgb3BlcmF0aW9ucyBhcmUgc3RyaWN0bHkgZ292ZXJuZWQgYnkgcG9s
+a2l0IChQb2xpY3lLaXQpLg0Kc3lzdGVtZC10cG1kIHdpbGwgcXVlcnkgcG9sa2l0IHRvIGVuc3Vy
+ZSB0aGF0IG9ubHkgYXV0aGVudGljYXRlZCBhZG1pbmlzdHJhdG9ycyBvciBlbnRlcnByaXNlIG1h
+bmFnZW1lbnQgYWdlbnRzIGNhbiBtdXRhdGUgdGhlIHBoeXNpY2FsIGhhcmR3YXJlJ3Mgb3duZXJz
+aGlwIHN0YXRlLiBVbnByaXZpbGVnZWQgdXNlcnMgYXJlIHBoeXNpY2FsbHkgcHJldmVudGVkIGZy
+b20gY2xlYXJpbmcgdGhlIFRQTSBvciB0cmlnZ2VyaW5nIGFudGktaGFtbWVyaW5nIGxvY2tvdXRz
+Lg0KDQo1LiBTZWN1cml0eSwgU2FuZGJveGluZywgYW5kIFNpbXVsYXRpb24NCj09PT09PT09PT09
+PT09PT09PT09PT09PQ0KNS4xIEhhcmRlbmVkIFNlcnZpY2UgQ29uZmluZW1lbnQNCi0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLQ0Kc3lzdGVtZC10cG1kIGxldmVyYWdlcyBzeXN0ZW1kJ3MgbmF0aXZl
+IHNhbmRib3hpbmcgZGlyZWN0aXZlcyB0byBlbmZvcmNlIHRoZSBwcmluY2lwbGUgb2YgbGVhc3Qg
+cHJpdmlsZWdlLiBUaGUgdW5pdCBmaWxlDQooc3lzdGVtZC10cG1kLnNlcnZpY2UpIGluY29ycG9y
+YXRlczoNCiogRHluYW1pY1VzZXI9eWVzOiBHZW5lcmF0ZXMgYSBkeW5hbWljLCB1bnByaXZpbGVn
+ZWQgdXNlciBmb3IgdGhlIGV4ZWN1dGlvbiBjb250ZXh0Lg0KKiBDYXBhYmlsaXR5Qm91bmRpbmdT
+ZXQ9OiBEcm9wcyBhbGwgTGludXggY2FwYWJpbGl0aWVzIGV4Y2VwdCB0aG9zZSBzdHJpY3RseSBy
+ZXF1aXJlZCBmb3IgaGFyZHdhcmUgY29tbXVuaWNhdGlvbi4NCiogRGV2aWNlQWxsb3c9L2Rldi90
+cG1ybTAgcnc6IFN0cmljdGx5IGxpbWl0cyBoYXJkd2FyZSBhY2Nlc3MgdG8gdGhlIGtlcm5lbCBy
+ZXNvdXJjZSBtYW5hZ2VyLg0KKiBOb05ld1ByaXZpbGVnZXM9eWVzOiBQcmV2ZW50cyBwcml2aWxl
+Z2UgZXNjYWxhdGlvbiB2aWEgZXhlY3ZlLg0KDQo1LjIgU2ltdWxhdG9yIFN1cHBvcnQgYW5kIEZh
+bGxiYWNrIFByZXZlbnRpb24NCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KVG8gc3VwcG9ydCBy
+b2J1c3QgQ0kvQ0QgYW5kIGRldmVsb3BlciB0ZXN0aW5nIHdpdGhvdXQgd2VhcmluZyBvdXQgcGh5
+c2ljYWwgTlZSQU0sIHN5c3RlbWQtdHBtZCBuYXRpdmVseSBzdXBwb3J0cyBzb2Z0d2FyZSBlbXVs
+YXRvcnMgbGlrZSBzd3RwbS4gVGhyb3VnaCBhIHN5c3RlbWQgZHJvcC1pbiBjb25maWd1cmF0aW9u
+IChlLmcuLCB1c2luZyBzeXN0ZW1jdGwgZWRpdCBzeXN0ZW1kLXRwbWQpLCBhIGRldmVsb3BlciBj
+YW4gZHluYW1pY2FsbHkgcm91dGUgdGhlIGRhZW1vbidzIHRyYW5zcG9ydCBsYXllciBhd2F5IGZy
+b20gL2Rldi90cG1ybTAgdG8gYSBsb2NhbCBzb2Z0d2FyZSBzaW11bGF0b3IuDQpIb3dldmVyLCBm
+YWxsaW5nIGJhY2sgdG8gYSBzb2Z0d2FyZSBlbXVsYXRvciBpbiBhIHByb2R1Y3Rpb24gZW52aXJv
+bm1lbnQgYnJlYWtzIHRoZSBoYXJkd2FyZSByb290IG9mIHRydXN0Lg0KDQpFbmZvcmNlbWVudCBv
+ZiB0aGlzIHN0cmljdCBib3VuZGFyeSByZWxpZXMgb24gc3lzdGVtIGFkbWluaXN0cmF0b3JzIHV0
+aWxpemluZyBzeXN0ZW1kJ3MgbmF0aXZlIHVuaXQgZmlsZSBjb25maWd1cmF0aW9ucyBhbmQgdGhl
+IHVuZGVybHlpbmcgTGludXgga2VybmVsIHNlY3VyaXR5IG1vZHVsZXMgKGNncm91cHMsIG5hbWVz
+cGFjZXMsIGFuZCBNYW5kYXRvcnkgQWNjZXNzIENvbnRyb2xzIGxpa2UgQXBwQXJtb3Igb3IgU0VM
+aW51eCkuIEFkbWluaXN0cmF0b3JzIGVuZm9yY2UgdGhlc2UgcHJvdGVjdGlvbnMgYnkgZGVmaW5p
+bmcgc2FuZGJveCBkaXJlY3RpdmVzIHdpdGhpbiB0aGUgL2V0Yy9zeXN0ZW1kL3N5c3RlbS9zeXN0
+ZW1kLXRwbWQuc2VydmljZSBmaWxlOg0KKiBEZXZpY2UgV2hpdGVsaXN0aW5nIChjZ3JvdXBzKTog
+VGhlIHVuaXQgZW5mb3JjZXMNCkRldmljZUFsbG93PS9kZXYvdHBtcm0wIHJ3LiBXaGVuIHN5c3Rl
+bWQgbG9hZHMgdGhlIHNlcnZpY2UsIGl0IGNvbmZpZ3VyZXMgdGhlIGtlcm5lbCdzIGNncm91cCBk
+ZXZpY2UgY29udHJvbGxlciB0byBleHBsaWNpdGx5IGJsb2NrIGFjY2VzcyB0byBhbnkgb3RoZXIg
+ZGV2aWNlLiBUaGlzIGd1YXJhbnRlZXMgdGhlIGRhZW1vbiBpcyBibG9ja2VkIGZyb20gaW50ZXJh
+Y3Rpbmcgd2l0aCB2aXJ0dWFsIGNoYXJhY3RlciBkZXZpY2VzIGxpa2UgL2Rldi92dHBteCB1c2Vk
+IGJ5IENVU0UtYmFzZWQgZW11bGF0b3JzLg0KKiBOZXR3b3JrIFNhbmRib3hpbmcgKG5hbWVzcGFj
+ZXMpOiBCeSBhcHBseWluZyBSZXN0cmljdEFkZHJlc3NGYW1pbGllcz1BRl9VTklYICh3aGljaCBw
+ZXJtaXRzIGxvY2FsIFZhcmxpbmsgc29ja2V0cyBidXQgZW50aXJlbHkgZGlzYWJsZXMgVENQL0lQ
+IG5ldHdvcmtpbmcgbmFtZXNwYWNlcyksIHN5c3RlbWQgaW5zdHJ1Y3RzIHRoZSBrZXJuZWwgdG8g
+cGh5c2ljYWxseSBibG9jayB0aGUgZGFlbW9uIGZyb20gb3BlbmluZyBvdXRib3VuZCBuZXR3b3Jr
+IGNvbm5lY3Rpb25zIHRvIGEgcmVtb3RlIG9yIGxvY2FsIHN3dHBtIFRDUCBwb3J0Lg0KDQpCZWNh
+dXNlIHRoZXNlIHJ1bGVzIGFyZSBlbmZvcmNlZCBieSBzeXN0ZW1kIChhY3RpbmcgYXMgUElEIDEp
+IGFuZCB0aGUgTGludXgga2VybmVsIGl0c2VsZiwgZXZlbiBhIGNvbXByb21pc2VkIHN5c3RlbWQt
+dHBtZCBwcm9jZXNzIGNhbm5vdCBieXBhc3MgdGhlbS4gVGhlc2UgcG9saWNpZXMgZ3VhcmFudGVl
+IHRoZSBkYWVtb24gd2lsbCBmYXRhbGx5IGVycm9yIG91dCByYXRoZXIgdGhhbiBzaWxlbnRseSBm
+YWxsaW5nIGJhY2sgdG8gYSBjb21wcm9taXNlZCBzaW11bGF0b3IgaW4gbGl2ZSBkZXBsb3ltZW50
+cy4NCg0KNi4gRnV0dXJlIENhcGFiaWxpdGllcyBhbmQgU29sdmFibGUgUHJvYmxlbXMgPT09PT09
+PT09PT09PT09PT09PT09PT09IEJ5IGVzdGFibGlzaGluZyBzeXN0ZW1kLXRwbWQgYXMgYSBwZXJz
+aXN0ZW50LCBjZW50cmFsaXplZCByb290IG9mIHRydXN0IGluIHVzZXJzcGFjZSwgc2V2ZXJhbCBs
+b25nLXN0YW5kaW5nIGVjb3N5c3RlbSBjaGFsbGVuZ2VzIGJleW9uZCBiYXNpYyBjcnlwdG9ncmFw
+aHkgY2FuIGJlIGVsZWdhbnRseSByZXNvbHZlZC4NCg0KNi4xIFNlYW1sZXNzIEZpcm13YXJlIFVw
+ZGF0ZXMgKFNvbHZpbmcgdGhlIExVS1MgLyBmd3VwZCBMb2Nrb3V0KQ0KLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tDQpDdXJyZW50bHksIGJpbmRpbmcgTFVLUyBkaXNrIGVuY3J5cHRpb24gdG8gUGxh
+dGZvcm0gQ29uZmlndXJhdGlvbiBSZWdpc3RlcnMgY3JlYXRlcyBzZXZlcmUgc3lzdGVtIGZyYWdp
+bGl0eS4gV2hlbiBhbiBhZG1pbmlzdHJhdG9yIHVwZGF0ZXMgdGhlIHN5c3RlbSBmaXJtd2FyZSB1
+c2luZyBmd3VwZCwgdGhlIFBDUiA3IG1lYXN1cmVtZW50IGNoYW5nZXMsIHdoaWNoIHBlcm1hbmVu
+dGx5IGJyZWFrcyB0aGUgTFVLUyB1bmxvY2tpbmcgcG9saWN5IGFuZCBsb2NrcyB0aGUgdXNlciBv
+dXQuIHN5c3RlbWQtdHBtZCB3aWxsIHJlc29sdmUgdGhpcyBieSBsZXZlcmFnaW5nIFRQTTJfUG9s
+aWN5QXV0aG9yaXplLiBJbnN0ZWFkIG9mIGJpbmRpbmcgZGlzayBlbmNyeXB0aW9uIHRvIHN0YXRp
+YyBQQ1IgdmFsdWVzLCB0aGUgZGlzayBpcyBib3VuZCB0byBhIGNyeXB0b2dyYXBoaWMgdGlja2V0
+IHNpZ25lZCBieSBzeXN0ZW1kLXRwbWQuIFdoZW4gZnd1cGQgc2NoZWR1bGVzIGFuIHVwZGF0ZSwg
+aXQgY2FuIGNvbW11bmljYXRlIGl0cyBpbnRlbnQgdmlhIFZhcmxpbmsuIHN5c3RlbWQtdHBtZCBj
+YW4gYXV0b21hdGljYWxseSBnZW5lcmF0ZSBhIG5ldyBhdXRob3JpemVkIHBvbGljeSBmb3IgdGhl
+IGluY29taW5nIGZpcm13YXJlIHN0YXRlLCBlbnN1cmluZyB0aGUgZGlzayB1bnNlYWxzIHNtb290
+aGx5IGFmdGVyIHRoZSByZWJvb3QuDQoNCjYuMiBTdGFuZGFyZGl6aW5nIFRQTS1CYWNrZWQgUGFz
+c2tleXMgZm9yIHRoZSBMaW51eCBEZXNrdG9wDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NClRo
+ZSBMaW51eCBkZXNrdG9wIGN1cnJlbnRseSBsYWNrcyBhIHVuaWZpZWQsIGhhcmR3YXJlLWJhY2tl
+ZCBBUEkgZm9yIG1vZGVybiBXZWJBdXRobi9GSURPMiBwYXNza2V5cy4gc3lzdGVtZC10cG1kIGNv
+dWxkIHNlcnZlIGFzIHRoZSBmb3VuZGF0aW9uYWwgYmFja2VuZCBmb3IgcHJvamVjdHMgbGlrZSBj
+cmVkZW50aWFsc2QuIEJ5IGRlcml2aW5nIGtleXMgZnJvbSB0aGUgVFBNJ3MgcHJpbWFyeSBzZWVk
+IGFuZCBlbmNyeXB0aW5nIHRoZSBjcmVkZW50aWFsIGJsb2JzLCBzeXN0ZW1kLXRwbWQgd291bGQg
+YWxsb3cgYnJvd3NlcnMgdG8gc3RvcmUgaGlnaGx5IHNlY3VyZSwgcGhpc2hpbmctcmVzaXN0YW50
+IHBhc3NrZXlzIHRoYXQgbmV2ZXIgbGVhdmUgdGhlIGhhcmR3YXJlIGluIHBsYWludGV4dC4NCg0K
+Ni4zIFN0YWJpbGl6aW5nIENvbnRpbnVvdXMgUmVtb3RlIEF0dGVzdGF0aW9uIGZvciBGbGVldCBN
+YW5hZ2VtZW50DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkluIGVudGVycHJpc2UgZGVwbG95
+bWVudHMsIGNvbnRpbnVvdXMgcmVtb3RlIGF0dGVzdGF0aW9uIGFnZW50cyAoc3VjaCBhcyBLZXls
+aW1lKSBhcmUgdXNlZCB0byBjcnlwdG9ncmFwaGljYWxseSBwcm92ZSB0byBhIGNlbnRyYWwgc2Vy
+dmVyIHRoYXQgYSBtYWNoaW5lJ3MgTGludXggSW50ZWdyaXR5IE1lYXN1cmVtZW50IEFyY2hpdGVj
+dHVyZSAoSU1BKSBsb2cgaGFzIG5vdCBiZWVuIGNvbXByb21pc2VkLiBIb3dldmVyLCB0aGVzZSBh
+Z2VudHMgZnJlcXVlbnRseSBzdWZmZXIgZnJvbSBmYWxzZSBhbGVydHMgYW5kIGFjY2VzcyBjb25m
+bGljdHMgd2hlbiBxdWVyeWluZyB0aGUgVFBNIHNpbXVsdGFuZW91c2x5IHdpdGggb3RoZXIgc3lz
+dGVtIHVwZGF0ZXMuIEJ5IGFjdGluZyBhcyB0aGUgc29sZSBvcmNoZXN0cmF0b3IsIHN5c3RlbWQt
+dHBtZCBjb3VsZCBzYWZlbHkgYnJva2VyIGF0dGVzdGF0aW9uIHF1b3RlcyBhbmQgSU1BIG1lYXN1
+cmVtZW50cywgZW5zdXJpbmcgdGhhdCBmbGVldCBtYW5hZ2VtZW50IHRvb2xzIG9wZXJhdGUgcmVs
+aWFibHkgd2l0aG91dCByZXNvdXJjZSBjb250ZW50aW9uIG9uIHRoZSAvZGV2L3RwbXJtMCBub2Rl
+Lg0KDQo2LjQgU2VjdXJlIFNTSCBLZXkgUHJvdGVjdGlvbg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tDQpTU0ggcHJpdmF0ZSBrZXlzIHN0b3JlZCBpbiBsb2NhbCBmaWxlcyBhcmUgaGlnaGx5IHZ1
+bG5lcmFibGUgdG8gdGhlZnQgYnkgbWFsd2FyZS4gV2hpbGUgdGhlIFRQTSBjYW4gbWl0aWdhdGUg
+dGhpcyBieSBnZW5lcmF0aW5nIGFuZCBzZWN1cmluZyB0aGUga2V5cyBpbiBoYXJkd2FyZSwgY29u
+ZmlndXJpbmcgdGhpcyBjdXJyZW50bHkgcmVxdWlyZXMgZW5kLXVzZXJzIHRvIG1hbmFnZSBjb21w
+bGV4IFBLQ1MjMTEgbGlicmFyaWVzIChsaWtlIHRwbTItcGtjczExKSBhbmQgbWFuaXB1bGF0ZSBw
+YXRocy4gV2l0aCBzeXN0ZW1kLXRwbWQsIFNTSCBhZ2VudHMgY291bGQgYmUgcmV3cml0dGVuIHRv
+IHNpbXBseSBwYXNzIHNpZ25pbmcgcGF5bG9hZHMgdmlhIFZhcmxpbmssIG5hdGl2ZWx5IHByb3Rl
+Y3RpbmcgU1NIIGFjY2VzcyBhY3Jvc3MgdGhlIGVudGlyZSBMaW51eCBlY29zeXN0ZW0gd2l0aCB6
+ZXJvIGNvbmZpZ3VyYXRpb24gcmVxdWlyZWQgZnJvbSB0aGUgdXNlci4gQWx0ZXJuYXRpdmVseSwg
+dGhleSBjYW4gbGV2ZXJhZ2UgdGhlIE9wZW5TU0wgMy4wIHByb3ZpZGVyIG5hdGl2ZWx5Lg0KDQo2
+LjUgQ29uZmlkZW50aWFsIENvbXB1dGluZyBhbmQgdlRQTSBTdGF0ZSBNYW5hZ2VtZW50DQotLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0NCkluIGNsb3VkIGVudmlyb25tZW50cyBsZXZlcmFnaW5nIEFN
+RCBTRVYtU05QIG9yIEludGVsIFREWCBmb3IgQ29uZmlkZW50aWFsIENvbXB1dGluZywgdmlydHVh
+bCBUUE1zICh2VFBNcykgYXJlIGluamVjdGVkIGludG8gdGhlIGd1ZXN0IHRvIHByb3ZpZGUgbWVh
+c3VyZWQgYm9vdCBndWFyYW50ZWVzLiBzeXN0ZW1kLXRwbWQgY2FuIGVhc2lseSBzdGFuZGFyZGl6
+ZSB0aGUgbWFuYWdlbWVudCBvZiB0aGVzZSB2aXJ0dWFsIFRQTXMgZnJvbSBpbnNpZGUgdGhlIGd1
+ZXN0IE9TLiBCZWNhdXNlIHRoZSBkYWVtb24gYWJzdHJhY3RzIHRoZSB1bmRlcmx5aW5nIGhhcmR3
+YXJlLCBpdCBjYW4gaW50ZXJmYWNlIHdpdGggYSBjbG91ZCBwcm92aWRlcidzIHZUUE0gZXhhY3Rs
+eSBhcyBpdCB3b3VsZCBhIHBoeXNpY2FsIGNoaXAsIGF1dG9tYXRpY2FsbHkgcHJvdmlzaW9uaW5n
+IGl0IGFuZCBzaW1wbGlmeWluZyB0aGUgZGVwbG95bWVudCBvZiBDb25maWRlbnRpYWwgVmlydHVh
+bCBNYWNoaW5lcyAoQ1ZNcykgd2l0aG91dCByZXF1aXJpbmcgY2xvdWQtc3BlY2lmaWMgdXNlciBz
+cGFjZSB0b29saW5nLg0KDQpUaGFua3MgZm9yIHlvdXIgdGltZSBhbmQgZWZmb3J0cyByZWFkaW5n
+IGludG8gdGhpZSBwcm9wb3NhbC4gQW55IHRob3VnaHRzLCBjcml0aXF1ZXMsIG9yIGFyY2hpdGVj
+dHVyYWwgZmVlZGJhY2sgYXJlIGhpZ2hseSBhcHByZWNpYXRlZC4NCg0KQmVzdCBSZWdhcmRzLA0K
+QWtzaGF5IEhlbmRyZQ0KDQo=
