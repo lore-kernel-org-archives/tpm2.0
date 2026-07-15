@@ -1,57 +1,57 @@
 Received: from smtp11.infineon.com (smtp11.infineon.com [217.10.52.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B84403EA0
-	for <tpm2@lists.linux.dev>; Mon, 13 Jul 2026 12:07:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3272B2931C6
+	for <tpm2@lists.linux.dev>; Wed, 15 Jul 2026 15:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783944478; cv=none; b=s5PstdIlNrmGqEk1UBA6SkBVfJFa0qSr4f6TukBHZLM7f3SLJ99dcoUrVgpaE5clnUYVl6QzgTvdP1vYAQhp2zzoxQLK7F/OID1PZunm1BJnOt+qrdoB2l4zJ+2uBX5ejf21p7w2sPo+/RD0Gcbr261mvl7GmJa3/YdS687OfRw=
+	t=1784129128; cv=none; b=SNR9PfEX63Atv265akGf4dJS82btU1Q1TyWnfKmQ+9G3Or2wzzXrFAIOsoh4GILDu8xImGs1Ov3oyJOSFNLvfizTRHYXaVFDLRfv/698J6ydVMvinqcMi2xDengevRqnYen1krgHzI+wWuC6+W30Rltzfit/uXJ0Vz7qHGmyurY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783944478; c=relaxed/simple;
-	bh=9dRHIn9wNSrETVi/XvNjG6ZJqWdzbkc+L+fXFU7+9MI=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=P5ZRljm3XppGSaRUCD3PFFxtsLioiY3fZGsINjIr2GcLp85BfRJ/NUQnsArL6cZFPrayvSM/z3yaX79Y87YIC2dI1NQnKuAaRvhHAFdyYs8aanaRJ2UAWDUXmDu5jxuZCfMdQRHK+oaYyLOcmv55W4lQhkqIF5+5tOi/EknsRCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=NnJcZksj; arc=none smtp.client-ip=217.10.52.105
+	s=arc-20240116; t=1784129128; c=relaxed/simple;
+	bh=W8LZbeezjiXIdfI8fbV3ivEP3pUbhZdOasDDpE+mIK4=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=XZQmr13lHwHxgN4O02nijqQz6nbPajVOBr2VllHXBxI6NfFdnsnFDq+o2j/Y82PFafGRpJPASLyGn36nY+inKL8YNeD5KXHHfIvYRvgBh6h6l3rWVrxWE9wScux2FsnJPO00pMkb48KaFnZ4L2TL/RZnwht1deVXaudvd3ZrxpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=Nx8MoJ4M; arc=none smtp.client-ip=217.10.52.105
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=infineon.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="NnJcZksj"
+	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="Nx8MoJ4M"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1783944477; x=1815480477;
+  t=1784129127; x=1815665127;
   h=from:to:subject:date:message-id:
    content-transfer-encoding:mime-version;
-  bh=9dRHIn9wNSrETVi/XvNjG6ZJqWdzbkc+L+fXFU7+9MI=;
-  b=NnJcZksj9s9b5ek6fuUpTCbXHdI4T3P3zFUWr31t/FsbvmknZybE6iI3
-   upqVyr8ZtBNFsnt7Y9NfVftQwszezsMpdvkTY85fgTy4wfI7FXjtUBWE/
-   e0XG5+78k6ejB7bMJUNDDlQVb5IdhF9gdpEpI+lfVCtzTZjr7ptBrfAz/
-   w=;
-X-CSE-ConnectionGUID: bGqMWUpJQTev6BZh4WE6uQ==
-X-CSE-MsgGUID: vcik3CnPTn+VMYXvh7Ff1g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="151375625"
-X-IronPort-AV: E=Sophos;i="6.25,154,1779141600"; 
-   d="scan'208";a="151375625"
+  bh=W8LZbeezjiXIdfI8fbV3ivEP3pUbhZdOasDDpE+mIK4=;
+  b=Nx8MoJ4Mn5k02zWQLKVb7jEVvXh3/kw1V2EvHIvLZI96qsnHvkxPqKwM
+   D/PWwJhFmdf+YtghK4C8klCKGZNm6pE19sEFVSqfogRe3pxr/UcWx43pN
+   A7yADfXud8NNahDZUa+Z4qkJrJlnbJBvEi/8SKKhuDybrGEAAgf3dCWq5
+   M=;
+X-CSE-ConnectionGUID: 65pX2N5LRiy8VlBD88z5LQ==
+X-CSE-MsgGUID: T70YEsNITCea7maixy1/nQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="151759874"
+X-IronPort-AV: E=Sophos;i="6.25,165,1779141600"; 
+   d="scan'208";a="151759874"
 X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO MUCSE812.infineon.com) ([172.23.29.38])
-  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 14:07:49 +0200
-Received: from MUCSE842.infineon.com (172.23.7.71) by MUCSE812.infineon.com
- (172.23.29.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Mon, 13 Jul
- 2026 14:07:48 +0200
+Received: from unknown (HELO MUCSE822.infineon.com) ([172.23.29.53])
+  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 17:25:24 +0200
+Received: from MUCSE842.infineon.com (172.23.7.71) by MUCSE822.infineon.com
+ (172.23.29.53) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Wed, 15 Jul
+ 2026 17:25:23 +0200
 Received: from MUCSE843.infineon.com (172.23.7.72) by MUCSE842.infineon.com
  (172.23.7.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Mon, 13 Jul
- 2026 14:07:48 +0200
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Wed, 15 Jul
+ 2026 17:25:23 +0200
 Received: from MUCSE843.infineon.com ([fe80::2199:b8a6:8f2e:48a]) by
  MUCSE843.infineon.com ([fe80::2199:b8a6:8f2e:48a%21]) with mapi id
- 15.02.2562.043; Mon, 13 Jul 2026 14:07:48 +0200
+ 15.02.2562.043; Wed, 15 Jul 2026 17:25:23 +0200
 From: <Andreas.Fuchs@infineon.com>
 To: <tpm2@lists.linux.dev>
-Subject: tpm2-tss 4.1.4-rc1 and 4.2.0-rc2
-Thread-Topic: tpm2-tss 4.1.4-rc1 and 4.2.0-rc2
-Thread-Index: Ad0Sv9bxy5ZC0enTRE+yV2NTJ/5HTA==
-Date: Mon, 13 Jul 2026 12:07:28 +0000
-Deferred-Delivery: Mon, 13 Jul 2026 12:07:01 +0000
-Message-ID: <222f89d45e934f63a288986bcfc5c962@infineon.com>
+Subject: [SECURITY][RELEASE] tpm2-tss 4.2.0 and 4.1.4
+Thread-Topic: [SECURITY][RELEASE] tpm2-tss 4.2.0 and 4.1.4
+Thread-Index: Ad0UbZxISwRNBjAqQXywZJ0SXVgMQQ==
+Date: Wed, 15 Jul 2026 15:24:58 +0000
+Deferred-Delivery: Wed, 15 Jul 2026 15:24:49 +0000
+Message-ID: <31df17559ce44ff6bcc5d5a5d38b7750@infineon.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -67,15 +67,15 @@ MIME-Version: 1.0
 
 Hi all,
 
-I just released
-https://github.com/tpm2-software/tpm2-tss/releases/tag/4.1.4-rc1
+I just tagged and released
+https://github.com/tpm2-software/tpm2-tss/releases/tag/4.2.0
 and
-https://github.com/tpm2-software/tpm2-tss/releases/tag/4.2.0-rc2
-with two minor fixes.
+https://github.com/tpm2-software/tpm2-tss/releases/tag/4.1.4
 
-Please test and provide feedback.
-I'll release the final versions, as soon as Github assigns CVE-IDs to our a=
-dvisories.
+Note that these fix several Security Advisories.
+Also, note that CVE-IDs have not been assigned yet, since the workflow of t=
+he GH CNA increased from 3 days to 3 weeks.
+Once the CVE-IDs are assigned, I'll update the changelog accordingly.
 
-Best regards,
+Bests,
 Andreas
