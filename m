@@ -1,63 +1,25 @@
-Received: from smtp9.infineon.com (smtp9.infineon.com [217.10.52.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFAB480DE6
-	for <tpm2@lists.linux.dev>; Wed, 15 Jul 2026 15:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.204
+Received: from majs.cnackers.org (vps-1525-1.tilaa.nl [46.19.33.97])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 992A03C3BF7
+	for <tpm2@lists.linux.dev>; Mon, 20 Jul 2026 20:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.33.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784129193; cv=none; b=ZaVqg8FSgFkWYrUmlLG/k5T/ffmtaN6bzlheUISZfewY3JFKs7ESPvswCYtaDVorgF6Fd7lA6QBYl+oQfGgO23I3ZCME8PfvdCOoVbBTD4+sCkDeAyBrD4KIq3sOcx2crH9+p3RJLAxks9PVjZUyHCswFeSXSZtv5W8io5z721k=
+	t=1784580808; cv=none; b=dwPR0L0L4YorpcGvF6ppTr1sY1TuSPNiOq7ICvial5Yb87F1GT3nOMHw7+QK/5Gu5f1aZ4NZjjv45h0aMNEuM17TEMeBNlcLFw5+anOowmiUkewb+3cyrj9lREs4MjQgsIfGBmOCmAzLQHOdwrLfDt3IvrOfupOUTu2Kq05/7lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784129193; c=relaxed/simple;
-	bh=UFz5q8XAUZqwG84VmHD4Qt8bQbUBvpt6enJ+NWF6Gd8=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ecNcYSyX4flWVGyaFGTInhqd45fiZhBm09y8pwJIuuA5DF44aGvOuWLsrYGGecq1Vben60GK0bDIkzF3am2nkWw89kZo+EpXZ8w7+nzacUrMogGDZJFdEzYv9191qLePs2gVO7V0qoM3wrv3coNt2rafIHQSLa9PlUZO5UAHDfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=R8T4CDse; arc=none smtp.client-ip=217.10.52.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=infineon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="R8T4CDse"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1784129192; x=1815665192;
-  h=from:to:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=UFz5q8XAUZqwG84VmHD4Qt8bQbUBvpt6enJ+NWF6Gd8=;
-  b=R8T4CDseWoyg4EJHCY2Jmu+PjNFi4Yg3xv/uHb8HwmcPlOEsQ944MyKY
-   zA6IDaUYbAwMOVhU2WdrzaaxNvXfqm7Kk7Gdfp9wcDRWMQzivakjUizj3
-   afWOAUqEIt4gGC7dYcR5FZBtXyHQwuRqvjS8gXvfc/93jCBxGWrZ2foNU
-   c=;
-X-CSE-ConnectionGUID: WTnoOVqDTX+b9OcW1313YQ==
-X-CSE-MsgGUID: 1XPZYhdvTN2Y+dqSvoE7jA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="101046431"
-X-IronPort-AV: E=Sophos;i="6.25,165,1779141600"; 
-   d="scan'208";a="101046431"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO MUCSE812.infineon.com) ([172.23.29.38])
-  by smtp9.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 17:26:24 +0200
-Received: from MUCSE841.infineon.com (172.23.7.70) by MUCSE812.infineon.com
- (172.23.29.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Wed, 15 Jul
- 2026 17:26:23 +0200
-Received: from MUCSE843.infineon.com (172.23.7.72) by MUCSE841.infineon.com
- (172.23.7.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Wed, 15 Jul
- 2026 17:26:23 +0200
-Received: from MUCSE843.infineon.com ([fe80::2199:b8a6:8f2e:48a]) by
- MUCSE843.infineon.com ([fe80::2199:b8a6:8f2e:48a%21]) with mapi id
- 15.02.2562.043; Wed, 15 Jul 2026 17:26:23 +0200
-From: <Andreas.Fuchs@infineon.com>
-To: <tpm2@lists.linux.dev>
-Subject: [SECURITY][RELEASE] tpm2-tools 5.8 and 5.7.1
-Thread-Topic: [SECURITY][RELEASE] tpm2-tools 5.8 and 5.7.1
-Thread-Index: Ad0UbhfAPDz0jf/hShWkGXS0Q12jFg==
-Date: Wed, 15 Jul 2026 15:26:22 +0000
-Deferred-Delivery: Wed, 15 Jul 2026 15:25:56 +0000
-Message-ID: <ff7c85b9e6b14f33896832b178750cf3@infineon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
+	s=arc-20240116; t=1784580808; c=relaxed/simple;
+	bh=wTJ01LTH4Mw8INfMdjRAgt+HFwgFqTY1PdStNxKXmyY=;
+	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=eQSqhdxbt2Rd7as/S40zIdWp7pXMKgR3P4COE3MJg7rFwy9BTP3Y/WG8PTRDDz15Me2DCfw6EjE1qF2ZXPtWQ3tDwJUyfrXT76xuo3Rm75ImltHvTDSh3Ubf0NDwhY9QGeTFe0+75OZK41b4ltDx9OPCJfvc/+V2SeGN6CKS7Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cnackers.org; spf=none smtp.mailfrom=cnackers.org; arc=none smtp.client-ip=46.19.33.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cnackers.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cnackers.org
+Received: from majs.cnackers.org (localhost [127.0.0.1]) by majs.cnackers.org (Postfix) with ESMTPA id 7086BFF10
+Message-ID: <a669f1e0903fa00a647bc0409c1ef30494279c9a.camel@cnackers.org>
+Subject: tpm2-pytss 3.0.0-rc1
+From: Erik <who+lfl@cnackers.org>
+To: tpm2@lists.linux.dev
+Date: Mon, 20 Jul 2026 22:46:45 +0200
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-10 
 Precedence: bulk
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
@@ -65,17 +27,14 @@ List-Subscribe: <mailto:tpm2+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Hi all,
+Hi,
 
-I just tagged and released
-https://github.com/tpm2-software/tpm2-tools/releases/tag/5.8
-and
-https://github.com/tpm2-software/tpm2-tools/releases/tag/5.7.1
+There is now a release candidate available for the next release of tpm2-pyt=
+ss, 3.0.0-rc1.
+Since the last RC the most interesting changes are support for free-threade=
+d python, memory leak fixes in FAPI and the we no longer have a dependency =
+on asn1crypto.
+The full changelog can be found at https://github.com/tpm2-software/tpm2-py=
+tss/blob/master/CHANGELOG.md
 
-Note that these fix several Security Advisories.
-Also, note that CVE-IDs have not been assigned yet, since the workflow of t=
-he GH CNA increased from 3 days to 3 weeks.
-Once the CVE-IDs are assigned, I'll update the changelog accordingly.
-
-Bests,
-Andreas
+/Erik
