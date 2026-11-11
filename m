@@ -1,19 +1,19 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=217.10.52.160
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=217.10.52.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1793361794;
-	b=NlUF2uXiC3sv7B3aPuwjoMTQplVlXni9edBmmgQQqfdiCw/jevybk+CjSdJc7GTQGRZa
-	 ODAypQTohqLP3VYWFfcp1f8cCT4QMoyID9Z5w4VM3FSe4LmcCKOZYY3+5sx+gvRFyLozq
-	 Oj739un1+5HXHurDbc5kHWiwUl1UbGbvhwe9LZTHbPAZy4ny/FAc5x2v+PBhqOlBuo8ke
-	 xEsjINxgu26r663LqNttRv5iAR9WKN5i2ut/HcVoRsXMdMQzh6xDKh5pxYaBr6uZUZTCQ
-	 k1wrPdjC1gOc/QcuFCF2IT7gigjsp0WtA4wxNoPSKZpgeah9VPJPgw/v49tjChr9LcA==
+	t=1794388281;
+	b=SmSFGUHRmAvF4t8Kl0XP6cdPmlh31hWZol4ZWgqfvGcc3d8h2lTkyBAQj94Qm8jMZik5
+	 JNEo0KGeVHVHK+xSX4lTvHZ2wPooqX4tqFUHaApAzpGDGn1d+qdlUrIHSFA3coo9T+Edd
+	 epcAUXgBgKOISTgKAq4+r0AKahrD/9lSD/XKAS1J7lB3TtaTUDyao9DGG+PxDef43z9L5
+	 Kh7Phy2BzO5UutxpAyUSKEBr2utJ1LqgEd+jdLXPSudqdbFcL7gFa+wIszbZO4jpbOKRS
+	 9rdT8TEN5ssNLFx58rq1e4Cq/hv4GecJkfC4fu3oXfQ529TJRVwZlldSeNY8fvuGsPQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793361794;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794388281;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:DKIM-Signature:
 	 X-CSE-ConnectionGUID:X-CSE-MsgGUID:X-Encrypted-To-SeppBox:
 	 X-IronPort-AV:X-IronPort-AV:X-Amp-Result:X-Amp-Original-Verdict:
-	 Received:Received:Received:Received:Received:DKIM-Signature:Received:
-	 Received:From:To:CC:Subject:Thread-Topic:Thread-Index:Date:Message-ID:
+	 Received:Received:Received:Received:DKIM-Signature:Received:Received:
+	 From:To:CC:Subject:Thread-Topic:Thread-Index:Date:Message-ID:
 	 Accept-Language:Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
 	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
 	 x-ms-office365-filtering-correlation-id:x-ms-exchange-senderadcheck:
@@ -30,124 +30,120 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-userprincipalname:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
 	 X-SM-outgoing;
-	bh=MzJM8YOJIgOl2ewqg8w7aO5A93L2sg5rL/ZiEKp4mmU=;
-	b=mjkUjtyFyE12Q4tksN562NvPy4IkkiwjTYETn4QpfJXfdBE63I/YL/YqplsaCTuktmps
-	 EWjmn8/v3AmWJOg2/YOdXNo0z2FaPQ3Mba1G4ORVf9xHp5aHh8VPxstoUClTSCnsrCKOP
-	 IlqLrf+dxM9MNDlykALdT032y6rtqSzVAgfCmbfz52HeMS6dOiYOanEy85ETL9GFWHu43
-	 xuzUm442SdcJoULsYs28acmG1M6d6dOVzFXsaPjw8McaMjc+h9DNxHB8P1AimeVmWi8+0
-	 JuGUQ7xXVH0KeMCLfNsH2CjrRlpYGaSJI3eiTvyGdwfGSBFZNWyF88UlZbPCAbXLM7A==
+	bh=irXO7c53JlNLCOW6AGt0p7TwFJgdjq6TMhZZmiTMVDE=;
+	b=pYoevj9CYs3fOEj0CM3xcWnRpzlG6gFj1ZwaBsDE+lhm/AYhYfJTajdgn2DetcajydyQ
+	 HvbE7t78qPkjWtjQewruiyVvT/gnb2HTxEhmSVn/VBsjJTEWTDBZsaqlPJeTi8//+eeAO
+	 MhHkJ9Ul4ACQd6rqVue6Q7F3v55sNcUFwWcgViId82fB4pFcBzMFTieSnI9TUdI+aPMLn
+	 4o9Rs65nvb0cZxWSLBdlN8ebrzUoU3Y34eMFOlEd5bqv3AtFFOwcfj7h3rJKXhWS6gIac
+	 gncQeOQkynYsHHEf7ZtoFTzQc3RDiMOmkarcwKRTRFQi8ifZVC5ASeadMjb9tQtpVjA==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=infineon.com;
 	spf=pass smtp.mailfrom=infineon.com;
-	dkim=pass header.d=infineon.com header.i=@infineon.com header.a=rsa-sha256 header.s=IFXMAIL header.b="S3m1J/FK";
-	dkim=pass header.d=infineon.com header.i=@infineon.com header.a=rsa-sha256 header.s=IFXMAIL header.b=L4h8rVVB;
-	dkim=fail reason="signature verification failed" header.d=infineon.onmicrosoft.com header.i=@infineon.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-infineon-onmicrosoft-com header.b="Q/WL1whL";
-	arc=fail smtp.remote-ip=217.10.52.160
-Received: from smtp14.infineon.com (smtp14.infineon.com [217.10.52.160])
+	dkim=pass header.d=infineon.com header.i=@infineon.com header.a=rsa-sha256 header.s=IFXMAIL header.b=ACd7SubF;
+	dkim=pass header.d=infineon.com header.i=@infineon.com header.a=rsa-sha256 header.s=IFXMAIL header.b=Hgi4X03f;
+	dkim=fail reason="signature verification failed" header.d=infineon.onmicrosoft.com header.i=@infineon.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-infineon-onmicrosoft-com header.b=U5s8oKQz;
+	arc=fail smtp.remote-ip=217.10.52.18
+Received: from smtp2.infineon.com (smtp2.infineon.com [217.10.52.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E7F606A330
-	for <tpm2@lists.linux.dev>; Fri, 30 Oct 2026 12:03:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 74E7F606A330
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC0A606A327
+	for <tpm2@lists.linux.dev>; Wed, 11 Nov 2026 09:11:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DDC0A606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=infineon.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=infineon.com header.i=@infineon.com header.a=rsa-sha256 header.s=IFXMAIL header.b=S3m1J/FK;
-	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.a=rsa-sha256 header.s=IFXMAIL header.b=L4h8rVVB;
-	dkim=fail reason="signature verification failed" (1024-bit key, unprotected) header.d=infineon.onmicrosoft.com header.i=@infineon.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-infineon-onmicrosoft-com header.b=Q/WL1whL
+	dkim=pass (1024-bit key, unprotected) header.d=infineon.com header.i=@infineon.com header.a=rsa-sha256 header.s=IFXMAIL header.b=ACd7SubF;
+	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.a=rsa-sha256 header.s=IFXMAIL header.b=Hgi4X03f;
+	dkim=fail reason="signature verification failed" (1024-bit key, unprotected) header.d=infineon.onmicrosoft.com header.i=@infineon.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-infineon-onmicrosoft-com header.b=U5s8oKQz
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1793361794; x=1824897794;
+  t=1794388280; x=1825924280;
   h=from:to:cc:subject:date:message-id:mime-version;
-  bh=+j29qI7OpZqUkPmECVlgtk86NYy4qn36z3UusIX2hAc=;
-  b=S3m1J/FKmMtG7u+aklI1Y14mddOjgzXwHbj/Um0061Y+AkEukzj32fDE
-   3XM1f5W+SZywMZQKW0ixAniDJnC4ipFdkm4sriCn/uW+EkCAV4Qrw1l6F
-   PbjWVEm3XRnJsrU6PDuyoiJoNr/qe1jBtoJQns1utKqpgs0fKmuYDnqqO
-   g=;
-X-CSE-ConnectionGUID: 0gQlgowVRC2TOvt254ZgIw==
-X-CSE-MsgGUID: gg/SjlruTBefbBZNSITzCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="153811649"
-X-IronPort-AV: E=Sophos;i="6.27,186,1787004000"; 
-   d="p7s'346?scan'346,208,346";a="153811649"
-Received: from unknown (HELO mucxv002.muc.infineon.com) ([172.23.11.17])
-  by smtp14.infineon.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 30 Oct 2026 13:03:06 +0100
-Received: from mucxv002 (localhost [127.0.0.1])
-	by mucxv002.muc.infineon.com (Postfix) with SMTP id 4jGKVd4qTrzTNh
-	for <tpm2@lists.linux.dev>; Fri, 30 Oct 2026 13:03:05 +0100 (CET)
-Received: from smtp11.infineon.com (ironport-smtp11.infineon.com [10.32.17.21])
+  bh=a7F7THM7iYE1Clj7fiOrXfalNgiyYYI/iTbkybXYjg8=;
+  b=ACd7SubFfRz2CUHwi9edldPzpvWeWP7y8ap9mmKQmV9eR8thunpM24uq
+   +PP7pXz/Zg6jLJowPAoOfYG10mAH/YKlnrKuHFPltzPF6Z6OQly24lu3R
+   Fn9h34PdufVay+6+0YCeWVkGdBLd7pFsMIuk6Okpslxnsr1fmMuPNPPwW
+   0=;
+X-CSE-ConnectionGUID: pRMWqlNgR7We4dXBQHRowg==
+X-CSE-MsgGUID: 8eVmKZfxRD2IM1S5mk3zxw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11962"; a="189226800"
+X-IronPort-AV: E=Sophos;i="6.27,207,1787004000"; 
+   d="p7s'346?scan'346,208,346";a="189226800"
+Received: from unknown (HELO mucxv003.muc.infineon.com) ([172.23.11.20])
+  by smtp2.infineon.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 11 Nov 2026 10:11:12 +0100
+Received: from mucxv003 (localhost [127.0.0.1])
+	by mucxv003.muc.infineon.com (Postfix) with SMTP id 4jPd6l1glCzbkj
+	for <tpm2@lists.linux.dev>; Wed, 11 Nov 2026 10:11:11 +0100 (CET)
+Received: from smtp2.infineon.com (ironport-smtp2.infineon.com [10.32.17.20])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mucxv002.muc.infineon.com (Postfix) with ESMTPS
-	for <tpm2@lists.linux.dev>; Fri, 30 Oct 2026 13:03:05 +0100 (CET)
+	by mucxv003.muc.infineon.com (Postfix) with ESMTPS
+	for <tpm2@lists.linux.dev>; Wed, 11 Nov 2026 10:11:11 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1793361785; x=1824897785;
+  t=1794388271; x=1825924271;
   h=from:to:cc:subject:date:message-id:mime-version;
-  bh=+j29qI7OpZqUkPmECVlgtk86NYy4qn36z3UusIX2hAc=;
-  b=L4h8rVVBmT6UNRBBzQw4NmpKN1oL3mNi1p/u6BykDIFiM53Z7S6XTo8L
-   f8xbI5Uz/RPr8N8Rt/k24g0hzY7vJJrDL4QFKinh5YjDFLvk1hlXQh0XC
-   OSnH5zhUCMw0hiyxTxxuLMyaR4jcNARWpIeVarRFZZ+gZB6jb4unuQM1X
-   M=;
-X-CSE-ConnectionGUID: 4QQhLYElRKSlejOPKG+9dw==
-X-CSE-MsgGUID: fXAjh/CCS3C04+LBiHJtzw==
+  bh=a7F7THM7iYE1Clj7fiOrXfalNgiyYYI/iTbkybXYjg8=;
+  b=Hgi4X03fZG/ydjG2/EZJZf76H1TFN/kJKyHlHgxVaA2WvZx089ADnAXO
+   VTisjcOsckWBvlmEM+pIykbXJIoEV7Y8s0bwqAFBRgFdvspvMZ5L47/eZ
+   HXDXsdEFG6YsNKUD1v3LVBq8nLdp8q+4e/KGGaNAotSqKk5yznmiBi+Za
+   c=;
+X-CSE-ConnectionGUID: gTqBlRTvTOqZflqFOO5Dow==
+X-CSE-MsgGUID: WDZagk6RQRK319pwyyl9OA==
 X-Encrypted-To-SeppBox: True
-X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="168071797"
-X-IronPort-AV: E=Sophos;i="6.27,186,1787004000"; 
-   d="p7s'346?scan'346,208,346";a="168071797"
+X-IronPort-AV: E=McAfee;i="6800,10657,11962"; a="189226795"
+X-IronPort-AV: E=Sophos;i="6.27,207,1787004000"; 
+   d="p7s'346?scan'346,208,346";a="189226795"
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO MUCSE814.infineon.com) ([172.23.29.40])
-  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2026 13:03:04 +0100
-Received: from MUCSE809.infineon.com (172.23.29.35) by MUCSE814.infineon.com
- (172.23.29.40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56; Fri, 30 Oct
- 2026 13:03:03 +0100
-Received: from MUCSE801.infineon.com (172.23.29.27) by MUCSE809.infineon.com
- (172.23.29.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56; Fri, 30 Oct
- 2026 13:03:03 +0100
-Received: from DMUCS0010.ifxdmz.net (10.32.24.68) by MUCSE801.infineon.com
- (172.23.29.27) with Microsoft SMTP Server (version=TLS1_2,
+Received: from unknown (HELO MUCSE822.infineon.com) ([172.23.29.53])
+  by smtp2.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 10:11:11 +0100
+Received: from MUCSE821.infineon.com (172.23.29.47) by MUCSE822.infineon.com
+ (172.23.29.53) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56; Wed, 11 Nov
+ 2026 10:11:10 +0100
+Received: from DMUCS0011.ifxdmz.net (10.32.24.69) by MUCSE821.infineon.com
+ (172.23.29.47) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56 via Frontend
- Transport; Fri, 30 Oct 2026 13:03:03 +0100
-Received: from DUZPR08CU001.outbound.protection.outlook.com (40.93.64.69) by
- ifxsmtp-edge.infineon.com (10.32.8.116) with Microsoft SMTP Server
+ Transport; Wed, 11 Nov 2026 10:11:10 +0100
+Received: from AS8PR07CU003.outbound.protection.outlook.com (40.93.65.51) by
+ ifxsmtp-edge.infineon.com (10.32.8.117) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Fri, 30 Oct 2026 13:03:03 +0100
+ 15.2.2562.56; Wed, 11 Nov 2026 10:11:10 +0100
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=anXlKNCWIbLU3LHzjBmQ1MsFIZ29vjBxnCFdDTw7Sm6azXWyHFKoqhLFgGd6SLyTo5i7bDCLZVoIry0gzRPwcby1uGYkn56Ca1okGMNJK9AWFjMaao/1aLH4yCa4Pt95br6oi+Hn2L+Al1mGquwwbdFrehHvUshR1/SgC+jF8dupRXDpZChaYqENBu0hblAyofWvmUvfLhHIXrgHZlHnhsj6CEyo7a2XjwLcwcmyQSGH2W0SwB1Sn5nTkla/XCxoNak7cUDeRukkSUYbjMLNN/z+Q4mZvVuYeL9pzd+NaHnqRtbfcenqJ570gXnMW0z6GUKbRicY2uT/l6yfsLXrlg==
+ b=b5YJ28mCYKVM/1QB2QLllOxMnC6TfJWXmF2P0I4OJWc9UxlyMPZoSkZrsYq13S1kPGqiUuxEvRUeOuFstu3CBuNNVHaKG1XhMY34TQVbtvfYuYX04Kfp0THYoy3J2Dypk0k+UZmFgnDobQS8Eh3C1Vrr8kZFWHYsZdcAU8dYarfSu5JoUYTJr6a7D7UJ3LHIYTfVZLmCNNw6fXN0vN/NXLwx3VJ/bs9e7aoNtqpsLfPDV9BupId16cpmfzdVvQElPsoAfIOdGXp9TBWMmjJ2CqoS6ExilSG1B86ohvPNdMXaHzwxN1a8NUhMGVbOVdsfo3/zJOhe+khV0j7vDrFE2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iDuufg3r4lauQmFxHCDFUhtaxk9EtYKImDCI0JmiZsE=;
- b=GitB5mKvqncSAsFYdGsLtELoosO810vXURXfeDm972LiF9UlKTY6JdojQ8gwuuX2I4FWQxSRdTL1heGLEXLV2DqWU2b8GipgkSqwbXR7qtMKWc6up0BKVEmjr/O2MSU4sj0LiGoG6rEu8nHmQuMMYzpsCda5hPdbcAO14HeHtdf7UUv0D6/cUlLpfldWw/QAmXDvseAw6cNsjOezHjulY1PyxXsho0ewJN2LlyYFbBSD825B04s2KSFCnRysnwmu7DftzTvUq24Wbuqezab68PkOP0gpfImeTBx1jyox8RJtjExVP2kz6BO2YM5XYLHJxSSD0grMIN8TbD4byVDzCw==
+ bh=SwgCGPjFV6+TBwI7YEm8p2WvaDznpyfuJaUQhfMEI+E=;
+ b=wa0uD9fJxkC9B1ACJkpA/SlR9t2HPHs2cr8vG5MVwWROsfQW2351UjBSDk652rRux7dUJPtL8IqOYS9rVL9JW7FqVOddCjReLZ9Tvg2WW0/TGzA1Ro14tHCmavB6g+tRyum+Sdo3l7XdVBhF69XJOla22xgKg4WjTKxbGVmvvPp3/WGAzqh2ku9/E25DRz/bTGXlklXLNr+NWs2STCzFVnMr4aVni2BXMrZqPPIqJlEaEv2xQeWLOepYWeEse3bB/kh/HF5KCAxamR0CXSaa1gNIEf/p9WwbHUShqH7fp9tbHNmFBHvm4M1ypVfqeTUdyaCu23hPkLkKXGsURHcwFA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=infineon.com; dmarc=pass action=none header.from=infineon.com;
  dkim=pass header.d=infineon.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=infineon.onmicrosoft.com; s=selector2-infineon-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iDuufg3r4lauQmFxHCDFUhtaxk9EtYKImDCI0JmiZsE=;
- b=Q/WL1whLXd0O0ZqvHN6soms4i+xB93dqrtwIS966wx2xikTXGmnWt+j8NQBOzr9bhQeKKV2NhaBqskg3T2N75rtPSxpfNfgvIkJR/TiCoDTh6MzWPWeul8LHCctXeHXTFdVs2n3wkHvjon6S4PxSelEoQpeQdylSDGheoKcweU4=
-Received: from AS2PR03MB8978.eurprd03.prod.outlook.com (2603:10a6:20b:5f2::7)
- by DUYPR03MB998920.eurprd03.prod.outlook.com (2603:10a6:10:65e::20) with
+ bh=SwgCGPjFV6+TBwI7YEm8p2WvaDznpyfuJaUQhfMEI+E=;
+ b=U5s8oKQz+oFjaRKvuj/LtWDvH2rn7IcvrDAFWNQZTfWPVtZjZWeZeec35VcrtsJ7T3Opp0y9nvhgUzxiEIFV0J7D8O6VkN0clAWoBEApyX7+cDj6d3EnK2ZiHn2oFieAaqXVZ0o5aPdy9THUc3TDdvbJIGjlEjFFlxQo0PviLEA=
+Received: from DU0PR03MB8983.eurprd03.prod.outlook.com (2603:10a6:10:478::18)
+ by PAVPR03MB9211.eurprd03.prod.outlook.com (2603:10a6:102:325::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.10; Fri, 30 Oct
- 2026 12:03:01 +0000
-Received: from AS2PR03MB8978.eurprd03.prod.outlook.com
- ([fe80::90f0:a9d7:c395:f8e9]) by AS2PR03MB8978.eurprd03.prod.outlook.com
- ([fe80::90f0:a9d7:c395:f8e9%5]) with mapi id 15.21.0569.009; Fri, 30 Oct 2026
- 12:03:01 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.615.8; Wed, 11 Nov
+ 2026 09:11:07 +0000
+Received: from DU0PR03MB8983.eurprd03.prod.outlook.com
+ ([fe80::64c0:bebd:8710:3f63]) by DU0PR03MB8983.eurprd03.prod.outlook.com
+ ([fe80::64c0:bebd:8710:3f63%6]) with mapi id 15.21.0592.010; Wed, 11 Nov 2026
+ 09:11:06 +0000
 From: <Moritz.Buhl@infineon.com>
 To: <tpm2@lists.linux.dev>
 CC: <Moritz.Buhl@infineon.com>
-Subject: [SECURITY][RELEASE] tpm2-tss 4.2.1 and 4.1.5
-Thread-Topic: [SECURITY][RELEASE] tpm2-tss 4.2.1 and 4.1.5
-Thread-Index: Ad1oZasASdfsHiNJR3OmrJurNfCmwQ==
-Date: Fri, 30 Oct 2026 12:03:00 +0000
-Message-ID: <AS2PR03MB897848B4E380185CEEBBB77A9D6D2@AS2PR03MB8978.eurprd03.prod.outlook.com>
+Subject: [SECURITY] tpm2-tss 4.2.2-rc0 and 4.1.6-rc0
+Thread-Topic: [SECURITY] tpm2-tss 4.2.2-rc0 and 4.1.6-rc0
+Thread-Index: Ad1xvHcKY/TYYcPnQWu7jThWfkuZtw==
+Date: Wed, 11 Nov 2026 09:11:06 +0000
+Message-ID: <DU0PR03MB898335809CA0582D578311A39D712@DU0PR03MB8983.eurprd03.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: yes
@@ -155,48 +151,48 @@ X-MS-TNEF-Correlator:
 authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=infineon.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS2PR03MB8978:EE_|DUYPR03MB998920:EE_
-x-ms-office365-filtering-correlation-id: 1bfeb9aa-8547-49f6-a91a-08df367dbef2
+x-ms-traffictypediagnostic: DU0PR03MB8983:EE_|PAVPR03MB9211:EE_
+x-ms-office365-filtering-correlation-id: 6c16c9c5-96e7-4cdb-9460-08df3fd3b7fb
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|6049299003|23010399003|261028144727099003|261022115727099003|261022105027099003|261022075727099003|261021121427099003|261009223027099003|261026121527099003|261026140227099003|10067099003|56012099006|11063799006|3023799007|4053099003|18002099003|38070700021;
-x-microsoft-antispam-message-info: fm0h3A+8inbNmrphEDIcvAr/F63WLMhkvOIVwka/SFCDzOZShJdumxDBhTwsX5aty6ck7FjxWr2fRZ1G6IQUQf/kJUsFyvVj3g3WQ2rHLrbTgnUiJUM2kAUr+gG4WM+6t+x3DWLGXYOHV2R+ZiAEliULiqj9f/N67/W6gIN+2eiyETQhAPGNSbrQioJQ1159Hwm8ys9gQ7wSgAh2mOls9KRV6YBdCUqcfUfMCgAAVxPSQ30ascUwI4QSHHMXXDrbsFydBBfyzOTx6k9IqWEANVuOFKqcl825l7Gy+EsZxdFGyjPRj0HLEP1a8Ap02FTjBZUQYxWRat3Z5RtRb8BMjhYnkLYOhGQT8+mB2eZcMit4RWqYd5Nk65t9JiEJ456L7M2MgMZP3QriB/pjeJYHICvWLysWOhTB3bUzBZ120ATOQiY24eFYbSs+oxv9io6UGZGXU2kjM2gw02K4DH1CFQWLFFFL75m/tYtNilx6QE4CrhzrLpNMRxNRzQa/U+DEmBKEVoxOBezeAt/qzcDk20Syhb9ZdjEW3krD4fzyGaueAJenFr+Fdn6sISuSGS3q2tNyf3aQKyl7ejOMxIebnwSfCnXyMvfe3Q0Zs393uQ9hP+VKmts6YqmkdRo7ue5D7jJJOaViN2Vtah5DeNzvO4zwzAapju/SJrvF5x7uyBJBYeS3w1wniV+nZ/zIGCEtKi4wIjO0+/4dnTcmqu4wBTPb9WHLXUTc8LGKn9D0OII=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS2PR03MB8978.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(6049299003)(23010399003)(261028144727099003)(261022115727099003)(261022105027099003)(261022075727099003)(261021121427099003)(261009223027099003)(261026121527099003)(261026140227099003)(10067099003)(56012099006)(11063799006)(3023799007)(4053099003)(18002099003)(38070700021);DIR:OUT;SFP:1101;
+x-microsoft-antispam: BCL:0;ARA:13230040|6049299003|23010399003|376014|1800799024|366016|38070700021|10067099003|11063799006|56012099006|261022105027099003|261009223027099003|261026140227099003|261028144727099003|18002099003|4053099003;
+x-microsoft-antispam-message-info: wHKQrfpg1sAXOJPJXGXIABVKe0Em7GeHdN6ci1IQ25DQZPNfxq2jq6ZXqZLzAZ2mQqEAup7W8HBleJEKdImgEcCv6uPS7tsNtxqGXpMAxjzdf7WREhruyJkx8fljJN8wOz6k8WT3GUkV59J2MT4eAQXWuAzBDuYSr3SPAxuCKueN62Wb6o7MlKIO0yyx4Ih0ybKk1Crg5GWDYWHfgG9c8k/aLXPto0fXsoeTtMtsQTvOT+c782yVoZK1HfExSwKOvbiOFEEJRaaXg7XknVWOfisRUax5un9gB2gUdvKlTPA3rKx9MgpvcjX2KuM9ZVWppbsl1DYPcXQNv0/wkrbMfO3/BS+0CJlAao+yHvnnKVAGWH1SqUBcYA6+9ob5S6bZMJF9y1i+Z6XZyngG7hG3SYwDuZ4f3EP0T3S93P287TC5ykqxsoM6+2ez/uzChuzeWeJ1pHdi7MYsbnELx4sovTkwyx7MNW1ggBQmaX+nOh1nf3xK/ZZz9GRZpqd6GPcdnVpROGbUjA9ufSvbM9bY0yRFTNBqXzXkaexNh8KJN1A6Z34K4L8k4lwr3+2IOcq9yXGvDUHzwpps+T+TtWZscRdWKbX6coCTT6qcidxaH2m2d63l1jND/gJ9QtI570MW6clUfa16u7BpEEXwyM5MiQCWnfoekWZn7HK43WYNgU3hGv4Q4KTKDJ++qaiaDrvbDyRVZoN4kaXqkAGhQygqdWntK5NKjnNOPrjm4XBJK3I=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR03MB8983.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(6049299003)(23010399003)(376014)(1800799024)(366016)(38070700021)(10067099003)(11063799006)(56012099006)(261022105027099003)(261009223027099003)(261026140227099003)(261028144727099003)(18002099003)(4053099003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?8/QVb0sLrtxZbPphZoQUD+JdEMidIG9zzANEK0RsGkS7VgYjl4pJ3M1FloKz?=
- =?us-ascii?Q?LaY8BFf7HPfgzeLkp9RUNzlT9QENG2SG6aNcMEmo7ojJv6LgBhxF1Nn9jkjz?=
- =?us-ascii?Q?J+10DJBlBUdSZzrY8wPfn1iOOZHhzym6bNDG2G1jeFYRm9E3ojwPQsy92PCh?=
- =?us-ascii?Q?Udzh75j6eL7z8eLKU6EqhSw7o4LUkOVw15f9AnDlcGhVm+CbN9LtAfBe4SHV?=
- =?us-ascii?Q?CouLrLLuy/ygCe/+OzfdOTgjTlw+n5FlueCX0FeiJ0grXURH3UmDtVbTrJIt?=
- =?us-ascii?Q?VQ6WudGdOg2tshZGvJVoL1q3pWMwzUtfatASSVzsG3pZ26ixF45rg6RxSGoa?=
- =?us-ascii?Q?7jzAPTwLEhNU8m1IC+WUToX1t5HSiNFjFOyCqpsRz/c+LYOhyw2Xx2YiPO3Q?=
- =?us-ascii?Q?hSniJFpKAtDNh/UrijvYi60uWODNgHnyH+4X3oY8ZvqIPWvqLcyBHblI/z6k?=
- =?us-ascii?Q?0xNN1bwoKt4GctWrKXhtaMEBISMPpalNvKRVRGtbXz3cUr+On8LyEgMwIjVx?=
- =?us-ascii?Q?5tn7ymRr/pwVRXXxWDyhjV7+46H8nMG+lk7eTzdM+dkj6cYlyOqtKHzKWzog?=
- =?us-ascii?Q?ItO/w6BcONKca7b8sql1OxOKyae7c/Lh4wtmDfOwAC4Q1uMBZ8vTeRzcz87s?=
- =?us-ascii?Q?6E0U+Q65eKGnKGhfkkE7RRPML5wYJmohNgglKooRg6SohVQzlBowcbKjxzEL?=
- =?us-ascii?Q?xpZv/cveK1q2rjf6kcXWeCAy0OHN9O5frymsnpUGwlVOqpQWHoAAzpCCOkZ4?=
- =?us-ascii?Q?OSrexBwDxqiMidKxvnOsfk9xFHxH1smepO1TweH57KSxwkovUsAqEzxWf+KQ?=
- =?us-ascii?Q?PmKoz4CuP/Kd6GOxPAt1jempedMRsnf9YysEmHWDe7kW4mW+uor6WnSI5FkD?=
- =?us-ascii?Q?70/Omr0DjbXsPc4cZ6DSRlYqqKg+RT0zCTZ+WQmSjRqKv/Ah7DHZ9hZQobH2?=
- =?us-ascii?Q?y9QFgIXxgtkn5gvt+q/bTex7+enXSJ1jVm4MDcddwe2EpKm1lxvvQTtCn9a0?=
- =?us-ascii?Q?8eKcOL6k1bvN1U3I77k3JDb6bA5XSSLDtQJErBny1Ww4QBIgbyVG12QUuAQh?=
- =?us-ascii?Q?sZ69xyW6LC5u6GBPi7PAMVZmldf/Yl90IiGwBalOcUFrJ/vQ0z9U9oRapSIK?=
- =?us-ascii?Q?R/tr07SbYe2sN1i+Fst2Wh+xxoWca6KgPkph2tPHb1X7X9+ZGvYv7B1rycOd?=
- =?us-ascii?Q?G9iV8F5RxzQPlaEGVeCtl5uonbzPCPoDMYD1GKVMkMl3rTWmZ8UgbdJbLjaN?=
- =?us-ascii?Q?igfaOSkmIp3fi3SHQo7suz51eJBZ6y58oqMr0OIuGPa7KPz9mNLCTgXdCH+V?=
- =?us-ascii?Q?tCntn5jxfn8bdb+oypwOG8tS2m6ipxqnamP6TXL/q7BLU663VqnzjpsjqMB/?=
- =?us-ascii?Q?mkh/4k4TGXV7YnrWrzSk+qPg6C8DmpBaX3SMtbGU9brBzKnnVh2ScZDLJ+WM?=
- =?us-ascii?Q?pv89JPTRR+jevfWNT+AugcXM32y4mQ/R4JW8skx4F0UK8UCVJiFCT2UPqZ/Z?=
- =?us-ascii?Q?rRt9cPdVeZsla+RNrqTs7xxdYtSqzpkVXym21n0dwp0SnG2TMTyroINvWwJ5?=
- =?us-ascii?Q?eicp3YPAzW0wPSYgh563R6c3NIEwMlCQC4jHrmaifiox0VBwQnDwxt+IJHyB?=
- =?us-ascii?Q?MEGxQ/qNnNVafxft4Yz5Vs2rss6vKlKJa6lH9t0Q0bmaNU4twQPGfXG6PmzI?=
- =?us-ascii?Q?dmi05q7urcvdZL5YhAizxcJ6yN6VD0xLG1W12uYMGYDl4CcNzNQh2EOhgFRm?=
- =?us-ascii?Q?qyE9UV+4Bw=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?PyM9A5QBep72cGqA92Z5IID2/m5L+mW4Q4Oao4juXpZSk0uYqjNWKLtV0rej?=
+ =?us-ascii?Q?7krjZci5bsv9ljuXnqmL4KAM2FAbUizq022I4dqHwyEKkUrgHkO19qQSS+Hu?=
+ =?us-ascii?Q?VrpdufUHdbrDkF/PgR0QMH8//b9LMh3SLQmierv4KXO57yyCXVtD+dUkfKRc?=
+ =?us-ascii?Q?eIvhLQwIZn6H8M+HHbXzhTEC/+IifLvqhNBHRHIAPcuvPlDUI+CkgtLq/GTL?=
+ =?us-ascii?Q?lgfTHI5CyPeHcw9NgN1kMq1CZ38zbg9W3REW5kFd9fnY8P9kGWjZFFD3ocHi?=
+ =?us-ascii?Q?fYNO4T2I5YA3dUWmCbm7vK22dCE+7SnZyAiP116tGxH06Lvn1H220T36TFLF?=
+ =?us-ascii?Q?cYeRYsYlI5XMvETJlaSigPxyjr0r6FXV5l7RcS5BS3e8JbfA7KISpkbJBg0L?=
+ =?us-ascii?Q?lXUwfFl3/tenGBl3YAHk/ZsmzP5mFCkmuyJEz+iYWzufX9KwBeJzESZWuVGZ?=
+ =?us-ascii?Q?cbkUZN06gU8NkMDY2GTpiIrIPKckVPk9T/alF38IqvfZdeK2KvrUMZKK6ukT?=
+ =?us-ascii?Q?0CQB6Gqr8aoSs7v6Eds0DoMYhS5lEb6hQknDN3cY4rfB5aynS2ZlXdE26Loa?=
+ =?us-ascii?Q?6j/VC0zoElNGAdAQK08GpimMoIJlfeWZRNumn0GEl2QnezHQnfGMTtyBm6Fu?=
+ =?us-ascii?Q?queB5cliiM2nl/D7azt/XR1+RCxSaLapzF8hFHfMxYqCZ8AnHmWYIkBhtpTq?=
+ =?us-ascii?Q?DEz0kBaONrpGKS1T76OIO4TsQIV+iaLMfuU9csw/nKyPoO3mKGJwTa/VgOUB?=
+ =?us-ascii?Q?uW6e80qD05xDJxMK132XErQG6lu2UT1il20hvi2yNlimsvxOqwl0KD4IUweA?=
+ =?us-ascii?Q?Fr2FqX13Vsi2GN3UN4lXg42Zo9AUVgfaNw+7bjz2MX+BaPxu/1v4YEqL0Izj?=
+ =?us-ascii?Q?p7pfJbLg9AbrRG3zHtiIy1ONghH17w7l5LN9edSkiHc52F90siXdAZHfTQbb?=
+ =?us-ascii?Q?8TMaarqfWWJojvE5fF///Z1aYW6d4hiszWMOtuMB6CLQZ84cY5rafBhmUoBA?=
+ =?us-ascii?Q?bCoT/A4rnVeju08XeyCj6/IQ7s4lPxpW+EbgM+UnbFXWlo7Dm+EL8kqH/rp5?=
+ =?us-ascii?Q?u6t+OvpUazDmXxIg8mT32KuT+B3aI15BfhgbqeVjO7tQtNTCBb2YpaL11yJS?=
+ =?us-ascii?Q?Egt3pqT1hwy22HL9Tq2wZ6V2z0W84S7Y5vQl4+2hBavevD0LsNX8jUOlmQ6O?=
+ =?us-ascii?Q?ZOAJqp2tGznc6xsC8nUeZ3kwnEfMBNIufinsZVV8DZ4Bty7xUUdmeQ3xTmJ/?=
+ =?us-ascii?Q?FetHyZCY2iPvS59SCd6ojNEDnOHDDI2uzjW36JjUiwV1wLDSeKO4xR/M/LPS?=
+ =?us-ascii?Q?QEkzsNPGOrk7rooDkbR0IrrhocmXDy6wPA2jrisT8hBzdbHgCi3HiYLxwbfm?=
+ =?us-ascii?Q?E+gxv0hM0i1AcEEfafHqcb4qWbyJ18R5VgVBqfv5gcS6B27uNDSNi3QcZaQs?=
+ =?us-ascii?Q?EYubb6dYVWOAriSs9E4kCdEI9XUpuczSXV2vWRki4/fkfSVfEwDfv1aiFuvw?=
+ =?us-ascii?Q?phBtdnQvDEHVHS7CN+WGG9ujlhMRyaqkHJtifhKbWhbA0dr7pSxtcaxhhNRy?=
+ =?us-ascii?Q?jqefyr4OTGKk4Z6D3weGsvkvWmN3TXUV+4XpwMutEga0ESUWUh/GqgUnI+zY?=
+ =?us-ascii?Q?IhaQUECynwwuNNyiFddb/GHlkc42SEoN2G+kYa7sPigbF7FB3efSUPPpOUtr?=
+ =?us-ascii?Q?Lg1DuNpJmUltLdAsRvL5xlHSz+6YY65ZVKd1BDGUVad5u+3QUEKKP+zkPSfs?=
+ =?us-ascii?Q?ZsPfzm7Mww=3D=3D?=
 Content-Type: multipart/signed;
 	protocol="application/x-pkcs7-signature";
 	micalg=SHA1;
-	boundary="----=_NextPart_000_0064_01DD686E.FD5B4010"
+	boundary="----=_NextPart_000_006A_01DD71C4.F6527270"
 X-Mailing-List: tpm2@lists.linux.dev
 List-Id: <tpm2.lists.linux.dev>
 List-Post: <mailto:tpm2@lists.linux.dev>
@@ -206,81 +202,38 @@ List-Unsubscribe: <mailto:tpm2+unsubscribe@lists.linux.dev>
 List-Owner: <mailto:tpm2+owner@lists.linux.dev>
 Precedence: list
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked: HoZB6r8yozFMIyo+6HWU0QmSWOviiXl5WkV5/ArsWrJZE736/b/vQqudeL1MpZiSOgFfSHg/BgSzhLqWRAQCfQYE76ErNfg/8A/sURKChtIQQomZiTqaQKUKzjib7ARExha0vaPAW4du038ZsSO2mHK5hlD92vZb1erUBWKxTT7tWnhTZhlJVw0rUdc1exvWBqQfsysNXNDPzNmtgCAn1MgFEhA+53MC4/qPt01ncErUqh1iSHOnt6+JxFZvCFulqkSJuQRkd6p/UF3UR7KOtXR/Ni4DVU2pqD1IbWXhL3ca5eWVJeuVIsBwKepwrVvenoJL51q5hw0NsP9gfiGRpA==
+X-Exchange-RoutingPolicyChecked: dTxUGVl9qjfFCI6RUNqa8XoV0SllQgiZqPIocUEHI2DzyWKIqlNcCfgxjWT1cQI6eFbiq9NPKX6CHd+xgsBQhEHdOGue0KA5lhqi0yDuqnfPXrJiogqc6qFPgpA7Ptr50sHOVEI79Rf320UqKgJNjt/8HOVJbGGD5tPw+3k67SHJ1AwawCw7JsKMNeJ8XwG7otdoyX/Vc6b4hDbjT9tgeBnRTA35nbNASPfRUTQSe1AH/TaOE7rJjDkU9ZeH76LlLGd9+FQQ42RJTW253wH/BBx0HE0dx9NLaE718m85MfdeunrI4MpXZAJRIxp6Co27+TTYEv01YcdfyAnywBeWUQ==
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS2PR03MB8978.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1bfeb9aa-8547-49f6-a91a-08df367dbef2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2026 12:03:00.8874
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR03MB8983.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c16c9c5-96e7-4cdb-9460-08df3fd3b7fb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2026 09:11:06.6900
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: eeb8d0e8-3544-41d3-aac6-934c309faf5a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: juB0PKeRmu1tI8a/1douGdpBHKLen1cWkTu3y9LRkFSCmqIZ1ocS/mqYrR9qiSQVXqS9LUwe0yf5aWWrQVQ0A23CtTYn1P8oMsaLYMQ+Wwk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUYPR03MB998920
+X-MS-Exchange-CrossTenant-userprincipalname: ETx3eIwVEaCPQicHWxzbNToMLJlzVTMUpzW5JLK3XuatkxZD7SJKeSa4sHDSraY7NcyWfpYQWIcDuP7Dgtn7c1hl0wfsnfha83y+Y6zXUbI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR03MB9211
 X-OriginatorOrg: infineon.com
 X-SM-outgoing: yes
 
-------=_NextPart_000_0064_01DD686E.FD5B4010
+------=_NextPart_000_006A_01DD71C4.F6527270
 Content-Type: text/plain;
 	charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-Hi all,
+Dear tpm2 list,
 
-I am proud to announce the new tpm2-tss 4.2.1 and 4.1.5 releases:
-https://github.com/tpm2-software/tpm2-tss/releases/tag/4.2.1
-https://github.com/tpm2-software/tpm2-tss/releases/tag/4.1.5
+I just tagged https://github.com/tpm2-software/tpm2-tss/tree/4.2.2-rc0 and
+https://github.com/tpm2-software/tpm2-tss/tree/4.1.6-rc0
 
-The changes include:
+Both contain security fixes, so I plan final releases before end of the work
+week.
 
-Security
-GHSA-h664-qxhh-gx3w CVE-2026-109545
-GHSA-2q8j-chww-3pcq CVE-ID requested
-GHSA-5mqr-9575-x89w CVE-ID requested
-GHSA-rjg6-phr3-3rxw CVE-ID requested
-GHSA-g73j-fj87-wmqq CVE-ID requested
-GHSA-v965-wr7f-xw6w CVE-ID requested
-GHSA-5p93-qmch-h65j CVE-ID requested
-GHSA-x33j-3x4g-f32j CVE-ID requested
-GHSA-xvmm-58jj-c6gf CVE-ID requested
+Kind regards,
+Moritz Buhl
 
-Fixes
-MAINTAINERS: add Moritz
-TCTI: validate the response header length
-TCTI: add missing size checks for response buffers
-FAPI: fix quoting of empty event logs
-FAPI: check the number of branches for policy lists
-FAPI: validate key size before extracting the public key
-FAPI: add a missing bounds check on PCR_Select deserialization
-FAPI: check buffer size in RSASSA and RSAPSS signature conversion
-FAPI: reject eventlog entries with an empty template value
-FAPI: bound eventlog entry name reads by the template size
-FAPI: verify the eventlog digest window fits the template buffer
-FAPI: fix file leak on read error
-FAPI: fix tests failing with physical TPMs
-FAPI: fix buffer overflow in ifapi_set_auth_primary
-ESYS: fix compilation without SM4 support
-ESYS: fix OpenSSL 3.X engine context handling for internal crypto
-SYS: harden the response size checks
-SYS: validate the length of no-session responses
-SYS: validate the length of encrypted parameter responses
-SYS: validate the length of response authorization parameters
-SYS: use response size instead of buffer size during unmarshalling
-MU: bound subtype unmarshalling to the TPM2B size field
-IO: retry poll calls on EINTR and EAGAIN
-CI: allow CI runs from different repositories
 
-For 4.2.1, there further are these changes:
-TEST: use SHA-256 in EVP signing integration test
-CI: update container images
-
-For 4.1.5, there is additionally this change:
-CI: pin Docker images to before the major update
-
-Best,
-Moritz
-
-------=_NextPart_000_0064_01DD686E.FD5B4010
+------=_NextPart_000_006A_01DD71C4.F6527270
 Content-Type: application/pkcs7-signature;
 	name="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -373,23 +326,23 @@ nIAPQFyUyG3bVlcdWrYZJBIPyHvmieckf3QknOyZwehpzwZrzrPtrkRT4e6/2r6nTa2/TYCsC8Il
 7zT3eMCVe+RygOxJdaug6hFVlWb9RHjrMYIEbjCCBGoCAQEwZDBdMQswCQYDVQQGEwJERTEhMB8G
 A1UEChMYSW5maW5lb24gVGVjaG5vbG9naWVzIEFHMSswKQYDVQQDEyJJbmZpbmVvbiBUZWNobm9s
 b2dpZXMgQUcgVXNlciBDQSA0AgMBJm4wCQYFKw4DAhoFAKCCAd8wGAYJKoZIhvcNAQkDMQsGCSqG
-SIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjYxMDMwMTIwMjU5WjAjBgkqhkiG9w0BCQQxFgQUiQNa
-MfMnELwrRXxlMFUo5YUWxkMwcwYJKwYBBAGCNxAEMWYwZDBdMQswCQYDVQQGEwJERTEhMB8GA1UE
+SIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjYxMTExMDkxMTA1WjAjBgkqhkiG9w0BCQQxFgQUzRw3
+ukuhx2vJTCcXu6OvPJuuYAUwcwYJKwYBBAGCNxAEMWYwZDBdMQswCQYDVQQGEwJERTEhMB8GA1UE
 ChMYSW5maW5lb24gVGVjaG5vbG9naWVzIEFHMSswKQYDVQQDEyJJbmZpbmVvbiBUZWNobm9sb2dp
 ZXMgQUcgVXNlciBDQSA0AgMBJm4wdQYLKoZIhvcNAQkQAgsxZqBkMF0xCzAJBgNVBAYTAkRFMSEw
 HwYDVQQKExhJbmZpbmVvbiBUZWNobm9sb2dpZXMgQUcxKzApBgNVBAMTIkluZmluZW9uIFRlY2hu
 b2xvZ2llcyBBRyBVc2VyIENBIDQCAwEmbjCBkwYJKoZIhvcNAQkPMYGFMIGCMAsGCWCGSAFlAwQB
 KjALBglghkgBZQMEARYwCgYIKoZIhvcNAwcwCwYJYIZIAWUDBAECMA4GCCqGSIb3DQMCAgIAgDAN
 BggqhkiG9w0DAgIBQDAHBgUrDgMCGjALBglghkgBZQMEAgMwCwYJYIZIAWUDBAICMAsGCWCGSAFl
-AwQCATANBgkqhkiG9w0BAQEFAASCAgB0jrfc+OKoF2ytVg+gxCN391Gy2AYO7L60k3VuwBhucxtA
-/XDNaKE59Q0frSRmPdUda2FJSjAdF5hdN0c5EKyJ1dlJPTm3MHXQwxVMXxJa0ZvdwWBqkwBd4cjo
-EeUFwC+nb1VnEPPalF3V91htmU+A2jGdyhWXvQ39FoYohDbW8ngZBKCbUk4MetAEK4EM7OHvO8NN
-VlDRquV8Q2xdXxFz2Sr0u71UaPpBJV1jtvDh4iI/vPJn2ZWPZVMk7CW0k2T9kP9HExPJI/C/jmut
-sQ3JRbccC7M9/aD/vVTSGbmH6vvCMO73Zk1mLUDLsn5eUCcZgUzJh3MhvjDXJwaKgsyYzUyzHcwp
-4VlikVz20BpsxeCAssF17zJaU/y7IYoZpMtrVLvfpqHMldnJIkx6r/ScREKGYEpwhud9Ljk9AU/N
-4vs5/w03s9Gwtp2WxkOWDrvnvgi3NYEUYZ8riRzfzB92JpgPgbJUKdosH4ZtDhCv4tiClkfbuKST
-08heYcTsI+Tk20xpqjoq1LYB2l7jEil8aGCY+KQpuEB8cRrSXpGvyCo3Zdqj1owGohsg2Ib2I3h0
-NycpXzqdnhsFEoDYxw0ymPJdULpUBHa4XW/Ie99UeONbOpoqZqqZmcVX0oPzzTGNyTExKvYndy0K
-4csn4cCjrXQ8/2hDUrvJDeFbgUU9YwAAAAAAAA==
+AwQCATANBgkqhkiG9w0BAQEFAASCAgAyaIcTTye++nHGl+8nyKbgy+JnbEJgTkBcepwXI96HViSl
+epQL6B2owtBWo3q4tVJqPYIIIimspoHxzhNTnc2a1hxrEJq11T4Fyn2ubPcB0HS4s6pMg57kXhDu
+AMbqFOxX41cUaGpXZ4SblDquZPnl9mM5LIiO/hiM0vSmVpxBdrpYjLTPN4ng/46UFopMQwqoDlDb
+jxH1Hlsbn5j6h29G8BS2nA5twqCYkqCEjrcZnit1BCI5M6O3AaMCz42be4IqEeKfH26rENhmpQe5
+6QcGAVtoUwIY14Lzn+woePdp5j86Nx8ysHBsQNn6aGYzmO5STZBgjcyae2L3+9TLkxViSBVhvopV
+JhogEIwTesf7Bi5ELHbApodBy3Eo6wCybCafxUSU6cGX9XNTmkL7OS4pA0ln+jWP3x9L3lxxYWv5
+LAQ3A7Twd0WYBVV8fB5Z1u+1YiP7g29jJfxg4T4ihNWnQ9ijp1XUDKJbrJHCRt2fT/tJ2sMLoybc
+nFG60GzlUbOY9M8NtEH5ppPnwCG5cW7h34qZ2pvQEeUdtbNZVu1zpoe5jIVEVsAX9EoVl6VD1vfb
+emnXJ+AS8NHY1Kod3SXG/9I4sfm53bFSwQ24rP4YZfDaWPFrRItfJQ9IN+Knhwyqj97daa5dMQQZ
+s19PavKnptH/zOs6Pbu+yIKMvComHgAAAAAAAA==
 
-------=_NextPart_000_0064_01DD686E.FD5B4010--
+------=_NextPart_000_006A_01DD71C4.F6527270--
